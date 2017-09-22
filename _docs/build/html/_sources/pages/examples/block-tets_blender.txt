@@ -1,0 +1,9 @@
+.. _block-tets_blender:
+
+********************************************************************************
+Block tetrahedrons Blender
+********************************************************************************
+
+.. image:: /_images/block-tets_blender.png
+
+.. literalinclude:: ../../../../_examples/block/block-tets_abaqus_blender.py

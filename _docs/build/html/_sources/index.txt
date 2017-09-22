@@ -1,0 +1,25 @@
+.. _compas_fea-home:
+
+********************************************************************************
+compas FEA documentation
+********************************************************************************
+
+Contents
+========
+
+.. toctree::
+   :maxdepth: 2
+
+   pages/fea
+   pages/gettingstarted
+   pages/examples
+   pages/reference
+   pages/license
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

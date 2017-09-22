@@ -1,0 +1,52 @@
+.. _tutorial:
+
+********************************************************************************
+Basics
+********************************************************************************
+
+The following tutorial shows how to create and analyse a Structure object using a CAD environment and FE solver.
+
+.. contents::
+
+=============================
+Importing modules and classes
+=============================
+
+A ``.py`` file is created for every compas_fea analysis, which is where a Structure object is first created and then populated with the components needed for the particular project. In order to import these components and other helper functions from the core compas or compas_fea package, ``import`` statements are needed in the first few lines of the file. For example, if the user wishes to use a cad environment for extracting geometry or visualising analysis results, either of the following could be written to use Rhinoceros or Blender:
+
+.. code-block:: python
+
+   from compas_fea.cad import blender
+   from compas_fea.cad import rhino
+
+These imports will make a variety of functions available from the ``compas_fea/cad/blender.py`` and ``compas_fea/cad/rhino.py`` modules. Similarly, depending on what Finite Element Analysis software of library is being used, an import such as:
+
+.. code-block:: python
+
+   from compas_fea.fea.abaq import abaq
+   from compas_fea.fea.ansys import ansys
+
+will be required. It is common to also pull modules from the core compas library, especially geometry and datastructure imports to help build the Structure object:
+
+.. code-block:: python
+
+   from compas.cad.rhino.helpers.mesh import mesh_from_guid
+   from compas.datastructures.mesh.mesh import Mesh
+   from compas.geometry import distance_point_point
+
+as well as utility functions from the compas core cad packages, for creating, editing or deleting objects and layers:
+
+.. code-block:: python
+
+   from compas.cad.blender.utilities import clear_layers
+   from compas.cad.blender.helpers import network_from_bmesh
+
+The most important imports however will be for retrieving classes from the ``compas_fea/structure`` folder, including the main Structure class itself:
+
+.. code-block:: python
+
+   from compas_fea.structure import GeneralStep
+   from compas_fea.structure import PointLoad
+   from compas_fea.structure import Structure
+
+These special classes will be described in more detail throughout the tutorial.
