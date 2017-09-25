@@ -1,170 +1,242 @@
-
-
 <!DOCTYPE html>
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>truss-tower Blender &mdash; compas_fea  documentation</title>
-  
-
-  
-  
-
-  
-
-  
-  
-    
-
-  
-
-  
-  
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../../_static/css/compas.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../genindex.html"/>
-        <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="compas_fea  documentation" href="../../index.html"/>
-        <link rel="up" title="Examples" href="../examples.html"/>
-        <link rel="next" title="License" href="../license.html"/>
-        <link rel="prev" title="truss-tower Rhino" href="truss-tower_rhino.html"/> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+ <!--<![endif]-->
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   truss-tower Blender &mdash; compas_fea  documentation
+  </title>
+  <link href="../../_static/css/theme.css" rel="stylesheet" type="text/css"/>
+  <link href="../../_static/css/compas.css" rel="stylesheet" type="text/css"/>
+  <link href="../../genindex.html" rel="index" title="Index"/>
+  <link href="../../search.html" rel="search" title="Search"/>
+  <link href="../../index.html" rel="top" title="compas_fea  documentation"/>
+  <link href="../examples.html" rel="up" title="Examples"/>
+  <link href="../license.html" rel="next" title="License"/>
+  <link href="truss-tower_rhino.html" rel="prev" title="truss-tower Rhino"/>
+  <script src="../../_static/js/modernizr.min.js">
+  </script>
+ </head>
+ <body class="wy-body-for-nav" role="document">
   <div class="wy-grid-for-nav">
-
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
-            <a href="../../index.html" class="icon icon-home"> compas_fea
-          
-
-          
-          </a>
-
-          
-            
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-                <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../nodes.html">Nodes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../elements.html">Elements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sets.html">Sets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sections.html">Sections</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../material.html">Materials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../properties.html">Properties</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../loads.html">Loads</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../displacements.html">Displacements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../steps.html">Steps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../analysis.html">Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cad.html">CAD</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="beam-gridshell_rhino.html">beam-gridshell Rhino</a></li>
-<li class="toctree-l2"><a class="reference internal" href="beam-simple_rhino.html">beam-simple Rhino</a></li>
-<li class="toctree-l2"><a class="reference internal" href="beam-simple_blender.html">beam-simple Blender</a></li>
-<li class="toctree-l2"><a class="reference internal" href="beam-tree_rhino.html">beam-tree Rhino</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mesh-floor_rhino.html">mesh-floor Rhino</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mesh-floor_blender.html">mesh-floor Blender</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mesh-bridge_rhino.html">mesh-bridge Rhino</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mesh-tris_blender.html">mesh-triangle Blender</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mesh-yieldline_rhino.html">mesh-yieldline Rhino</a></li>
-<li class="toctree-l2"><a class="reference internal" href="script-introduction_abaqus.html">script-introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="truss-frame_rhino.html">truss-frame Rhino</a></li>
-<li class="toctree-l2"><a class="reference internal" href="truss-tower_rhino.html">truss-tower Rhino</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">truss-tower Blender</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
-</ul>
-
-            
-          
-        </div>
+   <nav class="wy-nav-side" data-toggle="wy-nav-shift">
+    <div class="wy-side-scroll">
+     <div class="wy-side-nav-search">
+      <a class="icon icon-home" href="../../index.html">
+       compas_fea
+      </a>
+      <div role="search">
+       <form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+        <input name="q" placeholder="Search docs" type="text"/>
+        <input name="check_keywords" type="hidden" value="yes"/>
+        <input name="area" type="hidden" value="default"/>
+       </form>
       </div>
+     </div>
+     <div aria-label="main navigation" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+      <ul class="current">
+       <li class="toctree-l1">
+        <a class="reference internal" href="../intro.html">
+         Introduction
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../setup.html">
+         Setup
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../structure.html">
+         Structure
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../nodes.html">
+         Nodes
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../elements.html">
+         Elements
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../sets.html">
+         Sets
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../sections.html">
+         Sections
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../material.html">
+         Materials
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../properties.html">
+         Properties
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../loads.html">
+         Loads
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../displacements.html">
+         Displacements
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../steps.html">
+         Steps
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../analysis.html">
+         Analysis
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../cad.html">
+         CAD
+        </a>
+       </li>
+       <li class="toctree-l1 current">
+        <a class="reference internal" href="../examples.html">
+         Examples
+        </a>
+        <ul class="current">
+         <li class="toctree-l2">
+          <a class="reference internal" href="beam-gridshell_rhino.html">
+           beam-gridshell Rhino
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="beam-simple_rhino.html">
+           beam-simple Rhino
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="beam-simple_blender.html">
+           beam-simple Blender
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="beam-tree_rhino.html">
+           beam-tree Rhino
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="mesh-floor_rhino.html">
+           mesh-floor Rhino
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="mesh-floor_blender.html">
+           mesh-floor Blender
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="mesh-bridge_rhino.html">
+           mesh-bridge Rhino
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="mesh-tris_blender.html">
+           mesh-triangle Blender
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="mesh-yieldline_rhino.html">
+           mesh-yieldline Rhino
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="script-introduction_abaqus.html">
+           script-introduction
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="truss-frame_rhino.html">
+           truss-frame Rhino
+          </a>
+         </li>
+         <li class="toctree-l2">
+          <a class="reference internal" href="truss-tower_rhino.html">
+           truss-tower Rhino
+          </a>
+         </li>
+         <li class="toctree-l2 current">
+          <a class="current reference internal" href="#">
+           truss-tower Blender
+          </a>
+         </li>
+        </ul>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../license.html">
+         License
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </nav>
+   <section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+    <nav aria-label="top navigation" class="wy-nav-top" role="navigation">
+     <i class="fa fa-bars" data-toggle="wy-nav-top">
+     </i>
+     <a href="../../index.html">
+      compas_fea
+     </a>
     </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">compas_fea</a>
-      </nav>
-
-
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          
-
- 
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-  <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
-          <li><a href="../examples.html">Examples</a> &raquo;</li>
-      
-    <!-- <li>truss-tower Blender</li> -->
-      <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../../_sources/pages/examples/truss-tower_blender.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-            
-  <div class="section" id="truss-tower-blender">
-<span id="id1"></span><h1>truss-tower Blender<a class="headerlink" href="#truss-tower-blender" title="Permalink to this headline">¶</a></h1>
-<img alt="../../_images/truss-tower_blender.png" src="../../_images/truss-tower_blender.png" />
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;A compas_fea package example for truss elements.&quot;&quot;&quot;</span>
+    <div class="wy-nav-content">
+     <div class="rst-content">
+      <div aria-label="breadcrumbs navigation" role="navigation">
+       <ul class="wy-breadcrumbs">
+        <li>
+         <a href="../../index.html">
+          Docs
+         </a>
+         &raquo;
+        </li>
+        <li>
+         <a href="../examples.html">
+          Examples
+         </a>
+         &raquo;
+        </li>
+        <!-- <li>truss-tower Blender</li> -->
+        <li class="wy-breadcrumbs-aside">
+         <a href="../../_sources/pages/examples/truss-tower_blender.rst.txt" rel="nofollow">
+          View page source
+         </a>
+        </li>
+       </ul>
+       <hr/>
+      </div>
+      <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+       <div itemprop="articleBody">
+        <div class="section" id="truss-tower-blender">
+         <span id="id1">
+         </span>
+         <h1>
+          truss-tower Blender
+          <a class="headerlink" href="#truss-tower-blender" title="Permalink to this headline">
+           &para;
+          </a>
+         </h1>
+         <img alt="../../images/truss-tower_blender.png" src="../../images/truss-tower_blender.png"/>
+         <div class="highlight-default">
+          <div class="highlight">
+           <pre><span></span><span class="sd">"""A compas_fea package example for truss elements."""</span>
 
 <span class="kn">from</span> <span class="nn">compas_fea.fea.abaq</span> <span class="k">import</span> <span class="n">abaq</span>
 <span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">blender</span>
@@ -178,14 +250,14 @@
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">TrussSection</span>
 
 
-<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
-<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">&#39;Copyright 2017, BLOCK Research Group - ETH Zurich&#39;</span>
-<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
-<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
+<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">'Andrew Liew &lt;liew@arch.ethz.ch&gt;'</span><span class="p">]</span>
+<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">'Copyright 2017, BLOCK Research Group - ETH Zurich'</span>
+<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">'MIT License'</span>
+<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">'liew@arch.ethz.ch'</span>
 
 
-<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;truss-tower&#39;</span>
-<span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;C:/Temp/&#39;</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s1">'truss-tower'</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s1">'C:/Temp/'</span>
 
 <span class="c1"># Create empty Structure object</span>
 
@@ -193,40 +265,40 @@
 
 <span class="c1"># Add truss elements</span>
 
-<span class="n">blender</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">edge_type</span><span class="o">=</span><span class="s1">&#39;TrussElement&#39;</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">blender</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">edge_type</span><span class="o">=</span><span class="s1">'TrussElement'</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
 <span class="c1"># Add node and element sets</span>
 
-<span class="n">blender</span><span class="o">.</span><span class="n">add_elset_from_bmeshes</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;elset_struts&#39;</span><span class="p">)</span>
-<span class="n">blender</span><span class="o">.</span><span class="n">add_nset_from_objects</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">)</span>
-<span class="n">blender</span><span class="o">.</span><span class="n">add_nset_from_objects</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;nset_load&#39;</span><span class="p">)</span>
+<span class="n">blender</span><span class="o">.</span><span class="n">add_elset_from_bmeshes</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'elset_struts'</span><span class="p">)</span>
+<span class="n">blender</span><span class="o">.</span><span class="n">add_nset_from_objects</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'nset_pins'</span><span class="p">)</span>
+<span class="n">blender</span><span class="o">.</span><span class="n">add_nset_from_objects</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'nset_load'</span><span class="p">)</span>
 
 <span class="c1"># Add materials</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">Steel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">Steel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_steel'</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">))</span>
 
 <span class="c1"># Add sections</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">TrussSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_truss&#39;</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="mf">0.0050</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">TrussSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_truss'</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="mf">0.0050</span><span class="p">))</span>
 
 <span class="c1"># Add element properties</span>
 
-<span class="n">ep</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_truss&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_struts&#39;</span><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_truss&#39;</span><span class="p">)</span>
+<span class="n">ep</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_steel'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_truss'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">'elset_struts'</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'ep_truss'</span><span class="p">)</span>
 
 <span class="c1"># Add loads</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_point&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_load&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mi">1000000</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'load_point'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">'nset_load'</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mi">1000000</span><span class="p">))</span>
 
 <span class="c1"># Add displacements</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'disp_pinned'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">'nset_pins'</span><span class="p">))</span>
 
 <span class="c1"># Add steps</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">]))</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_point&#39;</span><span class="p">]))</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">set_steps_order</span><span class="p">([</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="s1">&#39;step_load&#39;</span><span class="p">])</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'step_bc'</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">'disp_pinned'</span><span class="p">]))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'step_load'</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">'load_point'</span><span class="p">]))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">set_steps_order</span><span class="p">([</span><span class="s1">'step_bc'</span><span class="p">,</span> <span class="s1">'step_load'</span><span class="p">])</span>
 
 <span class="c1"># Structure summary</span>
 
@@ -234,90 +306,85 @@
 
 <span class="c1"># Generate .inp file</span>
 
-<span class="n">abaq</span><span class="o">.</span><span class="n">inp_generate</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">.inp&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+<span class="n">abaq</span><span class="o">.</span><span class="n">inp_generate</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">.inp'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
 
 <span class="c1"># Run and extract data</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;U,S&#39;</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">analyse</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">software</span><span class="o">=</span><span class="s1">'abaqus'</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">'U,S'</span><span class="p">)</span>
 
 <span class="c1"># Plot displacements</span>
 
-<span class="n">blender</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;U&#39;</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">&#39;magnitude&#39;</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">blender</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_load'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'U'</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">'magnitude'</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
 <span class="c1"># Plot stress</span>
 
-<span class="n">blender</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">&#39;mises&#39;</span><span class="p">,</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-
-
-           </div>
+<span class="n">blender</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_load'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'S'</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">'mises'</span><span class="p">,</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">'max'</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre>
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../license.html" class="btn btn-neutral float-right" title="License" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="truss-tower_rhino.html" class="btn btn-neutral" title="truss-tower Rhino" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2017, Block Research Group.
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
+         </div>
         </div>
+       </div>
       </div>
-
-    </section>
-
+      <footer>
+       <div aria-label="footer navigation" class="rst-footer-buttons" role="navigation">
+        <a accesskey="n" class="btn btn-neutral float-right" href="../license.html" rel="next" title="License">
+         Next
+         <span class="fa fa-arrow-circle-right">
+         </span>
+        </a>
+        <a accesskey="p" class="btn btn-neutral" href="truss-tower_rhino.html" rel="prev" title="truss-tower Rhino">
+         <span class="fa fa-arrow-circle-left">
+         </span>
+         Previous
+        </a>
+       </div>
+       <hr/>
+       <div role="contentinfo">
+        <p>
+         &copy; Copyright 2017, Block Research Group.
+        </p>
+       </div>
+       Built with
+       <a href="http://sphinx-doc.org/">
+        Sphinx
+       </a>
+       using a
+       <a href="https://github.com/snide/sphinx_rtd_theme">
+        theme
+       </a>
+       provided by
+       <a href="https://readthedocs.org">
+        Read the Docs
+       </a>
+       .
+      </footer>
+     </div>
+    </div>
+   </section>
   </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
+  <script type="text/javascript">
+   var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
             VERSION:'',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
         };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
-
-  
-  
+  </script>
+  <script src="../../_static/jquery.js" type="text/javascript">
+  </script>
+  <script src="../../_static/underscore.js" type="text/javascript">
+  </script>
+  <script src="../../_static/doctools.js" type="text/javascript">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript">
+  </script>
+  <script src="../../_static/js/theme.js" type="text/javascript">
+  </script>
   <script type="text/javascript">
-      jQuery(function () {
+   jQuery(function () {
           SphinxRtdTheme.StickyNav.enable();
       });
   </script>
-   
-
-</body>
+ </body>
 </html>
