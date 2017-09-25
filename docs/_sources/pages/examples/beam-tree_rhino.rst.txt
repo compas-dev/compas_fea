@@ -6,4 +6,4 @@ beam-tree Rhino
 
 .. image:: /_images/beam-tree_rhino.png
 
-.. literalinclude:: ../../../../_examples/beam/beam-tree_abaqus_rhino.py
+.. literalinclude:: ../../../../examples/beam/beam-tree_abaqus_rhino.py

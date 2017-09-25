@@ -6,4 +6,4 @@ beam-simple Rhino
 
 .. image:: /_images/beam-simple_rhino.png
 
-.. literalinclude:: ../../../../_examples/beam/beam-simple_abaqus_rhino.py
+.. literalinclude:: ../../../../examples/beam/beam-simple_abaqus_rhino.py

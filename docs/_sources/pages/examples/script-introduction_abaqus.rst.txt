@@ -4,5 +4,5 @@
 script-introduction
 ********************************************************************************
 
-.. literalinclude:: ../../../../_examples/script/introduction_abaqus_script.py
+.. literalinclude:: ../../../../examples/script/introduction_abaqus_script.py
 

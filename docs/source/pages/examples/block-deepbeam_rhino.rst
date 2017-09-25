@@ -6,4 +6,4 @@ block-deepbeam Rhino
 
 .. image:: /_images/block-deepbeam_rhino.png
 
-.. literalinclude:: ../../../../_examples/block/block-deepbeam_abaqus_rhino.py
+.. literalinclude:: ../../../../examples/block/block-deepbeam_abaqus_rhino.py
