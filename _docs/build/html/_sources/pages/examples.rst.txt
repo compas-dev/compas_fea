@@ -9,7 +9,7 @@ Examples
 
     examples/beam-gridshell_rhino
     examples/beam-simple_rhino
-    .. examples/beam-simple_blender
+    examples/beam-simple_blender
     examples/beam-tree_rhino
 
     .. examples/block-deepbeam_rhino
@@ -17,11 +17,11 @@ Examples
     .. examples/block-tets_blender
 
     examples/mesh-floor_rhino
-    .. examples/mesh-floor_blender
+    examples/mesh-floor_blender
     .. examples/mesh-mould_rhino
     .. examples/mesh-mould_blender
     examples/mesh-bridge_rhino
-    .. examples/mesh-tris_blender
+    examples/mesh-tris_blender
     examples/mesh-yieldline_rhino
 
     examples/script-introduction_abaqus

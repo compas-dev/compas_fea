@@ -78,7 +78,7 @@ __all__ = [
     'network_order',
     'normalise_data',
     'voxels',
-    'discretise_vertices_faces',
+    'discretise_faces',
     'extrude_mesh'
 ]
 
@@ -352,7 +352,7 @@ def voxels(values, vmin, U, vdx, plot=None, indexing=None):
     return Am
 
 
-def discretise_vertices_faces(vertices, faces, target, min_angle=15, factor=3, iterations=100):
+def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations=100):
     """ Make an FE mesh from an input coarse mesh data.
 
     Parameters:

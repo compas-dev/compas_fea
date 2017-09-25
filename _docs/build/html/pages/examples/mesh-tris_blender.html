@@ -35,7 +35,10 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="compas_fea  documentation" href="../../index.html"/> 
+    <link rel="top" title="compas_fea  documentation" href="../../index.html"/>
+        <link rel="up" title="Examples" href="../examples.html"/>
+        <link rel="next" title="mesh-yieldline Rhino" href="mesh-yieldline_rhino.html"/>
+        <link rel="prev" title="mesh-bridge Rhino" href="mesh-bridge_rhino.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -80,7 +83,7 @@
           
             
             
-                <ul>
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
@@ -95,7 +98,22 @@
 <li class="toctree-l1"><a class="reference internal" href="../steps.html">Steps</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis.html">Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cad.html">CAD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="beam-gridshell_rhino.html">beam-gridshell Rhino</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beam-simple_rhino.html">beam-simple Rhino</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beam-simple_blender.html">beam-simple Blender</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beam-tree_rhino.html">beam-tree Rhino</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh-floor_rhino.html">mesh-floor Rhino</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh-floor_blender.html">mesh-floor Blender</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh-bridge_rhino.html">mesh-bridge Rhino</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">mesh-triangle Blender</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh-yieldline_rhino.html">mesh-yieldline Rhino</a></li>
+<li class="toctree-l2"><a class="reference internal" href="script-introduction_abaqus.html">script-introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="truss-frame_rhino.html">truss-frame Rhino</a></li>
+<li class="toctree-l2"><a class="reference internal" href="truss-tower_rhino.html">truss-tower Rhino</a></li>
+<li class="toctree-l2"><a class="reference internal" href="truss-tower_blender.html">truss-tower Blender</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
 </ul>
 
@@ -127,6 +145,8 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../../index.html">Docs</a> &raquo;</li>
       
+          <li><a href="../examples.html">Examples</a> &raquo;</li>
+      
     <!-- <li>mesh-triangle Blender</li> -->
       <li class="wy-breadcrumbs-aside">
         
@@ -144,12 +164,69 @@
   <div class="section" id="mesh-triangle-blender">
 <span id="id1"></span><h1>mesh-triangle Blender<a class="headerlink" href="#mesh-triangle-blender" title="Permalink to this headline">¶</a></h1>
 <img alt="../../_images/mesh-triangle_blender.png" src="../../_images/mesh-triangle_blender.png" />
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;An example compas_fea package use for meshing.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">compas_fea.fea.abaq</span> <span class="k">import</span> <span class="n">abaq</span>
+<span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">blender</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
+
+<span class="kn">from</span> <span class="nn">compas.cad.blender.geometry</span> <span class="k">import</span> <span class="n">bmesh_data</span>
+<span class="kn">from</span> <span class="nn">compas.cad.blender.utilities</span> <span class="k">import</span> <span class="n">draw_bmesh</span>
+<span class="kn">from</span> <span class="nn">compas.cad.blender.utilities</span> <span class="k">import</span> <span class="n">get_objects</span>
+<span class="kn">from</span> <span class="nn">compas.cad.blender.utilities</span> <span class="k">import</span> <span class="n">clear_layers</span>
+
+<span class="kn">from</span> <span class="nn">compas_fea.utilities.functions</span> <span class="k">import</span> <span class="n">discretise_faces</span>
+
+<span class="c1"># Note: test for meshing function.</span>
+
+
+<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
+<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">&#39;Copyright 2017, BLOCK Research Group - ETH Zurich&#39;</span>
+<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
+<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
+
+
+<span class="n">clear_layers</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;mesh-triangle&#39;</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/home/al/Temp/&#39;</span>
+
+<span class="c1"># Create empty Structure object</span>
+
+<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">()</span>
+
+<span class="c1"># Discretise mesh</span>
+
+<span class="n">pts</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">fcs</span> <span class="o">=</span> <span class="n">bmesh_data</span><span class="p">(</span><span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span> <span class="o">=</span> <span class="n">discretise_faces</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">pts</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">fcs</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">min_angle</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">points</span><span class="p">,</span> <span class="n">face</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">):</span>
+    <span class="n">bmesh</span> <span class="o">=</span> <span class="n">draw_bmesh</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;face&#39;</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="n">points</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">face</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">wire</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">blender</span><span class="o">.</span><span class="n">add_nodes_elements_from_bmesh</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">bmesh</span><span class="o">=</span><span class="n">bmesh</span><span class="p">,</span> <span class="n">face_type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">)</span>
+
+<span class="c1"># Structure summary</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+
+<span class="c1"># Generate .inp file</span>
+
+<span class="n">abaq</span><span class="o">.</span><span class="n">inp_generate</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">.inp&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+</pre></div>
+</div>
 </div>
 
 
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="mesh-yieldline_rhino.html" class="btn btn-neutral float-right" title="mesh-yieldline Rhino" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="mesh-bridge_rhino.html" class="btn btn-neutral" title="mesh-bridge Rhino" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
