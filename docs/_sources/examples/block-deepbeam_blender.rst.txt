@@ -8,4 +8,4 @@ block-deepbeam Blender
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/block/block-deepbeam_abaqus_blender.py
+.. literalinclude:: /../../examples/block-deepbeam_abaqus_blender.py

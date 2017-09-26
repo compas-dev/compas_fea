@@ -8,4 +8,4 @@ mesh-mould Rhino
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/mesh/mesh-mould_abaqus_rhino.py
+.. literalinclude:: /../../examples/mesh-mould_abaqus_rhino.py

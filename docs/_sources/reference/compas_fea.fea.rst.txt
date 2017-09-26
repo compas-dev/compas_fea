@@ -2,7 +2,7 @@
 .. _compas_fea.fea:
 
 ********************************************************************************
-fea
+compas_fea.fea
 ********************************************************************************
 
 .. module:: compas_fea.fea
@@ -20,16 +20,16 @@ abaq
 .. autosummary::
     :toctree: generated/
 
-    inp_constraints
-    inp_elements
+    inp_write_constraints
+    inp_write_elements
     inp_generate
-    inp_heading
-    inp_materials
-    inp_misc
-    inp_nodes
-    inp_properties
-    inp_sets
-    inp_steps
+    inp_write_heading
+    inp_write_materials
+    inp_write_misc
+    inp_write_nodes
+    inp_write_properties
+    inp_write_sets
+    inp_write_steps
 
 
 ansys

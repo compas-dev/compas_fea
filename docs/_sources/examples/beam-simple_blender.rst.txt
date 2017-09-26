@@ -8,4 +8,4 @@ beam-simple Blender
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/beam/beam-simple_abaqus_blender.py
+.. literalinclude:: /../../examples/beam-simple_abaqus_blender.py

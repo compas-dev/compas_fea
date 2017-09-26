@@ -8,4 +8,4 @@ mesh-bridge Rhino
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/mesh/mesh-bridge_abaqus_rhino.py
+.. literalinclude:: /../../examples/mesh-bridge_abaqus_rhino.py

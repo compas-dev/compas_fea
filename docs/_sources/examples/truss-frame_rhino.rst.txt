@@ -8,5 +8,5 @@ truss-frame Rhino
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/truss/truss-frame_abaqus_rhino.py
+.. literalinclude:: /../../examples/truss-frame_abaqus_rhino.py
 

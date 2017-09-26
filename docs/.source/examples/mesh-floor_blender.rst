@@ -8,4 +8,4 @@ mesh-floor Blender
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/mesh/mesh-floor_abaqus_blender.py
+.. literalinclude:: /../../examples/mesh-floor_abaqus_blender.py

@@ -1,553 +1,189 @@
+
 <!DOCTYPE html>
+
 <html lang="en">
- <head>
-  <title>
-   compas_fea -- FEA package for compas
-  </title>
-  <!-- Required meta tags -->
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
-  <!-- compas meta tags -->
-  <meta content="" name="author"/>
-  <meta content="" name="description"/>
-  <!-- Bootstrap CSS -->
-  <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
-  <!-- highlight CSS -->
-  <link href="https://compas-dev.github.io/css/github.css" rel="stylesheet" type="text/css"/>
-  <!-- compas CSS -->
-  <link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
-  <link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
-  <link href="loads.html" rel="next" title="Loads"/>
-  <link href="displacements.html" rel="prev" title="Displacements"/>
-  <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript">
-  </script>
- </head>
- <body data-spy="scroll" data-target="#compas-localnav">
-  <!-- main navigation bar -->
-  <header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
-   <a class="navbar-brand" href="https://compas-dev.github.io">
-    compas
-   </a>
-   <ul class="navbar-nav">
-    <li class="nav-item">
-     <a class="nav-link" href="https://compas-dev.github.io/compas_fea">
-      compas_fea
-     </a>
-    </li>
-   </ul>
-  </header>
-  <!-- page container -->
-  <div class="container-fluid compas-container">
-   <div class="row flex-xl-nowrap">
-    <!-- main page content -->
-    <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
-     <nav class="breadcrumb">
-      <a class="breadcrumb-item" href="https://compas-dev.github.io/">
-       compas
-      </a>
-      <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">
-       packages
-      </a>
-      <a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">
-       compas_fea
-      </a>
-      <a accesskey="U" class="breadcrumb-item" href="../tutorial.html">
-       tutorial
-      </a>
-     </nav>
-     <div class="section">
-      <h1>
-       Elements
-      </h1>
-      <p>
-       This page shows how
-       <strong>
-        Element
-       </strong>
-       objects are added and inspected with the
-       <strong>
-        Structure
-       </strong>
-       object, here given as
-       <code class="docutils literal">
-        mdl
-       </code>
-       .
-      </p>
-      <div class="section">
-       <h2>
-        Adding elements
-       </h2>
-       <p>
-        <strong>
-         Element
-        </strong>
-        objects are added to the
-        <strong>
-         Structure
-        </strong>
-        object with the
-        <code class="docutils literal">
-         add_element()
-        </code>
-        method, by giving the list of nodes that the element connects to and the element type as a string. The
-        <strong>
-         Element
-        </strong>
-        objects are added to the
-        <code class="docutils literal">
-         .elements
-        </code>
-        dictionary, from the classes found in module
-        <strong>
-         compas_fea.structure.elements
-        </strong>
-        , where the class names match the string entered for
-        <code class="docutils literal">
-         type
-        </code>
-        . The element types include, amongst others, 1D elements:
-        <strong>
-         BeamElement
-        </strong>
-        ,
-        <strong>
-         TrussElement
-        </strong>
-        , 2D elements:
-        <strong>
-         ShellElement
-        </strong>
-        ,
-        <strong>
-         MembraneElement
-        </strong>
-        , and 3D elements:
-        <strong>
-         PentahedronElement
-        </strong>
-        ,
-        <strong>
-         TetrahedronElement
-        </strong>
-        ,
-        <strong>
-         HexahedronElement
-        </strong>
-        . As with nodes, the elements will be added with integer keys numbered sequentially starting from 0 (Python based).
-       </p>
-       <div class="highlight">
-        <pre><code class="language-python border rounded"><span></span><span class="k">for</span> <span class="n">uv</span> <span class="ow">in</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]:</span>
+<head>
+<title>compas_fea -- FEA package for compas</title>
+<!-- Required meta tags -->
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+<!-- compas meta tags -->
+<meta content="" name="author"/>
+<meta content="" name="description"/>
+<!-- Bootstrap CSS -->
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
+<!-- highlight CSS -->
+<link href="https://compas-dev.github.io/css/github.css" rel="stylesheet" type="text/css"/>
+<!-- compas CSS -->
+<link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
+<link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
+<link href="loads.html" rel="next" title="Loads"/>
+<link href="displacements.html" rel="prev" title="Displacements"/>
+<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+</head>
+<body data-spy="scroll" data-target="#compas-localnav">
+<!-- main navigation bar -->
+<header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
+<a class="navbar-brand" href="https://compas-dev.github.io">compas</a>
+<ul class="navbar-nav">
+<li class="nav-item">
+<a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+</li>
+</ul>
+</header>
+<!-- page container -->
+<div class="container-fluid compas-container">
+<div class="row flex-xl-nowrap">
+<!-- main page content -->
+<main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+<nav class="breadcrumb">
+<a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
+<a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
+<a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+<a accesskey="U" class="breadcrumb-item" href="../tutorial.html">tutorial</a>
+</nav>
+<div class="section">
+<h1>Elements</h1>
+<p>This page shows how <strong>Element</strong> objects are added and inspected with the <strong>Structure</strong> object, here given as <code class="docutils literal">mdl</code>.</p>
+<div class="section">
+<h2>Adding elements</h2>
+<p><strong>Element</strong> objects are added to the <strong>Structure</strong> object with the <code class="docutils literal">add_element()</code> method, by giving the list of nodes that the element connects to and the element type as a string. The <strong>Element</strong> objects are added to the <code class="docutils literal">.elements</code> dictionary, from the classes found in module <strong>compas_fea.structure.elements</strong>, where the class names match the string entered for <code class="docutils literal">type</code>. The element types include, amongst others, 1D elements: <strong>BeamElement</strong>, <strong>TrussElement</strong>, 2D elements: <strong>ShellElement</strong>, <strong>MembraneElement</strong>, and 3D elements: <strong>PentahedronElement</strong>, <strong>TetrahedronElement</strong>, <strong>HexahedronElement</strong>. As with nodes, the elements will be added with integer keys numbered sequentially starting from 0 (Python based).</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="k">for</span> <span class="n">uv</span> <span class="ow">in</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]:</span>
     <span class="n">mdl</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">uv</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'BeamElement'</span><span class="p">)</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'ShellElement'</span><span class="p">)</span>
-</code></pre>
-       </div>
-      </div>
-      <div class="section">
-       <h2>
-        Accessing elements
-       </h2>
-       <p>
-        The
-        <strong>
-         Element
-        </strong>
-        objects can be accessed through their integer key to get their attributes.
-       </p>
-       <div class="highlight">
-        <pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
+</code></pre></div>
+
+</div>
+<div class="section">
+<h2>Accessing elements</h2>
+<p>The <strong>Element</strong> objects can be accessed through their integer key to get their attributes.</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
 <span class="go">[3, 4]</span>
-</code></pre>
-       </div>
-       <p>
-        The number of elements in the
-        <strong>
-         Structure
-        </strong>
-        can be returned with
-        <code class="docutils literal">
-         element_count()
-        </code>
-        and an element centroid determined by the method
-        <code class="docutils literal">
-         element_centroid()
-        </code>
-        .
-       </p>
-       <div class="highlight">
-        <pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_count</span><span class="p">()</span>
+</code></pre></div>
+
+<p>The number of elements in the <strong>Structure</strong> can be returned with <code class="docutils literal">element_count()</code> and an element centroid determined by the method <code class="docutils literal">element_centroid()</code>.</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_count</span><span class="p">()</span>
 <span class="go">5</span>
-</code></pre>
-       </div>
-       <div class="highlight">
-        <pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_centroid</span><span class="p">(</span><span class="n">element</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div>
+
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_centroid</span><span class="p">(</span><span class="n">element</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="go">(-2.5, 2.5, 2.5)</span>
-</code></pre>
-       </div>
-      </div>
-      <div class="section">
-       <h2>
-        Element index
-       </h2>
-       <p>
-        A geometric key to integer key index dictionary is accessed through
-        <code class="docutils literal">
-         element_index
-        </code>
-        , where the geometric key is taken as the element centroid as above.
-       </p>
-       <div class="highlight">
-        <pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_index</span>
+</code></pre></div>
+
+</div>
+<div class="section">
+<h2>Element index</h2>
+<p>A geometric key to integer key index dictionary is accessed through <code class="docutils literal">element_index</code>, where the geometric key is taken as the element centroid as above.</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_index</span>
 <span class="go">{'-2.500,-2.500,2.500': 0,</span>
 <span class="go"> '2.500,-2.500,2.500':  1,</span>
 <span class="go"> '2.500,2.500,2.500':   2,</span>
 <span class="go"> '-2.500,2.500,2.500':  3,</span>
 <span class="go"> '0.000,-3.333,1.667':  4}</span>
-</code></pre>
-       </div>
-       <p>
-        It can be checked if an element is already present in the
-        <strong>
-         Structure
-        </strong>
-        object by a query with the method
-        <code class="docutils literal">
-         check_element_exists()
-        </code>
-        by giving the list of nodes the element would be connected to. As the check is based on the centroid of the element, it does not matter the order that the nodes are given in the list.
-        <strong>
-         Note
-        </strong>
-        : no more than one element can exist for the same nodes, i.e. no overlapping elements are allowed. If an element exists, the method will return the integer key, if not,
-        <code class="docutils literal">
-         None
-        </code>
-        will be returned.
-       </p>
-       <div class="highlight">
-        <pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+</code></pre></div>
+
+<p>It can be checked if an element is already present in the <strong>Structure</strong> object by a query with the method <code class="docutils literal">check_element_exists()</code> by giving the list of nodes the element would be connected to. As the check is based on the centroid of the element, it does not matter the order that the nodes are given in the list. <strong>Note</strong>: no more than one element can exist for the same nodes, i.e. no overlapping elements are allowed. If an element exists, the method will return the integer key, if not, <code class="docutils literal">None</code> will be returned.</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
 <span class="go">1</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 <span class="go">None</span>
-</code></pre>
-       </div>
-      </div>
-      <div class="section">
-       <h2>
-        Axes
-       </h2>
-       <p>
-        Giving a dictionary
-        <code class="docutils literal">
-         axes
-        </code>
-        when adding the element can be used to store
-        <code class="docutils literal">
-         {'ex':
-         [],
-         'ey':
-         [],
-         'ez':
-         []}
-        </code>
-        in the
-        <strong>
-         Element
-        </strong>
-        object&rsquo;s
-        <code class="docutils literal">
-         .axes
-        </code>
-        attribute. The
-        <code class="docutils literal">
-         'ex'
-        </code>
-        ,
-        <code class="docutils literal">
-         'ey'
-        </code>
-        and
-        <code class="docutils literal">
-         'ez'
-        </code>
-        lists are the element&rsquo;s local
-        <cite>
-         x
-        </cite>
-        ,
-        <cite>
-         y
-        </cite>
-        and
-        <cite>
-         z
-        </cite>
-        axes, and are used for example, when orientating cross-sections or for aligning rebar in concrete. If no
-        <code class="docutils literal">
-         axes
-        </code>
-        data are given, it is left up to the finite element solver to determine default local axes values. This default alignment is often based on the global axes of the model, thus it is important to check these defaults are suitable, especially for element geometry that does not align well with the global
-        <cite>
-         x
-        </cite>
-        ,
-        <cite>
-         y
-        </cite>
-        ,
-        <cite>
-         z
-        </cite>
-        directions.
-       </p>
-      </div>
-      <div class="section">
-       <h2>
-        Elements
-       </h2>
-       <p>
-        Additional information when defining elements s given below, with image reference from the Abaqus Documentation:
-       </p>
-       <div class="section">
-        <h3>
-         1D elements
-        </h3>
-        <p>
-         One dimensional elements such as truss and beam elements are currently first order (linear), they are defined by two nodes, the start and end points of a straight line. An internal node is currently not supported for second order (parabolic) elements. For modelling a curved beam, use many straight segments. The single integration point is at the middle of the line element.
-        </p>
-        <a class="reference internal image-reference" href="../_images/truss-element.png">
-         <img alt="../images/truss-element.png" src="../images/truss-element.png" style="width: 180.5px; height: 81.0px;"/>
-        </a>
-       </div>
-       <div class="section">
-        <h3>
-         2D elements
-        </h3>
-        <p>
-         Two dimensional elements such as membrane and shell elements are currently first order (linear), they are defined by three or four nodes. These nodes are the corners of straight-sided elements, intermediate edge nodes are currently not supported for second order (parabolic) elements. For modelling a curved edge, use many straight segments. There are three or four internal integration points.
-        </p>
-        <a class="reference internal image-reference" href="../_images/shell-element.png">
-         <img alt="../images/shell-element.png" src="../images/shell-element.png" style="width: 385.5px; height: 128.5px;"/>
-        </a>
-       </div>
-       <div class="section">
-        <h3>
-         3D elements
-        </h3>
-        <p>
-         Three dimensional solid elements are also currently first order (linear), they are defined by four nodes (
-         <strong>
-          TetrahedronElement
-         </strong>
-         with four sides), six nodes (
-         <strong>
-          PentahedronElement
-         </strong>
-         with five sides) or eight nodes (
-         <strong>
-          HexahedronElement
-         </strong>
-         with six sides). The nodes are the corners of flat-faced elements and should be added in the order shown below. Intermediate edge nodes are currently not supported for second order (parabolic) elements. For a curved edge/face, use many straight segments/faces for modelling. There is one internal integration point for a
-         <strong>
-          TetrahedronElement
-         </strong>
-         . two for a
-         <strong>
-          PentahedronElement
-         </strong>
-         and eight for a
-         <strong>
-          HexahedronElement
-         </strong>
-         .
-        </p>
-        <a class="reference internal image-reference" href="../_images/solid-element.png">
-         <img alt="../images/solid-element.png" src="../images/solid-element.png" style="width: 670.0px; height: 362.5px;"/>
-        </a>
-       </div>
-      </div>
-     </div>
-     <nav class="compas-sideways">
-      <a class="btn btn-primary compas-prev" href="displacements.html" role="button">
-       Displacements
-      </a>
-      <a class="btn btn-primary compas-next" href="loads.html" role="button">
-       Loads
-      </a>
-     </nav>
-    </main>
-    <!-- sidebar navigation -->
-    <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
-     <div class="navbar-light">
-      <form action="../search.html" class="d-flex compas-searchbox" id="" method="get">
-       <input class="form-control" name="q" placeholder="Search docs" type="text"/>
-       <input name="check_keywords" type="hidden" value="yes"/>
-       <input name="area" type="hidden" value="default"/>
-       <button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
-        <span class="navbar-toggler-icon">
-        </span>
-       </button>
-      </form>
-      <div class="navbar-expand-md">
-       <div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
-        <ul class="nav flex-column active">
-         <li class="nav-item">
-          <a class="nav-link reference internal" href="../intro.html">
-           Introduction
-          </a>
-         </li>
-         <li class="nav-item active">
-          <a class="nav-link reference internal" href="../tutorial.html">
-           Tutorial
-          </a>
-          <ul class="nav active">
-           <li class="nav-item">
-            <a class="nav-link reference internal" href="analysis.html">
-             Analysis
-            </a>
-           </li>
-           <li class="nav-item">
-            <a class="nav-link reference internal" href="cad.html">
-             CAD
-            </a>
-           </li>
-           <li class="nav-item">
-            <a class="nav-link reference internal" href="displacements.html">
-             Displacements
-            </a>
-           </li>
-           <li class="nav-item active">
-            <a class="nav-link active current reference internal" href="#">
-             Elements
-            </a>
-           </li>
-           <li class="nav-item">
-            <a class="nav-link reference internal" href="loads.html">
-             Loads
-            </a>
-           </li>
-           <li class="nav-item">
-            <a class="nav-link reference internal" href="material.html">
-             Materials
-            </a>
-           </li>
-           <li class="nav-item">
-            <a class="nav-link reference internal" href="nodes.html">
-             Nodes
-            </a>
-           </li>
-           <li class="nav-item">
-            <a class="nav-link reference internal" href="properties.html">
-             Properties
-            </a>
-           </li>
-           <li class="nav-item">
-            <a class="nav-link reference internal" href="sections.html">
-             Sections
-            </a>
-           </li>
-           <li class="nav-item">
-            <a class="nav-link reference internal" href="sets.html">
-             Sets
-            </a>
-           </li>
-           <li class="nav-item">
-            <a class="nav-link reference internal" href="setup.html">
-             Setup
-            </a>
-           </li>
-           <li class="nav-item">
-            <a class="nav-link reference internal" href="steps.html">
-             Steps
-            </a>
-           </li>
-           <li class="nav-item">
-            <a class="nav-link reference internal" href="structure.html">
-             Structure
-            </a>
-           </li>
-          </ul>
-         </li>
-         <li class="nav-item">
-          <a class="nav-link reference internal" href="../examples.html">
-           Examples
-          </a>
-         </li>
-         <li class="nav-item">
-          <a class="nav-link reference internal" href="../reference.html">
-           Reference
-          </a>
-         </li>
-         <li class="nav-item">
-          <a class="nav-link reference internal" href="../license.html">
-           License
-          </a>
-         </li>
-        </ul>
-       </div>
-      </div>
-     </div>
-    </div>
-    <!-- toc of current page -->
-    <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
-     <ul class="nav flex-column" id="compas-localnav">
-      <li class="nav-item">
-       <a class="nav-link reference internal" href="#">
-        Elements
-       </a>
-       <ul class="nav">
-        <li class="nav-item">
-         <a class="nav-link reference internal" href="#adding-elements">
-          Adding elements
-         </a>
-        </li>
-        <li class="nav-item">
-         <a class="nav-link reference internal" href="#accessing-elements">
-          Accessing elements
-         </a>
-        </li>
-        <li class="nav-item">
-         <a class="nav-link reference internal" href="#element-index">
-          Element index
-         </a>
-        </li>
-        <li class="nav-item">
-         <a class="nav-link reference internal" href="#axes">
-          Axes
-         </a>
-        </li>
-        <li class="nav-item">
-         <a class="nav-link reference internal" href="#id1">
-          Elements
-         </a>
-         <ul class="nav">
-          <li class="nav-item">
-           <a class="nav-link reference internal" href="#d-elements">
-            1D elements
-           </a>
-          </li>
-          <li class="nav-item">
-           <a class="nav-link reference internal" href="#id2">
-            2D elements
-           </a>
-          </li>
-          <li class="nav-item">
-           <a class="nav-link reference internal" href="#id3">
-            3D elements
-           </a>
-          </li>
-         </ul>
-        </li>
-       </ul>
-      </li>
-     </ul>
-    </div>
-   </div>
-  </div>
-  <footer class="compas-footer">
-   &copy; Copyright 2017, Block Research Group.
+</code></pre></div>
+
+</div>
+<div class="section">
+<h2>Axes</h2>
+<p>Giving a dictionary <code class="docutils literal">axes</code> when adding the element can be used to store <code class="docutils literal">{'ex': [], 'ey': [], 'ez': []}</code> in the <strong>Element</strong> object’s <code class="docutils literal">.axes</code> attribute. The <code class="docutils literal">'ex'</code>, <code class="docutils literal">'ey'</code> and <code class="docutils literal">'ez'</code> lists are the element’s local <cite>x</cite>, <cite>y</cite> and <cite>z</cite> axes, and are used for example, when orientating cross-sections or for aligning rebar in concrete. If no <code class="docutils literal">axes</code> data are given, it is left up to the finite element solver to determine default local axes values. This default alignment is often based on the global axes of the model, thus it is important to check these defaults are suitable, especially for element geometry that does not align well with the global <cite>x</cite>, <cite>y</cite>, <cite>z</cite> directions.</p>
+</div>
+<div class="section">
+<h2>Elements</h2>
+<p>Additional information when defining elements s given below, with image reference from the Abaqus Documentation:</p>
+<div class="section">
+<h3>1D elements</h3>
+<p>One dimensional elements such as truss and beam elements are currently first order (linear), they are defined by two nodes, the start and end points of a straight line. An internal node is currently not supported for second order (parabolic) elements. For modelling a curved beam, use many straight segments. The single integration point is at the middle of the line element.</p>
+<a class="reference internal image-reference" href="../_images/truss-element.png"><img alt="../images/truss-element.png" src="../images/truss-element.png" style="width: 180.5px; height: 81.0px;"/></a>
+</div>
+<div class="section">
+<h3>2D elements</h3>
+<p>Two dimensional elements such as membrane and shell elements are currently first order (linear), they are defined by three or four nodes. These nodes are the corners of straight-sided elements, intermediate edge nodes are currently not supported for second order (parabolic) elements. For modelling a curved edge, use many straight segments. There are three or four internal integration points.</p>
+<a class="reference internal image-reference" href="../_images/shell-element.png"><img alt="../images/shell-element.png" src="../images/shell-element.png" style="width: 385.5px; height: 128.5px;"/></a>
+</div>
+<div class="section">
+<h3>3D elements</h3>
+<p>Three dimensional solid elements are also currently first order (linear), they are defined by four nodes (<strong>TetrahedronElement</strong> with four sides), six nodes (<strong>PentahedronElement</strong> with five sides) or eight nodes (<strong>HexahedronElement</strong> with six sides). The nodes are the corners of flat-faced elements and should be added in the order shown below. Intermediate edge nodes are currently not supported for second order (parabolic) elements. For a curved edge/face, use many straight segments/faces for modelling. There is one internal integration point for a <strong>TetrahedronElement</strong>. two for a <strong>PentahedronElement</strong> and eight for a <strong>HexahedronElement</strong>.</p>
+<a class="reference internal image-reference" href="../_images/solid-element.png"><img alt="../images/solid-element.png" src="../images/solid-element.png" style="width: 670.0px; height: 362.5px;"/></a>
+</div>
+</div>
+</div>
+<nav class="compas-sideways">
+<a class="btn btn-primary compas-prev" href="displacements.html" role="button">Displacements</a>
+<a class="btn btn-primary compas-next" href="loads.html" role="button">Loads</a>
+</nav>
+</main>
+<!-- sidebar navigation -->
+<div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
+<div class="navbar-light">
+<form action="../search.html" class="d-flex compas-searchbox" id="" method="get">
+<input class="form-control" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+<button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+</form>
+<div class="navbar-expand-md">
+<div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
+<ul class="nav flex-column active">
+<li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
+<li class="nav-item active"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a><ul class="nav active">
+<li class="nav-item"><a class="nav-link reference internal" href="analysis.html">Analysis</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="cad.html">CAD</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="displacements.html">Displacements</a></li>
+<li class="nav-item active"><a class="nav-link active current reference internal" href="#">Elements</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="loads.html">Loads</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="material.html">Materials</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="nodes.html">Nodes</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="properties.html">Properties</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="sections.html">Sections</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="sets.html">Sets</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="setup.html">Setup</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="steps.html">Steps</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="structure.html">Structure</a></li>
+</ul>
+</li>
+<li class="nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- toc of current page -->
+<div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+<ul class="nav flex-column" id="compas-localnav">
+<li class="nav-item"><a class="nav-link reference internal" href="#">Elements</a><ul class="nav">
+<li class="nav-item"><a class="nav-link reference internal" href="#adding-elements">Adding elements</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#accessing-elements">Accessing elements</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#element-index">Element index</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#axes">Axes</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#id1">Elements</a><ul class="nav">
+<li class="nav-item"><a class="nav-link reference internal" href="#d-elements">1D elements</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#id2">2D elements</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#id3">3D elements</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<footer class="compas-footer">
+            
+                
+                    © Copyright 2017, Block Research Group.
                 
             
 
@@ -556,14 +192,11 @@
             
 
             
-                Created using
-   <a href="http://sphinx-doc.org/">
-    Sphinx
-   </a>
-   1.5.1.
-  </footer>
-  <script type="text/javascript">
-   var DOCUMENTATION_OPTIONS = {
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+            
+        </footer>
+<script type="text/javascript">
+              var DOCUMENTATION_OPTIONS = {
                 URL_ROOT:    '',
                 VERSION:     '',
                 COLLAPSE_INDEX: false,
@@ -571,28 +204,20 @@
                 HAS_SOURCE:  true,
                 SOURCELINK_SUFFIX: '.txt'
               };
-  </script>
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js">
-  </script>
-  <script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js">
-  </script>
-  <script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js">
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js">
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js">
-  </script>
-  <script src="https://compas-dev.github.io/js/underscore.js">
-  </script>
-  <script src="https://compas-dev.github.io/js/doctools.js">
-  </script>
-  <script src="https://compas-dev.github.io/js/searchtools_.js">
-  </script>
-  <script>
-   hljs.initHighlightingOnLoad();
+            </script>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+<script src="https://compas-dev.github.io/js/underscore.js"></script>
+<script src="https://compas-dev.github.io/js/doctools.js"></script>
+<script src="https://compas-dev.github.io/js/searchtools_.js"></script>
+<script>
+                hljs.initHighlightingOnLoad();
                 anchors.add();
-  </script>
- </body>
+            </script>
+</body>
 </html>

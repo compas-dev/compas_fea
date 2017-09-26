@@ -128,4 +128,5 @@ for path, dirs, files in os.walk('../'):
                             parent.unwrap()
 
             with open(filepath, 'w') as fp:
-                fp.write(soup.prettify(formatter='html'))
+                fp.write(str(soup))
+                # fp.write(soup.prettify(formatter='html'))

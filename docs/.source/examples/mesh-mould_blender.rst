@@ -8,4 +8,4 @@ mesh-mould Blender
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/mesh/mesh-mould_abaqus_blender.py
+.. literalinclude:: /../../examples/mesh-mould_abaqus_blender.py

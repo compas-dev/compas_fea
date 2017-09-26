@@ -8,4 +8,4 @@ mesh-triangle Blender
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/mesh/mesh-tris_abaqus_blender.py
+.. literalinclude:: /../../examples/mesh-tris_abaqus_blender.py

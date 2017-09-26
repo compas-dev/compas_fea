@@ -8,5 +8,5 @@ truss-tower Rhino
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/truss/truss-tower_abaqus_rhino.py
+.. literalinclude:: /../../examples/truss-tower_abaqus_rhino.py
 

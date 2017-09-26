@@ -8,4 +8,4 @@ beam-simple Rhino
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/beam/beam-simple_abaqus_rhino.py
+.. literalinclude:: /../../examples/beam-simple_abaqus_rhino.py

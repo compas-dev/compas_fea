@@ -8,4 +8,4 @@ beam-tree Rhino
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/beam/beam-tree_abaqus_rhino.py
+.. literalinclude:: /../../examples/beam-tree_abaqus_rhino.py
