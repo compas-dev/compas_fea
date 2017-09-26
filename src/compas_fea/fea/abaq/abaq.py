@@ -2,6 +2,9 @@
 compas_fea.fea.abaq : Abaqus .inp file creator.
 """
 
+from __future__ import print_function
+from __future__ import absolute_import
+
 from math import pi
 
 
@@ -12,20 +15,20 @@ __email__      = 'liew@arch.ethz.ch'
 
 
 __all__ = [
-    'inp_constraints',
-    'inp_elements',
+    'inp_write_constraints',
+    'inp_write_elements',
     'inp_generate',
-    'inp_heading',
-    'inp_materials',
-    'inp_misc',
-    'inp_nodes',
-    'inp_properties',
-    'inp_sets',
-    'inp_steps'
+    'inp_write_heading',
+    'inp_write_materials',
+    'inp_write_misc',
+    'inp_write_nodes',
+    'inp_write_properties',
+    'inp_write_sets',
+    'inp_write_steps'
 ]
 
 
-def inp_constraints(f, constraints):
+def inp_write_constraints(f, constraints):
     """ Writes the constraints information to the Abaqus .inp file.
 
     Parameters:
@@ -56,7 +59,7 @@ def inp_constraints(f, constraints):
     f.write('**\n')
 
 
-def inp_elements(f, elements):
+def inp_write_elements(f, elements):
     """ Writes the element information to the Abaqus .inp file.
 
     Note:
@@ -150,19 +153,34 @@ def inp_generate(structure, filename, units='m'):
         None
     """
     with open(filename, 'w') as f:
-        inp_heading(f)
-        inp_nodes(f, structure.nodes, units)
-        inp_elements(f, structure.elements)
-        inp_sets(f, structure.sets)
-        inp_materials(f, structure.materials)
-        inp_misc(f, structure.misc)
-        inp_properties(f, structure.sections, structure.element_properties, structure.elements, structure.sets)
-        inp_constraints(f, structure.constraints)
-        inp_steps(f, structure.steps, structure.loads, structure.displacements, structure.interactions, structure.misc)
+
+        constraints = structure.constraints
+        displacements = structure.displacements
+        elements = structure.elements
+        interactions = structure.interactions
+        loads = structure.loads
+        materials = structure.materials
+        misc = structure.misc
+        nodes = structure.nodes
+        properties = structure.element_properties
+        sections = structure.sections
+        sets = structure.sets
+        steps = structure.steps
+
+        inp_write_heading(f)
+        inp_write_nodes(f, nodes, units)
+        inp_write_elements(f, elements)
+        inp_write_sets(f, sets)
+        inp_write_materials(f, materials)
+        inp_write_misc(f, misc)
+        inp_write_properties(f, sections, properties, elements, sets)
+        inp_write_constraints(f, constraints)
+        inp_write_steps(f, steps, loads, displacements, interactions, misc)
+
     print('***** Abaqus input file generated: {0} *****\n'.format(filename))
 
 
-def inp_heading(f):
+def inp_write_heading(f):
     """ Creates the Abaqus .inp file heading.
 
     Parameters:
@@ -189,7 +207,7 @@ def inp_heading(f):
     f.write('**\n')
 
 
-def inp_materials(f, materials):
+def inp_write_materials(f, materials):
     """ Writes materials to the Abaqus .inp file.
 
     Parameters:
@@ -321,7 +339,7 @@ def inp_materials(f, materials):
         f.write('**\n')
 
 
-def inp_misc(f, misc):
+def inp_write_misc(f, misc):
     """ Writes misc class info to the Abaqus .inp file.
 
     Parameters:
@@ -352,7 +370,7 @@ def inp_misc(f, misc):
         f.write('**\n')
 
 
-def inp_nodes(f, nodes, units):
+def inp_write_nodes(f, nodes, units):
     """ Writes the nodal co-ordinates information to the Abaqus .inp file.
 
     Note:
@@ -379,7 +397,7 @@ def inp_nodes(f, nodes, units):
     f.write('**\n')
 
 
-def inp_properties(f, sections, properties, elements, sets):
+def inp_write_properties(f, sections, properties, elements, sets):
     """ Writes the section information to the Abaqus .inp file.
 
     Parameters:
@@ -494,7 +512,7 @@ def inp_properties(f, sections, properties, elements, sets):
         f.write('**\n')
 
 
-def inp_sets(f, sets):
+def inp_write_sets(f, sets):
     """ Creates the Abaqus .inp file node sets NSETs and element sets ELSETs.
 
     Note:
@@ -548,7 +566,7 @@ def inp_sets(f, sets):
     f.write('**\n')
 
 
-def inp_steps(f, steps, loads, displacements, interactions, misc):
+def inp_write_steps(f, steps, loads, displacements, interactions, misc):
     """ Writes step information to the Abaqus .inp file.
 
     Note:

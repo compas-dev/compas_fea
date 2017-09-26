@@ -1,5 +1,8 @@
 """compas_fea.structure.results"""
 
+from __future__ import print_function
+from __future__ import absolute_import
+
 from compas_fea.fea.ansys.reading import *
 
 __author__     = ['Tomas Mendez <mendez@arch.ethz.ch>']
@@ -15,7 +18,6 @@ __all__ = [
 
 class NodalResults(object):
     def __init__(self):
-
         """ Initialises Results object for use in finite element analysis.
 
         Parameters:
@@ -59,4 +61,4 @@ if __name__ == '__main__':
     path = '/Users/mtomas/Desktop/ansys_test/'
     res = NodalResults()
     res.load_results_from_files('ansys', path, stresses=True)
-    print res.stresses
+    print(res.stresses)

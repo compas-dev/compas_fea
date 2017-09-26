@@ -2,6 +2,9 @@
 compas_fea.cad.rhino : Rhinoceros specific functions.
 """
 
+from __future__ import print_function
+from __future__ import absolute_import
+
 from subprocess import Popen
 from subprocess import PIPE
 
@@ -390,7 +393,7 @@ def plot_data(structure, path, name, step, field='U', component='magnitude', sca
             elif field in element_fields:
                 col = celements[int(ekey)]
                 rs.MeshVertexColors(guid, [col] * 8)
-        
+
         elif n == 3:
             mesh_faces.append(nodes + [nodes[-1]])
 

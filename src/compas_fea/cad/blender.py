@@ -2,19 +2,22 @@
 compas_fea.cad.blender : Blender specific functions.
 """
 
+from __future__ import print_function
+from __future__ import absolute_import
+
 from compas_blender.geometry import bmesh_data
 from compas_blender.geometry.mesh import colour_bmesh_vertices
 
+from compas_blender.helpers import mesh_from_bmesh
+
+from compas_blender.utilities import clear_layers
 from compas_blender.utilities import delete_all_materials
+from compas_blender.utilities import draw_bmesh
 from compas_blender.utilities import draw_cuboid
 from compas_blender.utilities import draw_pipes
-from compas_blender.utilities import draw_bmesh
 from compas_blender.utilities import get_objects
 from compas_blender.utilities import get_objects_locations
 from compas_blender.utilities import xdraw_texts
-from compas_blender.utilities import clear_layers
-
-from compas_blender.helpers import mesh_from_bmesh
 
 from compas_fea.utilities.functions import colorbar
 from compas_fea.utilities.functions import extrude_mesh
@@ -26,10 +29,10 @@ from numpy import array
 from numpy import newaxis
 
 try:
-    from meshpy.tet import MeshInfo
     from meshpy.tet import build
+    from meshpy.tet import MeshInfo
 except ImportError:
-    print('***** meshpy not imported *****')
+    print('***** MeshPy not imported *****')
 
 import json
 

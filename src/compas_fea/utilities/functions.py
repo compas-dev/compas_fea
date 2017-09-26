@@ -3,19 +3,22 @@ compas_fea.utilities.functions
 Support functions for the compas_fea package.
 """
 
+from __future__ import print_function
+from __future__ import absolute_import
+
 from compas.datastructures.network.algorithms import network_dijkstra_path
 
 from compas.geometry import add_vectors
+from compas.geometry import angles_points_xy
 from compas.geometry import area_polygon_xy
 from compas.geometry import centroid_points
+from compas.geometry import circle_from_points_xy
 from compas.geometry import cross_vectors
 from compas.geometry import distance_point_point
 from compas.geometry import length_vector
 from compas.geometry import normalize_vector
 from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
-from compas.geometry import angles_points_xy
-from compas.geometry import circle_from_points_xy
 
 from compas.utilities import geometric_key
 
@@ -46,11 +49,11 @@ try:
     from numpy.linalg import inv
 except ImportError:
     print('***** NumPy functions not imported *****')
-    
-try:    
+
+try:
     from scipy.interpolate import griddata
-    from scipy.sparse import find
     from scipy.sparse import csr_matrix
+    from scipy.sparse import find
     from scipy.spatial import Delaunay
     from scipy.spatial import distance_matrix
 except ImportError:
@@ -82,6 +85,7 @@ __all__ = [
     'extrude_mesh'
 ]
 
+
 node_fields = ['RF', 'RM', 'U', 'UR', 'CF', 'CM']
 element_fields = ['SF', 'SM', 'SK', 'SE', 'S', 'E', 'PE', 'RBFOR']
 
@@ -110,246 +114,6 @@ def colorbar(fsc, input='array', type=255):
         green = max([0, min([1, green])])
         blue = max([0, min([1, blue])])
         return [i * type for i in [red, green, blue]]
-
-
-def load_data(temp, name, step, field, component):
-    """ Load data from .json results files.
-
-    Parameters:
-        temp (str): Folder where .json results files are stored.
-        name (str): Structure name.
-        step (str): Name of the Step.
-        field (str): Results to plot, e.g. 'U', 'S', 'SM'.
-        component (str): The component to plot, e.g. 'U1', 'RF2'.
-
-    Returns:
-        array: Original nodal [x, y, z] co-ordinates.
-        array: Relative nodal displacements [Ux, Uy, Uz].
-        list: Node numbers of each element.
-        dic: Complete unprocessed data for field and component.
-        int: Number of nodes
-    """
-    with open('{0}{1}-nodes.json'.format(temp, name), 'r') as f:
-        nodes = json.load(f)
-    with open('{0}{1}-elements.json'.format(temp, name), 'r') as f:
-        elements = json.load(f)
-    with open('{0}{1}-{2}-U.json'.format(temp, name, step), 'r') as f:
-        u = json.load(f)
-    with open('{0}{1}-{2}-{3}.json'.format(temp, name, step, field), 'r') as f:
-        data = json.load(f)[component]
-
-    nkeys = sorted(nodes, key=int)
-    ekeys = sorted(elements, key=int)
-    X = array([nodes[nkey] for nkey in nkeys])
-    U = array([[u[i][nkey] for i in ['U1', 'U2', 'U3']] for nkey in nkeys])
-    enodes = [elements[ekey] for ekey in ekeys]
-
-    return X, U, enodes, data, len(nkeys)
-
-
-def network_order(sp_xyz, structure, network):
-    """ Extract node and element orders from a Network for a given start-point.
-
-    Parameters:
-        sp_xyz (list): Start point co-ordinates.
-        structure (obj): Structure object.
-        network (obj): Network object.
-
-    Returns:
-        list: Ordered nodes.
-        list: Ordered elements.
-        list: Cumulative lengths at element mid-points.
-        float: Total length.
-    """
-    nodes, elements, arclengths, L = [], [], [], 0
-    sp_gkey = geometric_key(sp_xyz, '{0}f'.format(structure.tol))
-    leaves = network.leaves()
-    leaves_xyz = [network.vertex_coordinates(i) for i in leaves]
-    leaves_gkey = [geometric_key(i, '{0}f'.format(structure.tol)) for i in leaves_xyz]
-    sp = leaves[leaves_gkey.index(sp_gkey)]
-    leaves.remove(sp)
-    ep = leaves[0]
-    weight = dict(((u, v), 1) for u, v in network.edges())
-    weight.update({(v, u): weight[(u, v)] for u, v in network.edges()})
-    path = network_dijkstra_path(network.adjacency, weight, sp, ep)
-    nodes = [structure.check_node_exists(network.vertex_coordinates(i)) for i in path]
-    for i in range(len(nodes) - 1):
-        sp = nodes[i]
-        ep = nodes[i + 1]
-        elements.append(structure.check_element_exists([sp, ep]))
-        xyz_sp = structure.node_xyz(sp)
-        xyz_ep = structure.node_xyz(ep)
-        dL = distance_point_point(xyz_sp, xyz_ep)
-        arclengths.append(L + dL / 2.)
-        L += dL
-    return nodes, elements, arclengths, L
-
-
-def postprocess(temp, name, step, field, component, scale, iptype, nodal, cmin, cmax, type, input='array'):
-    """ Post-process data from analysis results for given step and field.
-
-    Parameters:
-        temp (str): Folder of saved raw data.
-        name (str): Structure name.
-        step (str): Name of the Step.
-        field (str): Results to plot, e.g. 'U', 'S', 'SM'.
-        component (str): The component to plot, e.g. 'U1', 'RF2'.
-        scale (float): Scale displacements for the deformed plot.
-        iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
-        nodal (str): 'mean', 'max' or 'min' for nodal values.
-        cmin (float): Minimum cap on colorbar.
-        cmax (float): Maximum cap on colorbar.
-        type (int): RGB type, 1 or 255.
-
-    Returns:
-        float: toc for time taken to process data.
-        array: Colors for node data.
-        array: Colors for element data.
-        array: Colors for nodal data.
-        float: Absolute max node or element data value.
-        float: Absolute max nodal data value.
-        array: Scaled nodal displacements.
-        array: Scaled node or element data.
-        array: Scaled nodal data.
-    """
-    tic = time()
-    X, dU, enodes, data, n = load_data(temp, name, step, field, component)
-    U = X + dU * float(scale)
-    fnodes, felements, fnodal = process_data(field, data, iptype, nodal, enodes, n)
-
-    if field in node_fields:
-        fscaled, fabs = normalise_data(data=fnodes, cmin=cmin, cmax=cmax)
-        cnodes = colorbar(fsc=fscaled, input=input, type=type)
-        cnodal, celements = None, None
-        nabs, nscaled = None, None
-
-    elif field in element_fields:
-        fscaled, fabs = normalise_data(data=felements, cmin=cmin, cmax=cmax)
-        nscaled, nabs = normalise_data(data=fnodal, cmin=cmin, cmax=cmax)
-        cnodes = None
-        celements = colorbar(fsc=fscaled, input=input, type=type)
-        cnodal = colorbar(fsc=nscaled, input=input, type=type)
-
-    toc = time() - tic
-    return toc, cnodes, celements, cnodal, fabs, nabs, U, fscaled, nscaled
-
-
-def process_data(field, data, iptype, nodal, enodes, n):
-    """ Processes the raw data.
-
-    Parameters:
-        field (str): Data field to process, e.g. 'U', 'S', 'SM'.
-        data (dic): Unprocessed data.
-        iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
-        nodal (str): 'mean', 'max' or 'min' for nodal values.
-        enodes (list): Node numbers for each element.
-        n (int): Number of nodes.
-
-    Returns:
-        array: Data at each node.
-        array: Data at each element.
-        array: Data at each node from elements.
-    """
-    dkeys = sorted(data, key=int)
-
-    if field in node_fields:
-        felements, fnodal = None, None
-        fnodes = array([data[dkey] for dkey in dkeys])[:, newaxis]
-
-    elif field in element_fields:
-        fnodes = None
-        m = len(dkeys)
-        felements = zeros((m, 1))
-        for dkey in dkeys:
-            fdata = list(data[dkey].values())
-            for i in range(len(fdata)):
-                if fdata[i] is None:
-                    fdata[i] = 0
-            if iptype == 'max':
-                value = max(fdata)
-            elif iptype == 'min':
-                value = min(fdata)
-            elif iptype == 'mean':
-                value = sum(fdata) / len(fdata)
-            felements[int(dkey)] = value
-        srows, scols = [], []
-        for c, i in enumerate(enodes):
-            srows.extend([c] * len(i))
-            scols.extend(i)
-        sdata = [1] * len(srows)
-        A = csr_matrix((sdata, (srows, scols)), shape=(m, n))
-        AT = A.transpose()
-        if nodal == 'mean':
-            fnodal = AT.dot(felements) / sum(AT, 1)
-        else:
-            rows, cols, vals = find(AT)
-            dic = {i: [] for i in range(n)}
-            for row, col in zip(rows, cols):
-                dic[row].append(felements[col, 0])
-            fnodal = zeros((n, 1))
-            for i in range(n):
-                if nodal == 'max':
-                    fnodal[i] = max(dic[i])
-                elif nodal == 'min':
-                    fnodal[i] = min(dic[i])
-    return fnodes, felements, fnodal
-
-
-def normalise_data(data, cmin, cmax):
-    """ Normalise a vector of data to between -1 and 1.
-
-    Parameters:
-        data (array): Unscaled (n x 1) data.
-        cmin (float): Cap data values >= cmin.
-        cmax (float): Cap data values <= cmax.
-
-    Returns:
-        array: -1 to 1 scaled data.
-        float: The maximum absolute unscaled value.
-    """
-    f = asarray(data)
-    fmax = cmax if cmax is not None else max(abs(f))
-    fmin = cmin if cmin is not None else min(abs(f))
-    fabs = max([abs(fmin), abs(fmax)])
-    fscaled = f / fabs if fabs else f
-    fscaled[fscaled > +1] = +1
-    fscaled[fscaled < -1] = -1
-    return fscaled, fabs
-
-
-def voxels(values, vmin, U, vdx, plot=None, indexing=None):
-    """ Plot normalised [0 1] values as voxel data.
-
-    Parameters:
-        values (array): Normalised data at nodes.
-        vmin (float): Cull values below vmin.
-        U (array): Nodal co-ordinates.
-        vdx (float): Spacing of voxel grid.
-        plot (str): 'mayavi'.
-
-    Returns:
-        None
-    """
-    x = U[:, 0]
-    y = U[:, 1]
-    z = U[:, 2]
-    xmin, xmax = min(x), max(x)
-    ymin, ymax = min(y), max(y)
-    zmin, zmax = min(z), max(z)
-    X = linspace(xmin, xmax, (xmax - xmin) / vdx)
-    Y = linspace(ymin, ymax, (ymax - ymin) / vdx)
-    Z = linspace(zmin, zmax, (zmax - zmin) / vdx)
-    if indexing is None:
-        Xm, Ym, Zm = meshgrid(X, Y, Z)
-    else:
-        Zm, Ym, Xm = meshgrid(X, Y, Z, indexing=indexing)
-    f = abs(asarray(values))
-    Am = squeeze(griddata(U, f, (Xm, Ym, Zm), method='linear', fill_value=0))
-    Am[isnan(Am)] = 0
-    if plot == 'mayavi':
-        mlab.pipeline.volume(mlab.pipeline.scalar_field(Am), vmin=vmin)
-        mlab.show()
-    return Am
 
 
 def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations=100):
@@ -506,6 +270,247 @@ def extrude_mesh(structure, mesh, nz, dz):
             structure.add_element(nodes, element_type, acoustic=False, thermal=False)
 
 
+def load_data(temp, name, step, field, component):
+    """ Load data from .json results files.
+
+    Parameters:
+        temp (str): Folder where .json results files are stored.
+        name (str): Structure name.
+        step (str): Name of the Step.
+        field (str): Results to plot, e.g. 'U', 'S', 'SM'.
+        component (str): The component to plot, e.g. 'U1', 'RF2'.
+
+    Returns:
+        array: Original nodal [x, y, z] co-ordinates.
+        array: Relative nodal displacements [Ux, Uy, Uz].
+        list: Node numbers of each element.
+        dic: Complete unprocessed data for field and component.
+        int: Number of nodes
+    """
+    with open('{0}{1}-nodes.json'.format(temp, name), 'r') as f:
+        nodes = json.load(f)
+    with open('{0}{1}-elements.json'.format(temp, name), 'r') as f:
+        elements = json.load(f)
+    with open('{0}{1}-{2}-U.json'.format(temp, name, step), 'r') as f:
+        u = json.load(f)
+    with open('{0}{1}-{2}-{3}.json'.format(temp, name, step, field), 'r') as f:
+        data = json.load(f)[component]
+
+    nkeys = sorted(nodes, key=int)
+    ekeys = sorted(elements, key=int)
+    X = array([nodes[nkey] for nkey in nkeys])
+    U = array([[u[i][nkey] for i in ['U1', 'U2', 'U3']] for nkey in nkeys])
+    enodes = [elements[ekey] for ekey in ekeys]
+
+    return X, U, enodes, data, len(nkeys)
+
+
+def network_order(sp_xyz, structure, network):
+    """ Extract node and element orders from a Network for a given start-point.
+
+    Parameters:
+        sp_xyz (list): Start point co-ordinates.
+        structure (obj): Structure object.
+        network (obj): Network object.
+
+    Returns:
+        list: Ordered nodes.
+        list: Ordered elements.
+        list: Cumulative lengths at element mid-points.
+        float: Total length.
+    """
+    nodes, elements, arclengths, L = [], [], [], 0
+    sp_gkey = geometric_key(sp_xyz, '{0}f'.format(structure.tol))
+    leaves = network.leaves()
+    leaves_xyz = [network.vertex_coordinates(i) for i in leaves]
+    leaves_gkey = [geometric_key(i, '{0}f'.format(structure.tol)) for i in leaves_xyz]
+    sp = leaves[leaves_gkey.index(sp_gkey)]
+    leaves.remove(sp)
+    ep = leaves[0]
+    weight = dict(((u, v), 1) for u, v in network.edges())
+    weight.update({(v, u): weight[(u, v)] for u, v in network.edges()})
+    path = network_dijkstra_path(network.adjacency, weight, sp, ep)
+    nodes = [structure.check_node_exists(network.vertex_coordinates(i)) for i in path]
+
+    for i in range(len(nodes) - 1):
+        sp = nodes[i]
+        ep = nodes[i + 1]
+        elements.append(structure.check_element_exists([sp, ep]))
+        xyz_sp = structure.node_xyz(sp)
+        xyz_ep = structure.node_xyz(ep)
+        dL = distance_point_point(xyz_sp, xyz_ep)
+        arclengths.append(L + dL / 2.)
+        L += dL
+    return nodes, elements, arclengths, L
+
+
+def normalise_data(data, cmin, cmax):
+    """ Normalise a vector of data to between -1 and 1.
+
+    Parameters:
+        data (array): Unscaled (n x 1) data.
+        cmin (float): Cap data values >= cmin.
+        cmax (float): Cap data values <= cmax.
+
+    Returns:
+        array: -1 to 1 scaled data.
+        float: The maximum absolute unscaled value.
+    """
+    f = asarray(data)
+    fmax = cmax if cmax is not None else max(abs(f))
+    fmin = cmin if cmin is not None else min(abs(f))
+    fabs = max([abs(fmin), abs(fmax)])
+    fscaled = f / fabs if fabs else f
+    fscaled[fscaled > +1] = +1
+    fscaled[fscaled < -1] = -1
+    return fscaled, fabs
+
+
+def postprocess(temp, name, step, field, component, scale, iptype, nodal, cmin, cmax, type, input='array'):
+    """ Post-process data from analysis results for given step and field.
+
+    Parameters:
+        temp (str): Folder of saved raw data.
+        name (str): Structure name.
+        step (str): Name of the Step.
+        field (str): Results to plot, e.g. 'U', 'S', 'SM'.
+        component (str): The component to plot, e.g. 'U1', 'RF2'.
+        scale (float): Scale displacements for the deformed plot.
+        iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
+        nodal (str): 'mean', 'max' or 'min' for nodal values.
+        cmin (float): Minimum cap on colorbar.
+        cmax (float): Maximum cap on colorbar.
+        type (int): RGB type, 1 or 255.
+
+    Returns:
+        float: toc for time taken to process data.
+        array: Colors for node data.
+        array: Colors for element data.
+        array: Colors for nodal data.
+        float: Absolute max node or element data value.
+        float: Absolute max nodal data value.
+        array: Scaled nodal displacements.
+        array: Scaled node or element data.
+        array: Scaled nodal data.
+    """
+    tic = time()
+    X, dU, enodes, data, n = load_data(temp, name, step, field, component)
+    U = X + dU * float(scale)
+    fnodes, felements, fnodal = process_data(field, data, iptype, nodal, enodes, n)
+
+    if field in node_fields:
+        fscaled, fabs = normalise_data(data=fnodes, cmin=cmin, cmax=cmax)
+        cnodes = colorbar(fsc=fscaled, input=input, type=type)
+        cnodal, celements = None, None
+        nabs, nscaled = None, None
+
+    elif field in element_fields:
+        fscaled, fabs = normalise_data(data=felements, cmin=cmin, cmax=cmax)
+        nscaled, nabs = normalise_data(data=fnodal, cmin=cmin, cmax=cmax)
+        cnodes = None
+        celements = colorbar(fsc=fscaled, input=input, type=type)
+        cnodal = colorbar(fsc=nscaled, input=input, type=type)
+
+    toc = time() - tic
+    return toc, cnodes, celements, cnodal, fabs, nabs, U, fscaled, nscaled
+
+
+def process_data(field, data, iptype, nodal, enodes, n):
+    """ Processes the raw data.
+
+    Parameters:
+        field (str): Data field to process, e.g. 'U', 'S', 'SM'.
+        data (dic): Unprocessed data.
+        iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
+        nodal (str): 'mean', 'max' or 'min' for nodal values.
+        enodes (list): Node numbers for each element.
+        n (int): Number of nodes.
+
+    Returns:
+        array: Data at each node.
+        array: Data at each element.
+        array: Data at each node from elements.
+    """
+    dkeys = sorted(data, key=int)
+
+    if field in node_fields:
+        felements, fnodal = None, None
+        fnodes = array([data[dkey] for dkey in dkeys])[:, newaxis]
+
+    elif field in element_fields:
+        fnodes = None
+        m = len(dkeys)
+        felements = zeros((m, 1))
+        for dkey in dkeys:
+            fdata = list(data[dkey].values())
+            for i in range(len(fdata)):
+                if fdata[i] is None:
+                    fdata[i] = 0
+            if iptype == 'max':
+                value = max(fdata)
+            elif iptype == 'min':
+                value = min(fdata)
+            elif iptype == 'mean':
+                value = sum(fdata) / len(fdata)
+            felements[int(dkey)] = value
+        srows, scols = [], []
+        for c, i in enumerate(enodes):
+            srows.extend([c] * len(i))
+            scols.extend(i)
+        sdata = [1] * len(srows)
+        A = csr_matrix((sdata, (srows, scols)), shape=(m, n))
+        AT = A.transpose()
+        if nodal == 'mean':
+            fnodal = AT.dot(felements) / sum(AT, 1)
+        else:
+            rows, cols, vals = find(AT)
+            dic = {i: [] for i in range(n)}
+            for row, col in zip(rows, cols):
+                dic[row].append(felements[col, 0])
+            fnodal = zeros((n, 1))
+            for i in range(n):
+                if nodal == 'max':
+                    fnodal[i] = max(dic[i])
+                elif nodal == 'min':
+                    fnodal[i] = min(dic[i])
+    return fnodes, felements, fnodal
+
+
+def voxels(values, vmin, U, vdx, plot=None, indexing=None):
+    """ Plot normalised [0 1] values as voxel data.
+
+    Parameters:
+        values (array): Normalised data at nodes.
+        vmin (float): Cull values below vmin.
+        U (array): Nodal co-ordinates.
+        vdx (float): Spacing of voxel grid.
+        plot (str): 'mayavi'.
+
+    Returns:
+        None
+    """
+    x = U[:, 0]
+    y = U[:, 1]
+    z = U[:, 2]
+    xmin, xmax = min(x), max(x)
+    ymin, ymax = min(y), max(y)
+    zmin, zmax = min(z), max(z)
+    X = linspace(xmin, xmax, (xmax - xmin) / vdx)
+    Y = linspace(ymin, ymax, (ymax - ymin) / vdx)
+    Z = linspace(zmin, zmax, (zmax - zmin) / vdx)
+    if indexing is None:
+        Xm, Ym, Zm = meshgrid(X, Y, Z)
+    else:
+        Zm, Ym, Xm = meshgrid(X, Y, Z, indexing=indexing)
+    f = abs(asarray(values))
+    Am = squeeze(griddata(U, f, (Xm, Ym, Zm), method='linear', fill_value=0))
+    Am[isnan(Am)] = 0
+    if plot == 'mayavi':
+        mlab.pipeline.volume(mlab.pipeline.scalar_field(Am), vmin=vmin)
+        mlab.show()
+    return Am
+
+
 # ==============================================================================
 # Debugging
 # ==============================================================================
@@ -514,4 +519,4 @@ if __name__ == "__main__":
 
     vertices = [[1, 3, 4], [2, 0, 3], [4, 4, 1], [3, 3, 3]]
     faces = [[0, 1, 2], [1, 2, 3]]
-    pts, fcs = discretise_vertices_faces(vertices, faces, target=0.2, min_angle=15, factor=3, iterations=200)
+    pts, fcs = discretise_faces(vertices, faces, target=0.2, min_angle=15, factor=3, iterations=200)

@@ -2,12 +2,12 @@
 Abaqus .odb data extraction file and function.
 """
 
-try:
-    from abaqus import *
-    from abaqusConstants import *
-    from job import *
-except:
-    print('***** Abaqus modules not imported *****')
+from __future__ import print_function
+from __future__ import absolute_import
+
+from abaqus import *
+from abaqusConstants import *
+from job import *
 
 from time import time
 
@@ -19,9 +19,11 @@ __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
 __license__    = 'MIT License'
 __email__      = 'liew@arch.ethz.ch'
 
+
 __all__ = [
     'extract_odb_data'
 ]
+
 
 node_fields = ['RF', 'RM', 'U', 'UR', 'CF', 'CM', 'NT']
 element_fields = ['SF', 'SM', 'SE', 'SK', 'S', 'E', 'PE', 'RBFOR']

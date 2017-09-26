@@ -18,6 +18,8 @@ Interfaces to Finite Element Analysis software built on compas ...
     compas_fea.cad
     compas_fea.fea
     compas_fea.structure
+    compas_fea.utilities
+    compas_fea.viewers
 
 
 """

@@ -3,6 +3,9 @@ compas_fea.structure.material : Material classes.
 For creating and/or selecting linear and non-linear material model classes.
 """
 
+from __future__ import print_function
+from __future__ import absolute_import
+
 from math import log
 
 
