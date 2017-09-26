@@ -13,6 +13,7 @@ Interfaces to Finite Element Analysis software built on compas ...
 
 .. toctree::
     :maxdepth: 1
+    :titlesonly:
 
     compas_fea.cad
     compas_fea.fea

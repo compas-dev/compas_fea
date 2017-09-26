@@ -5,7 +5,7 @@
 compas_fea.abaq
 ********************************************************************************
 
-.. module:: compas_fea.abaq
+.. module:: compas_fea.fea.abaq
 
 
 .. autosummary::

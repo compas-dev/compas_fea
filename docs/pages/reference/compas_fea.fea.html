@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+ <!--<![endif]-->
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   compas_fea.fea &mdash; compas_fea  documentation
+  </title>
+  <link href="../../static/css/theme.css" rel="stylesheet" type="text/css"/>
+  <link href="../../static/css/compas.css" rel="stylesheet" type="text/css"/>
+  <link href="../../genindex.html" rel="index" title="Index"/>
+  <link href="../../search.html" rel="search" title="Search"/>
+  <link href="../../index.html" rel="top" title="compas_fea  documentation"/>
+  <link href="compas_fea.html" rel="up" title="compas_fea"/>
+  <link href="generated/compas_fea.fea.abaq.inp_constraints.html" rel="next" title="inp_constraints"/>
+  <link href="generated/compas_fea.cad.rhino.plot_principal_stresses.html" rel="prev" title="plot_principal_stresses"/>
+  <script src="../../static/js/modernizr.min.js">
+  </script>
+ </head>
+ <body class="wy-body-for-nav" role="document">
+  <div class="wy-grid-for-nav">
+   <nav class="wy-nav-side" data-toggle="wy-nav-shift">
+    <div class="wy-side-scroll">
+     <div class="wy-side-nav-search">
+      <a class="icon icon-home" href="../../index.html">
+       compas_fea
+      </a>
+      <div role="search">
+       <form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+        <input name="q" placeholder="Search docs" type="text"/>
+        <input name="check_keywords" type="hidden" value="yes"/>
+        <input name="area" type="hidden" value="default"/>
+       </form>
+      </div>
+     </div>
+     <div aria-label="main navigation" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+      <ul class="current">
+       <li class="toctree-l1">
+        <a class="reference internal" href="../intro.html">
+         Introduction
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../tutorial.html">
+         Tutorial
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../examples.html">
+         Examples
+        </a>
+       </li>
+       <li class="toctree-l1 current">
+        <a class="reference internal" href="../reference.html">
+         Reference
+        </a>
+        <ul class="current">
+         <li class="toctree-l2 current">
+          <a class="reference internal" href="compas_fea.html">
+           compas_fea
+          </a>
+          <ul class="current">
+           <li class="toctree-l3">
+            <a class="reference internal" href="compas_fea.cad.html">
+             compas_fea.cad
+            </a>
+           </li>
+           <li class="toctree-l3 current">
+            <a class="current reference internal" href="#">
+             compas_fea.fea
+            </a>
+            <ul>
+             <li class="toctree-l4">
+              <a class="reference internal" href="#abaq">
+               abaq
+              </a>
+              <ul>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_constraints.html">
+                 inp_constraints
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_elements.html">
+                 inp_elements
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_generate.html">
+                 inp_generate
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_heading.html">
+                 inp_heading
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_materials.html">
+                 inp_materials
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_misc.html">
+                 inp_misc
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_nodes.html">
+                 inp_nodes
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_properties.html">
+                 inp_properties
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_sets.html">
+                 inp_sets
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_steps.html">
+                 inp_steps
+                </a>
+               </li>
+              </ul>
+             </li>
+             <li class="toctree-l4">
+              <a class="reference internal" href="#ansys">
+               ansys
+              </a>
+              <ul>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.ansys.inp_generate.html">
+                 inp_generate
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_static.html">
+                 make_command_file_static
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_static_combined.html">
+                 make_command_file_static_combined
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_modal.html">
+                 make_command_file_modal
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_harmonic.html">
+                 make_command_file_harmonic
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.ansys.ansys_launch_process.html">
+                 ansys_launch_process
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.ansys.delete_result_files.html">
+                 delete_result_files
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="generated/compas_fea.fea.ansys.write_total_results.html">
+                 write_total_results
+                </a>
+               </li>
+              </ul>
+             </li>
+            </ul>
+           </li>
+           <li class="toctree-l3">
+            <a class="reference internal" href="compas_fea.structure.html">
+             compas_fea.structure
+            </a>
+           </li>
+          </ul>
+         </li>
+        </ul>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../license.html">
+         License
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </nav>
+   <section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+    <nav aria-label="top navigation" class="wy-nav-top" role="navigation">
+     <i class="fa fa-bars" data-toggle="wy-nav-top">
+     </i>
+     <a href="../../index.html">
+      compas_fea
+     </a>
+    </nav>
+    <div class="wy-nav-content">
+     <div class="rst-content">
+      <div aria-label="breadcrumbs navigation" role="navigation">
+       <ul class="wy-breadcrumbs">
+        <li>
+         <a href="../../index.html">
+          Docs
+         </a>
+         &raquo;
+        </li>
+        <li>
+         <a href="../reference.html">
+          Reference
+         </a>
+         &raquo;
+        </li>
+        <li>
+         <a href="compas_fea.html">
+          compas_fea
+         </a>
+         &raquo;
+        </li>
+        <li>
+         compas_fea.fea
+        </li>
+        <li class="wy-breadcrumbs-aside">
+         <a href="../../_sources/pages/reference/compas_fea.fea.rst.txt" rel="nofollow">
+          View page source
+         </a>
+        </li>
+       </ul>
+       <hr/>
+      </div>
+      <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+       <div itemprop="articleBody">
+        <div class="section" id="compas-fea-fea">
+         <span id="id1">
+         </span>
+         <h1>
+          compas_fea.fea
+          <a class="headerlink" href="#compas-fea-fea" title="Permalink to this headline">
+           &para;
+          </a>
+         </h1>
+         <span class="target" id="module-compas_fea.fea">
+         </span>
+         <p>
+          The compas_fea package supports ABAQUS, ANSYS and OpenSEES as analysis backends.
+         </p>
+         <div class="section" id="abaq">
+          <h2>
+           abaq
+           <a class="headerlink" href="#abaq" title="Permalink to this headline">
+            &para;
+           </a>
+          </h2>
+          <p>
+           <code class="xref py py-mod docutils literal">
+            <span class="pre">
+             compas_fea.fea.abaq
+            </span>
+           </code>
+          </p>
+          <table border="1" class="longtable docutils">
+           <colgroup>
+            <col width="10%"/>
+            <col width="90%"/>
+           </colgroup>
+           <tbody valign="top">
+            <tr class="row-odd">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_constraints.html#compas_fea.fea.abaq.inp_constraints" title="compas_fea.fea.abaq.inp_constraints">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 inp_constraints
+                </span>
+               </code>
+              </a>
+              (f,&nbsp;constraints)
+             </td>
+             <td>
+              Writes the constraints information to the Abaqus .inp file.
+             </td>
+            </tr>
+            <tr class="row-even">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_elements.html#compas_fea.fea.abaq.inp_elements" title="compas_fea.fea.abaq.inp_elements">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 inp_elements
+                </span>
+               </code>
+              </a>
+              (f,&nbsp;elements)
+             </td>
+             <td>
+              Writes the element information to the Abaqus .inp file.
+             </td>
+            </tr>
+            <tr class="row-odd">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_generate.html#compas_fea.fea.abaq.inp_generate" title="compas_fea.fea.abaq.inp_generate">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 inp_generate
+                </span>
+               </code>
+              </a>
+              (structure,&nbsp;filename[,&nbsp;units])
+             </td>
+             <td>
+              Creates the Abaqus .inp file from the Structure object.
+             </td>
+            </tr>
+            <tr class="row-even">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_heading.html#compas_fea.fea.abaq.inp_heading" title="compas_fea.fea.abaq.inp_heading">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 inp_heading
+                </span>
+               </code>
+              </a>
+              (f)
+             </td>
+             <td>
+              Creates the Abaqus .inp file heading.
+             </td>
+            </tr>
+            <tr class="row-odd">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_materials.html#compas_fea.fea.abaq.inp_materials" title="compas_fea.fea.abaq.inp_materials">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 inp_materials
+                </span>
+               </code>
+              </a>
+              (f,&nbsp;materials)
+             </td>
+             <td>
+              Writes materials to the Abaqus .inp file.
+             </td>
+            </tr>
+            <tr class="row-even">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_misc.html#compas_fea.fea.abaq.inp_misc" title="compas_fea.fea.abaq.inp_misc">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 inp_misc
+                </span>
+               </code>
+              </a>
+              (f,&nbsp;misc)
+             </td>
+             <td>
+              Writes misc class info to the Abaqus .inp file.
+             </td>
+            </tr>
+            <tr class="row-odd">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_nodes.html#compas_fea.fea.abaq.inp_nodes" title="compas_fea.fea.abaq.inp_nodes">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 inp_nodes
+                </span>
+               </code>
+              </a>
+              (f,&nbsp;nodes,&nbsp;units)
+             </td>
+             <td>
+              Writes the nodal co-ordinates information to the Abaqus .inp file.
+             </td>
+            </tr>
+            <tr class="row-even">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_properties.html#compas_fea.fea.abaq.inp_properties" title="compas_fea.fea.abaq.inp_properties">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 inp_properties
+                </span>
+               </code>
+              </a>
+              (f,&nbsp;sections,&nbsp;properties,&nbsp;...)
+             </td>
+             <td>
+              Writes the section information to the Abaqus .inp file.
+             </td>
+            </tr>
+            <tr class="row-odd">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_sets.html#compas_fea.fea.abaq.inp_sets" title="compas_fea.fea.abaq.inp_sets">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 inp_sets
+                </span>
+               </code>
+              </a>
+              (f,&nbsp;sets)
+             </td>
+             <td>
+              Creates the Abaqus .inp file node sets NSETs and element sets ELSETs.
+             </td>
+            </tr>
+            <tr class="row-even">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.abaq.inp_steps.html#compas_fea.fea.abaq.inp_steps" title="compas_fea.fea.abaq.inp_steps">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 inp_steps
+                </span>
+               </code>
+              </a>
+              (f,&nbsp;steps,&nbsp;loads,&nbsp;displacements,&nbsp;...)
+             </td>
+             <td>
+              Writes step information to the Abaqus .inp file.
+             </td>
+            </tr>
+           </tbody>
+          </table>
+         </div>
+         <div class="section" id="ansys">
+          <h2>
+           ansys
+           <a class="headerlink" href="#ansys" title="Permalink to this headline">
+            &para;
+           </a>
+          </h2>
+          <p>
+           <code class="xref py py-mod docutils literal">
+            <span class="pre">
+             compas_fea.fea.ansys
+            </span>
+           </code>
+          </p>
+          <table border="1" class="longtable docutils">
+           <colgroup>
+            <col width="10%"/>
+            <col width="90%"/>
+           </colgroup>
+           <tbody valign="top">
+            <tr class="row-odd">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.ansys.inp_generate.html#compas_fea.fea.ansys.inp_generate" title="compas_fea.fea.ansys.inp_generate">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 inp_generate
+                </span>
+               </code>
+              </a>
+              (structure,&nbsp;filename,&nbsp;out_path)
+             </td>
+             <td>
+             </td>
+            </tr>
+            <tr class="row-even">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_static.html#compas_fea.fea.ansys.make_command_file_static" title="compas_fea.fea.ansys.make_command_file_static">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 make_command_file_static
+                </span>
+               </code>
+              </a>
+              (structure,&nbsp;...)
+             </td>
+             <td>
+             </td>
+            </tr>
+            <tr class="row-odd">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_static_combined.html#compas_fea.fea.ansys.make_command_file_static_combined" title="compas_fea.fea.ansys.make_command_file_static_combined">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 make_command_file_static_combined
+                </span>
+               </code>
+              </a>
+              (structure,&nbsp;...)
+             </td>
+             <td>
+             </td>
+            </tr>
+            <tr class="row-even">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_modal.html#compas_fea.fea.ansys.make_command_file_modal" title="compas_fea.fea.ansys.make_command_file_modal">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 make_command_file_modal
+                </span>
+               </code>
+              </a>
+              (structure,&nbsp;...)
+             </td>
+             <td>
+             </td>
+            </tr>
+            <tr class="row-odd">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_harmonic.html#compas_fea.fea.ansys.make_command_file_harmonic" title="compas_fea.fea.ansys.make_command_file_harmonic">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 make_command_file_harmonic
+                </span>
+               </code>
+              </a>
+              (structure,&nbsp;...)
+             </td>
+             <td>
+             </td>
+            </tr>
+            <tr class="row-even">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.ansys.ansys_launch_process.html#compas_fea.fea.ansys.ansys_launch_process" title="compas_fea.fea.ansys.ansys_launch_process">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 ansys_launch_process
+                </span>
+               </code>
+              </a>
+              (structure,&nbsp;output_path,&nbsp;...)
+             </td>
+             <td>
+             </td>
+            </tr>
+            <tr class="row-odd">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.ansys.delete_result_files.html#compas_fea.fea.ansys.delete_result_files" title="compas_fea.fea.ansys.delete_result_files">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 delete_result_files
+                </span>
+               </code>
+              </a>
+              (structure,&nbsp;output_path)
+             </td>
+             <td>
+             </td>
+            </tr>
+            <tr class="row-even">
+             <td>
+              <a class="reference internal" href="generated/compas_fea.fea.ansys.write_total_results.html#compas_fea.fea.ansys.write_total_results" title="compas_fea.fea.ansys.write_total_results">
+               <code class="xref py py-obj docutils literal">
+                <span class="pre">
+                 write_total_results
+                </span>
+               </code>
+              </a>
+              (filename,&nbsp;output_path[,&nbsp;...])
+             </td>
+             <td>
+             </td>
+            </tr>
+           </tbody>
+          </table>
+         </div>
+        </div>
+       </div>
+      </div>
+      <footer>
+       <div aria-label="footer navigation" class="rst-footer-buttons" role="navigation">
+        <a accesskey="n" class="btn btn-neutral float-right" href="generated/compas_fea.fea.abaq.inp_constraints.html" title="inp_constraints">
+         Next
+         <span class="fa fa-arrow-circle-right">
+         </span>
+        </a>
+        <a accesskey="p" class="btn btn-neutral" href="generated/compas_fea.cad.rhino.plot_principal_stresses.html" title="plot_principal_stresses">
+         <span class="fa fa-arrow-circle-left">
+         </span>
+         Previous
+        </a>
+       </div>
+       <hr/>
+       <div role="contentinfo">
+        <p>
+         &copy; Copyright 2017, Block Research Group.
+        </p>
+       </div>
+       Built with
+       <a href="http://sphinx-doc.org/">
+        Sphinx
+       </a>
+       using a
+       <a href="https://github.com/snide/sphinx_rtd_theme">
+        theme
+       </a>
+       provided by
+       <a href="https://readthedocs.org">
+        Read the Docs
+       </a>
+       .
+      </footer>
+     </div>
+    </div>
+   </section>
+  </div>
+  <script type="text/javascript">
+   var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+  </script>
+  <script src="../../static/jquery.js" type="text/javascript">
+  </script>
+  <script src="../../static/underscore.js" type="text/javascript">
+  </script>
+  <script src="../../static/doctools.js" type="text/javascript">
+  </script>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript">
+  </script>
+  <script src="../../static/js/theme.js" type="text/javascript">
+  </script>
+  <script type="text/javascript">
+   jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+ </body>
+</html>

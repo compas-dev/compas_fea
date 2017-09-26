@@ -20,11 +20,16 @@ blender
 .. autosummary::
     :toctree: generated/
 
-    add_nodes_elements_from_mesh
-    nset_from_meshes
-    elset_from_meshes
-    nset_from_objects
-    plot_deformed_data
+    add_nodes_elements_from_bmesh
+    add_nodes_elements_from_layers
+    add_tets_from_bmesh
+    add_nset_from_bmeshes
+    add_elset_from_bmeshes
+    add_nset_from_objects
+    plot_data
+    ordered_lines
+    plot_voxels
+    mesh_extrude
 
 
 rhino
@@ -40,13 +45,13 @@ rhino
     add_element_set
     add_node_set
     add_nodes_elements_from_layers
+    add_sets_from_layers
     mesh_extrude
     network_from_lines
     ordered_lines
     plot_axes
-    plot_deformed_data
+    plot_data
     plot_principal_stresses
-    sets_from_layers
 
 
 """

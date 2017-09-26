@@ -2,19 +2,19 @@
 compas_fea.cad.blender : Blender specific functions.
 """
 
-from compas.cad.blender.geometry import bmesh_data
-from compas.cad.blender.geometry.mesh import colour_bmesh_vertices
+from compas_blender.geometry import bmesh_data
+from compas_blender.geometry.mesh import colour_bmesh_vertices
 
-from compas.cad.blender.utilities import delete_all_materials
-from compas.cad.blender.utilities import draw_cuboid
-from compas.cad.blender.utilities import draw_pipes
-from compas.cad.blender.utilities import draw_bmesh
-from compas.cad.blender.utilities import get_objects
-from compas.cad.blender.utilities import get_objects_locations
-from compas.cad.blender.utilities import xdraw_texts
-from compas.cad.blender.utilities import clear_layers
+from compas_blender.utilities import delete_all_materials
+from compas_blender.utilities import draw_cuboid
+from compas_blender.utilities import draw_pipes
+from compas_blender.utilities import draw_bmesh
+from compas_blender.utilities import get_objects
+from compas_blender.utilities import get_objects_locations
+from compas_blender.utilities import xdraw_texts
+from compas_blender.utilities import clear_layers
 
-from compas.cad.blender.helpers import mesh_from_bmesh
+from compas_blender.helpers import mesh_from_bmesh
 
 from compas_fea.utilities.functions import colorbar
 from compas_fea.utilities.functions import extrude_mesh
@@ -32,7 +32,11 @@ except ImportError:
     print('***** meshpy not imported *****')
 
 import json
-import bpy
+
+try:
+    import bpy
+except ImportError:
+    pass
 
 
 __author__     = ['Andrew Liew <liew@arch.ethz.ch>']

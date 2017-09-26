@@ -8,7 +8,7 @@ from subprocess import PIPE
 from compas.datastructures.mesh import Mesh
 from compas.datastructures.network import Network
 
-from compas.cad.rhino.helpers.mesh import mesh_from_guid
+from compas_rhino.helpers.mesh import mesh_from_guid
 
 from compas.geometry import add_vectors
 from compas.geometry import centroid_points

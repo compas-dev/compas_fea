@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+ <!--<![endif]-->
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   delete_result_files &mdash; compas_fea  documentation
+  </title>
+  <link href="../../../static/css/theme.css" rel="stylesheet" type="text/css"/>
+  <link href="../../../static/css/compas.css" rel="stylesheet" type="text/css"/>
+  <link href="../../../genindex.html" rel="index" title="Index"/>
+  <link href="../../../search.html" rel="search" title="Search"/>
+  <link href="../../../index.html" rel="top" title="compas_fea  documentation"/>
+  <link href="../compas_fea.fea.html" rel="up" title="compas_fea.fea"/>
+  <link href="compas_fea.fea.ansys.write_total_results.html" rel="next" title="write_total_results"/>
+  <link href="compas_fea.fea.ansys.ansys_launch_process.html" rel="prev" title="ansys_launch_process"/>
+  <script src="../../../static/js/modernizr.min.js">
+  </script>
+ </head>
+ <body class="wy-body-for-nav" role="document">
+  <div class="wy-grid-for-nav">
+   <nav class="wy-nav-side" data-toggle="wy-nav-shift">
+    <div class="wy-side-scroll">
+     <div class="wy-side-nav-search">
+      <a class="icon icon-home" href="../../../index.html">
+       compas_fea
+      </a>
+      <div role="search">
+       <form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+        <input name="q" placeholder="Search docs" type="text"/>
+        <input name="check_keywords" type="hidden" value="yes"/>
+        <input name="area" type="hidden" value="default"/>
+       </form>
+      </div>
+     </div>
+     <div aria-label="main navigation" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+      <ul class="current">
+       <li class="toctree-l1">
+        <a class="reference internal" href="../../intro.html">
+         Introduction
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../../tutorial.html">
+         Tutorial
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../../examples.html">
+         Examples
+        </a>
+       </li>
+       <li class="toctree-l1 current">
+        <a class="reference internal" href="../../reference.html">
+         Reference
+        </a>
+        <ul class="current">
+         <li class="toctree-l2 current">
+          <a class="reference internal" href="../compas_fea.html">
+           compas_fea
+          </a>
+          <ul class="current">
+           <li class="toctree-l3">
+            <a class="reference internal" href="../compas_fea.cad.html">
+             compas_fea.cad
+            </a>
+           </li>
+           <li class="toctree-l3 current">
+            <a class="reference internal" href="../compas_fea.fea.html">
+             compas_fea.fea
+            </a>
+            <ul class="current">
+             <li class="toctree-l4">
+              <a class="reference internal" href="../compas_fea.fea.html#abaq">
+               abaq
+              </a>
+             </li>
+             <li class="toctree-l4 current">
+              <a class="reference internal" href="../compas_fea.fea.html#ansys">
+               ansys
+              </a>
+              <ul class="current">
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.fea.ansys.inp_generate.html">
+                 inp_generate
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.fea.ansys.make_command_file_static.html">
+                 make_command_file_static
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.fea.ansys.make_command_file_static_combined.html">
+                 make_command_file_static_combined
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.fea.ansys.make_command_file_modal.html">
+                 make_command_file_modal
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.fea.ansys.make_command_file_harmonic.html">
+                 make_command_file_harmonic
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.fea.ansys.ansys_launch_process.html">
+                 ansys_launch_process
+                </a>
+               </li>
+               <li class="toctree-l5 current">
+                <a class="current reference internal" href="#">
+                 delete_result_files
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.fea.ansys.write_total_results.html">
+                 write_total_results
+                </a>
+               </li>
+              </ul>
+             </li>
+            </ul>
+           </li>
+           <li class="toctree-l3">
+            <a class="reference internal" href="../compas_fea.structure.html">
+             compas_fea.structure
+            </a>
+           </li>
+          </ul>
+         </li>
+        </ul>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../../license.html">
+         License
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </nav>
+   <section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+    <nav aria-label="top navigation" class="wy-nav-top" role="navigation">
+     <i class="fa fa-bars" data-toggle="wy-nav-top">
+     </i>
+     <a href="../../../index.html">
+      compas_fea
+     </a>
+    </nav>
+    <div class="wy-nav-content">
+     <div class="rst-content">
+      <div aria-label="breadcrumbs navigation" role="navigation">
+       <ul class="wy-breadcrumbs">
+        <li>
+         <a href="../../../index.html">
+          Docs
+         </a>
+         &raquo;
+        </li>
+        <li>
+         <a href="../../reference.html">
+          Reference
+         </a>
+         &raquo;
+        </li>
+        <li>
+         <a href="../compas_fea.html">
+          compas_fea
+         </a>
+         &raquo;
+        </li>
+        <li>
+         <a href="../compas_fea.fea.html">
+          compas_fea.fea
+         </a>
+         &raquo;
+        </li>
+        <li>
+         delete_result_files
+        </li>
+        <li class="wy-breadcrumbs-aside">
+         <a href="../../../_sources/pages/reference/generated/compas_fea.fea.ansys.delete_result_files.rst.txt" rel="nofollow">
+          View page source
+         </a>
+        </li>
+       </ul>
+       <hr/>
+      </div>
+      <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+       <div itemprop="articleBody">
+        <div class="section" id="delete-result-files">
+         <h1>
+          delete_result_files
+          <a class="headerlink" href="#delete-result-files" title="Permalink to this headline">
+           &para;
+          </a>
+         </h1>
+         <dl class="function">
+          <dt id="compas_fea.fea.ansys.delete_result_files">
+           <code class="descclassname">
+            compas_fea.fea.ansys.
+           </code>
+           <code class="descname">
+            delete_result_files
+           </code>
+           <span class="sig-paren">
+            (
+           </span>
+           <em>
+            structure
+           </em>
+           ,
+           <em>
+            output_path
+           </em>
+           <span class="sig-paren">
+            )
+           </span>
+           <a class="reference internal" href="../../../_modules/compas_fea/fea/ansys/ansys.html#delete_result_files">
+            <span class="viewcode-link">
+             [source]
+            </span>
+           </a>
+           <a class="headerlink" href="#compas_fea.fea.ansys.delete_result_files" title="Permalink to this definition">
+            &para;
+           </a>
+          </dt>
+          <dd>
+          </dd>
+         </dl>
+        </div>
+       </div>
+      </div>
+      <footer>
+       <div aria-label="footer navigation" class="rst-footer-buttons" role="navigation">
+        <a accesskey="n" class="btn btn-neutral float-right" href="compas_fea.fea.ansys.write_total_results.html" title="write_total_results">
+         Next
+         <span class="fa fa-arrow-circle-right">
+         </span>
+        </a>
+        <a accesskey="p" class="btn btn-neutral" href="compas_fea.fea.ansys.ansys_launch_process.html" title="ansys_launch_process">
+         <span class="fa fa-arrow-circle-left">
+         </span>
+         Previous
+        </a>
+       </div>
+       <hr/>
+       <div role="contentinfo">
+        <p>
+         &copy; Copyright 2017, Block Research Group.
+        </p>
+       </div>
+       Built with
+       <a href="http://sphinx-doc.org/">
+        Sphinx
+       </a>
+       using a
+       <a href="https://github.com/snide/sphinx_rtd_theme">
+        theme
+       </a>
+       provided by
+       <a href="https://readthedocs.org">
+        Read the Docs
+       </a>
+       .
+      </footer>
+     </div>
+    </div>
+   </section>
+  </div>
+  <script type="text/javascript">
+   var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+  </script>
+  <script src="../../../static/jquery.js" type="text/javascript">
+  </script>
+  <script src="../../../static/underscore.js" type="text/javascript">
+  </script>
+  <script src="../../../static/doctools.js" type="text/javascript">
+  </script>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript">
+  </script>
+  <script src="../../../static/js/theme.js" type="text/javascript">
+  </script>
+  <script type="text/javascript">
+   jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+ </body>
+</html>

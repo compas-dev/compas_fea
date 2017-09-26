@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+ <!--<![endif]-->
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   compas_fea.fea.abaq.abaq &mdash; compas_fea  documentation
+  </title>
+  <link href="../../../../static/css/theme.css" rel="stylesheet" type="text/css"/>
+  <link href="../../../../static/css/compas.css" rel="stylesheet" type="text/css"/>
+  <link href="../../../../genindex.html" rel="index" title="Index"/>
+  <link href="../../../../search.html" rel="search" title="Search"/>
+  <link href="../../../../index.html" rel="top" title="compas_fea  documentation"/>
+  <link href="../../../index.html" rel="up" title="Module code"/>
+  <script src="../../../../static/js/modernizr.min.js">
+  </script>
+ </head>
+ <body class="wy-body-for-nav" role="document">
+  <div class="wy-grid-for-nav">
+   <nav class="wy-nav-side" data-toggle="wy-nav-shift">
+    <div class="wy-side-scroll">
+     <div class="wy-side-nav-search">
+      <a class="icon icon-home" href="../../../../index.html">
+       compas_fea
+      </a>
+      <div role="search">
+       <form action="../../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+        <input name="q" placeholder="Search docs" type="text"/>
+        <input name="check_keywords" type="hidden" value="yes"/>
+        <input name="area" type="hidden" value="default"/>
+       </form>
+      </div>
+     </div>
+     <div aria-label="main navigation" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+      <ul>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../../../../pages/intro.html">
+         Introduction
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../../../../pages/tutorial.html">
+         Tutorial
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../../../../pages/examples.html">
+         Examples
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../../../../pages/reference.html">
+         Reference
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../../../../pages/license.html">
+         License
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </nav>
+   <section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+    <nav aria-label="top navigation" class="wy-nav-top" role="navigation">
+     <i class="fa fa-bars" data-toggle="wy-nav-top">
+     </i>
+     <a href="../../../../index.html">
+      compas_fea
+     </a>
+    </nav>
+    <div class="wy-nav-content">
+     <div class="rst-content">
+      <div aria-label="breadcrumbs navigation" role="navigation">
+       <ul class="wy-breadcrumbs">
+        <li>
+         <a href="../../../../index.html">
+          Docs
+         </a>
+         &raquo;
+        </li>
+        <li>
+         <a href="../../../index.html">
+          Module code
+         </a>
+         &raquo;
+        </li>
+        <li>
+         compas_fea.fea.abaq.abaq
+        </li>
+        <li class="wy-breadcrumbs-aside">
+        </li>
+       </ul>
+       <hr/>
+      </div>
+      <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+       <div itemprop="articleBody">
+        <h1>
+         Source code for compas_fea.fea.abaq.abaq
+        </h1>
+        <div class="highlight">
+         <pre>
+<span></span><span class="sd">"""</span>
+<span class="sd">compas_fea.fea.abaq : Abaqus .inp file creator.</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">pi</span>
+
+
+<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">'Andrew Liew &lt;liew@arch.ethz.ch&gt;'</span><span class="p">]</span>
+<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">'Copyright 2017, BLOCK Research Group - ETH Zurich'</span>
+<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">'MIT License'</span>
+<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">'liew@arch.ethz.ch'</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'inp_constraints'</span><span class="p">,</span>
+    <span class="s1">'inp_elements'</span><span class="p">,</span>
+    <span class="s1">'inp_generate'</span><span class="p">,</span>
+    <span class="s1">'inp_heading'</span><span class="p">,</span>
+    <span class="s1">'inp_materials'</span><span class="p">,</span>
+    <span class="s1">'inp_misc'</span><span class="p">,</span>
+    <span class="s1">'inp_nodes'</span><span class="p">,</span>
+    <span class="s1">'inp_properties'</span><span class="p">,</span>
+    <span class="s1">'inp_sets'</span><span class="p">,</span>
+    <span class="s1">'inp_steps'</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="inp_constraints"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_constraints.html#compas_fea.fea.abaq.inp_constraints">[docs]</a><span class="k">def</span> <span class="nf">inp_constraints</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">constraints</span><span class="p">):</span>
+    <span class="sd">""" Writes the constraints information to the Abaqus .inp file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        f (obj): The open file object for the .inp file.</span>
+<span class="sd">        constraints (dic): Constraint dictionary from structure.constraints.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    """</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** ----------------------------------------------------------------- Constraints</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">constraints</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** '</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">ctype</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">__name__</span>
+
+        <span class="c1"># Tie constraint</span>
+
+        <span class="k">if</span> <span class="n">ctype</span> <span class="o">==</span> <span class="s1">'TieConstraint'</span><span class="p">:</span>
+            <span class="n">tol</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">tol</span>
+            <span class="n">slave</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">slave</span>
+            <span class="n">master</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">master</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*TIE, POSITION TOLERANCE=</span><span class="si">{0}</span><span class="s1">, NAME=</span><span class="si">{1}</span><span class="s1">, ADJUST=NO</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tol</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** SLAVE, MASTER</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slave</span><span class="p">,</span> <span class="n">master</span><span class="p">))</span>
+
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="inp_elements"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_elements.html#compas_fea.fea.abaq.inp_elements">[docs]</a><span class="k">def</span> <span class="nf">inp_elements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
+    <span class="sd">""" Writes the element information to the Abaqus .inp file.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        - T3D2  truss    2 nodes elset_T3D2.</span>
+<span class="sd">        - B31   beam     2 nodes elset_B31.</span>
+<span class="sd">        - S3    shell    3 nodes elset_S3.</span>
+<span class="sd">        - S4    shell    4 nodes elset_S4.</span>
+<span class="sd">        - M3D3  membrane 3 nodes elset_M3D3.</span>
+<span class="sd">        - M3D4  membrane 4 nodes elset_M3D4.</span>
+<span class="sd">        - C3D4  solid    4 nodes elset_C3D4.</span>
+<span class="sd">        - C3D6  solid    6 nodes elset_C3D6.</span>
+<span class="sd">        - C3D8  solid    8 nodes elset_C3D8.</span>
+<span class="sd">        - DC3D4 solid    4 nodes elset_DC3D4 thermal.</span>
+<span class="sd">        - DC3D6 solid    6 nodes elset_DC3D6 thermal.</span>
+<span class="sd">        - DC3D8 solid    8 nodes elset_DC3D8 thermal.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        f (obj): The open file object for the .inp file.</span>
+<span class="sd">        elements (dic): Elements from structure.elements.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    """</span>
+
+    <span class="c1"># Sort elements</span>
+
+    <span class="n">etypes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'T3D2'</span><span class="p">,</span> <span class="s1">'B31'</span><span class="p">,</span> <span class="s1">'S3'</span><span class="p">,</span> <span class="s1">'S4'</span><span class="p">,</span> <span class="s1">'M3D3'</span><span class="p">,</span> <span class="s1">'M3D4'</span><span class="p">,</span> <span class="s1">'C3D4'</span><span class="p">,</span> <span class="s1">'C3D6'</span><span class="p">,</span> <span class="s1">'C3D8'</span><span class="p">,</span> <span class="s1">'DC3D4'</span><span class="p">,</span> <span class="s1">'DC3D6'</span><span class="p">,</span> <span class="s1">'DC3D8'</span><span class="p">]</span>
+    <span class="n">edic</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">etypes</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">ekey</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>
+        <span class="n">element</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="n">ekey</span><span class="p">]</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">element</span><span class="o">.</span><span class="n">nodes</span><span class="p">]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">number</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">nodes</span>
+        <span class="n">etype</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">__name__</span>
+        <span class="k">if</span> <span class="n">etype</span> <span class="o">==</span> <span class="s1">'TrussElement'</span><span class="p">:</span>
+            <span class="n">estr</span> <span class="o">=</span> <span class="s1">'T3D2'</span>
+        <span class="k">elif</span> <span class="n">etype</span> <span class="o">==</span> <span class="s1">'BeamElement'</span><span class="p">:</span>
+            <span class="n">estr</span> <span class="o">=</span> <span class="s1">'B31'</span>
+        <span class="k">elif</span> <span class="n">etype</span> <span class="o">==</span> <span class="s1">'ShellElement'</span><span class="p">:</span>
+            <span class="n">estr</span> <span class="o">=</span> <span class="s1">'S</span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">etype</span> <span class="o">==</span> <span class="s1">'MembraneElement'</span><span class="p">:</span>
+            <span class="n">estr</span> <span class="o">=</span> <span class="s1">'M3D</span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">etype</span> <span class="o">==</span> <span class="s1">'TetrahedronElement'</span><span class="p">:</span>
+            <span class="n">estr</span> <span class="o">=</span> <span class="s1">'C3D4'</span>
+        <span class="k">elif</span> <span class="n">etype</span> <span class="o">==</span> <span class="s1">'PentahedronElement'</span><span class="p">:</span>
+            <span class="n">estr</span> <span class="o">=</span> <span class="s1">'C3D6'</span>
+        <span class="k">elif</span> <span class="n">etype</span> <span class="o">==</span> <span class="s1">'HexahedronElement'</span><span class="p">:</span>
+            <span class="n">estr</span> <span class="o">=</span> <span class="s1">'C3D8'</span>
+        <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="n">thermal</span><span class="p">:</span>
+            <span class="n">estr</span> <span class="o">=</span> <span class="s1">'D</span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">estr</span><span class="p">)</span>
+        <span class="n">edic</span><span class="p">[</span><span class="n">estr</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="c1"># Write element data</span>
+
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** -------------------------------------------------------------------- Elements</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">elset_all</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">edata</span> <span class="ow">in</span> <span class="n">edic</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">edata</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** '</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*ELEMENT, TYPE=</span><span class="si">{0}</span><span class="s1">, ELSET=elset_</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** No., nodes</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">edata</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">j</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])))</span>
+            <span class="n">elset_all</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'elset_</span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** ------------------------------------------------------------------------ Sets</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** elset_all</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** ---------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*ELSET, ELSET=elset_all</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">elset_all</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="inp_generate"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_generate.html#compas_fea.fea.abaq.inp_generate">[docs]</a><span class="k">def</span> <span class="nf">inp_generate</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">'m'</span><span class="p">):</span>
+    <span class="sd">""" Creates the Abaqus .inp file from the Structure object.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        structure (obj): The Structure object to read from.</span>
+<span class="sd">        filename (str): Path to save the .inp file to.</span>
+<span class="sd">        units (str): Units of the nodal co-ordinates 'm','cm','mm'.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    """</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">inp_heading</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">inp_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">units</span><span class="p">)</span>
+        <span class="n">inp_elements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+        <span class="n">inp_sets</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">sets</span><span class="p">)</span>
+        <span class="n">inp_materials</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">materials</span><span class="p">)</span>
+        <span class="n">inp_misc</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">misc</span><span class="p">)</span>
+        <span class="n">inp_properties</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">sections</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">element_properties</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">sets</span><span class="p">)</span>
+        <span class="n">inp_constraints</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">constraints</span><span class="p">)</span>
+        <span class="n">inp_steps</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">loads</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">displacements</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">interactions</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">misc</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'***** Abaqus input file generated: </span><span class="si">{0}</span><span class="s1"> *****</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="inp_heading"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_heading.html#compas_fea.fea.abaq.inp_heading">[docs]</a><span class="k">def</span> <span class="nf">inp_heading</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="sd">""" Creates the Abaqus .inp file heading.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        f (obj): The open file object for the .inp file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    """</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** --------------------------------------------------------------------- Heading</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*HEADING</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'                               ABAQUS input file                                </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'                            SI units: [N, m, kg, s]                             </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'              compas_fea package: Dr Andrew Liew - liew@arch.ethz.ch            </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** ---------------------------------------------------------- Physical constants</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*PHYSICAL CONSTANTS, ABSOLUTE ZERO=-273.15, STEFAN BOLTZMANN=5.67e-8</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="inp_materials"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_materials.html#compas_fea.fea.abaq.inp_materials">[docs]</a><span class="k">def</span> <span class="nf">inp_materials</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">materials</span><span class="p">):</span>
+    <span class="sd">""" Writes materials to the Abaqus .inp file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        f (obj): The open file object for the .inp file.</span>
+<span class="sd">        materials (dic): Material objects from structure.materials.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    """</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** ------------------------------------------------------------------- Materials</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">material</span> <span class="ow">in</span> <span class="n">materials</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">mtype</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">__name__</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** '</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*MATERIAL, NAME=</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+
+        <span class="c1"># Density</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*DENSITY</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">material</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** p[kg/m3], T[C]</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">material</span><span class="o">.</span><span class="n">p</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">T</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** p[kg/m3]</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">material</span><span class="o">.</span><span class="n">p</span><span class="p">))</span>
+
+        <span class="c1"># Elastic</span>
+
+        <span class="k">if</span> <span class="n">mtype</span> <span class="o">==</span> <span class="s1">'ElasticOrthotropic'</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">elif</span> <span class="n">mtype</span> <span class="o">==</span> <span class="s1">'ThermalMaterial'</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*ELASTIC</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">E</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">E</span><span class="p">[</span><span class="s1">'E'</span><span class="p">]</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="s1">'v'</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** E[Pa], v[-], T[C]</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">E</span><span class="p">)):</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">E</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">E</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** E[Pa], v[-]</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">material</span><span class="o">.</span><span class="n">compression</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*NO COMPRESSION</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">material</span><span class="o">.</span><span class="n">tension</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*NO TENSION</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+        <span class="c1"># Concrete smeared crack</span>
+
+        <span class="k">if</span> <span class="n">mtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'ConcreteSmearedCrack'</span><span class="p">,</span> <span class="s1">'Concrete'</span><span class="p">]:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*CONCRETE</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** f[Pa], e[-] : COMPRESSION</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">compression</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">compression</span>
+            <span class="k">for</span> <span class="n">cf</span><span class="p">,</span> <span class="n">ce</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">compression</span><span class="p">[</span><span class="s1">'f'</span><span class="p">],</span> <span class="n">compression</span><span class="p">[</span><span class="s1">'e'</span><span class="p">]):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cf</span><span class="p">,</span> <span class="n">ce</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*TENSION STIFFENING</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** f[Pa], e[-] : TENSION</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">tension</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">tension</span>
+            <span class="k">for</span> <span class="n">tf</span><span class="p">,</span> <span class="n">te</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">tension</span><span class="p">[</span><span class="s1">'f'</span><span class="p">],</span> <span class="n">tension</span><span class="p">[</span><span class="s1">'e'</span><span class="p">]):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span> <span class="n">te</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*FAILURE RATIOS</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">fratios</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
+
+        <span class="c1"># Concrete damaged plasticity</span>
+
+        <span class="k">elif</span> <span class="n">mtype</span> <span class="o">==</span> <span class="s1">'ConcreteDamagedPlasticity'</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*CONCRETE DAMAGED PLASTICITY</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** psi[deg], e[-], sr[-], Kc[-], mu[-]</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">material</span><span class="o">.</span><span class="n">damage</span><span class="p">])</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*CONCRETE COMPRESSION HARDENING</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** fy[Pa], eu[-], , T[C]</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">material</span><span class="o">.</span><span class="n">hardening</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*CONCRETE TENSION STIFFENING, TYPE=GFI</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** ft[Pa], et[-], etd[1/s], T[C]</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">material</span><span class="o">.</span><span class="n">stiffening</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+        <span class="c1"># Plastic</span>
+
+        <span class="k">elif</span> <span class="n">mtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'ElasticPlastic'</span><span class="p">,</span> <span class="s1">'Steel'</span><span class="p">]:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*PLASTIC</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** f[Pa], e[-] : COMPRESSION-TENSION</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">compression</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">compression</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">compression</span><span class="p">[</span><span class="s1">'f'</span><span class="p">],</span> <span class="n">compression</span><span class="p">[</span><span class="s1">'e'</span><span class="p">]):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+
+        <span class="c1"># Thermal</span>
+
+        <span class="k">elif</span> <span class="n">mtype</span> <span class="o">==</span> <span class="s1">'ThermalMaterial'</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*CONDUCTIVITY</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** k[W/mK]</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">material</span><span class="o">.</span><span class="n">conductivity</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*SPECIFIC HEAT</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** c[J/kgK]</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">material</span><span class="o">.</span><span class="n">sheat</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="inp_misc"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_misc.html#compas_fea.fea.abaq.inp_misc">[docs]</a><span class="k">def</span> <span class="nf">inp_misc</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">misc</span><span class="p">):</span>
+    <span class="sd">""" Writes misc class info to the Abaqus .inp file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        f (obj): The open file object for the .inp file.</span>
+<span class="sd">        misc (dic): Misc objects from structure.misc.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    """</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** ------------------------------------------------------------------------ Misc</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">misc</span> <span class="ow">in</span> <span class="n">misc</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">mtype</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">__name__</span>
+        <span class="k">if</span> <span class="n">mtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'Amplitude'</span><span class="p">]:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** '</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+        <span class="c1"># Amplitude</span>
+
+        <span class="k">if</span> <span class="n">mtype</span> <span class="o">==</span> <span class="s1">'Amplitude'</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*AMPLITUDE, NAME=</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">misc</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="inp_nodes"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_nodes.html#compas_fea.fea.abaq.inp_nodes">[docs]</a><span class="k">def</span> <span class="nf">inp_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">units</span><span class="p">):</span>
+    <span class="sd">""" Writes the nodal co-ordinates information to the Abaqus .inp file.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        - Node set 'nset_all' is automatically created containing all nodes.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        f (obj): The open file object for the .inp file.</span>
+<span class="sd">        nodes (dic): Node dictionary from structure.nodes.</span>
+<span class="sd">        units (str): Units of the nodal co-ordinates.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    """</span>
+    <span class="n">cl</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'m'</span><span class="p">:</span> <span class="mf">1.</span><span class="p">,</span> <span class="s1">'cm'</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s1">'mm'</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">}</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** ----------------------------------------------------------------------- Nodes</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*NODE, NSET=nset_all</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** No., x[m], y[m], z[m]</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>
+        <span class="n">xyz</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">cl</span><span class="p">[</span><span class="n">units</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="s1">'xyz'</span><span class="p">]</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">+</span> <span class="n">xyz</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="inp_properties"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_properties.html#compas_fea.fea.abaq.inp_properties">[docs]</a><span class="k">def</span> <span class="nf">inp_properties</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sections</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">sets</span><span class="p">):</span>
+    <span class="sd">""" Writes the section information to the Abaqus .inp file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        f (obj): The open file object for the .inp file.</span>
+<span class="sd">        sections (dic): Section objects from structure.sections.</span>
+<span class="sd">        properties (dic): ElementProperties objects from structure.element_properties.</span>
+<span class="sd">        elements (dic): Element objects from structure.elements.</span>
+<span class="sd">        sets (dic): Sets from structure.sets.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    """</span>
+
+    <span class="c1"># Sections</span>
+
+    <span class="n">sdata</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'AngleSection'</span><span class="p">:</span>       <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'L'</span><span class="p">,</span>           <span class="s1">'geometry'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'b'</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">,</span> <span class="s1">'t'</span><span class="p">,</span> <span class="s1">'t'</span><span class="p">]},</span>
+        <span class="s1">'BoxSection'</span><span class="p">:</span>         <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'BOX'</span><span class="p">,</span>         <span class="s1">'geometry'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'b'</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">,</span> <span class="s1">'tw'</span><span class="p">,</span> <span class="s1">'tf'</span><span class="p">,</span> <span class="s1">'tw'</span><span class="p">,</span> <span class="s1">'tf'</span><span class="p">]},</span>
+        <span class="s1">'CircularSection'</span><span class="p">:</span>    <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'CIRC'</span><span class="p">,</span>        <span class="s1">'geometry'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'r'</span><span class="p">]},</span>
+        <span class="s1">'ISection'</span><span class="p">:</span>           <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'I'</span><span class="p">,</span>           <span class="s1">'geometry'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'c'</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'tf'</span><span class="p">,</span> <span class="s1">'tf'</span><span class="p">,</span> <span class="s1">'tw'</span><span class="p">]},</span>
+        <span class="s1">'PipeSection'</span><span class="p">:</span>        <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'PIPE'</span><span class="p">,</span>        <span class="s1">'geometry'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'r'</span><span class="p">,</span> <span class="s1">'t'</span><span class="p">]},</span>
+        <span class="s1">'RectangularSection'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'RECTANGULAR'</span><span class="p">,</span> <span class="s1">'geometry'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'b'</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">]},</span>
+        <span class="s1">'TrapezoidalSection'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'TRAPEZOID'</span><span class="p">,</span>   <span class="s1">'geometry'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'b1'</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">,</span> <span class="s1">'b2'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">]},</span>
+        <span class="s1">'GeneralSection'</span><span class="p">:</span>     <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'GENERAL'</span><span class="p">,</span>     <span class="s1">'geometry'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'I11'</span><span class="p">,</span> <span class="s1">'I12'</span><span class="p">,</span> <span class="s1">'I22'</span><span class="p">,</span> <span class="s1">'J'</span><span class="p">,</span> <span class="s1">'g0'</span><span class="p">,</span> <span class="s1">'gw'</span><span class="p">]},</span>
+        <span class="s1">'ShellSection'</span><span class="p">:</span>       <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>          <span class="s1">'geometry'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'t'</span><span class="p">]},</span>
+        <span class="s1">'SolidSection'</span><span class="p">:</span>       <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>          <span class="s1">'geometry'</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+        <span class="s1">'TrussSection'</span><span class="p">:</span>       <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>          <span class="s1">'geometry'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'A'</span><span class="p">]}}</span>
+    <span class="n">shells</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'ShellSection'</span><span class="p">]</span>
+    <span class="n">solids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'SolidSection'</span><span class="p">,</span> <span class="s1">'TrussSection'</span><span class="p">]</span>
+
+    <span class="c1"># Write data</span>
+
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** -------------------------------------------------------------------- Sections</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="nb">property</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">material</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">material</span>
+        <span class="n">elsets</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">elsets</span>
+        <span class="n">reinforcement</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">reinforcement</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">sections</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">section</span><span class="p">]</span>
+        <span class="n">stype</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">__name__</span>
+        <span class="n">geometry</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">geometry</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** Section: </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** --------'</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elsets</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">elsets</span> <span class="o">=</span> <span class="p">[</span><span class="n">elsets</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">elset</span> <span class="ow">in</span> <span class="n">elsets</span><span class="p">:</span>
+
+            <span class="c1"># Beam sections</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">stype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">shells</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">stype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">solids</span><span class="p">):</span>
+                <span class="n">s1</span> <span class="o">=</span> <span class="n">sdata</span><span class="p">[</span><span class="n">stype</span><span class="p">][</span><span class="s1">'name'</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">sets</span><span class="p">[</span><span class="n">elset</span><span class="p">][</span><span class="s1">'explode'</span><span class="p">]:</span>
+                    <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">sets</span><span class="p">[</span><span class="n">elset</span><span class="p">][</span><span class="s1">'selection'</span><span class="p">]:</span>
+                        <span class="n">e1</span> <span class="o">=</span> <span class="s1">'element_</span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">select</span><span class="p">)</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*BEAM SECTION, SECTION=</span><span class="si">{0}</span><span class="s1">, ELSET=</span><span class="si">{1}</span><span class="s1">, MATERIAL=</span><span class="si">{2}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">material</span><span class="p">))</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">geometry</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">sdata</span><span class="p">[</span><span class="n">stype</span><span class="p">][</span><span class="s1">'geometry'</span><span class="p">]])</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                        <span class="n">ex</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="n">select</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'ex'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">ex</span><span class="p">:</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">ex</span><span class="p">])</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">'GeneralSection'</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*BEAM GENERAL SECTION, SECTION=</span><span class="si">{0}</span><span class="s1">, ELSET=</span><span class="si">{1}</span><span class="s1">, MATERIAL=</span><span class="si">{2}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">material</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*BEAM SECTION, SECTION=</span><span class="si">{0}</span><span class="s1">, ELSET=</span><span class="si">{1}</span><span class="s1">, MATERIAL=</span><span class="si">{2}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">material</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">geometry</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">sdata</span><span class="p">[</span><span class="n">stype</span><span class="p">][</span><span class="s1">'geometry'</span><span class="p">]])</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+            <span class="c1"># Shell sections</span>
+
+            <span class="k">elif</span> <span class="n">stype</span> <span class="ow">in</span> <span class="n">shells</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">sets</span><span class="p">[</span><span class="n">elset</span><span class="p">][</span><span class="s1">'explode'</span><span class="p">]:</span>
+                    <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">sets</span><span class="p">[</span><span class="n">elset</span><span class="p">][</span><span class="s1">'selection'</span><span class="p">]:</span>
+                        <span class="n">e1</span> <span class="o">=</span> <span class="s1">'element_</span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">select</span><span class="p">)</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*SHELL SECTION, ELSET=</span><span class="si">{0}</span><span class="s1">, MATERIAL=</span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">material</span><span class="p">))</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">geometry</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">sdata</span><span class="p">[</span><span class="n">stype</span><span class="p">][</span><span class="s1">'geometry'</span><span class="p">]])</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*SHELL SECTION, ELSET=</span><span class="si">{0}</span><span class="s1">, MATERIAL=</span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elset</span><span class="p">,</span> <span class="n">material</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">geometry</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">sdata</span><span class="p">[</span><span class="n">stype</span><span class="p">][</span><span class="s1">'geometry'</span><span class="p">]])</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">reinforcement</span><span class="p">:</span>
+                        <span class="n">orientation</span> <span class="o">=</span> <span class="n">reinforcement</span><span class="p">[</span><span class="s1">'orientation'</span><span class="p">]</span>
+                        <span class="n">spacing</span> <span class="o">=</span> <span class="n">reinforcement</span><span class="p">[</span><span class="s1">'spacing'</span><span class="p">]</span>
+                        <span class="n">offset</span> <span class="o">=</span> <span class="n">reinforcement</span><span class="p">[</span><span class="s1">'offset'</span><span class="p">]</span>
+                        <span class="n">rmaterial</span> <span class="o">=</span> <span class="n">reinforcement</span><span class="p">[</span><span class="s1">'material'</span><span class="p">]</span>
+                        <span class="n">dia</span> <span class="o">=</span> <span class="n">reinforcement</span><span class="p">[</span><span class="s1">'dia'</span><span class="p">]</span>
+                        <span class="n">area</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">dia</span><span class="o">**</span><span class="mi">2</span>
+                        <span class="k">if</span> <span class="n">orientation</span><span class="p">:</span>
+                            <span class="k">pass</span>
+                            <span class="c1"># f.write('*REBAR LAYER, ORIENTATION=ORIENT_{0}\n'.format(element))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*REBAR LAYER</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'U1, </span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">, </span><span class="si">{3}</span><span class="s1">, </span><span class="si">{4}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">area</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="o">+</span><span class="n">offset</span><span class="p">,</span> <span class="n">rmaterial</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'U2, </span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">, </span><span class="si">{3}</span><span class="s1">, </span><span class="si">{4}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">area</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="o">+</span><span class="n">offset</span> <span class="o">-</span> <span class="n">dia</span><span class="p">,</span> <span class="n">rmaterial</span><span class="p">,</span> <span class="mi">90</span><span class="p">))</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'L1, </span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">, </span><span class="si">{3}</span><span class="s1">, </span><span class="si">{4}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">area</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="o">-</span><span class="n">offset</span><span class="p">,</span> <span class="n">rmaterial</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'L2, </span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">, </span><span class="si">{3}</span><span class="s1">, </span><span class="si">{4}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">area</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="o">-</span><span class="n">offset</span> <span class="o">+</span> <span class="n">dia</span><span class="p">,</span> <span class="n">rmaterial</span><span class="p">,</span> <span class="mi">90</span><span class="p">))</span>
+                        <span class="k">if</span> <span class="n">orientation</span><span class="p">:</span>
+                            <span class="k">pass</span>
+                            <span class="c1"># f.write('*ORIENTATION, SYSTEM=RECTANGULAR, NAME=ORIENT_{0}\n'.format(element))</span>
+                            <span class="c1"># ex, ey, origin points</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+            <span class="c1"># Solid sections</span>
+
+            <span class="k">elif</span> <span class="n">stype</span> <span class="ow">in</span> <span class="n">solids</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*SOLID SECTION, ELSET=</span><span class="si">{0}</span><span class="s1">, MATERIAL=</span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elset</span><span class="p">,</span> <span class="n">material</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">'TrussSection'</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">geometry</span><span class="p">[</span><span class="s1">'A'</span><span class="p">]))</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="inp_sets"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_sets.html#compas_fea.fea.abaq.inp_sets">[docs]</a><span class="k">def</span> <span class="nf">inp_sets</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sets</span><span class="p">):</span>
+    <span class="sd">""" Creates the Abaqus .inp file node sets NSETs and element sets ELSETs.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        - Restriction in Abaqus to 10 entries written per line in the .inp file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        f (obj): The open file object for the .inp file.</span>
+<span class="sd">        sets (dic): Sets dictionary from structure.sets.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    """</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="nb">set</span> <span class="ow">in</span> <span class="n">sets</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">stype</span> <span class="o">=</span> <span class="nb">set</span><span class="p">[</span><span class="s1">'type'</span><span class="p">]</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** '</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">stype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'node'</span><span class="p">,</span> <span class="s1">'element'</span><span class="p">,</span> <span class="s1">'surface_node'</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">'node'</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*NSET, NSET=</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">'element'</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*ELSET, ELSET=</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">'surface_node'</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*SURFACE, TYPE=NODE, NAME=</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="n">selection</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">[</span><span class="s1">'selection'</span><span class="p">]]</span>
+            <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">cnt</span> <span class="o">&lt;</span> <span class="n">cm</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">j</span> <span class="o">!=</span> <span class="n">selection</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span>
+                    <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">cnt</span> <span class="o">&gt;=</span> <span class="n">cm</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">'surface_element'</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*SURFACE, TYPE=ELEMENT, NAME=</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** ELEMENT, SIDE</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">selection</span> <span class="o">=</span> <span class="nb">set</span><span class="p">[</span><span class="s1">'selection'</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">element</span><span class="p">,</span> <span class="n">sides</span> <span class="ow">in</span> <span class="n">selection</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="n">sides</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">element</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">side</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="inp_steps"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_steps.html#compas_fea.fea.abaq.inp_steps">[docs]</a><span class="k">def</span> <span class="nf">inp_steps</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">interactions</span><span class="p">,</span> <span class="n">misc</span><span class="p">):</span>
+    <span class="sd">""" Writes step information to the Abaqus .inp file.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        - Steps are analysed in the order given by steps['order'].</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        f (obj): The open file object for the .inp file.</span>
+<span class="sd">        steps (dic): Step objects from structure.steps.</span>
+<span class="sd">        loads (dic): Load objects from structure.loads.</span>
+<span class="sd">        displacements (dic): Displacement objects from structure.displacements.</span>
+<span class="sd">        interactions (dic): Interaction objects from structure.interactions.</span>
+<span class="sd">        misc (dic): Misc objects from structure.misc.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    """</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** ----------------------------------------------------------------------- Steps</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">dofs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">,</span> <span class="s1">'xx'</span><span class="p">,</span> <span class="s1">'yy'</span><span class="p">,</span> <span class="s1">'zz'</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">'order'</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">[</span><span class="s1">'order'</span><span class="p">]:</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="n">steps</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">stype</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">__name__</span>
+            <span class="n">increments</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">increments</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">type</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** '</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+            <span class="c1"># Mechanical</span>
+
+            <span class="k">if</span> <span class="n">stype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'GeneralStep'</span><span class="p">,</span> <span class="s1">'ModalStep'</span><span class="p">]:</span>
+
+                <span class="c1"># Header</span>
+
+                <span class="n">nlgeom</span> <span class="o">=</span> <span class="s1">'YES'</span> <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">nlgeom</span> <span class="k">else</span> <span class="s1">'NO'</span>
+                <span class="n">perturbation</span> <span class="o">=</span> <span class="s1">', PERTURBATION'</span> <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">'ModalStep'</span> <span class="k">else</span> <span class="s1">''</span>
+                <span class="n">lf</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">factor</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*STEP, NLGEOM=</span><span class="si">{0}</span><span class="s1">, NAME=</span><span class="si">{1}{2}</span><span class="s1">, INC=</span><span class="si">{3}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nlgeom</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">perturbation</span><span class="p">,</span> <span class="n">increments</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">method</span><span class="p">))</span>
+
+                <span class="c1"># Modes</span>
+
+                <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">'ModalStep'</span><span class="p">:</span>
+                    <span class="n">modes</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">modes</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">, </span><span class="si">{3}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">modes</span><span class="p">,</span> <span class="n">modes</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">modes</span><span class="p">,</span> <span class="n">increments</span><span class="p">))</span>
+
+                <span class="c1"># Loads</span>
+
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">loads</span><span class="p">:</span>
+                    <span class="n">load</span> <span class="o">=</span> <span class="n">loads</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                    <span class="n">ltype</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">__name__</span>
+                    <span class="n">com</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">components</span>
+                    <span class="n">axes</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">axes</span>
+                    <span class="n">nset</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">nodes</span>
+                    <span class="n">elset</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">elements</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** '</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+                    <span class="c1"># Type</span>
+
+                    <span class="k">if</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'PointLoad'</span><span class="p">,</span> <span class="s1">'TributaryLoad'</span><span class="p">]:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*CLOAD</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** NSET, dof, CLOAD</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'LineLoad'</span><span class="p">,</span> <span class="s1">'AreaLoad'</span><span class="p">,</span> <span class="s1">'GravityLoad'</span><span class="p">,</span> <span class="s1">'BodyLoad'</span><span class="p">]:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*DLOAD</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** ELSET, component, DLOAD</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+                    <span class="c1"># Point load</span>
+
+                    <span class="k">if</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">'PointLoad'</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">dof</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dofs</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">]:</span>
+                                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">lf</span> <span class="o">*</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">])</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+                    <span class="c1"># Line load</span>
+
+                    <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">'LineLoad'</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">'global'</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">dof</span> <span class="ow">in</span> <span class="n">dofs</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>
+                                <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">]:</span>
+                                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, P</span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elset</span><span class="p">,</span> <span class="n">dof</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">lf</span> <span class="o">*</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">])</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">'local'</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]:</span>
+                                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, P1, </span><span class="si">{1}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elset</span><span class="p">,</span> <span class="n">lf</span> <span class="o">*</span> <span class="n">com</span><span class="p">[</span><span class="s1">'y'</span><span class="p">])</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">'z'</span><span class="p">]:</span>
+                                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, P2, </span><span class="si">{1}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elset</span><span class="p">,</span> <span class="n">lf</span> <span class="o">*</span> <span class="n">com</span><span class="p">[</span><span class="s1">'z'</span><span class="p">])</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+                    <span class="c1"># Area load</span>
+
+                    <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">'AreaLoad'</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">'global'</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+                        <span class="k">elif</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">'local'</span><span class="p">:</span>
+                            <span class="c1"># x COMPONENT</span>
+                            <span class="c1"># y COMPONENT</span>
+                            <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">'z'</span><span class="p">]:</span>
+                                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, P, </span><span class="si">{1}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elset</span><span class="p">,</span> <span class="n">lf</span> <span class="o">*</span> <span class="n">com</span><span class="p">[</span><span class="s1">'z'</span><span class="p">])</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+                    <span class="c1"># Body load</span>
+
+                    <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">'BodyLoad'</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+                    <span class="c1"># Gravity load</span>
+
+                    <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">'GravityLoad'</span><span class="p">:</span>
+                        <span class="n">g</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">g</span>
+                        <span class="n">gx</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+                        <span class="n">gy</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+                        <span class="n">gz</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">'z'</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, GRAV, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">, </span><span class="si">{3}</span><span class="s1">, </span><span class="si">{4}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elset</span><span class="p">,</span> <span class="n">lf</span> <span class="o">*</span> <span class="n">g</span><span class="p">,</span> <span class="n">gx</span><span class="p">,</span> <span class="n">gy</span><span class="p">,</span> <span class="n">gz</span><span class="p">))</span>
+
+                    <span class="c1"># Tributary load</span>
+
+                    <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">'TributaryLoad'</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">com</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>
+                            <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">dof</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dofs</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">):</span>
+                                <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">dof</span><span class="p">]:</span>
+                                    <span class="n">ni</span> <span class="o">=</span> <span class="n">node</span> <span class="o">+</span> <span class="mi">1</span>
+                                    <span class="n">dl</span> <span class="o">=</span> <span class="n">com</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">dof</span><span class="p">]</span> <span class="o">*</span> <span class="n">lf</span>
+                                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">dl</span><span class="p">))</span>
+
+                <span class="c1"># Displacements</span>
+
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">displacements</span><span class="p">:</span>
+                    <span class="n">displacement</span> <span class="o">=</span> <span class="n">displacements</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                    <span class="n">com</span> <span class="o">=</span> <span class="n">displacement</span><span class="o">.</span><span class="n">components</span>
+                    <span class="n">nset</span> <span class="o">=</span> <span class="n">displacement</span><span class="o">.</span><span class="n">nodes</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** '</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*BOUNDARY</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** NSET, dof.start, dof.end, displacement</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">dof</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dofs</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span> <span class="o">*</span> <span class="n">lf</span><span class="p">))</span>
+
+                <span class="c1"># Temperatures</span>
+
+            <span class="c1"># try:</span>
+            <span class="c1">#     duration = step.duration</span>
+            <span class="c1"># except:</span>
+            <span class="c1">#     duration = 1</span>
+            <span class="c1">#     temperatures = steps[key].temperatures</span>
+            <span class="c1">#     if temperatures:</span>
+            <span class="c1">#         file = misc[temperatures].file</span>
+            <span class="c1">#         einc = str(misc[temperatures].einc)</span>
+            <span class="c1">#         f.write('**\n')</span>
+            <span class="c1">#         f.write('*TEMPERATURE, FILE={0}, BSTEP=1, BINC=1, ESTEP=1, EINC={1}, INTERPOLATE\n'.format(file, einc))</span>
+
+                <span class="c1"># fieldOutputs</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** Output</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** ------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*OUTPUT, FIELD</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*NODE OUTPUT</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'RF, RM, U, UR, CF, CM, NT</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*ELEMENT OUTPUT</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'SF, SM, SE, SK, S, E, PE</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*ELEMENT OUTPUT, REBAR</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'RBFOR</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'*END STEP</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+            <span class="c1"># Thermal</span>
+
+            <span class="c1"># elif stype == 'HeatStep':</span>
+            <span class="c1">#     temp0 = step.temp0</span>
+            <span class="c1">#     duration = step.duration</span>
+            <span class="c1">#     deltmx = steps[key].deltmx</span>
+            <span class="c1">#     interaction = interactions[step.interaction]</span>
+            <span class="c1">#     amplitude = interaction.amplitude</span>
+            <span class="c1">#     interface = interaction.interface</span>
+            <span class="c1">#     sink_t = interaction.sink_t</span>
+            <span class="c1">#     film_c = interaction.film_c</span>
+            <span class="c1">#     ambient_t = interaction.ambient_t</span>
+            <span class="c1">#     emissivity = interaction.emissivity</span>
+
+            <span class="c1">#     # Initial T</span>
+
+            <span class="c1">#     f.write('*INITIAL CONDITIONS, TYPE=TEMPERATURE\n')</span>
+            <span class="c1">#     f.write('NSET_ALL, {0}\n'.format(temp0))</span>
+            <span class="c1">#     f.write('**\n')</span>
+
+            <span class="c1">#     # Interface</span>
+
+            <span class="c1">#     f.write('*STEP, NAME={0}, INC={1}\n'.format(sname, increments))</span>
+            <span class="c1">#     f.write('*{0}, END=PERIOD, DELTMX={1}\n'.format(method, deltmx))</span>
+            <span class="c1">#     f.write('1, {0}, 5.4e-05, {0}\n'.format(duration))</span>
+            <span class="c1">#     f.write('**\n')</span>
+            <span class="c1">#     f.write('*SFILM, AMPLITUDE={0}\n'.format(amplitude))</span>
+            <span class="c1">#     f.write('{0}, F, {1}, {2}\n'.format(interface, sink_t, film_c))</span>
+            <span class="c1">#     f.write('**\n')</span>
+            <span class="c1">#     f.write('*SRADIATE, AMPLITUDE={0}\n'.format(amplitude))</span>
+            <span class="c1">#     f.write('{0}, R, {1}, {2}\n'.format(interface, ambient_t, emissivity))</span>
+
+            <span class="c1">#     # fieldOutputs</span>
+
+            <span class="c1">#     f.write('**\n')</span>
+            <span class="c1">#     f.write('** OUTPUT\n')</span>
+            <span class="c1">#     f.write('** ------\n')</span>
+            <span class="c1">#     f.write('*OUTPUT, FIELD\n')</span>
+            <span class="c1">#     f.write('**\n')</span>
+            <span class="c1">#     f.write('*NODE OUTPUT\n')</span>
+            <span class="c1">#     f.write('NT\n')</span>
+            <span class="c1">#     f.write('**\n')</span>
+            <span class="c1">#     f.write('*END STEP\n')</span>
+
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
+</pre>
+        </div>
+       </div>
+      </div>
+      <footer>
+       <hr/>
+       <div role="contentinfo">
+        <p>
+         &copy; Copyright 2017, Block Research Group.
+        </p>
+       </div>
+       Built with
+       <a href="http://sphinx-doc.org/">
+        Sphinx
+       </a>
+       using a
+       <a href="https://github.com/snide/sphinx_rtd_theme">
+        theme
+       </a>
+       provided by
+       <a href="https://readthedocs.org">
+        Read the Docs
+       </a>
+       .
+      </footer>
+     </div>
+    </div>
+   </section>
+  </div>
+  <script type="text/javascript">
+   var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+  </script>
+  <script src="../../../../static/jquery.js" type="text/javascript">
+  </script>
+  <script src="../../../../static/underscore.js" type="text/javascript">
+  </script>
+  <script src="../../../../static/doctools.js" type="text/javascript">
+  </script>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript">
+  </script>
+  <script src="../../../../static/js/theme.js" type="text/javascript">
+  </script>
+  <script type="text/javascript">
+   jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+ </body>
+</html>
