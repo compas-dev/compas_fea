@@ -5,7 +5,7 @@
 compas_fea.ansys
 ********************************************************************************
 
-.. module:: compas_fea.ansys
+.. module:: compas_fea.fea.ansys
 
 
 .. autosummary::
@@ -18,9 +18,7 @@ compas_fea.ansys
     make_command_file_harmonic
     ansys_launch_process
     delete_result_files
-    combine_static_steps
-    scale_displacements
-    scale_loads
+    write_total_results
 
 """
 

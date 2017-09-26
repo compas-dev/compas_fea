@@ -6,7 +6,7 @@ Support functions for the compas_fea package.
 from compas.datastructures.network.algorithms import network_dijkstra_path
 
 from compas.geometry import add_vectors
-from compas.geometry import area_polygon_2d
+from compas.geometry import area_polygon_xy
 from compas.geometry import centroid_points
 from compas.geometry import cross_vectors
 from compas.geometry import distance_point_point
@@ -14,8 +14,8 @@ from compas.geometry import length_vector
 from compas.geometry import normalize_vector
 from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
-from compas.geometry._planar import angles_points_2d
-from compas.geometry._planar import circle_from_points_2d
+from compas.geometry import angles_points_xy
+from compas.geometry import circle_from_points_xy
 
 from compas.utilities import geometric_key
 
@@ -429,14 +429,14 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
                 p1 = [float(i) for i in V[u, :2]]
                 p2 = [float(i) for i in V[v, :2]]
                 p3 = [float(i) for i in V[w, :2]]
-                th1 = angles_points_2d(p1, p2, p3)[0] * 180 / pi
-                th2 = angles_points_2d(p2, p1, p3)[0] * 180 / pi
-                th3 = angles_points_2d(p3, p1, p2)[0] * 180 / pi
+                th1 = angles_points_xy(p1, p2, p3)[0] * 180 / pi
+                th2 = angles_points_xy(p2, p1, p3)[0] * 180 / pi
+                th3 = angles_points_xy(p3, p1, p2)[0] * 180 / pi
                 thm = min([th1, th2, th3])
-                c, r = circle_from_points_2d(p1, p2, p3)
+                c, r = circle_from_points_xy(p1, p2, p3)
                 c = list(c)
                 c[2] = z
-                A = area_polygon_2d([p1, p2, p3])
+                A = area_polygon_xy([p1, p2, p3])
                 if (thm < min_angle) or (A > Amax):
                     change = True
                     dist = distance_matrix(array([c]), V, threshold=10**5)

@@ -9,12 +9,12 @@
   <title>
    mesh-mould Blender &mdash; compas_fea  documentation
   </title>
-  <link href="../../_static/css/theme.css" rel="stylesheet" type="text/css"/>
-  <link href="../../_static/css/compas.css" rel="stylesheet" type="text/css"/>
+  <link href="../../static/css/theme.css" rel="stylesheet" type="text/css"/>
+  <link href="../../static/css/compas.css" rel="stylesheet" type="text/css"/>
   <link href="../../genindex.html" rel="index" title="Index"/>
   <link href="../../search.html" rel="search" title="Search"/>
   <link href="../../index.html" rel="top" title="compas_fea  documentation"/>
-  <script src="../../_static/js/modernizr.min.js">
+  <script src="../../static/js/modernizr.min.js">
   </script>
  </head>
  <body class="wy-body-for-nav" role="document">
@@ -41,73 +41,18 @@
         </a>
        </li>
        <li class="toctree-l1">
-        <a class="reference internal" href="../setup.html">
-         Setup
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../structure.html">
-         Structure
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../nodes.html">
-         Nodes
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../elements.html">
-         Elements
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../sets.html">
-         Sets
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../sections.html">
-         Sections
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../material.html">
-         Materials
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../properties.html">
-         Properties
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../loads.html">
-         Loads
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../displacements.html">
-         Displacements
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../steps.html">
-         Steps
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../analysis.html">
-         Analysis
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../cad.html">
-         CAD
+        <a class="reference internal" href="../tutorial.html">
+         Tutorial
         </a>
        </li>
        <li class="toctree-l1">
         <a class="reference internal" href="../examples.html">
          Examples
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../reference.html">
+         Reference
         </a>
        </li>
        <li class="toctree-l1">
@@ -137,7 +82,9 @@
          </a>
          &raquo;
         </li>
-        <!-- <li>mesh-mould Blender</li> -->
+        <li>
+         mesh-mould Blender
+        </li>
         <li class="wy-breadcrumbs-aside">
          <a href="../../_sources/pages/examples/mesh-mould_blender.rst.txt" rel="nofollow">
           View page source
@@ -158,6 +105,122 @@
           </a>
          </h1>
          <img alt="../../images/mesh-mould_blender.png" src="../../images/mesh-mould_blender.png"/>
+         <div class="highlight-default">
+          <div class="highlight">
+           <pre><span></span><span class="sd">""" Example Meshmould analysed with shell elements and rebar."""</span>
+
+<span class="c1"># Note: The rebar implementation is currently basic.</span>
+
+<span class="kn">from</span> <span class="nn">compas_fea.fea.abaq</span> <span class="k">import</span> <span class="n">abaq</span>
+<span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">blender</span>
+
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Concrete</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">FixedDisplacement</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralStep</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GravityLoad</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PointLoad</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ShellSection</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Steel</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
+
+<span class="kn">from</span> <span class="nn">compas.cad.blender.utilities</span> <span class="k">import</span> <span class="n">get_objects</span>
+
+
+<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">'Andrew Liew &lt;liew@arch.ethz.ch&gt;'</span><span class="p">]</span>
+<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">'Copyright 2017, BLOCK Research Group - ETH Zurich'</span>
+<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">'MIT License'</span>
+<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">'liew@arch.ethz.ch'</span>
+
+
+<span class="c1"># Folders and Structure name</span>
+
+<span class="n">name</span> <span class="o">=</span> <span class="s1">'mesh-mould'</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s1">'/home/al/Temp/'</span>
+
+<span class="c1"># Create an empty Structure object named mdl</span>
+
+<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">()</span>
+
+<span class="c1"># Add shell elements and geometry to Structure</span>
+
+<span class="n">blender</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">face_type</span><span class="o">=</span><span class="s1">'ShellElement'</span><span class="p">)</span>
+<span class="n">blender</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">face_type</span><span class="o">=</span><span class="s1">'ShellElement'</span><span class="p">)</span>
+
+<span class="c1"># Add node and element sets to the Structure object</span>
+
+<span class="n">blender</span><span class="o">.</span><span class="n">add_elset_from_bmeshes</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'elset_wall'</span><span class="p">)</span>
+<span class="n">blender</span><span class="o">.</span><span class="n">add_elset_from_bmeshes</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'elset_plinth'</span><span class="p">)</span>
+<span class="n">blender</span><span class="o">.</span><span class="n">add_nset_from_bmeshes</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'nset_fixed'</span><span class="p">)</span>
+
+<span class="c1"># Add materials</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">Concrete</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_concrete'</span><span class="p">,</span> <span class="n">fck</span><span class="o">=</span><span class="mi">40</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">Steel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_rebar'</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">500</span><span class="p">))</span>
+
+<span class="c1"># Add sections</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_wall'</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.150</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_plinth'</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.300</span><span class="p">))</span>
+
+<span class="c1"># Add element properties</span>
+
+<span class="n">rebar_plinth</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'orientation'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">'offset'</span><span class="p">:</span> <span class="mf">0.120</span><span class="p">,</span> <span class="s1">'spacing'</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">'material'</span><span class="p">:</span> <span class="s1">'mat_rebar'</span><span class="p">,</span> <span class="s1">'dia'</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">}</span>
+<span class="n">rebar_wall</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'orientation'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">'offset'</span><span class="p">:</span> <span class="mf">0.045</span><span class="p">,</span> <span class="s1">'spacing'</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">'material'</span><span class="p">:</span> <span class="s1">'mat_rebar'</span><span class="p">,</span> <span class="s1">'dia'</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">}</span>
+<span class="n">epp</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_concrete'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_plinth'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">'elset_plinth'</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="n">rebar_plinth</span><span class="p">)</span>
+<span class="n">epw</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_concrete'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_wall'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">'elset_wall'</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="n">rebar_wall</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">epp</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'ep_plinth'</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">epw</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'ep_wall'</span><span class="p">)</span>
+
+<span class="c1"># Add loads</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">GravityLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'load_gravity'</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">'elset_all'</span><span class="p">))</span>
+<span class="n">loads</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'load_gravity'</span><span class="p">]</span>
+<span class="k">for</span> <span class="nb">object</span> <span class="ow">in</span> <span class="n">get_objects</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="n">pz</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">location</span><span class="p">))</span>
+    <span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'load_point_</span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span><span class="p">),</span> <span class="n">nodes</span><span class="o">=</span><span class="n">node</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">pz</span><span class="p">)))</span>
+    <span class="n">loads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'load_point_</span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span><span class="p">))</span>
+
+<span class="c1"># Add displacements</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">FixedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'disp_fixed'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">'nset_fixed'</span><span class="p">))</span>
+
+<span class="c1"># Add steps</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'step_bc'</span><span class="p">,</span> <span class="n">nlgeom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">'disp_fixed'</span><span class="p">]))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'step_loads'</span><span class="p">,</span> <span class="n">nlgeom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="n">loads</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">set_steps_order</span><span class="p">([</span><span class="s1">'step_bc'</span><span class="p">,</span> <span class="s1">'step_loads'</span><span class="p">])</span>
+
+<span class="c1"># Structure summary</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+
+<span class="c1"># Generate .inp file</span>
+
+<span class="n">fnm</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">.inp'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+<span class="n">abaq</span><span class="o">.</span><span class="n">inp_generate</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">fnm</span><span class="p">)</span>
+
+<span class="c1"># Run and extract data</span>
+
+<span class="n">exe</span> <span class="o">=</span> <span class="s1">'/home/al/abaqus/Commands/abaqus cae '</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">analyse</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">software</span><span class="o">=</span><span class="s1">'abaqus'</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="n">exe</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">'U,S,RBFOR'</span><span class="p">)</span>
+
+<span class="c1"># Plot displacements</span>
+
+<span class="n">blender</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_loads'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'U'</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">'magnitude'</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># Plot stress</span>
+
+<span class="n">blender</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_loads'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'S'</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">'maxPrincipal'</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">blender</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_loads'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'S'</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">'minPrincipal'</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+
+<span class="c1"># Plot rebar force</span>
+
+<span class="n">blender</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_loads'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'RBFOR'</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">'VALUE'</span><span class="p">,</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">'max'</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+</pre>
+          </div>
+         </div>
         </div>
        </div>
       </div>
@@ -195,15 +258,15 @@
             HAS_SOURCE:  true
         };
   </script>
-  <script src="../../_static/jquery.js" type="text/javascript">
+  <script src="../../static/jquery.js" type="text/javascript">
   </script>
-  <script src="../../_static/underscore.js" type="text/javascript">
+  <script src="../../static/underscore.js" type="text/javascript">
   </script>
-  <script src="../../_static/doctools.js" type="text/javascript">
+  <script src="../../static/doctools.js" type="text/javascript">
   </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript">
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript">
   </script>
-  <script src="../../_static/js/theme.js" type="text/javascript">
+  <script src="../../static/js/theme.js" type="text/javascript">
   </script>
   <script type="text/javascript">
    jQuery(function () {

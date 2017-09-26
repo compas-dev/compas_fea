@@ -1,9 +1,0 @@
-.. _beam-simple_rhino:
-
-********************************************************************************
-Beam Rhino
-********************************************************************************
-
-.. image:: /_images/beam-simple_rhino.png
-
-.. literalinclude:: ../../../../_examples/beam/beam-simple_abaqus_rhino.py

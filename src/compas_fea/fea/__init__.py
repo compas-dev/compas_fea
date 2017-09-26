@@ -49,9 +49,7 @@ ansys
     make_command_file_harmonic
     ansys_launch_process
     delete_result_files
-    combine_static_steps
-    scale_displacements
-    scale_loads
+    write_total_results
 
 
 """

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+ <!--<![endif]-->
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   add_nodes_elements_from_layers &mdash; compas_fea  documentation
+  </title>
+  <link href="../../../static/css/theme.css" rel="stylesheet" type="text/css"/>
+  <link href="../../../static/css/compas.css" rel="stylesheet" type="text/css"/>
+  <link href="../../../genindex.html" rel="index" title="Index"/>
+  <link href="../../../search.html" rel="search" title="Search"/>
+  <link href="../../../index.html" rel="top" title="compas_fea  documentation"/>
+  <link href="../compas_fea.cad.html" rel="up" title="compas_fea.cad"/>
+  <link href="compas_fea.cad.rhino.add_sets_from_layers.html" rel="next" title="add_sets_from_layers"/>
+  <link href="compas_fea.cad.rhino.add_node_set.html" rel="prev" title="add_node_set"/>
+  <script src="../../../static/js/modernizr.min.js">
+  </script>
+ </head>
+ <body class="wy-body-for-nav" role="document">
+  <div class="wy-grid-for-nav">
+   <nav class="wy-nav-side" data-toggle="wy-nav-shift">
+    <div class="wy-side-scroll">
+     <div class="wy-side-nav-search">
+      <a class="icon icon-home" href="../../../index.html">
+       compas_fea
+      </a>
+      <div role="search">
+       <form action="../../../search.html" class="wy-form" id="rtd-search-form" method="get">
+        <input name="q" placeholder="Search docs" type="text"/>
+        <input name="check_keywords" type="hidden" value="yes"/>
+        <input name="area" type="hidden" value="default"/>
+       </form>
+      </div>
+     </div>
+     <div aria-label="main navigation" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+      <ul class="current">
+       <li class="toctree-l1">
+        <a class="reference internal" href="../../intro.html">
+         Introduction
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../../tutorial.html">
+         Tutorial
+        </a>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../../examples.html">
+         Examples
+        </a>
+       </li>
+       <li class="toctree-l1 current">
+        <a class="reference internal" href="../../reference.html">
+         Reference
+        </a>
+        <ul class="current">
+         <li class="toctree-l2 current">
+          <a class="reference internal" href="../compas_fea.html">
+           compas_fea
+          </a>
+          <ul class="current">
+           <li class="toctree-l3 current">
+            <a class="reference internal" href="../compas_fea.cad.html">
+             compas_fea.cad
+            </a>
+            <ul class="current">
+             <li class="toctree-l4">
+              <a class="reference internal" href="../compas_fea.cad.html#blender">
+               blender
+              </a>
+             </li>
+             <li class="toctree-l4 current">
+              <a class="reference internal" href="../compas_fea.cad.html#rhino">
+               rhino
+              </a>
+              <ul class="current">
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.cad.rhino.add_element_set.html">
+                 add_element_set
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.cad.rhino.add_node_set.html">
+                 add_node_set
+                </a>
+               </li>
+               <li class="toctree-l5 current">
+                <a class="current reference internal" href="#">
+                 add_nodes_elements_from_layers
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.cad.rhino.add_sets_from_layers.html">
+                 add_sets_from_layers
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.cad.rhino.mesh_extrude.html">
+                 mesh_extrude
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.cad.rhino.network_from_lines.html">
+                 network_from_lines
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.cad.rhino.ordered_lines.html">
+                 ordered_lines
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.cad.rhino.plot_axes.html">
+                 plot_axes
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.cad.rhino.plot_data.html">
+                 plot_data
+                </a>
+               </li>
+               <li class="toctree-l5">
+                <a class="reference internal" href="compas_fea.cad.rhino.plot_principal_stresses.html">
+                 plot_principal_stresses
+                </a>
+               </li>
+              </ul>
+             </li>
+            </ul>
+           </li>
+           <li class="toctree-l3">
+            <a class="reference internal" href="../compas_fea.fea.html">
+             compas_fea.fea
+            </a>
+           </li>
+           <li class="toctree-l3">
+            <a class="reference internal" href="../compas_fea.structure.html">
+             compas_fea.structure
+            </a>
+           </li>
+          </ul>
+         </li>
+        </ul>
+       </li>
+       <li class="toctree-l1">
+        <a class="reference internal" href="../../license.html">
+         License
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+   </nav>
+   <section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+    <nav aria-label="top navigation" class="wy-nav-top" role="navigation">
+     <i class="fa fa-bars" data-toggle="wy-nav-top">
+     </i>
+     <a href="../../../index.html">
+      compas_fea
+     </a>
+    </nav>
+    <div class="wy-nav-content">
+     <div class="rst-content">
+      <div aria-label="breadcrumbs navigation" role="navigation">
+       <ul class="wy-breadcrumbs">
+        <li>
+         <a href="../../../index.html">
+          Docs
+         </a>
+         &raquo;
+        </li>
+        <li>
+         <a href="../../reference.html">
+          Reference
+         </a>
+         &raquo;
+        </li>
+        <li>
+         <a href="../compas_fea.html">
+          compas_fea
+         </a>
+         &raquo;
+        </li>
+        <li>
+         <a href="../compas_fea.cad.html">
+          compas_fea.cad
+         </a>
+         &raquo;
+        </li>
+        <li>
+         add_nodes_elements_from_layers
+        </li>
+        <li class="wy-breadcrumbs-aside">
+         <a href="../../../_sources/pages/reference/generated/compas_fea.cad.rhino.add_nodes_elements_from_layers.rst.txt" rel="nofollow">
+          View page source
+         </a>
+        </li>
+       </ul>
+       <hr/>
+      </div>
+      <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+       <div itemprop="articleBody">
+        <div class="section" id="add-nodes-elements-from-layers">
+         <h1>
+          add_nodes_elements_from_layers
+          <a class="headerlink" href="#add-nodes-elements-from-layers" title="Permalink to this headline">
+           &para;
+          </a>
+         </h1>
+         <dl class="function">
+          <dt id="compas_fea.cad.rhino.add_nodes_elements_from_layers">
+           <code class="descclassname">
+            compas_fea.cad.rhino.
+           </code>
+           <code class="descname">
+            add_nodes_elements_from_layers
+           </code>
+           <span class="sig-paren">
+            (
+           </span>
+           <em>
+            structure
+           </em>
+           ,
+           <em>
+            element_type
+           </em>
+           ,
+           <em>
+            layers
+           </em>
+           ,
+           <em>
+            acoustic=False
+           </em>
+           ,
+           <em>
+            thermal=False
+           </em>
+           <span class="sig-paren">
+            )
+           </span>
+           <a class="reference internal" href="../../../_modules/compas_fea/cad/rhino.html#add_nodes_elements_from_layers">
+            <span class="viewcode-link">
+             [source]
+            </span>
+           </a>
+           <a class="headerlink" href="#compas_fea.cad.rhino.add_nodes_elements_from_layers" title="Permalink to this definition">
+            &para;
+           </a>
+          </dt>
+          <dd>
+           <p>
+            Adds node and element data from Rhino layers to Structure object.
+           </p>
+           <div class="admonition note">
+            <p class="first admonition-title">
+             Note
+            </p>
+            <ul class="last simple">
+             <li>
+              The element_type should be applicable to all objects in the given layers.
+             </li>
+            </ul>
+           </div>
+           <table class="docutils field-list" frame="void" rules="none">
+            <col class="field-name"/>
+            <col class="field-body"/>
+            <tbody valign="top">
+             <tr class="field-odd field">
+              <th class="field-name">
+               Parameters:
+              </th>
+              <td class="field-body">
+               <ul class="first simple">
+                <li>
+                 <strong>
+                  structure
+                 </strong>
+                 (
+                 <em>
+                  obj
+                 </em>
+                 ) &ndash; Structure object to update.
+                </li>
+                <li>
+                 <strong>
+                  element_type
+                 </strong>
+                 (
+                 <em>
+                  str
+                 </em>
+                 ) &ndash; Element type: &lsquo;TetrahedronElement&rsquo;, &lsquo;ShellElement&rsquo;, &lsquo;TrussElement&rsquo; etc.
+                </li>
+                <li>
+                 <strong>
+                  layers
+                 </strong>
+                 (
+                 <em>
+                  list
+                 </em>
+                 ) &ndash; Layer names to extract nodes or elements from.
+                </li>
+                <li>
+                 <strong>
+                  acoustic
+                 </strong>
+                 (
+                 <em>
+                  bool
+                 </em>
+                 ) &ndash; Acoustic properties on or off.
+                </li>
+                <li>
+                 <strong>
+                  thermal
+                 </strong>
+                 (
+                 <em>
+                  bool
+                 </em>
+                 ) &ndash; Thermal properties on or off.
+                </li>
+               </ul>
+              </td>
+             </tr>
+             <tr class="field-even field">
+              <th class="field-name">
+               Returns:
+              </th>
+              <td class="field-body">
+               <p class="first last">
+                <em>
+                 None
+                </em>
+                &ndash; Nodes and elements are updated in the Structure object.
+               </p>
+              </td>
+             </tr>
+            </tbody>
+           </table>
+          </dd>
+         </dl>
+        </div>
+       </div>
+      </div>
+      <footer>
+       <div aria-label="footer navigation" class="rst-footer-buttons" role="navigation">
+        <a accesskey="n" class="btn btn-neutral float-right" href="compas_fea.cad.rhino.add_sets_from_layers.html" title="add_sets_from_layers">
+         Next
+         <span class="fa fa-arrow-circle-right">
+         </span>
+        </a>
+        <a accesskey="p" class="btn btn-neutral" href="compas_fea.cad.rhino.add_node_set.html" title="add_node_set">
+         <span class="fa fa-arrow-circle-left">
+         </span>
+         Previous
+        </a>
+       </div>
+       <hr/>
+       <div role="contentinfo">
+        <p>
+         &copy; Copyright 2017, Block Research Group.
+        </p>
+       </div>
+       Built with
+       <a href="http://sphinx-doc.org/">
+        Sphinx
+       </a>
+       using a
+       <a href="https://github.com/snide/sphinx_rtd_theme">
+        theme
+       </a>
+       provided by
+       <a href="https://readthedocs.org">
+        Read the Docs
+       </a>
+       .
+      </footer>
+     </div>
+    </div>
+   </section>
+  </div>
+  <script type="text/javascript">
+   var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+  </script>
+  <script src="../../../static/jquery.js" type="text/javascript">
+  </script>
+  <script src="../../../static/underscore.js" type="text/javascript">
+  </script>
+  <script src="../../../static/doctools.js" type="text/javascript">
+  </script>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript">
+  </script>
+  <script src="../../../static/js/theme.js" type="text/javascript">
+  </script>
+  <script type="text/javascript">
+   jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+ </body>
+</html>
