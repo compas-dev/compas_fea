@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <title>
+   compas_fea -- FEA package for compas
+  </title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <!-- compas meta tags -->
+  <meta content="" name="author"/>
+  <meta content="" name="description"/>
+  <!-- Bootstrap CSS -->
+  <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
+  <!-- highlight CSS -->
+  <link href="../static/css/github.css" rel="stylesheet" type="text/css"/>
+  <!-- compas CSS -->
+  <link href="../static/css/compas.css" rel="stylesheet" type="text/css"/>
+  <link href="../static/css/compas-reference.css" rel="stylesheet" type="text/css"/>
+  <link href="generated/compas_fea.cad.blender.add_nodes_elements_from_bmesh.html" rel="next" title="add_nodes_elements_from_bmesh"/>
+  <link href="compas_fea.html" rel="prev" title="compas_fea"/>
+  <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript">
+  </script>
+ </head>
+ <body data-spy="scroll" data-target="#compas-localnav">
+  <!-- main navigation bar -->
+  <header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
+   <a class="navbar-brand" href="/index.html">
+    compas
+   </a>
+   <ul class="navbar-nav">
+    <li class="nav-item">
+     <a class="nav-link" href="index.html">
+      compas_fea
+     </a>
+    </li>
+   </ul>
+  </header>
+  <!-- page container -->
+  <div class="container-fluid compas-container">
+   <div class="row flex-xl-nowrap">
+    <!-- main page content -->
+    <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+     <nav class="breadcrumb">
+      <a class="breadcrumb-item" href="#">
+       compas
+      </a>
+      <a class="breadcrumb-item" href="#">
+       packages
+      </a>
+      <a class="breadcrumb-item" href="#">
+       compas_fea
+      </a>
+      <a class="breadcrumb-item" href="../reference.html">
+       reference
+      </a>
+      <a accesskey="U" class="breadcrumb-item" href="compas_fea.html">
+       compas_fea
+      </a>
+     </nav>
+     <div class="section">
+      <span id="cad">
+      </span>
+      <span id="compas-fea-cad">
+      </span>
+      <h1>
+       cad
+      </h1>
+      <p>
+       The compas_fea package supports Rhino and Blender.
+      </p>
+      <div class="section">
+       <h2>
+        blender
+       </h2>
+       <p>
+        <code class="xref py py-mod docutils literal">
+         compas_fea.cad.blender
+        </code>
+       </p>
+       <table border="1" class="longtable docutils table table-responsive table-bordered">
+        <colgroup>
+         <col width="10%"/>
+         <col width="90%"/>
+        </colgroup>
+        <tbody valign="top">
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.blender.add_nodes_elements_from_bmesh.html" title="compas_fea.cad.blender.add_nodes_elements_from_bmesh">
+            <code class="xref py py-obj docutils literal">
+             add_nodes_elements_from_bmesh
+            </code>
+           </a>
+           (structure,&nbsp;bmesh)
+          </td>
+          <td>
+           Adds the Blender mesh&rsquo;s nodes, edges and faces to the Structure object.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.blender.add_nodes_elements_from_layers.html" title="compas_fea.cad.blender.add_nodes_elements_from_layers">
+            <code class="xref py py-obj docutils literal">
+             add_nodes_elements_from_layers
+            </code>
+           </a>
+           (structure,&nbsp;layers)
+          </td>
+          <td>
+           Adds node and element data from Blender layers to Structure object.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.blender.add_tets_from_bmesh.html" title="compas_fea.cad.blender.add_tets_from_bmesh">
+            <code class="xref py py-obj docutils literal">
+             add_tets_from_bmesh
+            </code>
+           </a>
+           (structure,&nbsp;name,&nbsp;bmesh)
+          </td>
+          <td>
+           Adds tetrahedron elements from a Blender mesh to Structure object.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.blender.add_nset_from_bmeshes.html" title="compas_fea.cad.blender.add_nset_from_bmeshes">
+            <code class="xref py py-obj docutils literal">
+             add_nset_from_bmeshes
+            </code>
+           </a>
+           (structure,&nbsp;name[,&nbsp;...])
+          </td>
+          <td>
+           Adds the Blender meshes&rsquo; vertices as a node set.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.blender.add_elset_from_bmeshes.html" title="compas_fea.cad.blender.add_elset_from_bmeshes">
+            <code class="xref py py-obj docutils literal">
+             add_elset_from_bmeshes
+            </code>
+           </a>
+           (structure,&nbsp;name[,&nbsp;...])
+          </td>
+          <td>
+           Adds the Blender meshes&rsquo; edges and faces as an element set.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.blender.add_nset_from_objects.html" title="compas_fea.cad.blender.add_nset_from_objects">
+            <code class="xref py py-obj docutils literal">
+             add_nset_from_objects
+            </code>
+           </a>
+           (structure,&nbsp;name[,&nbsp;...])
+          </td>
+          <td>
+           Adds the objects&rsquo; locations as a node set.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.blender.plot_data.html" title="compas_fea.cad.blender.plot_data">
+            <code class="xref py py-obj docutils literal">
+             plot_data
+            </code>
+           </a>
+           (structure,&nbsp;path,&nbsp;name,&nbsp;step[,&nbsp;...])
+          </td>
+          <td>
+           Plots analysis results on the deformed shape of the Structure.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.blender.ordered_lines.html" title="compas_fea.cad.blender.ordered_lines">
+            <code class="xref py py-obj docutils literal">
+             ordered_lines
+            </code>
+           </a>
+           (structure,&nbsp;network,&nbsp;layer)
+          </td>
+          <td>
+           Extract node and element orders from a Network for a given start-point.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.blender.plot_voxels.html" title="compas_fea.cad.blender.plot_voxels">
+            <code class="xref py py-obj docutils literal">
+             plot_voxels
+            </code>
+           </a>
+           (structure,&nbsp;path,&nbsp;name,&nbsp;step[,&nbsp;...])
+          </td>
+          <td>
+           Applies a base voxel material and texture to a cube for 4D visualisation.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.blender.mesh_extrude.html" title="compas_fea.cad.blender.mesh_extrude">
+            <code class="xref py py-obj docutils literal">
+             mesh_extrude
+            </code>
+           </a>
+           (structure,&nbsp;bmesh,&nbsp;nz,&nbsp;dz)
+          </td>
+          <td>
+           Extrudes a Blender mesh into cells of many layers.
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+      <div class="section">
+       <h2>
+        rhino
+       </h2>
+       <p>
+        <code class="xref py py-mod docutils literal">
+         compas_fea.cad.rhino
+        </code>
+       </p>
+       <table border="1" class="longtable docutils table table-responsive table-bordered">
+        <colgroup>
+         <col width="10%"/>
+         <col width="90%"/>
+        </colgroup>
+        <tbody valign="top">
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.rhino.add_element_set.html" title="compas_fea.cad.rhino.add_element_set">
+            <code class="xref py py-obj docutils literal">
+             add_element_set
+            </code>
+           </a>
+           (structure,&nbsp;guids,&nbsp;name[,&nbsp;...])
+          </td>
+          <td>
+           Adds element set information from Rhino curve and mesh guids.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.rhino.add_node_set.html" title="compas_fea.cad.rhino.add_node_set">
+            <code class="xref py py-obj docutils literal">
+             add_node_set
+            </code>
+           </a>
+           (structure,&nbsp;guids,&nbsp;name[,&nbsp;explode])
+          </td>
+          <td>
+           Adds node set information from Rhino point guids.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.rhino.add_nodes_elements_from_layers.html" title="compas_fea.cad.rhino.add_nodes_elements_from_layers">
+            <code class="xref py py-obj docutils literal">
+             add_nodes_elements_from_layers
+            </code>
+           </a>
+           (structure,&nbsp;...)
+          </td>
+          <td>
+           Adds node and element data from Rhino layers to Structure object.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.rhino.add_sets_from_layers.html" title="compas_fea.cad.rhino.add_sets_from_layers">
+            <code class="xref py py-obj docutils literal">
+             add_sets_from_layers
+            </code>
+           </a>
+           (structure,&nbsp;layers[,&nbsp;...])
+          </td>
+          <td>
+           Add node or element sets to the Structure object from layers.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.rhino.mesh_extrude.html" title="compas_fea.cad.rhino.mesh_extrude">
+            <code class="xref py py-obj docutils literal">
+             mesh_extrude
+            </code>
+           </a>
+           (structure,&nbsp;guid,&nbsp;nz,&nbsp;dz)
+          </td>
+          <td>
+           Extrudes a Rhino mesh into cells of many layers.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.rhino.network_from_lines.html" title="compas_fea.cad.rhino.network_from_lines">
+            <code class="xref py py-obj docutils literal">
+             network_from_lines
+            </code>
+           </a>
+           (guids)
+          </td>
+          <td>
+           Creates a Network datastructure object from a list of curve guids.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.rhino.ordered_lines.html" title="compas_fea.cad.rhino.ordered_lines">
+            <code class="xref py py-obj docutils literal">
+             ordered_lines
+            </code>
+           </a>
+           (structure,&nbsp;network,&nbsp;layer)
+          </td>
+          <td>
+           Extract node and element orders from a Network for a given start-point.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.rhino.plot_axes.html" title="compas_fea.cad.rhino.plot_axes">
+            <code class="xref py py-obj docutils literal">
+             plot_axes
+            </code>
+           </a>
+           (xyz,&nbsp;e11,&nbsp;e22,&nbsp;e33[,&nbsp;sc])
+          </td>
+          <td>
+           Plots a set of axes.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.rhino.plot_data.html" title="compas_fea.cad.rhino.plot_data">
+            <code class="xref py py-obj docutils literal">
+             plot_data
+            </code>
+           </a>
+           (structure,&nbsp;path,&nbsp;name,&nbsp;step[,&nbsp;...])
+          </td>
+          <td>
+           Plots analysis results on the deformed shape of the Structure.
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <a class="reference internal" href="generated/compas_fea.cad.rhino.plot_principal_stresses.html" title="compas_fea.cad.rhino.plot_principal_stresses">
+            <code class="xref py py-obj docutils literal">
+             plot_principal_stresses
+            </code>
+           </a>
+           (structure,&nbsp;path,&nbsp;...)
+          </td>
+          <td>
+           Plots the principal stresses of the elements.
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+     <nav class="compas-sideways">
+      <a class="btn btn-primary compas-prev" href="compas_fea.html" role="button">
+       compas_fea
+      </a>
+      <a class="btn btn-primary compas-next" href="generated/compas_fea.cad.blender.add_nodes_elements_from_bmesh.html" role="button">
+       add_nodes_elements_from_bmesh
+      </a>
+     </nav>
+    </main>
+    <!-- sidebar navigation -->
+    <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
+     <div class="navbar-light">
+      <form action="../search.html" class="d-flex compas-searchbox" id="" method="get">
+       <input class="form-control" name="q" placeholder="Search docs" type="text"/>
+       <input name="check_keywords" type="hidden" value="yes"/>
+       <input name="area" type="hidden" value="default"/>
+       <button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon">
+        </span>
+       </button>
+      </form>
+      <div class="navbar-expand-md">
+       <div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
+        <ul class="nav flex-column active">
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../intro.html">
+           Introduction
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../tutorial.html">
+           Tutorial
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../examples.html">
+           Examples
+          </a>
+         </li>
+         <li class="nav-item active">
+          <a class="nav-link reference internal" href="../reference.html">
+           Reference
+          </a>
+          <ul class="nav active">
+           <li class="nav-item active">
+            <a class="nav-link reference internal" href="compas_fea.html">
+             compas_fea
+            </a>
+            <ul class="nav active">
+             <li class="nav-item active">
+              <a class="nav-link active current reference internal" href="#">
+               cad
+              </a>
+             </li>
+             <li class="nav-item">
+              <a class="nav-link reference internal" href="compas_fea.fea.html">
+               fea
+              </a>
+             </li>
+             <li class="nav-item">
+              <a class="nav-link reference internal" href="compas_fea.structure.html">
+               structure
+              </a>
+             </li>
+            </ul>
+           </li>
+          </ul>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../license.html">
+           License
+          </a>
+         </li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </div>
+    <!-- toc of current page -->
+    <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+     <ul class="nav flex-column" id="compas-localnav">
+      <li class="nav-item">
+       <a class="nav-link reference internal" href="#">
+        cad
+       </a>
+       <ul class="nav">
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#blender">
+          blender
+         </a>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#rhino">
+          rhino
+         </a>
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </div>
+   </div>
+  </div>
+  <footer class="compas-footer">
+   &copy; Copyright 2017, Block Research Group.
+                
+            
+
+            
+                Last updated on Sep 26, 2017.
+            
+
+            
+                Created using
+   <a href="http://sphinx-doc.org/">
+    Sphinx
+   </a>
+   1.5.1.
+  </footer>
+  <script type="text/javascript">
+   var DOCUMENTATION_OPTIONS = {
+                URL_ROOT:    '',
+                VERSION:     '',
+                COLLAPSE_INDEX: false,
+                FILE_SUFFIX: '.html',
+                HAS_SOURCE:  true,
+                SOURCELINK_SUFFIX: '.txt'
+              };
+  </script>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js">
+  </script>
+  <script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js">
+  </script>
+  <script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js">
+  </script>
+  <script src="../static/underscore.js">
+  </script>
+  <script src="../static/doctools.js">
+  </script>
+  <script src="../static/searchtools_.js">
+  </script>
+  <script>
+   hljs.initHighlightingOnLoad();
+                anchors.add();
+  </script>
+ </body>
+</html>

@@ -1,109 +1,63 @@
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="no-js" lang="en">
- <!--<![endif]-->
+<html lang="en">
  <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>
-   compas_fea.fea.abaq.abaq &mdash; compas_fea  documentation
+   compas_fea -- FEA package for compas
   </title>
-  <link href="../../../../static/css/theme.css" rel="stylesheet" type="text/css"/>
+  <!-- Required meta tags -->
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <!-- compas meta tags -->
+  <meta content="" name="author"/>
+  <meta content="" name="description"/>
+  <!-- Bootstrap CSS -->
+  <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
+  <!-- highlight CSS -->
+  <link href="../../../../static/css/github.css" rel="stylesheet" type="text/css"/>
+  <!-- compas CSS -->
   <link href="../../../../static/css/compas.css" rel="stylesheet" type="text/css"/>
-  <link href="../../../../genindex.html" rel="index" title="Index"/>
-  <link href="../../../../search.html" rel="search" title="Search"/>
-  <link href="../../../../index.html" rel="top" title="compas_fea  documentation"/>
-  <link href="../../../index.html" rel="up" title="Module code"/>
-  <script src="../../../../static/js/modernizr.min.js">
+  <link href="../../../../static/css/compas-reference.css" rel="stylesheet" type="text/css"/>
+  <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript">
   </script>
  </head>
- <body class="wy-body-for-nav" role="document">
-  <div class="wy-grid-for-nav">
-   <nav class="wy-nav-side" data-toggle="wy-nav-shift">
-    <div class="wy-side-scroll">
-     <div class="wy-side-nav-search">
-      <a class="icon icon-home" href="../../../../index.html">
-       compas_fea
-      </a>
-      <div role="search">
-       <form action="../../../../search.html" class="wy-form" id="rtd-search-form" method="get">
-        <input name="q" placeholder="Search docs" type="text"/>
-        <input name="check_keywords" type="hidden" value="yes"/>
-        <input name="area" type="hidden" value="default"/>
-       </form>
-      </div>
-     </div>
-     <div aria-label="main navigation" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
-      <ul>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../../../../pages/intro.html">
-         Introduction
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../../../../pages/tutorial.html">
-         Tutorial
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../../../../pages/examples.html">
-         Examples
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../../../../pages/reference.html">
-         Reference
-        </a>
-       </li>
-       <li class="toctree-l1">
-        <a class="reference internal" href="../../../../pages/license.html">
-         License
-        </a>
-       </li>
-      </ul>
-     </div>
-    </div>
-   </nav>
-   <section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
-    <nav aria-label="top navigation" class="wy-nav-top" role="navigation">
-     <i class="fa fa-bars" data-toggle="wy-nav-top">
-     </i>
-     <a href="../../../../index.html">
+ <body data-spy="scroll" data-target="#compas-localnav">
+  <!-- main navigation bar -->
+  <header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
+   <a class="navbar-brand" href="/index.html">
+    compas
+   </a>
+   <ul class="navbar-nav">
+    <li class="nav-item">
+     <a class="nav-link" href="index.html">
       compas_fea
      </a>
-    </nav>
-    <div class="wy-nav-content">
-     <div class="rst-content">
-      <div aria-label="breadcrumbs navigation" role="navigation">
-       <ul class="wy-breadcrumbs">
-        <li>
-         <a href="../../../../index.html">
-          Docs
-         </a>
-         &raquo;
-        </li>
-        <li>
-         <a href="../../../index.html">
-          Module code
-         </a>
-         &raquo;
-        </li>
-        <li>
-         compas_fea.fea.abaq.abaq
-        </li>
-        <li class="wy-breadcrumbs-aside">
-        </li>
-       </ul>
-       <hr/>
-      </div>
-      <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
-       <div itemprop="articleBody">
-        <h1>
-         Source code for compas_fea.fea.abaq.abaq
-        </h1>
-        <div class="highlight">
-         <pre>
+    </li>
+   </ul>
+  </header>
+  <!-- page container -->
+  <div class="container-fluid compas-container">
+   <div class="row flex-xl-nowrap">
+    <!-- main page content -->
+    <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+     <nav class="breadcrumb">
+      <a class="breadcrumb-item" href="#">
+       compas
+      </a>
+      <a class="breadcrumb-item" href="#">
+       packages
+      </a>
+      <a class="breadcrumb-item" href="#">
+       compas_fea
+      </a>
+      <a accesskey="U" class="breadcrumb-item" href="../../../index.html">
+       module code
+      </a>
+     </nav>
+     <h1>
+      Source code for compas_fea.fea.abaq.abaq
+     </h1>
+     <div class="highlight">
+      <pre><code class="language-python border rounded">
 <span></span><span class="sd">"""</span>
 <span class="sd">compas_fea.fea.abaq : Abaqus .inp file creator.</span>
 <span class="sd">"""</span>
@@ -131,7 +85,7 @@
 <span class="p">]</span>
 
 
-<div class="viewcode-block" id="inp_constraints"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_constraints.html#compas_fea.fea.abaq.inp_constraints">[docs]</a><span class="k">def</span> <span class="nf">inp_constraints</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">constraints</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_constraints"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_constraints.html#compas_fea.fea.abaq.inp_constraints">[docs]</a><span class="k">def</span> <span class="nf">inp_constraints</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">constraints</span><span class="p">):</span>
     <span class="sd">""" Writes the constraints information to the Abaqus .inp file.</span>
 
 <span class="sd">    Parameters:</span>
@@ -162,7 +116,7 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inp_elements"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_elements.html#compas_fea.fea.abaq.inp_elements">[docs]</a><span class="k">def</span> <span class="nf">inp_elements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_elements"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_elements.html#compas_fea.fea.abaq.inp_elements">[docs]</a><span class="k">def</span> <span class="nf">inp_elements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
     <span class="sd">""" Writes the element information to the Abaqus .inp file.</span>
 
 <span class="sd">    Note:</span>
@@ -244,7 +198,7 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inp_generate"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_generate.html#compas_fea.fea.abaq.inp_generate">[docs]</a><span class="k">def</span> <span class="nf">inp_generate</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">'m'</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_generate"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_generate.html#compas_fea.fea.abaq.inp_generate">[docs]</a><span class="k">def</span> <span class="nf">inp_generate</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">'m'</span><span class="p">):</span>
     <span class="sd">""" Creates the Abaqus .inp file from the Structure object.</span>
 
 <span class="sd">    Parameters:</span>
@@ -268,7 +222,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">'***** Abaqus input file generated: </span><span class="si">{0}</span><span class="s1"> *****</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="inp_heading"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_heading.html#compas_fea.fea.abaq.inp_heading">[docs]</a><span class="k">def</span> <span class="nf">inp_heading</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_heading"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_heading.html#compas_fea.fea.abaq.inp_heading">[docs]</a><span class="k">def</span> <span class="nf">inp_heading</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
     <span class="sd">""" Creates the Abaqus .inp file heading.</span>
 
 <span class="sd">    Parameters:</span>
@@ -295,7 +249,7 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inp_materials"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_materials.html#compas_fea.fea.abaq.inp_materials">[docs]</a><span class="k">def</span> <span class="nf">inp_materials</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">materials</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_materials"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_materials.html#compas_fea.fea.abaq.inp_materials">[docs]</a><span class="k">def</span> <span class="nf">inp_materials</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">materials</span><span class="p">):</span>
     <span class="sd">""" Writes materials to the Abaqus .inp file.</span>
 
 <span class="sd">    Parameters:</span>
@@ -427,7 +381,7 @@
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inp_misc"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_misc.html#compas_fea.fea.abaq.inp_misc">[docs]</a><span class="k">def</span> <span class="nf">inp_misc</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">misc</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_misc"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_misc.html#compas_fea.fea.abaq.inp_misc">[docs]</a><span class="k">def</span> <span class="nf">inp_misc</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">misc</span><span class="p">):</span>
     <span class="sd">""" Writes misc class info to the Abaqus .inp file.</span>
 
 <span class="sd">    Parameters:</span>
@@ -458,7 +412,7 @@
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inp_nodes"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_nodes.html#compas_fea.fea.abaq.inp_nodes">[docs]</a><span class="k">def</span> <span class="nf">inp_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">units</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_nodes"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_nodes.html#compas_fea.fea.abaq.inp_nodes">[docs]</a><span class="k">def</span> <span class="nf">inp_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">units</span><span class="p">):</span>
     <span class="sd">""" Writes the nodal co-ordinates information to the Abaqus .inp file.</span>
 
 <span class="sd">    Note:</span>
@@ -485,7 +439,7 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inp_properties"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_properties.html#compas_fea.fea.abaq.inp_properties">[docs]</a><span class="k">def</span> <span class="nf">inp_properties</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sections</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">sets</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_properties"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_properties.html#compas_fea.fea.abaq.inp_properties">[docs]</a><span class="k">def</span> <span class="nf">inp_properties</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sections</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">sets</span><span class="p">):</span>
     <span class="sd">""" Writes the section information to the Abaqus .inp file.</span>
 
 <span class="sd">    Parameters:</span>
@@ -600,7 +554,7 @@
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inp_sets"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_sets.html#compas_fea.fea.abaq.inp_sets">[docs]</a><span class="k">def</span> <span class="nf">inp_sets</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sets</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_sets"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_sets.html#compas_fea.fea.abaq.inp_sets">[docs]</a><span class="k">def</span> <span class="nf">inp_sets</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sets</span><span class="p">):</span>
     <span class="sd">""" Creates the Abaqus .inp file node sets NSETs and element sets ELSETs.</span>
 
 <span class="sd">    Note:</span>
@@ -654,7 +608,7 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inp_steps"><a class="viewcode-back" href="../../../../pages/reference/generated/compas_fea.fea.abaq.inp_steps.html#compas_fea.fea.abaq.inp_steps">[docs]</a><span class="k">def</span> <span class="nf">inp_steps</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">interactions</span><span class="p">,</span> <span class="n">misc</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_steps"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_steps.html#compas_fea.fea.abaq.inp_steps">[docs]</a><span class="k">def</span> <span class="nf">inp_steps</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">interactions</span><span class="p">,</span> <span class="n">misc</span><span class="p">):</span>
     <span class="sd">""" Writes step information to the Abaqus .inp file.</span>
 
 <span class="sd">    Note:</span>
@@ -876,58 +830,108 @@
             <span class="c1">#     f.write('*END STEP\n')</span>
 
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
-</pre>
-        </div>
+</code></pre>
+     </div>
+     <nav class="compas-sideways">
+     </nav>
+    </main>
+    <!-- sidebar navigation -->
+    <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
+     <div class="navbar-light">
+      <form action="../../../../search.html" class="d-flex compas-searchbox" id="" method="get">
+       <input class="form-control" name="q" placeholder="Search docs" type="text"/>
+       <input name="check_keywords" type="hidden" value="yes"/>
+       <input name="area" type="hidden" value="default"/>
+       <button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon">
+        </span>
+       </button>
+      </form>
+      <div class="navbar-expand-md">
+       <div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
+        <ul class="nav flex-column">
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../../../../intro.html">
+           Introduction
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../../../../tutorial.html">
+           Tutorial
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../../../../examples.html">
+           Examples
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../../../../reference.html">
+           Reference
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../../../../license.html">
+           License
+          </a>
+         </li>
+        </ul>
        </div>
       </div>
-      <footer>
-       <hr/>
-       <div role="contentinfo">
-        <p>
-         &copy; Copyright 2017, Block Research Group.
-        </p>
-       </div>
-       Built with
-       <a href="http://sphinx-doc.org/">
-        Sphinx
-       </a>
-       using a
-       <a href="https://github.com/snide/sphinx_rtd_theme">
-        theme
-       </a>
-       provided by
-       <a href="https://readthedocs.org">
-        Read the Docs
-       </a>
-       .
-      </footer>
      </div>
     </div>
-   </section>
+    <!-- toc of current page -->
+    <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+    </div>
+   </div>
   </div>
+  <footer class="compas-footer">
+   &copy; Copyright 2017, Block Research Group.
+                
+            
+
+            
+                Last updated on Sep 26, 2017.
+            
+
+            
+                Created using
+   <a href="http://sphinx-doc.org/">
+    Sphinx
+   </a>
+   1.5.1.
+  </footer>
   <script type="text/javascript">
    var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../../',
-            VERSION:'',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
+                URL_ROOT:    '',
+                VERSION:     '',
+                COLLAPSE_INDEX: false,
+                FILE_SUFFIX: '.html',
+                HAS_SOURCE:  true,
+                SOURCELINK_SUFFIX: '.txt'
+              };
   </script>
-  <script src="../../../../static/jquery.js" type="text/javascript">
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js">
   </script>
-  <script src="../../../../static/underscore.js" type="text/javascript">
+  <script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js">
   </script>
-  <script src="../../../../static/doctools.js" type="text/javascript">
+  <script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js">
   </script>
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js">
   </script>
-  <script src="../../../../static/js/theme.js" type="text/javascript">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js">
   </script>
-  <script type="text/javascript">
-   jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
+  <script src="../../../../static/underscore.js">
+  </script>
+  <script src="../../../../static/doctools.js">
+  </script>
+  <script src="../../../../static/searchtools_.js">
+  </script>
+  <script>
+   hljs.initHighlightingOnLoad();
+                anchors.add();
   </script>
  </body>
 </html>

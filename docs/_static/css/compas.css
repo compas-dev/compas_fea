@@ -1,38 +1,318 @@
-.wy-nav-content {
-    max-width: 960px;
+body {
 }
 
-.wy-menu-vertical li.toctree-l3 li.toctree-l4 > ul,
-.wy-menu-vertical li.toctree-l3.current li.toctree-l4 > ul,
-.wy-menu-vertical li.toctree-l4 li.toctree-l5 > ul,
-.wy-menu-vertical li.toctree-l4.current li.toctree-l5 > ul {
-    display: none;
+h1 {
+	margin-bottom: 2rem;
+	word-wrap: break-word;
 }
 
-.wy-menu-vertical li.toctree-l3.current li.toctree-l4.current > ul,
-.wy-menu-vertical li.toctree-l4.current li.toctree-l5.current > ul {
-    display: block;
+h2 {
+	margin-top: 3rem;
+	margin-bottom: 2rem;
 }
 
-.wy-menu-vertical li.toctree-l4 li.toctree-l5 > a,
-.wy-menu-vertical li.toctree-l4.current li.toctree-l5 > a {
-    background: #cecece none repeat scroll 0 0;
-    border-bottom: medium none;
-    border-top: medium none;
-    display: block;
-    padding: 0.4045em 5.663em;
-    padding-right: 4.045em;
+h3 {
+	margin-top: 2rem;
+	margin-bottom: 1rem;
+	font-weight: normal;
 }
 
-.rst-content code,
-.rst-content code.xref,
-.rst-content a code,
-.rst-content a code.xref,
-.rst-content a.reference code,
-.rst-content a.reference code.xref {
-    font-weight: normal;
+a {
+	text-decoration: none;
 }
 
-.rst-content a.reference code {
-    color: #2980b9;
+a:hover {
+	text-decoration: none;
+}
+
+/*li .py-mod {
+	word-wrap: break-word;
+}*/
+
+.compas-navbar {
+	height: 4rem;
+	z-index: 1053;
+}
+
+.compas-container {
+	/*max-width: 1440px;*/
+}
+
+.compas-footer {
+	width: 100%;
+	min-height: 8rem;
+	background-color: #eee;
+	border-top: 1px solid #ccc;
+	padding: 2rem;
+	color: #888;
+	text-align: center;
+}
+
+.compas-sidebar {
+	order: 0;
+	z-index: 1000;
+	background-color: #f8f9fa;
+	padding-top: 0rem;
+	padding-bottom: 0rem;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.compas-content {
+	order: 1;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	padding-top: 2rem;
+	padding-bottom: 3em;
+}
+
+.compas-toc {
+	order: 2;
+	border-left: 1px solid #eee;
+	padding-top: 1rem;
+	padding-left: 0;
+	padding-right: 0;
+	background-color: #fefefe;
+	font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+	@supports ((position: sticky)
+		       or (position: -webkit-sticky)
+		       or (position: -moz-sticky)
+		       or (position: -ms-sticky)
+		       or (position: -o-sticky)) {
+		.compas-navbar {
+			position: -webkit-sticky;
+			position: -moz-sticky;
+			position: -ms-sticky;
+			position: -o-sticky;
+			position: sticky;
+			top: 0;
+		}
+	}
+}
+
+@media (min-width: 768px) {
+	.compas-sidebar {
+		border-bottom: none;
+		border-right: 1px solid #ccc;
+	}
+
+	@supports ((position: sticky)
+		       or (position: -webkit-sticky)
+		       or (position: -moz-sticky)
+		       or (position: -ms-sticky)
+		       or (position: -o-sticky)) {
+		.compas-sidebar {
+			position: -webkit-sticky;
+			position: -moz-sticky;
+			position: -ms-sticky;
+			position: -o-sticky;
+			position: sticky;
+			top: 4rem;
+			max-height: calc(100vh - 4rem);
+			overflow-y: auto;
+		}
+	}
+}
+
+@media (min-width: 768px) {
+	.compas-content {
+		padding-left: 3rem;
+		padding-right: 3rem;
+	}
+
+	@supports ((position: sticky)
+		       or (position: -webkit-sticky)
+		       or (position: -moz-sticky)
+		       or (position: -ms-sticky)
+		       or (position: -o-sticky)) {
+		.compas-content {
+		}
+	}
+}
+
+@media (min-width: 768px) {
+	@supports ((position: sticky)
+		       or (position: -webkit-sticky)
+		       or (position: -moz-sticky)
+		       or (position: -ms-sticky)
+		       or (position: -o-sticky)) {
+		.compas-toc {
+			position: -webkit-sticky;
+			position: -moz-sticky;
+			position: -ms-sticky;
+			position: -o-sticky;
+			position: sticky;
+			top: 4rem;
+			max-height: calc(100vh - 4rem);
+			overflow-y: auto;
+		}
+	}
+}
+
+/* Local */
+
+.compas-toc .nav {
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+
+.compas-toc .nav-item {
+	list-style-type: none;
+	display: block;
+	width: 100%;
+}
+
+.compas-toc .nav-link {
+	color: #ccc;
+	padding: 0.25rem 0;
+}
+
+.compas-toc .nav-link:hover {
+	color: #666;
+}
+
+.compas-toc .nav-link.active {
+	color: #222;
+}
+
+/* Sidebar */
+
+.compas-searchbox {
+	padding: 1rem;
+	border-bottom: 1px solid #ccc;
+	position: relative;
+}
+
+.compas-searchbox input {
+	border-radius: 0.25rem;
+}
+
+.compas-navigation-toggler {
+	margin-left: 1rem;
+}
+
+.compas-navigation {
+	padding-top: 1rem;
+	padding-bottom: 2rem;
+}
+
+.compas-sidebar .nav {
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
+}
+
+.compas-sidebar .nav-item {
+	list-style-type: none;
+	display: block;
+	width: 100%;
+}
+
+.compas-sidebar .nav-link {
+	padding: 0.25rem 0.5rem;
+	color: #222;
+}
+
+.compas-sidebar .nav .nav .nav-link {
+	/*color: #666;*/
+}
+
+.compas-sidebar .nav .nav-item {
+	font-size: 1rem;
+}
+
+.compas-sidebar .nav .nav {
+	display: none;
+}
+
+.compas-sidebar .nav-item.active .nav {
+	display: block;
+	margin-bottom: 1rem;
+}
+
+.compas-sidebar .nav .nav .nav-item {
+	font-size: 0.875rem;
+}
+
+.compas-sidebar > .nav > .nav-item.active {
+	margin-top: 0rem;
+	margin-bottom: 0rem;
+}
+
+.compas-sidebar > .nav > .nav-item.active:first-child {
+	margin-top: 0rem;
+}
+
+.compas-sidebar .nav-item.active > .nav-link,
+.compas-sidebar .nav-link.active {
+	color: #222;
+	font-weight: 600;
+}
+
+/* Content */
+
+.compas-content .breadcrumb {
+	background-color: #fff;
+	padding: 0;
+}
+
+.compas-content .section h2::before {
+	display: block;
+	padding-top: 6rem;
+	margin-top: -6rem;
+	visibility: hidden;
+	content: "";
+}
+
+.compas-content ul {
+	margin-bottom: 2rem;
+}
+
+.compas-content ul p {
+	margin-bottom: 0.5rem;
+}
+.compas-content ul ul {
+	margin-bottom: 1rem;
+}
+
+.compas-content .alert {
+	margin-bottom: 2rem;
+}
+
+.compas-content .figure {
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+}
+
+.compas-content .card {
+	margin-bottom: 2rem;
+}
+
+.compas-content .highlight {
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+}
+
+.compas-content .highlight .hljs {
+	padding: 2rem;
+	font-size: 0.875rem;
+	/*font-family: monospace;*/
+}
+
+.compas-content .anchorjs-link {
+	text-decoration: none;
+}
+
+.compas-sideways {
+	margin-top: 4rem;
+}
+
+.compas-prev {
+
+}
+
+.compas-next {
+	float: right;
 }

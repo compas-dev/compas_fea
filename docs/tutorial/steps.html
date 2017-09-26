@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <title>
+   compas_fea -- FEA package for compas
+  </title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <!-- compas meta tags -->
+  <meta content="" name="author"/>
+  <meta content="" name="description"/>
+  <!-- Bootstrap CSS -->
+  <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
+  <!-- highlight CSS -->
+  <link href="../static/css/github.css" rel="stylesheet" type="text/css"/>
+  <!-- compas CSS -->
+  <link href="../static/css/compas.css" rel="stylesheet" type="text/css"/>
+  <link href="../static/css/compas-reference.css" rel="stylesheet" type="text/css"/>
+  <link href="structure.html" rel="next" title="Structure"/>
+  <link href="setup.html" rel="prev" title="Setup"/>
+  <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript">
+  </script>
+ </head>
+ <body data-spy="scroll" data-target="#compas-localnav">
+  <!-- main navigation bar -->
+  <header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
+   <a class="navbar-brand" href="/index.html">
+    compas
+   </a>
+   <ul class="navbar-nav">
+    <li class="nav-item">
+     <a class="nav-link" href="index.html">
+      compas_fea
+     </a>
+    </li>
+   </ul>
+  </header>
+  <!-- page container -->
+  <div class="container-fluid compas-container">
+   <div class="row flex-xl-nowrap">
+    <!-- main page content -->
+    <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+     <nav class="breadcrumb">
+      <a class="breadcrumb-item" href="#">
+       compas
+      </a>
+      <a class="breadcrumb-item" href="#">
+       packages
+      </a>
+      <a class="breadcrumb-item" href="#">
+       compas_fea
+      </a>
+      <a accesskey="U" class="breadcrumb-item" href="../tutorial.html">
+       tutorial
+      </a>
+     </nav>
+     <div class="section">
+      <h1>
+       Steps
+      </h1>
+      <p>
+       This page shows how
+       <strong>
+        Step
+       </strong>
+       objects are added to the
+       <strong>
+        Structure
+       </strong>
+       object, here given as
+       <code class="docutils literal">
+        mdl
+       </code>
+       .
+      </p>
+      <div class="section">
+       <h2>
+        Adding steps
+       </h2>
+       <p>
+        <strong>
+         Step
+        </strong>
+        objects are used to define the type of analysis and to bring together all of the
+        <strong>
+         Displacement
+        </strong>
+        and
+        <strong>
+         Load
+        </strong>
+        objects. Like with
+        <strong>
+         Material
+        </strong>
+        and
+        <strong>
+         Section
+        </strong>
+        objects requiring
+        <strong>
+         ElementProperties
+        </strong>
+        objects to be activated,
+        <strong>
+         Load
+        </strong>
+        and
+        <strong>
+         Displacement
+        </strong>
+        objects use
+        <strong>
+         Step
+        </strong>
+        objects to be activated, as without steps they will not impose any effect on the structure.
+        <strong>
+         Step
+        </strong>
+        objects are created from classes in module
+        <strong>
+         compas_fea.structure.steps
+        </strong>
+        for which the most commonly used
+        <strong>
+         GeneralStep
+        </strong>
+        is shown below. It is added to the
+        <code class="docutils literal">
+         .steps
+        </code>
+        dictionary of the
+        <strong>
+         Structure
+        </strong>
+        object with string keys and lists of the string key names of the
+        <strong>
+         Load
+        </strong>
+        and
+        <strong>
+         Displacement
+        </strong>
+        objects to apply.
+       </p>
+       <div class="highlight">
+        <pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GeneralStep</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'step_bc'</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">'disp_pinned'</span><span class="p">]))</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'step_loads'</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">'load_point'</span><span class="p">,</span> <span class="s1">'load_gravity'</span><span class="p">]))</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">set_steps_order</span><span class="p">([</span><span class="s1">'step_bc'</span><span class="p">,</span> <span class="s1">'step_loads'</span><span class="p">])</span>
+</code></pre>
+       </div>
+       <p>
+        Here, steps with string keys
+        <code class="docutils literal">
+         'step_bc'
+        </code>
+        and
+        <code class="docutils literal">
+         'step_loads'
+        </code>
+        are added, to be analysed in the order given by the order list. That is,
+        <code class="docutils literal">
+         'disp_pinned'
+        </code>
+        will be completed first in
+        <code class="docutils literal">
+         'step_bc'
+        </code>
+        , followed by
+        <code class="docutils literal">
+         'load_point'
+        </code>
+        and
+        <code class="docutils literal">
+         'load_gravity'
+        </code>
+        of
+        <code class="docutils literal">
+         'step_loads'
+        </code>
+        . The order of the
+        <strong>
+         Step
+        </strong>
+        objects can be seen and edited in the
+        <code class="docutils literal">
+         'order'
+        </code>
+        key.
+       </p>
+       <div class="highlight">
+        <pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">'order'</span><span class="p">]</span>
+<span class="go">['step_bc', 'step_loads']</span>
+</code></pre>
+       </div>
+      </div>
+      <div class="section">
+       <h2>
+        Arguments
+       </h2>
+       <p>
+        The basic arguments to the
+        <strong>
+         GeneralStep
+        </strong>
+        class are presented above, these are the string
+        <code class="docutils literal">
+         name
+        </code>
+        and the lists of
+        <code class="docutils literal">
+         displacements
+        </code>
+        and
+        <code class="docutils literal">
+         loads
+        </code>
+        . Additionally the following can be given:
+       </p>
+       <div class="section">
+        <h3>
+         Increments
+        </h3>
+        <p>
+         <code class="docutils literal">
+          increments
+         </code>
+         (default
+         <code class="docutils literal">
+          200
+         </code>
+         ) is the integer number of increments the analysis step can take, a higher number of increments may be needed for a model that shows highly non-linear behaviour due to material and/or geometric effects. A stiff linear analysis will often use only a few or even one of these increments. If the analysis does not converge for even a high number of increments, it may mean the structure is struggling to find equilibrium for the given applied actions. This may indicate that the structure needs to be stiffer or stronger, that the loads need to be reduced, or that there may be mechanisms or modelling problems in the structure.
+        </p>
+       </div>
+       <div class="section">
+        <h3>
+         Factor
+        </h3>
+        <p>
+         <code class="docutils literal">
+          factor
+         </code>
+         (default
+         <code class="docutils literal">
+          1.0
+         </code>
+         ) is the float proportionality factor on the loads and displacements. By default, no scaling of the load and displacement components will occur. Defining a value other than unity is useful for creating
+         <strong>
+          Step
+         </strong>
+         objects that represent load combinations for design code checks, without having to change the base
+         <strong>
+          Load
+         </strong>
+         and
+         <strong>
+          Displacement
+         </strong>
+         objects. For instance, factors of 1.35 and 1.5 might be applied to dead and live loads.
+        </p>
+       </div>
+       <div class="section">
+        <h3>
+         NLGEOM
+        </h3>
+        <p>
+         <code class="docutils literal">
+          nlgeom
+         </code>
+         (default
+         <code class="docutils literal">
+          True
+         </code>
+         ) is a boolean to toggle on or off the effects of non-linear geometry in the analysis. If the structure is relatively stiff, meaning that it does not displace significantly under the applied actions, then it is likely that the deformed geometry does not affect significantly the internal forces and moments. However, a coupling of large forces and deformations can lead to second order effects, which can lead to further deformations and structural instability. To incorporate these and other non-linear geometric effects, keep this to
+         <code class="docutils literal">
+          True
+         </code>
+         and a second order analysis will be performed. If this is not needed, then a first order analysis with
+         <code class="docutils literal">
+          nlgeom=False
+         </code>
+         can be used.
+         <strong>
+          Note
+         </strong>
+         , turning off
+         <code class="docutils literal">
+          nlgeom
+         </code>
+         just to get the analysis to run can be misleading and dangerous, as non-convergence in a
+         <code class="docutils literal">
+          nlgeom=True
+         </code>
+         analysis can be a warning signal for local or global instability.
+        </p>
+       </div>
+       <div class="section">
+        <h3>
+         Type
+        </h3>
+        <p>
+         <code class="docutils literal">
+          type
+         </code>
+         (default
+         <code class="docutils literal">
+          'STATIC'
+         </code>
+         ) the default
+         <code class="docutils literal">
+          'STATIC'
+         </code>
+         analysis type will incrementally increase the loads (or displacements) until equilibrium is ideally achieved for the given applied load level. The loads are generally increased from zero, and the structure follows its load&ndash;displacement curve up until a peak load, in increments related to the tangent stiffness (gradient) at any point on the curve. If the applied load exceeds the peak load of the structure, it cannot be in equilibrium and will fail prematurely. A monotonically increasing load controlled analysis will not give information on the post-peak load behaviour on the load&ndash;displacement curve, as loads are now decreasing. For this post-peak load information, it is required to use either a displacement controlled analysis or to change the
+         <code class="docutils literal">
+          type
+         </code>
+         to
+         <code class="docutils literal">
+          'STATIC,RIKS'
+         </code>
+         , which is an arc-length based analysis process.
+        </p>
+       </div>
+      </div>
+     </div>
+     <nav class="compas-sideways">
+      <a class="btn btn-primary compas-prev" href="setup.html" role="button">
+       Setup
+      </a>
+      <a class="btn btn-primary compas-next" href="structure.html" role="button">
+       Structure
+      </a>
+     </nav>
+    </main>
+    <!-- sidebar navigation -->
+    <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
+     <div class="navbar-light">
+      <form action="../search.html" class="d-flex compas-searchbox" id="" method="get">
+       <input class="form-control" name="q" placeholder="Search docs" type="text"/>
+       <input name="check_keywords" type="hidden" value="yes"/>
+       <input name="area" type="hidden" value="default"/>
+       <button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon">
+        </span>
+       </button>
+      </form>
+      <div class="navbar-expand-md">
+       <div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
+        <ul class="nav flex-column active">
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../intro.html">
+           Introduction
+          </a>
+         </li>
+         <li class="nav-item active">
+          <a class="nav-link reference internal" href="../tutorial.html">
+           Tutorial
+          </a>
+          <ul class="nav active">
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="analysis.html">
+             Analysis
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="cad.html">
+             CAD
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="displacements.html">
+             Displacements
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="elements.html">
+             Elements
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="loads.html">
+             Loads
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="material.html">
+             Materials
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="nodes.html">
+             Nodes
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="properties.html">
+             Properties
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="sections.html">
+             Sections
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="sets.html">
+             Sets
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="setup.html">
+             Setup
+            </a>
+           </li>
+           <li class="nav-item active">
+            <a class="nav-link active current reference internal" href="#">
+             Steps
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="structure.html">
+             Structure
+            </a>
+           </li>
+          </ul>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../examples.html">
+           Examples
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../reference.html">
+           Reference
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../license.html">
+           License
+          </a>
+         </li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </div>
+    <!-- toc of current page -->
+    <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+     <ul class="nav flex-column" id="compas-localnav">
+      <li class="nav-item">
+       <a class="nav-link reference internal" href="#">
+        Steps
+       </a>
+       <ul class="nav">
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#adding-steps">
+          Adding steps
+         </a>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#arguments">
+          Arguments
+         </a>
+         <ul class="nav">
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#increments">
+            Increments
+           </a>
+          </li>
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#factor">
+            Factor
+           </a>
+          </li>
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#nlgeom">
+            NLGEOM
+           </a>
+          </li>
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#type">
+            Type
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </div>
+   </div>
+  </div>
+  <footer class="compas-footer">
+   &copy; Copyright 2017, Block Research Group.
+                
+            
+
+            
+                Last updated on Sep 26, 2017.
+            
+
+            
+                Created using
+   <a href="http://sphinx-doc.org/">
+    Sphinx
+   </a>
+   1.5.1.
+  </footer>
+  <script type="text/javascript">
+   var DOCUMENTATION_OPTIONS = {
+                URL_ROOT:    '',
+                VERSION:     '',
+                COLLAPSE_INDEX: false,
+                FILE_SUFFIX: '.html',
+                HAS_SOURCE:  true,
+                SOURCELINK_SUFFIX: '.txt'
+              };
+  </script>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js">
+  </script>
+  <script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js">
+  </script>
+  <script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js">
+  </script>
+  <script src="../static/underscore.js">
+  </script>
+  <script src="../static/doctools.js">
+  </script>
+  <script src="../static/searchtools_.js">
+  </script>
+  <script>
+   hljs.initHighlightingOnLoad();
+                anchors.add();
+  </script>
+ </body>
+</html>

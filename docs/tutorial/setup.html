@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <title>
+   compas_fea -- FEA package for compas
+  </title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <!-- compas meta tags -->
+  <meta content="" name="author"/>
+  <meta content="" name="description"/>
+  <!-- Bootstrap CSS -->
+  <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
+  <!-- highlight CSS -->
+  <link href="../static/css/github.css" rel="stylesheet" type="text/css"/>
+  <!-- compas CSS -->
+  <link href="../static/css/compas.css" rel="stylesheet" type="text/css"/>
+  <link href="../static/css/compas-reference.css" rel="stylesheet" type="text/css"/>
+  <link href="steps.html" rel="next" title="Steps"/>
+  <link href="sets.html" rel="prev" title="Sets"/>
+  <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript">
+  </script>
+ </head>
+ <body data-spy="scroll" data-target="#compas-localnav">
+  <!-- main navigation bar -->
+  <header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
+   <a class="navbar-brand" href="/index.html">
+    compas
+   </a>
+   <ul class="navbar-nav">
+    <li class="nav-item">
+     <a class="nav-link" href="index.html">
+      compas_fea
+     </a>
+    </li>
+   </ul>
+  </header>
+  <!-- page container -->
+  <div class="container-fluid compas-container">
+   <div class="row flex-xl-nowrap">
+    <!-- main page content -->
+    <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+     <nav class="breadcrumb">
+      <a class="breadcrumb-item" href="#">
+       compas
+      </a>
+      <a class="breadcrumb-item" href="#">
+       packages
+      </a>
+      <a class="breadcrumb-item" href="#">
+       compas_fea
+      </a>
+      <a accesskey="U" class="breadcrumb-item" href="../tutorial.html">
+       tutorial
+      </a>
+     </nav>
+     <div class="section">
+      <h1>
+       Setup
+      </h1>
+      <p>
+       The following instructions describe the prerequisites for using the compas_fea package.
+      </p>
+      <div class="section">
+       <h2>
+        FE software
+       </h2>
+       <div class="section">
+        <h3>
+         Abaqus
+        </h3>
+        <p>
+         Most support with the compas_fea package is for the finite element software Abaqus by Simulia. Development has been for version 6.14 and has not been verified to work for the newer 201x releases. As this software is generally used by academia, licensing is usually through a university network academic license, or a lighter student license. be aware that a student license may contain a restriction on the number of nodes that the model may contain, and so heavy models with many shell or solid elements may surpass this limit and not execute. Licenses that require the computer to be connected to the same network as the license server, will require the host to be connected through a Virtual Private Network (VPN) through a client such as
+         <a class="reference external" href="https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-client/index.html">
+          Cisco AnyConnect
+         </a>
+         .
+        </p>
+        <p>
+         Abaqus should be installed as per the installation instructions for your version. The Abaqus documentation is not needed for the compas_fea package to run, but is a useful reference. On installation, Abaqus requires a temporary directory to be nominated for saving many different files during analysis, including the most important
+         <strong>
+          .odb
+         </strong>
+         file and various useful log files. Generally this folder will be
+         <strong>
+          C:/Temp/
+         </strong>
+         on Windows or
+         <strong>
+          ~/Temp
+         </strong>
+         on Linux, but a different folder location may be defined at the start of any compas_fea script. Abaqus will also register its core executables to the
+         <strong>
+          PATH
+         </strong>
+         for Windows systems, which can be confirmed by opening the program by typing
+         <code class="docutils literal">
+          abaqus
+          cae
+         </code>
+         in a
+         <code class="docutils literal">
+          cmd
+         </code>
+         terminal. Linux users may wish to define similar aliases manually with the following in their
+         <strong>
+          .bashrc
+         </strong>
+         or
+         <strong>
+          .profile
+         </strong>
+         file.
+        </p>
+        <div class="highlight">
+         <pre><code class="language-python border rounded"><span></span><span class="nb">alias</span> <span class="nv">abaqus_cae</span><span class="o">=</span><span class="s2">"XLIB_SKIP_ARGB_VISUALS=1 /path/to/abaqus/Commands/abaqus cae -mesa"</span>
+<span class="nb">alias</span> <span class="nv">abaqus</span><span class="o">=</span><span class="s2">"/path/to/abaqus/Commands/abaqus"</span>
+</code></pre>
+        </div>
+        <p>
+         Having these aliases set will make the use of the package easier, although the Abaqus executable can be manually given at analysis. When called for an analysis, the Abaqus executable is run in the background as a subprocess to analyse a model. There is no official support for Abaqus with Mac OS, Mac users will need to use a Virtual Machine such as
+         <a class="reference external" href="http://www.parallels.com/">
+          Parallels
+         </a>
+         ,
+         <a class="reference external" href="https://www.virtualbox.org/">
+          VirtualBox
+         </a>
+         or
+         <a class="reference external" href="https://www.vmware.com/products/workstation.html">
+          VMWare Workstation
+         </a>
+         , and use a Windows or Linux Abaqus operating system installation (see also the Opensource section below).
+        </p>
+       </div>
+       <div class="section">
+        <h3>
+         ANSYS
+        </h3>
+        <p>
+         Support for ANSYS finite element software is in development.
+        </p>
+       </div>
+       <div class="section">
+        <h3>
+         Opensource
+        </h3>
+        <p>
+         Support for opensource finite element libraries is currently in development and will be an important part of the compas_fea package. The first opensource finite element library support will be for
+         <a class="reference external" href="http://opensees.berkeley.edu/OpenSees/manuals/usermanual/index.html">
+          OpenSees
+         </a>
+         by the Pacific Earthquake Engineering (PEER) Center, due to, amongst other things, its cross-platform support.
+        </p>
+       </div>
+      </div>
+      <div class="section">
+       <h2>
+        Python
+       </h2>
+       <p>
+        As the compas_fea package uses the core compas framework for a variety of datastructure, visualisation and geometric tasks, the core compas library must be on the
+        <strong>
+         PYTHONPATH
+        </strong>
+        . This can be set in Windows under Environment Variables in Advanced System Settings, and on Linux with the following additions to the
+        <strong>
+         .bashrc
+        </strong>
+        or
+        <strong>
+         .profile
+        </strong>
+        files:
+       </p>
+       <div class="highlight">
+        <pre><code class="language-python border rounded"><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PYTHONPATH</span><span class="si">}</span>:/path/to/compas_framework/src/
+</code></pre>
+       </div>
+       <p>
+        The compas_fea package is compatible with Python versions 2.x and 3.x, and although the target finite element software may utilise one version or the other for their API, the input files that are needed to run the model through this software are generated independently.
+       </p>
+       <p>
+        A number of Python dependencies exists in order to use the compas_fea package, either as an optional or a required module or package, these are listed below. A Python distribution such as
+        <a class="reference external" href="http://www.anaconda.com/download/">
+         Anaconda
+        </a>
+        2 or 3, will generally cover all of the required module and packages and most optional ones. For a standalone
+        <a class="reference external" href="https://www.python.org/downloads/">
+         CPython
+        </a>
+        installation, additional modules and packages are recommended to be installed via
+        <code class="docutils literal">
+         pip
+        </code>
+        .
+       </p>
+       <div class="section">
+        <h3>
+         Required modules
+        </h3>
+        <ul>
+         <li>
+          <p class="first">
+           <strong>
+            NumPy
+           </strong>
+           : needed for efficient post-processing of output data.
+          </p>
+         </li>
+         <li>
+          <p class="first">
+           <strong>
+            SciPy
+           </strong>
+           : used for various 4D (voxel) visualisation functions and post-processing sparse arrays.
+          </p>
+         </li>
+        </ul>
+       </div>
+       <div class="section">
+        <h3>
+         Optional modules
+        </h3>
+        <ul>
+         <li>
+          <p class="first">
+           <strong>
+            mayavi
+           </strong>
+           : utilised for standalone voxel plotting of solid elements.
+          </p>
+         </li>
+         <li>
+          <p class="first">
+           <strong>
+            MeshPy
+           </strong>
+           : for the meshing of triangular shells (Triangle) and tetrahedron solids (TetGen).
+          </p>
+         </li>
+         <li>
+          <p class="first">
+           <strong>
+            PyOpenGL
+           </strong>
+           : a Python OpenGL requirement for the core compas Viewer.
+          </p>
+         </li>
+         <li>
+          <p class="first">
+           <strong>
+            PySide
+           </strong>
+           : for the base visualisation App.
+          </p>
+         </li>
+        </ul>
+       </div>
+      </div>
+      <div class="section">
+       <h2>
+        CAD software
+       </h2>
+       <p>
+        The compas_fea package does not need CAD software to be installed to function, but it is very useful for generating and inserting geometry into the
+        <strong>
+         Structure
+        </strong>
+        object and for efficiently visualising results, either for a single analysis of a structural model, or as part of a parametric analysis with many cycles or analyses. In general, the only difference in using a specific type of CAD software, is the manner in which geometric information is taken from the CAD environment (e.g. through layers or objects) and the way that output data is then re-plotted on this geometry. There is no difference in how objects such as loads, materials and boundary conditions are applied, as this is based on adding objects through scripting.
+       </p>
+       <div class="section">
+        <h3>
+         Rhinoceros
+        </h3>
+        <p>
+         Support for
+         <a class="reference external" href="http://www.rhino3d.com">
+          Rhinoceros
+         </a>
+         from Robert McNeel &amp; Associates is based on version 5.0, for which
+         <a class="reference external" href="http://www.ironpython.net/">
+          IronPython
+         </a>
+         is standard. Please see the installation and set-up instructions for using Rhinoceros with the core compas library, as the only addition for compas_fea compatibility is to include the compas_fea package in the
+         <strong>
+          PYTHONPATH
+         </strong>
+         .
+        </p>
+       </div>
+       <div class="section">
+        <h3>
+         Blender
+        </h3>
+        <p>
+         Support for the opensource graphics software
+         <a class="reference external" href="https://www.blender.org/">
+          Blender
+         </a>
+         by the Blender Foundation is based on version 2.78, for which Python 3.6 (CPython) is standard. The compas_fea package must again be on the
+         <strong>
+          PYTHONPATH
+         </strong>
+         to work.
+        </p>
+       </div>
+      </div>
+     </div>
+     <nav class="compas-sideways">
+      <a class="btn btn-primary compas-prev" href="sets.html" role="button">
+       Sets
+      </a>
+      <a class="btn btn-primary compas-next" href="steps.html" role="button">
+       Steps
+      </a>
+     </nav>
+    </main>
+    <!-- sidebar navigation -->
+    <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
+     <div class="navbar-light">
+      <form action="../search.html" class="d-flex compas-searchbox" id="" method="get">
+       <input class="form-control" name="q" placeholder="Search docs" type="text"/>
+       <input name="check_keywords" type="hidden" value="yes"/>
+       <input name="area" type="hidden" value="default"/>
+       <button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon">
+        </span>
+       </button>
+      </form>
+      <div class="navbar-expand-md">
+       <div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
+        <ul class="nav flex-column active">
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../intro.html">
+           Introduction
+          </a>
+         </li>
+         <li class="nav-item active">
+          <a class="nav-link reference internal" href="../tutorial.html">
+           Tutorial
+          </a>
+          <ul class="nav active">
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="analysis.html">
+             Analysis
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="cad.html">
+             CAD
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="displacements.html">
+             Displacements
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="elements.html">
+             Elements
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="loads.html">
+             Loads
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="material.html">
+             Materials
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="nodes.html">
+             Nodes
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="properties.html">
+             Properties
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="sections.html">
+             Sections
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="sets.html">
+             Sets
+            </a>
+           </li>
+           <li class="nav-item active">
+            <a class="nav-link active current reference internal" href="#">
+             Setup
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="steps.html">
+             Steps
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="structure.html">
+             Structure
+            </a>
+           </li>
+          </ul>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../examples.html">
+           Examples
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../reference.html">
+           Reference
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../license.html">
+           License
+          </a>
+         </li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </div>
+    <!-- toc of current page -->
+    <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+     <ul class="nav flex-column" id="compas-localnav">
+      <li class="nav-item">
+       <a class="nav-link reference internal" href="#">
+        Setup
+       </a>
+       <ul class="nav">
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#fe-software">
+          FE software
+         </a>
+         <ul class="nav">
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#abaqus">
+            Abaqus
+           </a>
+          </li>
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#ansys">
+            ANSYS
+           </a>
+          </li>
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#opensource">
+            Opensource
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#python">
+          Python
+         </a>
+         <ul class="nav">
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#required-modules">
+            Required modules
+           </a>
+          </li>
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#optional-modules">
+            Optional modules
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#cad-software">
+          CAD software
+         </a>
+         <ul class="nav">
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#rhinoceros">
+            Rhinoceros
+           </a>
+          </li>
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#blender">
+            Blender
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </div>
+   </div>
+  </div>
+  <footer class="compas-footer">
+   &copy; Copyright 2017, Block Research Group.
+                
+            
+
+            
+                Last updated on Sep 26, 2017.
+            
+
+            
+                Created using
+   <a href="http://sphinx-doc.org/">
+    Sphinx
+   </a>
+   1.5.1.
+  </footer>
+  <script type="text/javascript">
+   var DOCUMENTATION_OPTIONS = {
+                URL_ROOT:    '',
+                VERSION:     '',
+                COLLAPSE_INDEX: false,
+                FILE_SUFFIX: '.html',
+                HAS_SOURCE:  true,
+                SOURCELINK_SUFFIX: '.txt'
+              };
+  </script>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js">
+  </script>
+  <script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js">
+  </script>
+  <script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js">
+  </script>
+  <script src="../static/underscore.js">
+  </script>
+  <script src="../static/doctools.js">
+  </script>
+  <script src="../static/searchtools_.js">
+  </script>
+  <script>
+   hljs.initHighlightingOnLoad();
+                anchors.add();
+  </script>
+ </body>
+</html>

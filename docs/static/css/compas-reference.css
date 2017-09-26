@@ -1,0 +1,127 @@
+.rubric {
+  padding: 0.75rem 1.25rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  color: #5a5e62;
+  background-color: #eff0f2;
+  border-color: #e8eaed;
+  font-weight: 600;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  width: 100%; }
+  .rubric hr {
+    border-top-color: #dadde2; }
+  .rubric .alert-link {
+    color: #424547; }
+
+/* ----------------------------------------------------------------- */
+.admonition {
+  padding: 0.75rem 1.25rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem; }
+
+.admonition p {
+  margin-bottom: 1rem; }
+
+.admonition-title {
+  font-weight: 600;
+  color: inherit; }
+
+.admonition.note {
+  color: #464a4e;
+  background-color: #e7e8ea;
+  border-color: #dddfe2; }
+  .admonition.note hr {
+    border-top-color: #cfd2d6; }
+  .admonition.note .alert-link {
+    color: #2e3133; }
+
+.admonition.important {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba; }
+  .admonition.important hr {
+    border-top-color: #ffe8a1; }
+  .admonition.important .alert-link {
+    color: #533f03; }
+
+.admonition.warning {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb; }
+  .admonition.warning hr {
+    border-top-color: #f1b0b7; }
+  .admonition.warning .alert-link {
+    color: #491217; }
+
+.admonition.seealso {
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border-color: #bee5eb; }
+  .admonition.seealso hr {
+    border-top-color: #abdde5; }
+  .admonition.seealso .alert-link {
+    color: #062c33; }
+
+/* ----------------------------------------------------------------- */
+table {
+  font-size: 0.875rem; }
+
+.longtable {
+  border: none;
+  width: 100%;
+  margin-top: 2rem;
+  margin-bottom: 2rem; }
+
+.longtable td {
+  padding: 0.5rem;
+  border: 1px solid #eee; }
+
+@media (min-width: 768px) {
+  .longtable tbody tr td:first-child {
+    white-space: nowrap; } }
+.longtable code {
+  background: transparent;
+  padding: 0; }
+
+.longtable a {
+  text-decoration: none; }
+
+.function > dt,
+.class > dt {
+  font-weight: 600;
+  padding: 1rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  border-color: #c6c8ca;
+  color: #1b1e21;
+  background-color: #d6d8d9;
+  margin-bottom: 2rem; }
+
+.function .descclassname,
+.class .descclassname {
+  border-radius: 0; }
+
+.function .descname,
+.class .descname {
+  margin-right: 0;
+  border-radius: 0; }
+
+.function > dt > .reference.internal,
+.class > dt > .reference.internal {
+  float: right; }
+
+.function .field-list,
+.class .field-list {
+  margin-top: 3rem;
+  margin-bottom: 2rem; }
+
+.function .field-name,
+.class .field-name {
+  background-color: #eee; }
+
+/* ----------------------------------------------------------------- */
+
+/*# sourceMappingURL=compas-reference.css.map */
