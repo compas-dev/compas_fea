@@ -3,6 +3,9 @@ compas_fea.structure.structure : The compas_fea main Structure class.
 The main datastructure for all structural model information and methods.
 """
 
+from __future__ import print_function
+from __future__ import absolute_import
+
 from subprocess import Popen
 from subprocess import PIPE
 
@@ -27,6 +30,7 @@ __email__      = 'liew@arch.ethz.ch'
 
 __all__ = [
     'Structure',
+    'load_from_obj'
 ]
 
 
@@ -72,6 +76,7 @@ class Structure(object):
         self.sets = {}
         self.steps = {}
         self.tol = '3'
+
 
 # ==============================================================================
 # nodes
@@ -202,6 +207,7 @@ class Structure(object):
             list: [x, y, z] co-ordinates.
         """
         return [self.nodes[node][i] for i in 'xyz']
+
 
 # ==============================================================================
 # elements
@@ -360,6 +366,7 @@ class Structure(object):
             ep = self.check_node_exists(network.vertex_coordinates(v))
             self.add_element(nodes=[sp, ep], type=element_type, acoustic=acoustic, thermal=thermal)
 
+
 # ==============================================================================
 # sets
 # ==============================================================================
@@ -381,6 +388,7 @@ class Structure(object):
                 for select in selection:
                     self.sets['{0}_{1}'.format(type, select)] = {'type': type, 'selection': [select], 'explode': False}
         self.sets[name] = {'type': type, 'selection': selection, 'explode': explode}
+
 
 # ==============================================================================
 # modifiers
@@ -421,6 +429,7 @@ class Structure(object):
                     load.components[lkey] *= factor
             loads_dic[key] = load
         return loads_dic
+
 
 # ==============================================================================
 # add objects
@@ -538,6 +547,7 @@ class Structure(object):
         step.index = len(self.steps)
         self.steps[step.name] = step
 
+
 # ==============================================================================
 # steps
 # ==============================================================================
@@ -576,6 +586,7 @@ class Structure(object):
                     nlgeom = True
         self.add_step(GeneralStep(name=name, displacements=disp_dic, loads=loads_dic, type='STATIC', nlgeom=nlgeom))
         return name
+
 
 # ==============================================================================
 # analyse
@@ -666,6 +677,7 @@ class Structure(object):
 
             ansys.ansys_launch_process(self, path, name)
 
+
 # ==============================================================================
 # summary
 # ==============================================================================
@@ -716,6 +728,7 @@ class Structure(object):
                 print('    {0} : {1}'.format(i, step.__name__))
 
         print('-' * 50 + '\n')
+
 
 # ==============================================================================
 # app

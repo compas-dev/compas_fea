@@ -3,9 +3,11 @@ compas_fea.utilities.postprocess
 A sub-process to analyse the output FE data.
 """
 
+from __future__ import print_function
+from __future__ import absolute_import
+
 import sys
 import json
-# sys.path.append('F:/')
 
 from compas_fea.utilities.functions import postprocess
 from compas_fea.utilities.functions import voxels

@@ -2,6 +2,9 @@
 compas_fea.fea.opensees : OpenSEES file creator.
 """
 
+from __future__ import print_function
+from __future__ import absolute_import
+
 
 __author__     = ['Andrew Liew <liew@arch.ethz.ch>', 'Aryan Rezaei Rad <aryan.rezaeirad@epfl.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
@@ -12,7 +15,8 @@ __email__      = 'liew@arch.ethz.ch'
 __all__ = [
 ]
 
-# name = 'truss-test'
+
+# Notes for future file maker
 
 wipe;
 model basic -ndm 3 -ndf 6;

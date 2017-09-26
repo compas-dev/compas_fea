@@ -3,6 +3,9 @@ compas_fea.structure.constraint : Constraint class.
 For restraining degrees-of-freedom between master and slave nodes/elements/surfaces.
 """
 
+from __future__ import print_function
+from __future__ import absolute_import
+
 
 __author__     = ['Andrew Liew <liew@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'

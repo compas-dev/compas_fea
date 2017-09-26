@@ -3,6 +3,9 @@ compas_fea.structure.section : Section class.
 Section definitions for 1D, 2D and 3D finite elements.
 """
 
+from __future__ import print_function
+from __future__ import absolute_import
+
 from math import pi
 
 
