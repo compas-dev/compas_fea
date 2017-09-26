@@ -10,27 +10,12 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   pages/intro
-   pages/tutorial
-   pages/examples
-   pages/reference
-   pages/license
+   intro
+   tutorial
+   examples
+   reference
+   license
 
-
-..
-   pages/setup
-   pages/structure
-   pages/nodes
-   pages/elements
-   pages/sets
-   pages/sections
-   pages/material
-   pages/properties
-   pages/loads
-   pages/displacements
-   pages/steps
-   pages/analysis
-   pages/cad
 
 
 Indices and tables

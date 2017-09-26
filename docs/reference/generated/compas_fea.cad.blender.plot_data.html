@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <title>
+   compas_fea -- FEA package for compas
+  </title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <!-- compas meta tags -->
+  <meta content="" name="author"/>
+  <meta content="" name="description"/>
+  <!-- Bootstrap CSS -->
+  <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
+  <!-- highlight CSS -->
+  <link href="../../static/css/github.css" rel="stylesheet" type="text/css"/>
+  <!-- compas CSS -->
+  <link href="../../static/css/compas.css" rel="stylesheet" type="text/css"/>
+  <link href="../../static/css/compas-reference.css" rel="stylesheet" type="text/css"/>
+  <link href="compas_fea.cad.blender.ordered_lines.html" rel="next" title="ordered_lines"/>
+  <link href="compas_fea.cad.blender.add_nset_from_objects.html" rel="prev" title="add_nset_from_objects"/>
+  <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript">
+  </script>
+ </head>
+ <body data-spy="scroll" data-target="#compas-localnav">
+  <!-- main navigation bar -->
+  <header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
+   <a class="navbar-brand" href="https://compas-dev.github.io">
+    compas
+   </a>
+   <ul class="navbar-nav">
+    <li class="nav-item">
+     <a class="nav-link" href="https://compas-dev.github.io/compas_fea">
+      compas_fea
+     </a>
+    </li>
+   </ul>
+  </header>
+  <!-- page container -->
+  <div class="container-fluid compas-container">
+   <div class="row flex-xl-nowrap">
+    <!-- main page content -->
+    <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+     <nav class="breadcrumb">
+      <a class="breadcrumb-item" href="https://compas-dev.github.io/">
+       compas
+      </a>
+      <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">
+       packages
+      </a>
+      <a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">
+       compas_fea
+      </a>
+      <a class="breadcrumb-item" href="../../reference.html">
+       reference
+      </a>
+      <a class="breadcrumb-item" href="../compas_fea.html">
+       compas_fea
+      </a>
+      <a accesskey="U" class="breadcrumb-item" href="../compas_fea.cad.html">
+       cad
+      </a>
+     </nav>
+     <div class="section">
+      <h1>
+       plot_data
+      </h1>
+      <dl class="function">
+       <dt id="compas_fea.cad.blender.plot_data">
+        <code class="descclassname">
+         compas_fea.cad.blender.
+        </code>
+        <code class="descname">
+         plot_data
+        </code>
+        <span class="sig-paren">
+         (
+        </span>
+        <em>
+         structure, path, name, step, field='U', component='magnitude', scale=1.0, radius=0.05, iptype='mean', nodal='mean', cbar=[None, None], layer=0
+        </em>
+        <span class="sig-paren">
+         )
+        </span>
+        <a class="reference internal" href="../../_modules/compas_fea/cad/blender.html#plot_data">
+         <span class="viewcode-link">
+          [source]
+         </span>
+        </a>
+       </dt>
+       <dd>
+        <p>
+         Plots analysis results on the deformed shape of the Structure.
+        </p>
+        <div class="admonition note">
+         <p class="first admonition-title">
+          Note
+         </p>
+         <ul class="last">
+          <li>
+           <p class="first">
+            Pipe visualisation of line elements is not based on the element section.
+           </p>
+          </li>
+         </ul>
+        </div>
+        <table class="docutils field-list table table-responsive table-bordered" frame="void" rules="none">
+         <col class="field-name"/>
+         <col class="field-body"/>
+         <tbody valign="top">
+          <tr class="field-odd field">
+           <th class="field-name">
+            Parameters:
+           </th>
+           <td class="field-body">
+            <ul class="first">
+             <li>
+              <p class="first">
+               <strong>
+                structure
+               </strong>
+               (
+               <em>
+                obj
+               </em>
+               ) &ndash; Structure object.
+              </p>
+             </li>
+             <li>
+              <p class="first">
+               <strong>
+                path
+               </strong>
+               (
+               <em>
+                str
+               </em>
+               ) &ndash; Folder to saved data.
+              </p>
+             </li>
+             <li>
+              <p class="first">
+               <strong>
+                name
+               </strong>
+               (
+               <em>
+                str
+               </em>
+               ) &ndash; Structure name.
+              </p>
+             </li>
+             <li>
+              <p class="first">
+               <strong>
+                step
+               </strong>
+               (
+               <em>
+                str
+               </em>
+               ) &ndash; Name of the Step.
+              </p>
+             </li>
+             <li>
+              <p class="first">
+               <strong>
+                field
+               </strong>
+               (
+               <em>
+                str
+               </em>
+               ) &ndash; Field to plot, e.g. &lsquo;U&rsquo;, &lsquo;S&rsquo;, &lsquo;SM&rsquo;.
+              </p>
+             </li>
+             <li>
+              <p class="first">
+               <strong>
+                component
+               </strong>
+               (
+               <em>
+                str
+               </em>
+               ) &ndash; Component to plot, e.g. &lsquo;U1&rsquo;, &lsquo;RF2&rsquo;.
+              </p>
+             </li>
+             <li>
+              <p class="first">
+               <strong>
+                scale
+               </strong>
+               (
+               <em>
+                float
+               </em>
+               ) &ndash; Scale displacements for the deformed plot.
+              </p>
+             </li>
+             <li>
+              <p class="first">
+               <strong>
+                radius
+               </strong>
+               (
+               <em>
+                float
+               </em>
+               ) &ndash; Radius of the pipe visualisation meshes.
+              </p>
+             </li>
+             <li>
+              <p class="first">
+               <strong>
+                iptype
+               </strong>
+               (
+               <em>
+                str
+               </em>
+               ) &ndash; &lsquo;mean&rsquo;, &lsquo;max&rsquo; or &lsquo;min&rsquo; of an element&rsquo;s integration point data.
+              </p>
+             </li>
+             <li>
+              <p class="first">
+               <strong>
+                nodal
+               </strong>
+               (
+               <em>
+                str
+               </em>
+               ) &ndash; &lsquo;mean&rsquo;, &lsquo;max&rsquo; or &lsquo;min&rsquo; for nodal values.
+              </p>
+             </li>
+             <li>
+              <p class="first">
+               <strong>
+                cbar
+               </strong>
+               (
+               <em>
+                list
+               </em>
+               ) &ndash; Minimum and maximum limits on the colourbar.
+              </p>
+             </li>
+             <li>
+              <p class="first">
+               <strong>
+                layer
+               </strong>
+               (
+               <em>
+                int
+               </em>
+               ) &ndash; Layer number for plotting.
+              </p>
+             </li>
+            </ul>
+           </td>
+          </tr>
+          <tr class="field-even field">
+           <th class="field-name">
+            Returns:
+           </th>
+           <td class="field-body">
+            <p class="first last">
+             None
+            </p>
+           </td>
+          </tr>
+         </tbody>
+        </table>
+       </dd>
+      </dl>
+     </div>
+     <nav class="compas-sideways">
+      <a class="btn btn-primary compas-prev" href="compas_fea.cad.blender.add_nset_from_objects.html" role="button">
+       add_nset_from_objects
+      </a>
+      <a class="btn btn-primary compas-next" href="compas_fea.cad.blender.ordered_lines.html" role="button">
+       ordered_lines
+      </a>
+     </nav>
+    </main>
+    <!-- sidebar navigation -->
+    <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
+     <div class="navbar-light">
+      <form action="../../search.html" class="d-flex compas-searchbox" id="" method="get">
+       <input class="form-control" name="q" placeholder="Search docs" type="text"/>
+       <input name="check_keywords" type="hidden" value="yes"/>
+       <input name="area" type="hidden" value="default"/>
+       <button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon">
+        </span>
+       </button>
+      </form>
+      <div class="navbar-expand-md">
+       <div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
+        <ul class="nav flex-column active">
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../../intro.html">
+           Introduction
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../../tutorial.html">
+           Tutorial
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../../examples.html">
+           Examples
+          </a>
+         </li>
+         <li class="nav-item active">
+          <a class="nav-link reference internal" href="../../reference.html">
+           Reference
+          </a>
+          <ul class="nav active">
+           <li class="nav-item active">
+            <a class="nav-link reference internal" href="../compas_fea.html">
+             compas_fea
+            </a>
+            <ul class="nav active">
+             <li class="nav-item active">
+              <a class="nav-link reference internal" href="../compas_fea.cad.html">
+               cad
+              </a>
+             </li>
+             <li class="nav-item">
+              <a class="nav-link reference internal" href="../compas_fea.fea.html">
+               fea
+              </a>
+             </li>
+             <li class="nav-item">
+              <a class="nav-link reference internal" href="../compas_fea.structure.html">
+               structure
+              </a>
+             </li>
+            </ul>
+           </li>
+          </ul>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../../license.html">
+           License
+          </a>
+         </li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </div>
+    <!-- toc of current page -->
+    <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+     <ul class="nav flex-column" id="compas-localnav">
+      <li class="nav-item">
+       <a class="nav-link reference internal" href="#">
+        plot_data
+       </a>
+      </li>
+     </ul>
+    </div>
+   </div>
+  </div>
+  <footer class="compas-footer">
+   &copy; Copyright 2017, Block Research Group.
+                
+            
+
+            
+                Last updated on Sep 26, 2017.
+            
+
+            
+                Created using
+   <a href="http://sphinx-doc.org/">
+    Sphinx
+   </a>
+   1.5.1.
+  </footer>
+  <script type="text/javascript">
+   var DOCUMENTATION_OPTIONS = {
+                URL_ROOT:    '',
+                VERSION:     '',
+                COLLAPSE_INDEX: false,
+                FILE_SUFFIX: '.html',
+                HAS_SOURCE:  true,
+                SOURCELINK_SUFFIX: '.txt'
+              };
+  </script>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js">
+  </script>
+  <script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js">
+  </script>
+  <script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js">
+  </script>
+  <script src="../../static/underscore.js">
+  </script>
+  <script src="../../static/doctools.js">
+  </script>
+  <script src="../../static/searchtools_.js">
+  </script>
+  <script>
+   hljs.initHighlightingOnLoad();
+                anchors.add();
+  </script>
+ </body>
+</html>

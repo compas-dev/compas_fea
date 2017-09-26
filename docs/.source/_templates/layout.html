@@ -1,193 +1,211 @@
-{# TEMPLATE VAR SETTINGS #}
-{%- set url_root = pathto('', 1) %}
-{%- if url_root == '#' %}{% set url_root = '' %}{% endif %}
-{%- if not embedded and docstitle %}
-  {%- set titlesuffix = " &mdash; "|safe + docstitle|e %}
-{%- else %}
-  {%- set titlesuffix = "" %}
-{%- endif %}
-<!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="no-js" lang="en">
- <!--<![endif]-->
- <head>
-  <meta charset="utf-8"/>
-  {{ metatags }}
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  {% block htmltitle %}
-  <title>
-   {{ title|striptags|e }}{{ titlesuffix }}
-  </title>
-  {% endblock %}
-
-  {# FAVICON #}
-  {% if favicon %}
-  <link href="{{ pathto('_static/' + favicon, 1) }}" rel="shortcut icon"/>
-  {% endif %}
-
-  {# CSS #}
-
-  {# OPENSEARCH #}
-  {% if not embedded %}
-    {% if use_opensearch %}
-  <link href="{{ pathto('_static/opensearch.xml', 1) }}" rel="search" title="{% trans docstitle=docstitle|e %}Search within {{ docstitle }}{% endtrans %}" type="application/opensearchdescription+xml"/>
-  {% endif %}
-
-  {% endif %}
-
-  {# RTD hosts this file, so just load on non RTD builds #}
-  {% if not READTHEDOCS %}
-  <link href="{{ pathto('static/' + style, 1) }}" rel="stylesheet" type="text/css"/>
-  {% endif %}
-
-  {% for cssfile in css_files %}
-  <link href="{{ pathto(cssfile, 1) }}" rel="stylesheet" type="text/css"/>
-  {% endfor %}
-
-  {% for cssfile in extra_css_files %}
-  <link href="{{ pathto(cssfile, 1) }}" rel="stylesheet" type="text/css"/>
-  {% endfor %}
-
-  {%- block linktags %}
-    {%- if hasdoc('about') %}
-  <link href="{{ pathto('about') }}" rel="author" title="{{ _('About these documents') }}"/>
-  {%- endif %}
-    {%- if hasdoc('genindex') %}
-  <link href="{{ pathto('genindex') }}" rel="index" title="{{ _('Index') }}"/>
-  {%- endif %}
-    {%- if hasdoc('search') %}
-  <link href="{{ pathto('search') }}" rel="search" title="{{ _('Search') }}"/>
-  {%- endif %}
-    {%- if hasdoc('copyright') %}
-  <link href="{{ pathto('copyright') }}" rel="copyright" title="{{ _('Copyright') }}"/>
-  {%- endif %}
-  <link href="{{ pathto('index') }}" rel="top" title="{{ docstitle|e }}"/>
-  {%- if parents %}
-  <link href="{{ parents[-1].link|e }}" rel="up" title="{{ parents[-1].title|striptags|e }}"/>
-  {%- endif %}
-    {%- if next %}
-  <link href="{{ next.link|e }}" rel="next" title="{{ next.title|striptags|e }}"/>
-  {%- endif %}
-    {%- if prev %}
-  <link href="{{ prev.link|e }}" rel="prev" title="{{ prev.title|striptags|e }}"/>
-  {%- endif %}
-  {%- endblock %}
-  {%- block extrahead %} {% endblock %}
-
-  {# Keep modernizr in head - http://modernizr.com/docs/#installing #}
-  <script src="{{ pathto('static/js/modernizr.min.js', 1) }}">
-  </script>
- </head>
- <body class="wy-body-for-nav" role="document">
-  <div class="wy-grid-for-nav">
-   {# SIDE NAV, TOGGLES ON MOBILE #}
-   <nav class="wy-nav-side" data-toggle="wy-nav-shift">
-    <div class="wy-side-scroll">
-     <div class="wy-side-nav-search">
-      {% block sidebartitle %}
-
-          {% if logo and theme_logo_only %}
-      <a href="{{ pathto(master_doc) }}">
-       {% else %}
-       <a class="icon icon-home" href="{{ pathto(master_doc) }}">
-        {{ project }}
-          {% endif %}
-
-          {% if logo %}
-            {# Not strictly valid HTML, but it's the only way to display/scale it properly, without weird scripting or heaps of work #}
-        <img class="logo" src="{{ pathto('_static/' + logo, 1) }}"/>
-        {% endif %}
-       </a>
-       {% if theme_display_version %}
-            {%- set nav_version = version %}
-            {% if READTHEDOCS and current_version %}
-              {%- set nav_version = current_version %}
+{% macro breadcrumb() %}
+        <nav class="breadcrumb">
+            <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
+            <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
+            <a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+            {% if parents %}
+                {% for parent in parents %}
+                    <a class="breadcrumb-item" href="{{ parent.link|e }}" {% if loop.last %}{{ accesskey("U") }}{% endif %}>{{ parent.title|lower }}</a>
+                {% endfor %}
             {% endif %}
-            {% if nav_version %}
-       <div class="version">
-        {{ nav_version }}
-       </div>
-       {% endif %}
-          {% endif %}
+        </nav>
+{% endmacro %}
 
-          {% include "searchbox.html" %}
 
-          {% endblock %}
-      </a>
-     </div>
-     <div aria-label="main navigation" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
-      {% block menu %}
-            {% set toctree = toctree(maxdepth=5, collapse=theme_collapse_navigation, includehidden=True, titles_only=False) %}
-            {% if toctree %}
-                {{ toctree }}
-            {% else %}
-      <!-- Local TOC -->
-      <div class="local-toc">
-       {{ toc }}
-      </div>
-      {% endif %}
-          {% endblock %}
-     </div>
-    </div>
-   </nav>
-   <section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
-    {# MOBILE NAV, TRIGGLES SIDE NAV ON TOGGLE #}
-    <nav aria-label="top navigation" class="wy-nav-top" role="navigation">
-     <i class="fa fa-bars" data-toggle="wy-nav-top">
-     </i>
-     <a href="{{ pathto(master_doc) }}">
-      {{ project }}
-     </a>
-    </nav>
-    {# PAGE CONTENT #}
-    <div class="wy-nav-content">
-     <div class="rst-content">
-      {% include "breadcrumbs.html" %}
-      <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
-       <div itemprop="articleBody">
-        {% block body %}{% endblock %}
-       </div>
-      </div>
-      {% include "footer.html" %}
-     </div>
-    </div>
-   </section>
-  </div>
-  {% include "versions.html" %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>compas_fea -- FEA package for compas</title>
 
-  {% if not embedded %}
-  <script type="text/javascript">
-   var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'{{ url_root }}',
-            VERSION:'{{ release|e }}',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'{{ '' if no_search_suffix else file_suffix }}',
-            HAS_SOURCE:  {{ has_source|lower }}
-        };
-  </script>
-  {%- for scriptfile in script_files %}
-  <script src="{{ pathto(scriptfile, 1) }}" type="text/javascript">
-  </script>
-  {%- endfor %}
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+        <!-- compas meta tags -->
+        <meta name="author" content="" />
+        <meta name="description" content="" />
 
-  {% endif %}
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
 
-  {# RTD hosts this file, so just load on non RTD builds #}
-  {% if not READTHEDOCS %}
-  <script src="{{ pathto('static/js/theme.js', 1) }}" type="text/javascript">
-  </script>
-  {% endif %}
+        <!-- highlight CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ pathto('_static/css/github.css', 1) }}" />
 
-  {# STICKY NAVIGATION #}
-  {% if theme_sticky_navigation %}
-  <script type="text/javascript">
-   jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
-  </script>
-  {% endif %}
+        <!-- compas CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ pathto('_static/css/compas.css', 1) }}" />
+        <link rel="stylesheet" type="text/css" href="{{ pathto('_static/css/compas-reference.css', 1) }}" />
 
-  {%- block footer %} {% endblock %}
- </body>
+        {% if next %}
+            <link rel="next" title="{{ next.title|striptags|e }}" href="{{ next.link|e }}" />
+        {% endif %}
+        
+        {% if prev %}
+            <link rel="prev" title="{{ prev.title|striptags|e }}" href="{{ prev.link|e }}" />
+        {% endif %}
+
+        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    </head>
+    <body data-spy="scroll" data-target="#compas-localnav">
+        <!-- main navigation bar -->
+        <header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
+            <a class="navbar-brand" href="https://compas-dev.github.io">compas</a>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+                    </li>
+                </ul>
+        </header>
+        
+        <!-- page container -->
+        <div class="container-fluid compas-container">
+            <div class="row flex-xl-nowrap">
+
+                <!-- main page content -->
+                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+
+                    {% block content %}
+
+                        {{ breadcrumb() }}
+
+                        {% set page = pagename.split('/') %}
+
+                        {% set body = body
+                            | replace("<pre>", "<pre><code class=\"language-python border rounded\">")
+                            | replace("</pre>", "</code></pre>")
+                        %}
+
+                        {{ body }}
+                        
+                        <nav class="compas-sideways">
+                            {% if prev %}
+                                <a href="{{ prev.link|e }}" class="btn btn-primary compas-prev" role="button">{{ prev.title|striptags|e }}</a>
+                            {% endif %}
+
+                            {% if next %}
+                                <a href="{{ next.link|e }}" class="btn btn-primary compas-next" role="button">{{ next.title|striptags|e }}</a>
+                            {% endif %}
+                        </nav>
+
+                    {% endblock %}
+
+                </main>
+
+                <!-- sidebar navigation -->
+                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
+                    <div class="navbar-light">
+
+                        <form id="" class="d-flex compas-searchbox" action="{{ pathto('search') }}" method="get">
+                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
+                            <input type="hidden" name="check_keywords" value="yes" />
+                            <input type="hidden" name="area" value="default" />
+
+                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                        </form>
+
+                        {% set toctree = toctree(maxdepth=3, titles_only=True) %}
+                        {% if toctree %}
+
+                            <div class="navbar-expand-md">
+                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
+
+                                {{ toctree
+                                    | replace("<ul>", "<ul class=\"nav\">")
+                                    | replace("<ul class=\"nav\">", "<ul class=\"nav flex-column\">", 1)
+                                    | replace("<ul class=\"current\">", "<ul class=\"nav active\">")
+                                    | replace("<ul class=\"nav active\">", "<ul class=\"nav flex-column active\">", 1)
+
+                                    | replace("<li class=\"toctree-l1\">", "<li class=\"nav-item\">")
+                                    | replace("<li class=\"toctree-l1 current\">", "<li class=\"nav-item active\">")
+                                    | replace("class=\"reference internal\"", "class=\"nav-link reference internal\"") 
+                                    | replace("class=\"current reference internal\"", "class=\"nav-link active current reference internal\"") 
+                                    | replace("<li class=\"toctree-l2\">", "<li class=\"nav-item\">")
+                                    | replace("<li class=\"toctree-l2 current\">", "<li class=\"nav-item active\">")
+                                    | replace("<li class=\"toctree-l3\">", "<li class=\"nav-item\">")
+                                    | replace("<li class=\"toctree-l3 current\">", "<li class=\"nav-item active\">")
+                                    | replace("class=\"reference internal\"", "class=\"nav-link reference internal\"") 
+                                    | replace("class=\"current reference internal\"", "class=\"nav-link active current reference internal\"") 
+                                }}
+
+                                </div>
+                            </div>
+
+                        {% else %}
+                            {{ toc }}
+                        {% endif %}
+
+                    </div>
+                </div>
+                
+                <!-- toc of current page -->
+                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+
+                    {% set toc = toc
+                        | replace("<ul>", "<ul class=\"nav\">") 
+                        | replace("<ul class=\"nav\">", "<ul class=\"nav flex-column\" id=\"compas-localnav\">", 1) 
+                        | replace("<li>", "<li class=\"nav-item\">") 
+                        | replace("<a>", "<a class=\"nav-link\">") 
+                        | replace("class=\"reference internal\"", "class=\"nav-link reference internal\"") 
+                    %}
+
+                    {{ toc }}
+
+                </div>
+            </div>
+        </div>
+
+        <footer class="compas-footer">
+            {% if show_copyright %}
+                {% if hasdoc('copyright') %}
+                    {% trans path=pathto('copyright'), copyright=copyright|e %}&#169; <a href="{{ path }}">Copyright</a> {{ copyright }}.{% endtrans %}
+                {% else %}
+                    {% trans copyright=copyright|e %}&#169; Copyright {{ copyright }}.{% endtrans %}
+                {% endif %}
+            {% endif %}
+
+            {% if last_updated %}
+                {% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}.{% endtrans %}
+            {% endif %}
+
+            {% if show_sphinx %}
+                {% trans sphinx_version=sphinx_version|e %}Created using <a href="http://sphinx-doc.org/">Sphinx</a> {{ sphinx_version }}.{% endtrans %}
+            {% endif %}
+        </footer>
+
+        {% block footer %}
+
+            <script type="text/javascript">
+              var DOCUMENTATION_OPTIONS = {
+                URL_ROOT:    '{{ url_root }}',
+                VERSION:     '{{ release|e }}',
+                COLLAPSE_INDEX: false,
+                FILE_SUFFIX: '{{ '' if no_search_suffix else file_suffix }}',
+                HAS_SOURCE:  {{ has_source|lower }},
+                SOURCELINK_SUFFIX: '{{ sourcelink_suffix }}'
+              };
+            </script>
+
+            <!-- Optional JavaScript -->
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+
+            <script src="{{ pathto('_static/underscore.js', 1) }}"></script>
+            <script src="{{ pathto('_static/doctools.js', 1) }}"></script>
+            <script src="{{ pathto('_static/searchtools_.js', 1) }}"></script>
+
+            <script>
+                hljs.initHighlightingOnLoad();
+                anchors.add();
+            </script>
+
+        {% endblock %}
+    </body>
 </html>
