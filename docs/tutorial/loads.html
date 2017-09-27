@@ -52,7 +52,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'load_point'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">'nset_top'</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mi">10000</span><span class="p">))</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Accessing loads</h2>
@@ -63,7 +62,6 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">loads</span><span class="p">[</span><span class="s1">'load_point'</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
 <span class="go">'nset_top'</span>
 </code></pre></div>
-
 <p>Given are the input components of the load <code class="docutils literal">x=10000</code> and <code class="docutils literal">z=-10000</code>, where the <code class="docutils literal">y</code> component and concentrated moments <code class="docutils literal">xx</code>, <code class="docutils literal">yy</code> and <code class="docutils literal">zz</code>, as not given, all default to zero.</p>
 </div>
 <div class="section">
@@ -79,7 +77,6 @@
 <span class="o">&gt;&gt;&gt;</span> <span class="n">mdl</span><span class="o">.</span><span class="n">loads</span><span class="p">[</span><span class="s1">'load_gravity'</span><span class="p">]</span><span class="o">.</span><span class="n">g</span>
 <span class="o">-</span><span class="mf">9.81</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Tributary</h2>
@@ -88,7 +85,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">TributaryLoad</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'load_tributary'</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mi">2000</span><span class="p">))</span>
 </code></pre></div>
-
 </div>
 </div>
 <nav class="compas-sideways">

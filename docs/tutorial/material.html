@@ -52,7 +52,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_elastic'</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1500</span><span class="p">))</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Accessing materials</h2>
@@ -66,7 +65,6 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="s1">'mat_elastic'</span><span class="p">]</span><span class="o">.</span><span class="n">p</span>
 <span class="go">1500</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Materials</h2>
@@ -81,7 +79,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ElasticPlastic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_plastic'</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">5</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.30</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">350</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="n">e</span><span class="p">))</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h3>Steel</h3>
@@ -90,7 +87,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">Steel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_steel'</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">210</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">7850</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'elastic-plastic'</span><span class="p">))</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h3>Concrete</h3>
@@ -103,7 +99,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">Concrete</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_concrete'</span><span class="p">,</span> <span class="n">fck</span><span class="o">=</span><span class="mi">90</span><span class="p">))</span>
 </code></pre></div>
-
 <a class="reference internal image-reference" href="../_images/concrete_f-e.png"><img alt="../images/concrete_f-e.png" src="../images/concrete_f-e.png" style="width: 539.4px; height: 295.2px;"/></a>
 <ul>
 <li><p class="first">The <strong>ConcreteSmearedCrack</strong> class (based on the Abaqus smeared crack material, see figure below) creates a more general concrete material model object. Cracks are smeared across cracking areas, and not individually modelled. The Young’s modulus <code class="docutils literal">E</code>, Poisson’s ratio <code class="docutils literal">v</code> and density <code class="docutils literal">p</code> are all explicitly given, as no defaults are assumed. The compressive stress–strain data are given with plastic stresses <code class="docutils literal">fc</code> in Pascals and plastic strains <code class="docutils literal">ec</code>. The first value of <code class="docutils literal">fc</code> is the stress at the end of the elastic region defined by slope <code class="docutils literal">E</code>, paired with the first value of <code class="docutils literal">ec</code> of zero. Tension stiffening uses plastic stresses <code class="docutils literal">fc</code> and plastic strains <code class="docutils literal">et</code>, where <code class="docutils literal">ft</code> is now not the absolute value of tensile stress in Pa, but the relative tensile stress from the point of cracking. So the first data pairs are <code class="docutils literal">ft</code> as 1 at <code class="docutils literal">et</code> of 0, then dropping to <code class="docutils literal">ft</code> as 0 at another value of <code class="docutils literal">et</code> (0.001 recommended). Before cracking, the tensile stress–strain behaviour is linear, using the same Young’s modulus <code class="docutils literal">E</code> as for compression. Finally, the failure ratios <code class="docutils literal">fr</code> are given, which are the ratio of the ultimate bi-axial to uni-axial compressive ultimate stress (default 1.16) and the ratio of uni-axial tensile to compressive stress at failure (default 0.0836), the latter will give a tensile failure stress of 35 * 0.0836 = 2.926 if the concrete fails in compression at 35 MPa.</p>
@@ -122,7 +117,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ConcreteSmearedCrack</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_concrete'</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">ec</span><span class="p">,</span> <span class="n">ft</span><span class="p">,</span> <span class="n">et</span><span class="p">,</span> <span class="n">fr</span><span class="p">))</span>
 </code></pre></div>
-
 <a class="reference internal image-reference" href="../_images/concrete-smeared.png"><img alt="../images/concrete-smeared.png" src="../images/concrete-smeared.png" style="width: 366.1px; height: 257.6px;"/></a>
 <ul>
 <li><p class="first">The <strong>ConcreteDamagedPlasticity</strong> material model is used for concrete and other quasi-brittle materials (and is based here and quoted from the Abaqus damaged plasticity material). The class takes the Young’s modulus <code class="docutils literal">E</code>, Poisson’s ratio <code class="docutils literal">v</code> and density <code class="docutils literal">p</code> as no defaults are assumed, as well as lists <code class="docutils literal">damage</code>, <code class="docutils literal">hardening</code> and <code class="docutils literal">stiffening</code>. For <code class="docutils literal">damage</code>, a list is given of: the dilation angle in degrees, flow potential eccentricity, the ratio of initial equibiaxial to uni-axial compressive yield stress, the ratio of the second stress invariant on the tensile meridian to that on the compressive meridian, and the viscosity parameter.. For the input <code class="docutils literal">hardening</code>, a list is given of: the compressive yield stress, inelastic crushing strain, inelastic crushing strain rate, and  temperature. Finally, for <code class="docutils literal">stiffening</code>, a list of: remaining direct stress after cracking, direct cracking strain, direct cracking strain rate, and temperature.</p>

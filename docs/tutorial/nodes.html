@@ -51,7 +51,6 @@
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">xyz</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_nodes</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Accessing nodes</h2>
@@ -62,7 +61,6 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="s1">'z'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span>
 <span class="go">{'x': -5.0, 'y': 5.0, 'z': 2.0, 'ex': [1, 0, 0], 'ey': [0, 1, 0], 'ez': [0, 0, 1]}</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Methods</h2>
@@ -70,16 +68,13 @@
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="go">[-5.0, 5.0, 2.0]</span>
 </code></pre></div>
-
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">node_count</span><span class="p">()</span>
 <span class="go">5</span>
 </code></pre></div>
-
 <p>The simple bounding box made by the <strong>Structure</strong> can be found by calling the <code class="docutils literal">node_bounds()</code> method. This will return three lists, containing the minimum and maximum <cite>x</cite>, <cite>y</cite> and <cite>z</cite> co-ordinates of the nodes in <code class="docutils literal">.nodes</code>.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">node_bounds</span><span class="p">()</span>
 <span class="go">([-5.0, 5.0], [-5.0, 5.0], [0.0, 5.0])</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Node index</h2>
@@ -91,7 +86,6 @@
 <span class="go"> '-5.000,5.000,0.000':  3,</span>
 <span class="go"> '0.000,0.000,5.000':   4}</span>
 </code></pre></div>
-
 <p>It can be checked if a node is present in the <strong>Structure</strong> object by a query with the method <code class="docutils literal">check_node_exists()</code> by giving the list of node co-ordinates. <strong>Note</strong>: no more than one node can exist for the same co-ordinates, i.e. no overlapping nodes are allowed. If a node exists, the method will return the integer key, if not, <code class="docutils literal">None</code> will be returned.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="go">2</span>
@@ -99,7 +93,6 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 <span class="go">None</span>
 </code></pre></div>
-
 </div>
 </div>
 <nav class="compas-sideways">

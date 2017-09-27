@@ -52,12 +52,10 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">CircularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_circ'</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.010</span><span class="p">))</span>
 </code></pre></div>
-
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ShellSection</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_shell'</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.005</span><span class="p">))</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Properties</h2>
@@ -65,7 +63,6 @@
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">'sec_circ'</span><span class="p">]</span><span class="o">.</span><span class="n">geometry</span>
 <span class="go">{'r': 0.01, 'D': 0.02, 'A': 0.0003141592653, 'I11': 7.853981633e-09, 'I22': 7.853981633e-09, 'I12': 0}</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Types</h2>
@@ -77,7 +74,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">TrussSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_truss'</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="mf">0.0050</span><span class="p">))</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h3>Box</h3>
@@ -86,7 +82,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">BoxSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_box'</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">tw</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <span class="n">tf</span><span class="o">=</span><span class="mf">0.005</span><span class="p">))</span>
 </code></pre></div>
-
 <a class="reference internal image-reference" href="../_images/box-ip.png"><img alt="../images/box-ip.png" src="../images/box-ip.png" style="width: 302.0px; height: 294.0px;"/></a>
 </div>
 <div class="section">
@@ -96,7 +91,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">CircularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_circular'</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.01</span><span class="p">))</span>
 </code></pre></div>
-
 <img alt="../images/circ-ip.png" src="../images/circ-ip.png"/>
 </div>
 <div class="section">
@@ -106,7 +100,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">ISection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_I'</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">tw</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <span class="n">tf</span><span class="o">=</span><span class="mf">0.005</span><span class="p">))</span>
 </code></pre></div>
-
 <img alt="../images/I-ip.png" src="../images/I-ip.png"/>
 </div>
 <div class="section">
@@ -116,7 +109,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">AngleSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_angle'</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">tw</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <span class="n">tf</span><span class="o">=</span><span class="mf">0.005</span><span class="p">))</span>
 </code></pre></div>
-
 <img alt="../images/angle-ip.png" src="../images/angle-ip.png"/>
 </div>
 <div class="section">
@@ -126,7 +118,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">PipeSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_pipe'</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.005</span><span class="p">))</span>
 </code></pre></div>
-
 <img alt="../images/pipe-ip.png" src="../images/pipe-ip.png"/>
 </div>
 <div class="section">
@@ -136,7 +127,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">RectangularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_rectangular'</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
 </code></pre></div>
-
 <img alt="../images/rect-ip.png" src="../images/rect-ip.png"/>
 </div>
 <div class="section">
@@ -146,7 +136,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">TrapezoidalSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_trapezoidal'</span><span class="p">,</span> <span class="n">b1</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">b2</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
 </code></pre></div>
-
 <img alt="../images/trap-ip.png" src="../images/trap-ip.png"/>
 </div>
 <div class="section">
@@ -160,7 +149,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_shell'</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.005</span><span class="p">))</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h3>Solid</h3>
@@ -169,7 +157,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">SolidSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_solid'</span><span class="p">))</span>
 </code></pre></div>
-
 </div>
 </div>
 </div>

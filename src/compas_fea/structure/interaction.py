@@ -19,21 +19,23 @@ __all__ = [
 
 
 class HeatTransfer(object):
+
+    """ Heat transfer across an interface.
+
+    Parameters:
+        name (str): Heat transfer name.
+        amplitude (str): Name of the heat transfer amplitude function.
+        interface (str): Name of the interaction interface.
+        sink_temp (float): Sink temperature in K.
+        film_coef (float): Film coefficient.
+        ambient_temp (float): Ambient temperature in K.
+        emissivity (float): Emissivity.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, amplitude, interface, sink_temp, film_coef, ambient_temp, emissivity):
-        """ Heat transfer across an interface.
-
-        Parameters:
-            name (str): Heat transfer name.
-            amplitude (str): Name of the heat transfer amplitude function.
-            interface (str): Name of the interaction interface.
-            sink_temp (float): Sink temperature in K.
-            film_coef (float): Film coefficient.
-            ambient_temp (float): Ambient temperature in K.
-            emissivity (float): Emissivity.
-
-        Returns:
-            None
-        """
         self.__name__ = 'HeatTransfer'
         self.name = name
         self.amplitude = amplitude

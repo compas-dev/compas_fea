@@ -47,10 +47,8 @@
 <p>This page shows how to benefit from using computer aided design and graphics software with the compas_fea package. It will assume that either the <code class="docutils literal">blender</code> or <code class="docutils literal">rhino</code> module of the compas_fea package has been imported:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">rhino</span>
 </code></pre></div>
-
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">blender</span>
 </code></pre></div>
-
 <div class="section">
 <h2>Geometry</h2>
 <div class="section">
@@ -59,19 +57,15 @@
 <p>For example, to add lines that are contained in Rhino layer <code class="docutils literal">'elset_elements'</code> to <strong>mdl</strong> as <strong>TrussElement</strong> objects, use the code below. The <strong>TrussElement</strong> objects will be sent to <code class="docutils literal">mdl.elements</code> and nodes (the line endpoints) added to <code class="docutils literal">mdl.nodes</code>.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">element_type</span><span class="o">=</span><span class="s1">'TrussElement'</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">'elset_elements'</span><span class="p">])</span>
 </code></pre></div>
-
 <p>If <code class="docutils literal">element_type</code> is <code class="docutils literal">'ShellElement'</code> or <code class="docutils literal">'MembraneElement'</code>, Rhino meshes on the given layers will have their faces individually added as elements to the <strong>Structure</strong>.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">element_type</span><span class="o">=</span><span class="s1">'ShellElement'</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">'elset_shells'</span><span class="p">])</span>
 </code></pre></div>
-
 <p>If <code class="docutils literal">element_type</code> is one of the solid element types <code class="docutils literal">'HexahedronElement'</code>, <code class="docutils literal">'TetrahedronElement'</code>, <code class="docutils literal">'SolidElement'</code> or <code class="docutils literal">'PentahedronElement'</code>, Rhino meshes on the layers will be treated as a solid and not broken into faces.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">element_type</span><span class="o">=</span><span class="s1">'HexahedronElement'</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">'elset_solids'</span><span class="p">])</span>
 </code></pre></div>
-
 <p>In Blender, the equivalent function with the same name is used slightly differently, as there are no clear point and line type objects. Instead, Blender meshes should exist in the given <code class="docutils literal">layers</code> (use the function <code class="docutils literal">add_nodes_elements_from_bmesh()</code> to explicitly give a Blender mesh <code class="docutils literal">bmesh</code> rather than layer numbers). Once the meshes are picked up, the vertices of the Blender meshes will be added to the <strong>Structure</strong> object as nodes, along with: line elements represented by the edges of the mesh and added as element type <code class="docutils literal">edge_type</code>, and shell elements represented by the faces of the mesh and added as element type <code class="docutils literal">face_type</code>. If the entire Blender mesh is to be used as a solid element, similar to the Rhino procedure above, then give a solid element type in <code class="docutils literal">block_type</code>.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">blender</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">edge_type</span><span class="o">=</span><span class="s1">'TrussElement'</span><span class="p">,</span> <span class="n">face_type</span><span class="o">=</span><span class="s1">'ShellElement'</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h3>Local axes</h3>
@@ -84,7 +78,6 @@
 <p>To add Rhino geometry held in layers as sets of the <strong>Structure</strong> object, use the <code class="docutils literal">add_sets_from_layers()</code> function. This function requires the <code class="docutils literal">structure</code> to add to, and the <code class="docutils literal">layers</code> to extract Rhino geometry from. Each layer in the list <code class="docutils literal">layers</code>, should exclusively contain Rhino points or Rhino line/mesh objects, otherwise it is not possible to assign that all <cite>guids</cite> in that layer contribute to a node or element set. The name of the set does not need be given, as the function will ensure that added sets inherit the layer names as their keys. If the layer is nested such that it has a name <code class="docutils literal">'a::b::c'</code>, then only the last part of the string <code class="docutils literal">'c'</code> will be used as the name .</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">'nset_pins'</span><span class="p">,</span> <span class="s1">'nset_load'</span><span class="p">,</span> <span class="s1">'elset_elements'</span><span class="p">])</span>
 </code></pre></div>
-
 <p>The Blender equivalent functions are <code class="docutils literal">add_nset_from_bmeshes()</code> and <code class="docutils literal">add_elset_from_bmeshes()</code>, where the former will add vertices from Blender meshes as a node set, and the latter an element set from edges and faces. Either a list of the Blender mesh objects is given directly with <code class="docutils literal">bmeshes</code> or the meshes are extracted from the layer <code class="docutils literal">layer</code>. The function <code class="docutils literal">add_nset_from_objects()</code> can be used to add objects’ locations as a node set. The <code class="docutils literal">name</code> of the sets must be given, as Blender layers cannot currently be named, as they are only numbered.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">blender</span><span class="o">.</span><span class="n">add_nset_from_bmeshes</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'nset_supports'</span><span class="p">)</span>
 
@@ -92,7 +85,6 @@
 
 <span class="n">blender</span><span class="o">.</span><span class="n">add_nset_from_objects</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'nset_pins'</span><span class="p">)</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Plotting data</h2>
@@ -100,7 +92,6 @@
 <p>For Rhino, the meshes will be plotted in either the given <code class="docutils literal">layer</code> name string, or a default layer named <strong>step-field-component</strong>, for which the layer will first be cleared. This function call could look like:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">'C:/Temp/'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'simple-truss'</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_load'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'U'</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">'magnitude'</span><span class="p">)</span>
 </code></pre></div>
-
 <p>A snippet summary will be printed, giving information on how much time the whole analysis (all steps) took, how long the data took to extract from the output data file, and how long the post-processing of that step took (see next section).</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">Step</span> <span class="n">summary</span><span class="p">:</span> <span class="n">step_load</span>
 <span class="o">-----------------------</span>
@@ -109,11 +100,9 @@
 <span class="n">Extraction</span> <span class="n">time</span><span class="p">:</span> <span class="mf">0.011</span>
 <span class="n">Processing</span> <span class="n">time</span><span class="p">:</span> <span class="mf">0.008</span>
 </code></pre></div>
-
 <p>The Blender function works in exactly the same way, with <code class="docutils literal">layer</code> being the integer layer number and not a string as with Rhino:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">blender</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">'C:/Temp/'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'simple-truss'</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_load'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'U'</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">'magnitude'</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </code></pre></div>
-
 <div class="section">
 <h3>Processing</h3>
 <p>A degree of data post-processing is performed before plotting, through the function <code class="docutils literal">postprocess()</code> of the <strong>compas_fea.utilities.functions</strong> module. This post-processing requires NumPy and SciPy, and so is carried out in a subprocess for non-CPython based CAD environments like Rhino. The function calls a selection of other functions which do the following:</p>
@@ -143,11 +132,9 @@
 <p>The next step is to use this data and convert it a <code class="docutils literal">nodal</code> value, as each node will connect to many elements and so be adjacent to many element data values. Either <code class="docutils literal">'mean'</code>, <code class="docutils literal">'max'</code> or <code class="docutils literal">'min'</code> is given as a string for <code class="docutils literal">nodal</code>, plotting then a value at each node based on all elements that connect to it. So for example, to find conservatively the most heavily loaded nodal Von Mises stress value one would use:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'simple-truss'</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_load'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'S'</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">'mises'</span><span class="p">,</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">'max'</span><span class="p">,</span> <span class="n">nodal</span><span class="o">=</span><span class="s1">'max'</span><span class="p">)</span>
 </code></pre></div>
-
 <p>and to plot the most compressive (with compression negative) values use:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'simple-truss'</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_load'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'S'</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">'minPrincipal'</span><span class="p">,</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">'min'</span><span class="p">,</span> <span class="n">nodal</span><span class="o">=</span><span class="s1">'min'</span><span class="p">)</span>
 </code></pre></div>
-
 <p><strong>Note</strong>: using <code class="docutils literal">'mean'</code> for <code class="docutils literal">nodal</code> and with a coarse finite element mesh could give unexpected results. This is because element data, such as stresses, can change suddenly across elements in coarse meshes, leading to a mean value at a shared node that is somewhat poorly representative. This effect can be resolved by refining the mesh in the areas where stresses may change quickly or form concentrations, such as near supports, applied loads or areas of peak internal forces and moments.</p>
 </div>
 <div class="section">
@@ -161,7 +148,6 @@
 
 <span class="n">rhino</span><span class="o">.</span><span class="n">plot_principal_stresses</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">'C:/Temp/'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'shell'</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_loads'</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">'max'</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 </code></pre></div>
-
 <a class="reference internal image-reference" href="../_images/principals.png"><img alt="../images/principals.png" src="../images/principals.png" style="width: 651.0px; height: 460.6px;"/></a>
 </div>
 </div>

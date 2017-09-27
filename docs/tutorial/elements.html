@@ -53,7 +53,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'ShellElement'</span><span class="p">)</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Accessing elements</h2>
@@ -61,16 +60,13 @@
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
 <span class="go">[3, 4]</span>
 </code></pre></div>
-
 <p>The number of elements in the <strong>Structure</strong> can be returned with <code class="docutils literal">element_count()</code> and an element centroid determined by the method <code class="docutils literal">element_centroid()</code>.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_count</span><span class="p">()</span>
 <span class="go">5</span>
 </code></pre></div>
-
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_centroid</span><span class="p">(</span><span class="n">element</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="go">(-2.5, 2.5, 2.5)</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Element index</h2>
@@ -82,7 +78,6 @@
 <span class="go"> '-2.500,2.500,2.500':  3,</span>
 <span class="go"> '0.000,-3.333,1.667':  4}</span>
 </code></pre></div>
-
 <p>It can be checked if an element is already present in the <strong>Structure</strong> object by a query with the method <code class="docutils literal">check_element_exists()</code> by giving the list of nodes the element would be connected to. As the check is based on the centroid of the element, it does not matter the order that the nodes are given in the list. <strong>Note</strong>: no more than one element can exist for the same nodes, i.e. no overlapping elements are allowed. If an element exists, the method will return the integer key, if not, <code class="docutils literal">None</code> will be returned.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
 <span class="go">1</span>
@@ -90,7 +85,6 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 <span class="go">None</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Axes</h2>

@@ -52,21 +52,18 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'elset_shell'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'element'</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">explode</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </code></pre></div>
-
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">'nset_top'</span><span class="p">]</span>
 <span class="go">{'type': 'node', 'selection': [4], 'explode': False}</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">'elset_shell'</span><span class="p">]</span>
 <span class="go">{'type': 'element', 'selection': [7, 8], 'explode': False}</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Exploding</h2>
 <p>The argument <code class="docutils literal">explode</code> is a boolean that if <code class="docutils literal">True</code> (default <code class="docutils literal">False</code>) will take all elements of that set, and make an individual set for each element in the selection. For example:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'elset_exploded'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'element'</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="n">explode</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </code></pre></div>
-
 <p>will additionally make two new element sets named <code class="docutils literal">'element_4'</code> and <code class="docutils literal">'element_6'</code> with <code class="docutils literal">selection=[4]</code> and <code class="docutils literal">selection=[6]</code>. The utility of this is, the user can break up a larger set knowing that individual sets can now be referenced to, to individually assign a thickness, material, section or cross-section orientation to specific elements by their number.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">'element_4'</span><span class="p">]</span>
 <span class="go">{'type': 'element', 'selection': [4], 'explode': False}</span>
@@ -74,7 +71,6 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">'element_6'</span><span class="p">]</span>
 <span class="go">{'type': 'element', 'selection': [6], 'explode': False}</span>
 </code></pre></div>
-
 <p>The same exploding method works for node sets:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'nset_exploded'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'node'</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">explode</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
@@ -84,18 +80,15 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">'node_2'</span><span class="p">]</span>
 <span class="go">{'type': 'node', 'selection': [2], 'explode': False}</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Surface sets</h2>
 <p>From the node and element geometry of the <strong>Structure</strong> object, a surface can be defined by one of two surface set types. The first is by using <code class="docutils literal">type='surface_node'</code> when creating a set with the <code class="docutils literal">add_set()</code> method, and describes a surface by the nodes it connects to in the <code class="docutils literal">selection</code> list. This surface type can be created like:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'surf_set'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'surface_node'</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
 </code></pre></div>
-
 <p>The second way to define a surface set is with <code class="docutils literal">type='surface_element'</code>, where instead of a list of nodes for <code class="docutils literal">selection</code>, a dictionary of element number keys and list of element string sides is given. So for example, to add sides 1 and 2 of solid element 4, and the top side (<code class="docutils literal">'SPOS'</code> for top and <code class="docutils literal">`SNEG`</code> for bottom) of shell element 7 as an element surface set use:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'surf_set'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'surface_element'</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">{</span><span class="mi">4</span><span class="p">:</span> <span class="p">[</span><span class="s1">'S1'</span><span class="p">,</span> <span class="s1">'S2'</span><span class="p">],</span> <span class="mi">7</span><span class="p">:</span> <span class="p">[</span><span class="s1">'SPOS'</span><span class="p">]})</span>
 </code></pre></div>
-
 <p>For both types, the <code class="docutils literal">explode</code> argument can be kept as <code class="docutils literal">False</code>, as it currently has no meaning in a surface set definition.</p>
 </div>
 </div>

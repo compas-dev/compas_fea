@@ -38,18 +38,19 @@ __all__ = [
 
 class AngleSection(object):
 
+    """ Equal angle cross-section for beam elements.
+
+    Parameters:
+        name (str): Section name.
+        b (float): Width.
+        h (float): Height.
+        t (float): Thickness.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, b, h, t):
-        """ Equal angle cross-section for beam elements.
-
-        Parameters:
-            name (str): Section name.
-            b (float): Width.
-            h (float): Height.
-            t (float): Thickness.
-
-        Returns:
-            None
-        """
         xc = (b**2 + h * t - t**2) / (2. * (b + h - t))
         yc = (h**2 + b * t - t**2) / (2. * (b + h - t))
         A = t * (b + h - t)
@@ -62,19 +63,20 @@ class AngleSection(object):
 
 class BoxSection(object):
 
+    """ Hollow rectangular box cross-section for beam elements.
+
+    Parameters:
+        name (str): Section name.
+        b (float): Width.
+        h (float): Height.
+        tw (float): Web thickness.
+        tf (float): Flange thickness.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, b, h, tw, tf):
-        """ Hollow rectangular box cross-section for beam elements.
-
-        Parameters:
-            name (str): Section name.
-            b (float): Width.
-            h (float): Height.
-            tw (float): Web thickness.
-            tf (float): Flange thickness.
-
-        Returns:
-            None
-        """
         A = b * h - (b - 2 * tw) * (h - 2 * tf)
         I11 = (b * h**3) / 12. - ((b - 2 * tw) * (h - 2 * tf)**3) / 12.
         I22 = (h * b**3) / 12. - ((h - 2 * tf) * (b - 2 * tw)**3) / 12.
@@ -85,16 +87,17 @@ class BoxSection(object):
 
 class CircularSection(object):
 
+    """ Solid circular cross-section for beam elements.
+
+    Parameters:
+        name (str): Section name.
+        r (float): Radius.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, r):
-        """ Solid circular cross-section for beam elements.
-
-        Parameters:
-            name (str): Section name.
-            r (float): Radius.
-
-        Returns:
-            None
-        """
         D = 2 * r
         A = 0.25 * pi * D**2
         I11 = (pi * D**4) / 64.
@@ -106,22 +109,23 @@ class CircularSection(object):
 
 class GeneralSection(object):
 
+    """ General cross-section for beam elements.
+
+    Parameters:
+        name (str): Section name.
+        A (float): Area.
+        I11 (float): Second moment of area about axis 1-1.
+        I12 (float): Cross moment of area.
+        I22 (float): Second moment of area about axis 2-2.
+        J (float): Torsional rigidity.
+        g0 (float): Sectorial moment.
+        gw (float): Warping constant.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, A, I11, I12, I22, J, g0, gw):
-        """ General cross-section for beam elements.
-
-        Parameters:
-            name (str): Section name.
-            A (float): Area.
-            I11 (float): Second moment of area about axis 1-1.
-            I12 (float): Cross moment of area.
-            I22 (float): Second moment of area about axis 2-2.
-            J (float): Torsional rigidity.
-            g0 (float): Sectorial moment.
-            gw (float): Warping constant.
-
-        Returns:
-            None
-        """
         self.__name__ = 'GeneralSection'
         self.geometry = {'A': A, 'I11': I11, 'I12': I12, 'I22': I22, 'J': J, 'g0': g0, 'gw': gw}
         self.name = name
@@ -129,19 +133,20 @@ class GeneralSection(object):
 
 class ISection(object):
 
+    """ Equal flanged I-section for beam elements.
+
+    Parameters:
+        name (str): Section name.
+        b (float): Width.
+        h (float): Height.
+        tw (float): Web thickness.
+        tf (float): Flange thickness.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, b, h, tw, tf):
-        """ Equal flanged I-section for beam elements.
-
-        Parameters:
-            name (str): Section name.
-            b (float): Width.
-            h (float): Height.
-            tw (float): Web thickness.
-            tf (float): Flange thickness.
-
-        Returns:
-            None
-        """
         A = 2 * b * tf + (h - 2 * tf) * tw
         I11 = (tw * (h - 2 * tf)**3) / 12. + 2 * ((tf**3) * b / 12. + b * tf * (h / 2. - tf / 2.)**2)
         I22 = ((h - 2 * tf) * tw**3) / 12. + 2 * ((b**3) * tf / 12.)
@@ -152,17 +157,18 @@ class ISection(object):
 
 class PipeSection(object):
 
+    """ Hollow circular cross-section for beam elements.
+
+    Parameters:
+        name (str): Section name.
+        r (float): Outer radius.
+        t (float): Wall thickness.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, r, t):
-        """ Hollow circular cross-section for beam elements.
-
-        Parameters:
-            name (str): Section name.
-            r (float): Outer radius.
-            t (float): Wall thickness.
-
-        Returns:
-            None
-        """
         D = 2 * r
         A = 0.25 * pi * (D**2 - (D - 2 * t)**2)
         I11 = 0.25 * pi * (r**4 - (r - t)**4)
@@ -174,17 +180,18 @@ class PipeSection(object):
 
 class RectangularSection(object):
 
+    """ Solid rectangular cross-section for beam elements.
+
+    Parameters:
+        name (str): Section name.
+        b (float): Width.
+        h (float): Height.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, b, h):
-        """ Solid rectangular cross-section for beam elements.
-
-        Parameters:
-            name (str): Section name.
-            b (float): Width.
-            h (float): Height.
-
-        Returns:
-            None
-        """
         A = b * h
         I11 = (1 / 12.) * b * h**3
         I22 = (1 / 12.) * h * b**3
@@ -195,18 +202,19 @@ class RectangularSection(object):
 
 class TrapezoidalSection(object):
 
+    """ Solid trapezoidal cross-section for beam elements.
+
+    Parameters:
+        name (str): Section name.
+        b1 (float): Width at bottom.
+        b2 (float): Width at top.
+        h (float): Height.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, b1, b2, h):
-        """ Solid trapezoidal cross-section for beam elements.
-
-        Parameters:
-            name (str): Section name.
-            b1 (float): Width at bottom.
-            b2 (float): Width at top.
-            h (float): Height.
-
-        Returns:
-            None
-        """
         c = (h * (2 * b2 + b1)) / (3. * (b1 + b2))
         A = 0.5 * (b1 + b2) * h
         I11 = (1 / 12.) * (3 * b2 + b1) * h**3
@@ -218,16 +226,17 @@ class TrapezoidalSection(object):
 
 class TrussSection(object):
 
+    """ For use with truss elements.
+
+    Parameters:
+        name (str): Section name.
+        A (float): Area.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, A):
-        """ For use with truss elements.
-
-        Parameters:
-            name (str): Section name.
-            A (float): Area.
-
-        Returns:
-            None
-        """
         self.__name__ = 'TrussSection'
         self.geometry = {'A': A}
         self.name = name
@@ -235,33 +244,35 @@ class TrussSection(object):
 
 class StrutSection(TrussSection):
 
+    """ For use with strut elements.
+
+    Parameters:
+        name (str): Section name.
+        A (float): Area.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, A):
         TrussSection.__init__(self, name=name, A=A)
-        """ For use with strut elements.
-
-        Parameters:
-            name (str): Section name.
-            A (float): Area.
-
-        Returns:
-            None
-        """
         self.__name__ = 'StrutSection'
 
 
 class TieSection(TrussSection):
 
+    """ For use with tie elements.
+
+    Parameters:
+        name (str): Section name.
+        A (float): Area.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, A):
         TrussSection.__init__(self, name=name, A=A)
-        """ For use with tie elements.
-
-        Parameters:
-            name (str): Section name.
-            A (float): Area.
-
-        Returns:
-            None
-        """
         self.__name__ = 'TieSection'
 
 
@@ -271,16 +282,17 @@ class TieSection(TrussSection):
 
 class ShellSection(object):
 
+    """ Section for shell and membrane elements.
+
+    Parameters:
+        name (str): Section name.
+        t (float): Thickness.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, t):
-        """ Section for shell and membrane elements.
-
-        Parameters:
-            name (str): Section name.
-            t (float): Thickness.
-
-        Returns:
-            None
-        """
         self.__name__ = 'ShellSection'
         self.geometry = {'t': t}
         self.name = name
@@ -292,15 +304,16 @@ class ShellSection(object):
 
 class SolidSection(object):
 
+    """ Section for solid elements.
+
+    Parameters:
+        name (str): Section name.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name):
-        """ Section for solid elements.
-
-        Parameters:
-            name (str): Section name.
-
-        Returns:
-            None
-        """
         self.__name__ = 'SolidSection'
         self.geometry = None
         self.name = name

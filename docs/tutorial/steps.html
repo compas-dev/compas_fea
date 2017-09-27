@@ -56,12 +56,10 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">set_steps_order</span><span class="p">([</span><span class="s1">'step_bc'</span><span class="p">,</span> <span class="s1">'step_loads'</span><span class="p">])</span>
 </code></pre></div>
-
 <p>Here, steps with string keys <code class="docutils literal">'step_bc'</code> and <code class="docutils literal">'step_loads'</code> are added, to be analysed in the order given by the order list. That is, <code class="docutils literal">'disp_pinned'</code> will be completed first in <code class="docutils literal">'step_bc'</code>, followed by <code class="docutils literal">'load_point'</code> and <code class="docutils literal">'load_gravity'</code> of <code class="docutils literal">'step_loads'</code>. The order of the <strong>Step</strong> objects can be seen and edited in the <code class="docutils literal">'order'</code> key.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="s1">'order'</span><span class="p">]</span>
 <span class="go">['step_bc', 'step_loads']</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Arguments</h2>

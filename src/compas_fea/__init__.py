@@ -8,7 +8,7 @@ compas_fea
 .. module:: compas_fea
 
 
-Interfaces to Finite Element Analysis software built on compas ...
+Interfaces to Finite Element Analysis software built on compas.
 
 
 .. toctree::

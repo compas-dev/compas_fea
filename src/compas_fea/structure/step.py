@@ -23,24 +23,25 @@ __all__ = [
 
 class GeneralStep(object):
 
+    """ Initialises GeneralStep object for use in static analysis types.
+
+    Parameters:
+        name (str): Name of the GeneralStep.
+        increments (int): Number of step increments.
+        factor (float): Proportionality factor on the loads and displacements.
+        nlgeom (bool): Analyse non-linear geometry effects.
+        displacements (list): Displacement object names (str).
+        loads (list): Load object names (str).
+        type (str): 'STATIC','STATIC,RIKS'.
+        temperatures (str): Name of Temperature object to apply.
+        duration (float): Duration of step.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, increments=200, factor=1.0, nlgeom=True, displacements=[], loads=[], type='STATIC',
                  temperatures=None, duration=1):
-        """ Initialises GeneralStep object for use in static analysis types.
-
-        Parameters:
-            name (str): Name of the GeneralStep.
-            increments (int): Number of step increments.
-            factor (float): Proportionality factor on the loads and displacements.
-            nlgeom (bool): Analyse non-linear geometry effects.
-            displacements (list): Displacement object names (str).
-            loads (list): Load object names (str).
-            type (str): 'STATIC','STATIC,RIKS'.
-            temperatures (str): Name of Temperature object to apply.
-            duration (float): Duration of step.
-
-        Returns:
-            None
-        """
         self.__name__ = 'GeneralStep'
         self.name = name
         self.increments = increments
@@ -55,21 +56,22 @@ class GeneralStep(object):
 
 class HeatStep(object):
 
+    """ Initialises HeatStep object for use in thermal analysis types.
+
+    Parameters:
+        name (str): Name of the HeatStep.
+        interaction (str): Name of the HeatTransfer interaction.
+        increments (int): Number of step increments.
+        temp0 (float): Initial temperature of all nodes.
+        dTmax (float): Maximum temperature increase per increment.
+        type (str): 'HEAT TRANSFER'.
+        duration (float): Duration of step.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, interaction, increments=200, temp0=20, dTmax=1, type='HEAT TRANSFER', duration=1):
-        """ Initialises HeatStep object for use in thermal analysis types.
-
-        Parameters:
-            name (str): Name of the HeatStep.
-            interaction (str): Name of the HeatTransfer interaction.
-            increments (int): Number of step increments.
-            temp0 (float): Initial temperature of all nodes.
-            dTmax (float): Maximum temperature increase per increment.
-            type (str): 'HEAT TRANSFER'.
-            duration (float): Duration of step.
-
-        Returns:
-            None
-        """
         self.__name__ = 'HeatStep'
         self.name = name
         self.interaction = interaction
@@ -82,23 +84,24 @@ class HeatStep(object):
 
 class ModalStep(object):
 
+    """ Initialises ModalStep object for use in modal/buckling analysis types.
+
+    Parameters:
+        name (str): Name of the ModalStep.
+        modes (int): Number of modes to analyse.
+        increments (int): Number of increments.
+        factor (float): Proportionality factor on the loads and displacements.
+        nlgeom (bool): Analyse non-linear geometry effects.
+        displacements (list): Displacement object names (str).
+        loads (list): Load object names (str).
+        type (str): 'BUCKLE', 'MODAL'.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, modes=10, increments=200, factor=1.0, nlgeom=False, displacements=[], loads=[],
                  type='BUCKLE'):
-        """ Initialises ModalStep object for use in modal/buckling analysis types.
-
-        Parameters:
-            name (str): Name of the ModalStep.
-            modes (int): Number of modes to analyse.
-            increments (int): Number of increments.
-            factor (float): Proportionality factor on the loads and displacements.
-            nlgeom (bool): Analyse non-linear geometry effects.
-            displacements (list): Displacement object names (str).
-            loads (list): Load object names (str).
-            type (str): 'BUCKLE', 'MODAL'.
-
-        Returns:
-            None
-        """
         self.__name__ = 'ModalStep'
         self.name = name
         self.modes = modes
@@ -112,23 +115,24 @@ class ModalStep(object):
 
 class HarmonicStep(object):
 
+    """ Initialises HarmonicStep object analysis type.
+
+    Parameters:
+        name (str): Name of the HarmonicStep.
+        displacements (list): Displacement object names (str).
+        loads (list): Load object names (str).
+        factor (float): Proportionality factor on the loads and displacements.
+        freq_range (list): First and last frequencies to analyse.
+        freq_steps (int): The number of frequency steps.
+        damping (float): Constant harmonic damping ratio.
+        type (str): 'HARMONIC'.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, displacements=[], loads=[], factor=1.0, freq_range=None, freq_steps=None, damping=None,
                  type='HARMONIC'):
-        """ Initialises HarmonicStep object analysis type.
-
-        Parameters:
-            name (str): Name of the HarmonicStep.
-            displacements (list): Displacement object names (str).
-            loads (list): Load object names (str).
-            factor (float): Proportionality factor on the loads and displacements.
-            freq_range (list): First and last frequencies to analyse.
-            freq_steps (int): The number of frequency steps.
-            damping (float): Constant harmonic damping ratio.
-            type (str): 'HARMONIC'.
-
-        Returns:
-            None
-        """
         self.__name__ = 'HarmonicStepStep'
         self.name = name
         self.displacements = displacements

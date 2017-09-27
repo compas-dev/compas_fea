@@ -52,7 +52,6 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'disp_pinned'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">'nset_base'</span><span class="p">))</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Accessing displacements</h2>
@@ -63,7 +62,6 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="s1">'disp_pinned'</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
 <span class="go">'nset_base'</span>
 </code></pre></div>
-
 <p>A <strong>PinnedDisplacement</strong> object restrains translations in all directions but allows rotations about any axis, as indicated by the automatic assignment of zero for <code class="docutils literal">x</code>, <code class="docutils literal">y</code> and <code class="docutils literal">z</code>, and <code class="docutils literal">None</code> values for <code class="docutils literal">xx</code>, <code class="docutils literal">yy</code> and <code class="docutils literal">zz</code>. Non-zero values for the six components could be given to simulate support settlements or to perform a displacement controlled analysis.</p>
 </div>
 <div class="section">

@@ -34,19 +34,20 @@ __all__ = [
 
 class Element(object):
 
+    """ Initialises base Element object.
+
+    Parameters:
+        axes (list): The local element axes.
+        nodes (list): Nodes the element connects to.
+        number (int): Number of the element.
+        acoustic (bool): Acoustic properties on or off.
+        thermal (bool): Thermal properties on or off.
+
+    Returns:
+        None
+    """
+
     def __init__(self, axes={}, nodes=None, number=None, acoustic=None, thermal=None):
-        """ Initialises base Element object.
-
-        Parameters:
-            axes (list): The local element axes.
-            nodes (list): Nodes the element connects to.
-            number (int): Number of the element.
-            acoustic (bool): Acoustic properties on or off.
-            thermal (bool): Thermal properties on or off.
-
-        Returns:
-            None
-        """
         self.axes = axes
         self.nodes = nodes
         self.number = number
@@ -60,61 +61,65 @@ class Element(object):
 
 class BeamElement(Element):
 
+    """ A 1D element that takes axial, shear, bending and torsion.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
+
     def __init__(self):
         Element.__init__(self)
-        """ A 1D element that takes axial, shear, bending and torsion.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
         self.__name__ = 'BeamElement'
 
 
 class TrussElement(BeamElement):
 
+    """ A 1D element that takes axial loads.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
+
     def __init__(self):
         BeamElement.__init__(self)
-        """ A 1D element that takes axial loads.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
         self.__name__ = 'TrussElement'
 
 
 class StrutElement(TrussElement):
 
+    """ A truss element that takes axial compressive loads.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
+
     def __init__(self):
         TrussElement.__init__(self)
-        """ A truss element that takes axial compressive loads.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
         self.__name__ = 'StrutElement'
 
 
 class TieElement(TrussElement):
 
+    """ A truss element that takes axial tensile loads.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
+
     def __init__(self):
         TrussElement.__init__(self)
-        """ A truss element that takes axial tensile loads.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
         self.__name__ = 'TieElement'
 
 
@@ -124,31 +129,33 @@ class TieElement(TrussElement):
 
 class ShellElement(Element):
 
+    """ A 2D element that takes axial, shear, bending and torsion.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
+
     def __init__(self):
         Element.__init__(self)
-        """ A 2D element that takes axial, shear, bending and torsion.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
         self.__name__ = 'ShellElement'
 
 
 class MembraneElement(ShellElement):
 
+    """ A shell element that takes only axial loads.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
+
     def __init__(self):
         ShellElement.__init__(self)
-        """ A shell element that takes only axial loads.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
         self.__name__ = 'MembraneElement'
 
 
@@ -158,59 +165,63 @@ class MembraneElement(ShellElement):
 
 class SolidElement(Element):
 
+    """ A 3D element that takes axial, shear, bending and torsion.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
+
     def __init__(self):
         Element.__init__(self)
-        """ A 3D element that takes axial, shear, bending and torsion.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
         self.__name__ = 'SolidElement'
 
 
 class PentahedronElement(SolidElement):
 
+    """ A Solid element with 5 faces (extruded triangle).
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
+
     def __init__(self):
         SolidElement.__init__(self)
-        """ A Solid element with 5 faces (extruded triangle).
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
         self.__name__ = 'PentahedronElement'
 
 
 class TetrahedronElement(SolidElement):
 
+    """ A Solid element with 4 faces.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
+
     def __init__(self):
         SolidElement.__init__(self)
-        """ A Solid element with 4 faces.
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
         self.__name__ = 'TetrahedronElement'
 
 
 class HexahedronElement(SolidElement):
 
+    """ A Solid cuboid element with 6 faces (extruded rectangle).
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
+
     def __init__(self):
         SolidElement.__init__(self)
-        """ A Solid cuboid element with 6 faces (extruded rectangle).
-
-        Parameters:
-            None
-
-        Returns:
-            None
-        """
         self.__name__ = 'HexahedronElement'

@@ -20,19 +20,20 @@ __all__ = [
 
 class ElementProperties(object):
 
+    """ Initialises ElementProperties object.
+
+    Parameters:
+        material str): Name of the material to assign.
+        section (str): Name of the section to assign.
+        elsets (list): ELSETs the properties are assigned to.
+        elements (list): Elements the properties are assigned to.
+        reinforcement (dic): Reinforcement information for the element/section.
+
+    Returns:
+        None
+    """
+
     def __init__(self, material, section, elsets=None, elements=None, reinforcement={}):
-        """ Initialises ElementProperties object.
-
-        Parameters:
-            material str): Name of the material to assign.
-            section (str): Name of the section to assign.
-            elsets (list): ELSETs the properties are assigned to.
-            elements (list): Elements the properties are assigned to.
-            reinforcement (dic): Reinforcement information for the element/section.
-
-        Returns:
-            None
-        """
         self.material = material
         self.section = section
         self.elsets = elsets

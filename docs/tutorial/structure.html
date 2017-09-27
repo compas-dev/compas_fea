@@ -50,37 +50,29 @@
 <p>A <strong>.py</strong> file is created for every compas_fea analysis, which is where a <strong>Structure</strong> object is first instantiated and then populated with the components needed for the particular project. To import these components and use other helper functions from the core compas or compas_fea package, <code class="docutils literal">import</code> statements are needed in the first few lines of the file. For example, if the user wishes to use a CAD environment for extracting geometry or visualising analysis results, either of the following could be written to use Rhinoceros or Blender. These imports will make a variety of functions available from the <strong>compas_fea.cad.blender</strong> and <strong>compas_fea.cad.rhino</strong> modules.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">rhino</span>
 </code></pre></div>
-
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">blender</span>
 </code></pre></div>
-
 <p>Similarly, depending on which finite element analysis software or library is being used, one of the following imports would be used:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.fea.abaq</span> <span class="kn">import</span> <span class="n">abaq</span>
 </code></pre></div>
-
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.fea.ansys</span> <span class="kn">import</span> <span class="n">ansys</span>
 </code></pre></div>
-
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.fea.opensees</span> <span class="kn">import</span> <span class="n">opensees</span>
 </code></pre></div>
-
 <p>It is also useful to pull modules from the core compas library, especially geometry and datastructure imports to help build the <strong>Structure</strong> object:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_rhino.helpers.mesh</span> <span class="kn">import</span> <span class="n">mesh_from_guid</span>
 <span class="kn">from</span> <span class="nn">compas.datastructures.mesh.mesh</span> <span class="kn">import</span> <span class="n">Mesh</span>
 <span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">distance_point_point</span>
 </code></pre></div>
-
 <p>as well as various functions from the core compas CAD packages, for creating, editing or deleting objects and layers:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="kn">import</span> <span class="n">clear_layers</span>
 <span class="kn">from</span> <span class="nn">compas_blender.helpers</span> <span class="kn">import</span> <span class="n">network_from_bmesh</span>
 </code></pre></div>
-
 <p>The most important imports will be for retrieving classes from the <strong>compas_fea/structure/</strong> folder, including the main <strong>Structure</strong> class itself:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GeneralStep</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PointLoad</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Structure</span>
 </code></pre></div>
-
 <p>These special classes will be described in more detail throughout the various topics.</p>
 </div>
 <div class="section">
@@ -89,7 +81,6 @@
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">name</span> <span class="o">=</span> <span class="s1">'simple-truss'</span>
 <span class="n">path</span> <span class="o">=</span> <span class="s1">'/home/al/Temp/'</span>
 </code></pre></div>
-
 <p>The above pairing will produce files such as <strong>/home/al/Temp/simple-truss.inp</strong> and <strong>/home/al/Temp/simple-truss.obj</strong>. Additional temporary files, including output <strong>.json</strong> data and analysis output databases such as an Abaqus <strong>.odb</strong> file will be stored in a separate folder within <code class="docutils literal">path</code> with folder name <code class="docutils literal">name</code>, this is to keep things organised as an analysis will often generate hundreds of output files. These output files are explained in more detail in the Analysis topic.</p>
 </div>
 <div class="section">
@@ -99,7 +90,6 @@
 
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">()</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Summary</h2>
@@ -133,7 +123,6 @@
 <span class="go">    step_loads : GeneralStep</span>
 <span class="go">--------------------------------------------------</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Loading and saving</h2>
@@ -146,7 +135,6 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span> <span class="o">=</span> <span class="n">load_from_obj</span><span class="p">(</span><span class="s1">'/home/al/Temp/simple-truss.obj'</span><span class="p">)</span>
 <span class="go">***** Structure loaded from: /home/al/Temp/simple-truss.obj *****</span>
 </code></pre></div>
-
 </div>
 </div>
 <nav class="compas-sideways">

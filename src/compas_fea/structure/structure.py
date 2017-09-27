@@ -36,30 +36,31 @@ __all__ = [
 
 class Structure(object):
 
+    """ Initialises empty Structure object for use in finite element analysis.
+
+    Parameters:
+        constraints (dic): Constraint objects.
+        displacements (dic): Displacement objects.
+        elements (dic): Element objects.
+        element_index (dic): Index of elements (geometric keys).
+        element_properties (dic): Element properties objects.
+        interactions (dic): Interaction objects.
+        loads (dic): Load objects.
+        materials (dic): Material objects.
+        misc (dic): Misc objects.
+        nodes (dic): Node co-ordinates and local axes.
+        node_index (dic): Index of nodes (geometric keys).
+        results (dic): Results from analysis.
+        sections (dic): Section objects.
+        sets (dic): Node, element and surface sets.
+        steps (dic): Step objects.
+        tol (str): Geometric key tolerance.
+
+    Returns:
+        None
+    """
+
     def __init__(self):
-        """ Initialises empty Structure object for use in finite element analysis.
-
-        Parameters:
-            constraints (dic): Constraint objects.
-            displacements (dic): Displacement objects.
-            elements (dic): Element objects.
-            element_index (dic): Index of elements (geometric keys).
-            element_properties (dic): Element properties objects.
-            interactions (dic): Interaction objects.
-            loads (dic): Load objects.
-            materials (dic): Material objects.
-            misc (dic): Misc objects.
-            nodes (dic): Node co-ordinates and local axes.
-            node_index (dic): Index of nodes (geometric keys).
-            results (dic): Results from analysis.
-            sections (dic): Section objects.
-            sets (dic): Node, element and surface sets.
-            steps (dic): Step objects.
-            tol (str): Geometric key tolerance.
-
-        Returns:
-            None
-        """
         self.constraints = {}
         self.displacements = {}
         self.elements = {}

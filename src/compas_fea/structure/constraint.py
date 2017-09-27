@@ -19,18 +19,20 @@ __all__ = [
 
 
 class TieConstraint(object):
+
+    """ Tie constraint between two sets of nodes, elements or surfaces.
+
+    Parameters:
+        name (str): TieConstraint name.
+        master (str): Master set name.
+        slave (str): Slave set name.
+        tol (float): Constraint tolerance, distance limit between master and slave.
+
+    Returns:
+        None
+    """
+
     def __init__(self, name, master, slave, tol):
-        """ Tie constraint between two sets of nodes, elements or surfaces.
-
-        Parameters:
-            name (str): TieConstraint name.
-            master (str): Master set name.
-            slave (str): Slave set name.
-            tol (float): Constraint tolerance, distance limit between master and slave.
-
-        Returns:
-            None
-        """
         self.__name__ = 'TieConstraint'
         self.name = name
         self.master = master
