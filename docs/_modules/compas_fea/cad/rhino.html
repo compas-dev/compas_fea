@@ -62,6 +62,9 @@
 <span class="sd">compas_fea.cad.rhino : Rhinoceros specific functions.</span>
 <span class="sd">"""</span>
 
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+
 <span class="kn">from</span> <span class="nn">subprocess</span> <span class="k">import</span> <span class="n">Popen</span>
 <span class="kn">from</span> <span class="nn">subprocess</span> <span class="k">import</span> <span class="n">PIPE</span>
 
@@ -376,7 +379,7 @@
 
     <span class="c1"># Start postprocess</span>
 
-    <span class="n">script</span> <span class="o">=</span> <span class="n">utilities</span><span class="o">.</span><span class="n">__file__</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'__init__.py'</span><span class="p">,</span> <span class="s1">'postprocess.py'</span><span class="p">)</span>
+    <span class="n">script</span> <span class="o">=</span> <span class="n">utilities</span><span class="o">.</span><span class="vm">__file__</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'__init__.py'</span><span class="p">,</span> <span class="s1">'postprocess.py'</span><span class="p">)</span>
     <span class="n">temp</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">/'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="n">cmin</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">cbar</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">cbar</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">'None'</span>
     <span class="n">cmax</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">cbar</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">cbar</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">'None'</span>
@@ -415,7 +418,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">'Step summary: </span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">'--------------'</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">step</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">'Frame description: </span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">'Analysis time: </span><span class="si">{0:.3f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">'toc_analysis'</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'Analysis time: </span><span class="si">{0:.3f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">'toc_analysis'</span><span class="p">])))</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">'Extraction time: </span><span class="si">{0:.3f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">'toc_extraction'</span><span class="p">]))</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">'Processing time: </span><span class="si">{0:.3f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">toc</span><span class="p">))</span>
 
@@ -450,7 +453,7 @@
             <span class="k">elif</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">element_fields</span><span class="p">:</span>
                 <span class="n">col</span> <span class="o">=</span> <span class="n">celements</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">ekey</span><span class="p">)]</span>
                 <span class="n">rs</span><span class="o">.</span><span class="n">MeshVertexColors</span><span class="p">(</span><span class="n">guid</span><span class="p">,</span> <span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span>
-        
+
         <span class="k">elif</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="n">mesh_faces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nodes</span> <span class="o">+</span> <span class="p">[</span><span class="n">nodes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
 
@@ -641,7 +644,7 @@
             
 
             
-                Last updated on Sep 26, 2017.
+                Last updated on Sep 27, 2017.
             
 
             
@@ -649,7 +652,7 @@
    <a href="http://sphinx-doc.org/">
     Sphinx
    </a>
-   1.5.1.
+   1.6.3.
   </footer>
   <script type="text/javascript">
    var DOCUMENTATION_OPTIONS = {

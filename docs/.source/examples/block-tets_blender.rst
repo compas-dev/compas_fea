@@ -8,4 +8,4 @@ block-tets Blender
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/block/block-tets_abaqus_blender.py
+.. literalinclude:: /../../examples/block-tets_abaqus_blender.py

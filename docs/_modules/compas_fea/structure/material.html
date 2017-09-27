@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <title>
+   compas_fea -- FEA package for compas
+  </title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <!-- compas meta tags -->
+  <meta content="" name="author"/>
+  <meta content="" name="description"/>
+  <!-- Bootstrap CSS -->
+  <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
+  <!-- highlight CSS -->
+  <link href="../../../static/css/github.css" rel="stylesheet" type="text/css"/>
+  <!-- compas CSS -->
+  <link href="../../../static/css/compas.css" rel="stylesheet" type="text/css"/>
+  <link href="../../../static/css/compas-reference.css" rel="stylesheet" type="text/css"/>
+  <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript">
+  </script>
+ </head>
+ <body data-spy="scroll" data-target="#compas-localnav">
+  <!-- main navigation bar -->
+  <header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
+   <a class="navbar-brand" href="https://compas-dev.github.io">
+    compas
+   </a>
+   <ul class="navbar-nav">
+    <li class="nav-item">
+     <a class="nav-link" href="https://compas-dev.github.io/compas_fea">
+      compas_fea
+     </a>
+    </li>
+   </ul>
+  </header>
+  <!-- page container -->
+  <div class="container-fluid compas-container">
+   <div class="row flex-xl-nowrap">
+    <!-- main page content -->
+    <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+     <nav class="breadcrumb">
+      <a class="breadcrumb-item" href="https://compas-dev.github.io/">
+       compas
+      </a>
+      <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">
+       packages
+      </a>
+      <a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">
+       compas_fea
+      </a>
+      <a accesskey="U" class="breadcrumb-item" href="../../index.html">
+       module code
+      </a>
+     </nav>
+     <h1>
+      Source code for compas_fea.structure.material
+     </h1>
+     <div class="highlight">
+      <pre><code class="language-python border rounded">
+<span></span><span class="sd">"""</span>
+<span class="sd">compas_fea.structure.material : Material classes.</span>
+<span class="sd">For creating and/or selecting linear and non-linear material model classes.</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">log</span>
+
+
+<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">'Andrew Liew &lt;liew@arch.ethz.ch&gt;'</span><span class="p">]</span>
+<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">'Copyright 2017, BLOCK Research Group - ETH Zurich'</span>
+<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">'MIT License'</span>
+<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">'liew@arch.ethz.ch'</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'Concrete'</span><span class="p">,</span>
+    <span class="s1">'ConcreteSmearedCrack'</span><span class="p">,</span>
+    <span class="s1">'ConcreteDamagedPlasticity'</span><span class="p">,</span>
+    <span class="s1">'ElasticIsotropic'</span><span class="p">,</span>
+    <span class="s1">'ElasticOrthotropic'</span><span class="p">,</span>
+    <span class="s1">'ElasticPlastic'</span><span class="p">,</span>
+    <span class="s1">'ThermalMaterial'</span><span class="p">,</span>
+    <span class="s1">'Steel'</span>
+<span class="p">]</span>
+
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># linear elastic</span>
+<span class="c1"># ==============================================================================</span>
+
+<div class="viewcode-block" id="ElasticIsotropic"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.material.ElasticIsotropic.html#compas_fea.structure.material.ElasticIsotropic">[docs]</a><span class="k">class</span> <span class="nc">ElasticIsotropic</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">tension</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">""" Elastic, isotropic and homogeneous material.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            name (str): Material name.</span>
+<span class="sd">            E (float, list): Young's modulus E.</span>
+<span class="sd">            v (float, list): Poisson's ratio v.</span>
+<span class="sd">            p (float, list): Density.</span>
+<span class="sd">            tension (bool): Can take tension.</span>
+<span class="sd">            compression (bool): Can take compression.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'ElasticIsotropic'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">E</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'E'</span><span class="p">:</span> <span class="n">E</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'v'</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tension</span> <span class="o">=</span> <span class="n">tension</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="n">compression</span></div>
+
+
+<div class="viewcode-block" id="ElasticOrthotropic"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.material.ElasticOrthotropic.html#compas_fea.structure.material.ElasticOrthotropic">[docs]</a><span class="k">class</span> <span class="nc">ElasticOrthotropic</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">Ex</span><span class="p">,</span> <span class="n">Ey</span><span class="p">,</span> <span class="n">Ez</span><span class="p">,</span> <span class="n">vxy</span><span class="p">,</span> <span class="n">vyz</span><span class="p">,</span> <span class="n">vzx</span><span class="p">,</span> <span class="n">Gxy</span><span class="p">,</span> <span class="n">Gyz</span><span class="p">,</span> <span class="n">Gzx</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">tension</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">""" Elastic, orthotropic and homogeneous material.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            - Class can be created but is currently not implemented.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            name (str): Material name.</span>
+<span class="sd">            Ex (float, list): Young's modulus Ex in x direction.</span>
+<span class="sd">            Ey (float, list): Young's modulus Ey in y direction.</span>
+<span class="sd">            Ez (float, list): Young's modulus Ez in z direction.</span>
+<span class="sd">            vxy (float, list): Poisson's ratio vxy in x-y directions.</span>
+<span class="sd">            vyz (float, list): Poisson's ratio vyz in y-z directions.</span>
+<span class="sd">            vzx (float, list): Poisson's ratio vzx in z-x directions.</span>
+<span class="sd">            Gxy (float, list): Shear modulus Gxy in x-y directions.</span>
+<span class="sd">            Gyz (float, list): Shear modulus Gyz in y-z directions.</span>
+<span class="sd">            Gzx (float, list): Shear modulus Gzx in z-x directions.</span>
+<span class="sd">            p (float, list): Density.</span>
+<span class="sd">            tension (bool): Can take tension.</span>
+<span class="sd">            compression (bool): Can take compression.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'ElasticOrthotropic'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">E</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'Ex'</span><span class="p">:</span> <span class="n">Ex</span><span class="p">,</span> <span class="s1">'Ey'</span><span class="p">:</span> <span class="n">Ey</span><span class="p">,</span> <span class="s1">'Ez'</span><span class="p">:</span> <span class="n">Ez</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vxy'</span><span class="p">:</span> <span class="n">vxy</span><span class="p">,</span> <span class="s1">'vyz'</span><span class="p">:</span> <span class="n">vyz</span><span class="p">,</span> <span class="s1">'vzx'</span><span class="p">:</span> <span class="n">vzx</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'Gxy'</span><span class="p">:</span> <span class="n">Gxy</span><span class="p">,</span> <span class="s1">'Gyz'</span><span class="p">:</span> <span class="n">Gyz</span><span class="p">,</span> <span class="s1">'Gzx'</span><span class="p">:</span> <span class="n">Gzx</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tension</span> <span class="o">=</span> <span class="n">tension</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="n">compression</span></div>
+
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># non-linear general</span>
+<span class="c1"># ==============================================================================</span>
+
+<div class="viewcode-block" id="ElasticPlastic"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.material.ElasticPlastic.html#compas_fea.structure.material.ElasticPlastic">[docs]</a><span class="k">class</span> <span class="nc">ElasticPlastic</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="sd">""" Elastic and plastic, isotropic and homogeneous material.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            - Plastic stress--strain pairs applies to both compression and tension.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            name (str): Material name.</span>
+<span class="sd">            E (float, list): Young's modulus E.</span>
+<span class="sd">            v (float, list): Poisson's ratio v.</span>
+<span class="sd">            p (float, list): Density.</span>
+<span class="sd">            f (list): Plastic stress data.</span>
+<span class="sd">            e (list): Plastic strain data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'ElasticPlastic'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">E</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'E'</span><span class="p">:</span> <span class="n">E</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'v'</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'f'</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span> <span class="n">e</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tension</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'f'</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span> <span class="n">e</span><span class="p">}</span></div>
+
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># non-linear metal</span>
+<span class="c1"># ==============================================================================</span>
+
+<div class="viewcode-block" id="Steel"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.material.Steel.html#compas_fea.structure.material.Steel">[docs]</a><span class="k">class</span> <span class="nc">Steel</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">210</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">7850</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'elastic-plastic'</span><span class="p">):</span>
+        <span class="sd">""" Construction steel with given yield stress.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            name (str): Material name.</span>
+<span class="sd">            fy (float): Yield stress [MPa].</span>
+<span class="sd">            E (float): Young's modulus E.</span>
+<span class="sd">            v (float): Poisson's ratio v.</span>
+<span class="sd">            p (float): Density.</span>
+<span class="sd">            type (str): 'elastic-plastic.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'Steel'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">E</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'E'</span><span class="p">:</span> <span class="n">E</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'v'</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">'elastic-plastic'</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="n">fy</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">]</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'f'</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span> <span class="n">e</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tension</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'f'</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span> <span class="n">e</span><span class="p">}</span></div>
+
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># non-linear timber</span>
+<span class="c1"># ==============================================================================</span>
+
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># non-linear masonry</span>
+<span class="c1"># ==============================================================================</span>
+
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># non-linear concrete</span>
+<span class="c1"># ==============================================================================</span>
+
+<div class="viewcode-block" id="Concrete"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.material.Concrete.html#compas_fea.structure.material.Concrete">[docs]</a><span class="k">class</span> <span class="nc">Concrete</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fck</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2400</span><span class="p">,</span> <span class="n">fr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">""" Elastic and plastic-cracking concrete material.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            - The concrete model is based on Eurocode 2 up to fck=90 MPa.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            name (str): Material name.</span>
+<span class="sd">            fck (float): Characteristic (5%) 28 day cylinder strength MPa.</span>
+<span class="sd">            v (float, list): Poisson's ratio v.</span>
+<span class="sd">            p (float, list): Density.</span>
+<span class="sd">            fr (list): Failure ratios.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="n">de</span> <span class="o">=</span> <span class="mf">0.0001</span>
+        <span class="n">fcm</span> <span class="o">=</span> <span class="n">fck</span> <span class="o">+</span> <span class="mi">8</span>  <span class="c1"># MPa</span>
+        <span class="n">Ecm</span> <span class="o">=</span> <span class="mi">22</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">fcm</span> <span class="o">/</span> <span class="mf">10.</span><span class="p">)</span><span class="o">**</span><span class="mf">0.3</span>  <span class="c1"># MPa</span>
+        <span class="n">ec1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">0.7</span> <span class="o">*</span> <span class="n">fcm</span><span class="o">**</span><span class="mf">0.31</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.001</span>
+        <span class="n">ecu1</span> <span class="o">=</span> <span class="mf">0.0035</span> <span class="k">if</span> <span class="n">fck</span> <span class="o">&lt;</span> <span class="mi">50</span> <span class="k">else</span> <span class="p">(</span><span class="mf">2.8</span> <span class="o">+</span> <span class="mi">27</span> <span class="o">*</span> <span class="p">((</span><span class="mi">98</span> <span class="o">-</span> <span class="n">fcm</span><span class="p">)</span> <span class="o">/</span> <span class="mf">100.</span><span class="p">)</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.001</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ecu1</span> <span class="o">/</span> <span class="n">de</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="mf">1.05</span> <span class="o">*</span> <span class="n">Ecm</span> <span class="o">*</span> <span class="n">ec1</span> <span class="o">/</span> <span class="n">fcm</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">de</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="n">ec</span> <span class="o">=</span> <span class="p">[</span><span class="n">ei</span> <span class="o">-</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">ei</span> <span class="ow">in</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+        <span class="n">fctm</span> <span class="o">=</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">fck</span><span class="o">**</span><span class="p">(</span><span class="mf">2.</span> <span class="o">/</span> <span class="mf">3.</span><span class="p">)</span> <span class="k">if</span> <span class="n">fck</span> <span class="o">&lt;=</span> <span class="mi">50</span> <span class="k">else</span> <span class="mf">2.12</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">fcm</span> <span class="o">/</span> <span class="mf">10.</span><span class="p">)</span>  <span class="c1"># MPa</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span> <span class="o">*</span> <span class="n">fcm</span> <span class="o">*</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">ei</span> <span class="o">/</span> <span class="n">ec1</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">ei</span> <span class="o">/</span> <span class="n">ec1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ei</span> <span class="o">/</span> <span class="n">ec1</span><span class="p">))</span> <span class="k">for</span> <span class="n">ei</span> <span class="ow">in</span> <span class="n">e</span><span class="p">]</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">ft</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]</span>
+        <span class="n">et</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fr</span><span class="p">:</span>
+            <span class="n">fr</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.16</span><span class="p">,</span> <span class="n">fctm</span> <span class="o">/</span> <span class="n">fcm</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'Concrete'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">E</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'E'</span><span class="p">:</span> <span class="n">E</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'v'</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'f'</span><span class="p">:</span> <span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="s1">'e'</span><span class="p">:</span> <span class="n">ec</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tension</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'f'</span><span class="p">:</span> <span class="n">ft</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span> <span class="n">et</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fratios</span> <span class="o">=</span> <span class="n">fr</span></div>
+
+
+<div class="viewcode-block" id="ConcreteSmearedCrack"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.material.ConcreteSmearedCrack.html#compas_fea.structure.material.ConcreteSmearedCrack">[docs]</a><span class="k">class</span> <span class="nc">ConcreteSmearedCrack</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">ec</span><span class="p">,</span> <span class="n">ft</span><span class="p">,</span> <span class="n">et</span><span class="p">,</span> <span class="n">fr</span><span class="o">=</span><span class="p">[</span><span class="mf">1.16</span><span class="p">,</span> <span class="mf">0.0836</span><span class="p">]):</span>
+        <span class="sd">""" Elastic and plastic, cracking concrete material.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            name (str): Material name.</span>
+<span class="sd">            E (float, list): Young's modulus E.</span>
+<span class="sd">            v (float, list): Poisson's ratio v.</span>
+<span class="sd">            p (float, list): Density.</span>
+<span class="sd">            fc (list): Plastic stress data in compression.</span>
+<span class="sd">            ec (list): Plastic strain data in compression.</span>
+<span class="sd">            ft (list): Plastic stress data in tension.</span>
+<span class="sd">            et (list): Plastic strain data in tension.</span>
+<span class="sd">            fr (list): Failure ratios.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'ConcreteSmearedCrack'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">E</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'E'</span><span class="p">:</span> <span class="n">E</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'v'</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'f'</span><span class="p">:</span> <span class="n">fc</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span> <span class="n">ec</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tension</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'f'</span><span class="p">:</span> <span class="n">ft</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span> <span class="n">et</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fratios</span> <span class="o">=</span> <span class="n">fr</span></div>
+
+
+<div class="viewcode-block" id="ConcreteDamagedPlasticity"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.material.ConcreteDamagedPlasticity.html#compas_fea.structure.material.ConcreteDamagedPlasticity">[docs]</a><span class="k">class</span> <span class="nc">ConcreteDamagedPlasticity</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">damage</span><span class="p">,</span> <span class="n">hardening</span><span class="p">,</span> <span class="n">stiffening</span><span class="p">):</span>
+        <span class="sd">""" Damaged plasticity isotropic and homogeneous material.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            name (str): Material name.</span>
+<span class="sd">            E (float, list): Young's modulus E.</span>
+<span class="sd">            v (float, list): Poisson's ratio v.</span>
+<span class="sd">            p (float, list): Density.</span>
+<span class="sd">            damage (list): Damage parameters.</span>
+<span class="sd">            hardening (list): Compression hardening parameters.</span>
+<span class="sd">            stiffening (list): Tension stiffening parameters.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'ConcreteDamagedPlasticity'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">E</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'E'</span><span class="p">:</span> <span class="n">E</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'v'</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="o">=</span> <span class="n">damage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hardening</span> <span class="o">=</span> <span class="n">hardening</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stiffening</span> <span class="o">=</span> <span class="n">stiffening</span></div>
+
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># thermal</span>
+<span class="c1"># ==============================================================================</span>
+
+<div class="viewcode-block" id="ThermalMaterial"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.material.ThermalMaterial.html#compas_fea.structure.material.ThermalMaterial">[docs]</a><span class="k">class</span> <span class="nc">ThermalMaterial</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">conductivity</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">sheat</span><span class="p">):</span>
+        <span class="sd">""" Class for thermal material properties.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            name (str): Material name.</span>
+<span class="sd">            conductivity (list): Pairs of conductivity and temperature values.</span>
+<span class="sd">            p (list): Pairs of density and temperature values.</span>
+<span class="sd">            sheat (list): Pairs of specific heat and temperature values.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'ThermalMaterial'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conductivity</span> <span class="o">=</span> <span class="n">conductivity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sheat</span> <span class="o">=</span> <span class="n">sheat</span></div>
+</code></pre>
+     </div>
+     <nav class="compas-sideways">
+     </nav>
+    </main>
+    <!-- sidebar navigation -->
+    <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
+     <div class="navbar-light">
+      <form action="../../../search.html" class="d-flex compas-searchbox" id="" method="get">
+       <input class="form-control" name="q" placeholder="Search docs" type="text"/>
+       <input name="check_keywords" type="hidden" value="yes"/>
+       <input name="area" type="hidden" value="default"/>
+       <button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon">
+        </span>
+       </button>
+      </form>
+      <div class="navbar-expand-md">
+       <div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
+        <ul class="nav flex-column">
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../../../intro.html">
+           Introduction
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../../../tutorial.html">
+           Tutorial
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../../../examples.html">
+           Examples
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../../../reference.html">
+           Reference
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../../../license.html">
+           License
+          </a>
+         </li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </div>
+    <!-- toc of current page -->
+    <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+    </div>
+   </div>
+  </div>
+  <footer class="compas-footer">
+   &copy; Copyright 2017, Block Research Group.
+                
+            
+
+            
+                Last updated on Sep 27, 2017.
+            
+
+            
+                Created using
+   <a href="http://sphinx-doc.org/">
+    Sphinx
+   </a>
+   1.6.3.
+  </footer>
+  <script type="text/javascript">
+   var DOCUMENTATION_OPTIONS = {
+                URL_ROOT:    '',
+                VERSION:     '',
+                COLLAPSE_INDEX: false,
+                FILE_SUFFIX: '.html',
+                HAS_SOURCE:  true,
+                SOURCELINK_SUFFIX: '.txt'
+              };
+  </script>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js">
+  </script>
+  <script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js">
+  </script>
+  <script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js">
+  </script>
+  <script src="../../../static/underscore.js">
+  </script>
+  <script src="../../../static/doctools.js">
+  </script>
+  <script src="../../../static/searchtools_.js">
+  </script>
+  <script>
+   hljs.initHighlightingOnLoad();
+                anchors.add();
+  </script>
+ </body>
+</html>

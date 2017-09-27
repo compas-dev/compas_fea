@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <title>
+   compas_fea -- FEA package for compas
+  </title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <!-- compas meta tags -->
+  <meta content="" name="author"/>
+  <meta content="" name="description"/>
+  <!-- Bootstrap CSS -->
+  <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
+  <!-- highlight CSS -->
+  <link href="../static/css/github.css" rel="stylesheet" type="text/css"/>
+  <!-- compas CSS -->
+  <link href="../static/css/compas.css" rel="stylesheet" type="text/css"/>
+  <link href="../static/css/compas-reference.css" rel="stylesheet" type="text/css"/>
+  <link href="13_cad.html" rel="next" title="CAD"/>
+  <link href="11_steps.html" rel="prev" title="Steps"/>
+  <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript">
+  </script>
+ </head>
+ <body data-spy="scroll" data-target="#compas-localnav">
+  <!-- main navigation bar -->
+  <header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
+   <a class="navbar-brand" href="https://compas-dev.github.io">
+    compas
+   </a>
+   <ul class="navbar-nav">
+    <li class="nav-item">
+     <a class="nav-link" href="https://compas-dev.github.io/compas_fea">
+      compas_fea
+     </a>
+    </li>
+   </ul>
+  </header>
+  <!-- page container -->
+  <div class="container-fluid compas-container">
+   <div class="row flex-xl-nowrap">
+    <!-- main page content -->
+    <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+     <nav class="breadcrumb">
+      <a class="breadcrumb-item" href="https://compas-dev.github.io/">
+       compas
+      </a>
+      <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">
+       packages
+      </a>
+      <a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">
+       compas_fea
+      </a>
+      <a accesskey="U" class="breadcrumb-item" href="../tutorial.html">
+       tutorial
+      </a>
+     </nav>
+     <div class="section">
+      <h1>
+       Analysis
+      </h1>
+      <p>
+       This page describes how to analyse a completed
+       <strong>
+        Structure
+       </strong>
+       object and interpret the resulting data.
+      </p>
+      <div class="section">
+       <h2>
+        Abaqus
+       </h2>
+       <div class="section">
+        <h3>
+         Generation of .inp file
+        </h3>
+        <p>
+         The most important file in generating an Abaqus structural model is the
+         <code class="docutils literal">
+          .inp
+         </code>
+         input file. With this file, it is possible to generate and analyse a structural model, as well as request certain output data to be written to an output database
+         <code class="docutils literal">
+          .odb
+         </code>
+         file. The function that generates an input file from a
+         <strong>
+          Structure
+         </strong>
+         object is
+         <code class="docutils literal">
+          inp_generate()
+         </code>
+         from the
+         <strong>
+          compas_fea.fea.abaq.abaq
+         </strong>
+         module (this module was not named
+         <strong>
+          abaqus
+         </strong>
+         as it would clash with an already present and  important import from Abaqus). To use the
+         <code class="docutils literal">
+          inp_generate()
+         </code>
+         function, provide the
+         <code class="docutils literal">
+          structure
+         </code>
+         object and the
+         <code class="docutils literal">
+          filename
+         </code>
+         string of where to save the
+         <code class="docutils literal">
+          .inp
+         </code>
+         file, and a confirmation that the file has been made will be given upon generation.
+        </p>
+        <div class="highlight">
+         <pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.fea.abaq</span> <span class="kn">import</span> <span class="n">abaq</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">abaq</span><span class="o">.</span><span class="n">inp_generate</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">'/home/al/Temp/simple-truss.inp'</span><span class="p">)</span>
+<span class="o">*****</span> <span class="n">Abaqus</span> <span class="nb">input</span> <span class="nb">file</span> <span class="n">generated</span><span class="p">:</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">al</span><span class="o">/</span><span class="n">Temp</span><span class="o">/</span><span class="n">simple</span><span class="o">-</span><span class="n">truss</span><span class="o">.</span><span class="n">inp</span> <span class="o">*****</span>
+</code></pre>
+        </div>
+        <p>
+         Because the official reference documentation for Abaqus
+         <code class="docutils literal">
+          .inp
+         </code>
+         files is vast, it will not be described here what every line of the
+         <code class="docutils literal">
+          .inp
+         </code>
+         file means. For users interested or experienced in Abaqus input file generation, see the Abaqus Documentation, particularly the Keywords Manual, which can be set-up during installation. To see precisely how the
+         <strong>
+          Structure
+         </strong>
+         object data is converted into the
+         <code class="docutils literal">
+          .inp
+         </code>
+         file format, see the functions
+         <code class="docutils literal">
+          inp_constraints()
+         </code>
+         ,
+         <code class="docutils literal">
+          inp_elements()
+         </code>
+         ,
+         <code class="docutils literal">
+          inp_heading()
+         </code>
+         ,
+         <code class="docutils literal">
+          inp_materials()
+         </code>
+         ,
+         <code class="docutils literal">
+          inp_misc()
+         </code>
+         ,
+         <code class="docutils literal">
+          inp_nodes()
+         </code>
+         ,
+         <code class="docutils literal">
+          inp_properties()
+         </code>
+         ,
+         <code class="docutils literal">
+          inp_sets()
+         </code>
+         ,
+         <code class="docutils literal">
+          inp_steps()
+         </code>
+         of the
+         <strong>
+          abaq
+         </strong>
+         module.
+        </p>
+        <p>
+         There are a few important points to highlight about the Python procedure and data format of the
+         <strong>
+          Structure
+         </strong>
+         object, and the generated input file format:
+        </p>
+        <ul>
+         <li>
+          <p>
+           Abaqus uses a numbering system that starts from 1, therefore for the input file, every node and element from the
+           <strong>
+            Structure
+           </strong>
+           object has the number 1 added to it, which is then subtracted for all results data so that it remains consistent with the input.
+          </p>
+         </li>
+         <li>
+          <p>
+           A node set
+           <strong>
+            nset_all
+           </strong>
+           is automatically generated containing all nodes of the
+           <strong>
+            Structure
+           </strong>
+           , as well as an element set
+           <strong>
+            elset_all
+           </strong>
+           for all elements, regardless of element type. Separate element sets for each element type are also automatically constructed, such as
+           <strong>
+            elset_S4
+           </strong>
+           for any four-noded shell elements.
+          </p>
+         </li>
+         <li>
+          <p>
+           When making an exploded set, because of the different numbering systems of Python and Abaqus, an exploded  element set
+           <strong>
+            element_4
+           </strong>
+           will refer to Abaqus element 5.
+          </p>
+         </li>
+        </ul>
+       </div>
+       <div class="section">
+        <h3>
+         From .inp to .odb
+        </h3>
+        <p>
+         By using the
+         <code class="docutils literal">
+          .analyse()
+         </code>
+         method of the
+         <strong>
+          Structure
+         </strong>
+         object, the input file sent for analysis via Abaqus in a Python subprocess. The main arguments that
+         <code class="docutils literal">
+          .analyse()
+         </code>
+         takes are: the
+         <code class="docutils literal">
+          path
+         </code>
+         and
+         <code class="docutils literal">
+          name
+         </code>
+         strings associated with the
+         <strong>
+          Structure
+         </strong>
+         object, the
+         <code class="docutils literal">
+          software
+         </code>
+         string set to
+         <code class="docutils literal">
+          'abaqus'
+         </code>
+         to show that we want to use Abaqus, the
+         <code class="docutils literal">
+          fields
+         </code>
+         to extract as a string separated by commas e.g
+         <code class="docutils literal">
+          'U,S,SM'
+         </code>
+         (see Fields and components section later), and the integer number of CPU cores to use
+         <code class="docutils literal">
+          cpus
+         </code>
+         . This call could look like for example:
+        </p>
+        <div class="highlight">
+         <pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">analyse</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">'/home/al/Temp/'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'simple-truss'</span><span class="p">,</span> <span class="n">software</span><span class="o">=</span><span class="s1">'abaqus'</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">'U,S'</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</code></pre>
+        </div>
+        <p>
+         This will then initiate a subprocess, launching the Abaqus executable (
+         <code class="docutils literal">
+          abaqus
+          cae
+         </code>
+         ) with no graphical user interface (
+         <code class="docutils literal">
+          noGUI
+         </code>
+         mode) and running the
+         <strong>
+          odb.py
+         </strong>
+         script for the requested fields and folder/file names. The purpose of this method is to pair the Abaqus executable with the
+         <code class="docutils literal">
+          .inp
+         </code>
+         file and to generate an
+         <code class="docutils literal">
+          .odb
+         </code>
+         file of data, and is equivalent to manually performing the following in a terminal:
+        </p>
+        <div class="highlight">
+         <pre><code class="language-python border rounded"><span></span>abaqus cae <span class="nv">noGUI</span><span class="o">=</span>~/compas_fea/fea/abaq/odb.py -- U,S <span class="m">2</span> /home/al/Temp/simple-truss/ /home/al/Temp/ simple-truss
+</code></pre>
+        </div>
+        <p>
+         An information stream will print a rolling update of the subprocess progress, and show
+         <code class="docutils literal">
+          COMPLETED
+         </code>
+         if the analysis was successful. If there was not a successful analysis, a variety of error messages will appear to try and help the user evaluate what may have gone wrong. If it is not possible to find out what was wrong with the model from the terminal interface messages, the model should be inspected manually within Abaqus by loading the input file and submitting a job with the job monitor open.
+        </p>
+        <div class="highlight">
+         <pre><code class="language-python border rounded"><span></span>Abaqus JOB simple-truss
+Abaqus <span class="m">6</span>.14-1
+Begin Analysis Input File Processor
+<span class="m">13</span>/09/2017 <span class="m">17</span>:56:25
+Run pre.exe
+<span class="m">13</span>/09/2017 <span class="m">17</span>:56:28
+End Analysis Input File Processor
+Begin Abaqus/Standard Analysis
+<span class="m">13</span>/09/2017 <span class="m">17</span>:56:28
+Run standard.exe
+<span class="m">13</span>/09/2017 <span class="m">17</span>:56:30
+End Abaqus/Standard Analysis
+Abaqus JOB truss-tower COMPLETED
+
+Abaqus License Manager checked out the following licenses:
+Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server XXX-XXX-XXX.
+&lt;<span class="m">212</span> out of <span class="m">580</span> licenses remain available&gt;.
+</code></pre>
+        </div>
+       </div>
+       <div class="section">
+        <h3>
+         Processing of .odb file
+        </h3>
+        <p>
+         The data is extracted from the output database
+         <code class="docutils literal">
+          .odb
+         </code>
+         file with the function
+         <code class="docutils literal">
+          extract_odb_data()
+         </code>
+         , which is called automatically as part of the
+         <code class="docutils literal">
+          .analyse()
+         </code>
+         method above. In the same folder as the
+         <code class="docutils literal">
+          .odb
+         </code>
+         file, it will generate a set of
+         <code class="docutils literal">
+          .json
+         </code>
+         files of scraped unprocessed data. These files will all be in the folder
+         <strong>
+          /path/name/
+         </strong>
+         and structured as follows:
+        </p>
+        <ul>
+         <li>
+          <p>
+           <strong>
+            name-nodes.json
+           </strong>
+           : the key and co-ordinates of the nodes before the analysis {&ldquo;0&rdquo;: [0.5, 0.875, 1.25], &ldquo;1&rdquo;: [0.5, 0.125, 1.25], &hellip;}.
+          </p>
+         </li>
+         <li>
+          <p>
+           <strong>
+            name-elements.json
+           </strong>
+           : the key and connected nodes of all elements, in the format {&ldquo;0&rdquo;: [0, 1], &ldquo;1&rdquo;: [0, 2], &ldquo;2&rdquo;: [3, 0], &ldquo;3&rdquo;: [1, 3, 4, 6], &hellip;}.
+          </p>
+         </li>
+         <li>
+          <p>
+           <strong>
+            name-step-field.json
+           </strong>
+           : there will be a file for all steps and field data requested. See the next section on how this data is organised.
+          </p>
+         </li>
+         <li>
+          <p>
+           <strong>
+            name-step-info.json
+           </strong>
+           : additional log of: frame descriptions, analysis and extraction times and miscellaneous additional information.
+          </p>
+         </li>
+         <li>
+          <p>
+           <strong>
+            name-results.json
+           </strong>
+           : all
+           <strong>
+            name-step-field.json
+           </strong>
+           files collected into a dictionary containing all data. This is then saved into the original
+           <strong>
+            Structure
+           </strong>
+           object under
+           <code class="docutils literal">
+            .results
+           </code>
+           .
+          </p>
+         </li>
+        </ul>
+       </div>
+      </div>
+      <div class="section">
+       <h2>
+        Fields, components and data
+       </h2>
+       <p>
+        After the analysis, the data are stored in
+        <code class="docutils literal">
+         .json
+        </code>
+        files and the
+        <strong>
+         Structure
+        </strong>
+        object, where they are accessed by the user to read or visualise the results. The organisation of the collected data in
+        <strong>
+         name-results.json
+        </strong>
+        or
+        <code class="docutils literal">
+         structure.results
+        </code>
+        is in nested dictionaries with keys following a pattern of the:
+        <code class="docutils literal">
+         step
+        </code>
+        string,
+        <code class="docutils literal">
+         field
+        </code>
+        string,
+        <code class="docutils literal">
+         component
+        </code>
+        string of that field and the node or element number string (
+        <code class="docutils literal">
+         structure.results[step][field][component][number]
+        </code>
+        ). The
+        <code class="docutils literal">
+         field
+        </code>
+        and
+        <code class="docutils literal">
+         component
+        </code>
+        strings follow the Abaqus notation which are as follows, where suffixes 1, 2 and 3 correspond to the
+        <cite>
+         x
+        </cite>
+        ,
+        <cite>
+         y
+        </cite>
+        and
+        <cite>
+         z
+        </cite>
+        axes:
+       </p>
+       <div class="section">
+        <h3>
+         Node fields
+        </h3>
+        <ul>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'RF'
+           </code>
+           : reaction forces
+           <code class="docutils literal">
+            'RF1'
+           </code>
+           ,
+           <code class="docutils literal">
+            'RF2'
+           </code>
+           and
+           <code class="docutils literal">
+            'RF3'
+           </code>
+           .
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'RM'
+           </code>
+           : reaction moments
+           <code class="docutils literal">
+            'RM1'
+           </code>
+           ,
+           <code class="docutils literal">
+            'RM2'
+           </code>
+           and
+           <code class="docutils literal">
+            'RM3'
+           </code>
+           .
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'U'
+           </code>
+           : displacements
+           <code class="docutils literal">
+            'U1'
+           </code>
+           ,
+           <code class="docutils literal">
+            'U2'
+           </code>
+           and
+           <code class="docutils literal">
+            'U3'
+           </code>
+           .
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'UR'
+           </code>
+           : rotations
+           <code class="docutils literal">
+            'UR1'
+           </code>
+           ,
+           <code class="docutils literal">
+            'UR2'
+           </code>
+           and
+           <code class="docutils literal">
+            'UR3'
+           </code>
+           .
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'CF'
+           </code>
+           : concentrated forces
+           <code class="docutils literal">
+            'CF1'
+           </code>
+           ,
+           <code class="docutils literal">
+            'CF2'
+           </code>
+           and
+           <code class="docutils literal">
+            'CF3'
+           </code>
+           .
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'CM'
+           </code>
+           : concentrated moments
+           <code class="docutils literal">
+            'CM1'
+           </code>
+           ,
+           <code class="docutils literal">
+            'CM2'
+           </code>
+           and
+           <code class="docutils literal">
+            'CM3'
+           </code>
+           .
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'NT'
+           </code>
+           : nodal temperatures.
+          </p>
+         </li>
+         <li>
+          <p>
+           Where applicable,
+           <code class="docutils literal">
+            'magnitude'
+           </code>
+           can be accessed as the component key for the resultant of vector components.
+          </p>
+         </li>
+        </ul>
+       </div>
+       <div class="section">
+        <h3>
+         Element fields
+        </h3>
+        <ul>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'SF'
+           </code>
+           (beams): section forces
+           <code class="docutils literal">
+            'SF1'
+           </code>
+           axial force,
+           <code class="docutils literal">
+            'SF2'
+           </code>
+           shear force in local y and
+           <code class="docutils literal">
+            'SF3'
+           </code>
+           shear force in local x.
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'SF'
+           </code>
+           (shells): section forces
+           <code class="docutils literal">
+            'SF1'
+           </code>
+           axial force / width in
+           <cite>
+            x
+           </cite>
+           ,
+           <code class="docutils literal">
+            'SF2'
+           </code>
+           axial force / width in
+           <cite>
+            y
+           </cite>
+           ,
+           <code class="docutils literal">
+            'SF3'
+           </code>
+           shear force / width,
+           <code class="docutils literal">
+            'SF4'
+           </code>
+           transverse shear force / width in
+           <cite>
+            x
+           </cite>
+           and
+           <code class="docutils literal">
+            'SF5'
+           </code>
+           transverse shear force / width in
+           <cite>
+            y
+           </cite>
+           .
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'SM'
+           </code>
+           (beams): section moments
+           <code class="docutils literal">
+            'SM1'
+           </code>
+           bending moment about
+           <cite>
+            x
+           </cite>
+           ,
+           <code class="docutils literal">
+            'SM2'
+           </code>
+           bending moment about
+           <cite>
+            y
+           </cite>
+           and
+           <code class="docutils literal">
+            'SM3'
+           </code>
+           torsion moment.
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'SM'
+           </code>
+           (shells): section moments
+           <code class="docutils literal">
+            'SM1'
+           </code>
+           bending moment / width about
+           <cite>
+            y
+           </cite>
+           ,
+           <code class="docutils literal">
+            'SM2'
+           </code>
+           bending moment / width about
+           <cite>
+            x
+           </cite>
+           and
+           <code class="docutils literal">
+            'SM3'
+           </code>
+           torsion moment / width.
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'SE'
+           </code>
+           (beams): section strains
+           <code class="docutils literal">
+            'SE1'
+           </code>
+           axial strain,
+           <code class="docutils literal">
+            'SE2'
+           </code>
+           shear strain in
+           <cite>
+            y
+           </cite>
+           and
+           <code class="docutils literal">
+            'SE3'
+           </code>
+           shear strain in
+           <cite>
+            x
+           </cite>
+           .
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'SE'
+           </code>
+           (shells): section strains
+           <code class="docutils literal">
+            'SE1'
+           </code>
+           axial strain in
+           <cite>
+            x
+           </cite>
+           ,
+           <code class="docutils literal">
+            'SE2'
+           </code>
+           axial strain in
+           <cite>
+            y
+           </cite>
+           ,
+           <code class="docutils literal">
+            'SE3'
+           </code>
+           shear strain,
+           <code class="docutils literal">
+            'SE4'
+           </code>
+           transverse shear strain in
+           <cite>
+            x
+           </cite>
+           ,
+           <code class="docutils literal">
+            'SE5'
+           </code>
+           transverse shear strain in
+           <cite>
+            y
+           </cite>
+           ,
+           <code class="docutils literal">
+            'SE6'
+           </code>
+           through thickness strain.
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'SK'
+           </code>
+           (beams): section curvatures
+           <code class="docutils literal">
+            'SK1'
+           </code>
+           curvature about
+           <cite>
+            x
+           </cite>
+           ,
+           <code class="docutils literal">
+            'SK2'
+           </code>
+           curvature about
+           <cite>
+            y
+           </cite>
+           and
+           <code class="docutils literal">
+            'SK3'
+           </code>
+           twist.
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'SK'
+           </code>
+           (shells): section curvatures
+           <code class="docutils literal">
+            'SK1'
+           </code>
+           curvature about
+           <cite>
+            y
+           </cite>
+           ,
+           <code class="docutils literal">
+            'SK2'
+           </code>
+           curvature about
+           <cite>
+            x
+           </cite>
+           and
+           <code class="docutils literal">
+            'SK3'
+           </code>
+           twist.
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'S'
+           </code>
+           (beams): stress
+           <code class="docutils literal">
+            'S11'
+           </code>
+           ,
+           <code class="docutils literal">
+            'S22'
+           </code>
+           ,
+           <code class="docutils literal">
+            'S33'
+           </code>
+           axial stresses and
+           <code class="docutils literal">
+            'S12'
+           </code>
+           .
+           <code class="docutils literal">
+            'S13'
+           </code>
+           &hellip; shear stresses.
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'E'
+           </code>
+           : strain
+           <strong>
+            fill
+           </strong>
+           .
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'PE'
+           </code>
+           : plastic strain
+           <strong>
+            fill
+           </strong>
+           .
+          </p>
+         </li>
+         <li>
+          <p>
+           <code class="docutils literal">
+            'RBFOR'
+           </code>
+           : reinforcement forces.
+          </p>
+         </li>
+         <li>
+          <p>
+           For the tensor fields,
+           <code class="docutils literal">
+            'mises'
+           </code>
+           ,
+           <code class="docutils literal">
+            'maxPrincipal'
+           </code>
+           and
+           <code class="docutils literal">
+            'minPrincipal'
+           </code>
+           component entries can be requested.
+          </p>
+         </li>
+         <li>
+          <p>
+           For elements such as shell elements, the local element axes can be accessed through
+           <code class="docutils literal">
+            'axes'
+           </code>
+           as a component entry.
+          </p>
+         </li>
+        </ul>
+       </div>
+       <div class="section">
+        <h3>
+         Integration and section points
+        </h3>
+        <p>
+         For node fields, accessing the displacement in
+         <cite>
+          z
+         </cite>
+         , for step
+         <code class="docutils literal">
+          'step_load'
+         </code>
+         , and for node 4 would be
+         <code class="docutils literal">
+          structure.results['step_load']['U']['U3']['4']
+         </code>
+         , which would be a single value. For element fields, there is no single data value that can represent the entire element, as each element has physical dimensions and requires many data values across its volume. During a finite element analysis, specific points are evaluated across an element and  section related to the element shape function and cross-section shape (Gauss points). Each of these data-points in the results is stored for the element as an integration point&ndash;section point string key. This key looks  like
+         <code class="docutils literal">
+          'ip4_sp1'
+         </code>
+         , which would be the data for integration point 4 and section point 1.
+        </p>
+        <p>
+         The data request
+         <code class="docutils literal">
+          structure.results['step_load']['S']['mises']['4']
+         </code>
+         , will, for an example shell element, return a dictionary of data with keys as the integration point&ndash;section point keys. For a four noded shell element these would be four integration points (the four internal points, unless a reduced integration scheme is used leading to one point) and two section points (top and bottom layers by default). Details of integration and section points for standard Abaqus elements can be found in the Abaqus documentation, with summaries in the Elements and Sections topics.
+        </p>
+        <p>
+         Data are stored in this format at each point rather than one value per element for a number of reasons:
+        </p>
+        <ul>
+         <li>
+          <p>
+           Taking a mean value of all points could give meaningless or misleading results, for example, the mean value of normal stresses in a beam under pure bending would be zero, as positive and negative normal stresses would cancel each other out.
+          </p>
+         </li>
+         <li>
+          <p>
+           Selecting one representative integration point is not possible without some understanding of the structural model and loading. For instance, any given point of a beam section will have completely different stress values depending on the degree of major axis or minor axis bending.
+          </p>
+         </li>
+         <li>
+          <p>
+           Picking a maximum value of Von Mises stress could be used to find a critical heavily stressed point, as these stresses are always positive. But picking a maximum or minimum value for a stress where the sign matters, as with  compression or tension, is not so straightforward.
+          </p>
+         </li>
+        </ul>
+       </div>
+      </div>
+     </div>
+     <nav class="compas-sideways">
+      <a class="btn btn-primary compas-prev" href="11_steps.html" role="button">
+       Steps
+      </a>
+      <a class="btn btn-primary compas-next" href="13_cad.html" role="button">
+       CAD
+      </a>
+     </nav>
+    </main>
+    <!-- sidebar navigation -->
+    <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
+     <div class="navbar-light">
+      <form action="../search.html" class="d-flex compas-searchbox" id="" method="get">
+       <input class="form-control" name="q" placeholder="Search docs" type="text"/>
+       <input name="check_keywords" type="hidden" value="yes"/>
+       <input name="area" type="hidden" value="default"/>
+       <button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon">
+        </span>
+       </button>
+      </form>
+      <div class="navbar-expand-md">
+       <div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
+        <ul class="nav flex-column active">
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../intro.html">
+           Introduction
+          </a>
+         </li>
+         <li class="nav-item active">
+          <a class="nav-link reference internal" href="../tutorial.html">
+           Tutorial
+          </a>
+          <ul class="nav active">
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="01_setup.html">
+             Setup
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="02_structure.html">
+             Structure
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="03_nodes.html">
+             Nodes
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="04_elements.html">
+             Elements
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="05_sets.html">
+             Sets
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="06_sections.html">
+             Sections
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="07_material.html">
+             Materials
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="08_properties.html">
+             Properties
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="09_loads.html">
+             Loads
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="10_displacements.html">
+             Displacements
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="11_steps.html">
+             Steps
+            </a>
+           </li>
+           <li class="nav-item active">
+            <a class="nav-link active current reference internal" href="#">
+             Analysis
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="13_cad.html">
+             CAD
+            </a>
+           </li>
+          </ul>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../examples.html">
+           Examples
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../reference.html">
+           Reference
+          </a>
+         </li>
+         <li class="nav-item">
+          <a class="nav-link reference internal" href="../license.html">
+           License
+          </a>
+         </li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </div>
+    <!-- toc of current page -->
+    <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+     <ul class="nav flex-column" id="compas-localnav">
+      <li class="nav-item">
+       <a class="nav-link reference internal" href="#">
+        Analysis
+       </a>
+       <ul class="nav">
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#abaqus">
+          Abaqus
+         </a>
+         <ul class="nav">
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#generation-of-inp-file">
+            Generation of .inp file
+           </a>
+          </li>
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#from-inp-to-odb">
+            From .inp to .odb
+           </a>
+          </li>
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#processing-of-odb-file">
+            Processing of .odb file
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#fields-components-and-data">
+          Fields, components and data
+         </a>
+         <ul class="nav">
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#node-fields">
+            Node fields
+           </a>
+          </li>
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#element-fields">
+            Element fields
+           </a>
+          </li>
+          <li class="nav-item">
+           <a class="nav-link reference internal" href="#integration-and-section-points">
+            Integration and section points
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </li>
+     </ul>
+    </div>
+   </div>
+  </div>
+  <footer class="compas-footer">
+   &copy; Copyright 2017, Block Research Group.
+                
+            
+
+            
+                Last updated on Sep 27, 2017.
+            
+
+            
+                Created using
+   <a href="http://sphinx-doc.org/">
+    Sphinx
+   </a>
+   1.6.3.
+  </footer>
+  <script type="text/javascript">
+   var DOCUMENTATION_OPTIONS = {
+                URL_ROOT:    '',
+                VERSION:     '',
+                COLLAPSE_INDEX: false,
+                FILE_SUFFIX: '.html',
+                HAS_SOURCE:  true,
+                SOURCELINK_SUFFIX: '.txt'
+              };
+  </script>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js">
+  </script>
+  <script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js">
+  </script>
+  <script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js">
+  </script>
+  <script src="../static/underscore.js">
+  </script>
+  <script src="../static/doctools.js">
+  </script>
+  <script src="../static/searchtools_.js">
+  </script>
+  <script>
+   hljs.initHighlightingOnLoad();
+                anchors.add();
+  </script>
+ </body>
+</html>

@@ -17,6 +17,8 @@
   <!-- compas CSS -->
   <link href="../static/css/compas.css" rel="stylesheet" type="text/css"/>
   <link href="../static/css/compas-reference.css" rel="stylesheet" type="text/css"/>
+  <link href="mesh-mould_rhino.html" rel="next" title="mesh-mould Rhino"/>
+  <link href="mesh-bridge_rhino.html" rel="prev" title="mesh-bridge Rhino"/>
   <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript">
   </script>
  </head>
@@ -49,6 +51,9 @@
       <a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">
        compas_fea
       </a>
+      <a accesskey="U" class="breadcrumb-item" href="../examples.html">
+       examples
+      </a>
      </nav>
      <div class="section">
       <span id="id1">
@@ -61,8 +66,6 @@
       </figure>
       <div class="highlight">
        <pre><code class="language-python border rounded"><span></span><span class="sd">""" Example Meshmould analysed with shell elements and rebar."""</span>
-
-<span class="c1"># Note: The rebar implementation is currently basic.</span>
 
 <span class="kn">from</span> <span class="nn">compas_fea.fea.abaq</span> <span class="k">import</span> <span class="n">abaq</span>
 <span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">blender</span>
@@ -77,7 +80,7 @@
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Steel</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
 
-<span class="kn">from</span> <span class="nn">compas.cad.blender.utilities</span> <span class="k">import</span> <span class="n">get_objects</span>
+<span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="k">import</span> <span class="n">get_objects</span>
 
 
 <span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">'Andrew Liew &lt;liew@arch.ethz.ch&gt;'</span><span class="p">]</span>
@@ -86,21 +89,19 @@
 <span class="n">__email__</span>      <span class="o">=</span> <span class="s1">'liew@arch.ethz.ch'</span>
 
 
-<span class="c1"># Folders and Structure name</span>
-
 <span class="n">name</span> <span class="o">=</span> <span class="s1">'mesh-mould'</span>
 <span class="n">path</span> <span class="o">=</span> <span class="s1">'/home/al/Temp/'</span>
 
-<span class="c1"># Create an empty Structure object named mdl</span>
+<span class="c1"># Create empty Structure object</span>
 
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">()</span>
 
-<span class="c1"># Add shell elements and geometry to Structure</span>
+<span class="c1"># Add shell elements</span>
 
 <span class="n">blender</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">face_type</span><span class="o">=</span><span class="s1">'ShellElement'</span><span class="p">)</span>
 <span class="n">blender</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">face_type</span><span class="o">=</span><span class="s1">'ShellElement'</span><span class="p">)</span>
 
-<span class="c1"># Add node and element sets to the Structure object</span>
+<span class="c1"># Add node and element sets</span>
 
 <span class="n">blender</span><span class="o">.</span><span class="n">add_elset_from_bmeshes</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'elset_wall'</span><span class="p">)</span>
 <span class="n">blender</span><span class="o">.</span><span class="n">add_elset_from_bmeshes</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'elset_plinth'</span><span class="p">)</span>
@@ -118,10 +119,10 @@
 
 <span class="c1"># Add element properties</span>
 
-<span class="n">rebar_plinth</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'orientation'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">'offset'</span><span class="p">:</span> <span class="mf">0.120</span><span class="p">,</span> <span class="s1">'spacing'</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">'material'</span><span class="p">:</span> <span class="s1">'mat_rebar'</span><span class="p">,</span> <span class="s1">'dia'</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">}</span>
-<span class="n">rebar_wall</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'orientation'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">'offset'</span><span class="p">:</span> <span class="mf">0.045</span><span class="p">,</span> <span class="s1">'spacing'</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">'material'</span><span class="p">:</span> <span class="s1">'mat_rebar'</span><span class="p">,</span> <span class="s1">'dia'</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">}</span>
-<span class="n">epp</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_concrete'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_plinth'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">'elset_plinth'</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="n">rebar_plinth</span><span class="p">)</span>
-<span class="n">epw</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_concrete'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_wall'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">'elset_wall'</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="n">rebar_wall</span><span class="p">)</span>
+<span class="n">reb_plinth</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'orientation'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">'offset'</span><span class="p">:</span> <span class="mf">0.120</span><span class="p">,</span> <span class="s1">'spacing'</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">'material'</span><span class="p">:</span> <span class="s1">'mat_rebar'</span><span class="p">,</span> <span class="s1">'dia'</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">}</span>
+<span class="n">reb_wall</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'orientation'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">'offset'</span><span class="p">:</span> <span class="mf">0.045</span><span class="p">,</span> <span class="s1">'spacing'</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">'material'</span><span class="p">:</span> <span class="s1">'mat_rebar'</span><span class="p">,</span> <span class="s1">'dia'</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">}</span>
+<span class="n">epp</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_concrete'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_plinth'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">'elset_plinth'</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="n">reb_plinth</span><span class="p">)</span>
+<span class="n">epw</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_concrete'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_wall'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">'elset_wall'</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="n">reb_wall</span><span class="p">)</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">epp</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'ep_plinth'</span><span class="p">)</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">epw</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'ep_wall'</span><span class="p">)</span>
 
@@ -129,7 +130,7 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">GravityLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'load_gravity'</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">'elset_all'</span><span class="p">))</span>
 <span class="n">loads</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'load_gravity'</span><span class="p">]</span>
-<span class="k">for</span> <span class="nb">object</span> <span class="ow">in</span> <span class="n">get_objects</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+<span class="k">for</span> <span class="nb">object</span> <span class="ow">in</span> <span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="n">pz</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)</span>
     <span class="n">node</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">location</span><span class="p">))</span>
     <span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'load_point_</span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span><span class="p">),</span> <span class="n">nodes</span><span class="o">=</span><span class="n">node</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">pz</span><span class="p">)))</span>
@@ -151,13 +152,11 @@
 
 <span class="c1"># Generate .inp file</span>
 
-<span class="n">fnm</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">.inp'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-<span class="n">abaq</span><span class="o">.</span><span class="n">inp_generate</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">fnm</span><span class="p">)</span>
+<span class="n">abaq</span><span class="o">.</span><span class="n">inp_generate</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">.inp'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
 
 <span class="c1"># Run and extract data</span>
 
-<span class="n">exe</span> <span class="o">=</span> <span class="s1">'/home/al/abaqus/Commands/abaqus cae '</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">software</span><span class="o">=</span><span class="s1">'abaqus'</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="n">exe</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">'U,S,RBFOR'</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">analyse</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">software</span><span class="o">=</span><span class="s1">'abaqus'</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">'U,S,RBFOR'</span><span class="p">)</span>
 
 <span class="c1"># Plot displacements</span>
 
@@ -175,6 +174,12 @@
       </div>
      </div>
      <nav class="compas-sideways">
+      <a class="btn btn-primary compas-prev" href="mesh-bridge_rhino.html" role="button">
+       mesh-bridge Rhino
+      </a>
+      <a class="btn btn-primary compas-next" href="mesh-mould_rhino.html" role="button">
+       mesh-mould Rhino
+      </a>
      </nav>
     </main>
     <!-- sidebar navigation -->
@@ -191,7 +196,7 @@
       </form>
       <div class="navbar-expand-md">
        <div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
-        <ul class="nav flex-column">
+        <ul class="nav flex-column active">
          <li class="nav-item">
           <a class="nav-link reference internal" href="../intro.html">
            Introduction
@@ -202,10 +207,102 @@
            Tutorial
           </a>
          </li>
-         <li class="nav-item">
+         <li class="nav-item active">
           <a class="nav-link reference internal" href="../examples.html">
            Examples
           </a>
+          <ul class="nav active">
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="beam-gridshell_rhino.html">
+             beam-gridshell Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="beam-simple_rhino.html">
+             beam-simple Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="beam-simple_blender.html">
+             beam-simple Blender
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="beam-tree_rhino.html">
+             beam-tree Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="block-deepbeam_rhino.html">
+             block-deepbeam Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="block-deepbeam_blender.html">
+             block-deepbeam Blender
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="block-tets_blender.html">
+             block-tets Blender
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="mesh-floor_rhino.html">
+             mesh-floor Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="mesh-floor_blender.html">
+             mesh-floor Blender
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="mesh-bridge_rhino.html">
+             mesh-bridge Rhino
+            </a>
+           </li>
+           <li class="nav-item active">
+            <a class="nav-link active current reference internal" href="#">
+             mesh-mould Blender
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="mesh-mould_rhino.html">
+             mesh-mould Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="mesh-tris_blender.html">
+             mesh-tris Blender
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="mesh-yieldline_rhino.html">
+             mesh-yieldline Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="script-introduction_abaqus.html">
+             script-introduction
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="truss-frame_rhino.html">
+             truss-frame Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="truss-tower_rhino.html">
+             truss-tower Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="truss-tower_blender.html">
+             truss-tower Blender
+            </a>
+           </li>
+          </ul>
          </li>
          <li class="nav-item">
           <a class="nav-link reference internal" href="../reference.html">
@@ -240,7 +337,7 @@
             
 
             
-                Last updated on Sep 26, 2017.
+                Last updated on Sep 27, 2017.
             
 
             
@@ -248,7 +345,7 @@
    <a href="http://sphinx-doc.org/">
     Sphinx
    </a>
-   1.5.1.
+   1.6.3.
   </footer>
   <script type="text/javascript">
    var DOCUMENTATION_OPTIONS = {

@@ -7,7 +7,7 @@ for path, dirs, files in os.walk('../'):
     # print files
     parts = path.split('/')
     if '.source' in parts:
-        print path
+        print(path)
         continue
 
     for f in files:

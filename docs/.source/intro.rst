@@ -4,29 +4,9 @@ Introduction
 
 Finite element analysis, or the finite element method, is a numerical approach to solving a variety of problems in the sciences, mathematics and engineering fields. In a broad sense, a continuum such as a fluid or solid volume, is discretised into a set of smaller discrete elements. For each element, data of interest, such as stresses, displacements, temperatures and so on, are found at the nodes and element integration points. They are interpolated for values across the element with shape functions. The greater the number of elements used to represent the continuum, the better the numerical model will represent the original continuous solution. The finite element method is often used, as closed-form solutions for the continua cases can be difficult or impossible to ascertain, and so a numerical approximation is sought.
 
-
-.. raw:: html
-
-    <figure class="figure">
-        <div class="container-fluid m-0 p-0">
-            <div class="row no-gutters">
-                <div class="col-8">
-                    <img src="_images/discretise-bone.png" alt="" class="figure-img img-fluid" />
-                </div>
-                <div class="col">
-                    <img src="_images/discretise-rim.png" alt="" class="figure-img img-fluid" />
-                </div>
-            </div>
-        </div>
-        <figcaption class="figure-caption">
-            Example discretisations into finite elements: Scientific Computing and Imaging Institute, University of Utah (left), COMSOL Multiphysics (right).
-        </figcaption>
-    </figure>
-
-..
-    .. figure:: /_images/discretise-bone.png
-        :figclass: figure
-        :class: figure-img img-fluid
+.. figure:: /_images/discretise-compound.png
+    :figclass: figure
+    :class: figure-img img-fluid
 
     Example discretisations into finite elements: Scientific Computing and Imaging Institute, University of Utah (left), COMSOL Multiphysics (right).
 

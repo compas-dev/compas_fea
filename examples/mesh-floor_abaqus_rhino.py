@@ -1,7 +1,7 @@
 """An example compas_fea package use for meshes."""
 
 from compas.datastructures.mesh.mesh import Mesh
-from compas.cad.rhino.helpers.mesh import mesh_from_guid
+from compas_rhino.helpers.mesh import mesh_from_guid
 
 from compas_fea.fea.abaq import abaq
 from compas_fea.cad import rhino

@@ -106,10 +106,11 @@ def extract_odb_data(temp, name, toc, fields, steps='all'):
                                     dic[c][element][id] = float(data[i])
                                 except:
                                     pass
-                    dic['mises'][element][id] = float(value.mises) if value.mises else None
-                    dic['maxPrincipal'][element][id] = float(value.maxPrincipal) if value.maxPrincipal else None
-                    dic['minPrincipal'][element][id] = float(value.minPrincipal) if value.minPrincipal else None
-                    dic['axes'][element][id] = value.localCoordSystem
+                    if field is not 'RBFOR':
+                        dic['mises'][element][id] = float(value.mises) if value.mises else None
+                        dic['maxPrincipal'][element][id] = float(value.maxPrincipal) if value.maxPrincipal else None
+                        dic['minPrincipal'][element][id] = float(value.minPrincipal) if value.minPrincipal else None
+                        dic['axes'][element][id] = value.localCoordSystem
 
                 with open('{0}{1}-{2}-{3}.json'.format(temp, name, step, field), 'w') as f:
                     json.dump(dic, f)

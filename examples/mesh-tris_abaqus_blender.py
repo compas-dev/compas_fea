@@ -4,10 +4,10 @@ from compas_fea.fea.abaq import abaq
 from compas_fea.cad import blender
 from compas_fea.structure import Structure
 
-from compas.cad.blender.geometry import bmesh_data
-from compas.cad.blender.utilities import draw_bmesh
-from compas.cad.blender.utilities import get_objects
-from compas.cad.blender.utilities import clear_layers
+from compas_blender.geometry import bmesh_data
+from compas_blender.utilities import draw_bmesh
+from compas_blender.utilities import get_objects
+from compas_blender.utilities import clear_layers
 
 from compas_fea.utilities.functions import discretise_faces
 

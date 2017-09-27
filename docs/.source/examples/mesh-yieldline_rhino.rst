@@ -8,4 +8,4 @@ mesh-yieldline Rhino
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/mesh/mesh-yieldline_abaqus_rhino.py
+.. literalinclude:: /../../examples/mesh-yieldline_abaqus_rhino.py

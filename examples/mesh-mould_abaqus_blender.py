@@ -1,7 +1,5 @@
 """ Example Meshmould analysed with shell elements and rebar."""
 
-# Note: The rebar implementation is currently basic.
-
 from compas_fea.fea.abaq import abaq
 from compas_fea.cad import blender
 
@@ -15,7 +13,7 @@ from compas_fea.structure import ShellSection
 from compas_fea.structure import Steel
 from compas_fea.structure import Structure
 
-from compas.cad.blender.utilities import get_objects
+from compas_blender.utilities import get_objects
 
 
 __author__     = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -24,21 +22,19 @@ __license__    = 'MIT License'
 __email__      = 'liew@arch.ethz.ch'
 
 
-# Folders and Structure name
-
 name = 'mesh-mould'
 path = '/home/al/Temp/'
 
-# Create an empty Structure object named mdl
+# Create empty Structure object
 
 mdl = Structure()
 
-# Add shell elements and geometry to Structure
+# Add shell elements
 
 blender.add_nodes_elements_from_layers(mdl, layers=0, face_type='ShellElement')
 blender.add_nodes_elements_from_layers(mdl, layers=1, face_type='ShellElement')
 
-# Add node and element sets to the Structure object
+# Add node and element sets
 
 blender.add_elset_from_bmeshes(mdl, layer=0, name='elset_wall')
 blender.add_elset_from_bmeshes(mdl, layer=1, name='elset_plinth')
@@ -56,10 +52,10 @@ mdl.add_section(ShellSection(name='sec_plinth', t=0.300))
 
 # Add element properties
 
-rebar_plinth = {'orientation': None, 'offset': 0.120, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010}
-rebar_wall = {'orientation': None, 'offset': 0.045, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010}
-epp = ElementProperties(material='mat_concrete', section='sec_plinth', elsets='elset_plinth', reinforcement=rebar_plinth)
-epw = ElementProperties(material='mat_concrete', section='sec_wall', elsets='elset_wall', reinforcement=rebar_wall)
+reb_plinth = {'orientation': None, 'offset': 0.120, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010}
+reb_wall = {'orientation': None, 'offset': 0.045, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010}
+epp = ElementProperties(material='mat_concrete', section='sec_plinth', elsets='elset_plinth', reinforcement=reb_plinth)
+epw = ElementProperties(material='mat_concrete', section='sec_wall', elsets='elset_wall', reinforcement=reb_wall)
 mdl.add_element_properties(epp, name='ep_plinth')
 mdl.add_element_properties(epw, name='ep_wall')
 
@@ -67,7 +63,7 @@ mdl.add_element_properties(epw, name='ep_wall')
 
 mdl.add_load(GravityLoad(name='load_gravity', elements='elset_all'))
 loads = ['load_gravity']
-for object in get_objects(2):
+for object in get_objects(layer=2):
     px, py, pz, _ = object.name.split(' ')
     node = mdl.check_node_exists(list(object.location))
     mdl.add_load(PointLoad(name='load_point_{0}'.format(node), nodes=node, z=float(pz)))
@@ -89,13 +85,11 @@ mdl.summary()
 
 # Generate .inp file
 
-fnm = '{0}{1}.inp'.format(path, name)
-abaq.inp_generate(mdl, filename=fnm)
+abaq.inp_generate(mdl, filename='{0}{1}.inp'.format(path, name))
 
 # Run and extract data
 
-exe = '/home/al/abaqus/Commands/abaqus cae '
-mdl.analyse(path=path, name=name, software='abaqus', exe=exe, fields='U,S,RBFOR')
+mdl.analyse(path=path, name=name, software='abaqus', fields='U,S,RBFOR')
 
 # Plot displacements
 

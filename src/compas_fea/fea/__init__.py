@@ -2,7 +2,7 @@
 .. _compas_fea.fea:
 
 ********************************************************************************
-compas_fea.fea
+fea
 ********************************************************************************
 
 .. module:: compas_fea.fea
@@ -23,7 +23,7 @@ abaq
     inp_write_constraints
     inp_write_elements
     inp_generate
-    inp_write_headings
+    inp_write_heading
     inp_write_materials
     inp_write_misc
     inp_write_nodes

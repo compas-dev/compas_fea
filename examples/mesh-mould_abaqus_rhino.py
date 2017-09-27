@@ -1,7 +1,5 @@
 """ Example Meshmould analysed with shell elements and rebar."""
 
-# Note: The rebar implementation is currently basic.
-
 from compas_fea.fea.abaq import abaq
 from compas_fea.cad import rhino
 
@@ -15,12 +13,7 @@ from compas_fea.structure import ShellSection
 from compas_fea.structure import Steel
 from compas_fea.structure import Structure
 
-try:
-    import rhinoscriptsyntax as rs
-except ImportError:
-    import platform
-    if platform.system() == 'Windows':
-        raise
+import rhinoscriptsyntax as rs
 
 
 __author__     = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -29,20 +22,18 @@ __license__    = 'MIT License'
 __email__      = 'liew@arch.ethz.ch'
 
 
-# Folders and Structure name
-
 name = 'mesh-mould'
 path = 'C:/Temp/'
 
-# Create an empty Structure object named mdl
+# Create empty Structure object
 
 mdl = Structure()
 
-# Add shell elements and geometry to Structure
+# Add shell elements
 
 rhino.add_nodes_elements_from_layers(mdl, element_type='ShellElement', layers=['elset_wall', 'elset_plinth'])
 
-# Add node and element sets to the Structure object
+# Add node and element sets
 
 rhino.add_sets_from_layers(mdl, layers=['nset_fixed', 'elset_wall', 'elset_plinth'])
 
@@ -58,10 +49,10 @@ mdl.add_section(ShellSection(name='sec_plinth', t=0.300))
 
 # Add element properties
 
-rebar_plinth = {'orientation': None, 'offset': 0.120, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010}
-rebar_wall = {'orientation': None, 'offset': 0.045, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010}
-epp = ElementProperties(material='mat_concrete', section='sec_plinth', elsets='elset_plinth', reinforcement=rebar_plinth)
-epw = ElementProperties(material='mat_concrete', section='sec_wall', elsets='elset_wall', reinforcement=rebar_wall)
+reb_plinth = {'orientation': None, 'offset': 0.120, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010}
+reb_wall = {'orientation': None, 'offset': 0.045, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010}
+epp = ElementProperties(material='mat_concrete', section='sec_plinth', elsets='elset_plinth', reinforcement=reb_plinth)
+epw = ElementProperties(material='mat_concrete', section='sec_wall', elsets='elset_wall', reinforcement=reb_wall)
 mdl.add_element_properties(epp, name='ep_plinth')
 mdl.add_element_properties(epw, name='ep_wall')
 
@@ -91,8 +82,7 @@ mdl.summary()
 
 # Generate .inp file
 
-fnm = '{0}{1}.inp'.format(path, name)
-abaq.inp_generate(mdl, filename=fnm)
+abaq.inp_generate(mdl, filename='{0}{1}.inp'.format(path, name))
 
 # Run and extract data
 
@@ -100,7 +90,7 @@ mdl.analyse(path=path, name=name, software='abaqus', fields='U,S')
 
 # Plot displacements
 
-rhino.plot_data(mdl, path, step='step_loads', field='U', component='magnitude')
+rhino.plot_data(mdl, path, name, step='step_loads', field='U', component='magnitude')
 
 # Plot stress
 
@@ -109,5 +99,5 @@ rhino.plot_data(mdl, path, name, step='step_loads', field='S', component='minPri
 
 # Plot rebar force
 
-rhino.plot_data(mdl, path, name, step='step_loads', field='RBFOR', component='VALUE', 
+rhino.plot_data(mdl, path, name, step='step_loads', field='RBFOR', component='VALUE',
                 iptype='max', nodal='max')

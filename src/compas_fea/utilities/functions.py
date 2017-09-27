@@ -6,7 +6,7 @@ Support functions for the compas_fea package.
 from __future__ import print_function
 from __future__ import absolute_import
 
-from compas.datastructures.network.algorithms import network_dijkstra_path
+from compas.datastructures.network.algorithms.traversal import network_dijkstra_path
 
 from compas.geometry import add_vectors
 from compas.geometry import angles_points_xy
@@ -197,7 +197,7 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
                 th2 = angles_points_xy(p2, p1, p3)[0] * 180 / pi
                 th3 = angles_points_xy(p3, p1, p2)[0] * 180 / pi
                 thm = min([th1, th2, th3])
-                c, r = circle_from_points_xy(p1, p2, p3)
+                c, r, _ = circle_from_points_xy(p1, p2, p3)
                 c = list(c)
                 c[2] = z
                 A = area_polygon_xy([p1, p2, p3])

@@ -2,7 +2,7 @@
 .. _compas_fea.structure:
 
 ********************************************************************************
-compas_fea.structure
+structure
 ********************************************************************************
 
 .. module:: compas_fea.structure
@@ -184,6 +184,8 @@ section
     SolidSection
     TrapezoidalSection
     TrussSection
+    StrutSection
+    TieSection
 
 
 step

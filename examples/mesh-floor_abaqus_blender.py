@@ -1,7 +1,7 @@
 """An example compas_fea package use for meshes."""
 
-from compas.cad.blender.helpers import mesh_from_bmesh
-from compas.cad.blender.utilities import get_objects
+from compas_blender.helpers import mesh_from_bmesh
+from compas_blender.utilities import get_objects
 
 from compas_fea.fea.abaq import abaq
 from compas_fea.cad import blender

@@ -26,7 +26,9 @@ __all__ = [
     'ShellSection',
     'SolidSection',
     'TrapezoidalSection',
-    'TrussSection'
+    'TrussSection',
+    'StrutSection',
+    'TieSection'
 ]
 
 
@@ -229,6 +231,38 @@ class TrussSection(object):
         self.__name__ = 'TrussSection'
         self.geometry = {'A': A}
         self.name = name
+
+
+class StrutSection(TrussSection):
+
+    def __init__(self, name, A):
+        TrussSection.__init__(self, name=name, A=A)
+        """ For use with strut elements.
+
+        Parameters:
+            name (str): Section name.
+            A (float): Area.
+
+        Returns:
+            None
+        """
+        self.__name__ = 'StrutSection'
+
+
+class TieSection(TrussSection):
+
+    def __init__(self, name, A):
+        TrussSection.__init__(self, name=name, A=A)
+        """ For use with tie elements.
+
+        Parameters:
+            name (str): Section name.
+            A (float): Area.
+
+        Returns:
+            None
+        """
+        self.__name__ = 'TieSection'
 
 
 # ==============================================================================

@@ -466,9 +466,9 @@ def plot_voxels(structure, path, name, step, field='S', component='mises', iptyp
     # Process data
 
     if field in node_fields:
-        data = cnodes
+        data = fscaled
     elif field in element_fields:
-        data = cnodal
+        data = nscaled
     Am = voxels(values=data, vmin=None, U=U, vdx=vdx, plot=None, indexing='ij')
     sx, sy, sz = Am.shape
 

@@ -17,7 +17,7 @@
   <!-- compas CSS -->
   <link href="../static/css/compas.css" rel="stylesheet" type="text/css"/>
   <link href="../static/css/compas-reference.css" rel="stylesheet" type="text/css"/>
-  <link href="../license.html" rel="next" title="License"/>
+  <link href="generated/compas_fea.structure.structure.Structure.html" rel="next" title="Structure"/>
   <link href="generated/compas_fea.fea.ansys.write_total_results.html" rel="prev" title="write_total_results"/>
   <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript">
   </script>
@@ -66,21 +66,1236 @@
       <h1>
        structure
       </h1>
-      <table border="1" class="longtable docutils table table-responsive table-bordered">
-       <colgroup>
-        <col width="10%"/>
-        <col width="90%"/>
-       </colgroup>
-       <tbody valign="top">
-       </tbody>
-      </table>
+      <div class="section">
+       <h2>
+        structure
+       </h2>
+       <p>
+        <code class="xref py py-mod docutils literal">
+         compas_fea.structure.structure
+        </code>
+       </p>
+       <table class="longtable docutils table table-responsive table-bordered">
+        <colgroup>
+         <col style="width: 10%"/>
+         <col style="width: 90%"/>
+        </colgroup>
+        <tbody>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.structure.Structure.html" title="compas_fea.structure.structure.Structure">
+             <code class="xref py py-obj docutils literal">
+              Structure
+             </code>
+            </a>
+            ()
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.structure.load_from_obj.html" title="compas_fea.structure.structure.load_from_obj">
+             <code class="xref py py-obj docutils literal">
+              load_from_obj
+             </code>
+            </a>
+            (fnm)
+           </p>
+          </td>
+          <td>
+           <p>
+            Imports a Structure object from an .obj file through Pickle.
+           </p>
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+      <div class="section">
+       <h2>
+        constraint
+       </h2>
+       <p>
+        <code class="xref py py-mod docutils literal">
+         compas_fea.structure.constraint
+        </code>
+       </p>
+       <table class="longtable docutils table table-responsive table-bordered">
+        <colgroup>
+         <col style="width: 10%"/>
+         <col style="width: 90%"/>
+        </colgroup>
+        <tbody>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.constraint.TieConstraint.html" title="compas_fea.structure.constraint.TieConstraint">
+             <code class="xref py py-obj docutils literal">
+              TieConstraint
+             </code>
+            </a>
+            (name,&nbsp;master,&nbsp;slave,&nbsp;tol)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+      <div class="section">
+       <h2>
+        displacement
+       </h2>
+       <p>
+        <code class="xref py py-mod docutils literal">
+         compas_fea.structure.displacement
+        </code>
+       </p>
+       <table class="longtable docutils table table-responsive table-bordered">
+        <colgroup>
+         <col style="width: 10%"/>
+         <col style="width: 90%"/>
+        </colgroup>
+        <tbody>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.displacement.GeneralDisplacement.html" title="compas_fea.structure.displacement.GeneralDisplacement">
+             <code class="xref py py-obj docutils literal">
+              GeneralDisplacement
+             </code>
+            </a>
+            (name,&nbsp;nodes[,&nbsp;x,&nbsp;y,&nbsp;z,&nbsp;&hellip;])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.displacement.FixedDisplacement.html" title="compas_fea.structure.displacement.FixedDisplacement">
+             <code class="xref py py-obj docutils literal">
+              FixedDisplacement
+             </code>
+            </a>
+            (name,&nbsp;nodes[,&nbsp;axes])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.displacement.PinnedDisplacement.html" title="compas_fea.structure.displacement.PinnedDisplacement">
+             <code class="xref py py-obj docutils literal">
+              PinnedDisplacement
+             </code>
+            </a>
+            (name,&nbsp;nodes[,&nbsp;axes])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.displacement.FixedDisplacementXX.html" title="compas_fea.structure.displacement.FixedDisplacementXX">
+             <code class="xref py py-obj docutils literal">
+              FixedDisplacementXX
+             </code>
+            </a>
+            (name,&nbsp;nodes[,&nbsp;axes])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.displacement.FixedDisplacementYY.html" title="compas_fea.structure.displacement.FixedDisplacementYY">
+             <code class="xref py py-obj docutils literal">
+              FixedDisplacementYY
+             </code>
+            </a>
+            (name,&nbsp;nodes[,&nbsp;axes])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.displacement.FixedDisplacementZZ.html" title="compas_fea.structure.displacement.FixedDisplacementZZ">
+             <code class="xref py py-obj docutils literal">
+              FixedDisplacementZZ
+             </code>
+            </a>
+            (name,&nbsp;nodes[,&nbsp;axes])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.displacement.RollerDisplacementX.html" title="compas_fea.structure.displacement.RollerDisplacementX">
+             <code class="xref py py-obj docutils literal">
+              RollerDisplacementX
+             </code>
+            </a>
+            (name,&nbsp;nodes[,&nbsp;axes])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.displacement.RollerDisplacementY.html" title="compas_fea.structure.displacement.RollerDisplacementY">
+             <code class="xref py py-obj docutils literal">
+              RollerDisplacementY
+             </code>
+            </a>
+            (name,&nbsp;nodes[,&nbsp;axes])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.displacement.RollerDisplacementZ.html" title="compas_fea.structure.displacement.RollerDisplacementZ">
+             <code class="xref py py-obj docutils literal">
+              RollerDisplacementZ
+             </code>
+            </a>
+            (name,&nbsp;nodes[,&nbsp;axes])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.displacement.RollerDisplacementXY.html" title="compas_fea.structure.displacement.RollerDisplacementXY">
+             <code class="xref py py-obj docutils literal">
+              RollerDisplacementXY
+             </code>
+            </a>
+            (name,&nbsp;nodes[,&nbsp;axes])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.displacement.RollerDisplacementYZ.html" title="compas_fea.structure.displacement.RollerDisplacementYZ">
+             <code class="xref py py-obj docutils literal">
+              RollerDisplacementYZ
+             </code>
+            </a>
+            (name,&nbsp;nodes[,&nbsp;axes])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.displacement.RollerDisplacementXZ.html" title="compas_fea.structure.displacement.RollerDisplacementXZ">
+             <code class="xref py py-obj docutils literal">
+              RollerDisplacementXZ
+             </code>
+            </a>
+            (name,&nbsp;nodes[,&nbsp;axes])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+      <div class="section">
+       <h2>
+        element
+       </h2>
+       <p>
+        <code class="xref py py-mod docutils literal">
+         compas_fea.structure.element
+        </code>
+       </p>
+       <table class="longtable docutils table table-responsive table-bordered">
+        <colgroup>
+         <col style="width: 10%"/>
+         <col style="width: 90%"/>
+        </colgroup>
+        <tbody>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.element.Element.html" title="compas_fea.structure.element.Element">
+             <code class="xref py py-obj docutils literal">
+              Element
+             </code>
+            </a>
+            ([axes,&nbsp;nodes,&nbsp;number,&nbsp;acoustic,&nbsp;thermal])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.element.BeamElement.html" title="compas_fea.structure.element.BeamElement">
+             <code class="xref py py-obj docutils literal">
+              BeamElement
+             </code>
+            </a>
+            ()
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.element.TrussElement.html" title="compas_fea.structure.element.TrussElement">
+             <code class="xref py py-obj docutils literal">
+              TrussElement
+             </code>
+            </a>
+            ()
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.element.StrutElement.html" title="compas_fea.structure.element.StrutElement">
+             <code class="xref py py-obj docutils literal">
+              StrutElement
+             </code>
+            </a>
+            ()
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.element.TieElement.html" title="compas_fea.structure.element.TieElement">
+             <code class="xref py py-obj docutils literal">
+              TieElement
+             </code>
+            </a>
+            ()
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.element.ShellElement.html" title="compas_fea.structure.element.ShellElement">
+             <code class="xref py py-obj docutils literal">
+              ShellElement
+             </code>
+            </a>
+            ()
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.element.MembraneElement.html" title="compas_fea.structure.element.MembraneElement">
+             <code class="xref py py-obj docutils literal">
+              MembraneElement
+             </code>
+            </a>
+            ()
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.element.SolidElement.html" title="compas_fea.structure.element.SolidElement">
+             <code class="xref py py-obj docutils literal">
+              SolidElement
+             </code>
+            </a>
+            ()
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.element.PentahedronElement.html" title="compas_fea.structure.element.PentahedronElement">
+             <code class="xref py py-obj docutils literal">
+              PentahedronElement
+             </code>
+            </a>
+            ()
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.element.TetrahedronElement.html" title="compas_fea.structure.element.TetrahedronElement">
+             <code class="xref py py-obj docutils literal">
+              TetrahedronElement
+             </code>
+            </a>
+            ()
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.element.HexahedronElement.html" title="compas_fea.structure.element.HexahedronElement">
+             <code class="xref py py-obj docutils literal">
+              HexahedronElement
+             </code>
+            </a>
+            ()
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+      <div class="section">
+       <h2>
+        element_properties
+       </h2>
+       <p>
+        <code class="xref py py-mod docutils literal">
+         compas_fea.structure.element_properties
+        </code>
+       </p>
+       <table class="longtable docutils table table-responsive table-bordered">
+        <colgroup>
+         <col style="width: 10%"/>
+         <col style="width: 90%"/>
+        </colgroup>
+        <tbody>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.element_properties.ElementProperties.html" title="compas_fea.structure.element_properties.ElementProperties">
+             <code class="xref py py-obj docutils literal">
+              ElementProperties
+             </code>
+            </a>
+            (material,&nbsp;section[,&nbsp;&hellip;])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+      <div class="section">
+       <h2>
+        interaction
+       </h2>
+       <p>
+        <code class="xref py py-mod docutils literal">
+         compas_fea.structure.interaction
+        </code>
+       </p>
+       <table class="longtable docutils table table-responsive table-bordered">
+        <colgroup>
+         <col style="width: 10%"/>
+         <col style="width: 90%"/>
+        </colgroup>
+        <tbody>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.interaction.HeatTransfer.html" title="compas_fea.structure.interaction.HeatTransfer">
+             <code class="xref py py-obj docutils literal">
+              HeatTransfer
+             </code>
+            </a>
+            (name,&nbsp;amplitude,&nbsp;interface,&nbsp;&hellip;)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+      <div class="section">
+       <h2>
+        load
+       </h2>
+       <p>
+        <code class="xref py py-mod docutils literal">
+         compas_fea.structure.load
+        </code>
+       </p>
+       <table class="longtable docutils table table-responsive table-bordered">
+        <colgroup>
+         <col style="width: 10%"/>
+         <col style="width: 90%"/>
+        </colgroup>
+        <tbody>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.load.Load.html" title="compas_fea.structure.load.Load">
+             <code class="xref py py-obj docutils literal">
+              Load
+             </code>
+            </a>
+            (name[,&nbsp;axes,&nbsp;components,&nbsp;nodes,&nbsp;elements])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.load.PrestressLoad.html" title="compas_fea.structure.load.PrestressLoad">
+             <code class="xref py py-obj docutils literal">
+              PrestressLoad
+             </code>
+            </a>
+            (name,&nbsp;elements,&nbsp;prestress)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.load.PointLoad.html" title="compas_fea.structure.load.PointLoad">
+             <code class="xref py py-obj docutils literal">
+              PointLoad
+             </code>
+            </a>
+            (name,&nbsp;nodes[,&nbsp;x,&nbsp;y,&nbsp;z,&nbsp;xx,&nbsp;yy,&nbsp;zz])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.load.LineLoad.html" title="compas_fea.structure.load.LineLoad">
+             <code class="xref py py-obj docutils literal">
+              LineLoad
+             </code>
+            </a>
+            (name,&nbsp;elements[,&nbsp;x,&nbsp;y,&nbsp;z,&nbsp;xx,&nbsp;yy,&nbsp;zz])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.load.AreaLoad.html" title="compas_fea.structure.load.AreaLoad">
+             <code class="xref py py-obj docutils literal">
+              AreaLoad
+             </code>
+            </a>
+            (name,&nbsp;elements[,&nbsp;x,&nbsp;y,&nbsp;z])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.load.BodyLoad.html" title="compas_fea.structure.load.BodyLoad">
+             <code class="xref py py-obj docutils literal">
+              BodyLoad
+             </code>
+            </a>
+            (name,&nbsp;elements[,&nbsp;x,&nbsp;y,&nbsp;z])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.load.GravityLoad.html" title="compas_fea.structure.load.GravityLoad">
+             <code class="xref py py-obj docutils literal">
+              GravityLoad
+             </code>
+            </a>
+            (name,&nbsp;elements[,&nbsp;g,&nbsp;x,&nbsp;y,&nbsp;z])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.load.AcousticLoad.html" title="compas_fea.structure.load.AcousticLoad">
+             <code class="xref py py-obj docutils literal">
+              AcousticLoad
+             </code>
+            </a>
+            (name,&nbsp;elements[,&nbsp;axes])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.load.TributaryLoad.html" title="compas_fea.structure.load.TributaryLoad">
+             <code class="xref py py-obj docutils literal">
+              TributaryLoad
+             </code>
+            </a>
+            (structure,&nbsp;name,&nbsp;mesh[,&nbsp;x,&nbsp;y,&nbsp;&hellip;])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+      <div class="section">
+       <h2>
+        material
+       </h2>
+       <p>
+        <code class="xref py py-mod docutils literal">
+         compas_fea.structure.material
+        </code>
+       </p>
+       <table class="longtable docutils table table-responsive table-bordered">
+        <colgroup>
+         <col style="width: 10%"/>
+         <col style="width: 90%"/>
+        </colgroup>
+        <tbody>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.material.Concrete.html" title="compas_fea.structure.material.Concrete">
+             <code class="xref py py-obj docutils literal">
+              Concrete
+             </code>
+            </a>
+            (name,&nbsp;fck[,&nbsp;v,&nbsp;p,&nbsp;fr])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.material.ConcreteSmearedCrack.html" title="compas_fea.structure.material.ConcreteSmearedCrack">
+             <code class="xref py py-obj docutils literal">
+              ConcreteSmearedCrack
+             </code>
+            </a>
+            (name,&nbsp;E,&nbsp;v,&nbsp;p,&nbsp;fc,&nbsp;ec,&nbsp;&hellip;)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.material.ConcreteDamagedPlasticity.html" title="compas_fea.structure.material.ConcreteDamagedPlasticity">
+             <code class="xref py py-obj docutils literal">
+              ConcreteDamagedPlasticity
+             </code>
+            </a>
+            (name,&nbsp;E,&nbsp;v,&nbsp;p,&nbsp;&hellip;)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.material.ElasticIsotropic.html" title="compas_fea.structure.material.ElasticIsotropic">
+             <code class="xref py py-obj docutils literal">
+              ElasticIsotropic
+             </code>
+            </a>
+            (name,&nbsp;E,&nbsp;v,&nbsp;p[,&nbsp;tension,&nbsp;&hellip;])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.material.ElasticOrthotropic.html" title="compas_fea.structure.material.ElasticOrthotropic">
+             <code class="xref py py-obj docutils literal">
+              ElasticOrthotropic
+             </code>
+            </a>
+            (name,&nbsp;Ex,&nbsp;Ey,&nbsp;Ez,&nbsp;vxy,&nbsp;&hellip;)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.material.ElasticPlastic.html" title="compas_fea.structure.material.ElasticPlastic">
+             <code class="xref py py-obj docutils literal">
+              ElasticPlastic
+             </code>
+            </a>
+            (name,&nbsp;E,&nbsp;v,&nbsp;p,&nbsp;f,&nbsp;e)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.material.ThermalMaterial.html" title="compas_fea.structure.material.ThermalMaterial">
+             <code class="xref py py-obj docutils literal">
+              ThermalMaterial
+             </code>
+            </a>
+            (name,&nbsp;conductivity,&nbsp;p,&nbsp;sheat)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.material.Steel.html" title="compas_fea.structure.material.Steel">
+             <code class="xref py py-obj docutils literal">
+              Steel
+             </code>
+            </a>
+            (name[,&nbsp;fy,&nbsp;E,&nbsp;v,&nbsp;p,&nbsp;type])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+      <div class="section">
+       <h2>
+        misc
+       </h2>
+       <p>
+        <code class="xref py py-mod docutils literal">
+         compas_fea.structure.misc
+        </code>
+       </p>
+       <table class="longtable docutils table table-responsive table-bordered">
+        <colgroup>
+         <col style="width: 10%"/>
+         <col style="width: 90%"/>
+        </colgroup>
+        <tbody>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.misc.Amplitude.html" title="compas_fea.structure.misc.Amplitude">
+             <code class="xref py py-obj docutils literal">
+              Amplitude
+             </code>
+            </a>
+            (name[,&nbsp;values])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.misc.Temperature.html" title="compas_fea.structure.misc.Temperature">
+             <code class="xref py py-obj docutils literal">
+              Temperature
+             </code>
+            </a>
+            (name,&nbsp;file[,&nbsp;tend])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+      <div class="section">
+       <h2>
+        section
+       </h2>
+       <p>
+        <code class="xref py py-mod docutils literal">
+         compas_fea.structure.section
+        </code>
+       </p>
+       <table class="longtable docutils table table-responsive table-bordered">
+        <colgroup>
+         <col style="width: 10%"/>
+         <col style="width: 90%"/>
+        </colgroup>
+        <tbody>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.section.AngleSection.html" title="compas_fea.structure.section.AngleSection">
+             <code class="xref py py-obj docutils literal">
+              AngleSection
+             </code>
+            </a>
+            (name,&nbsp;b,&nbsp;h,&nbsp;t)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.section.BoxSection.html" title="compas_fea.structure.section.BoxSection">
+             <code class="xref py py-obj docutils literal">
+              BoxSection
+             </code>
+            </a>
+            (name,&nbsp;b,&nbsp;h,&nbsp;tw,&nbsp;tf)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.section.CircularSection.html" title="compas_fea.structure.section.CircularSection">
+             <code class="xref py py-obj docutils literal">
+              CircularSection
+             </code>
+            </a>
+            (name,&nbsp;r)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.section.GeneralSection.html" title="compas_fea.structure.section.GeneralSection">
+             <code class="xref py py-obj docutils literal">
+              GeneralSection
+             </code>
+            </a>
+            (name,&nbsp;A,&nbsp;I11,&nbsp;I12,&nbsp;I22,&nbsp;J,&nbsp;g0,&nbsp;gw)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.section.ISection.html" title="compas_fea.structure.section.ISection">
+             <code class="xref py py-obj docutils literal">
+              ISection
+             </code>
+            </a>
+            (name,&nbsp;b,&nbsp;h,&nbsp;tw,&nbsp;tf)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.section.PipeSection.html" title="compas_fea.structure.section.PipeSection">
+             <code class="xref py py-obj docutils literal">
+              PipeSection
+             </code>
+            </a>
+            (name,&nbsp;r,&nbsp;t)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.section.RectangularSection.html" title="compas_fea.structure.section.RectangularSection">
+             <code class="xref py py-obj docutils literal">
+              RectangularSection
+             </code>
+            </a>
+            (name,&nbsp;b,&nbsp;h)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.section.ShellSection.html" title="compas_fea.structure.section.ShellSection">
+             <code class="xref py py-obj docutils literal">
+              ShellSection
+             </code>
+            </a>
+            (name,&nbsp;t)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.section.SolidSection.html" title="compas_fea.structure.section.SolidSection">
+             <code class="xref py py-obj docutils literal">
+              SolidSection
+             </code>
+            </a>
+            (name)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.section.TrapezoidalSection.html" title="compas_fea.structure.section.TrapezoidalSection">
+             <code class="xref py py-obj docutils literal">
+              TrapezoidalSection
+             </code>
+            </a>
+            (name,&nbsp;b1,&nbsp;b2,&nbsp;h)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.section.TrussSection.html" title="compas_fea.structure.section.TrussSection">
+             <code class="xref py py-obj docutils literal">
+              TrussSection
+             </code>
+            </a>
+            (name,&nbsp;A)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.section.StrutSection.html" title="compas_fea.structure.section.StrutSection">
+             <code class="xref py py-obj docutils literal">
+              StrutSection
+             </code>
+            </a>
+            (name,&nbsp;A)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.section.TieSection.html" title="compas_fea.structure.section.TieSection">
+             <code class="xref py py-obj docutils literal">
+              TieSection
+             </code>
+            </a>
+            (name,&nbsp;A)
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+      <div class="section">
+       <h2>
+        step
+       </h2>
+       <p>
+        <code class="xref py py-mod docutils literal">
+         compas_fea.structure.step
+        </code>
+       </p>
+       <table class="longtable docutils table table-responsive table-bordered">
+        <colgroup>
+         <col style="width: 10%"/>
+         <col style="width: 90%"/>
+        </colgroup>
+        <tbody>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.step.GeneralStep.html" title="compas_fea.structure.step.GeneralStep">
+             <code class="xref py py-obj docutils literal">
+              GeneralStep
+             </code>
+            </a>
+            (name[,&nbsp;increments,&nbsp;factor,&nbsp;&hellip;])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.step.HeatStep.html" title="compas_fea.structure.step.HeatStep">
+             <code class="xref py py-obj docutils literal">
+              HeatStep
+             </code>
+            </a>
+            (name,&nbsp;interaction[,&nbsp;increments,&nbsp;&hellip;])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.step.ModalStep.html" title="compas_fea.structure.step.ModalStep">
+             <code class="xref py py-obj docutils literal">
+              ModalStep
+             </code>
+            </a>
+            (name[,&nbsp;modes,&nbsp;increments,&nbsp;factor,&nbsp;&hellip;])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+         <tr class="">
+          <td>
+           <p>
+            <a class="reference internal" href="generated/compas_fea.structure.step.HarmonicStep.html" title="compas_fea.structure.step.HarmonicStep">
+             <code class="xref py py-obj docutils literal">
+              HarmonicStep
+             </code>
+            </a>
+            (name[,&nbsp;displacements,&nbsp;loads,&nbsp;&hellip;])
+           </p>
+          </td>
+          <td>
+           <p>
+           </p>
+          </td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
      </div>
      <nav class="compas-sideways">
       <a class="btn btn-primary compas-prev" href="generated/compas_fea.fea.ansys.write_total_results.html" role="button">
        write_total_results
       </a>
-      <a class="btn btn-primary compas-next" href="../license.html" role="button">
-       License
+      <a class="btn btn-primary compas-next" href="generated/compas_fea.structure.structure.Structure.html" role="button">
+       Structure
       </a>
      </nav>
     </main>
@@ -139,6 +1354,11 @@
                structure
               </a>
              </li>
+             <li class="nav-item">
+              <a class="nav-link reference internal" href="compas_fea.utilities.html">
+               utilities
+              </a>
+             </li>
             </ul>
            </li>
           </ul>
@@ -160,6 +1380,63 @@
        <a class="nav-link reference internal" href="#">
         structure
        </a>
+       <ul class="nav">
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#id1">
+          structure
+         </a>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#constraint">
+          constraint
+         </a>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#displacement">
+          displacement
+         </a>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#element">
+          element
+         </a>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#element-properties">
+          element_properties
+         </a>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#interaction">
+          interaction
+         </a>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#load">
+          load
+         </a>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#material">
+          material
+         </a>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#misc">
+          misc
+         </a>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#section">
+          section
+         </a>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link reference internal" href="#step">
+          step
+         </a>
+        </li>
+       </ul>
       </li>
      </ul>
     </div>
@@ -171,7 +1448,7 @@
             
 
             
-                Last updated on Sep 26, 2017.
+                Last updated on Sep 27, 2017.
             
 
             
@@ -179,7 +1456,7 @@
    <a href="http://sphinx-doc.org/">
     Sphinx
    </a>
-   1.5.1.
+   1.6.3.
   </footer>
   <script type="text/javascript">
    var DOCUMENTATION_OPTIONS = {

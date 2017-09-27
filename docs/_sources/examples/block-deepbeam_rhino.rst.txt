@@ -8,4 +8,4 @@ block-deepbeam Rhino
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/block/block-deepbeam_abaqus_rhino.py
+.. literalinclude:: /../../examples/block-deepbeam_abaqus_rhino.py

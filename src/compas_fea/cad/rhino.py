@@ -358,7 +358,7 @@ def plot_data(structure, path, name, step, field='U', component='magnitude', sca
     print('Step summary: {0}'.format(step))
     print('--------------' + '-' * len(step))
     print('Frame description: {0}'.format(info['description']))
-    print('Analysis time: {0:.3f}'.format(info['toc_analysis']))
+    print('Analysis time: {0:.3f}'.format(float(info['toc_analysis'])))
     print('Extraction time: {0:.3f}'.format(info['toc_extraction']))
     print('Processing time: {0:.3f}'.format(toc))
 

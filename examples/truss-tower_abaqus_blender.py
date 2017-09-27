@@ -19,7 +19,7 @@ __email__      = 'liew@arch.ethz.ch'
 
 
 name = 'truss-tower'
-path = 'C:/Temp/'
+path = '/home/al/Temp/'
 
 # Create empty Structure object
 

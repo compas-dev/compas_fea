@@ -15,7 +15,7 @@ from compas_fea.structure import Steel
 from compas_fea.structure import Structure
 from compas_fea.structure import TrussSection
 
-from compas.cad.blender.utilities import get_objects
+from compas_blender.utilities import get_objects
 
 
 __author__     = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -24,28 +24,26 @@ __license__    = 'MIT License'
 __email__      = 'liew@arch.ethz.ch'
 
 
-# Folders and Structure name
-
 name = 'block-bridge'
 path = '/home/al/Temp/'
 
-# Create an empty Structure object named mdl
+# Create empty Structure object
 
 mdl = Structure()
 
-# Add tetrahedrons from bmesh
+# Add tetrahedrons
 
-blender.add_tets_from_bmesh(mdl, name='elset_tets', bmesh=get_objects(0)[0])
+blender.add_tets_from_bmesh(mdl, name='elset_tets', bmesh=get_objects(layer=0)[0])
 
 # Add end plates and ties
 
 blender.add_nodes_elements_from_layers(mdl, layers=[1, 2], face_type='ShellElement')
 blender.add_nodes_elements_from_layers(mdl, layers=[3], edge_type='TrussElement')
 
-# Add node sets to the Structure object
+# Add node sets
 
-blender.add_elset_from_bmeshes(mdl, name='elset_top', layer=1)
-blender.add_elset_from_bmeshes(mdl, name='elset_bot', layer=2)
+blender.add_elset_from_bmeshes(mdl, name='elset_top-plate', layer=1)
+blender.add_elset_from_bmeshes(mdl, name='elset_bot-plate', layer=2)
 blender.add_elset_from_bmeshes(mdl, name='elset_ties', layer=3)
 blender.add_nset_from_bmeshes(mdl, name='nset_supports', layer=4)
 blender.add_nset_from_bmeshes(mdl, name='nset_load', layer=5)
@@ -59,17 +57,17 @@ mdl.add_material(Concrete(name='mat_concrete', fck=90))
 
 A = 0.25 * 3.142 * 0.008**2
 mdl.add_section(ShellSection(name='sec_plate', t=0.005))
-mdl.add_section(SolidSection(name='sec_solid'))
 mdl.add_section(TrussSection(name='sec_tie', A=A))
+mdl.add_section(SolidSection(name='sec_solid'))
 
 # Add element properties
 
-eps = ElementProperties(material='mat_steel', section='sec_plate', elsets=['elset_top', 'elset_bot'])
-epc = ElementProperties(material='mat_concrete', section='sec_solid', elsets='elset_tets')
+eps = ElementProperties(material='mat_steel', section='sec_plate', elsets=['elset_top-plate', 'elset_bot-plate'])
 ept = ElementProperties(material='mat_steel', section='sec_tie', elsets='elset_ties')
+epc = ElementProperties(material='mat_concrete', section='sec_solid', elsets='elset_tets')
 mdl.add_element_properties(eps, name='ep_plates')
-mdl.add_element_properties(epc, name='ep_concrete')
 mdl.add_element_properties(ept, name='ep_ties')
+mdl.add_element_properties(epc, name='ep_concrete')
 
 # Add loads
 
@@ -92,10 +90,8 @@ mdl.summary()
 
 # Generate .inp file
 
-fnm = '{0}{1}.inp'.format(path, name)
-abaq.inp_generate(mdl, filename=fnm)
+abaq.inp_generate(mdl, filename='{0}{1}.inp'.format(path, name))
 
 # Run and extract data
 
-exe = '/home/al/abaqus/Commands/abaqus cae '
-mdl.analyse(path, name, software='abaqus', exe=exe, fields='U,S')
+mdl.analyse(path, name, software='abaqus', fields='U,S')

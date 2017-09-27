@@ -13,12 +13,7 @@ from compas_fea.structure import PointLoad
 from compas_fea.structure import SolidSection
 from compas_fea.structure import Structure
 
-try:
-    import rhinoscriptsyntax as rs
-except ImportError:
-    import platform
-    if platform.system() == 'Windows':
-        raise
+import rhinoscriptsyntax as rs
 
 
 __author__     = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -27,22 +22,19 @@ __license__    = 'MIT License'
 __email__      = 'liew@arch.ethz.ch'
 
 
-# Folders and Structure name
-
 name = 'block-deepbeam'
 path = 'C:/Temp/'
 
-# Create an empty Structure object named mdl
+# Create empty Structure object
 
 mdl = Structure()
 
 # Extrude mesh
 
 nz = 20
-dz = 1. / nz
-rhino.mesh_extrude(mdl, guid=rs.ObjectsByLayer('base_mesh'), nz=nz, dz=dz)
+rhino.mesh_extrude(mdl, guid=rs.ObjectsByLayer('base_mesh'), nz=nz, dz=1./nz)
 
-# Add node and element sets to the Structure object
+# Add node and element sets
 
 rhino.add_sets_from_layers(mdl, layers=['nset_load', 'nset_supports'])
 
@@ -56,7 +48,7 @@ mdl.add_section(SolidSection(name='sec_solid'))
 
 # Add element properties
 
-ep = ElementProperties(material='mat_elastic', section='sec_solid', elsets='elset_C3D8')
+ep = ElementProperties(material='mat_elastic', section='sec_solid', elsets='elset_all')
 mdl.add_element_properties(ep, 'ep_solid')
 
 # Add loads
@@ -78,8 +70,7 @@ mdl.summary()
 
 # Generate .inp file
 
-fnm = '{0}{1}.inp'.format(path, name)
-abaq.inp_generate(mdl, filename=fnm)
+abaq.inp_generate(mdl, filename='{0}{1}.inp'.format(path, name))
 
 # Run and extract data
 
@@ -87,4 +78,4 @@ mdl.analyse(path=path, name=name, software='abaqus', fields='U,S')
 
 # Plot displacements
 
-rhino.plot_data(mdl, path, name, step='step', field='S', component='mises', cbar=[0, 2], voxel=0.3, vdx=dz)
+rhino.plot_data(mdl, path, name, step='step', field='S', component='mises', cbar=[0, 2], voxel=0.3, vdx=1./nz)

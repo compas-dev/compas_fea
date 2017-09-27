@@ -13,10 +13,10 @@ from compas_fea.structure import GeneralStep
 from compas_fea.structure import PointLoad
 from compas_fea.structure import Structure
 
-from compas.cad.blender.geometry import add_empty
-from compas.cad.blender.helpers import network_from_bmesh
-from compas.cad.blender.utilities import draw_bmesh
-from compas.cad.blender.utilities import clear_layers
+from compas_blender.geometry import add_empty
+from compas_blender.helpers import network_from_bmesh
+from compas_blender.utilities import draw_bmesh
+from compas_blender.utilities import clear_layers
 
 
 __author__     = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -26,7 +26,7 @@ __email__      = 'liew@arch.ethz.ch'
 
 
 name = 'beam-simple'
-path = '/home/al/Temp/'
+path = 'C:/Temp/'
 
 # Create empty Structure object
 
@@ -90,7 +90,7 @@ mdl.add_load(PointLoad(name='load_weights', nodes='nset_weights', z=weight))
 
 deg = pi / 180
 mdl.add_displacement(GeneralDisplacement(name='disp_left', nodes='nset_left', x=0, y=0, z=0, yy=20*deg, xx=0, zz=0))
-mdl.add_displacement(GeneralDisplacement(name='disp_right', nodes='nset_right', y=0, z=-0.2, xx=0, zz=0))
+mdl.add_displacement(GeneralDisplacement(name='disp_right', nodes='nset_right', y=0, z=-0.2, xx=0, yy=20*deg, zz=0))
 
 # Add steps
 

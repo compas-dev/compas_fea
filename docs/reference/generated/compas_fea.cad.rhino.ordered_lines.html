@@ -101,84 +101,76 @@
          Extract node and element orders from a Network for a given start-point.
         </p>
         <div class="admonition note">
-         <p class="first admonition-title">
+         <p class="admonition-title">
           Note
          </p>
-         <ul class="last">
+         <ul>
           <li>
-           <p class="first">
+           <p>
             Function is for a Network representing a single structural element.
            </p>
           </li>
          </ul>
         </div>
-        <table class="docutils field-list table table-responsive table-bordered" frame="void" rules="none">
-         <col class="field-name"/>
-         <col class="field-body"/>
-         <tbody valign="top">
-          <tr class="field-odd field">
-           <th class="field-name">
-            Parameters:
-           </th>
-           <td class="field-body">
-            <ul class="first">
-             <li>
-              <p class="first">
-               <strong>
-                structure
-               </strong>
-               (
-               <em>
-                obj
-               </em>
-               ) &ndash; Structure object.
-              </p>
-             </li>
-             <li>
-              <p class="first">
-               <strong>
-                network
-               </strong>
-               (
-               <em>
-                obj
-               </em>
-               ) &ndash; Network object.
-              </p>
-             </li>
-             <li>
-              <p class="first">
-               <strong>
-                layer
-               </strong>
-               (
-               <em>
-                str
-               </em>
-               ) &ndash; Layer to extract start-point (Rhino point).
-              </p>
-             </li>
-            </ul>
-           </td>
-          </tr>
-          <tr class="field-even field">
-           <th class="field-name">
-            Returns:
-           </th>
-           <td class="field-body">
-            <p class="first last">
+        <dl class="field-list simple">
+         <dt class="field-odd">
+          Parameters
+         </dt>
+         <dd class="field-odd">
+          <ul>
+           <li>
+            <p>
+             <strong>
+              structure
+             </strong>
+             (
              <em>
-              list
+              obj
              </em>
-             &ndash; Ordered nodes.
+             ) &ndash; Structure object.
+            </p>
+           </li>
+           <li>
+            <p>
+             <strong>
+              network
+             </strong>
+             (
+             <em>
+              obj
+             </em>
+             ) &ndash; Network object.
+            </p>
+           </li>
+           <li>
+            <p>
+             <strong>
+              layer
+             </strong>
+             (
+             <em>
+              str
+             </em>
+             ) &ndash; Layer to extract start-point (Rhino point).
+            </p>
+           </li>
+          </ul>
+         </dd>
+         <dt class="field-even">
+          Returns
+         </dt>
+         <dd class="field-even">
+          <p>
+           <em>
+            list
+           </em>
+           &ndash; Ordered nodes.
 list: Ordered elements.
 list: Cumulative lengths at element mid-points.
 float: Total length.
-            </p>
-           </td>
-          </tr>
-         </tbody>
-        </table>
+          </p>
+         </dd>
+        </dl>
        </dd>
       </dl>
      </div>
@@ -246,6 +238,11 @@ float: Total length.
                structure
               </a>
              </li>
+             <li class="nav-item">
+              <a class="nav-link reference internal" href="../compas_fea.utilities.html">
+               utilities
+              </a>
+             </li>
             </ul>
            </li>
           </ul>
@@ -278,7 +275,7 @@ float: Total length.
             
 
             
-                Last updated on Sep 26, 2017.
+                Last updated on Sep 27, 2017.
             
 
             
@@ -286,7 +283,7 @@ float: Total length.
    <a href="http://sphinx-doc.org/">
     Sphinx
    </a>
-   1.5.1.
+   1.6.3.
   </footer>
   <script type="text/javascript">
    var DOCUMENTATION_OPTIONS = {

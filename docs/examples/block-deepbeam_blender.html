@@ -17,6 +17,8 @@
   <!-- compas CSS -->
   <link href="../static/css/compas.css" rel="stylesheet" type="text/css"/>
   <link href="../static/css/compas-reference.css" rel="stylesheet" type="text/css"/>
+  <link href="block-tets_blender.html" rel="next" title="block-tets Blender"/>
+  <link href="block-deepbeam_rhino.html" rel="prev" title="block-deepbeam Rhino"/>
   <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript">
   </script>
  </head>
@@ -49,6 +51,9 @@
       <a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">
        compas_fea
       </a>
+      <a accesskey="U" class="breadcrumb-item" href="../examples.html">
+       examples
+      </a>
      </nav>
      <div class="section">
       <span id="id1">
@@ -73,8 +78,8 @@
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PointLoad</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
 
-<span class="kn">from</span> <span class="nn">compas.cad.blender.utilities</span> <span class="k">import</span> <span class="n">draw_plane</span>
-<span class="kn">from</span> <span class="nn">compas.cad.blender.utilities</span> <span class="k">import</span> <span class="n">clear_layers</span>
+<span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="k">import</span> <span class="n">draw_plane</span>
+<span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="k">import</span> <span class="n">clear_layers</span>
 
 
 <span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">'Andrew Liew &lt;liew@arch.ethz.ch&gt;'</span><span class="p">]</span>
@@ -86,7 +91,7 @@
 <span class="n">clear_layers</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
 <span class="n">name</span> <span class="o">=</span> <span class="s1">'block-deepbeam'</span>
-<span class="n">path</span> <span class="o">=</span> <span class="s1">'C:/Temp/'</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s1">'/home/al/Temp/'</span>
 
 <span class="c1"># Create empty Structure object</span>
 
@@ -144,11 +149,17 @@
 
 <span class="c1"># Plot voxels</span>
 
-<span class="c1">#blender.plot_voxels(mdl, path, name, step='step', vdx=ds, cbar=[0, 1.5], cube_size=[10, 20, 10], layer=1)</span>
+<span class="n">blender</span><span class="o">.</span><span class="n">plot_voxels</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step'</span><span class="p">,</span> <span class="n">vdx</span><span class="o">=</span><span class="n">ds</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="n">cube_size</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </code></pre>
       </div>
      </div>
      <nav class="compas-sideways">
+      <a class="btn btn-primary compas-prev" href="block-deepbeam_rhino.html" role="button">
+       block-deepbeam Rhino
+      </a>
+      <a class="btn btn-primary compas-next" href="block-tets_blender.html" role="button">
+       block-tets Blender
+      </a>
      </nav>
     </main>
     <!-- sidebar navigation -->
@@ -165,7 +176,7 @@
       </form>
       <div class="navbar-expand-md">
        <div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
-        <ul class="nav flex-column">
+        <ul class="nav flex-column active">
          <li class="nav-item">
           <a class="nav-link reference internal" href="../intro.html">
            Introduction
@@ -176,10 +187,102 @@
            Tutorial
           </a>
          </li>
-         <li class="nav-item">
+         <li class="nav-item active">
           <a class="nav-link reference internal" href="../examples.html">
            Examples
           </a>
+          <ul class="nav active">
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="beam-gridshell_rhino.html">
+             beam-gridshell Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="beam-simple_rhino.html">
+             beam-simple Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="beam-simple_blender.html">
+             beam-simple Blender
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="beam-tree_rhino.html">
+             beam-tree Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="block-deepbeam_rhino.html">
+             block-deepbeam Rhino
+            </a>
+           </li>
+           <li class="nav-item active">
+            <a class="nav-link active current reference internal" href="#">
+             block-deepbeam Blender
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="block-tets_blender.html">
+             block-tets Blender
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="mesh-floor_rhino.html">
+             mesh-floor Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="mesh-floor_blender.html">
+             mesh-floor Blender
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="mesh-bridge_rhino.html">
+             mesh-bridge Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="mesh-mould_blender.html">
+             mesh-mould Blender
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="mesh-mould_rhino.html">
+             mesh-mould Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="mesh-tris_blender.html">
+             mesh-tris Blender
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="mesh-yieldline_rhino.html">
+             mesh-yieldline Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="script-introduction_abaqus.html">
+             script-introduction
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="truss-frame_rhino.html">
+             truss-frame Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="truss-tower_rhino.html">
+             truss-tower Rhino
+            </a>
+           </li>
+           <li class="nav-item">
+            <a class="nav-link reference internal" href="truss-tower_blender.html">
+             truss-tower Blender
+            </a>
+           </li>
+          </ul>
          </li>
          <li class="nav-item">
           <a class="nav-link reference internal" href="../reference.html">
@@ -214,7 +317,7 @@
             
 
             
-                Last updated on Sep 26, 2017.
+                Last updated on Sep 27, 2017.
             
 
             
@@ -222,7 +325,7 @@
    <a href="http://sphinx-doc.org/">
     Sphinx
    </a>
-   1.5.1.
+   1.6.3.
   </footer>
   <script type="text/javascript">
    var DOCUMENTATION_OPTIONS = {

@@ -11,8 +11,8 @@ from compas_fea.structure import PinnedDisplacement
 from compas_fea.structure import PointLoad
 from compas_fea.structure import Structure
 
-from compas.cad.blender.utilities import draw_plane
-from compas.cad.blender.utilities import clear_layers
+from compas_blender.utilities import draw_plane
+from compas_blender.utilities import clear_layers
 
 
 __author__     = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -24,7 +24,7 @@ __email__      = 'liew@arch.ethz.ch'
 clear_layers(layers=[0])
 
 name = 'block-deepbeam'
-path = 'C:/Temp/'
+path = '/home/al/Temp/'
 
 # Create empty Structure object
 
@@ -82,4 +82,4 @@ mdl.analyse(path, name, software='abaqus', fields='U,S')
 
 # Plot voxels
 
-#blender.plot_voxels(mdl, path, name, step='step', vdx=ds, cbar=[0, 1.5], cube_size=[10, 20, 10], layer=1)
+blender.plot_voxels(mdl, path, name, step='step', vdx=ds, cbar=[0, 1.5], cube_size=[10, 20, 10], layer=1)

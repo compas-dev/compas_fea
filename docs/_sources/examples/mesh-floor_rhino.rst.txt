@@ -8,4 +8,4 @@ mesh-floor Rhino
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/mesh/mesh-floor_abaqus_rhino.py
+.. literalinclude:: /../../examples/mesh-floor_abaqus_rhino.py

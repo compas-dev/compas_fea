@@ -62,6 +62,9 @@
 <span class="sd">compas_fea.fea.abaq : Abaqus .inp file creator.</span>
 <span class="sd">"""</span>
 
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">pi</span>
 
 
@@ -72,20 +75,20 @@
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">'inp_constraints'</span><span class="p">,</span>
-    <span class="s1">'inp_elements'</span><span class="p">,</span>
+    <span class="s1">'inp_write_constraints'</span><span class="p">,</span>
+    <span class="s1">'inp_write_elements'</span><span class="p">,</span>
     <span class="s1">'inp_generate'</span><span class="p">,</span>
-    <span class="s1">'inp_heading'</span><span class="p">,</span>
-    <span class="s1">'inp_materials'</span><span class="p">,</span>
-    <span class="s1">'inp_misc'</span><span class="p">,</span>
-    <span class="s1">'inp_nodes'</span><span class="p">,</span>
-    <span class="s1">'inp_properties'</span><span class="p">,</span>
-    <span class="s1">'inp_sets'</span><span class="p">,</span>
-    <span class="s1">'inp_steps'</span>
+    <span class="s1">'inp_write_heading'</span><span class="p">,</span>
+    <span class="s1">'inp_write_materials'</span><span class="p">,</span>
+    <span class="s1">'inp_write_misc'</span><span class="p">,</span>
+    <span class="s1">'inp_write_nodes'</span><span class="p">,</span>
+    <span class="s1">'inp_write_properties'</span><span class="p">,</span>
+    <span class="s1">'inp_write_sets'</span><span class="p">,</span>
+    <span class="s1">'inp_write_steps'</span>
 <span class="p">]</span>
 
 
-<div class="viewcode-block" id="inp_constraints"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_constraints.html#compas_fea.fea.abaq.inp_constraints">[docs]</a><span class="k">def</span> <span class="nf">inp_constraints</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">constraints</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_write_constraints"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_write_constraints.html#compas_fea.fea.abaq.inp_write_constraints">[docs]</a><span class="k">def</span> <span class="nf">inp_write_constraints</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">constraints</span><span class="p">):</span>
     <span class="sd">""" Writes the constraints information to the Abaqus .inp file.</span>
 
 <span class="sd">    Parameters:</span>
@@ -101,7 +104,7 @@
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">constraints</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** '</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
-        <span class="n">ctype</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="n">__name__</span>
+        <span class="n">ctype</span> <span class="o">=</span> <span class="n">constraint</span><span class="o">.</span><span class="vm">__name__</span>
 
         <span class="c1"># Tie constraint</span>
 
@@ -116,7 +119,7 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inp_elements"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_elements.html#compas_fea.fea.abaq.inp_elements">[docs]</a><span class="k">def</span> <span class="nf">inp_elements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_write_elements"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_write_elements.html#compas_fea.fea.abaq.inp_write_elements">[docs]</a><span class="k">def</span> <span class="nf">inp_write_elements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
     <span class="sd">""" Writes the element information to the Abaqus .inp file.</span>
 
 <span class="sd">    Note:</span>
@@ -149,7 +152,7 @@
         <span class="n">element</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="n">ekey</span><span class="p">]</span>
         <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">element</span><span class="o">.</span><span class="n">nodes</span><span class="p">]</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">number</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">nodes</span>
-        <span class="n">etype</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">__name__</span>
+        <span class="n">etype</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="k">if</span> <span class="n">etype</span> <span class="o">==</span> <span class="s1">'TrussElement'</span><span class="p">:</span>
             <span class="n">estr</span> <span class="o">=</span> <span class="s1">'T3D2'</span>
         <span class="k">elif</span> <span class="n">etype</span> <span class="o">==</span> <span class="s1">'BeamElement'</span><span class="p">:</span>
@@ -210,19 +213,34 @@
 <span class="sd">        None</span>
 <span class="sd">    """</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">inp_heading</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="n">inp_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">units</span><span class="p">)</span>
-        <span class="n">inp_elements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
-        <span class="n">inp_sets</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">sets</span><span class="p">)</span>
-        <span class="n">inp_materials</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">materials</span><span class="p">)</span>
-        <span class="n">inp_misc</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">misc</span><span class="p">)</span>
-        <span class="n">inp_properties</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">sections</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">element_properties</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">sets</span><span class="p">)</span>
-        <span class="n">inp_constraints</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">constraints</span><span class="p">)</span>
-        <span class="n">inp_steps</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">loads</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">displacements</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">interactions</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">misc</span><span class="p">)</span>
+
+        <span class="n">constraints</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="n">displacements</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">displacements</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">elements</span>
+        <span class="n">interactions</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">interactions</span>
+        <span class="n">loads</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">loads</span>
+        <span class="n">materials</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">materials</span>
+        <span class="n">misc</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">misc</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">nodes</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">element_properties</span>
+        <span class="n">sections</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">sections</span>
+        <span class="n">sets</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">sets</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span>
+
+        <span class="n">inp_write_heading</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">inp_write_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">units</span><span class="p">)</span>
+        <span class="n">inp_write_elements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">elements</span><span class="p">)</span>
+        <span class="n">inp_write_sets</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sets</span><span class="p">)</span>
+        <span class="n">inp_write_materials</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+        <span class="n">inp_write_misc</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">misc</span><span class="p">)</span>
+        <span class="n">inp_write_properties</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sections</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">sets</span><span class="p">)</span>
+        <span class="n">inp_write_constraints</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">constraints</span><span class="p">)</span>
+        <span class="n">inp_write_steps</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">interactions</span><span class="p">,</span> <span class="n">misc</span><span class="p">)</span>
+
     <span class="nb">print</span><span class="p">(</span><span class="s1">'***** Abaqus input file generated: </span><span class="si">{0}</span><span class="s1"> *****</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="inp_heading"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_heading.html#compas_fea.fea.abaq.inp_heading">[docs]</a><span class="k">def</span> <span class="nf">inp_heading</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_write_heading"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_write_heading.html#compas_fea.fea.abaq.inp_write_heading">[docs]</a><span class="k">def</span> <span class="nf">inp_write_heading</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
     <span class="sd">""" Creates the Abaqus .inp file heading.</span>
 
 <span class="sd">    Parameters:</span>
@@ -249,7 +267,7 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inp_materials"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_materials.html#compas_fea.fea.abaq.inp_materials">[docs]</a><span class="k">def</span> <span class="nf">inp_materials</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">materials</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_write_materials"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_write_materials.html#compas_fea.fea.abaq.inp_write_materials">[docs]</a><span class="k">def</span> <span class="nf">inp_write_materials</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">materials</span><span class="p">):</span>
     <span class="sd">""" Writes materials to the Abaqus .inp file.</span>
 
 <span class="sd">    Parameters:</span>
@@ -262,7 +280,7 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** ------------------------------------------------------------------- Materials</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">material</span> <span class="ow">in</span> <span class="n">materials</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">mtype</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">__name__</span>
+        <span class="n">mtype</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** '</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
@@ -381,7 +399,7 @@
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inp_misc"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_misc.html#compas_fea.fea.abaq.inp_misc">[docs]</a><span class="k">def</span> <span class="nf">inp_misc</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">misc</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_write_misc"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_write_misc.html#compas_fea.fea.abaq.inp_write_misc">[docs]</a><span class="k">def</span> <span class="nf">inp_write_misc</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">misc</span><span class="p">):</span>
     <span class="sd">""" Writes misc class info to the Abaqus .inp file.</span>
 
 <span class="sd">    Parameters:</span>
@@ -395,7 +413,7 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** ------------------------------------------------------------------------ Misc</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">misc</span> <span class="ow">in</span> <span class="n">misc</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">mtype</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">__name__</span>
+        <span class="n">mtype</span> <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="k">if</span> <span class="n">mtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'Amplitude'</span><span class="p">]:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'** '</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
@@ -412,7 +430,7 @@
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inp_nodes"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_nodes.html#compas_fea.fea.abaq.inp_nodes">[docs]</a><span class="k">def</span> <span class="nf">inp_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">units</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_write_nodes"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_write_nodes.html#compas_fea.fea.abaq.inp_write_nodes">[docs]</a><span class="k">def</span> <span class="nf">inp_write_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">units</span><span class="p">):</span>
     <span class="sd">""" Writes the nodal co-ordinates information to the Abaqus .inp file.</span>
 
 <span class="sd">    Note:</span>
@@ -439,7 +457,7 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inp_properties"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_properties.html#compas_fea.fea.abaq.inp_properties">[docs]</a><span class="k">def</span> <span class="nf">inp_properties</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sections</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">sets</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_write_properties"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_write_properties.html#compas_fea.fea.abaq.inp_write_properties">[docs]</a><span class="k">def</span> <span class="nf">inp_write_properties</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sections</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">sets</span><span class="p">):</span>
     <span class="sd">""" Writes the section information to the Abaqus .inp file.</span>
 
 <span class="sd">    Parameters:</span>
@@ -479,7 +497,7 @@
         <span class="n">elsets</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">elsets</span>
         <span class="n">reinforcement</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">reinforcement</span>
         <span class="n">section</span> <span class="o">=</span> <span class="n">sections</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">section</span><span class="p">]</span>
-        <span class="n">stype</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">__name__</span>
+        <span class="n">stype</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="n">geometry</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">geometry</span>
 
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
@@ -554,7 +572,7 @@
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inp_sets"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_sets.html#compas_fea.fea.abaq.inp_sets">[docs]</a><span class="k">def</span> <span class="nf">inp_sets</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sets</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_write_sets"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_write_sets.html#compas_fea.fea.abaq.inp_write_sets">[docs]</a><span class="k">def</span> <span class="nf">inp_write_sets</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sets</span><span class="p">):</span>
     <span class="sd">""" Creates the Abaqus .inp file node sets NSETs and element sets ELSETs.</span>
 
 <span class="sd">    Note:</span>
@@ -608,7 +626,7 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="inp_steps"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_steps.html#compas_fea.fea.abaq.inp_steps">[docs]</a><span class="k">def</span> <span class="nf">inp_steps</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">interactions</span><span class="p">,</span> <span class="n">misc</span><span class="p">):</span>
+<div class="viewcode-block" id="inp_write_steps"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.inp_write_steps.html#compas_fea.fea.abaq.inp_write_steps">[docs]</a><span class="k">def</span> <span class="nf">inp_write_steps</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">interactions</span><span class="p">,</span> <span class="n">misc</span><span class="p">):</span>
     <span class="sd">""" Writes step information to the Abaqus .inp file.</span>
 
 <span class="sd">    Note:</span>
@@ -631,7 +649,7 @@
     <span class="k">if</span> <span class="s1">'order'</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">[</span><span class="s1">'order'</span><span class="p">]:</span>
             <span class="n">step</span> <span class="o">=</span> <span class="n">steps</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-            <span class="n">stype</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">__name__</span>
+            <span class="n">stype</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="vm">__name__</span>
             <span class="n">increments</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">increments</span>
             <span class="n">method</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">type</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'**</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
@@ -661,7 +679,7 @@
 
                 <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">loads</span><span class="p">:</span>
                     <span class="n">load</span> <span class="o">=</span> <span class="n">loads</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
-                    <span class="n">ltype</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">__name__</span>
+                    <span class="n">ltype</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="vm">__name__</span>
                     <span class="n">com</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">components</span>
                     <span class="n">axes</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">axes</span>
                     <span class="n">nset</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">nodes</span>
@@ -891,7 +909,7 @@
             
 
             
-                Last updated on Sep 26, 2017.
+                Last updated on Sep 27, 2017.
             
 
             
@@ -899,7 +917,7 @@
    <a href="http://sphinx-doc.org/">
     Sphinx
    </a>
-   1.5.1.
+   1.6.3.
   </footer>
   <script type="text/javascript">
    var DOCUMENTATION_OPTIONS = {

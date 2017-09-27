@@ -13,8 +13,8 @@ compas_fea.abaq
 
     inp_write_constraints
     inp_write_elements
-    inp_generate
-    inp_write_headings
+    inp_generates
+    inp_write_heading
     inp_write_materials
     inp_write_misc
     inp_write_nodes
