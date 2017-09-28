@@ -10,7 +10,7 @@ try:
     from abaqusConstants import *
     from job import *
 except:
-    print('***** Abaqus modules not imported *****')
+    pass
 
 from time import time
 
