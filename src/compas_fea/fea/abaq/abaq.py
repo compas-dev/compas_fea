@@ -5,7 +5,15 @@ compas_fea.fea.abaq : Abaqus .inp file creator.
 from __future__ import print_function
 from __future__ import absolute_import
 
+from compas_fea.fea.abaq import odb
+
+from subprocess import Popen
+from subprocess import PIPE
+
 from math import pi
+
+import json
+import os
 
 
 __author__     = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -15,6 +23,7 @@ __email__      = 'liew@arch.ethz.ch'
 
 
 __all__ = [
+    'abaqus_launch_process',
     'inp_write_constraints',
     'inp_write_elements',
     'inp_generate',
@@ -26,6 +35,94 @@ __all__ = [
     'inp_write_sets',
     'inp_write_steps'
 ]
+
+
+def abaqus_launch_process(structure, path, name, exe, fields, cpus):
+    """ Runs the analysis through the chosen FEA software/library.
+
+    Parameters:
+        structure (obj): Structure object.
+        path (str): Folder to save data.
+        name (str): Name of the Structure object and analysis files.
+        exe (str): Full terminal command to bypass subprocess defaults.
+        fields (str): Data fields to extract e.g 'U,S,SM'.
+        cpus (int): Number of CPU cores to use.
+
+    Returns:
+        None
+    """
+
+    # Create temp folder
+
+    temp = '{0}{1}/'.format(path, name)
+    try:
+        os.stat(temp)
+    except:
+        os.mkdir(temp)
+
+    # Save node data
+
+    nkeys = sorted(structure.nodes, key=int)
+    nodes = {nkey: structure.node_xyz(nkey) for nkey in nkeys}
+    with open('{0}{1}-nodes.json'.format(temp, name), 'w') as f:
+        json.dump(nodes, f)
+
+    # Save elements' nodes data
+
+    ekeys = sorted(structure.elements, key=int)
+    elements = {ekey: structure.elements[ekey].nodes for ekey in ekeys}
+    with open('{0}{1}-elements.json'.format(temp, name), 'w') as f:
+        json.dump(elements, f)
+
+    # Run sub-process odb.py file
+
+    odb_loc = odb.__file__
+    subprocess = 'noGUI=' + odb_loc.replace('\\', '/')
+
+    success = False
+    if not exe:
+        args = ['abaqus', 'cae', subprocess, '--', fields, str(cpus), temp, path, name]
+        p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+        while True:
+            line = p.stdout.readline()
+            if not line:
+                break
+            line = str(line.strip())
+            print(line)
+            if 'COMPLETED' in line:
+                success = True
+        stdout, stderr = p.communicate()
+        print(stdout)
+        print(stderr)
+
+        if not success:
+            print('***** Analysis failed *****')
+            try:
+                with open('{0}{1}.msg'.format(temp, name)) as f:
+                    lines = f.readlines()
+                    for c, line in enumerate(lines):
+                        if (' ***ERROR' in line) or (' ***WARNING' in line):
+                            print(lines[c][:-2])
+                            print(lines[c + 1][:-2])
+            except:
+                print('***** Loading .msg log failed *****')
+        else:
+            print('***** Analysis successful *****')
+
+    else:
+        args = '{0} -- {1} {2} {3} {4} {5}'.format(subprocess, fields, cpus, temp, path, name)
+        os.chdir(temp)
+        os.system('{0}{1}'.format(exe, args))
+
+    # Store data
+
+    try:
+        with open('{0}{1}-results.json'.format(temp, name), 'r') as f:
+            structure.results = json.load(f)
+        structure.save_to_obj('{0}{1}.obj'.format(path, name))
+        print('***** Saving data to structure.results successful *****')
+    except:
+        print('***** Saving data to structure.results unsuccessful *****')
 
 
 def inp_write_constraints(f, constraints):

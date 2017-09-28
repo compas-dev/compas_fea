@@ -6,19 +6,15 @@ The main datastructure for all structural model information and methods.
 from __future__ import print_function
 from __future__ import absolute_import
 
-from subprocess import Popen
-from subprocess import PIPE
-
 from compas.geometry import centroid_points
 from compas.utilities import geometric_key
 
-from compas_fea.fea import abaq
+from compas_fea.fea.abaq import abaq
 from compas_fea.fea.ansys import ansys
+
 from compas_fea.structure.element import *
 from compas_fea.structure.step import GeneralStep
 
-import json
-import os
 import pickle
 
 
@@ -607,72 +603,9 @@ class Structure(object):
         Returns:
             None
         """
-        success = False
-
         if software == 'abaqus':
 
-            # Create temp folder
-
-            temp = '{0}{1}/'.format(path, name)
-            try:
-                os.stat(temp)
-            except:
-                os.mkdir(temp)
-
-            # Save node and elements' nodes data
-
-            nodes = {nkey: self.node_xyz(nkey) for nkey in sorted(self.nodes, key=int)}
-            elements = {ekey: self.elements[ekey].nodes for ekey in sorted(self.elements, key=int)}
-            with open('{0}{1}-nodes.json'.format(temp, name), 'w') as f:
-                json.dump(nodes, f)
-            with open('{0}{1}-elements.json'.format(temp, name), 'w') as f:
-                json.dump(elements, f)
-
-            # Run sub-process odb.py file
-
-            odb_loc = abaq.__file__.replace('__init__', 'odb')
-            subprocess = 'noGUI=' + odb_loc.replace('\\', '/')
-
-            if not exe:
-                args = ['abaqus', 'cae', subprocess, '--', fields, str(cpus), temp, path, name]
-                p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
-                while True:
-                    line = p.stdout.readline()
-                    if not line:
-                        break
-                    line = str(line.strip())
-                    print(line)
-                    if 'COMPLETED' in line:
-                        success = True
-                stdout, stderr = p.communicate()
-                print(stdout)
-                print(stderr)
-
-                if not success:
-                    try:
-                        with open('{0}{1}.msg'.format(temp, name)) as f:
-                            lines = f.readlines()
-                            for c, line in enumerate(lines):
-                                if (' ***ERROR' in line) or (' ***WARNING' in line):
-                                    print(lines[c][:-2])
-                                    print(lines[c + 1][:-2])
-                    except:
-                        print('***** Loading .msg log failed *****')
-
-            else:
-                args = '{0} -- {1} {2} {3} {4} {5}'.format(subprocess, fields, cpus, temp, path, name)
-                os.chdir(temp)
-                os.system('{0}{1}'.format(exe, args))
-
-            # Store data
-
-            try:
-                with open('{0}{1}-results.json'.format(temp, name), 'r') as f:
-                    self.results = json.load(f)
-                self.save_to_obj('{0}{1}.obj'.format(path, name))
-                print('***** Saving results.json file to structure.results successful *****')
-            except:
-                print('***** Saving results.json file to structure.results unsuccessful *****')
+            abaq.abaqus_launch_process(self, path, name, exe, fields, cpus)
 
         elif software == 'ansys':
 

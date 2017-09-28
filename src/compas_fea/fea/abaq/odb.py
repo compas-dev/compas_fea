@@ -5,9 +5,12 @@ Abaqus .odb data extraction file and function.
 from __future__ import print_function
 from __future__ import absolute_import
 
-from abaqus import *
-from abaqusConstants import *
-from job import *
+try:
+    from abaqus import *
+    from abaqusConstants import *
+    from job import *
+except:
+    print('***** Abaqus modules not imported *****')
 
 from time import time
 
@@ -123,6 +126,10 @@ def extract_odb_data(temp, name, toc, fields, steps='all'):
     with open('{0}{1}-results.json'.format(temp, name), 'w') as f:
         json.dump(results, f)
 
+
+# ==============================================================================
+# Run job
+# ==============================================================================
 
 if __name__ == "__main__":
 
