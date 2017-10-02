@@ -1,5 +1,6 @@
 from .ansys_nodes_elements import write_request_element_nodes
 from .ansys_nodes_elements import write_request_node_displacements
+from .ansys_nodes_elements import write_constraint_nodes
 from .ansys_nodes_elements import write_nodes
 from .ansys_nodes_elements import write_elements
 from .ansys_process import write_preprocess
@@ -17,6 +18,10 @@ def write_modal_analysis_request(structure, output_path, filename, skey):
     write_all_materials(structure, output_path, filename)
     write_nodes(structure, output_path, filename)
     write_elements(structure, output_path, filename)
+
+    step = structure.steps[skey]
+    displacements = step.displacements
+    write_constraint_nodes(structure, output_path, filename, displacements)
     write_modal_solve(structure, output_path, filename, skey)
     write_modal_post_process(output_path, filename)
     write_request_element_nodes(output_path, filename)
@@ -25,7 +30,7 @@ def write_modal_analysis_request(structure, output_path, filename, skey):
 
 
 def write_modal_solve(structure, output_path, filename, skey):
-    num_modes = structure.steps[skey].num_modes
+    num_modes = structure.steps[skey].modes
     cFile = open(output_path + "/" + filename, 'a')
     cFile.write('/SOL \n')
     cFile.write('!\n')
@@ -55,7 +60,7 @@ def write_modal_post_process(output_path, filename):
 
 
 def write_request_modal_freq(structure, output_path, filename, skey):
-    num_modes = structure.steps[skey].num_modes
+    num_modes = structure.steps[skey].modes
     cFile = open(output_path + "/" + filename, 'a')
     cFile.write('/SOL \n')
     cFile.write('!\n')
@@ -78,7 +83,7 @@ def write_request_modal_freq(structure, output_path, filename, skey):
 
 
 def write_request_modal_shapes(structure, output_path, filename, skey):
-    num_modes = structure.steps[skey].num_modes
+    num_modes = structure.steps[skey].modes
     cFile = open(output_path + "/" + filename, 'a')
     cFile.write('/POST1 \n')
     cFile.close()

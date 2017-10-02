@@ -1,3 +1,5 @@
+import os
+
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
 __license__    = 'MIT License'
@@ -7,7 +9,6 @@ __email__      = 'mendez@arch.ethz.ch'
 def write_elements(structure, output_path, filename):
     ep = structure.element_properties
     for key in ep:
-        etype = ep[key].type
         section = ep[key].section
         material = ep[key].material
         elsets = ep[key].elsets
@@ -19,19 +20,22 @@ def write_elements(structure, output_path, filename):
                 else:
                     ekeys.extend(structure.sets[elset]['selection'])
         elements = ep[key].elements
+        etype = structure.elements[ekeys[0]].__name__
         if elements:
             ekeys.extend(elements)
-        if etype == 'SHELL':
+        if etype == 'ShellElement':
             write_shell4_elements(structure, output_path, filename, ekeys, section, material)
-        if etype == 'BEAM':
+        if etype == 'BeamElement':
             write_beam_elements(structure, output_path, filename, ekeys, section, material)
+        if etype == 'TieElement' or etype == 'StrutElement' or etype == 'TrussElement':
+            write_tie_elements(structure, output_path, filename, ekeys, section, material, etype)
 
 
 def write_nodes(structure, output_path, filename):
     cFile = open(output_path + filename, 'a')
     nodes = structure.nodes
     for i in range(len(nodes)):
-        node = nodes[str(i)]
+        node = nodes[i]
         string = 'N,' + str(i + 1) + ',' + str(node['x']) + ',' + str(node['y']) + ',' + str(node['z']) + ',0,0,0 \n'
         cFile.write(string)
     cFile.write('!\n')
@@ -43,7 +47,7 @@ def write_set_element_material(output_path, filename, mat_index, elem_type, elem
     cFile = open(output_path + "/" + filename, 'a')
     cFile.write('ET,' + str(elem_type_index) + ',' + str(elem_type) + ' \n')
     cFile.write('TYPE,' + str(elem_type_index) + '\n')
-    cFile.write('MAT,' + str(mat_index) + '\n')
+    cFile.write('MAT,' + str(mat_index + 1) + '\n')
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()
@@ -80,10 +84,10 @@ def write_shell4_elements(structure, output_path, filename, ekeys, section, mate
 
 def write_shell_thickness(output_path, filename, thickness, sec_index, mat_index):
     cFile = open(output_path + "/" + filename, 'a')
-    cFile.write('SECTYPE,' + str(sec_index) + ',SHELL,, \n')
+    cFile.write('SECTYPE,' + str(sec_index + 1) + ',SHELL,, \n')
     cFile.write('SECDATA, ' + str(thickness) + ',' + str(mat_index) + ',0.0,3\n')
     cFile.write('SECOFFSET,MID\n')
-    cFile.write('SECNUM,' + str(sec_index) + '\n')
+    cFile.write('SECNUM,' + str(sec_index + 1) + '\n')
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()
@@ -124,8 +128,7 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
 
     cFile = open(output_path + "/" + filename, 'a')
     for ekey in ekeys:
-        element = structure.elements[ekey]
-        element = element.nodes
+        element = structure.elements[ekey].nodes
         if orient:
             enode = structure.nodes[element[-1]]
             onode = [enode['x'] + orient[0], enode['y'] + orient[1], enode['z'] + orient[2]]
@@ -147,7 +150,7 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
 
 def write_i_section(output_path, filename, height, base, thickness_w, thickness_f, sec_index):
     cFile = open(output_path + "/" + filename, 'a')
-    cFile.write('SECTYPE, ' + str(sec_index) + ', BEAM, I, , 0 \n')
+    cFile.write('SECTYPE, ' + str(sec_index + 1) + ', BEAM, I, , 0 \n')
     cFile.write('SECOFFSET, CENT \n')
     cFile.write('SECDATA,' + str(base) + ',' + str(base) + ',' + str(height) + ',')
     cFile.write(str(thickness_f) + ',' + str(thickness_f) + ',' + str(thickness_w) + '\n')
@@ -159,10 +162,10 @@ def write_i_section(output_path, filename, height, base, thickness_w, thickness_
 
 def write_angle_section(output_path, filename, height, base, thickness, sec_index):
     cFile = open(output_path + "/" + filename, 'a')
-    cFile.write('SECTYPE, ' + str(sec_index) + ', BEAM, L, , 0 \n')
+    cFile.write('SECTYPE, ' + str(sec_index + 1) + ', BEAM, L, , 0 \n')
     cFile.write('SECOFFSET, CENT \n')
     cFile.write('SECDATA,' + str(base) + ',' + str(height) + ',' + str(thickness) + ',' + str(thickness) + '\n')
-    cFile.write('SECNUM, ' + str(sec_index) + ' \n')
+    cFile.write('SECNUM, ' + str(sec_index + 1) + ' \n')
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()
@@ -170,10 +173,10 @@ def write_angle_section(output_path, filename, height, base, thickness, sec_inde
 
 def write_rectangular_beam_section(output_path, filename, height, base, sec_index):
     cFile = open(output_path + "/" + filename, 'a')
-    cFile.write('SECTYPE, ' + str(sec_index) + ', BEAM, RECT, , 0 \n')
+    cFile.write('SECTYPE, ' + str(sec_index + 1) + ', BEAM, RECT, , 0 \n')
     cFile.write('SECOFFSET, CENT \n')
     cFile.write('SECDATA,' + str(height) + ',' + str(base) + '\n')
-    cFile.write('SECNUM, ' + str(sec_index) + ' \n')
+    cFile.write('SECNUM, ' + str(sec_index + 1) + ' \n')
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()
@@ -181,10 +184,53 @@ def write_rectangular_beam_section(output_path, filename, height, base, sec_inde
 
 def write_pipe_section(output_path, filename, in_radius, thickness, sec_index):
     cFile = open(output_path + "/" + filename, 'a')
-    cFile.write('SECTYPE, ' + str(sec_index) + ', BEAM, CTUBE, , 0 \n')
+    cFile.write('SECTYPE, ' + str(sec_index + 1) + ', BEAM, CTUBE, , 0 \n')
     cFile.write('SECOFFSET, CENT \n')
     cFile.write('SECDATA,' + str(in_radius) + ',' + str(in_radius + thickness) + ',8\n')
-    cFile.write('SECNUM, ' + str(sec_index) + '\n')
+    cFile.write('SECNUM, ' + str(sec_index + 1) + '\n')
+    cFile.write('!\n')
+    cFile.write('!\n')
+    cFile.close()
+
+
+def write_tie_elements(structure, output_path, filename, ekeys, section, material, etype):
+
+    ekeys = sorted(ekeys, key=int)
+    mat_index = structure.materials[material].index
+    sec_index = structure.sections[section].index
+
+    write_set_element_material(output_path, filename, mat_index, 'LINK180', 4)
+
+    # axial_force =  0 for tension and compression, 1 tension only, 2 compression only
+    if etype == 'TieElement':
+        sec_area = structure.sections[section].geometry['A']
+        write_tie_section(output_path, filename, sec_area, sec_index, axial_force=2)
+    elif etype == 'StrutElement':
+        sec_area = structure.sections[section].geometry['A']
+        write_tie_section(output_path, filename, sec_area, sec_index, axial_force=1)
+    elif etype == 'TrussElement':
+        sec_area = structure.sections[section].geometry['A']
+        write_tie_section(output_path, filename, sec_area, sec_index, axial_force=0)
+
+    cFile = open(output_path + "/" + filename, 'a')
+    for ekey in ekeys:
+        element = structure.elements[ekey].nodes
+        string = 'E,'
+        for i in range(len(element)):
+            string += str(int(element[i]) + 1)
+            if i < len(element) - 1:
+                string += ','
+        string += '\n'
+        cFile.write(string)
+
+    cFile.write('!\n')
+    cFile.close()
+
+
+def write_tie_section(output_path, filename, sec_area, sec_index, axial_force):
+    cFile = open(output_path + "/" + filename, 'a')
+    cFile.write('R,' + str(sec_index + 1) + ',' + str(sec_area) + ', ,1  \n')
+    cFile.write('REAL,' + str(sec_index + 1) + '\n')
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()
@@ -192,10 +238,10 @@ def write_pipe_section(output_path, filename, in_radius, thickness, sec_index):
 
 def write_circular_section(output_path, filename, radius, sec_index):
     cFile = open(output_path + "/" + filename, 'a')
-    cFile.write('SECTYPE, ' + str(sec_index) + ', BEAM, CSOLID , 0 \n')
+    cFile.write('SECTYPE, ' + str(sec_index + 1) + ', BEAM, CSOLID , 0 \n')
     cFile.write('SECOFFSET, CENT \n')
     cFile.write('SECDATA,' + str(radius) + ',8\n')
-    cFile.write('SECNUM, ' + str(sec_index) + '\n')
+    cFile.write('SECNUM, ' + str(sec_index + 1) + '\n')
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()
@@ -359,3 +405,72 @@ def write_constraint_nodes(structure, output_path, filename, displacements):
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()
+
+
+def write_areas(structure, output_path, filename):
+
+    areas = structure.areas
+    areas_keys = sorted(areas.keys(), key=int)
+
+    cFile = open(output_path + "/" + filename, 'a')
+
+    for akey in areas_keys:
+        area = areas[akey]
+        string = 'A,'
+        for i in range(len(area)):
+            string += str(int(area[i]) + 1)
+            if i < len(area) - 1:
+                string += ','
+        string += '\n'
+        cFile.write(string)
+
+    cFile.write('!\n')
+    cFile.close()
+
+
+def write_nodes_as_keypoints(structure, output_path, filename):
+    cFile = open(output_path + "/" + filename, 'a')
+    nodes = structure.nodes
+    for i in range(len(nodes)):
+        node = nodes[i]
+        string = 'K,' + str(i + 1) + ',' + str(node['x']) + ',' + str(node['y']) + ',' + str(node['z']) + '\n'
+        cFile.write(string)
+    cFile.write('!\n')
+    cFile.write('!\n')
+    cFile.close()
+
+
+def write_request_mesh_areas(structure, output_path, filename, size=None, smart_size=None, div=None):
+
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+
+    write_nodes_as_keypoints(structure, output_path, filename)
+    write_areas(structure, output_path, filename)
+
+    # This function uses ansys meshing algorithm to mesh all areas present in the model
+    # and writes "nodes.txt" with the new nodes and "elements.txt" with the resulting elements.
+
+    cFile = open(output_path + "/" + filename, 'a')
+    cFile.write('ET,1,SHELL281 \n')
+    cFile.write('!\n')
+    cFile.write('!\n')
+    cFile.write('MSHAPE,1,2D \n')
+    if size:
+        cFile.write('ESIZE,' + str(size) + ', \n')
+    elif div:
+        cFile.write('ESIZE,,' + str(div) + ', \n')
+    elif smart_size:
+        cFile.write('SMRTSIZE,' + str(smart_size) + ', \n')
+    else:
+        cFile.write('SMRTSIZE,4, \n')
+        # cFile.write('SMRTSIZE,,0.2,0.8,2 \n') # Smart custom 1
+    # cFile.write('ESIZE,0.05, \n')
+    # cFile.write('ESIZE,,5 \n')
+    # cFile.write('SMRTSIZE,4 \n')
+    # cFile.write('SMRTSIZE,,0.2,1.5,2 \n')
+    cFile.write('AMESH,all,, \n')
+    cFile.write('!\n')
+    cFile.write('!\n')
+    cFile.close()
+    write_request_element_nodes(output_path, filename)

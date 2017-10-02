@@ -17,7 +17,8 @@ __all__ = [
     'GeneralStep',
     'HeatStep',
     'ModalStep',
-    'HarmonicStep'
+    'HarmonicStep',
+    'BucklingStep',
 ]
 
 
@@ -84,7 +85,7 @@ class HeatStep(object):
 
 class ModalStep(object):
 
-    """ Initialises ModalStep object for use in modal/buckling analysis types.
+    """ Initialises ModalStep object for use in modal analysis types.
 
     Parameters:
         name (str): Name of the ModalStep.
@@ -94,22 +95,19 @@ class ModalStep(object):
         nlgeom (bool): Analyse non-linear geometry effects.
         displacements (list): Displacement object names (str).
         loads (list): Load object names (str).
-        type (str): 'BUCKLE', 'MODAL'.
+        type (str): 'MODAL'.
 
     Returns:
         None
     """
 
-    def __init__(self, name, modes=10, increments=200, factor=1.0, nlgeom=False, displacements=[], loads=[],
-                 type='BUCKLE'):
+    def __init__(self, name, modes=10, increments=200, nlgeom=False, displacements=[], type='MODAL'):
         self.__name__ = 'ModalStep'
         self.name = name
         self.modes = modes
         self.increments = increments
-        self.factor = factor
         self.nlgeom = nlgeom
         self.displacements = displacements
-        self.loads = loads
         self.type = type
 
 
@@ -141,4 +139,35 @@ class HarmonicStep(object):
         self.freq_range = freq_range
         self.freq_steps = freq_steps
         self.damping = damping
+        self.type = type
+
+
+class BucklingStep(object):
+
+    """ Initialises ModalStep object for use in buckling analysis types.
+
+    Parameters:
+        name (str): Name of the BucklingStep.
+        modes (int): Number of modes to analyse.
+        increments (int): Number of increments.
+        factor (float): Proportionality factor on the loads and displacements.
+        nlgeom (bool): Analyse non-linear geometry effects.
+        displacements (list): Displacement object names (str).
+        loads (list): Load object names (str).
+        type (str): 'BUCKLE'.
+
+    Returns:
+        None
+    """
+
+    def __init__(self, name, modes=10, increments=200, factor=1.0, nlgeom=False, displacements=[], loads=[],
+                 type='BUCKLE'):
+        self.__name__ = 'BucklingStep'
+        self.name = name
+        self.modes = modes
+        self.increments = increments
+        self.factor = factor
+        self.nlgeom = nlgeom
+        self.displacements = displacements
+        self.loads = loads
         self.type = type

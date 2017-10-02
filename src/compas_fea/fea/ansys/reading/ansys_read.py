@@ -97,28 +97,27 @@ def get_modal_data_from_result_files(path):
     try:
         files = os.listdir(modal_path)
     except:
+        print ('Result files not found')
         return None, None
-    modal_files = []
     filenames = []
     for f in files:
         if f.startswith("modal_shape_"):
             filenames.append(f)
+    modal_files = []
     for i in range(len(filenames)):
         f = 'modal_shape_' + str(i + 1) + '.txt'
         modal_files.append(open(modal_path + '/' + f, 'r'))
-
-    modal_freq_file = open(modal_path + 'modal_freq.txt', 'r')
 
     if modal_files:
         modes_dict = {}
         for i, f in enumerate(modal_files):
             mode = f.readlines()
-            modes_dict[str(i)] = {}
+            modes_dict[i] = {}
             for j in range(len(mode)):
                 string = mode[j].split(',')
                 del string[0]
                 a = map(float, string)
-                modes_dict[str(i)][str(j)] = {'x': a[0], 'y': a[1], 'z': a[2]}
+                modes_dict[i][j] = {'x': a[0], 'y': a[1], 'z': a[2]}
             f.close()
         # num_modes = len(modal_files)
         # modal_analysis = True
@@ -126,12 +125,15 @@ def get_modal_data_from_result_files(path):
         modes_dict = None
         # num_modes  = None
         # modal_analysis = None
+
+    modal_freq_file = open(modal_path + 'modal_freq.txt', 'r')
+
     if modal_freq_file:
         modal_freqs = {}
         freqs = modal_freq_file.readlines()
         for freq in freqs:
             string = freq.split(',')
-            modal_freqs[str(int(float(string[0])))] = float(string[1])
+            modal_freqs[int(float(string[0])) - 1] = float(string[1])
     else:
         modal_freqs = None
 
