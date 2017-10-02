@@ -82,16 +82,33 @@ def add_nodes_elements_from_bmesh(structure, bmesh, edge_type=None, face_type=No
     Returns:
         None: Nodes and elements are updated in the Structure object.
     """
+
+    try:
+        name = bmesh.name
+        if name[-5:-3] == '}.':
+            dic = name[:-4]
+        else:
+            dic = name
+    except:
+        pass
+
     vertices, edges, faces = bmesh_data(bmesh)
 
     for vertex in vertices:
         structure.add_node(vertex)
 
     if edge_type:
+        try:
+            dic_ = json.loads(dic.replace("'", '"'))
+            ex = dic_.get('ex', None)
+            ey = dic_.get('ey', None)
+            axes = {'ex': ex, 'ey': ey}
+        except:
+            axes = {}
         for u, v in edges:
             sp = structure.check_node_exists(vertices[u])
             ep = structure.check_node_exists(vertices[v])
-            structure.add_element(nodes=[sp, ep], type=edge_type, acoustic=acoustic, thermal=thermal)
+            structure.add_element(nodes=[sp, ep], type=edge_type, acoustic=acoustic, thermal=thermal, axes=axes)
 
     if face_type:
         for face in faces:
@@ -101,10 +118,6 @@ def add_nodes_elements_from_bmesh(structure, bmesh, edge_type=None, face_type=No
     if block_type in ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']:
             nodes = [structure.check_node_exists(i) for i in vertices]
             structure.add_element(nodes=nodes, type=block_type, acoustic=acoustic, thermal=thermal)
-
-
-def add_nodes_elements_from_bmeshes():
-    raise NotImplementedError
 
 
 def add_nodes_elements_from_layers(structure, layers, edge_type=None, face_type=None, block_type=None, acoustic=False,

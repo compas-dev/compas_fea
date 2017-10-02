@@ -34,6 +34,8 @@ mdl.add_nodes([[-5., -5., 0.], [5., -5., 0.], [5., 5., 0.], [-5., 5., 0.], [0., 
 # print('Node number 3 xyz:', mdl.node_xyz(3))
 # print('Node count: ', mdl.node_count())
 # print('Node index: ', mdl.node_index)
+# print('Check node at [0, 0, 0]: ', mdl.check_node_exists([0., 0., 0.]))
+# print('Check node at [5, 5, 0]: ', mdl.check_node_exists([5., 5., 0.]))
 
 # Add elements
 
@@ -44,6 +46,8 @@ mdl.add_element(nodes=[0, 1, 4], type='ShellElement')
 # print('Element 3 nodes: ', mdl.elements[3].nodes)
 # print('Element count: ', mdl.element_count())
 # print('Element index: ', mdl.element_index)
+# print('Check element with nodes 1-4: ', mdl.check_element_exists([1, 4]))
+# print('Check element with nodes 0-1: ', mdl.check_element_exists([0, 1]))
 
 # Add sets
 
@@ -54,13 +58,6 @@ mdl.add_set(name='elset_shell', type='element', selection=[4])
 
 # print('Structure sets: ', mdl.sets)
 
-# Checks
-
-# print('Check element with nodes 1-4: ', mdl.check_element_exists([1, 4]))
-# print('Check element with nodes 0-1: ', mdl.check_element_exists([0, 1]))
-# print('Check node at [0, 0, 0]: ', mdl.check_node_exists([0., 0., 0.]))
-# print('Check node at [5, 5, 0]: ', mdl.check_node_exists([5., 5., 0.]))
-
 # Add sections
 
 mdl.add_section(CircularSection(name='sec_circ', r=0.010))
@@ -70,8 +67,7 @@ mdl.add_section(ShellSection(name='sec_shell', t=0.005))
 
 # Add materials
 
-E = 10 * 10**9
-mdl.add_material(ElasticIsotropic(name='mat_elastic', E=E, v=0.3, p=1500))
+mdl.add_material(ElasticIsotropic(name='mat_elastic', E=10*10**9, v=0.3, p=1500))
 
 # print('Material E: ', mdl.materials['mat_elastic'].E)
 

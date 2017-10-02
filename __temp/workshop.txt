@@ -1,6 +1,20 @@
 
-- Introduction : 10 mins
+- Introduction : 20 mins
     - Documentation
+    - Package files and folders
+    - Setup
 
 - Basics
-    - Introduction script
+    - Introduction script : 35 mins
+
+- Break : 10 mins
+
+- Rhino/Blender + Abaqus Part 1
+    - Trusses
+    - Beams
+
+- Break : 10 mins
+
+- Rhino/Blender + Abaqus Part 2
+    - Shells
+    - Solids
