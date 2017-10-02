@@ -696,19 +696,19 @@ def inp_write_steps(f, steps, loads, displacements, interactions, misc):
 
             # Mechanical
 
-            if stype in ['GeneralStep', 'ModalStep']:
+            if stype in ['GeneralStep', 'BucklingStep']:
 
                 # Header
 
                 nlgeom = 'YES' if step.nlgeom else 'NO'
-                perturbation = ', PERTURBATION' if stype == 'ModalStep' else ''
+                perturbation = ', PERTURBATION' if stype == 'BucklingStep' else ''
                 lf = step.factor
                 f.write('*STEP, NLGEOM={0}, NAME={1}{2}, INC={3}\n'.format(nlgeom, key, perturbation, increments))
                 f.write('*{0}\n'.format(method))
 
                 # Modes
 
-                if stype == 'ModalStep':
+                if stype == 'BucklingStep':
                     modes = step.modes
                     f.write('{0}, {1}, {2}, {3}\n'.format(modes, modes, 2 * modes, increments))
 

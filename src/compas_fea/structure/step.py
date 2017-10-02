@@ -18,7 +18,7 @@ __all__ = [
     'HeatStep',
     'ModalStep',
     'HarmonicStep',
-    'BucklingStep',
+    'BucklingStep'
 ]
 
 
@@ -91,10 +91,8 @@ class ModalStep(object):
         name (str): Name of the ModalStep.
         modes (int): Number of modes to analyse.
         increments (int): Number of increments.
-        factor (float): Proportionality factor on the loads and displacements.
         nlgeom (bool): Analyse non-linear geometry effects.
         displacements (list): Displacement object names (str).
-        loads (list): Load object names (str).
         type (str): 'MODAL'.
 
     Returns:
@@ -144,7 +142,7 @@ class HarmonicStep(object):
 
 class BucklingStep(object):
 
-    """ Initialises ModalStep object for use in buckling analysis types.
+    """ Initialises BucklingStep object for use in buckling analysis types.
 
     Parameters:
         name (str): Name of the BucklingStep.
