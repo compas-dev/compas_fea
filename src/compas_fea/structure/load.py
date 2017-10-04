@@ -22,7 +22,8 @@ __all__ = [
     'BodyLoad',
     'GravityLoad',
     'AcousticLoad',
-    'TributaryLoad'
+    'TributaryLoad',
+    'HarmonicPointLoad'
 ]
 
 
@@ -235,3 +236,27 @@ class TributaryLoad(Load):
                 A = mesh.vertex_area(key)
                 self.nodes.append(node)
                 self.components[node] = {'x': x * A, 'y': y * A, 'z': z * A}
+
+
+class HarmonicPointLoad(Load):
+
+    """ Harmonic concentrated forces and moments [units:N, Nm] applied to node(s).
+
+    Parameters:
+        name (str): Name of the PointLoad object.
+        nodes (str, list): NSET or nodes the load is applied to.
+        x (float): x component of force.
+        y (float): y component of force.
+        z (float): z component of force.
+        xx (float): xx component of moment.
+        yy (float): yy component of moment.
+        zz (float): zz component of moment.
+
+    Returns:
+        None
+    """
+
+    def __init__(self, name, nodes, x=0, y=0, z=0, xx=0, yy=0, zz=0):
+        Load.__init__(self, name=name, nodes=nodes, axes='global')
+        self.__name__ = 'PointLoad'
+        self.components = {'x': x, 'y': y, 'z': z, 'xx': xx, 'yy': yy, 'zz': zz}
