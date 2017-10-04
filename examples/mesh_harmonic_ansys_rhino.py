@@ -8,6 +8,7 @@ from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ShellSection
 from compas_fea.structure import ElementProperties
 from compas_fea.structure import HarmonicStep
+from compas_fea.structure import HarmonicPointLoad
 
 from compas.datastructures.mesh.mesh import Mesh
 
@@ -18,7 +19,7 @@ __license__    = 'MIT License'
 __email__      = 'mendez@arch.ethz.ch'
 
 
-def harmonic(mesh, pts, lpts, num_modes, path, filename):
+def harmonic(mesh, pts, lpts, freq_range, freq_steps, damping, path, filename):
     # add shell elements from mesh ---------------------------------------------
     s = structure.Structure()
     s.add_nodes_elements_from_mesh(mesh, element_type='ShellElement')
@@ -41,14 +42,15 @@ def harmonic(mesh, pts, lpts, num_modes, path, filename):
     s.add_element_properties(prop)
 
     # add loads ----------------------------------------------------------------
-    loads = []
+    nkeys = []
+    for lpt in lpts:
+        nkeys.append(s.check_node_exists(lpt))
+    load = HarmonicPointLoad(name='harmonic_load', nodes=nkeys, z=-1)
+    s.add_load(load)
 
     # add modal step -----------------------------------------------------------
-    freq_range = []
-    freq_steps = []
-    damping = []
     step = HarmonicStep(name='harmonic_analysis', displacements=['supports'], 
-                        loads=loads, freq_range=freq_range, freq_steps=freq_steps,
+                        loads=['harmonic_load'], freq_range=freq_range, freq_steps=freq_steps,
                         damping=damping)
     s.add_step(step)
     fnm = path + filename
@@ -61,11 +63,13 @@ if __name__ == '__main__':
     # layers = ['s1', 's2']
     layers = ['s1']
     path = os.path.dirname(os.path.abspath(__file__)) + '/'
-
+    freq_range = [100, 2000]
+    freq_steps = 19
+    damping = 0.0003
     for layer in layers:
         filename = layer + '.inp'
         pts = [list(rs.PointCoordinates(pt)) for pt in rs.ObjectsByLayer(layer + '_pts')]
         lpts = [list(rs.PointCoordinates(pt)) for pt in rs.ObjectsByLayer(layer + '_l')]
         guid = rs.ObjectsByLayer(layer)[0]
         mesh = rhino.mesh_from_guid(Mesh, guid)
-        harmonic(mesh, pts, lpts, num_modes, path, filename)
+        harmonic(mesh, pts, lpts, freq_range, freq_steps, damping, path, filename)

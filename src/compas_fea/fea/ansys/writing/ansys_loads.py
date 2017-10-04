@@ -34,7 +34,7 @@ def write_loads(structure, output_path, filename, loads, factor):
         if load.__name__ == 'GravityLoad':
             gravity = load.g
             write_gravity_loading(structure, output_path, filename, gravity, factor)
-        elif load.__name__ == 'PointLoad':
+        elif load.__name__ == 'PointLoad' or load.__name__ == 'HarmonicPointLoad':
             # write_apply_nodal_load(structure, output_path, filename, lkey, factor)
             pload = add_load_to_ploads(structure, pload, load, factor)
         elif load.__name__ == 'TributaryLoad':

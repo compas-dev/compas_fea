@@ -14,13 +14,11 @@ __email__      = 'mendez@arch.ethz.ch'
 
 
 def write_modal_analysis_request(structure, output_path, filename, skey):
+    displacements = structure.steps[skey].displacements
     write_preprocess(output_path, filename)
     write_all_materials(structure, output_path, filename)
     write_nodes(structure, output_path, filename)
     write_elements(structure, output_path, filename)
-
-    step = structure.steps[skey]
-    displacements = step.displacements
     write_constraint_nodes(structure, output_path, filename, displacements)
     write_modal_solve(structure, output_path, filename, skey)
     write_modal_post_process(output_path, filename)

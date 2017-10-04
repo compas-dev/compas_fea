@@ -97,16 +97,6 @@ def make_command_file_harmonic(structure, output_path, filename, skey):
     if not os.path.exists(output_path + 'harmonic_out/'):
         os.makedirs(output_path + 'harmonic_out/')
 
-    step = structure.steps[skey]
-    displacements = step.displacements
-    factor = step.factor
-    loads = step.loads
-
-    write_preprocess(output_path, filename)
-    write_all_materials(structure, output_path, filename)
-    write_elements(structure, output_path, filename)
-    write_constraint_nodes(structure, output_path, filename, displacements)
-    write_loads(structure, output_path, filename, loads, factor)
     write_harmonic_analysis_request(structure, output_path, filename, skey)
 
 

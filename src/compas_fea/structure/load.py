@@ -258,5 +258,5 @@ class HarmonicPointLoad(Load):
 
     def __init__(self, name, nodes, x=0, y=0, z=0, xx=0, yy=0, zz=0):
         Load.__init__(self, name=name, nodes=nodes, axes='global')
-        self.__name__ = 'PointLoad'
+        self.__name__ = 'HarmonicPointLoad'
         self.components = {'x': x, 'y': y, 'z': z, 'xx': xx, 'yy': yy, 'zz': zz}
