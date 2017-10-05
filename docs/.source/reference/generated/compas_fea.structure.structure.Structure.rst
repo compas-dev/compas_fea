@@ -35,6 +35,8 @@ Structure
       ~Structure.combine_static_steps
       ~Structure.element_centroid
       ~Structure.element_count
+      ~Structure.from_mesh
+      ~Structure.from_network
       ~Structure.make_element_index_dic
       ~Structure.make_node_index_dic
       ~Structure.node_bounds

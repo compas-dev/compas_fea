@@ -20,6 +20,7 @@ abaq
 .. autosummary::
     :toctree: generated/
 
+    abaqus_launch_process
     inp_write_constraints
     inp_write_elements
     inp_generate

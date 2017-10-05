@@ -130,16 +130,6 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="s1">'modal_out/'</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="s1">'modal_out/'</span><span class="p">)</span>
 
-    <span class="n">step</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">skey</span><span class="p">]</span>
-    <span class="n">displacements</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">displacements</span>
-    <span class="n">factor</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">factor</span>
-    <span class="n">loads</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">loads</span>
-
-    <span class="c1"># write_preprocess(output_path, filename)</span>
-    <span class="c1"># write_all_materials(structure, output_path, filename)</span>
-    <span class="c1"># write_elements(structure, output_path, filename)</span>
-    <span class="c1"># write_constraint_nodes(structure, output_path, filename, displacements)</span>
-    <span class="c1"># write_loads(structure, output_path, filename, loads, factor)</span>
     <span class="n">write_modal_analysis_request</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">skey</span><span class="p">)</span></div>
 
 
@@ -150,16 +140,6 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="s1">'harmonic_out/'</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="s1">'harmonic_out/'</span><span class="p">)</span>
 
-    <span class="n">step</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">skey</span><span class="p">]</span>
-    <span class="n">displacements</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">displacements</span>
-    <span class="n">factor</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">factor</span>
-    <span class="n">loads</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">loads</span>
-
-    <span class="n">write_preprocess</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-    <span class="n">write_all_materials</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-    <span class="n">write_elements</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-    <span class="n">write_constraint_nodes</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">displacements</span><span class="p">)</span>
-    <span class="n">write_loads</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">factor</span><span class="p">)</span>
     <span class="n">write_harmonic_analysis_request</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">skey</span><span class="p">)</span></div>
 
 
@@ -368,7 +348,7 @@
             
 
             
-                Last updated on Sep 27, 2017.
+                Last updated on Oct 05, 2017.
             
 
             

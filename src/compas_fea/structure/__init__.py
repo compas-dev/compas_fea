@@ -127,6 +127,7 @@ load
     GravityLoad
     AcousticLoad
     TributaryLoad
+    HarmonicPointLoad
 
 
 material

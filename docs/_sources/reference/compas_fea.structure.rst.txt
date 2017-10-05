@@ -127,6 +127,7 @@ load
     GravityLoad
     AcousticLoad
     TributaryLoad
+    HarmonicPointLoad
 
 
 material
@@ -202,5 +203,6 @@ step
     HeatStep
     ModalStep
     HarmonicStep
+    BucklingStep
 
 

@@ -326,10 +326,10 @@ class Structure(object):
 # constructors
 # ==============================================================================
 
-    def create_structure_from_mesh(self, mesh):
+    def from_mesh(self, mesh):
         pass
 
-    def create_structure_from_network(self, network):
+    def from_network(self, network):
         pass
 
     def add_nodes_elements_from_mesh(self, mesh, element_type, acoustic=False, thermal=False):
