@@ -41,7 +41,6 @@ def get_nodes_elements_from_result_files(path):
 
 
 def get_harmonic_data_from_result_files(path):
-
     harmonic_path = path + '/harmonic_out'
     files = os.listdir(harmonic_path)
 
@@ -75,7 +74,7 @@ def get_harmonic_data_from_result_files(path):
             dreal = real_files[i]
             dimag = imag_files[i]
 
-            harmonic_disp[str(i)] = {}
+            harmonic_disp[i] = {}
             for j in range(len(dreal)):
                 real_string = dreal[j].split(',')
                 imag_string = dimag[j].split(',')
@@ -84,10 +83,10 @@ def get_harmonic_data_from_result_files(path):
                 del imag_string[0]
                 real = map(float, real_string)
                 imag = map(float, imag_string)
-                harmonic_disp[str(i)][str(f)] = {'real': {'x': real[0], 'y': real[1], 'z': real[2]},
+                harmonic_disp[i][f] = {'real': {'x': real[0], 'y': real[1], 'z': real[2]},
                                                  'imag': {'x': imag[0], 'y': imag[1], 'z': imag[2]}}
 
-    freq_list = sorted(harmonic_disp[str(i)].keys(), key=int)
+    freq_list = sorted(harmonic_disp[i].keys(), key=int)
     freq_list = [int(fr) for fr in freq_list]
     return harmonic_disp, freq_list
 

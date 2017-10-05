@@ -86,8 +86,6 @@ def draw_modal_shapes(path, amp, name):
         else:
             for dlen in dlens:
                 value = (dlen - mind) / (maxd - mind)
-                # value = scale_value(dlen, [mind, maxd])
-                # colors.append(rgb_color(value))
                 colors.append(i_to_rgb(value))
         rs.AddMesh(dvert, faces, vertex_colors=colors)
 

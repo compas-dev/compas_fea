@@ -3,15 +3,17 @@ import os
 import compas_rhino as rhino
 from compas_fea import structure
 from compas_fea.fea import ansys
+from compas_fea.fea.ansys.reading import get_nodes_elements_from_result_files
+from compas_fea.fea.ansys.reading import get_harmonic_data_from_result_files
 from compas_fea.structure import PinnedDisplacement
 from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ShellSection
 from compas_fea.structure import ElementProperties
 from compas_fea.structure import HarmonicStep
 from compas_fea.structure import HarmonicPointLoad
-
 from compas.datastructures.mesh.mesh import Mesh
-
+from math import sqrt
+from compas.utilities.colors import i_to_rgb
 
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
@@ -59,11 +61,44 @@ def harmonic(mesh, pts, lpts, freq_range, freq_steps, damping, path, filename):
     return s
 
 
+def draw_harmonic_disp(path, amp, name):
+    nodes, elements = get_nodes_elements_from_result_files(path)
+    har_disp, freqs = get_harmonic_data_from_result_files(path)
+    vkeys = sorted(nodes.keys(), key=int)
+    vert = [[nodes[k]['x'], nodes[k]['y'], nodes[k]['z']] for k in vkeys]
+    fkeys = sorted(elements.keys(), key=int)
+    faces = [elements[k]['topology'] for k in fkeys]
+    dkeys = sorted(har_disp.keys(), key=int)
+    for freq in freqs:
+        print freq
+        lname = 'freq ' + str(round(freq, 2)) + 'Hz'
+        rs.AddLayer(lname)
+        rs.CurrentLayer(lname)
+        disp = [har_disp[k][freq]['real'] for k in dkeys]
+        disp = [[disp[k]['x'] * amp, disp[k]['y'] * amp, disp[k]['z'] * amp] for k in dkeys]
+        dvert = []
+        dlens = []
+        for i in range(len(vert)):
+            v = vert[i]
+            d = disp[i]
+            dlens.append(sqrt(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]))
+            dvert.append([v[0] + d[0], v[1] + d[1], v[2] + d[2]])
+        colors = []
+        maxd = max(dlens)
+        mind = min(dlens)
+        if mind == maxd:
+            colors = [0, 0, 0] * len(vert)
+        else:
+            for dlen in dlens:
+                value = (dlen - mind) / (maxd - mind)
+                colors.append(i_to_rgb(value))
+        rs.AddMesh(dvert, faces, vertex_colors=colors)
+
+
 if __name__ == '__main__':
-    # layers = ['s1', 's2']
-    layers = ['s1']
+    layers = ['s1', 's2']
     path = os.path.dirname(os.path.abspath(__file__)) + '/'
-    freq_range = [100, 2000]
+    freq_range = [10, 200]
     freq_steps = 19
     damping = 0.0003
     for layer in layers:
@@ -73,3 +108,5 @@ if __name__ == '__main__':
         guid = rs.ObjectsByLayer(layer)[0]
         mesh = rhino.mesh_from_guid(Mesh, guid)
         harmonic(mesh, pts, lpts, freq_range, freq_steps, damping, path, filename)
+        draw_harmonic_disp(path, 10000000, layer) 
+        
