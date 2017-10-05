@@ -237,6 +237,9 @@
 <tr class=""><td><p><a class="reference internal" href="generated/compas_fea.structure.load.TributaryLoad.html" title="compas_fea.structure.load.TributaryLoad"><code class="xref py py-obj docutils literal">TributaryLoad</code></a>(structure, name, mesh[, x, y, …])</p></td>
 <td><p>Tributary area pressure loads applied to nodes.</p></td>
 </tr>
+<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.structure.load.HarmonicPointLoad.html" title="compas_fea.structure.load.HarmonicPointLoad"><code class="xref py py-obj docutils literal">HarmonicPointLoad</code></a>(name, nodes[, x, y, z, …])</p></td>
+<td><p>Harmonic concentrated forces and moments [units:N, Nm] applied to node(s).</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -360,11 +363,14 @@
 <tr class=""><td><p><a class="reference internal" href="generated/compas_fea.structure.step.HeatStep.html" title="compas_fea.structure.step.HeatStep"><code class="xref py py-obj docutils literal">HeatStep</code></a>(name, interaction[, increments, …])</p></td>
 <td><p>Initialises HeatStep object for use in thermal analysis types.</p></td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.structure.step.ModalStep.html" title="compas_fea.structure.step.ModalStep"><code class="xref py py-obj docutils literal">ModalStep</code></a>(name[, modes, increments, factor, …])</p></td>
-<td><p>Initialises ModalStep object for use in modal/buckling analysis types.</p></td>
+<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.structure.step.ModalStep.html" title="compas_fea.structure.step.ModalStep"><code class="xref py py-obj docutils literal">ModalStep</code></a>(name[, modes, increments, nlgeom, …])</p></td>
+<td><p>Initialises ModalStep object for use in modal analysis types.</p></td>
 </tr>
 <tr class=""><td><p><a class="reference internal" href="generated/compas_fea.structure.step.HarmonicStep.html" title="compas_fea.structure.step.HarmonicStep"><code class="xref py py-obj docutils literal">HarmonicStep</code></a>(name[, displacements, loads, …])</p></td>
 <td><p>Initialises HarmonicStep object analysis type.</p></td>
+</tr>
+<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.structure.step.BucklingStep.html" title="compas_fea.structure.step.BucklingStep"><code class="xref py py-obj docutils literal">BucklingStep</code></a>(name[, modes, increments, …])</p></td>
+<td><p>Initialises BucklingStep object for use in buckling analysis types.</p></td>
 </tr>
 </tbody>
 </table>
@@ -437,7 +443,7 @@
             
 
             
-                Last updated on Sep 27, 2017.
+                Last updated on Oct 05, 2017.
             
 
             

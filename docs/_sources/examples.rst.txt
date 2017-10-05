@@ -21,6 +21,7 @@ Examples
     examples/mesh-bridge_rhino
     examples/mesh-mould_blender
     examples/mesh-mould_rhino
+    examples/mesh-strip_rhino
     examples/mesh-tris_blender
     examples/mesh-yieldline_rhino
 

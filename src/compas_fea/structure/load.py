@@ -243,7 +243,7 @@ class HarmonicPointLoad(Load):
     """ Harmonic concentrated forces and moments [units:N, Nm] applied to node(s).
 
     Parameters:
-        name (str): Name of the PointLoad object.
+        name (str): Name of the HarmonicPointLoad object.
         nodes (str, list): NSET or nodes the load is applied to.
         x (float): x component of force.
         y (float): y component of force.

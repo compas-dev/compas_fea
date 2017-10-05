@@ -65,7 +65,8 @@
     <span class="s1">'BodyLoad'</span><span class="p">,</span>
     <span class="s1">'GravityLoad'</span><span class="p">,</span>
     <span class="s1">'AcousticLoad'</span><span class="p">,</span>
-    <span class="s1">'TributaryLoad'</span>
+    <span class="s1">'TributaryLoad'</span><span class="p">,</span>
+    <span class="s1">'HarmonicPointLoad'</span>
 <span class="p">]</span>
 
 
@@ -278,6 +279,30 @@
                 <span class="n">A</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertex_area</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'x'</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">:</span> <span class="n">y</span> <span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">:</span> <span class="n">z</span> <span class="o">*</span> <span class="n">A</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="HarmonicPointLoad"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.load.HarmonicPointLoad.html#compas_fea.structure.load.HarmonicPointLoad">[docs]</a><span class="k">class</span> <span class="nc">HarmonicPointLoad</span><span class="p">(</span><span class="n">Load</span><span class="p">):</span>
+
+    <span class="sd">""" Harmonic concentrated forces and moments [units:N, Nm] applied to node(s).</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        name (str): Name of the HarmonicPointLoad object.</span>
+<span class="sd">        nodes (str, list): NSET or nodes the load is applied to.</span>
+<span class="sd">        x (float): x component of force.</span>
+<span class="sd">        y (float): y component of force.</span>
+<span class="sd">        z (float): z component of force.</span>
+<span class="sd">        xx (float): xx component of moment.</span>
+<span class="sd">        yy (float): yy component of moment.</span>
+<span class="sd">        zz (float): zz component of moment.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">yy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zz</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">Load</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">'global'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'HarmonicPointLoad'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'x'</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">:</span> <span class="n">z</span><span class="p">,</span> <span class="s1">'xx'</span><span class="p">:</span> <span class="n">xx</span><span class="p">,</span> <span class="s1">'yy'</span><span class="p">:</span> <span class="n">yy</span><span class="p">,</span> <span class="s1">'zz'</span><span class="p">:</span> <span class="n">zz</span><span class="p">}</span></div>
 </code></pre></div>
 <nav class="compas-sideways">
 </nav>
@@ -319,7 +344,7 @@
             
 
             
-                Last updated on Sep 27, 2017.
+                Last updated on Oct 05, 2017.
             
 
             

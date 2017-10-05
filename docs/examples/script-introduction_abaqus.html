@@ -80,6 +80,8 @@
 <span class="c1"># print('Node number 3 xyz:', mdl.node_xyz(3))</span>
 <span class="c1"># print('Node count: ', mdl.node_count())</span>
 <span class="c1"># print('Node index: ', mdl.node_index)</span>
+<span class="c1"># print('Check node at [0, 0, 0]: ', mdl.check_node_exists([0., 0., 0.]))</span>
+<span class="c1"># print('Check node at [5, 5, 0]: ', mdl.check_node_exists([5., 5., 0.]))</span>
 
 <span class="c1"># Add elements</span>
 
@@ -90,6 +92,8 @@
 <span class="c1"># print('Element 3 nodes: ', mdl.elements[3].nodes)</span>
 <span class="c1"># print('Element count: ', mdl.element_count())</span>
 <span class="c1"># print('Element index: ', mdl.element_index)</span>
+<span class="c1"># print('Check element with nodes 1-4: ', mdl.check_element_exists([1, 4]))</span>
+<span class="c1"># print('Check element with nodes 0-1: ', mdl.check_element_exists([0, 1]))</span>
 
 <span class="c1"># Add sets</span>
 
@@ -100,13 +104,6 @@
 
 <span class="c1"># print('Structure sets: ', mdl.sets)</span>
 
-<span class="c1"># Checks</span>
-
-<span class="c1"># print('Check element with nodes 1-4: ', mdl.check_element_exists([1, 4]))</span>
-<span class="c1"># print('Check element with nodes 0-1: ', mdl.check_element_exists([0, 1]))</span>
-<span class="c1"># print('Check node at [0, 0, 0]: ', mdl.check_node_exists([0., 0., 0.]))</span>
-<span class="c1"># print('Check node at [5, 5, 0]: ', mdl.check_node_exists([5., 5., 0.]))</span>
-
 <span class="c1"># Add sections</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">CircularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_circ'</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.010</span><span class="p">))</span>
@@ -116,8 +113,7 @@
 
 <span class="c1"># Add materials</span>
 
-<span class="n">E</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">9</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_elastic'</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1500</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_elastic'</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1500</span><span class="p">))</span>
 
 <span class="c1"># print('Material E: ', mdl.materials['mat_elastic'].E)</span>
 
@@ -192,6 +188,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="mesh-bridge_rhino.html">mesh-bridge Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh-mould_blender.html">mesh-mould Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh-mould_rhino.html">mesh-mould Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh-strip_rhino.html">mesh-strip Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh-tris_blender.html">mesh-tris Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh-yieldline_rhino.html">mesh-yieldline Rhino</a></li>
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">script-introduction</a></li>
@@ -223,7 +220,7 @@
             
 
             
-                Last updated on Sep 27, 2017.
+                Last updated on Oct 05, 2017.
             
 
             
