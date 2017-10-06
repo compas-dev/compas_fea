@@ -13,7 +13,15 @@ from compas_fea.fea.abaq import abaq
 from compas_fea.fea.ansys import ansys
 
 from compas_fea.structure.element import *
+from compas_fea.structure.displacement import *
+from compas_fea.structure.material import *
+from compas_fea.structure.section import *
+from compas_fea.structure.load import *
+from compas_fea.structure.element_properties import *
 from compas_fea.structure.step import GeneralStep
+from compas_fea.utilities.functions import group_keys_by_attribute
+from compas_fea.utilities.functions import group_keys_by_attributes
+from compas_fea.utilities.functions import combine_all_sets
 
 import pickle
 
@@ -325,9 +333,52 @@ class Structure(object):
 # ==============================================================================
 # constructors
 # ==============================================================================
+    @classmethod
+    def from_mesh(cls, mesh):
 
-    def from_mesh(self, mesh):
-        pass
+        structure = cls()
+
+        # add nodes and elements from mesh -------------------------------------
+        structure.add_nodes_elements_from_mesh(mesh, element_type='ShellElement')
+
+        # add displacements ----------------------------------------------------
+        disp_groups = group_keys_by_attributes(mesh.vertex, ['UX', 'UY', 'UZ', 'URX', 'URY', 'URZ'])
+        for dk in disp_groups:
+            if dk != '-_-_-_-_-_-':
+                structure.add_set(name=dk, type='NODE', selection=disp_groups[dk])
+                d = [float(x) if x != '-' else None for x in dk.split('_')]
+                supports = GeneralDisplacement(name=dk + '_nodes', nodes=dk, x=d[0], y=d[1], z=d[2],
+                                               xx=d[3], yy=d[4], zz=d[5])
+                structure.add_displacement(supports)
+
+        # add materials and sections -------------------------------------------
+        mat_groups = group_keys_by_attributes(mesh.facedata, ['E', 'v', 'p'])
+        for mk in mat_groups:
+            m = [float(x) if x != '-' else None for x in mk.split('_')]
+            material = ElasticIsotropic(name=mk + '_material', E=m[0], v=m[1], p=m[2])
+            structure.add_material(material)
+
+        thick_groups = group_keys_by_attribute(mesh.facedata, 'thick')
+        for tk in thick_groups:
+            t = float(tk)
+            section = ShellSection(name=tk + '_section', t=t)
+            structure.add_section(section)
+
+        prop_comb = combine_all_sets(mat_groups, thick_groups)
+        for pk in prop_comb:
+            mat, sec = pk.split(',')
+            prop = ElementProperties(material=mat + '_material', section=sec + '_section', elements=prop_comb[pk])
+            structure.add_element_properties(prop)
+
+        # add loads  -----------------------------------------------------------
+        load_groups = group_keys_by_attribute(mesh.vertex, 'l')
+        for lk in load_groups:
+            if lk != '-':
+                nkeys = load_groups[lk]
+                load = PointLoad(name=str(lk) + '_load', nodes=nkeys, x=lk[0], y=lk[1], z=lk[2])
+                structure.add_load(load)
+
+        return structure
 
     def from_network(self, network):
         pass

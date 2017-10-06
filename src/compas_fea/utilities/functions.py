@@ -511,6 +511,46 @@ def voxels(values, vmin, U, vdx, plot=None, indexing=None):
     return Am
 
 
+def group_keys_by_attribute(adict, name, tol='3f'):
+    groups = {}
+    for k in adict:
+        if name in adict[k]:
+            value = adict[k][name]
+            if type(value) == float:
+                value = '{0:.{1}}'.format(value, tol)
+            groups.setdefault(value, []).append(k)
+    return groups
+
+
+def group_keys_by_attributes(adict, names, tol='3f'):
+    groups = {}
+    for k in adict:
+        values = []
+        for name in names:
+            if name in adict[k]:
+                value = adict[k][name]
+                if type(value) == float:
+                    value = '{0:.{1}}'.format(value, tol)
+                else:
+                    value = str(value)
+            else:
+                value = '-'
+            values.append(value)
+        vkey = '_'.join(values)
+        groups.setdefault(vkey, []).append(k)
+    return groups
+
+
+def combine_all_sets(a, b):
+    comb = {}
+    for i in a:
+        for j in b:
+            for x in a[i]:
+                if x in b[j]:
+                    comb.setdefault(str(i) + ',' + str(j), []).append(x)
+    return comb
+
+
 # ==============================================================================
 # Debugging
 # ==============================================================================

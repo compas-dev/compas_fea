@@ -31,8 +31,8 @@ def harmonic(mesh, pts, lpts, freq_range, freq_steps, damping, path, filename):
     for pt in pts:
         nkeys.append(s.check_node_exists(pt))
     s.add_set(name='support_nodes', type='NODE', selection=nkeys)
-    supppots = PinnedDisplacement(name='supports', nodes='support_nodes')
-    s.add_displacement(supppots)
+    supports = PinnedDisplacement(name='supports', nodes='support_nodes')
+    s.add_displacement(supports)
 
     # add materials and sections -----------------------------------------------
     E35 = 35 * 10**9
@@ -51,7 +51,7 @@ def harmonic(mesh, pts, lpts, freq_range, freq_steps, damping, path, filename):
     s.add_load(load)
 
     # add modal step -----------------------------------------------------------
-    step = HarmonicStep(name='harmonic_analysis', displacements=['supports'], 
+    step = HarmonicStep(name='harmonic_analysis', displacements=['supports'],
                         loads=['harmonic_load'], freq_range=freq_range, freq_steps=freq_steps,
                         damping=damping)
     s.add_step(step)
@@ -108,5 +108,5 @@ if __name__ == '__main__':
         guid = rs.ObjectsByLayer(layer)[0]
         mesh = rhino.mesh_from_guid(Mesh, guid)
         harmonic(mesh, pts, lpts, freq_range, freq_steps, damping, path, filename)
-        draw_harmonic_disp(path, 10000000, layer) 
-        
+        draw_harmonic_disp(path, 10000000, layer)
+

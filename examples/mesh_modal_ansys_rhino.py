@@ -33,8 +33,8 @@ def modal(mesh, pts, num_modes, path, filename):
     for pt in pts:
         nkeys.append(s.check_node_exists(pt))
     s.add_set(name='support_nodes', type='NODE', selection=nkeys)
-    supppots = PinnedDisplacement(name='supports', nodes='support_nodes')
-    s.add_displacement(supppots)
+    supports = PinnedDisplacement(name='supports', nodes='support_nodes')
+    s.add_displacement(supports)
 
     # add materials and sections -----------------------------------------------
     E35 = 35 * 10**9
