@@ -58,6 +58,7 @@ class Structure(object):
         sections (dic): Section objects.
         sets (dic): Node, element and surface sets.
         steps (dic): Step objects.
+        steps_order (list): Sorted list of Step object names.
         tol (str): Geometric key tolerance.
 
     Returns:
@@ -81,6 +82,7 @@ class Structure(object):
         self.sections = {}
         self.sets = {}
         self.steps = {}
+        self.steps_order = []
         self.tol = '3'
 
     def __str__(self):
@@ -123,16 +125,16 @@ compas_fea structure: {}
 
 
 - number of nodes: {}
-- number of edges: {}
-- sets:{}
-- materials:{}
-- sections:{}
-- loads:{}
-- displacements:{}
-- constraints:{}
-- interactions:{}
-- misc:{}
-- steps:{}
+- number of elements: {}
+- sets:\n{}
+- materials:\n{}
+- sections:\n{}
+- loads:\n{}
+- displacements:\n{}
+- constraints:\n{}
+- interactions:\n{}
+- misc:\n{}
+- steps:\n{}
 
 """.format(self.name, n, e, sets, materials, sections, loads, displacements, constraints, interactions, misc, steps)
 
@@ -396,8 +398,10 @@ compas_fea structure: {}
 
         # add displacements ----------------------------------------------------
         disp_groups = group_keys_by_attributes(mesh.vertex, ['UX', 'UY', 'UZ', 'URX', 'URY', 'URZ'])
+        disp_names = []
         for dk in disp_groups:
             if dk != '-_-_-_-_-_-':
+                disp_names.append(dk + '_nodes')
                 structure.add_set(name=dk, type='NODE', selection=disp_groups[dk])
                 d = [float(x) if x != '-' else None for x in dk.split('_')]
                 supports = GeneralDisplacement(name=dk + '_nodes', nodes=dk, x=d[0], y=d[1], z=d[2],
@@ -425,11 +429,16 @@ compas_fea structure: {}
 
         # add loads  -----------------------------------------------------------
         load_groups = group_keys_by_attribute(mesh.vertex, 'l')
+        load_names = []
         for lk in load_groups:
             if lk != '-':
+                load_names.append(str(lk) + '_load')
                 nkeys = load_groups[lk]
                 load = PointLoad(name=str(lk) + '_load', nodes=nkeys, x=lk[0], y=lk[1], z=lk[2])
                 structure.add_load(load)
+
+        gstep = GeneralStep('Structure from Mesh', displacements=disp_names, loads=load_names)
+        structure.add_step(gstep)
 
         return structure
 
@@ -668,7 +677,7 @@ compas_fea structure: {}
         Returns:
             None
         """
-        self.steps['order'] = order
+        self.steps_order = order
 
     def combine_static_steps(self):
         """ Combines the static steps in structure.steps.

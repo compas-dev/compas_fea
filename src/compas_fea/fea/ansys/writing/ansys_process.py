@@ -11,17 +11,6 @@ __license__    = 'MIT License'
 __email__      = 'mendez@arch.ethz.ch'
 
 
-def write_analysis_request_static(structure, output_path, filename):
-    write_post_process(output_path, filename)
-    write_request_element_nodes(output_path, filename)
-    write_request_node_displacements(output_path, filename)
-    write_request_nodal_stresses(output_path, filename)
-    write_request_pricipal_stresses(output_path, filename)
-    write_request_shear_stresses(output_path, filename)
-    write_request_principal_strains(output_path, filename)
-    write_request_reactions(output_path, filename)
-
-
 def write_post_process(output_path, filename):
     cFile = open(output_path + filename, 'a')
     cFile.write('/POST1 \n')
@@ -32,24 +21,24 @@ def write_post_process(output_path, filename):
     cFile.close()
 
 
-def write_step(output_path, filename, skey, nlgeom):
-    cFile = open(output_path + filename, 'a')
-    cFile.write('! \n')
-    # cFile.write('TIME,'+skey+'!\n')
-    cFile.write('/SOL ! \n')
-    cFile.write('ANTYPE,0\n')
-    cFile.write('!\n')
-    if nlgeom:
-        cFile.write('ANTYPE,0\n')
-        cFile.write('NLGEOM,ON\n')
-        cFile.write('NSUBST,20,1000,1\n')
-        cFile.write('AUTOTS,1\n')
-        cFile.write('!\n')
+# def write_step(output_path, filename, skey, nlgeom):
+#     cFile = open(output_path + filename, 'a')
+#     cFile.write('! \n')
+#     # cFile.write('TIME,'+skey+'!\n')
+#     cFile.write('/SOL ! \n')
+#     cFile.write('ANTYPE,0\n')
+#     cFile.write('!\n')
+#     if nlgeom:
+#         cFile.write('ANTYPE,0\n')
+#         cFile.write('NLGEOM,ON\n')
+#         cFile.write('NSUBST,20,1000,1\n')
+#         cFile.write('AUTOTS,1\n')
+#         cFile.write('!\n')
 
-    cFile.write('SOLVE!\n')
-    # cFile.write('TIME,'+skey+'!\n')
-    cFile.write('!\n')
-    cFile.close()
+#     cFile.write('SOLVE!\n')
+#     # cFile.write('TIME,'+skey+'!\n')
+#     cFile.write('!\n')
+#     cFile.close()
 
 
 def write_preprocess(output_path, filename):

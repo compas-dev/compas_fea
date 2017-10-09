@@ -28,40 +28,25 @@ def inp_generate(structure, filename, out_path, ):
     stypes = [structure.steps[skey].type for skey in structure.steps]
 
     if 'STATIC' in stypes:
-        static_step_key = structure.combine_static_steps()
-        make_command_file_static_combined(structure, output_path, filename, static_step_key)
+        make_command_file_static(structure, output_path, filename)
+        # static_step_key = structure.combine_static_steps()
+        # make_command_file_static_combined(structure, output_path, filename, static_step_key)
     elif 'MODAL' in stypes:
         make_command_file_modal(structure, output_path, filename, skey)
     elif 'HARMONIC' in stypes:
         make_command_file_harmonic(structure, output_path, filename, skey)
+    else:
+        raise ValueError('This analysis type has not yet been implemented for Compas Ansys')
 
 
 def make_command_file_static(structure, output_path, filename):
-    # write_preprocess(output_path, filename)
-    # write_all_materials(structure, output_path, filename)
-    # write_nodes(structure, output_path, filename)
-    # write_elements(structure, output_path, filename)
-    skeys = structure.steps['order']
-    steps = structure.steps
-    nlgeom_list = [steps[skey].nlgeom for skey in skeys]
-    if True in nlgeom_list:
-        nlgeom = True
-        if not all(i is True for i in nlgeom_list):
-            warnings.warn('WARNING: Ansys only allows nlgeom to be ON or OFF for all load steps')
-    else:
-        nlgeom = False
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
 
-    for skey in skeys:
-        step = steps[skey]
-        displacements = step.displacements
-        factor = step.factor
-        loads = step.loads
+    if not os.path.exists(output_path + 'out/'):
+        os.makedirs(output_path + 'out/')
 
-        write_constraint_nodes(structure, output_path, filename, displacements, factor)
-        write_loads(structure, output_path, filename, loads, factor)
-        write_step(output_path, filename, skey, nlgeom)
-
-    write_analysis_request_static(structure, output_path, filename)
+    write_static_analysis_request(structure, output_path, filename)
 
 
 def make_command_file_static_combined(structure, output_path, filename, skey):

@@ -1,6 +1,8 @@
+import os
 from compas.datastructures import Mesh
 from compas.geometry import closest_point_in_cloud
 from compas_fea.structure import Structure
+from compas_fea.fea import ansys
 
 
 def pin_all_boundary_vertices(mesh):
@@ -34,6 +36,9 @@ def assign_structure_property_to_mesh_faces(mesh, name, value):
 
 
 if __name__ == '__main__':
+
+    filename = 'example_From_mesh'
+    path = os.path.dirname(os.path.abspath(__file__)) + '/'
     mesh = Mesh.from_obj('../data/quadmesh_planar.obj')
     minthick = .002
     maxthick = .01
@@ -48,6 +53,8 @@ if __name__ == '__main__':
     assign_structure_property_to_mesh_faces(mesh, 'v', v)
     assign_structure_property_to_mesh_faces(mesh, 'p', p)
     s = Structure.from_mesh(mesh)
+    fnm = path + filename
+    ansys.inp_generate(s, filename=fnm, out_path=path)
     print s
 
 

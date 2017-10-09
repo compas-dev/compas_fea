@@ -19,10 +19,9 @@ def write_elements(structure, output_path, filename):
                     ekeys.extend(structure.elements)
                 else:
                     ekeys.extend(structure.sets[elset]['selection'])
-        elements = ep[key].elements
+        if ep[key].elements:
+            ekeys.extend(ep[key].elements)
         etype = structure.elements[ekeys[0]].__name__
-        if elements:
-            ekeys.extend(elements)
         if etype == 'ShellElement':
             write_shell4_elements(structure, output_path, filename, ekeys, section, material)
         if etype == 'BeamElement':
