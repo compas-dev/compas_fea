@@ -10,8 +10,9 @@ from compas_fea.structure import Concrete
 from compas_fea.structure import ElementProperties
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import GravityLoad
-from compas_fea.structure import ModalStep
+from compas_fea.structure import BucklingStep
 from compas_fea.structure import PointLoad
+from compas_fea.structure import RectangularSection
 from compas_fea.structure import RollerDisplacementY
 from compas_fea.structure import ShellSection
 from compas_fea.structure import Steel
@@ -33,7 +34,7 @@ __email__      = 'liew@arch.ethz.ch'
 
 name = 'mesh-bridge'
 path = 'C:/Temp/'
-option = 'v10'
+option = 'v4_edited_straight'
 
 # Create empty Structure object
 
@@ -42,7 +43,8 @@ mdl = Structure()
 # Add tie and shell elements
 
 rhino.add_nodes_elements_from_layers(mdl, element_type='TrussElement', layers='{0}::ties'.format(option))
-rhino.add_nodes_elements_from_layers(mdl, element_type='ShellElement', layers='{0}::Mesh_bottom'.format(option))
+rhino.add_nodes_elements_from_layers(mdl, element_type='ShellElement', layers='{0}::mesh_bottom'.format(option))
+rhino.add_nodes_elements_from_layers(mdl, element_type='BeamElement', layers='{0}::ends'.format(option))
 
 # Add node and element sets
 
@@ -52,7 +54,8 @@ nodes_bot = [i for i in mdl.nodes if mdl.nodes[i]['y'] < yr[0] + 0.01]
 mdl.add_set(name='nset_top', type='node', selection=nodes_top)
 mdl.add_set(name='nset_bot', type='node', selection=nodes_bot)
 rhino.add_sets_from_layers(mdl, layers=['{0}::ties'.format(option)])
-rhino.add_sets_from_layers(mdl, layers=['{0}::Mesh_bottom'.format(option)])
+rhino.add_sets_from_layers(mdl, layers=['{0}::mesh_bottom'.format(option)])
+rhino.add_sets_from_layers(mdl, layers=['{0}::ends'.format(option)])
 
 # Add materials
 
@@ -61,24 +64,27 @@ mdl.add_material(Steel(name='mat_steel', fy=355))
 
 # Add sections
 
-mdl.add_section(ShellSection(name='sec_formwork', t=0.005))
+mdl.add_section(ShellSection(name='sec_formwork', t=0.004))
 mdl.add_section(TrussSection(name='sec_ties', A=0.25*pi*0.01**2))
+mdl.add_section(RectangularSection(name='sec_ends', b=0.03, h=0.03))
 
 # Add element properties
 
-epc = ElementProperties(material='mat_concrete', section='sec_formwork', elsets='Mesh_bottom')
+epc = ElementProperties(material='mat_concrete', section='sec_formwork', elsets='mesh_bottom')
 eps = ElementProperties(material='mat_steel', section='sec_ties', elsets='ties')
+epe = ElementProperties(material='mat_steel', section='sec_ends', elsets='ends')
 mdl.add_element_properties(epc, name='ep_concrete')
 mdl.add_element_properties(eps, name='ep_steel')
+mdl.add_element_properties(epe, name='ep_ends')
 
 # Add loads
 
-mdl.add_load(GravityLoad(name='load_gravity', elements='elset_all'))
+mdl.add_load(GravityLoad(name='load_gravity', elements='mesh_bottom'))
 
 # Add tributary loads
 
 Gc = 2400 * 9.81
-mesh= mesh_from_guid(Mesh(), rs.ObjectsByLayer('{0}::Mesh_bottom'.format(option))[0])
+mesh= mesh_from_guid(Mesh(), rs.ObjectsByLayer('{0}::mesh_bottom'.format(option))[0])
 surface = rs.ObjectsByLayer('{0}::surface'.format(option))[0]
 loads = ['load_gravity']
 for key in mesh.vertices():
@@ -101,7 +107,7 @@ mdl.add_displacement(RollerDisplacementY(name='disp_bot', nodes='nset_bot'))
 
 mdl.add_step(GeneralStep(name='step_bc', displacements=['disp_top', 'disp_bot']))
 mdl.add_step(GeneralStep(name='step_loads', loads=loads, increments=300, factor=1.35))
-mdl.add_step(ModalStep(name='step_buckle', loads=loads, displacements=['disp_top', 'disp_bot'], modes=1))
+mdl.add_step(BucklingStep(name='step_buckle', loads=loads, displacements=['disp_top', 'disp_bot'], modes=1))
 mdl.set_steps_order(['step_bc', 'step_loads', 'step_buckle'])
 
 # Structure summary
@@ -114,7 +120,7 @@ abaq.inp_generate(mdl, filename='{0}{1}.inp'.format(path, name))
 
 # Run and extract data
 
-#mdl.analyse(path=path, name=name, software='abaqus', fields='U,S')
+mdl.analyse(path=path, name=name, software='abaqus', fields='U,S')
 
 # Plot displacements
 
@@ -124,7 +130,7 @@ rhino.plot_data(mdl, path, name, step='step_loads', field='U', component='U3', l
 # Plot stress
 
 rhino.plot_data(mdl, path, name, step='step_loads', field='S', component='maxPrincipal', 
-                layer='{0}::SMAX'.format(option), cbar=[0, 3.5*10**6], radius=0.01)
+                layer='{0}::SMAX'.format(option), cbar=[0, 1.5*10**6], radius=0.01)
 rhino.plot_data(mdl, path, name, step='step_loads', field='S', component='minPrincipal', 
                 layer='{0}::SMIN'.format(option), cbar=[-5*10**6, 0], radius=0.01)
 
