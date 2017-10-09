@@ -96,8 +96,9 @@ def abaqus_launch_process(structure, path, name, exe, fields, cpus):
         print(stderr)
 
         if not success:
-            print('***** Analysis failed *****')
+            print('***** Analysis failed - attempting to read error logs *****')
             try:
+                print('***** Attempting to read .msg log *****')
                 with open('{0}{1}.msg'.format(temp, name)) as f:
                     lines = f.readlines()
                     for c, line in enumerate(lines):
@@ -106,6 +107,15 @@ def abaqus_launch_process(structure, path, name, exe, fields, cpus):
                             print(lines[c + 1][:-2])
             except:
                 print('***** Loading .msg log failed *****')
+            try:
+                print('***** Attempting to read abaqus.rpy log *****')
+                with open('{0}abaqus.rpy'.format(path)) as f:
+                    lines = f.readlines()
+                    for c, line in enumerate(lines):
+                        if '#: ' in line:
+                            print(lines[c])
+            except:
+                print('***** Loading abaqus.rpy log failed *****')
         else:
             print('***** Analysis successful *****')
 
