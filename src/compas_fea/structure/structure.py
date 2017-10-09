@@ -64,7 +64,7 @@ class Structure(object):
         None
     """
 
-    def __init__(self):
+    def __init__(self, name='Compas_FEA Structure'):
         self.constraints = {}
         self.displacements = {}
         self.elements = {}
@@ -73,6 +73,7 @@ class Structure(object):
         self.interactions = {}
         self.loads = {}
         self.materials = {}
+        self.name = name
         self.misc = {}
         self.nodes = {}
         self.node_index = {}
@@ -82,6 +83,58 @@ class Structure(object):
         self.steps = {}
         self.tol = '3'
 
+    def __str__(self):
+        """"""
+        n = ('Nodes: {0}'.format(self.node_count()))
+        e = ('Elements: {0}'.format(self.element_count()))
+        sets = ''
+        for i, set in self.sets.items():
+            sets += '    {0} : {1} {2}(s)'.format(i, len(set['selection']), set['type']) + '\n'
+        materials = ''
+        for i, material in self.materials.items():
+            materials += '    {0} : {1}'.format(i, material.__name__) + '\n'
+        sections = ''
+        for i, section in self.sections.items():
+            sections += '    {0} : {1}'.format(i, section.__name__) + '\n'
+        loads = ''
+        for i, load in self.loads.items():
+            loads += '    {0} : {1}'.format(i, load.__name__) + '\n'
+        displacements = ''
+        for i, displacement in self.displacements.items():
+            displacements += '    {0} : {1}'.format(i, displacement.__name__) + '\n'
+        constraints = ''
+        for i, constraint in self.constraints.items():
+            constraints += '    {0} : {1}'.format(i, constraint.__name__) + '\n'
+        interactions = ''
+        for i, interaction in self.interactions.items():
+            interactions += '    {0} : {1}'.format(i, interaction.__name__) + '\n'
+        misc = ''
+        for i, misc in self.misc.items():
+            misc += '    {0} : {1}'.format(i, misc.__name__) + '\n'
+        steps = ''
+        for i, step in self.steps.items():
+            if i != 'order':
+                steps += '    {0} : {1}'.format(i, step.__name__) + '\n'
+
+        return """
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+compas_fea structure: {}
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+- number of nodes: {}
+- number of edges: {}
+- sets:{}
+- materials:{}
+- sections:{}
+- loads:{}
+- displacements:{}
+- constraints:{}
+- interactions:{}
+- misc:{}
+- steps:{}
+
+""".format(self.name, n, e, sets, materials, sections, loads, displacements, constraints, interactions, misc, steps)
 
 # ==============================================================================
 # nodes

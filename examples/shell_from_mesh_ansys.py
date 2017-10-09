@@ -48,5 +48,6 @@ if __name__ == '__main__':
     assign_structure_property_to_mesh_faces(mesh, 'v', v)
     assign_structure_property_to_mesh_faces(mesh, 'p', p)
     s = Structure.from_mesh(mesh)
+    print s
 
 
