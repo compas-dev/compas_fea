@@ -7,8 +7,8 @@ __email__      = 'mendez@arch.ethz.ch'
 def write_post_process(output_path, filename):
     cFile = open(output_path + filename, 'a')
     cFile.write('/POST1 \n')
-    cFile.write('SET,LAST \n')
-    cFile.write('RAPPND,1, \n')
+    # cFile.write('SET,LAST \n')
+    # cFile.write('RAPPND,1, \n')
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()

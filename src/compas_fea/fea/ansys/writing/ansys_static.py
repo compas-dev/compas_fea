@@ -26,11 +26,11 @@ def write_static_analysis_request(structure, output_path, filename):
     write_request_solve_steps(structure, output_path, filename)
     write_request_element_nodes(output_path, filename)
     for i, skey in enumerate(structure.steps_order):
-        set_current_step(structure, output_path, filename, i)
-        write_request_static_results(structure, output_path, filename, skey)
+        set_current_step(output_path, filename, i)
+        write_request_static_results(output_path, filename, skey)
 
 
-def set_current_step(structure, output_path, filename, step_index):
+def set_current_step(output_path, filename, step_index):
     cFile = open(output_path + filename, 'a')
     cFile.write('! \n')
     cFile.write('/POST1 \n')
@@ -70,14 +70,10 @@ def write_static_solve(structure, output_path, filename, skey):
     cFile.close()
 
 
-def write_request_static_results(structure, output_path, filename, step_name):
+def write_request_static_results(output_path, filename, step_name):
     write_request_node_displacements(output_path, filename, step_name)
     write_request_nodal_stresses(output_path, filename, step_name)
     write_request_pricipal_stresses(output_path, filename, step_name)
     write_request_shear_stresses(output_path, filename, step_name)
     write_request_principal_strains(output_path, filename, step_name)
     write_request_reactions(output_path, filename, step_name)
-
-
-def write_static_results_from_ansys_rst(filename, out_path, res_type, load_step=1):
-    pass

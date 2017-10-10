@@ -18,7 +18,8 @@ __all__ = [
     'make_command_file_harmonic',
     'ansys_launch_process',
     'delete_result_files',
-    'write_total_results'
+    'write_total_results',
+    'write_static_results_from_ansys_rst'
 ]
 
 
@@ -84,9 +85,8 @@ def make_command_file_harmonic(structure, output_path, filename, skey):
     write_harmonic_analysis_request(structure, output_path, filename, skey)
 
 
-def ansys_launch_process(structure, output_path, filename):
+def ansys_launch_process(output_path, filename):
     ansys_path = 'MAPDL.exe'
-    delete_result_files(structure, output_path)
     inp_path = output_path + "/" + filename
     work_dir = output_path + "output/"
     if not os.path.exists(work_dir):
@@ -248,3 +248,12 @@ def write_total_results(filename, output_path, excluded_nodes=None, node_disp=No
         r_file.write(' \n')
 
     r_file.close()
+
+
+def write_static_results_from_ansys_rst(filename, output_path, step_index=1, step_name='step'):
+    write_preprocess(output_path, filename)
+    write_post_process(output_path, filename)
+    set_current_step(output_path, filename, step_index)
+    write_request_element_nodes(output_path, filename)
+    write_request_static_results(output_path, filename, step_name)
+    ansys_launch_process(output_path, filename)
