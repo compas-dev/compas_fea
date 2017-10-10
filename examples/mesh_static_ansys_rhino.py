@@ -17,7 +17,7 @@ __license__    = 'MIT License'
 __email__      = 'mendez@arch.ethz.ch'
 
 
-def static(mesh, pts, lpts, path, filename):
+def static(mesh, pts, lpts1, lpts2, path, filename):
 
     # add shell elements from mesh ---------------------------------------------
     s = structure.Structure()
@@ -42,29 +42,39 @@ def static(mesh, pts, lpts, path, filename):
 
     # add loads ----------------------------------------------------------------
     nkeys = []
-    for lpt in lpts:
+    for lpt in lpts1:
         nkeys.append(s.check_node_exists(lpt))
-    load = PointLoad(name='point_load', nodes=nkeys, z=-1)
+    load = PointLoad(name='point_load1', nodes=nkeys, z=-1)
+    s.add_load(load)
+
+    nkeys = []
+    for lpt in lpts2:
+        nkeys.append(s.check_node_exists(lpt))
+    load = PointLoad(name='point_load2', nodes=nkeys, z=-1)
     s.add_load(load)
 
     # add steps ----------------------------------------------------------------
-    step = GeneralStep('step1', displacements=['supports'], loads=['point_load'])
+    step = GeneralStep('step1', displacements=['supports'], loads=['point_load1'],
+    nlgeom=False)
     s.add_step(step)
-    step = GeneralStep('step2', displacements=['supports'], loads=['point_load'])
+    
+    step = GeneralStep('step2', loads=['point_load2'],
+    nlgeom=False)
     s.add_step(step)
     s.set_steps_order(['step1', 'step2'])
     # analyse ------------------------------------------------------------------
     fnm = path + filename
-    ansys.inp_generate(s, filename=fnm, out_path=path)
+    ansys.inp_generate(s, filename=fnm, output_path=path)
     s.analyse(path=path, name=filename, fields=None, software='ansys')
     return s
 
 
 if __name__ == '__main__':
     path = os.path.dirname(os.path.abspath(__file__)) + '/'
-    filename = 'ansys_static.inp'
+    filename = 'ansys_static.txt'
     pts = [list(rs.PointCoordinates(pt)) for pt in rs.ObjectsByLayer('pts')]
-    lpts = [list(rs.PointCoordinates(pt)) for pt in rs.ObjectsByLayer('lpts')]
+    lpts1 = [list(rs.PointCoordinates(pt)) for pt in rs.ObjectsByLayer('lpts1')]
+    lpts2 = [list(rs.PointCoordinates(pt)) for pt in rs.ObjectsByLayer('lpts2')]
     guid = rs.ObjectsByLayer('mesh')[0]
     mesh = rhino.mesh_from_guid(Mesh, guid)
-    static(mesh, pts, lpts, path, filename)
+    static(mesh, pts, lpts1, lpts2, path, filename)

@@ -22,8 +22,7 @@ __all__ = [
 ]
 
 
-def inp_generate(structure, filename, out_path, ):
-    output_path = out_path
+def inp_generate(structure, filename, output_path, ):
     filename = os.path.basename(filename)
     stypes = [structure.steps[skey].type for skey in structure.steps]
 
@@ -43,8 +42,8 @@ def make_command_file_static(structure, output_path, filename):
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 
-    if not os.path.exists(output_path + 'out/'):
-        os.makedirs(output_path + 'out/')
+    if not os.path.exists(output_path + 'output/'):
+        os.makedirs(output_path + 'output/')
 
     write_static_analysis_request(structure, output_path, filename)
 
@@ -69,8 +68,8 @@ def make_command_file_modal(structure, output_path, filename, skey):
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 
-    if not os.path.exists(output_path + 'modal_out/'):
-        os.makedirs(output_path + 'modal_out/')
+    if not os.path.exists(output_path + '/output/modal_out/'):
+        os.makedirs(output_path + '/output/modal_out/')
 
     write_modal_analysis_request(structure, output_path, filename, skey)
 
@@ -79,8 +78,8 @@ def make_command_file_harmonic(structure, output_path, filename, skey):
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 
-    if not os.path.exists(output_path + 'harmonic_out/'):
-        os.makedirs(output_path + 'harmonic_out/')
+    if not os.path.exists(output_path + 'output/harmonic_out/'):
+        os.makedirs(output_path + 'output/harmonic_out/')
 
     write_harmonic_analysis_request(structure, output_path, filename, skey)
 

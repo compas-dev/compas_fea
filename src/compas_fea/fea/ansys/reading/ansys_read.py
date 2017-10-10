@@ -3,11 +3,11 @@ import os
 
 def get_nodes_elements_from_result_files(path):
     try:
-        node_file    = open(path + '/nodes.txt', 'r')
+        node_file    = open(path + 'output/nodes.txt', 'r')
     except:
         node_file = None
     try:
-        elementFile    = open(path + '/elements.txt', 'r')
+        elementFile    = open(path + 'output/elements.txt', 'r')
     except:
         elementFile = None
 
@@ -41,7 +41,7 @@ def get_nodes_elements_from_result_files(path):
 
 
 def get_harmonic_data_from_result_files(path):
-    harmonic_path = path + '/harmonic_out'
+    harmonic_path = path + 'output/harmonic_out'
     files = os.listdir(harmonic_path)
 
     real_files = []
@@ -92,7 +92,7 @@ def get_harmonic_data_from_result_files(path):
 
 
 def get_modal_data_from_result_files(path):
-    modal_path = path + 'modal_out/'
+    modal_path = path + 'output/modal_out/'
     try:
         files = os.listdir(modal_path)
     except:
@@ -143,7 +143,7 @@ def get_modal_data_from_result_files(path):
 
 def get_displacements_from_result_files(path):
     try:
-        displacements_file = open(path + 'displacements.txt', 'r')
+        displacements_file = open(path + 'output/displacements.txt', 'r')
     except:
         displacements_file = None
     if displacements_file:
@@ -163,7 +163,7 @@ def get_displacements_from_result_files(path):
 
 def get_nodal_stresses_from_result_files(path):
     try:
-        stresses_file   = open(path + 'nodal_stresses_.txt', 'r')
+        stresses_file   = open(path + 'output/nodal_stresses_.txt', 'r')
     except:
         stresses_file = None
 
@@ -190,7 +190,7 @@ def get_nodal_stresses_from_result_files(path):
 
 def get_principal_streses(path):
     try:
-        p_stresses_file   = open(path + 'principal_stresses_.txt', 'r')
+        p_stresses_file   = open(path + 'output/principal_stresses_.txt', 'r')
     except:
         p_stresses_file = None
 
@@ -217,7 +217,7 @@ def get_principal_streses(path):
 
 def get_shear_stresses_from_result_files(path):
     try:
-        shear_stresses_file   = open(path + 'shear_stresses_.txt', 'r')
+        shear_stresses_file   = open(path + 'output/shear_stresses_.txt', 'r')
     except:
         shear_stresses_file = None
 
@@ -244,7 +244,7 @@ def get_shear_stresses_from_result_files(path):
 
 def get_principal_strains_from_result_files(path):
     try:
-        p_strains_file   = open(path + 'principal_strains.txt', 'r')
+        p_strains_file   = open(path + 'output/principal_strains.txt', 'r')
     except:
         p_strains_file = None
 
@@ -272,7 +272,7 @@ def get_principal_strains_from_result_files(path):
 def get_reactions_from_result_files(path):
 
     try:
-        reactions_file   = open(path + 'reactions.txt', 'r')
+        reactions_file   = open(path + 'output/reactions.txt', 'r')
     except:
         reactions_file = None
 

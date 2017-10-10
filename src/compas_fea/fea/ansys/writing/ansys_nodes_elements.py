@@ -265,7 +265,7 @@ def write_request_element_nodes(output_path, filename):
     cFile.write('*VGET, nodeY, node, all, loc, Y,,,2 \n')
     cFile.write('*VGET, nodeZ, node, all, loc, Z,,,2 \n')
     cFile.write('*vfill,nds(1),ramp,1,1 \n')
-    cFile.write('*cfopen,' + output_path + 'nodes,txt \n')
+    cFile.write('*cfopen,' + output_path + '/output/nodes,txt \n')
     cFile.write('*vwrite, nds(1) , \',\'  , nodeX(1) ,   \',\' ,   nodeY(1) ,   \',\' ,  nodeZ(1) \n')
     cFile.write('(          F,       A,       ES,           A,          ES,          A,      ES) \n')
     cFile.write('*cfclose \n')
@@ -308,7 +308,7 @@ def write_request_element_nodes(output_path, filename):
     cFile.write('*VGET, elemMat, elem, all,attr,mat,,,2 \n')
     cFile.write('*VGET, elemSec, elem, all,attr,secn,,,2 \n')
 
-    cFile.write('*cfopen,' + output_path + 'elements,txt \n')
+    cFile.write('*cfopen,' + output_path + '/output/elements,txt \n')
     cFile.write('*vwrite,  elem1(1),elem2(1),elem3(1),elem4(1),elem5(1),elem6(1)')
     cFile.write(',elem7(1),elem8(1), \',\',elemType(1),elemMat(1),elemSec(1) \n')
     cFile.write('(F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ',')
@@ -321,7 +321,7 @@ def write_request_element_nodes(output_path, filename):
     cFile.close()
 
 
-def write_request_node_displacements(output_path, filename, mode=None):
+def write_request_node_displacements(output_path, filename, step_name, mode=None):
 
     if mode:
         fname = 'modal_shape_' + str(mode)
@@ -329,14 +329,14 @@ def write_request_node_displacements(output_path, filename, mode=None):
         name_x = 'dispX' + str(mode)
         name_y = 'dispY' + str(mode)
         name_z = 'dispZ' + str(mode)
-        path = output_path + '/modal_out'
+        path = output_path + '/output/modal_out'
     else:
-        fname = 'displacements'
+        fname = str(step_name) + '_' + 'displacements'
         name = 'nds_d'
         name_x = 'dispX'
         name_y = 'dispY'
         name_z = 'dispZ'
-        path = output_path
+        path = output_path + '/output'
 
     cFile = open(output_path + filename, 'a')
     cFile.write('/POST1 \n')

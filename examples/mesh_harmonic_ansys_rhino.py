@@ -56,7 +56,7 @@ def harmonic(mesh, pts, lpts, freq_range, freq_steps, damping, path, filename):
                         damping=damping)
     s.add_step(step)
     fnm = path + filename
-    ansys.inp_generate(s, filename=fnm, out_path=path)
+    ansys.inp_generate(s, filename=fnm, output_path=path)
     s.analyse(path=path, name=filename, fields=None, software='ansys')
     return s
 
