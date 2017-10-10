@@ -1,6 +1,6 @@
 import rhinoscriptsyntax as rs
 import os
-import compas_rhino as rhino
+from compas_rhino.helpers.mesh import mesh_from_guid
 from compas_fea import structure
 from compas_fea.fea import ansys
 from compas_fea.structure import PinnedDisplacement
@@ -76,5 +76,5 @@ if __name__ == '__main__':
     lpts1 = [list(rs.PointCoordinates(pt)) for pt in rs.ObjectsByLayer('lpts1')]
     lpts2 = [list(rs.PointCoordinates(pt)) for pt in rs.ObjectsByLayer('lpts2')]
     guid = rs.ObjectsByLayer('mesh')[0]
-    mesh = rhino.mesh_from_guid(Mesh, guid)
+    mesh = mesh_from_guid(Mesh, guid)
     static(mesh, pts, lpts1, lpts2, path, filename)

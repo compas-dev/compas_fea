@@ -47,7 +47,7 @@ def write_loads(structure, output_path, filename, loads, factor):
 
 def write_combined_point_loads(pload, output_path, filename):
     cFile = open(output_path + "/" + filename, 'a')
-    cFile.write('/PREP7 \n')
+    # cFile.write('/PREP7 \n')
     axis_dict = {'x': 'X', 'y': 'Y', 'z': 'Z', 'xx': 'MX', 'yy': 'MY', 'zz': 'MZ'}
 
     nkeys = sorted(pload.keys(), key=int)

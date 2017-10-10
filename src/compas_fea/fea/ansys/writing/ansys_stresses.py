@@ -4,9 +4,9 @@ __license__    = 'MIT License'
 __email__      = 'mendez@arch.ethz.ch'
 
 
-def write_request_nodal_stresses(output_path, filename):
-    path = output_path
-    fname = 'nodal_stresses_'
+def write_request_nodal_stresses(output_path, filename, step_name):
+    path = output_path + 'output/'
+    fname = str(step_name) + '_' + 'nodal_stresses_'
     name = 'nds_s'
 
     cFile = open(output_path + "/" + filename, 'a')
@@ -48,9 +48,9 @@ def write_request_nodal_stresses(output_path, filename):
     cFile.close()
 
 
-def write_request_pricipal_stresses(output_path, filename):
-    path = output_path
-    fname = 'principal_stresses_'
+def write_request_pricipal_stresses(output_path, filename, step_name):
+    path = output_path + 'output/'
+    fname = str(step_name) + '_' + 'principal_stresses_'
     name = 'nds_p'
     cFile = open(output_path + "/" + filename, 'a')
     cFile.write('SHELL,TOP  \n')
@@ -90,9 +90,9 @@ def write_request_pricipal_stresses(output_path, filename):
     cFile.close()
 
 
-def write_request_shear_stresses(output_path, filename):
-    path = output_path
-    fname = 'shear_stresses_'
+def write_request_shear_stresses(output_path, filename, step_name):
+    path = output_path + 'output/'
+    fname = str(step_name) + '_' + 'shear_stresses_'
     name = 'nds_sh'
 
     cFile = open(output_path + "/" + filename, 'a')
@@ -133,9 +133,9 @@ def write_request_shear_stresses(output_path, filename):
     cFile.close()
 
 
-def write_request_principal_strains(output_path, filename):
-    path = output_path
-    fname = 'principal_strains'
+def write_request_principal_strains(output_path, filename, step_name):
+    path = output_path + 'output/'
+    fname = str(step_name) + '_' + 'principal_strains'
     name = 'nds_ps'
 
     cFile = open(output_path + "/" + filename, 'a')
@@ -176,10 +176,9 @@ def write_request_principal_strains(output_path, filename):
     cFile.close()
 
 
-def write_request_reactions(output_path, filename):
-
-    path = output_path
-    fname = 'reactions'
+def write_request_reactions(output_path, filename, step_name):
+    path = output_path + 'output/'
+    fname = str(step_name) + '_' + 'reactions'
     name = 'nds_r'
 
     cFile = open(output_path + "/" + filename, 'a')
