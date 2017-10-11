@@ -12,16 +12,11 @@ from compas.utilities import geometric_key
 from compas_fea.fea.abaq import abaq
 from compas_fea.fea.ansys import ansys
 
-from compas_fea.structure.element import *
-from compas_fea.structure.displacement import *
-from compas_fea.structure.material import *
-from compas_fea.structure.section import *
-from compas_fea.structure.load import *
-from compas_fea.structure.element_properties import *
-from compas_fea.structure.step import GeneralStep
-from compas_fea.utilities.functions import group_keys_by_attribute
-from compas_fea.utilities.functions import group_keys_by_attributes
-from compas_fea.utilities.functions import combine_all_sets
+from compas_fea.structure import *
+
+from compas_fea.utilities import combine_all_sets
+from compas_fea.utilities import group_keys_by_attribute
+from compas_fea.utilities import group_keys_by_attributes
 
 import pickle
 
@@ -65,7 +60,7 @@ class Structure(object):
         None
     """
 
-    def __init__(self, name='Compas_FEA Structure'):
+    def __init__(self, name='compas_fea-Structure'):
         self.constraints = {}
         self.displacements = {}
         self.elements = {}
@@ -86,57 +81,49 @@ class Structure(object):
         self.tol = '3'
 
     def __str__(self):
-        """"""
-        n = ('Nodes: {0}'.format(self.node_count()))
-        e = ('Elements: {0}'.format(self.element_count()))
-        sets = ''
-        for i, set in self.sets.items():
-            sets += '    {0} : {1} {2}(s)'.format(i, len(set['selection']), set['type']) + '\n'
-        materials = ''
-        for i, material in self.materials.items():
-            materials += '    {0} : {1}'.format(i, material.__name__) + '\n'
-        sections = ''
-        for i, section in self.sections.items():
-            sections += '    {0} : {1}'.format(i, section.__name__) + '\n'
-        loads = ''
-        for i, load in self.loads.items():
-            loads += '    {0} : {1}'.format(i, load.__name__) + '\n'
-        displacements = ''
-        for i, displacement in self.displacements.items():
-            displacements += '    {0} : {1}'.format(i, displacement.__name__) + '\n'
-        constraints = ''
-        for i, constraint in self.constraints.items():
-            constraints += '    {0} : {1}'.format(i, constraint.__name__) + '\n'
-        interactions = ''
-        for i, interaction in self.interactions.items():
-            interactions += '    {0} : {1}'.format(i, interaction.__name__) + '\n'
-        misc = ''
-        for i, misc in self.misc.items():
-            misc += '    {0} : {1}'.format(i, misc.__name__) + '\n'
-        steps = ''
-        for i, step in self.steps.items():
-            if i != 'order':
-                steps += '    {0} : {1}'.format(i, step.__name__) + '\n'
+
+        n = self.node_count()
+        m = self.element_count()
+
+        structure_data = [
+            self.materials,
+            self.sections,
+            self.loads,
+            self.displacements,
+            self.constraints,
+            self.interactions,
+            self.misc,
+            self.steps]
+
+        dt = ['\n'.join(['  {0} : {1} {2}(s)'.format(i, len(set['selection']), set['type'])
+                         for i, set in self.sets.items()])]
+
+        for data in structure_data:
+            if data:
+                dt.append('\n'.join(['  {0} : {1}'.format(i, j.__name__) for i, j in data.items()]))
+            else:
+                dt.append('  n/a')
 
         return """
+
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 compas_fea structure: {}
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+- Number of nodes: {}\n
+- Number of elements: {}\n
+- Sets:\n{}\n
+- Materials:\n{}\n
+- Sections:\n{}\n
+- Loads:\n{}\n
+- Displacements:\n{}\n
+- Constraints:\n{}\n
+- Interactions:\n{}\n
+- Misc:\n{}\n
+- Steps:\n{}
 
-- number of nodes: {}
-- number of elements: {}
-- sets:\n{}
-- materials:\n{}
-- sections:\n{}
-- loads:\n{}
-- displacements:\n{}
-- constraints:\n{}
-- interactions:\n{}
-- misc:\n{}
-- steps:\n{}
+""".format(self.name, n, m, dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8])
 
-""".format(self.name, n, e, sets, materials, sections, loads, displacements, constraints, interactions, misc, steps)
 
 # ==============================================================================
 # nodes
@@ -745,43 +732,7 @@ compas_fea structure: {}
         Returns:
             None
         """
-        print(' ')
-        print('-' * 50)
-        print('Structure summary')
-        print('-' * 50)
-
-        print('Nodes: {0}'.format(self.node_count()))
-        print('Elements: {0}'.format(self.element_count()))
-        print('Sets:')
-        for i, set in self.sets.items():
-            print('    {0} : {1} {2}(s)'.format(i, len(set['selection']), set['type']))
-        print('Materials:')
-        for i, material in self.materials.items():
-            print('    {0} : {1}'.format(i, material.__name__))
-        print('Sections:')
-        for i, section in self.sections.items():
-            print('    {0} : {1}'.format(i, section.__name__))
-        print('Loads:')
-        for i, load in self.loads.items():
-            print('    {0} : {1}'.format(i, load.__name__))
-        print('Displacements:')
-        for i, displacement in self.displacements.items():
-            print('    {0} : {1}'.format(i, displacement.__name__))
-        print('Constraints:')
-        for i, constraint in self.constraints.items():
-            print('    {0} : {1}'.format(i, constraint.__name__))
-        print('Interactions:')
-        for i, interaction in self.interactions.items():
-            print('    {0} : {1}'.format(i, interaction.__name__))
-        print('Misc:')
-        for i, misc in self.misc.items():
-            print('    {0} : {1}'.format(i, misc.__name__))
-        print('Steps:')
-        for i, step in self.steps.items():
-            if i != 'order':
-                print('    {0} : {1}'.format(i, step.__name__))
-
-        print('-' * 50 + '\n')
+        print(self)
 
 
 # ==============================================================================

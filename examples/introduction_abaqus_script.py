@@ -1,6 +1,7 @@
 """Introduction to the compas_fea package."""
 
 from compas_fea.fea.abaq import abaq
+from compas_fea.fea.opensees import opensees
 
 from compas_fea.structure import CircularSection
 from compas_fea.structure import ElasticIsotropic
@@ -105,3 +106,4 @@ mdl.save_to_obj('{0}{1}.obj'.format(path, name))
 # Generate .inp file
 
 abaq.inp_generate(mdl, filename='{0}{1}.inp'.format(path, name))
+opensees.inp_generate(mdl, filename='{0}{1}.tcl'.format(path, name))
