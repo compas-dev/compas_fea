@@ -708,7 +708,7 @@ compas_fea structure: {}
 # analyse
 # ==============================================================================
 
-    def analyse(self, path, name, software, fields, exe=None, cpus=2):
+    def analyse(self, path, name, software, fields, exe=None, cpus=2, license='Research'):
         """ Runs the analysis through the chosen FEA software/library.
 
         Parameters:
@@ -718,6 +718,7 @@ compas_fea structure: {}
             fields (str): Data fields to extract e.g 'U,S,SM'.
             exe (str): Full terminal command to bypass subprocess defaults.
             cpus (int): Number of CPU cores to use.
+            license (str): FE software license type e.g 'Research', 'Student'.
 
         Returns:
             None
@@ -728,7 +729,7 @@ compas_fea structure: {}
 
         elif software == 'ansys':
 
-            ansys.ansys_launch_process(self, path, name)
+            ansys.ansys_launch_process(path, name, fields, cpus, license)
 
 
 # ==============================================================================
