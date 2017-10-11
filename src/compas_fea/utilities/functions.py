@@ -75,14 +75,17 @@ __email__      = 'liew@arch.ethz.ch'
 
 __all__ = [
     'colorbar',
-    'postprocess',
-    'process_data',
+    'combine_all_sets',
+    'discretise_faces',
+    'extrude_mesh',
+    'group_keys_by_attribute',
+    'group_keys_by_attributes',
     'load_data',
     'network_order',
     'normalise_data',
+    'postprocess',
+    'process_data',
     'voxels',
-    'discretise_faces',
-    'extrude_mesh'
 ]
 
 
@@ -114,6 +117,16 @@ def colorbar(fsc, input='array', type=255):
         green = max([0, min([1, green])])
         blue = max([0, min([1, blue])])
         return [i * type for i in [red, green, blue]]
+
+
+def combine_all_sets(a, b):
+    comb = {}
+    for i in a:
+        for j in b:
+            for x in a[i]:
+                if x in b[j]:
+                    comb.setdefault(str(i) + ',' + str(j), []).append(x)
+    return comb
 
 
 def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations=100):
@@ -268,6 +281,36 @@ def extrude_mesh(structure, mesh, nz, dz):
             top = ['{0}_{1}'.format(j, i + 1) for j in vs]
             nodes = [ki[j] for j in bot + top]
             structure.add_element(nodes, element_type, acoustic=False, thermal=False)
+
+
+def group_keys_by_attribute(adict, name, tol='3f'):
+    groups = {}
+    for k in adict:
+        if name in adict[k]:
+            value = adict[k][name]
+            if type(value) == float:
+                value = '{0:.{1}}'.format(value, tol)
+            groups.setdefault(value, []).append(k)
+    return groups
+
+
+def group_keys_by_attributes(adict, names, tol='3f'):
+    groups = {}
+    for k in adict:
+        values = []
+        for name in names:
+            if name in adict[k]:
+                value = adict[k][name]
+                if type(value) == float:
+                    value = '{0:.{1}}'.format(value, tol)
+                else:
+                    value = str(value)
+            else:
+                value = '-'
+            values.append(value)
+        vkey = '_'.join(values)
+        groups.setdefault(vkey, []).append(k)
+    return groups
 
 
 def load_data(temp, name, step, field, component):
@@ -509,46 +552,6 @@ def voxels(values, vmin, U, vdx, plot=None, indexing=None):
         mlab.pipeline.volume(mlab.pipeline.scalar_field(Am), vmin=vmin)
         mlab.show()
     return Am
-
-
-def group_keys_by_attribute(adict, name, tol='3f'):
-    groups = {}
-    for k in adict:
-        if name in adict[k]:
-            value = adict[k][name]
-            if type(value) == float:
-                value = '{0:.{1}}'.format(value, tol)
-            groups.setdefault(value, []).append(k)
-    return groups
-
-
-def group_keys_by_attributes(adict, names, tol='3f'):
-    groups = {}
-    for k in adict:
-        values = []
-        for name in names:
-            if name in adict[k]:
-                value = adict[k][name]
-                if type(value) == float:
-                    value = '{0:.{1}}'.format(value, tol)
-                else:
-                    value = str(value)
-            else:
-                value = '-'
-            values.append(value)
-        vkey = '_'.join(values)
-        groups.setdefault(vkey, []).append(k)
-    return groups
-
-
-def combine_all_sets(a, b):
-    comb = {}
-    for i in a:
-        for j in b:
-            for x in a[i]:
-                if x in b[j]:
-                    comb.setdefault(str(i) + ',' + str(j), []).append(x)
-    return comb
 
 
 # ==============================================================================

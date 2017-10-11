@@ -9,12 +9,20 @@
 
 - Break : 10 mins
 
-- Rhino/Blender + Abaqus Part 1
-    - Trusses
-    - Beams
+- Examples - Part 1
+    - Trusses (frame): 15 mins
+    - Beams (tree) : 15 mins
+    - Shells (bridge) : 20 mins
 
 - Break : 10 mins
 
-- Rhino/Blender + Abaqus Part 2
-    - Shells
+- Examples - Part 2
     - Solids
+    - Other Rhino examples : 5 mins
+    - Blender : 5 mins
+
+- Break : 10 mins
+
+- Advanced
+    - Classes and modules
+    - Data output

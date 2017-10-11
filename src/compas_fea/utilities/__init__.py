@@ -32,3 +32,5 @@ functions
 
 
 """
+
+from .functions import *
