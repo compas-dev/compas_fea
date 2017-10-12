@@ -62,10 +62,13 @@ def static(mesh, pts, lpts1, lpts2, path, filename):
     nlgeom=False)
     s.add_step(step)
     s.set_steps_order(['step1', 'step2'])
+    
     # analyse ------------------------------------------------------------------
+    fields = ['U']
     fnm = path + filename
     ansys.inp_generate(s, filename=fnm, output_path=path)
     s.analyse(path=path, name=filename, fields=None, software='ansys')
+
     return s
 
 

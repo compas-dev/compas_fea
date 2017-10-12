@@ -13,7 +13,6 @@ __email__      = 'mendez@arch.ethz.ch'
 __all__ = [
     'inp_generate',
     'make_command_file_static',
-    'make_command_file_static_combined',
     'make_command_file_modal',
     'make_command_file_harmonic',
     'ansys_launch_process',
@@ -29,8 +28,6 @@ def inp_generate(structure, filename, output_path, ):
 
     if 'STATIC' in stypes:
         make_command_file_static(structure, output_path, filename)
-        # static_step_key = structure.combine_static_steps()
-        # make_command_file_static_combined(structure, output_path, filename, static_step_key)
     elif 'MODAL' in stypes:
         make_command_file_modal(structure, output_path, filename, skey)
     elif 'HARMONIC' in stypes:
@@ -47,22 +44,6 @@ def make_command_file_static(structure, output_path, filename):
         os.makedirs(output_path + 'output/')
 
     write_static_analysis_request(structure, output_path, filename)
-
-
-def make_command_file_static_combined(structure, output_path, filename, skey):
-    step = structure.steps[skey]
-    nlgeom = step.nlgeom
-    displacements = step.displacements
-    factor = step.factor
-    loads = step.loads
-    write_preprocess(output_path, filename)
-    write_all_materials(structure, output_path, filename)
-    write_nodes(structure, output_path, filename)
-    write_elements(structure, output_path, filename)
-    write_constraint_nodes(structure, output_path, filename, displacements)
-    write_loads(structure, output_path, filename, loads, factor)
-    write_step(output_path, filename, skey, nlgeom)
-    write_analysis_request_static(structure, output_path, filename)
 
 
 def make_command_file_modal(structure, output_path, filename, skey):
@@ -85,10 +66,13 @@ def make_command_file_harmonic(structure, output_path, filename, skey):
     write_harmonic_analysis_request(structure, output_path, filename, skey)
 
 
-def ansys_launch_process(output_path, filename, fields, cpus, license):
+def ansys_launch_process(output_path, filename, fields, cpus, license, post=False):
     ansys_path = 'MAPDL.exe'
     inp_path = output_path + '/' + filename
     work_dir = output_path + 'output/'
+    if post:
+        filename = filename.split('post_')[1]
+    basename  = filename.split('.')[0]
 
     if not os.path.exists(work_dir):
         os.makedirs(work_dir)
@@ -103,11 +87,30 @@ def ansys_launch_process(output_path, filename, fields, cpus, license):
 
     launch_string = '\"' + ansys_path + '\" -p ' + lic_str + ' -np ' + str(cpus)
     launch_string += ' -dir \"' + work_dir
-    launch_string += '\" -j \"compas_ansys\" -s read -l en-us -b -i \"'
+    launch_string += '\" -j \"' + str(basename) + '\" -s read -l en-us -b -i \"'
     launch_string += inp_path + ' \" -o \"' + out_path + '\"'
-
-    print launch_string
     subprocess.call(launch_string)
+
+
+def write_static_results_from_ansys_rst(filename, output_path, fields, step_index=1,
+                                        step_name='step', cpus=2, license='Research'):
+    ansys_open_post_process(output_path, 'post_' + filename)
+    set_current_step(output_path, 'post_' + filename, step_index)
+    write_request_element_nodes(output_path, 'post_' + filename)
+    if 'U' in fields:
+        write_request_node_displacements(output_path, 'post_' + filename, step_name)
+    if 'RF' in fields:
+        write_request_reactions(output_path, 'post_' + filename, step_name)
+    if 'S' in fields:
+        write_request_nodal_stresses(output_path, 'post_' + filename, step_name)
+    if 'PS' in fields:
+        write_request_pricipal_stresses(output_path, 'post_' + filename, step_name)
+    if 'SS' in fields:
+        write_request_shear_stresses(output_path, 'post_' + filename, step_name)
+    if 'PE' in fields:
+        write_request_principal_strains(output_path, 'post_' + filename, step_name)
+    ansys_launch_process(output_path, 'post_' + filename, fields, cpus, license, post=True)
+    os.remove(output_path + 'post_' + filename)
 
 
 def delete_result_files(structure, output_path):
@@ -260,12 +263,3 @@ def write_total_results(filename, output_path, excluded_nodes=None, node_disp=No
         r_file.write(' \n')
 
     r_file.close()
-
-
-def write_static_results_from_ansys_rst(filename, output_path, step_index=1, step_name='step'):
-    write_preprocess(output_path, filename)
-    write_post_process(output_path, filename)
-    set_current_step(output_path, filename, step_index)
-    write_request_element_nodes(output_path, filename)
-    write_request_static_results(output_path, filename, step_name)
-    ansys_launch_process(output_path, filename)
