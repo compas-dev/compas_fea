@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<title>compas_fea -- FEA package for compas</title>
+<!-- Required meta tags -->
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+<!-- compas meta tags -->
+<meta content="" name="author"/>
+<meta content="" name="description"/>
+<!-- Bootstrap CSS -->
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
+<!-- highlight CSS -->
+<link href="https://compas-dev.github.io/css/github.css" rel="stylesheet" type="text/css"/>
+<!-- compas CSS -->
+<link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
+<link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
+<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+</head>
+<body data-spy="scroll" data-target="#compas-localnav">
+<!-- main navigation bar -->
+<header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
+<a class="navbar-brand" href="https://compas-dev.github.io">compas</a>
+<ul class="navbar-nav">
+<li class="nav-item">
+<a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+</li>
+</ul>
+</header>
+<!-- page container -->
+<div class="container-fluid compas-container">
+<div class="row flex-xl-nowrap">
+<!-- main page content -->
+<main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+<nav class="breadcrumb">
+<a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
+<a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
+<a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+<a accesskey="U" class="breadcrumb-item" href="../../../index.html">module code</a>
+</nav>
+<h1>Source code for compas_fea.fea.ansys.ansys</h1><div class="highlight"><pre><code class="language-python border rounded">
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">compas_fea.fea.ansys.writing</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">'Tomas Mendez Echenagucia &lt;mendez@arch.ethz.ch&gt;'</span><span class="p">]</span>
+<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">'Copyright 2017, BLOCK Research Group - ETH Zurich'</span>
+<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">'MIT License'</span>
+<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">'mendez@arch.ethz.ch'</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'inp_generate'</span><span class="p">,</span>
+    <span class="s1">'make_command_file_static'</span><span class="p">,</span>
+    <span class="s1">'make_command_file_static_combined'</span><span class="p">,</span>
+    <span class="s1">'make_command_file_modal'</span><span class="p">,</span>
+    <span class="s1">'make_command_file_harmonic'</span><span class="p">,</span>
+    <span class="s1">'ansys_launch_process'</span><span class="p">,</span>
+    <span class="s1">'delete_result_files'</span><span class="p">,</span>
+    <span class="s1">'write_total_results'</span><span class="p">,</span>
+    <span class="s1">'write_static_results_from_ansys_rst'</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="inp_generate"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.inp_generate.html#compas_fea.fea.ansys.inp_generate">[docs]</a><span class="k">def</span> <span class="nf">inp_generate</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="p">):</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">stypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">skey</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="k">for</span> <span class="n">skey</span> <span class="ow">in</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="s1">'STATIC'</span> <span class="ow">in</span> <span class="n">stypes</span><span class="p">:</span>
+        <span class="n">make_command_file_static</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="c1"># static_step_key = structure.combine_static_steps()</span>
+        <span class="c1"># make_command_file_static_combined(structure, output_path, filename, static_step_key)</span>
+    <span class="k">elif</span> <span class="s1">'MODAL'</span> <span class="ow">in</span> <span class="n">stypes</span><span class="p">:</span>
+        <span class="n">make_command_file_modal</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">skey</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s1">'HARMONIC'</span> <span class="ow">in</span> <span class="n">stypes</span><span class="p">:</span>
+        <span class="n">make_command_file_harmonic</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">skey</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'This analysis type has not yet been implemented for Compas Ansys'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="make_command_file_static"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.make_command_file_static.html#compas_fea.fea.ansys.make_command_file_static">[docs]</a><span class="k">def</span> <span class="nf">make_command_file_static</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="s1">'output/'</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="s1">'output/'</span><span class="p">)</span>
+
+    <span class="n">write_static_analysis_request</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="make_command_file_static_combined"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.make_command_file_static_combined.html#compas_fea.fea.ansys.make_command_file_static_combined">[docs]</a><span class="k">def</span> <span class="nf">make_command_file_static_combined</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">skey</span><span class="p">):</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">skey</span><span class="p">]</span>
+    <span class="n">nlgeom</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">nlgeom</span>
+    <span class="n">displacements</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">displacements</span>
+    <span class="n">factor</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">factor</span>
+    <span class="n">loads</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">loads</span>
+    <span class="n">write_preprocess</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">write_all_materials</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">write_nodes</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">write_elements</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">write_constraint_nodes</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">displacements</span><span class="p">)</span>
+    <span class="n">write_loads</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">factor</span><span class="p">)</span>
+    <span class="n">write_step</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">skey</span><span class="p">,</span> <span class="n">nlgeom</span><span class="p">)</span>
+    <span class="n">write_analysis_request_static</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="make_command_file_modal"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.make_command_file_modal.html#compas_fea.fea.ansys.make_command_file_modal">[docs]</a><span class="k">def</span> <span class="nf">make_command_file_modal</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">skey</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="s1">'/output/modal_out/'</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="s1">'/output/modal_out/'</span><span class="p">)</span>
+
+    <span class="n">write_modal_analysis_request</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">skey</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="make_command_file_harmonic"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.make_command_file_harmonic.html#compas_fea.fea.ansys.make_command_file_harmonic">[docs]</a><span class="k">def</span> <span class="nf">make_command_file_harmonic</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">skey</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="s1">'output/harmonic_out/'</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="s1">'output/harmonic_out/'</span><span class="p">)</span>
+
+    <span class="n">write_harmonic_analysis_request</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">skey</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ansys_launch_process"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.ansys_launch_process.html#compas_fea.fea.ansys.ansys_launch_process">[docs]</a><span class="k">def</span> <span class="nf">ansys_launch_process</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="n">ansys_path</span> <span class="o">=</span> <span class="s1">'MAPDL.exe'</span>
+    <span class="n">inp_path</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="n">filename</span>
+    <span class="n">work_dir</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">+</span> <span class="s2">"output/"</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">work_dir</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">work_dir</span><span class="p">)</span>
+    <span class="n">out_path</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">+</span> <span class="s2">"/output.out"</span>
+    <span class="n">launch_string</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\"</span><span class="s2">"</span> <span class="o">+</span> <span class="n">ansys_path</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\"</span><span class="s2"> -p aa_t_a -dir </span><span class="se">\"</span><span class="s2">"</span> <span class="o">+</span> <span class="n">work_dir</span>
+    <span class="n">launch_string</span> <span class="o">+=</span> <span class="s2">"</span><span class="se">\"</span><span class="s2"> -j </span><span class="se">\"</span><span class="s2">compas_ansys</span><span class="se">\"</span><span class="s2"> -s read -l en-us -b -i </span><span class="se">\"</span><span class="s2">"</span>
+    <span class="n">launch_string</span> <span class="o">+=</span> <span class="n">inp_path</span> <span class="o">+</span> <span class="s2">" </span><span class="se">\"</span><span class="s2"> -o </span><span class="se">\"</span><span class="s2">"</span> <span class="o">+</span> <span class="n">out_path</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\"</span><span class="s2">"</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">launch_string</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="delete_result_files"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.delete_result_files.html#compas_fea.fea.ansys.delete_result_files">[docs]</a><span class="k">def</span> <span class="nf">delete_result_files</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
+    <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">'displacements'</span><span class="p">,</span>
+        <span class="s1">'elements'</span><span class="p">,</span>
+        <span class="s1">'nodalStresses'</span><span class="p">,</span>
+        <span class="s1">'nodes'</span><span class="p">,</span>
+        <span class="s1">'principalStresses'</span><span class="p">,</span>
+        <span class="s1">'shear_stresses'</span><span class="p">,</span>
+        <span class="s1">'principalStrains'</span><span class="p">,</span>
+        <span class="s1">'reactions'</span><span class="p">,</span>
+        <span class="s1">'modal_freq'</span>
+    <span class="p">]</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">'.txt'</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">continue</span></div>
+
+
+<div class="viewcode-block" id="write_total_results"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.write_total_results.html#compas_fea.fea.ansys.write_total_results">[docs]</a><span class="k">def</span> <span class="nf">write_total_results</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">excluded_nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">node_disp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="n">r_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="s1">'/'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="s1">'w'</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">stresses_file</span>   <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="s1">'nodal_stresses_.txt'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">stresses_file</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">p_stresses_file</span>   <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="s1">'principal_stresses_.txt'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">p_stresses_file</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">shear_stresses_file</span>   <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="s1">'shear_stresses_.txt'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">shear_stresses_file</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">displacements_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span> <span class="o">+</span> <span class="s1">'displacements.txt'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">displacements_file</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">stresses</span> <span class="o">=</span> <span class="n">stresses_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">p_stresses</span> <span class="o">=</span> <span class="n">p_stresses_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">shear_stresses</span> <span class="o">=</span> <span class="n">shear_stresses_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">displacements</span> <span class="o">=</span> <span class="n">displacements_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">excluded_nodes</span><span class="p">:</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">excluded_nodes</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)):</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span> <span class="n">i</span><span class="p">]</span>
+            <span class="k">del</span> <span class="n">stresses</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
+            <span class="k">del</span> <span class="n">p_stresses</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
+            <span class="k">del</span> <span class="n">shear_stresses</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
+            <span class="k">del</span> <span class="n">displacements</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">stress</span> <span class="ow">in</span> <span class="n">stresses</span><span class="p">:</span>
+        <span class="n">stressString</span> <span class="o">=</span> <span class="n">stress</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">stressString</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">stressString</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+
+    <span class="n">ps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">stress</span> <span class="ow">in</span> <span class="n">p_stresses</span><span class="p">:</span>
+        <span class="n">stressString</span> <span class="o">=</span> <span class="n">stress</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">stressString</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">stressString</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="n">ps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+
+    <span class="n">ss</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">stress</span> <span class="ow">in</span> <span class="n">shear_stresses</span><span class="p">:</span>
+        <span class="n">stressString</span> <span class="o">=</span> <span class="n">stress</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">stressString</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">stressString</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="n">ss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">displ</span> <span class="ow">in</span> <span class="n">displacements</span><span class="p">:</span>
+        <span class="n">dispString</span> <span class="o">=</span> <span class="n">displ</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">dispString</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">dispString</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">temp</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">string</span><span class="p">)))</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">abs</span><span class="p">((</span><span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">temp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">temp</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span><span class="p">))</span>
+
+    <span class="n">max_compression</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">max_tension</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">max_pcompression</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
+    <span class="n">max_ptension</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
+    <span class="n">max_scompression</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ss</span><span class="p">)</span>
+    <span class="n">max_stension</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ss</span><span class="p">)</span>
+    <span class="n">max_disp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="n">avg_disp</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">' </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'maximum compression stress,'</span><span class="p">)</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">max_compression</span><span class="p">))</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">' </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'maximum tension stress,'</span><span class="p">)</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">max_tension</span><span class="p">))</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">' </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'maximum principal compression stress,'</span><span class="p">)</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">max_pcompression</span><span class="p">))</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">' </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'maximum principal tension stress,'</span><span class="p">)</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">max_ptension</span><span class="p">))</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">' </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'maximum shear compression stress,'</span><span class="p">)</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">max_scompression</span><span class="p">))</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">' </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'maximum shear tension stress,'</span><span class="p">)</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">max_stension</span><span class="p">))</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">' </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'maximum displacement,'</span><span class="p">)</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">max_disp</span><span class="p">))</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">' </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'average displacement,'</span><span class="p">)</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">avg_disp</span><span class="p">))</span>
+    <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">' </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">node_disp</span><span class="p">:</span>
+        <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'displacement node '</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">node_disp</span><span class="p">)</span><span class="o">+</span><span class="s1">' </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">node_disp</span><span class="p">)]))</span>
+        <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">' </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">r_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">' </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="n">r_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<span class="k">def</span> <span class="nf">write_static_results_from_ansys_rst</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">step_index</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">step_name</span><span class="o">=</span><span class="s1">'step'</span><span class="p">):</span>
+    <span class="n">write_preprocess</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">write_post_process</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">set_current_step</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">step_index</span><span class="p">)</span>
+    <span class="n">write_request_element_nodes</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">write_request_static_results</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">step_name</span><span class="p">)</span>
+    <span class="n">ansys_launch_process</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+</code></pre></div>
+<nav class="compas-sideways">
+</nav>
+</main>
+<!-- sidebar navigation -->
+<div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
+<div class="navbar-light">
+<form action="../../../../search.html" class="d-flex compas-searchbox" id="" method="get">
+<input class="form-control" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+<button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+</form>
+<div class="navbar-expand-md">
+<div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
+<ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="../../../../intro.html">Introduction</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../../tutorial.html">Tutorial</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../../examples.html">Examples</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../../reference.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../../license.html">License</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- toc of current page -->
+<div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+</div>
+</div>
+</div>
+<footer class="compas-footer">
+            
+                
+                    © Copyright 2017, Block Research Group.
+                
+            
+
+            
+                Last updated on Oct 12, 2017.
+            
+
+            
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+            
+        </footer>
+<script type="text/javascript">
+              var DOCUMENTATION_OPTIONS = {
+                URL_ROOT:    '',
+                VERSION:     '',
+                COLLAPSE_INDEX: false,
+                FILE_SUFFIX: '.html',
+                HAS_SOURCE:  true,
+                SOURCELINK_SUFFIX: '.txt'
+              };
+            </script>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+<script src="https://compas-dev.github.io/js/underscore.js"></script>
+<script src="https://compas-dev.github.io/js/doctools.js"></script>
+<script src="https://compas-dev.github.io/js/searchtools_.js"></script>
+<script>
+                hljs.initHighlightingOnLoad();
+                anchors.add();
+            </script>
+</body>
+</html>
