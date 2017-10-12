@@ -85,16 +85,28 @@ def make_command_file_harmonic(structure, output_path, filename, skey):
     write_harmonic_analysis_request(structure, output_path, filename, skey)
 
 
-def ansys_launch_process(output_path, filename):
+def ansys_launch_process(output_path, filename, fields, cpus, license):
     ansys_path = 'MAPDL.exe'
-    inp_path = output_path + "/" + filename
-    work_dir = output_path + "output/"
+    inp_path = output_path + '/' + filename
+    work_dir = output_path + 'output/'
+
     if not os.path.exists(work_dir):
         os.makedirs(work_dir)
-    out_path = work_dir + "/output.out"
-    launch_string = "\"" + ansys_path + "\" -p aa_t_a -dir \"" + work_dir
-    launch_string += "\" -j \"compas_ansys\" -s read -l en-us -b -i \""
-    launch_string += inp_path + " \" -o \"" + out_path + "\""
+    out_path = work_dir + '/output.out'
+
+    if license == 'Research':
+        lic_str = 'aa_r'
+    elif license == 'Student':
+        lic_str = 'aa_t_a'
+    else:
+        lic_str = 'aa_t_a'  # temporary default.
+
+    launch_string = '\"' + ansys_path + '\" -p ' + lic_str + ' -np ' + str(cpus)
+    launch_string += ' -dir \"' + work_dir
+    launch_string += '\" -j \"compas_ansys\" -s read -l en-us -b -i \"'
+    launch_string += inp_path + ' \" -o \"' + out_path + '\"'
+
+    print launch_string
     subprocess.call(launch_string)
 
 
