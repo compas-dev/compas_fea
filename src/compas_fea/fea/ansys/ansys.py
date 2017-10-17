@@ -94,9 +94,9 @@ def ansys_launch_process(output_path, filename, fields, cpus, license):
         os.makedirs(work_dir)
     out_path = work_dir + '/output.out'
 
-    if license == 'Research':
+    if license == 'research':
         lic_str = 'aa_r'
-    elif license == 'Student':
+    elif license == 'student':
         lic_str = 'aa_t_a'
     else:
         lic_str = 'aa_t_a'  # temporary default.
@@ -106,7 +106,7 @@ def ansys_launch_process(output_path, filename, fields, cpus, license):
     launch_string += '\" -j \"compas_ansys\" -s read -l en-us -b -i \"'
     launch_string += inp_path + ' \" -o \"' + out_path + '\"'
 
-    print launch_string
+    print(launch_string)
     subprocess.call(launch_string)
 
 

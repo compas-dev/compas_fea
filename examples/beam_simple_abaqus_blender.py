@@ -2,7 +2,6 @@
 
 from math import pi
 
-from compas_fea.fea.abaq import abaq
 from compas_fea.cad import blender
 
 from compas_fea.structure import CircularSection
@@ -13,9 +12,9 @@ from compas_fea.structure import GeneralStep
 from compas_fea.structure import PointLoad
 from compas_fea.structure import Structure
 
-from compas_blender.geometry import add_empty
 from compas_blender.helpers import network_from_bmesh
-from compas_blender.utilities import draw_bmesh
+from compas_blender.utilities import xdraw_mesh
+from compas_blender.utilities import xdraw_spheres
 from compas_blender.utilities import clear_layers
 
 
@@ -25,16 +24,13 @@ __license__    = 'MIT License'
 __email__      = 'liew@arch.ethz.ch'
 
 
-name = 'beam_simple'
-path = 'C:/Temp/'
-
 # Create empty Structure object
 
-mdl = Structure()
+mdl = Structure(name='beam_simple', path='/home/al/Temp/')
 
 # Clear layers
 
-clear_layers([0, 1, 2, 3])
+clear_layers(layers=[0, 1, 2, 3])
 
 # Create beam
 
@@ -43,16 +39,15 @@ nx = 100
 x = [i * L / nx for i in range(nx + 1)]
 vertices = [[xi, 0, 0] for xi in x]
 edges = [[i, i + 1] for i in range(nx)]
-bmesh = draw_bmesh(name='beam', vertices=vertices, edges=edges, layer=0)
-add_empty(location=[0, 0, 0], layer=1, radius=0.05)
-add_empty(location=[L, 0, 0], layer=2, radius=0.05)
+bmesh = xdraw_mesh(name='beam', vertices=vertices, edges=edges, layer=0)
+xdraw_spheres([{'pos': [0, 0, 0], 'layer': 1, 'radius': 0.01},
+               {'pos': [L, 0, 0], 'layer': 2, 'radius': 0.01}])
 
 # Weights
 
 spacing = 5
 weight = -1.0
-for xi in x[spacing::spacing]:
-    add_empty(type='SPHERE', location=[xi, 0, 0], layer=3, radius=0.005)
+xdraw_spheres([{'pos': [xi, 0, 0], 'layer': 3, 'radius': 0.005} for xi in x[spacing::spacing]])
 
 # Add beam elements
 
@@ -102,21 +97,17 @@ mdl.set_steps_order(['step_bc', 'step_load'])
 
 mdl.summary()
 
-# Generate .inp file
-
-abaq.inp_generate(mdl, filename='{0}{1}.inp'.format(path, name))
-
 # Run and extract data
 
-mdl.analyse(path=path, name=name, software='abaqus', fields='U,UR,SF,SM')
+mdl.analyse_and_extract(software='abaqus', fields={'U': 'all', 'UR': 'all', 'SF': 'all', 'SM': 'all'})
 
 # Plot displacements
 
-blender.plot_data(mdl, path, name, step='step_load', field='U', component='magnitude', radius=0.01, layer=4)
-blender.plot_data(mdl, path, name, step='step_load', field='UR', component='UR2', radius=0.01, layer=5)
+blender.plot_data(mdl, step='step_load', field='U', component='magnitude', radius=0.01, layer=4)
+blender.plot_data(mdl, step='step_load', field='UR', component='UR2', radius=0.01, layer=5)
 
 # Plot section forces/moments
 
-blender.plot_data(mdl, path, name, step='step_load', field='SF', component='SF1', radius=0.01, layer=6)
-blender.plot_data(mdl, path, name, step='step_load', field='SF', component='SF3', radius=0.01, layer=7)
-blender.plot_data(mdl, path, name, step='step_load', field='SM', component='SM2', radius=0.01, layer=8)
+blender.plot_data(mdl, step='step_load', field='SF', component='SF1', radius=0.01, layer=6)
+blender.plot_data(mdl, step='step_load', field='SF', component='SF3', radius=0.01, layer=7)
+blender.plot_data(mdl, step='step_load', field='SM', component='SM2', radius=0.01, layer=8)

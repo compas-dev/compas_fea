@@ -3,7 +3,6 @@
 from compas.datastructures.mesh.mesh import Mesh
 from compas_rhino.helpers.mesh import mesh_from_guid
 
-from compas_fea.fea.abaq import abaq
 from compas_fea.cad import rhino
 
 from compas_fea.structure import Concrete
@@ -32,13 +31,11 @@ __license__    = 'MIT License'
 __email__      = 'liew@arch.ethz.ch'
 
 
-name = 'mesh_bridge'
-path = 'C:/Temp/'
 option = 'v4_edited_straight'
 
 # Create empty Structure object
 
-mdl = Structure()
+mdl = Structure(name='mesh_bridge', path='C:/Temp/')
 
 # Add tie and shell elements
 
@@ -87,7 +84,7 @@ mdl.add_load(GravityLoad(name='load_gravity', elements='mesh_bottom'))
 # Add tributary loads
 
 Gc = 2400 * 9.81
-mesh= mesh_from_guid(Mesh(), rs.ObjectsByLayer('{0}::mesh_bottom'.format(option))[0])
+mesh = mesh_from_guid(Mesh(), rs.ObjectsByLayer('{0}::mesh_bottom'.format(option))[0])
 surface = rs.ObjectsByLayer('{0}::surface'.format(option))[0]
 loads = ['load_gravity']
 for key in mesh.vertices():
@@ -117,34 +114,30 @@ mdl.set_steps_order(['step_bc', 'step_loads', 'step_buckle'])
 
 mdl.summary()
 
-# Generate .inp file
-
-abaq.inp_generate(mdl, filename='{0}{1}.inp'.format(path, name))
-
 # Run and extract data
 
-mdl.analyse(path=path, name=name, software='abaqus', fields='U,S')
+mdl.analyse_and_extract(software='abaqus', fields={'U': 'all', 'S': 'all'})
 
 # Plot displacements
 
 layer = '{0}::U3'.format(option)
-rhino.plot_data(mdl, path, name, step='step_loads', field='U', component='U3', layer=layer, radius=0.01)
+rhino.plot_data(mdl, step='step_loads', field='U', component='U3', layer=layer, radius=0.01)
 
 # Plot stress
 
-rhino.plot_data(mdl, path, name, step='step_loads', field='S', component='maxPrincipal',
+rhino.plot_data(mdl, step='step_loads', field='S', component='maxPrincipal',
                 layer='{0}::SMAX'.format(option), cbar=[0, 1.5*10**6], radius=0.01)
-rhino.plot_data(mdl, path, name, step='step_loads', field='S', component='minPrincipal',
+rhino.plot_data(mdl, step='step_loads', field='S', component='minPrincipal',
                 layer='{0}::SMIN'.format(option), cbar=[-5*10**6, 0], radius=0.01)
 
 # Plot buckled shape
 
-rhino.plot_data(mdl, path, name, step='step_buckle', field='U', component='magnitude',
+rhino.plot_data(mdl, step='step_buckle', field='U', component='magnitude',
                 layer='{0}::BUCKLE'.format(option), scale=0.3, radius=0.01)
 
 # Plot principal stresses
 
-rhino.plot_principal_stresses(mdl, path, name, step='step_loads', ptype='min', scale=0.2,
-                    layer='{0}::COM'.format(option))
-rhino.plot_principal_stresses(mdl, path, name, step='step_loads', ptype='max', scale=0.2,
-                    layer='{0}::TEN'.format(option))
+rhino.plot_principal_stresses(mdl, step='step_loads', ptype='min', scale=0.2,
+                              layer='{0}::COM'.format(option))
+rhino.plot_principal_stresses(mdl, step='step_loads', ptype='max', scale=0.2,
+                              layer='{0}::TEN'.format(option))

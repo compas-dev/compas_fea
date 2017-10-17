@@ -1,6 +1,5 @@
 """An example compas_fea package use for beams elements."""
 
-from compas_fea.fea.abaq import abaq
 from compas_fea.cad import rhino
 
 from compas_fea.structure import ElasticIsotropic
@@ -19,9 +18,6 @@ __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
 __license__    = 'MIT License'
 __email__      = 'liew@arch.ethz.ch'
 
-
-name = 'beam_neri'
-path = 'C:/Temp/'
 
 rs.EnableRedraw(False)
 
@@ -47,7 +43,7 @@ for i in range(2, 11):
 
 # Create empty Structure object
 
-mdl = Structure()
+mdl = Structure(name='beam_neri', path='C:/Temp/')
 
 # Add beam elements
 
@@ -97,18 +93,14 @@ mdl.set_steps_order(['step_bc', 'step_load'])
 
 mdl.summary()
 
-# Generate .inp file
-
-abaq.inp_generate(mdl, filename='{0}{1}.inp'.format(path, name))
-
 # Run and extract data
 
-mdl.analyse(path=path, name=name, software='abaqus', fields='U,S')
+mdl.analyse_and_extract(software='abaqus', fields={'U': 'all', 'S': 'all'})
 
 # Plot displacements
 
-rhino.plot_data(mdl, path, name, step='step_load', field='U', component='magnitude', radius=0.02)
+rhino.plot_data(mdl, step='step_load', field='U', component='magnitude', radius=0.02)
 
 # Plot stresses
 
-rhino.plot_data(mdl, path, name, step='step_load', field='S', component='mises', radius=0.02, nodal='max')
+rhino.plot_data(mdl, step='step_load', field='S', component='mises', radius=0.02, nodal='max')

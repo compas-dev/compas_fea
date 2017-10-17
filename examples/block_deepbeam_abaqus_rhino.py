@@ -2,7 +2,6 @@
 
 # Note: Requires mayavi to visualise the voxels.
 
-from compas_fea.fea.abaq import abaq
 from compas_fea.cad import rhino
 
 from compas_fea.structure import ElasticIsotropic
@@ -22,12 +21,9 @@ __license__    = 'MIT License'
 __email__      = 'liew@arch.ethz.ch'
 
 
-name = 'block_deepbeam'
-path = 'C:/Temp/'
-
 # Create empty Structure object
 
-mdl = Structure()
+mdl = Structure(name='block_deepbeam', path='C:/Temp/')
 
 # Extrude mesh
 
@@ -61,21 +57,17 @@ mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_supports
 
 # Add steps
 
-mdl.add_step(GeneralStep(name='step', nlgeom=False, displacements=['disp_pinned'], loads=['load_point']))
+mdl.add_step(GeneralStep(name='step', displacements=['disp_pinned'], loads=['load_point']))
 mdl.set_steps_order(['step'])
 
 # Structure summary
 
 mdl.summary()
 
-# Generate .inp file
-
-abaq.inp_generate(mdl, filename='{0}{1}.inp'.format(path, name))
-
 # Run and extract data
 
-mdl.analyse(path=path, name=name, software='abaqus', fields='U,S')
+mdl.analyse_and_extract(software='abaqus', fields={'U': 'all', 'S': 'all'})
 
 # Plot displacements
 
-rhino.plot_data(mdl, path, name, step='step', field='S', component='mises', cbar=[0, 2], voxel=0.3, vdx=1./nz)
+rhino.plot_data(mdl, step='step', field='S', component='mises', cbar=[0, 2], voxel=0.3, vdx=1./nz)

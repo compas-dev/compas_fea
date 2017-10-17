@@ -2,7 +2,6 @@
 
 # Note: Sliding at the joints is not included.
 
-from compas_fea.fea.abaq import abaq
 from compas_fea.cad import rhino
 
 from compas_fea.structure import ElasticIsotropic
@@ -24,12 +23,9 @@ __license__    = 'MIT License'
 __email__      = 'liew@arch.ethz.ch'
 
 
-name = 'beam_gridshell'
-path = 'C:/Temp/'
-
 # Create empty Structure object
 
-mdl = Structure()
+mdl = Structure(name='beam_gridshell', path='C:/Temp/')
 
 # Add beam elements
 
@@ -87,20 +83,16 @@ mdl.set_steps_order(['step_bc', 'step_lift'])
 
 mdl.summary()
 
-# Generate .inp file
-
-abaq.inp_generate(mdl, filename='{0}{1}.inp'.format(path, name))
-
 # Run and extract data
 
-mdl.analyse(path=path, name=name, software='abaqus', fields='U,SF,SM')
+mdl.analyse_and_extract(software='abaqus', fields={'U': 'all', 'SF': 'all', 'SM': 'all'})
 
 # Plot displacements
 
-rhino.plot_data(mdl, path, name, step='step_lift', field='U', component='magnitude', radius=0.005)
+rhino.plot_data(mdl, step='step_lift', field='U', component='magnitude', radius=0.005)
 
 # Plot section forces/moments
 
-rhino.plot_data(mdl, path, name, step='step_lift', field='SF', component='SF1', radius=0.005)
-rhino.plot_data(mdl, path, name, step='step_lift', field='SF', component='SF3', radius=0.005)
-rhino.plot_data(mdl, path, name, step='step_lift', field='SM', component='SM2', radius=0.005)
+rhino.plot_data(mdl, step='step_lift', field='SF', component='SF1', radius=0.005)
+rhino.plot_data(mdl, step='step_lift', field='SF', component='SF3', radius=0.005)
+rhino.plot_data(mdl, step='step_lift', field='SM', component='SM2', radius=0.005)

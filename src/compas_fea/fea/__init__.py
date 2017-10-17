@@ -21,16 +21,17 @@ abaq
     :toctree: generated/
 
     abaqus_launch_process
-    inp_write_constraints
-    inp_write_elements
-    inp_generate
-    inp_write_heading
-    inp_write_materials
-    inp_write_misc
-    inp_write_nodes
-    inp_write_properties
-    inp_write_sets
-    inp_write_steps
+    extract_odb_data
+    input_write_constraints
+    input_write_elements
+    input_generate
+    input_write_heading
+    input_write_materials
+    input_write_misc
+    input_write_nodes
+    input_write_properties
+    input_write_sets
+    input_write_steps
 
 
 ansys
@@ -43,7 +44,7 @@ ansys
 .. autosummary::
     :toctree: generated/
 
-    inp_generate
+    input_generate
     make_command_file_static
     make_command_file_static_combined
     make_command_file_modal

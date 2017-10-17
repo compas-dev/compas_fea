@@ -147,7 +147,7 @@ class Steel(object):
         None
     """
 
-    def __init__(self, name, fy=355, E=210 * 10**9, v=0.3, p=7850, type='elastic-plastic'):
+    def __init__(self, name, fy=355, E=210*10**9, v=0.3, p=7850, type='elastic-plastic'):
         self.__name__ = 'Steel'
         self.name = name
         self.E = {'E': E}

@@ -284,23 +284,43 @@ def extrude_mesh(structure, mesh, nz, dz):
 
 
 def group_keys_by_attribute(adict, name, tol='3f'):
+    """ Make group keys by shared attribute values.
+
+    Parameters:
+        adict (dic): Attribute dictionary.
+        name (str): Attribute of interest.
+        tol (float): Float tolerance.
+
+    Returns:
+        dic: Group dictionary.
+    """
     groups = {}
-    for k in adict:
-        if name in adict[k]:
-            value = adict[k][name]
+    for key, item in adict.items():
+        if name in item:
+            value = item[name]
             if type(value) == float:
                 value = '{0:.{1}}'.format(value, tol)
-            groups.setdefault(value, []).append(k)
+            groups.setdefault(value, []).append(key)
     return groups
 
 
 def group_keys_by_attributes(adict, names, tol='3f'):
+    """ Make group keys by shared values of attributes.
+
+    Parameters:
+        adict (dic): Attribute dictionary.
+        name (str): Attributes of interest.
+        tol (float): Float tolerance.
+
+    Returns:
+        dic: Group dictionary.
+    """
     groups = {}
-    for k in adict:
+    for key, item in adict.items():
         values = []
         for name in names:
-            if name in adict[k]:
-                value = adict[k][name]
+            if name in item:
+                value = item[name]
                 if type(value) == float:
                     value = '{0:.{1}}'.format(value, tol)
                 else:
@@ -309,7 +329,7 @@ def group_keys_by_attributes(adict, names, tol='3f'):
                 value = '-'
             values.append(value)
         vkey = '_'.join(values)
-        groups.setdefault(vkey, []).append(k)
+        groups.setdefault(vkey, []).append(key)
     return groups
 
 
@@ -437,6 +457,7 @@ def postprocess(temp, name, step, field, component, scale, iptype, nodal, cmin, 
         array: Scaled nodal data.
     """
     tic = time()
+
     X, dU, enodes, data, n = load_data(temp, name, step, field, component)
     U = X + dU * float(scale)
     fnodes, felements, fnodal = process_data(field, data, iptype, nodal, enodes, n)

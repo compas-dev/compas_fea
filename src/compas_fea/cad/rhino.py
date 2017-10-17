@@ -58,6 +58,10 @@ __all__ = [
 ]
 
 
+node_fields = ['RF', 'RM', 'U', 'UR', 'CF', 'CM']
+element_fields = ['SF', 'SM', 'SK', 'SE', 'S', 'E', 'PE', 'RBFOR']
+
+
 def add_element_set(structure, guids, name, explode=False):
     """ Adds element set information from Rhino curve and mesh guids.
 
@@ -279,8 +283,8 @@ def plot_axes(xyz, e11, e22, e33, sc=1):
     rs.ObjectColor(ez, [0, 0, 255])
 
 
-def plot_data(structure, path, name, step, field='U', component='magnitude', scale=1.0, radius=0.05,
-              iptype='mean', nodal='mean', cbar=[None, None], layer=None, voxel=None, vdx=0):
+def plot_data(structure, step, field='U', component='magnitude', scale=1.0, radius=0.05, iptype='mean', nodal='mean',
+              cbar=[None, None], layer=None, voxel=None, vdx=0):
     """ Plots analysis results on the deformed shape of the Structure.
 
     Note:
@@ -288,8 +292,6 @@ def plot_data(structure, path, name, step, field='U', component='magnitude', sca
 
     Parameters:
         structure (obj): Structure object.
-        path (str): Folder to saved data.
-        name (str): Structure name.
         step (str): Name of the Step.
         field (str): Field to plot, e.g. 'U', 'S', 'SM'.
         component (str): Component to plot, e.g. 'U1', 'RF2'.
@@ -306,8 +308,9 @@ def plot_data(structure, path, name, step, field='U', component='magnitude', sca
         None
     """
 
-    node_fields = ['RF', 'RM', 'U', 'UR', 'CF', 'CM']
-    element_fields = ['SF', 'SM', 'SK', 'SE', 'S', 'E', 'PE', 'RBFOR']
+    name = structure.name
+    path = structure.path
+    temp = '{0}{1}/'.format(path, name)
 
     # Create and clear Rhino layer
 
@@ -320,7 +323,6 @@ def plot_data(structure, path, name, step, field='U', component='magnitude', sca
     # Start postprocess
 
     script = utilities.__file__.replace('__init__.py', 'postprocess.py')
-    temp = '{0}{1}/'.format(path, name)
     cmin = str(cbar[0]) if cbar[0] is not None else 'None'
     cmax = str(cbar[1]) if cbar[1] is not None else 'None'
     voxel = str(voxel) if voxel is not None else 'None'
@@ -343,6 +345,7 @@ def plot_data(structure, path, name, step, field='U', component='magnitude', sca
         elements = json.load(f)
     with open('{0}{1}-postprocess.json'.format(temp, name), 'r') as f:
         data = json.load(f)
+
     toc       = data['toc']
     cnodes    = data['cnodes']
     celements = data['celements']
@@ -355,12 +358,10 @@ def plot_data(structure, path, name, step, field='U', component='magnitude', sca
 
     with open('{0}{1}-{2}-info.json'.format(temp, name, step), 'r') as f:
         info = json.load(f)
-    print('Step summary: {0}'.format(step))
+
+    print('\nStep summary: {0}'.format(step))
     print('--------------' + '-' * len(step))
     print('Frame description: {0}'.format(info['description']))
-    print('Analysis time: {0:.3f}'.format(float(info['toc_analysis'])))
-    print('Extraction time: {0:.3f}'.format(info['toc_extraction']))
-    print('Processing time: {0:.3f}'.format(toc))
 
     # Plot meshes
 
@@ -429,16 +430,17 @@ def plot_data(structure, path, name, step, field='U', component='magnitude', sca
         rs.CurrentLayer(layer)
 
     vertices = rs.MeshVertices(guid)
-    n = len(vertices)
     x = [i[0] for i in vertices]
     y = [i[1] for i in vertices]
     xmin = min(x)
     xmax = max(x)
     xran = xmax - xmin
     ymin = min(y)
-    colors = [colorbar((x[c] - xmin - xran / 2.) / (xran / 2.), input='float') for c in range(n)]
+
+    colors = [colorbar((x[c] - xmin - xran / 2.) / (xran / 2.), input='float') for c in range(len(vertices))]
     id = rs.AddMesh(vertices, rs.MeshFaceVertices(guid))
     rs.MeshVertexColors(id, colors)
+
     h = xran / 20.
     rs.AddText('{0:.4g}'.format(+fabs), [xmax, ymin - 1.5 * h, 0], height=h)
     rs.AddText('{0:.4g}'.format(-fabs), [xmin, ymin - 1.5 * h, 0], height=h)
@@ -452,7 +454,7 @@ def plot_data(structure, path, name, step, field='U', component='magnitude', sca
     rs.EnableRedraw(True)
 
 
-def plot_principal_stresses(structure, path, name, step, ptype, scale, layer):
+def plot_principal_stresses(structure, step, ptype, scale, layer):
     """ Plots the principal stresses of the elements.
 
     Note:
@@ -470,6 +472,9 @@ def plot_principal_stresses(structure, path, name, step, ptype, scale, layer):
     Returns:
         None
     """
+
+    name = structure.name
+    path = structure.path
 
     # Clear and create layer
 
@@ -491,7 +496,10 @@ def plot_principal_stresses(structure, path, name, step, ptype, scale, layer):
     sp5_keys = ['ip3_sp5', 'ip2_sp5', 'ip4_sp5', 'ip1_sp5']
     ipkeys = sp1_keys + sp5_keys
 
+    print('Plotting principal stress vectors ...')
+
     for ekey in SPr:
+
         if len(structure.elements[int(ekey)].nodes) == 4:
             th1 = [0.5 * atan2(S12[ekey][ip], 0.5 * (S11[ekey][ip] - S22[ekey][ip])) for ip in sp1_keys]
             th5 = [0.5 * atan2(S12[ekey][ip], 0.5 * (S11[ekey][ip] - S22[ekey][ip])) for ip in sp5_keys]

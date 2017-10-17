@@ -5,12 +5,15 @@ compas_fea.fea.abaq : Abaqus .inp file creator.
 from __future__ import print_function
 from __future__ import absolute_import
 
-from compas_fea.fea.abaq import odb
+from compas_fea.fea.abaq import launch_job
+from compas_fea.fea.abaq import odb_extract
 
 from subprocess import Popen
 from subprocess import PIPE
 
 from math import pi
+
+from time import time
 
 import json
 import os
@@ -24,33 +27,39 @@ __email__      = 'liew@arch.ethz.ch'
 
 __all__ = [
     'abaqus_launch_process',
-    'inp_write_constraints',
-    'inp_write_elements',
-    'inp_generate',
-    'inp_write_heading',
-    'inp_write_materials',
-    'inp_write_misc',
-    'inp_write_nodes',
-    'inp_write_properties',
-    'inp_write_sets',
-    'inp_write_steps'
+    'extract_odb_data',
+    'input_write_constraints',
+    'input_write_elements',
+    'input_generate',
+    'input_write_heading',
+    'input_write_materials',
+    'input_write_misc',
+    'input_write_nodes',
+    'input_write_properties',
+    'input_write_sets',
+    'input_write_steps'
 ]
 
 
-def abaqus_launch_process(structure, path, name, exe, fields, cpus):
+node_fields = ['RF', 'RM', 'U', 'UR', 'CF', 'CM']
+element_fields = ['SF', 'SM', 'SK', 'SE', 'S', 'E', 'PE', 'RBFOR']
+
+
+def abaqus_launch_process(structure, exe, fields, cpus):
     """ Runs the analysis through the chosen FEA software/library.
 
     Parameters:
         structure (obj): Structure object.
-        path (str): Folder to save data.
-        name (str): Name of the Structure object and analysis files.
         exe (str): Full terminal command to bypass subprocess defaults.
-        fields (str): Data fields to extract e.g 'U,S,SM'.
+        fields (dic): Data field requests.
         cpus (int): Number of CPU cores to use.
 
     Returns:
         None
     """
+
+    name = structure.name
+    path = structure.path
 
     # Create temp folder
 
@@ -74,14 +83,16 @@ def abaqus_launch_process(structure, path, name, exe, fields, cpus):
     with open('{0}{1}-elements.json'.format(temp, name), 'w') as f:
         json.dump(elements, f)
 
-    # Run sub-process odb.py file
+    # Run sub-process file
 
-    odb_loc = odb.__file__
-    subprocess = 'noGUI=' + odb_loc.replace('\\', '/')
+    loc = launch_job.__file__
+    subprocess = 'noGUI={0}'.format(loc.replace('\\', '/'))
+
+    tic = time()
 
     success = False
     if not exe:
-        args = ['abaqus', 'cae', subprocess, '--', fields, str(cpus), temp, path, name]
+        args = ['abaqus', 'cae', subprocess, '--', str(cpus), path, name]
         p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
         while True:
             line = p.stdout.readline()
@@ -98,7 +109,7 @@ def abaqus_launch_process(structure, path, name, exe, fields, cpus):
         if not success:
             print('***** Analysis failed - attempting to read error logs *****')
             try:
-                print('***** Attempting to read .msg log *****')
+                print('\n***** Attempting to read .msg log *****')
                 with open('{0}{1}.msg'.format(temp, name)) as f:
                     lines = f.readlines()
                     for c, line in enumerate(lines):
@@ -108,8 +119,8 @@ def abaqus_launch_process(structure, path, name, exe, fields, cpus):
             except:
                 print('***** Loading .msg log failed *****')
             try:
-                print('***** Attempting to read abaqus.rpy log *****')
-                with open('{0}abaqus.rpy'.format(path)) as f:
+                print('\n***** Attempting to read abaqus.rpy log *****')
+                with open('{0}abaqus.rpy'.format(temp)) as f:
                     lines = f.readlines()
                     for c, line in enumerate(lines):
                         if '#: ' in line:
@@ -120,22 +131,74 @@ def abaqus_launch_process(structure, path, name, exe, fields, cpus):
             print('***** Analysis successful *****')
 
     else:
-        args = '{0} -- {1} {2} {3} {4} {5}'.format(subprocess, fields, cpus, temp, path, name)
+        args = '{0} -- {1} {2} {3}'.format(subprocess, cpus, path, name)
         os.chdir(temp)
         os.system('{0}{1}'.format(exe, args))
 
-    # Store data
+    toc = time() - tic
+    print('\n***** Abaqus analysis time : {0}s *****'.format(toc))
+
+
+def extract_odb_data(structure, fields, exe):
+    """ Extract data from the Abaqus .odb file.
+
+    Parameters:
+        structure (obj): Structure object.
+        fields (dic): Data field requests.
+        exe (str): Full terminal command to bypass subprocess defaults.
+
+    Returns:
+        None
+    """
+
+    name = structure.name
+    path = structure.path
+    temp = '{0}{1}/'.format(path, name)
+
+    # Run sub-process file
+
+    loc = odb_extract.__file__
+    subprocess = 'noGUI={0}'.format(loc.replace('\\', '/'))
+
+    tic = time()
+
+    if fields == 'all':
+        fields = ','.join(node_fields + element_fields)
+    else:
+        fields = ','.join(list(fields.keys()))
+
+    if not exe:
+        args = ['abaqus', 'cae', subprocess, '--', fields, name, temp]
+        p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+        while True:
+            line = p.stdout.readline()
+            if not line:
+                break
+            line = str(line.strip())
+            print(line)
+        stdout, stderr = p.communicate()
+        print(stdout)
+        print(stderr)
+
+    else:
+        args = '{0} -- {1} {2} {3}'.format(subprocess, fields, name, temp)
+        os.chdir(temp)
+        os.system('{0}{1}'.format(exe, args))
+
+    toc = time() - tic
 
     try:
         with open('{0}{1}-results.json'.format(temp, name), 'r') as f:
             structure.results = json.load(f)
-        structure.save_to_obj('{0}{1}.obj'.format(path, name))
+        structure.save_to_obj()
         print('***** Saving data to structure.results successful *****')
     except:
         print('***** Saving data to structure.results unsuccessful *****')
 
+    print('\n***** Data extracted from Abaqus .odb file : {0}s *****'.format(toc))
 
-def inp_write_constraints(f, constraints):
+
+def input_write_constraints(f, constraints):
     """ Writes the constraints information to the Abaqus .inp file.
 
     Parameters:
@@ -166,7 +229,7 @@ def inp_write_constraints(f, constraints):
     f.write('**\n')
 
 
-def inp_write_elements(f, elements):
+def input_write_elements(f, elements):
     """ Writes the element information to the Abaqus .inp file.
 
     Note:
@@ -248,12 +311,13 @@ def inp_write_elements(f, elements):
     f.write('\n**\n')
 
 
-def inp_generate(structure, filename, units='m'):
+def input_generate(structure, filename, fields, units='m'):
     """ Creates the Abaqus .inp file from the Structure object.
 
     Parameters:
         structure (obj): The Structure object to read from.
         filename (str): Path to save the .inp file to.
+        fields (dic): Data field requests.
         units (str): Units of the nodal co-ordinates 'm','cm','mm'.
 
     Returns:
@@ -274,20 +338,20 @@ def inp_generate(structure, filename, units='m'):
         sets = structure.sets
         steps = structure.steps
 
-        inp_write_heading(f)
-        inp_write_nodes(f, nodes, units)
-        inp_write_elements(f, elements)
-        inp_write_sets(f, sets)
-        inp_write_materials(f, materials)
-        inp_write_misc(f, misc)
-        inp_write_properties(f, sections, properties, elements, sets)
-        inp_write_constraints(f, constraints)
-        inp_write_steps(f, structure, steps, loads, displacements, interactions, misc)
+        input_write_heading(f)
+        input_write_nodes(f, nodes, units)
+        input_write_elements(f, elements)
+        input_write_sets(f, sets)
+        input_write_materials(f, materials)
+        input_write_misc(f, misc)
+        input_write_properties(f, sections, properties, elements, sets)
+        input_write_constraints(f, constraints)
+        input_write_steps(f, structure, steps, loads, displacements, interactions, misc, fields)
 
     print('***** Abaqus input file generated: {0} *****\n'.format(filename))
 
 
-def inp_write_heading(f):
+def input_write_heading(f):
     """ Creates the Abaqus .inp file heading.
 
     Parameters:
@@ -314,7 +378,7 @@ def inp_write_heading(f):
     f.write('**\n')
 
 
-def inp_write_materials(f, materials):
+def input_write_materials(f, materials):
     """ Writes materials to the Abaqus .inp file.
 
     Parameters:
@@ -446,7 +510,7 @@ def inp_write_materials(f, materials):
         f.write('**\n')
 
 
-def inp_write_misc(f, misc):
+def input_write_misc(f, misc):
     """ Writes misc class info to the Abaqus .inp file.
 
     Parameters:
@@ -477,7 +541,7 @@ def inp_write_misc(f, misc):
         f.write('**\n')
 
 
-def inp_write_nodes(f, nodes, units):
+def input_write_nodes(f, nodes, units):
     """ Writes the nodal co-ordinates information to the Abaqus .inp file.
 
     Note:
@@ -504,7 +568,7 @@ def inp_write_nodes(f, nodes, units):
     f.write('**\n')
 
 
-def inp_write_properties(f, sections, properties, elements, sets):
+def input_write_properties(f, sections, properties, elements, sets):
     """ Writes the section information to the Abaqus .inp file.
 
     Parameters:
@@ -619,7 +683,7 @@ def inp_write_properties(f, sections, properties, elements, sets):
         f.write('**\n')
 
 
-def inp_write_sets(f, sets):
+def input_write_sets(f, sets):
     """ Creates the Abaqus .inp file node sets NSETs and element sets ELSETs.
 
     Note:
@@ -673,7 +737,7 @@ def inp_write_sets(f, sets):
     f.write('**\n')
 
 
-def inp_write_steps(f, structure, steps, loads, displacements, interactions, misc):
+def input_write_steps(f, structure, steps, loads, displacements, interactions, misc, fields):
     """ Writes step information to the Abaqus .inp file.
 
     Note:
@@ -687,6 +751,7 @@ def inp_write_steps(f, structure, steps, loads, displacements, interactions, mis
         displacements (dic): Displacement objects from structure.displacements.
         interactions (dic): Interaction objects from structure.interactions.
         misc (dic): Misc objects from structure.misc.
+        fields (dic): Data field requests.
 
     Returns:
         None
@@ -841,15 +906,26 @@ def inp_write_steps(f, structure, steps, loads, displacements, interactions, mis
             f.write('**\n')
             f.write('*OUTPUT, FIELD\n')
             f.write('**\n')
+
             f.write('*NODE OUTPUT\n')
-            f.write('RF, RM, U, UR, CF, CM, NT\n')
+            if fields == 'all':
+                f.write('RF, RM, U, UR, CF, CM, NT\n')
+            else:
+                f.write(', '.join([i for i in node_fields if i in fields]) + '\n')
             f.write('**\n')
+
             f.write('*ELEMENT OUTPUT\n')
-            f.write('SF, SM, SE, SK, S, E, PE\n')
+            if fields == 'all':
+                f.write('SF, SM, SE, SK, S, E, PE\n')
+            else:
+                f.write(', '.join([i for i in element_fields if (i in fields and i != 'RBFOR')]) + '\n')
             f.write('**\n')
-            f.write('*ELEMENT OUTPUT, REBAR\n')
-            f.write('RBFOR\n')
+
+            if (fields == 'all') or ('RBFOR' in fields):
+                f.write('*ELEMENT OUTPUT, REBAR\n')
+                f.write('RBFOR\n')
             f.write('**\n')
+
             f.write('*END STEP\n')
 
         # Thermal

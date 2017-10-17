@@ -13,19 +13,20 @@ __email__      = 'liew@arch.ethz.ch'
 
 
 __all__ = [
-    'inp_generate',
-    'inp_write_heading',
-    'inp_write_nodes',
-    'inp_write_steps'
+    'input_generate',
+    'input_write_heading',
+    'input_write_nodes',
+    'input_write_steps'
 ]
 
 
-def inp_generate(structure, filename, units='m'):
+def input_generate(structure, filename, fields, units='m'):
     """ Creates the OpenSees input file from the Structure object.
 
     Parameters:
         structure (obj): The Structure object to read from.
         filename (str): Path to save the input file to.
+        fields (dic): Data field requests.
         units (str): Units of the nodal co-ordinates 'm','cm','mm'.
 
     Returns:
@@ -46,15 +47,15 @@ def inp_generate(structure, filename, units='m'):
         # sets = structure.sets
         steps = structure.steps
 
-        inp_write_heading(f)
-        inp_write_nodes(f, nodes, units)
-        # inp_write_elements(f, elements)
-        inp_write_steps(f, structure, steps, loads, displacements, interactions, misc)
+        input_write_heading(f)
+        input_write_nodes(f, nodes, units)
+        # input_write_elements(f, elements)
+        input_write_steps(f, structure, steps, loads, displacements, interactions, misc)
 
     print('***** OpenSees input file generated: {0} *****\n'.format(filename))
 
 
-def inp_write_heading(f):
+def input_write_heading(f):
     """ Creates the input file heading.
 
     Parameters:
@@ -77,7 +78,7 @@ def inp_write_heading(f):
     f.write('##\n')
 
 
-def inp_write_nodes(f, nodes, units):
+def input_write_nodes(f, nodes, units):
     """ Writes the nodal co-ordinates information to the OpenSees input file.
 
     Parameters:
@@ -100,7 +101,7 @@ def inp_write_nodes(f, nodes, units):
     f.write('##\n')
 
 
-def inp_write_steps(f, structure, steps, loads, displacements, interactions, misc):
+def input_write_steps(f, structure, steps, loads, displacements, interactions, misc):
     """ Writes step information to the OpenSees input file.
 
     Note:

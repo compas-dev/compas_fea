@@ -1,8 +1,5 @@
 """An example compas_fea package use for beam elements."""
 
-from math import pi
-
-from compas_fea.fea.abaq import abaq
 from compas_fea.cad import rhino
 
 from compas_fea.structure import CircularSection
@@ -12,6 +9,8 @@ from compas_fea.structure import GeneralDisplacement
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import PointLoad
 from compas_fea.structure import Structure
+
+from math import pi
 
 import rhinoscriptsyntax as rs
 
@@ -24,12 +23,9 @@ __email__      = 'liew@arch.ethz.ch'
 
 rs.EnableRedraw(False)
 
-name = 'beam_simple'
-path = 'C:/Temp/'
-
 # Create empty Structure object
 
-mdl = Structure()
+mdl = Structure(name='beam_simple', path='C:/Temp/')
 
 # Clear layers
 
@@ -107,21 +103,17 @@ mdl.set_steps_order(['step_bc', 'step_load'])
 
 mdl.summary()
 
-# Generate .inp file
-
-abaq.inp_generate(mdl, filename='{0}{1}.inp'.format(path, name))
-
 # Run and extract data
 
-mdl.analyse(path=path, name=name, software='abaqus', fields='U,UR,SF,SM')
+mdl.analyse_and_extract(software='abaqus', fields='all')
 
 # Plot displacements
 
-rhino.plot_data(mdl, path, name, step='step_load', field='U', component='magnitude', radius=0.01)
-rhino.plot_data(mdl, path, name, step='step_load', field='UR', component='UR2', radius=0.01)
+rhino.plot_data(mdl, step='step_load', field='U', component='magnitude', radius=0.01)
+rhino.plot_data(mdl, step='step_load', field='UR', component='UR2', radius=0.01)
 
 # Plot section forces/moments
 
-rhino.plot_data(mdl, path, name, step='step_load', field='SF', component='SF1', radius=0.01)
-rhino.plot_data(mdl, path, name, step='step_load', field='SF', component='SF3', radius=0.01)
-rhino.plot_data(mdl, path, name, step='step_load', field='SM', component='SM2', radius=0.01)
+rhino.plot_data(mdl, step='step_load', field='SF', component='SF1', radius=0.01)
+rhino.plot_data(mdl, step='step_load', field='SF', component='SF3', radius=0.01)
+rhino.plot_data(mdl, step='step_load', field='SM', component='SM2', radius=0.01)

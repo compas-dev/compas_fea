@@ -11,6 +11,7 @@ from compas.utilities import geometric_key
 
 from compas_fea.fea.abaq import abaq
 from compas_fea.fea.ansys import ansys
+from compas_fea.fea.opensees import opensees
 
 from compas_fea.structure import *
 
@@ -49,6 +50,7 @@ class Structure(object):
         misc (dic): Misc objects.
         nodes (dic): Node co-ordinates and local axes.
         node_index (dic): Index of nodes (geometric keys).
+        path (str): Path to save files.
         results (dic): Results from analysis.
         sections (dic): Section objects.
         sets (dic): Node, element and surface sets.
@@ -60,7 +62,7 @@ class Structure(object):
         None
     """
 
-    def __init__(self, name='compas_fea-Structure'):
+    def __init__(self, name='compas_fea-Structure', path=None):
         self.constraints = {}
         self.displacements = {}
         self.elements = {}
@@ -73,6 +75,7 @@ class Structure(object):
         self.misc = {}
         self.nodes = {}
         self.node_index = {}
+        self.path = path
         self.results = {}
         self.sections = {}
         self.sets = {}
@@ -375,6 +378,7 @@ compas_fea structure: {}
 # ==============================================================================
 # constructors
 # ==============================================================================
+
     @classmethod
     def from_mesh(cls, mesh):
 
@@ -666,57 +670,88 @@ compas_fea structure: {}
         """
         self.steps_order = order
 
-    def combine_static_steps(self):
-        """ Combines the static steps in structure.steps.
-
-        Parameters:
-            None
-
-        Returns:
-            str: The name of the newly created combined Step.
-        """
-        name = ''
-        disp_dic = {}
-        loads_dic = {}
-        nlgeom = False
-        for skey, step in self.steps.items():
-            if step.type in ['STATIC', 'STATIC,RIKS']:
-                factor = step.factor
-                disp_dic.update(self.scale_displacements(step.displacements, factor))
-                loads_dic.update(self.scale_loads(step.loads, factor))
-                name += skey + '_'
-                if step.nlgeom:
-                    nlgeom = True
-        self.add_step(GeneralStep(name=name, displacements=disp_dic, loads=loads_dic, type='STATIC', nlgeom=nlgeom))
-        return name
-
 
 # ==============================================================================
-# analyse
+# analysis
 # ==============================================================================
 
-    def analyse(self, path, name, software, fields, exe=None, cpus=2, license='Research'):
-        """ Runs the analysis through the chosen FEA software/library.
+    def write_input_file(self, software, fields='all'):
+        """ Writes the FE software's input file.
 
         Parameters:
-            path (str): Folder to save data.
-            name (str): Name of the Structure object and analysis files.
-            software (str): Analysis software or library to use, 'abaqus' or 'ansys'.
-            fields (str): Data fields to extract e.g 'U,S,SM'.
-            exe (str): Full terminal command to bypass subprocess defaults.
-            cpus (int): Number of CPU cores to use.
-            license (str): FE software license type e.g 'Research', 'Student'.
+            software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
+            fields (dic): Data field requests.
 
         Returns:
             None
         """
         if software == 'abaqus':
-
-            abaq.abaqus_launch_process(self, path, name, exe, fields, cpus)
+            abaq.input_generate(self, filename='{0}{1}.inp'.format(self.path, self.name), fields=fields)
 
         elif software == 'ansys':
+            pass
 
-            ansys.ansys_launch_process(path, name, fields, cpus, license)
+        elif software == 'opensees':
+            opensees.input_generate(self, filename='{0}{1}.tcl'.format(self.path, self.name), fields=fields)
+
+    def analyse(self, software, fields='all', exe=None, cpus=2, license='research'):
+        """ Runs the analysis through the chosen FEA software/library.
+
+        Parameters:
+            software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
+            fields (dic): Data field requests.
+            exe (str): Full terminal command to bypass subprocess defaults.
+            cpus (int): Number of CPU cores to use.
+            license (str): FE software license type: 'research', 'student'.
+
+        Returns:
+            None
+        """
+        if software == 'abaqus':
+            abaq.abaqus_launch_process(self, exe, fields, cpus)
+
+        elif software == 'ansys':
+            ansys.ansys_launch_process(self.path, self.name, fields, cpus, license)
+
+        elif software == 'opensees':
+            pass
+
+    def extract_data(self, software, fields='all', exe=None):
+        """ Extracts data from the FE software's output.
+
+        Parameters:
+            software (str): Analysis software or library used, 'abaqus', 'opensees' or 'ansys'.
+            fields (dic): Data field requests.
+            exe (str): Full terminal command to bypass subprocess defaults.
+
+        Returns:
+            None
+        """
+        if software == 'abaqus':
+            abaq.extract_odb_data(self, fields=fields, exe=exe)
+
+        elif software == 'ansys':
+            pass
+
+        elif software == 'opensees':
+            pass
+
+    def analyse_and_extract(self, software, fields='all', exe=None, cpus=2, license='research'):
+        """ Runs the analysis through the chosen FEA software/library and extracts data.
+
+        Parameters:
+            software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
+            fields (dic): Data field requests.
+            exe (str): Full terminal command to bypass subprocess defaults.
+            cpus (int): Number of CPU cores to use.
+            license (str): FE software license type: 'research', 'student'.
+
+        Returns:
+            None
+        """
+        self.write_input_file(software=software, fields=fields)
+        self.analyse(software=software, fields=fields, exe=exe, cpus=cpus, license=license)
+        self.extract_data(software=software, fields=fields, exe=exe)
 
 
 # ==============================================================================
@@ -763,18 +798,19 @@ compas_fea structure: {}
 # save
 # ==============================================================================
 
-    def save_to_obj(self, fnm):
+    def save_to_obj(self):
         """ Exports the Structure object to an .obj file through Pickle.
 
         Parameters:
-            fnm (str): Path to save the Structure .obj to.
+            None
 
         Returns:
             None
         """
+        fnm = '{0}{1}.obj'.format(self.path, self.name)
         with open(fnm, 'wb') as f:
             pickle.dump(self, f)
-        print('***** Structure saved as: {0} *****'.format(fnm))
+        print('***** Structure saved as: {0} *****\n'.format(fnm))
 
 
 # ==============================================================================

@@ -1,6 +1,5 @@
 """ Example Meshmould analysed with shell elements and rebar."""
 
-from compas_fea.fea.abaq import abaq
 from compas_fea.cad import rhino
 
 from compas_fea.structure import Concrete
@@ -22,12 +21,9 @@ __license__    = 'MIT License'
 __email__      = 'liew@arch.ethz.ch'
 
 
-name = 'mesh_mould'
-path = 'C:/Temp/'
-
 # Create empty Structure object
 
-mdl = Structure()
+mdl = Structure(name='mesh_mould', path='C:/Temp/')
 
 # Add shell elements
 
@@ -80,24 +76,19 @@ mdl.set_steps_order(['step_bc', 'step_loads'])
 
 mdl.summary()
 
-# Generate .inp file
-
-abaq.inp_generate(mdl, filename='{0}{1}.inp'.format(path, name))
-
 # Run and extract data
 
-mdl.analyse(path=path, name=name, software='abaqus', fields='U,S')
+mdl.analyse_and_extract(software='abaqus', fields={'U': 'all', 'S': 'all', 'RBFOR': 'all'})
 
 # Plot displacements
 
-rhino.plot_data(mdl, path, name, step='step_loads', field='U', component='magnitude')
+rhino.plot_data(mdl, step='step_loads', field='U', component='magnitude')
 
 # Plot stress
 
-rhino.plot_data(mdl, path, name, step='step_loads', field='S', component='maxPrincipal')
-rhino.plot_data(mdl, path, name, step='step_loads', field='S', component='minPrincipal')
+rhino.plot_data(mdl, step='step_loads', field='S', component='maxPrincipal')
+rhino.plot_data(mdl, step='step_loads', field='S', component='minPrincipal')
 
 # Plot rebar force
 
-rhino.plot_data(mdl, path, name, step='step_loads', field='RBFOR', component='VALUE',
-                iptype='max', nodal='max')
+rhino.plot_data(mdl, step='step_loads', field='RBFOR', component='VALUE', iptype='max', nodal='max')
