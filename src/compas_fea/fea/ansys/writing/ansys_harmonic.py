@@ -4,9 +4,9 @@ from .ansys_nodes_elements import write_constraint_nodes
 from .ansys_nodes_elements import write_request_element_nodes
 from .ansys_nodes_elements import write_nodes
 from .ansys_nodes_elements import write_elements
-from .ansys_process import write_preprocess
 from .ansys_materials import write_all_materials
 from .ansys_loads import write_loads
+from compas_fea.fea.ansys.writing.ansys_process import *
 
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
@@ -18,7 +18,7 @@ def write_harmonic_analysis_request(structure, output_path, filename, skey):
     displacements = structure.steps[skey].displacements
     factor = structure.steps[skey].factor
     loads = structure.steps[skey].loads
-    write_preprocess(output_path, filename)
+    ansys_open_post_process(output_path, filename)
     write_all_materials(structure, output_path, filename)
     write_nodes(structure, output_path, filename)
     write_elements(structure, output_path, filename)

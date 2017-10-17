@@ -11,7 +11,7 @@ __email__      = 'mendez@arch.ethz.ch'
 
 
 def write_static_analysis_request(structure, output_path, filename):
-    write_preprocess(output_path, filename)
+    ansys_open_pre_process(output_path, filename)
     write_all_materials(structure, output_path, filename)
     write_nodes(structure, output_path, filename)
     write_elements(structure, output_path, filename)
@@ -24,10 +24,10 @@ def write_static_analysis_request(structure, output_path, filename):
         write_loads(structure, output_path, filename, loads, factor)
         write_request_load_step_file(structure, output_path, filename)
     write_request_solve_steps(structure, output_path, filename)
-    write_request_element_nodes(output_path, filename)
-    for i, skey in enumerate(structure.steps_order):
-        set_current_step(output_path, filename, i)
-        write_request_static_results(output_path, filename, skey)
+    # write_request_element_nodes(output_path, filename)
+    # for i, skey in enumerate(structure.steps_order):
+    #     set_current_step(output_path, filename, i)
+    #     write_request_static_results(output_path, filename, skey)
 
 
 def set_current_step(output_path, filename, step_index):

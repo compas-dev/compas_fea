@@ -4,8 +4,11 @@ __license__    = 'MIT License'
 __email__      = 'mendez@arch.ethz.ch'
 
 
-def write_post_process(output_path, filename):
-    cFile = open(output_path + filename, 'a')
+def ansys_open_post_process(output_path, filename):
+    cFile = open(output_path + filename, 'w')
+    cFile.write('! Ansys post-process file writen from compas_fea \n')
+    cFile.write('!\n')
+    cFile.write('!\n')
     cFile.write('/POST1 \n')
     # cFile.write('SET,LAST \n')
     # cFile.write('RAPPND,1, \n')
@@ -14,7 +17,7 @@ def write_post_process(output_path, filename):
     cFile.close()
 
 
-def write_preprocess(output_path, filename):
+def ansys_open_pre_process(output_path, filename):
     cFile = open(output_path + filename, 'w')
     cFile.write('! Ansys command file writen from compas_fea \n')
     cFile.write('!\n')
