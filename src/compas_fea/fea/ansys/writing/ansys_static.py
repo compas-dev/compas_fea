@@ -11,6 +11,7 @@ __email__      = 'mendez@arch.ethz.ch'
 
 
 def write_static_analysis_request(structure, output_path, filename):
+    filename += '.txt'
     ansys_open_pre_process(output_path, filename)
     write_all_materials(structure, output_path, filename)
     write_nodes(structure, output_path, filename)

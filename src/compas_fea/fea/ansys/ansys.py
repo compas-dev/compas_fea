@@ -1,6 +1,5 @@
 import os
 import subprocess
-import warnings
 
 from compas_fea.fea.ansys.writing import *
 
@@ -11,9 +10,8 @@ __email__      = 'mendez@arch.ethz.ch'
 
 
 __all__ = [
-    'inp_generate',
+    'input_generate',
     'make_command_file_static',
-    'make_command_file_static_combined',
     'make_command_file_modal',
     'make_command_file_harmonic',
     'ansys_launch_process',
@@ -23,14 +21,13 @@ __all__ = [
 ]
 
 
-def inp_generate(structure, filename, output_path, ):
-    filename = os.path.basename(filename)
+def input_generate(structure):
+    filename = structure.name
+    output_path = structure.path
     stypes = [structure.steps[skey].type for skey in structure.steps]
 
     if 'STATIC' in stypes:
         make_command_file_static(structure, output_path, filename)
-        # static_step_key = structure.combine_static_steps()
-        # make_command_file_static_combined(structure, output_path, filename, static_step_key)
     elif 'MODAL' in stypes:
         make_command_file_modal(structure, output_path, filename, skey)
     elif 'HARMONIC' in stypes:
@@ -40,55 +37,28 @@ def inp_generate(structure, filename, output_path, ):
 
 
 def make_command_file_static(structure, output_path, filename):
-    if not os.path.exists(output_path):
-        os.makedirs(output_path)
-
-    if not os.path.exists(output_path + 'output/'):
-        os.makedirs(output_path + 'output/')
 
     write_static_analysis_request(structure, output_path, filename)
 
 
-def make_command_file_static_combined(structure, output_path, filename, skey):
-    step = structure.steps[skey]
-    nlgeom = step.nlgeom
-    displacements = step.displacements
-    factor = step.factor
-    loads = step.loads
-    write_preprocess(output_path, filename)
-    write_all_materials(structure, output_path, filename)
-    write_nodes(structure, output_path, filename)
-    write_elements(structure, output_path, filename)
-    write_constraint_nodes(structure, output_path, filename, displacements)
-    write_loads(structure, output_path, filename, loads, factor)
-    write_step(output_path, filename, skey, nlgeom)
-    write_analysis_request_static(structure, output_path, filename)
-
-
 def make_command_file_modal(structure, output_path, filename, skey):
-    if not os.path.exists(output_path):
-        os.makedirs(output_path)
-
-    if not os.path.exists(output_path + '/output/modal_out/'):
-        os.makedirs(output_path + '/output/modal_out/')
 
     write_modal_analysis_request(structure, output_path, filename, skey)
 
 
 def make_command_file_harmonic(structure, output_path, filename, skey):
-    if not os.path.exists(output_path):
-        os.makedirs(output_path)
-
-    if not os.path.exists(output_path + 'output/harmonic_out/'):
-        os.makedirs(output_path + 'output/harmonic_out/')
 
     write_harmonic_analysis_request(structure, output_path, filename, skey)
 
 
 def ansys_launch_process(output_path, filename, fields, cpus, license):
+
+    if not os.path.exists(output_path + filename + '_output/'):
+        os.makedirs(output_path + filename + '_output/')
+
     ansys_path = 'MAPDL.exe'
-    inp_path = output_path + '/' + filename
-    work_dir = output_path + 'output/'
+    inp_path = output_path + '/' + filename + '.txt'
+    work_dir = output_path + filename + '_output/'
 
     if not os.path.exists(work_dir):
         os.makedirs(work_dir)
@@ -103,28 +73,17 @@ def ansys_launch_process(output_path, filename, fields, cpus, license):
 
     launch_string = '\"' + ansys_path + '\" -p ' + lic_str + ' -np ' + str(cpus)
     launch_string += ' -dir \"' + work_dir
-    launch_string += '\" -j \"compas_ansys\" -s read -l en-us -b -i \"'
+    launch_string += '\" -j \"' + filename + '\" -s read -l en-us -b -i \"'
     launch_string += inp_path + ' \" -o \"' + out_path + '\"'
 
-    print(launch_string)
     subprocess.call(launch_string)
 
 
-def delete_result_files(structure, output_path):
-    filenames = [
-        'displacements',
-        'elements',
-        'nodalStresses',
-        'nodes',
-        'principalStresses',
-        'shear_stresses',
-        'principalStrains',
-        'reactions',
-        'modal_freq'
-    ]
+def delete_result_folder(structure, output_path):
+    filenames = os.listdir(output_path)
     for name in filenames:
         try:
-            os.remove(output_path + name + '.txt')
+            os.remove(output_path + name)
         except:
             continue
 

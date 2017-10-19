@@ -17,10 +17,10 @@ __license__    = 'MIT License'
 __email__      = 'mendez@arch.ethz.ch'
 
 
-def static(mesh, pts, lpts1, lpts2, path, filename):
+def static(mesh, pts, lpts1, lpts2, path, name):
 
     # add shell elements from mesh ---------------------------------------------
-    s = structure.Structure()
+    s = structure.Structure(name=name, path=path)
     s.add_nodes_elements_from_mesh(mesh, element_type='ShellElement')
 
     # add displacements --------------------------------------------------------
@@ -65,17 +65,17 @@ def static(mesh, pts, lpts1, lpts2, path, filename):
     
     # analyse ------------------------------------------------------------------
     fields = ['U']
-    fnm = path + filename
-    ansys.inp_generate(s, filename=fnm, output_path=path)
-    s.analyse(path=path, name=filename, fields=None, software='ansys')
+    s.write_input_file(software='ansys', fields=fields)
+    s.analyse(software='ansys', fields=fields)
+    # s.extract_data(software='ansys', fields=fields)
     return s
 
 if __name__ == '__main__':
     path = os.path.dirname(os.path.abspath(__file__)) + '/'
-    filename = 'ansys_static.txt'
+    name = 'ansys_static'
     pts = [list(rs.PointCoordinates(pt)) for pt in rs.ObjectsByLayer('pts')]
     lpts1 = [list(rs.PointCoordinates(pt)) for pt in rs.ObjectsByLayer('lpts1')]
     lpts2 = [list(rs.PointCoordinates(pt)) for pt in rs.ObjectsByLayer('lpts2')]
     guid = rs.ObjectsByLayer('mesh')[0]
     mesh = mesh_from_guid(Mesh, guid)
-    static(mesh, pts, lpts1, lpts2, path, filename)
+    static(mesh, pts, lpts1, lpts2, path, name)

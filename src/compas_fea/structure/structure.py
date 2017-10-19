@@ -698,7 +698,7 @@ compas_fea structure: {}
             abaq.input_generate(self, filename='{0}{1}.inp'.format(self.path, self.name), fields=fields)
 
         elif software == 'ansys':
-            pass
+            ansys.input_generate(self)
 
         elif software == 'opensees':
             opensees.input_generate(self, filename='{0}{1}.tcl'.format(self.path, self.name), fields=fields)
