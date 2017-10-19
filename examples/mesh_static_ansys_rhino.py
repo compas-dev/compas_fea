@@ -68,9 +68,7 @@ def static(mesh, pts, lpts1, lpts2, path, filename):
     fnm = path + filename
     ansys.inp_generate(s, filename=fnm, output_path=path)
     s.analyse(path=path, name=filename, fields=None, software='ansys')
-
     return s
-
 
 if __name__ == '__main__':
     path = os.path.dirname(os.path.abspath(__file__)) + '/'

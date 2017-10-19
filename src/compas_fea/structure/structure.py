@@ -381,7 +381,16 @@ compas_fea structure: {}
 
     @classmethod
     def from_mesh(cls, mesh):
+        """ Creates a structure object based on data contained in a compas Mesh
+        object. The mesh object must contain displacements, materials, sections
+        and loads.
 
+        Parameters:
+            mesh (obj): Mesh datastructure object.
+
+        Returns:
+            Structure: The resulting Structure object.
+        """
         structure = cls()
 
         # add nodes and elements from mesh -------------------------------------

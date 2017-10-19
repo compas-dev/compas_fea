@@ -33,7 +33,7 @@ def write_modal_solve(structure, output_path, filename, skey):
     cFile.write('!\n')
     cFile.write('ANTYPE,2 \n')
     cFile.write('MODOPT,SUBSP,' + str(num_modes) + '\n')
-    cFile.write('EQSLV,FRONT \n')
+    # cFile.write('EQSLV,FRONT \n')
     cFile.write('MXPAND,' + str(num_modes) + ',,,YES \n')
 
     # if structure.geom_nonlinearity is True:
