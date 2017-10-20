@@ -694,6 +694,7 @@ compas_fea structure: {}
         Returns:
             None
         """
+        structure.save_to_obj()
         if software == 'abaqus':
             abaq.input_generate(self, filename='{0}{1}.inp'.format(self.path, self.name), fields=fields)
 

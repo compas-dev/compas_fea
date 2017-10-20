@@ -224,10 +224,13 @@ def write_total_results(filename, output_path, excluded_nodes=None, node_disp=No
 def extract_rst_data(strcture, fields='all', steps='all'):
     write_results_from_rst(structure, fields, steps)
 
+
 def write_results_from_rst(structure, fields, steps):
-    if steps == 'all'':
+    if steps == 'all':
         steps = structure.steps
+
     for step in steps:
+        structure.steps
 
 
 
