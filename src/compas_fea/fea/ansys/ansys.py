@@ -79,7 +79,7 @@ def ansys_launch_process(output_path, filename, fields, cpus, license):
     subprocess.call(launch_string)
 
 
-def delete_result_folder(structure, output_path):
+def delete_result_files(structure, output_path):
     filenames = os.listdir(output_path)
     for name in filenames:
         try:
@@ -221,16 +221,25 @@ def write_total_results(filename, output_path, excluded_nodes=None, node_disp=No
     r_file.close()
 
 
-def extract_rst_data(strcture, fields='all', steps='all'):
+def extract_rst_data(structure, fields='all', steps='all'):
     write_results_from_rst(structure, fields, steps)
 
 
 def write_results_from_rst(structure, fields, steps):
+    filename = structure.name
+    path = structure.path
+
     if steps == 'all':
         steps = structure.steps
 
-    for step in steps:
-        structure.steps
+    for i, skey in enumerate(structure.steps_order):
+        stype = structure.steps[skey].type
+        if stype == 'STATIC':
+            write_static_results_from_ansys_rst(filename, path, step_index=i, step_name=skey)
+        elif stype == 'MODAL':
+            pass
+        elif stype == 'HARMONIC':
+            pass
 
 
 

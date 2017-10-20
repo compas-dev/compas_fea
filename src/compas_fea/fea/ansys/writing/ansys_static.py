@@ -79,7 +79,7 @@ def write_request_static_results(output_path, filename, step_name):
     write_request_principal_strains(output_path, filename, step_name)
     write_request_reactions(output_path, filename, step_name)
 
-def write_static_results_from_ansys_rst(filename, output_path, step_index=1, step_name='step'):
+def write_static_results_from_ansys_rst(filename, path, fields,  step_index=0, step_name='step'):
     write_preprocess(output_path, filename)
     write_post_process(output_path, filename)
     set_current_step(output_path, filename, step_index)

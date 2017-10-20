@@ -684,17 +684,17 @@ compas_fea structure: {}
 # analysis
 # ==============================================================================
 
-    def write_input_file(self, software, fields='all'):
+    def write_input_file(self, software, fields='U'):
         """ Writes the FE software's input file.
 
         Parameters:
             software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
-            fields (dic): Data field requests.
+            fields (list, str): Data field requests.
 
         Returns:
             None
         """
-        structure.save_to_obj()
+        self.save_to_obj()
         if software == 'abaqus':
             abaq.input_generate(self, filename='{0}{1}.inp'.format(self.path, self.name), fields=fields)
 
@@ -704,12 +704,12 @@ compas_fea structure: {}
         elif software == 'opensees':
             opensees.input_generate(self, filename='{0}{1}.tcl'.format(self.path, self.name), fields=fields)
 
-    def analyse(self, software, fields='all', exe=None, cpus=2, license='research'):
+    def analyse(self, software, fields='U', exe=None, cpus=2, license='research'):
         """ Runs the analysis through the chosen FEA software/library.
 
         Parameters:
             software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
-            fields (dic): Data field requests.
+            fields (list, str): Data field requests.
             exe (str): Full terminal command to bypass subprocess defaults.
             cpus (int): Number of CPU cores to use.
             license (str): FE software license type: 'research', 'student'.
@@ -726,12 +726,12 @@ compas_fea structure: {}
         elif software == 'opensees':
             pass
 
-    def extract_data(self, software, fields='all', steps='all', exe=None):
+    def extract_data(self, software, fields='U', steps='last', exe=None):
         """ Extracts data from the FE software's output.
 
         Parameters:
             software (str): Analysis software or library used, 'abaqus', 'opensees' or 'ansys'.
-            fields (dic): Data field requests.
+            fields (list, str): Data field requests.
             steps (list) : Loads steps to extract from.
             exe (str): Full terminal command to bypass subprocess defaults.
 
@@ -747,12 +747,12 @@ compas_fea structure: {}
         elif software == 'opensees':
             pass
 
-    def analyse_and_extract(self, software, fields='all', exe=None, cpus=2, license='research'):
+    def analyse_and_extract(self, software, fields='U', exe=None, cpus=2, license='research'):
         """ Runs the analysis through the chosen FEA software/library and extracts data.
 
         Parameters:
             software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
-            fields (dic): Data field requests.
+            fields (list, str): Data field requests.
             exe (str): Full terminal command to bypass subprocess defaults.
             cpus (int): Number of CPU cores to use.
             license (str): FE software license type: 'research', 'student'.
