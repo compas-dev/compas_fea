@@ -78,3 +78,11 @@ def write_request_static_results(output_path, filename, step_name):
     write_request_shear_stresses(output_path, filename, step_name)
     write_request_principal_strains(output_path, filename, step_name)
     write_request_reactions(output_path, filename, step_name)
+
+def write_static_results_from_ansys_rst(filename, output_path, step_index=1, step_name='step'):
+    write_preprocess(output_path, filename)
+    write_post_process(output_path, filename)
+    set_current_step(output_path, filename, step_index)
+    write_request_element_nodes(output_path, filename)
+    write_request_static_results(output_path, filename, step_name)
+    ansys_launch_process(output_path, filename)

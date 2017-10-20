@@ -725,12 +725,13 @@ compas_fea structure: {}
         elif software == 'opensees':
             pass
 
-    def extract_data(self, software, fields='all', exe=None):
+    def extract_data(self, software, fields='all', steps='all', exe=None):
         """ Extracts data from the FE software's output.
 
         Parameters:
             software (str): Analysis software or library used, 'abaqus', 'opensees' or 'ansys'.
             fields (dic): Data field requests.
+            steps (list) : Loads steps to extract from.
             exe (str): Full terminal command to bypass subprocess defaults.
 
         Returns:
@@ -740,7 +741,7 @@ compas_fea structure: {}
             abaq.extract_odb_data(self, fields=fields, exe=exe)
 
         elif software == 'ansys':
-            pass
+            ansys.extract_rst_data(self, fields=fields, steps=steps)
 
         elif software == 'opensees':
             pass

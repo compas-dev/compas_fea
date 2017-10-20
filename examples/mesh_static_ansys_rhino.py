@@ -67,7 +67,7 @@ def static(mesh, pts, lpts1, lpts2, path, name):
     fields = ['U']
     s.write_input_file(software='ansys', fields=fields)
     s.analyse(software='ansys', fields=fields)
-    # s.extract_data(software='ansys', fields=fields)
+    s.extract_data(software='ansys', fields=fields)
     return s
 
 if __name__ == '__main__':
