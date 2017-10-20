@@ -31,15 +31,6 @@ def write_static_analysis_request(structure, output_path, filename):
     #     write_request_static_results(output_path, filename, skey)
 
 
-def set_current_step(output_path, filename, step_index):
-    cFile = open(output_path + filename, 'a')
-    cFile.write('! \n')
-    cFile.write('/POST1 \n')
-    cFile.write('SET, ' + str(step_index + 1) + '! \n')
-    cFile.write('!\n')
-    cFile.close()
-
-
 def write_request_load_step_file(structure, output_path, filename):
     cFile = open(output_path + filename, 'a')
     cFile.write('! \n')
@@ -71,7 +62,7 @@ def write_static_solve(structure, output_path, filename, skey):
     cFile.close()
 
 
-def write_request_static_results(output_path, filename, step_name):
+def write_request_static_results(output_path, filename, step_name, fields):
     write_request_node_displacements(output_path, filename, step_name)
     write_request_nodal_stresses(output_path, filename, step_name)
     write_request_pricipal_stresses(output_path, filename, step_name)
@@ -79,10 +70,22 @@ def write_request_static_results(output_path, filename, step_name):
     write_request_principal_strains(output_path, filename, step_name)
     write_request_reactions(output_path, filename, step_name)
 
-def write_static_results_from_ansys_rst(filename, path, fields,  step_index=0, step_name='step'):
-    write_preprocess(output_path, filename)
-    write_post_process(output_path, filename)
-    set_current_step(output_path, filename, step_index)
-    write_request_element_nodes(output_path, filename)
-    write_request_static_results(output_path, filename, step_name)
-    ansys_launch_process(output_path, filename)
+
+def write_static_results_from_ansys_rst(name, path, fields, step_index=0, step_name='step'):
+
+    if type(fields) == str:
+        fields = [fields]
+    if 'U' in fields or 'all' in fields:
+        write_request_node_displacements(path, name, step_name)
+    if 'S' in fields or 'all' in fields:
+        write_request_nodal_stresses(path, name, step_name)
+    if 'SP' in fields or 'all' in fields:
+        write_request_pricipal_stresses(path, name, step_name)
+    if 'SS' in fields or 'all' in fields:
+        write_request_shear_stresses(path, name, step_name)
+    if 'E' in fields or 'all' in fields:
+        write_request_principal_strains(path, name, step_name)
+    if 'R' in fields or 'all' in fields:
+        write_request_reactions(path, name, step_name)
+
+

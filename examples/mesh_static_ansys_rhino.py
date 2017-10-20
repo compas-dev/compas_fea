@@ -10,6 +10,7 @@ from compas_fea.structure import ElementProperties
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import PointLoad
 from compas.datastructures.mesh.mesh import Mesh
+import time
 
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
@@ -50,7 +51,7 @@ def static(mesh, pts, lpts1, lpts2, path, name):
     nkeys = []
     for lpt in lpts2:
         nkeys.append(s.check_node_exists(lpt))
-    load = PointLoad(name='point_load2', nodes=nkeys, z=-1)
+    load = PointLoad(name='point_load2', nodes=nkeys, z=-2)
     s.add_load(load)
 
     # add steps ----------------------------------------------------------------
@@ -64,10 +65,18 @@ def static(mesh, pts, lpts1, lpts2, path, name):
     s.set_steps_order(['step1', 'step2'])
     
     # analyse ------------------------------------------------------------------
-    fields = ['U']
+    fields = 'all'
+    t0 = time.time()
     s.write_input_file(software='ansys', fields=fields)
-    s.analyse(software='ansys', fields=fields)
-    s.extract_data(software='ansys', fields=fields)
+    t1 = time.time()
+    s.analyse(software='ansys', fields=fields, cpus=4)
+    t2 = time.time()
+    s.extract_data(software='ansys', fields=fields, steps='all')
+    t3 = time.time()
+    print 'writing time', t1-t0
+    print 'analysing time',t2-t1
+    print 'extracting time',t3-t2
+
     return s
 
 if __name__ == '__main__':

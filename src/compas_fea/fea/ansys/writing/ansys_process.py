@@ -4,8 +4,19 @@ __license__    = 'MIT License'
 __email__      = 'mendez@arch.ethz.ch'
 
 
-def ansys_open_post_process(output_path, filename):
-    cFile = open(output_path + filename, 'w')
+def ansys_open_pre_process(path, filename):
+    cFile = open(path + filename, 'w')
+    cFile.write('! Ansys command file writen from compas_fea \n')
+    cFile.write('!\n')
+    cFile.write('!\n')
+    cFile.write('/PREP7 \n')
+    cFile.write('!\n')
+    cFile.write('!\n')
+    cFile.close()
+
+
+def ansys_open_post_process(path, filename):
+    cFile = open(path + filename, 'w')
     cFile.write('! Ansys post-process file writen from compas_fea \n')
     cFile.write('!\n')
     cFile.write('!\n')
@@ -17,12 +28,10 @@ def ansys_open_post_process(output_path, filename):
     cFile.close()
 
 
-def ansys_open_pre_process(output_path, filename):
-    cFile = open(output_path + filename, 'w')
-    cFile.write('! Ansys command file writen from compas_fea \n')
-    cFile.write('!\n')
-    cFile.write('!\n')
-    cFile.write('/PREP7 \n')
-    cFile.write('!\n')
+def set_current_step(path, filename, step_index):
+    cFile = open(path + filename, 'a')
+    cFile.write('! \n')
+    cFile.write('/POST1 \n')
+    cFile.write('SET, ' + str(step_index + 1) + '! \n')
     cFile.write('!\n')
     cFile.close()

@@ -51,14 +51,16 @@ def make_command_file_harmonic(structure, output_path, filename, skey):
     write_harmonic_analysis_request(structure, output_path, filename, skey)
 
 
-def ansys_launch_process(output_path, filename, fields, cpus, license):
+def ansys_launch_process(path, name, fields, cpus, license):
 
-    if not os.path.exists(output_path + filename + '_output/'):
-        os.makedirs(output_path + filename + '_output/')
+    if not os.path.exists(path + name + '_output/'):
+        os.makedirs(path + name + '_output/')
+    else:
+        delete_result_files(path, name)
 
     ansys_path = 'MAPDL.exe'
-    inp_path = output_path + '/' + filename + '.txt'
-    work_dir = output_path + filename + '_output/'
+    inp_path = path + '/' + name + '.txt'
+    work_dir = path + name + '_output/'
 
     if not os.path.exists(work_dir):
         os.makedirs(work_dir)
@@ -73,19 +75,38 @@ def ansys_launch_process(output_path, filename, fields, cpus, license):
 
     launch_string = '\"' + ansys_path + '\" -p ' + lic_str + ' -np ' + str(cpus)
     launch_string += ' -dir \"' + work_dir
-    launch_string += '\" -j \"' + filename + '\" -s read -l en-us -b -i \"'
+    launch_string += '\" -j \"' + name + '\" -s read -l en-us -b -i \"'
     launch_string += inp_path + ' \" -o \"' + out_path + '\"'
 
     subprocess.call(launch_string)
 
 
-def delete_result_files(structure, output_path):
-    filenames = os.listdir(output_path)
+def ansys_launch_process_extract(path, name, cpus=2, license='research'):
+
+    ansys_path = 'MAPDL.exe'
+    inp_path = path + '/' + name + '_extract.txt'
+    work_dir = path + name + '_output/'
+    out_path = work_dir + '/output.out'
+
+    if license == 'research':
+        lic_str = 'aa_r'
+    elif license == 'student':
+        lic_str = 'aa_t_a'
+    else:
+        lic_str = 'aa_t_a'  # temporary default.
+
+    launch_string = '\"' + ansys_path + '\" -p ' + lic_str + ' -np ' + str(cpus)
+    launch_string += ' -dir \"' + work_dir
+    launch_string += '\" -j \"' + name + '\" -s read -l en-us -b -i \"'
+    launch_string += inp_path + ' \" -o \"' + out_path + '\"'
+    subprocess.call(launch_string)
+
+
+def delete_result_files(path, filename):
+    out_path = path + '/' + filename + '_output/'
+    filenames = os.listdir(out_path)
     for name in filenames:
-        try:
-            os.remove(output_path + name)
-        except:
-            continue
+        os.remove(out_path + name)
 
 
 def write_total_results(filename, output_path, excluded_nodes=None, node_disp=None):
@@ -221,28 +242,35 @@ def write_total_results(filename, output_path, excluded_nodes=None, node_disp=No
     r_file.close()
 
 
-def extract_rst_data(structure, fields='all', steps='all'):
+def extract_rst_data(structure, fields='all', steps='last'):
     write_results_from_rst(structure, fields, steps)
+    load_results()
 
 
 def write_results_from_rst(structure, fields, steps):
-    filename = structure.name
+    filename = structure.name + '_extract.txt'
     path = structure.path
-
-    if steps == 'all':
-        steps = structure.steps
-
-    for i, skey in enumerate(structure.steps_order):
+    if steps == 'last':
+        steps = [structure.steps_order[-1]]
+    elif steps == 'all':
+        steps = structure.steps_order
+    ansys_open_post_process(path, filename)
+    for skey in steps:
+        step_index = steps.index(skey)
+        set_current_step(path, filename, step_index=step_index)
         stype = structure.steps[skey].type
         if stype == 'STATIC':
-            write_static_results_from_ansys_rst(filename, path, step_index=i, step_name=skey)
+            write_static_results_from_ansys_rst(structure.name, path, fields, step_index=step_index, step_name=skey)
         elif stype == 'MODAL':
             pass
         elif stype == 'HARMONIC':
             pass
+    ansys_launch_process_extract(path, structure.name)
+    os.remove(path + '/' + filename)
 
 
-
+def load_results():
+    pass
 
 
 

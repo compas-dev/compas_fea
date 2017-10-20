@@ -4,12 +4,13 @@ __license__    = 'MIT License'
 __email__      = 'mendez@arch.ethz.ch'
 
 
-def write_request_nodal_stresses(output_path, filename, step_name):
-    path = output_path + 'output/'
-    fname = str(step_name) + '_' + 'nodal_stresses_'
+def write_request_nodal_stresses(path, name, step_name):
+    out_path = path + '/' + name + '_output/'
+    filename = name + '_extract.txt'
+    fname = str(step_name) + '_' + 'nodal_stresses'
     name = 'nds_s'
 
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(path + "/" + filename, 'a')
     # cFile.write('SET,'+skey+' \n')
     cFile.write('SHELL,TOP  \n')
     cFile.write('*get,numNodes,node,,count \n')
@@ -38,7 +39,7 @@ def write_request_nodal_stresses(output_path, filename, step_name):
     cFile.write('*VGET, SZbot, node, all, S, Z,,,2 \n')
 
     cFile.write('*vfill,' + name + '(1),ramp,1,1 \n')
-    cFile.write('*cfopen,' + path + fname + ',txt \n')
+    cFile.write('*cfopen,' + out_path + fname + ',txt \n')
     cFile.write('*vwrite, ' + name + '(1) , \',\'  , SXtop(1) ,   \',\' ,   SYtop(1) ')
     cFile.write(',   \',\' ,  SZtop(1) , \',\',    SXbot(1) ,   \',\' ,   SYbot(1) ,   \',\' ,  SZbot(1) \n')
     cFile.write('(F, A, ES, A, ES, A, ES, A, ES, A, ES, A, ES) \n')
@@ -48,11 +49,12 @@ def write_request_nodal_stresses(output_path, filename, step_name):
     cFile.close()
 
 
-def write_request_pricipal_stresses(output_path, filename, step_name):
-    path = output_path + 'output/'
-    fname = str(step_name) + '_' + 'principal_stresses_'
+def write_request_pricipal_stresses(path, name, step_name):
+    out_path = path + '/' + name + '_output/'
+    filename = name + '_extract.txt'
+    fname = str(step_name) + '_' + 'principal_stresses'
     name = 'nds_p'
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(path + "/" + filename, 'a')
     cFile.write('SHELL,TOP  \n')
     cFile.write('*get,numNodes,node,,count \n')
     cFile.write('*set,S1top, \n')
@@ -80,7 +82,7 @@ def write_request_pricipal_stresses(output_path, filename, step_name):
     cFile.write('*VGET, S3bot, node, all, S, 3,,,2 \n')
 
     cFile.write('*vfill,' + name + '(1),ramp,1,1 \n')
-    cFile.write('*cfopen,' + path + fname + ',txt \n')
+    cFile.write('*cfopen,' + out_path + fname + ',txt \n')
     cFile.write('*vwrite, ' + name + '(1), \',\', S1top(1), \',\', S2top(1), \',\',')
     cFile.write(' S3top(1), \',\', S1bot(1), \',\', S2bot(1), \',\', S3bot(1) \n')
     cFile.write('(F, A, ES, A, ES, A, ES, A, ES, A, ES, A, ES) \n')
@@ -90,12 +92,13 @@ def write_request_pricipal_stresses(output_path, filename, step_name):
     cFile.close()
 
 
-def write_request_shear_stresses(output_path, filename, step_name):
-    path = output_path + 'output/'
-    fname = str(step_name) + '_' + 'shear_stresses_'
+def write_request_shear_stresses(path, name, step_name):
+    out_path = path + '/' + name + '_output/'
+    filename = name + '_extract.txt'
+    fname = str(step_name) + '_' + 'shear_stresses'
     name = 'nds_sh'
 
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(path + "/" + filename, 'a')
     cFile.write('SHELL,TOP  \n')
     cFile.write('*get,numNodes,node,,count \n')
     cFile.write('*set,S1top, \n')
@@ -123,7 +126,7 @@ def write_request_shear_stresses(output_path, filename, step_name):
     cFile.write('*VGET, S3bot, node, all, S, XZ,,,2 \n')
 
     cFile.write('*vfill,' + name + '(1),ramp,1,1 \n')
-    cFile.write('*cfopen,' + path + fname + ',txt \n')
+    cFile.write('*cfopen,' + out_path + fname + ',txt \n')
     cFile.write('*vwrite, ' + name + '(1), \',\', S1top(1), \',\', S2top(1), \',\',')
     cFile.write(' S3top(1), \',\', S1bot(1), \',\', S2bot(1), \',\', S3bot(1) \n')
     cFile.write('(F, A, ES, A, ES, A, ES, A, ES , A, ES, A, ES) \n')
@@ -133,12 +136,13 @@ def write_request_shear_stresses(output_path, filename, step_name):
     cFile.close()
 
 
-def write_request_principal_strains(output_path, filename, step_name):
-    path = output_path + 'output/'
+def write_request_principal_strains(path, name, step_name):
+    out_path = path + '/' + name + '_output/'
+    filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'principal_strains'
     name = 'nds_ps'
 
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(path + "/" + filename, 'a')
     cFile.write('SHELL,TOP  \n')
     cFile.write('*get,numNodes,node,,count \n')
     cFile.write('*set,S1top, \n')
@@ -166,7 +170,7 @@ def write_request_principal_strains(output_path, filename, step_name):
     cFile.write('*VGET, S3bot, node, all, EPTO, 3,,,2 \n')
 
     cFile.write('*vfill,' + name + '(1),ramp,1,1 \n')
-    cFile.write('*cfopen,' + path + fname + ',txt \n')
+    cFile.write('*cfopen,' + out_path + fname + ',txt \n')
     cFile.write('*vwrite,' + name + '(1), \',\', S1top(1), \',\', S2top(1), \',\',')
     cFile.write(' S3top(1), \',\', S1bot(1), \',\', S2bot(1), \',\', S3bot(1) \n')
     cFile.write('(F, A, ES, A, ES, A, ES, A, ES, A, ES, A, ES) \n')
@@ -176,12 +180,13 @@ def write_request_principal_strains(output_path, filename, step_name):
     cFile.close()
 
 
-def write_request_reactions(output_path, filename, step_name):
-    path = output_path + 'output/'
+def write_request_reactions(path, name, step_name):
+    out_path = path + '/' + name + '_output/'
+    filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'reactions'
     name = 'nds_r'
 
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(path + "/" + filename, 'a')
     cFile.write('*get,numNodes,node,,count \n')
     cFile.write('*set,RFX, \n')
     cFile.write('*dim,RFX,array,numNodes,1 \n')
@@ -206,7 +211,7 @@ def write_request_reactions(output_path, filename, step_name):
     cFile.write('*VGET, RMZ, node, all, RF, MZ,,,2 \n')
 
     cFile.write('*vfill,' + name + '(1),ramp,1,1 \n')
-    cFile.write('*cfopen,' + path + fname + ',txt \n')
+    cFile.write('*cfopen,' + out_path + fname + ',txt \n')
     cFile.write('*vwrite, ' + name + '(1), \',\', RFX(1), \',\', RFY(1), \',\', ')
     cFile.write('RFZ(1), \',\', RMX(1), \',\', RMY(1), \',\', RMZ(1) \n')
     cFile.write('(F, A, ES, A, ES, A, ES, A, ES, A, ES, A, ES) \n')
