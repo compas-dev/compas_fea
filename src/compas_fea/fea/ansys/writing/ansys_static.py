@@ -16,19 +16,16 @@ def write_static_analysis_request(structure, output_path, filename):
     write_all_materials(structure, output_path, filename)
     write_nodes(structure, output_path, filename)
     write_elements(structure, output_path, filename)
+    loads = []
     for skey in structure.steps_order:
         displacements = structure.steps[skey].displacements
         factor = structure.steps[skey].factor
-        loads = structure.steps[skey].loads
+        loads.extend(structure.steps[skey].loads)
         write_static_solve(structure, output_path, filename, skey)
         write_constraint_nodes(structure, output_path, filename, displacements)
         write_loads(structure, output_path, filename, loads, factor)
         write_request_load_step_file(structure, output_path, filename)
     write_request_solve_steps(structure, output_path, filename)
-    # write_request_element_nodes(output_path, filename)
-    # for i, skey in enumerate(structure.steps_order):
-    #     set_current_step(output_path, filename, i)
-    #     write_request_static_results(output_path, filename, skey)
 
 
 def write_request_load_step_file(structure, output_path, filename):
@@ -40,10 +37,10 @@ def write_request_load_step_file(structure, output_path, filename):
 
 
 def write_request_solve_steps(structure, output_path, filename):
-    steps = ','.join([str(i + 1) for i in range(len(structure.steps_order))])
+    mstep = len(structure.steps_order)
     cFile = open(output_path + filename, 'a')
     cFile.write('! \n')
-    cFile.write('LSSOLVE,' + str(steps) + '! \n')
+    cFile.write('LSSOLVE, 1,' + str(mstep) + ',1! \n')
     cFile.write('!\n')
     cFile.close()
 

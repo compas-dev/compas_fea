@@ -18,7 +18,7 @@ __license__    = 'MIT License'
 __email__      = 'mendez@arch.ethz.ch'
 
 
-def static(mesh, pts, lpts1, lpts2, path, name):
+def static(mesh, pts, lpts1, lpts2, lpts3, path, name):
 
     # add shell elements from mesh ---------------------------------------------
     s = structure.Structure(name=name, path=path)
@@ -54,24 +54,32 @@ def static(mesh, pts, lpts1, lpts2, path, name):
     load = PointLoad(name='point_load2', nodes=nkeys, z=-2)
     s.add_load(load)
 
+    nkeys = []
+    for lpt in lpts3:
+        nkeys.append(s.check_node_exists(lpt))
+    load = PointLoad(name='point_load3', nodes=nkeys, z=-3)
+    s.add_load(load)
     # add steps ----------------------------------------------------------------
     step = GeneralStep('step1', displacements=['supports'], loads=['point_load1'],
     nlgeom=False)
     s.add_step(step)
     
-    step = GeneralStep('step2', loads=['point_load2'],
-    nlgeom=False)
+    step = GeneralStep('step2', loads=['point_load2'],nlgeom=False)
     s.add_step(step)
-    s.set_steps_order(['step1', 'step2'])
+
+    step = GeneralStep('step3', loads=['point_load3'],nlgeom=False)
+    s.add_step(step)
+    
+    s.set_steps_order(['step1', 'step2', 'step3'])
     
     # analyse ------------------------------------------------------------------
-    fields = 'all'
+    fields = 'U'
     t0 = time.time()
     s.write_input_file(software='ansys', fields=fields)
     t1 = time.time()
     s.analyse(software='ansys', fields=fields, cpus=4)
     t2 = time.time()
-    s.extract_data(software='ansys', fields=fields, steps='all')
+    s.extract_data(software='ansys', fields=fields, steps='last')
     t3 = time.time()
     print 'writing time', t1-t0
     print 'analysing time',t2-t1
@@ -85,6 +93,7 @@ if __name__ == '__main__':
     pts = [list(rs.PointCoordinates(pt)) for pt in rs.ObjectsByLayer('pts')]
     lpts1 = [list(rs.PointCoordinates(pt)) for pt in rs.ObjectsByLayer('lpts1')]
     lpts2 = [list(rs.PointCoordinates(pt)) for pt in rs.ObjectsByLayer('lpts2')]
+    lpts3 = [list(rs.PointCoordinates(pt)) for pt in rs.ObjectsByLayer('lpts3')]
     guid = rs.ObjectsByLayer('mesh')[0]
     mesh = mesh_from_guid(Mesh, guid)
-    static(mesh, pts, lpts1, lpts2, path, name)
+    static(mesh, pts, lpts1, lpts2, lpts3, path, name)

@@ -86,7 +86,7 @@ def ansys_launch_process_extract(path, name, cpus=2, license='research'):
     ansys_path = 'MAPDL.exe'
     inp_path = path + '/' + name + '_extract.txt'
     work_dir = path + name + '_output/'
-    out_path = work_dir + '/output.out'
+    out_path = work_dir + '/output_extract.out'
 
     if license == 'research':
         lic_str = 'aa_r'
