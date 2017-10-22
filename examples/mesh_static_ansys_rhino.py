@@ -2,7 +2,6 @@ import rhinoscriptsyntax as rs
 import os
 from compas_rhino.helpers.mesh import mesh_from_guid
 from compas_fea import structure
-from compas_fea.fea import ansys
 from compas_fea.structure import PinnedDisplacement
 from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ShellSection

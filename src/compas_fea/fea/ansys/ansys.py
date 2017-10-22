@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 
 from compas_fea.fea.ansys.writing import *
@@ -22,28 +23,28 @@ __all__ = [
 
 
 def input_generate(structure):
-    filename = structure.name
-    output_path = structure.path
+    name = structure.name
+    path = structure.path
     stypes = [structure.steps[skey].type for skey in structure.steps]
 
     if 'STATIC' in stypes:
-        make_command_file_static(structure, output_path, filename)
+        make_command_file_static(structure, path, name)
     elif 'MODAL' in stypes:
-        make_command_file_modal(structure, output_path, filename, skey)
+        make_command_file_modal(structure, path, name)
     elif 'HARMONIC' in stypes:
-        make_command_file_harmonic(structure, output_path, filename, skey)
+        make_command_file_harmonic(structure, path, name, skey)
     else:
         raise ValueError('This analysis type has not yet been implemented for Compas Ansys')
 
 
-def make_command_file_static(structure, output_path, filename):
+def make_command_file_static(structure, path, name):
 
-    write_static_analysis_request(structure, output_path, filename)
+    write_static_analysis_request(structure, path, name)
 
 
-def make_command_file_modal(structure, output_path, filename, skey):
+def make_command_file_modal(structure, path, name):
 
-    write_modal_analysis_request(structure, output_path, filename, skey)
+    write_modal_analysis_request(structure, path, name)
 
 
 def make_command_file_harmonic(structure, output_path, filename, skey):
@@ -104,9 +105,7 @@ def ansys_launch_process_extract(path, name, cpus=2, license='research'):
 
 def delete_result_files(path, filename):
     out_path = path + '/' + filename + '_output/'
-    filenames = os.listdir(out_path)
-    for name in filenames:
-        os.remove(out_path + name)
+    shutil.rmtree(out_path)
 
 
 def write_total_results(filename, output_path, excluded_nodes=None, node_disp=None):
@@ -257,23 +256,20 @@ def write_results_from_rst(structure, fields, steps):
     ansys_open_post_process(path, filename)
     for skey in steps:
         step_index = steps.index(skey)
-        set_current_step(path, filename, step_index=step_index)
         stype = structure.steps[skey].type
         if stype == 'STATIC':
-            write_static_results_from_ansys_rst(structure.name, path, fields, step_index=step_index, step_name=skey)
+            set_current_step(path, filename, step_index=step_index)
+            write_static_results_from_ansys_rst(structure.name, path, fields,
+                                                step_index=step_index, step_name=skey)
         elif stype == 'MODAL':
-            pass
+            num_modes = structure.steps[skey].modes
+            write_modal_results_from_ansys_rst(structure.name, path, fields, num_modes,
+                                               step_index=step_index, step_name=skey)
         elif stype == 'HARMONIC':
             pass
     ansys_launch_process_extract(path, structure.name)
-    os.remove(path + '/' + filename)
+    # os.remove(path + '/' + filename)
 
 
 def load_results():
     pass
-
-
-
-
-
-

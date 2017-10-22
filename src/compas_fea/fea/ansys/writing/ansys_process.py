@@ -26,12 +26,3 @@ def ansys_open_post_process(path, filename):
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()
-
-
-def set_current_step(path, filename, step_index):
-    cFile = open(path + filename, 'a')
-    cFile.write('! \n')
-    cFile.write('/POST1 \n')
-    cFile.write('SET, ' + str(step_index + 1) + '! \n')
-    cFile.write('!\n')
-    cFile.close()
