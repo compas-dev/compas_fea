@@ -39,6 +39,10 @@ class Structure(object):
     """ Initialises empty Structure object for use in finite element analysis.
 
     Parameters:
+        name (str, optional) : Name of the structure.
+        path (str, optional) : Path to save files.
+
+    Attributes:
         constraints (dic): Constraint objects.
         displacements (dic): Displacement objects.
         elements (dic): Element objects.
@@ -48,6 +52,7 @@ class Structure(object):
         loads (dic): Load objects.
         materials (dic): Material objects.
         misc (dic): Misc objects.
+        name (str): Name of the structure.
         nodes (dic): Node co-ordinates and local axes.
         node_index (dic): Index of nodes (geometric keys).
         path (str): Path to save files.
