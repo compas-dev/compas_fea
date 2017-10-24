@@ -6,7 +6,7 @@ Support functions for the compas_fea package.
 from __future__ import print_function
 from __future__ import absolute_import
 
-from compas.datastructures.network.algorithms.traversal import network_dijkstra_path
+from compas.topology import dijkstra_path
 
 from compas.geometry import add_vectors
 from compas.geometry import angles_points_xy
@@ -403,7 +403,7 @@ def network_order(sp_xyz, structure, network):
     ep = leaves[0]
     weight = dict(((u, v), 1) for u, v in network.edges())
     weight.update({(v, u): weight[(u, v)] for u, v in network.edges()})
-    path = network_dijkstra_path(network.adjacency, weight, sp, ep)
+    path = dijkstra_path(network.adjacency, weight, sp, ep)
     nodes = [structure.check_node_exists(network.vertex_coordinates(i)) for i in path]
 
     for i in range(len(nodes) - 1):
