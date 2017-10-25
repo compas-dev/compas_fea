@@ -77,15 +77,13 @@ def write_request_modal_freq(path, name, skey, num_modes, step_index):
 
     cFile = open(path + "/" + filename , 'a')
     cFile.write('!\n')
+    cFile.write('/POST1 \n')
     cFile.write('*set,n_freq, \n')
     cFile.write('*dim,n_freq,array,' + str(num_modes) + ', \n')
 
     for i in range(num_modes):
-        cFile.write('SET, FIRST \n')
-        # cFile.write('SET,' + str(step_index + 1) + ',' + str(i + 1) + '\n')
-        # cFile.write('*GET,n_freq(' + str(i + 1) + '),MODE,' + str(i + 1) + ',FREQ \n')
-        cFile.write('*GET,n_freq(' + str(i + 1) + '),MODE, FIRST, FREQ \n')
-        cFile.write('!\n')
+        cFile.write('SET,' + str(step_index + 1) + ',' + str(i + 1) + '\n')
+        cFile.write('*GET,n_freq(' + str(i + 1) + '),ACTIVE, 0, SET, FREQ \n')
 
     cFile.write('/SOL \n')
     cFile.write('!\n')
@@ -100,17 +98,19 @@ def write_request_modal_freq(path, name, skey, num_modes, step_index):
     cFile.close()
 
 
-def write_request_modal_shapes(structure, path, filename, skey):
-    num_modes = structure.steps[skey].modes
+def write_request_modal_shapes(path, name, step_name, num_modes, step_index):
+    filename = name + '_extract.txt'
+
     cFile = open(path + "/" + filename, 'a')
     cFile.write('/POST1 \n')
     cFile.close()
     for i in range(num_modes):
         cFile = open(path + "/" + filename, 'a')
-        cFile.write('SET,NEXT \n')
+        # cFile.write('SET,' + str(step_index + 1) + ' \n')
+        cFile.write('SET,' + str(step_index + 1) + ',' + str(i + 1) + '\n')
         cFile.write('! Mode ' + str(i + 1) + ' \n \n \n')
         cFile.close()
-        write_request_node_displacements(path, filename, mode=i + 1)
+        write_request_node_displacements(path, name, step_name, mode=i + 1)
 
 
 def write_modal_results_from_ansys_rst(name, path, fields, num_modes, step_index=0, step_name='step'):
@@ -122,6 +122,6 @@ def write_modal_results_from_ansys_rst(name, path, fields, num_modes, step_index
     if type(fields) == str:
         fields = [fields]
     if 'U' in fields or 'all' in fields:
-        write_request_modal_shapes(path, name, step_name)
+        write_request_modal_shapes(path, name, step_name, num_modes, step_index)
     if 'F' in fields or 'all' in fields:
         write_request_modal_freq(path, name, step_name, num_modes, step_index)

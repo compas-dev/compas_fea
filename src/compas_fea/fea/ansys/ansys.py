@@ -268,7 +268,7 @@ def write_results_from_rst(structure, fields, steps):
         elif stype == 'HARMONIC':
             pass
     ansys_launch_process_extract(path, structure.name)
-    # os.remove(path + '/' + filename)
+    os.remove(path + '/' + filename)
 
 
 def load_results():

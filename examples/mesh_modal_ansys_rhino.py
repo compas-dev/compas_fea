@@ -52,7 +52,7 @@ def modal(mesh, pts, num_modes, path, name):
     s.set_steps_order(['modal_analysis'])
     
     # analyse ------------------------------------------------------------------
-    fields = 'F'
+    fields = ['F']
     s.write_input_file(software='ansys', fields=fields)
     s.analyse(software='ansys', fields=fields, cpus=4)
     s.extract_data(software='ansys', fields=fields, steps='last')
@@ -95,9 +95,9 @@ def draw_modal_shapes(path, amp, name):
 
 
 if __name__ == '__main__':
-    layers = ['s1']
+    layers = ['s1','s2']
     path = os.path.dirname(os.path.abspath(__file__)) + '/'
-    num_modes = 5
+    num_modes = 6
 
     for layer in layers:
         name = layer

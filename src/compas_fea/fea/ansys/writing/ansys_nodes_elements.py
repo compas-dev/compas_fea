@@ -326,7 +326,7 @@ def write_request_node_displacements(path, name, step_name, mode=None):
     filename = name + '_extract.txt'
     if mode:
         fname = 'modal_shape_' + str(mode)
-        name = 'nds_d' + str(mode)
+        name_ = 'nds_d' + str(mode)
         name_x = 'dispX' + str(mode)
         name_y = 'dispY' + str(mode)
         name_z = 'dispZ' + str(mode)
