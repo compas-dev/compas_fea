@@ -141,20 +141,23 @@ def get_modal_data_from_result_files(path):
     return modes_dict, modal_freqs
 
 
-def get_displacements_from_result_files(path):
+def get_displacements_from_result_files(out_path, step):
+    filename = step + '_displacements.txt'
+
     try:
-        displacements_file = open(path + 'output/displacements.txt', 'r')
-    except:
-        displacements_file = None
-    if displacements_file:
-        displacements = displacements_file.readlines()
+        dfile = open(out_path + filename, 'r')
+    except(Exception):
+        dfile = None
+        print 'file not found'
+    if dfile:
+        displacements = dfile.readlines()
 
         disp_dict = {}
         for i in range(len(displacements)):
-            dispString = displacements[i].split(',')
-            del dispString[0]
-            displacement = map(float, dispString)
-            disp_dict[str(i)] = {'x': displacement[0], 'y': displacement[1], 'z': displacement[2]}
+            dstring = displacements[i].split(',')
+            disp = map(float, dstring)
+            key = int((disp[0])) - 1
+            disp_dict[key] = {'ux': disp[1], 'uy': disp[2], 'uz': disp[3]}
     else:
         disp_dict = None
 
@@ -300,15 +303,4 @@ def get_reactions_from_result_files(path):
 
 
 if __name__ == '__main__':
-    path = '/Users/mtomas/Desktop/ansys_test/'
-    nodes, elements = get_nodes_elements_from_result_files(path)
-    disp = get_displacements_from_result_files(path)
-    stress = get_nodal_stresses_from_result_files(path)
-    pstress = get_principal_streses(path)
-    shear = get_shear_stresses_from_result_files(path)
-    pstrain = get_principal_strains_from_result_files(path)
-    react = get_reactions_from_result_files(path)
-    harmonic_disp, freq_list = get_harmonic_data_from_result_files(path)
-    modes_dict, modal_freqs = get_modal_data_from_result_files(path)
-
-    print react
+    pass

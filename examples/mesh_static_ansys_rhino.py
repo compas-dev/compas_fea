@@ -78,7 +78,7 @@ def static(mesh, pts, lpts1, lpts2, lpts3, path, name):
     t1 = time.time()
     s.analyse(software='ansys', fields=fields, cpus=4)
     t2 = time.time()
-    s.extract_data(software='ansys', fields=fields, steps='last')
+    s.extract_data(software='ansys', fields=fields, steps='all')
     t3 = time.time()
     print 'writing time', t1-t0
     print 'analysing time',t2-t1

@@ -56,7 +56,7 @@ class Structure(object):
         nodes (dic): Node co-ordinates and local axes.
         node_index (dic): Index of nodes (geometric keys).
         path (str): Path to save files.
-        results (dic): Results from analysis.
+        results (dic): Dictionary containing a StepResults object per step.
         sections (dic): Section objects.
         sets (dic): Node, element and surface sets.
         steps (dic): Step objects.
@@ -81,7 +81,7 @@ class Structure(object):
         self.nodes = {}
         self.node_index = {}
         self.path = path
-        self.results = {}
+        self.results = {'nodal': {}, 'elements': {}}
         self.sections = {}
         self.sets = {}
         self.steps = {}
@@ -709,7 +709,7 @@ compas_fea structure: {}
         elif software == 'opensees':
             opensees.input_generate(self, filename='{0}{1}.tcl'.format(self.path, self.name), fields=fields)
 
-    def analyse(self, software, fields='U', exe=None, cpus=2, license='research'):
+    def analyse(self, software, fields='u', exe=None, cpus=2, license='research'):
         """ Runs the analysis through the chosen FEA software/library.
 
         Parameters:
@@ -731,7 +731,7 @@ compas_fea structure: {}
         elif software == 'opensees':
             pass
 
-    def extract_data(self, software, fields='U', steps='last', exe=None):
+    def extract_data(self, software, fields='u', steps='last', exe=None):
         """ Extracts data from the FE software's output.
 
         Parameters:
@@ -752,7 +752,7 @@ compas_fea structure: {}
         elif software == 'opensees':
             pass
 
-    def analyse_and_extract(self, software, fields='U', exe=None, cpus=2, license='research'):
+    def analyse_and_extract(self, software, fields='u', exe=None, cpus=2, license='research'):
         """ Runs the analysis through the chosen FEA software/library and extracts data.
 
         Parameters:
@@ -769,7 +769,27 @@ compas_fea structure: {}
         self.analyse(software=software, fields=fields, exe=exe, cpus=cpus, license=license)
         self.extract_data(software=software, fields=fields, exe=exe)
 
+# ==============================================================================
+# results
+# ==============================================================================
 
+    def get_results(self, step, fields, nodes=None, elements=None):
+        if nodes:
+            data = {}
+            rdict = self.results['nodal']
+            if nodes == 'all':
+                nodes = self.nodes.keys()
+            elif type(nodes) == str:
+                nodes = self.sets[nodes]['selection']
+
+            if fields == 'u':
+                fields = ['ux', 'uy', 'uz']
+            for nkey in nodes:
+                data[nkey] = {f: rdict[step][nkey][f] for f in fields}
+            return data
+
+        elif elements:
+            return None
 # ==============================================================================
 # summary
 # ==============================================================================

@@ -3,6 +3,7 @@ import shutil
 import subprocess
 
 from compas_fea.fea.ansys.writing import *
+from compas_fea.fea.ansys.reading import *
 
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
@@ -243,7 +244,7 @@ def write_total_results(filename, output_path, excluded_nodes=None, node_disp=No
 
 def extract_rst_data(structure, fields='all', steps='last'):
     write_results_from_rst(structure, fields, steps)
-    load_results()
+    load_to_results(structure, fields, steps)
 
 
 def write_results_from_rst(structure, fields, steps):
@@ -271,5 +272,15 @@ def write_results_from_rst(structure, fields, steps):
     os.remove(path + '/' + filename)
 
 
-def load_results():
-    pass
+def load_to_results(structure, fields, steps):
+    out_path = structure.path + structure.name + '_output/'
+    if steps == 'all':
+        steps = structure.steps.keys()
+    if type(steps) == str:
+        steps = [steps]
+    # sdict = {'nodal': {}, 'elements': {}}
+    for step in steps:
+        if 'u' in fields or 'all' in fields:
+            udict = get_displacements_from_result_files(out_path, step)
+            # structure.results['nodal'][step].update(structure.results['nodal'].setdefault(step, udict))
+            structure.results['nodal'].setdefault(step, udict)
