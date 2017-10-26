@@ -72,7 +72,7 @@ def static(mesh, pts, lpts1, lpts2, lpts3, path, name):
     s.set_steps_order(['step1', 'step2', 'step3'])
     
     # analyse ------------------------------------------------------------------
-    fields = 'U'
+    fields = 'all'
     t0 = time.time()
     s.write_input_file(software='ansys', fields=fields)
     t1 = time.time()

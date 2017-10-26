@@ -689,7 +689,7 @@ compas_fea structure: {}
 # analysis
 # ==============================================================================
 
-    def write_input_file(self, software, fields='U'):
+    def write_input_file(self, software, fields='u'):
         """ Writes the FE software's input file.
 
         Parameters:
@@ -779,17 +779,21 @@ compas_fea structure: {}
             rdict = self.results['nodal']
             if nodes == 'all':
                 nodes = self.nodes.keys()
-            elif type(nodes) == str:
+            elif isinstance(nodes, str):
                 nodes = self.sets[nodes]['selection']
 
-            if fields == 'u':
-                fields = ['ux', 'uy', 'uz']
-            for nkey in nodes:
-                data[nkey] = {f: rdict[step][nkey][f] for f in fields}
+            if fields == 'all':
+                for nkey in nodes:
+                    data[nkey] = {f: rdict[step][nkey][f] for f in rdict[step][nkey].keys()}
+            else:
+                for nkey in nodes:
+                    data[nkey] = {f: rdict[step][nkey][f] for f in fields}
             return data
 
         elif elements:
             return None
+
+
 # ==============================================================================
 # summary
 # ==============================================================================

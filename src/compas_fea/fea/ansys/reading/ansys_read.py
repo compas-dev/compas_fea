@@ -147,158 +147,105 @@ def get_displacements_from_result_files(out_path, step):
     try:
         dfile = open(out_path + filename, 'r')
     except(Exception):
-        dfile = None
-        print 'file not found'
-    if dfile:
-        displacements = dfile.readlines()
-
-        disp_dict = {}
-        for i in range(len(displacements)):
-            dstring = displacements[i].split(',')
-            disp = map(float, dstring)
-            key = int((disp[0])) - 1
-            disp_dict[key] = {'ux': disp[1], 'uy': disp[2], 'uz': disp[3]}
-    else:
-        disp_dict = None
+        return None
+    displacements = dfile.readlines()
+    disp_dict = {}
+    for i in range(len(displacements)):
+        dstring = displacements[i].split(',')
+        disp = map(float, dstring)
+        key = int(disp[0]) - 1
+        disp_dict[key] = {'ux': disp[1], 'uy': disp[2], 'uz': disp[3]}
 
     return disp_dict
 
 
-def get_nodal_stresses_from_result_files(path):
+def get_nodal_stresses_from_result_files(out_path, step):
+    filename = step + '_nodal_stresses.txt'
     try:
-        stresses_file   = open(path + 'output/nodal_stresses_.txt', 'r')
-    except:
-        stresses_file = None
+        sfile   = open(out_path + filename, 'r')
+    except(Exception):
+        return None
 
-    if stresses_file:
-        stresses = stresses_file.readlines()
-
-        stress_dict = {}
-        for i in range(len(stresses)):
-            stressString = stresses[i].split(',')
-            del stressString[0]
-            stress = []
-            for string in stressString:
-                try:
-                    s = float(string)
-                except:
-                    s = None
-                stress.append(s)
-            stress_dict[str(i)] = {'top': {'x': stress[3], 'y': stress[4], 'z': stress[5]},
-                                   'bot': {'x': stress[0], 'y': stress[1], 'z': stress[2]}}
-    else:
-        stress_dict = None
+    s = sfile.readlines()
+    stress_dict = {}
+    for i in range(len(s)):
+        s_string = s[i].split(',')
+        stress = map(float, s_string)
+        key = int(stress[0]) - 1
+        stress_dict[key] = {'sxt': stress[4], 'syt': stress[5], 'szt': stress[6],
+                            'sxb': stress[1], 'syb': stress[2], 'szb': stress[3]}
     return stress_dict
 
 
-def get_principal_streses(path):
+def get_principal_stresses_from_result_files(out_path, step):
+    filename = step + '_principal_stresses.txt'
     try:
-        p_stresses_file   = open(path + 'output/principal_stresses_.txt', 'r')
-    except:
-        p_stresses_file = None
+        psfile   = open(out_path + filename, 'r')
+    except(Exception):
+        return None
 
-    if p_stresses_file:
-        p_stresses = p_stresses_file.readlines()
-
-        p_stress_dict = {}
-        for i in range(len(p_stresses)):
-            p_stress_string = p_stresses[i].split(',')
-            del p_stress_string[0]
-            p_stress = []
-            for string in p_stress_string:
-                try:
-                    s = float(string)
-                except:
-                    s = None
-                p_stress.append(s)
-            p_stress_dict[str(i)] = {'top': {'1': p_stress[3], '2': p_stress[4], '3': p_stress[5]},
-                                     'bot': {'1': p_stress[0], '2': p_stress[1], '3': p_stress[2]}}
-    else:
-        p_stress_dict = None
+    ps = psfile.readlines()
+    p_stress_dict = {}
+    for i in range(len(ps)):
+        psstring = ps[i].split(',')
+        p_stress = map(float, psstring)
+        key = int(p_stress[0]) - 1
+        p_stress_dict[key] = {'ps1t': p_stress[3], 'ps2t': p_stress[4], 'ps3t': p_stress[5],
+                              'ps1b': p_stress[0], 'ps2b': p_stress[1], 'ps3b': p_stress[2]}
     return p_stress_dict
 
 
-def get_shear_stresses_from_result_files(path):
+def get_shear_stresses_from_result_files(out_path, step):
+
+    filename = step + '_shear_stresses.txt'
     try:
-        shear_stresses_file   = open(path + 'output/shear_stresses_.txt', 'r')
-    except:
-        shear_stresses_file = None
+        psfile = open(out_path + filename, 'r')
+    except(Exception):
+        return None
 
-    if shear_stresses_file:
-        shear_stresses = shear_stresses_file.readlines()
-
-        shear_stress_dict = {}
-        for i in range(len(shear_stresses)):
-            shear_stress_string = shear_stresses[i].split(',')
-            del shear_stress_string[0]
-            shear_stress = []
-            for string in shear_stress_string:
-                try:
-                    s = float(string)
-                except:
-                    s = None
-                shear_stress.append(s)
-            shear_stress_dict[str(i)] = {'top': {'xy': shear_stress[3], 'yz': shear_stress[4], 'xz': shear_stress[5]},
-                                         'bot': {'xy': shear_stress[0], 'yz': shear_stress[1], 'xz': shear_stress[2]}}
-    else:
-        shear_stress_dict = None
-    return shear_stress_dict
+    ss = psfile.readlines()
+    ss_dict = {}
+    for i in range(len(ss)):
+        ss_string = ss[i].split(',')
+        ss_stress = map(float, ss_string)
+        key = int(ss_stress[0]) - 1
+        ss_dict[key] = {'sxyt': ss_stress[3], 'syzt': ss_stress[4], 'sxzt': ss_stress[5],
+                        'sxyb': ss_stress[0], 'syzb': ss_stress[1], 'sxzb': ss_stress[2]}
+    return ss_dict
 
 
-def get_principal_strains_from_result_files(path):
+def get_principal_strains_from_result_files(out_path, step):
+    filename = step + '_principal_strains.txt'
     try:
-        p_strains_file   = open(path + 'output/principal_strains.txt', 'r')
-    except:
-        p_strains_file = None
-
-    if p_strains_file:
-        p_strains = p_strains_file.readlines()
-
-        p_strain_dict = {}
-        for i in range(len(p_strains)):
-            p_strainstring = p_strains[i].split(',')
-            del p_strainstring[0]
-            p_strain = []
-            for string in p_strainstring:
-                try:
-                    s = float(string)
-                except:
-                    s = None
-                p_strain.append(s)
-            p_strain_dict[str(i)] = {'top': {'1': p_strain[3], '2': p_strain[4], '3': p_strain[5]},
-                                     'bot': {'1': p_strain[0], '2': p_strain[1], '3': p_strain[2]}}
-    else:
-        p_strain_dict = None
-    return p_strain_dict
+        efile   = open(out_path + filename, 'r')
+    except(Exception):
+        return None
+    pe = efile.readlines()
+    pe_dict = {}
+    for i in range(len(pe)):
+        estring = pe[i].split(',')
+        p_strain = map(float, estring)
+        key = int(p_strain[0]) - 1
+        pe_dict[key] = {'e1t': p_strain[4], 'e2t': p_strain[5], 'e3t': p_strain[6],
+                        'e1b': p_strain[1], 'e2b': p_strain[2], 'e3b': p_strain[3]}
+    return pe_dict
 
 
-def get_reactions_from_result_files(path):
-
+def get_reactions_from_result_files(out_path, step):
+    filename = step + '_reactions.txt'
     try:
-        reactions_file   = open(path + 'output/reactions.txt', 'r')
-    except:
-        reactions_file = None
-
-    if reactions_file:
-        reactions = reactions_file.readlines()
-
-        react_dict = {}
-        for i in range(len(reactions)):
-            react_string = reactions[i].split(',')
-            del react_string[0]
-            reaction = []
-            for string in react_string:
-                try:
-                    s = float(string)
-                except:
-                    s = None
-                reaction.append(s)
-            if all(v == 0.0 for v in reaction) is False:
-                react_dict[str(i)] = {'m': {'x': reaction[3], 'y': reaction[4], 'z': reaction[5]},
-                                      'f': {'x': reaction[0], 'y': reaction[1], 'z': reaction[2]}}
-    else:
-        react_dict = None
-
+        rfile   = open(out_path + filename, 'r')
+    except(Exception):
+        return None
+    r = rfile.readlines()
+    react_dict = {}
+    for i in range(len(r)):
+        r_string = r[i].split(',')
+        reaction = map(float, r_string)
+        key = int(reaction[0]) - 1
+        if all(v == 0.0 for v in reaction) is False:
+            react_dict[key] = {'rxx': reaction[3], 'ryy': reaction[4], 'rzz': reaction[5],
+                               'rx': reaction[0], 'ry': reaction[1], 'rz': reaction[2]}
     return react_dict
 
 

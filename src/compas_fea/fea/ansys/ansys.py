@@ -243,7 +243,7 @@ def write_total_results(filename, output_path, excluded_nodes=None, node_disp=No
 
 
 def extract_rst_data(structure, fields='all', steps='last'):
-    write_results_from_rst(structure, fields, steps)
+    # write_results_from_rst(structure, fields, steps)
     load_to_results(structure, fields, steps)
 
 
@@ -278,9 +278,26 @@ def load_to_results(structure, fields, steps):
         steps = structure.steps.keys()
     if type(steps) == str:
         steps = [steps]
-    # sdict = {'nodal': {}, 'elements': {}}
+
     for step in steps:
+        rdicts = []
         if 'u' in fields or 'all' in fields:
-            udict = get_displacements_from_result_files(out_path, step)
-            # structure.results['nodal'][step].update(structure.results['nodal'].setdefault(step, udict))
-            structure.results['nodal'].setdefault(step, udict)
+            rdicts.append(get_displacements_from_result_files(out_path, step))
+        if 's' in fields or 'all' in fields:
+            rdicts.append(get_nodal_stresses_from_result_files(out_path, step))
+        if 'r' in fields or 'all' in fields:
+            rdicts.append(get_reactions_from_result_files(out_path, step))
+        if 'e' in fields or 'all' in fields:
+            rdicts.append(get_principal_strains_from_result_files(out_path, step))
+        if 'sp' in fields or 'all' in fields:
+            rdicts.append(get_principal_stresses_from_result_files(out_path, step))
+        if 'ss' in fields or 'all' in fields:
+            rdicts.append(get_shear_stresses_from_result_files(out_path, step))
+
+        structure.results['nodal'][step] = rdicts[0]
+        if len(rdicts) >= 1:
+            for d in rdicts[1:]:
+                for key, att in structure.results['nodal'][step].items():
+                    att.update(d[key])
+
+
