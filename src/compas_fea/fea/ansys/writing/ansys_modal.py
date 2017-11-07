@@ -121,7 +121,35 @@ def write_modal_results_from_ansys_rst(name, path, fields, num_modes, step_index
     # write_modal_post_process(path, name, step_index)
     if type(fields) == str:
         fields = [fields]
-    if 'U' in fields or 'all' in fields:
+    if 'u' in fields or 'all' in fields:
         write_request_modal_shapes(path, name, step_name, num_modes, step_index)
-    if 'F' in fields or 'all' in fields:
+    if 'f' in fields or 'all' in fields:
         write_request_modal_freq(path, name, step_name, num_modes, step_index)
+
+
+def write_request_mac_ansys(name, path, file1, lstep1, file2, lstep2, num_modes):
+    filename = name + '.txt'
+    out_path = path + '/' + name + '_output/'
+    ansys_open_post_process(path, filename)
+
+    cFile = open(path + "/" + filename, 'a')
+    cFile.write('RSTMAC,' + file1 + ',' + str(lstep1) + ',all,' + file2 + ',' + str(lstep2) + ',all,,0.01,,1 \n')
+
+    for i in range(num_modes):
+        cFile.write('*set,mac' + str(i + 1) + ', \n')
+        cFile.write('*dim,mac' + str(i + 1) + ',array,' + str(num_modes) + ', \n')
+        for j in range(num_modes):
+            cFile.write('*GET, mac' + str(i + 1) + '(' + str(j + 1) + '), RSTMAC,' + str(i + 1) + ', MAC, ' + str(j + 1) + ' \n')
+    cFile.write('*cfopen,' + out_path + '/mac,txt \n')
+    string = '*vwrite, '
+    string_ = '('
+    for i in range(num_modes):
+        string += 'mac' + str(i + 1) + '(1), \',\', '
+        string_ += 'ES, A, '
+
+    cFile.write(string + ' \n')
+    cFile.write(string_ + ') \n')
+
+    cFile.write('*cfclose \n')
+
+    cFile.close()

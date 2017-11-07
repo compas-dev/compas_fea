@@ -709,7 +709,7 @@ compas_fea structure: {}
         elif software == 'opensees':
             opensees.input_generate(self, filename='{0}{1}.tcl'.format(self.path, self.name), fields=fields)
 
-    def analyse(self, software, fields='u', exe=None, cpus=2, license='research'):
+    def analyse(self, software, fields='u', exe=None, cpus=2, license='research', delete=True):
         """ Runs the analysis through the chosen FEA software/library.
 
         Parameters:
@@ -726,7 +726,7 @@ compas_fea structure: {}
             abaq.abaqus_launch_process(self, exe, fields, cpus)
 
         elif software == 'ansys':
-            ansys.ansys_launch_process(self.path, self.name, fields, cpus, license)
+            ansys.ansys_launch_process(self.path, self.name, fields, cpus, license, delete=delete)
 
         elif software == 'opensees':
             pass

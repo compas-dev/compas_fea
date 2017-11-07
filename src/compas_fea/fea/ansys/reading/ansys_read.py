@@ -91,11 +91,11 @@ def get_harmonic_data_from_result_files(path):
     return harmonic_disp, freq_list
 
 
-def get_modal_data_from_result_files(path):
-    modal_path = path + 'output/modal_out/'
+def get_modal_shapes_from_result_files(out_path):
+    modal_path = out_path + '/modal_out/'
     try:
         files = os.listdir(modal_path)
-    except:
+    except(Exception):
         print ('Result files not found')
         return None, None
     filenames = []
@@ -107,26 +107,24 @@ def get_modal_data_from_result_files(path):
         f = 'modal_shape_' + str(i + 1) + '.txt'
         modal_files.append(open(modal_path + '/' + f, 'r'))
 
-    if modal_files:
-        modes_dict = {}
-        for i, f in enumerate(modal_files):
-            mode = f.readlines()
-            modes_dict[i] = {}
-            for j in range(len(mode)):
-                string = mode[j].split(',')
-                del string[0]
-                a = map(float, string)
-                modes_dict[i][j] = {'x': a[0], 'y': a[1], 'z': a[2]}
-            f.close()
-        # num_modes = len(modal_files)
-        # modal_analysis = True
-    else:
-        modes_dict = None
-        # num_modes  = None
-        # modal_analysis = None
+    modes_dict = {}
+    for i, f in enumerate(modal_files):
+        mode = f.readlines()
+        # modes_dict[i] = {}
+        for j in range(len(mode)):
+            string = mode[j].split(',')
+            a = map(float, string)
+            nkey = int(a[0]) - 1
+            modes_dict.setdefault(nkey, {})
+            modes_dict[nkey].update({'ux' + str(i): a[1], 'uy' + str(i): a[2], 'uz' + str(i): a[3]})
+        f.close()
 
+    return modes_dict
+
+
+def get_modal_freq_from_result_files(out_path):
+    modal_path = out_path + '/modal_out/'
     modal_freq_file = open(modal_path + 'modal_freq.txt', 'r')
-
     if modal_freq_file:
         modal_freqs = {}
         freqs = modal_freq_file.readlines()
@@ -136,9 +134,7 @@ def get_modal_data_from_result_files(path):
     else:
         modal_freqs = None
 
-    # data = {'modal_shapes': modes_dict, 'num_modes': num_modes,
-    #         'modal_analysis': modal_analysis, 'modal_freqs': modal_freqs}
-    return modes_dict, modal_freqs
+    return modal_freqs
 
 
 def get_displacements_from_result_files(out_path, step):

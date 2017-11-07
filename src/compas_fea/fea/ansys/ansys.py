@@ -53,11 +53,11 @@ def make_command_file_harmonic(structure, output_path, filename, skey):
     write_harmonic_analysis_request(structure, output_path, filename, skey)
 
 
-def ansys_launch_process(path, name, fields, cpus, license):
+def ansys_launch_process(path, name, fields, cpus, license, delete=True):
 
     if not os.path.exists(path + name + '_output/'):
         os.makedirs(path + name + '_output/')
-    else:
+    elif delete:
         delete_result_files(path, name)
 
     ansys_path = 'MAPDL.exe'
@@ -66,7 +66,7 @@ def ansys_launch_process(path, name, fields, cpus, license):
 
     if not os.path.exists(work_dir):
         os.makedirs(work_dir)
-    out_path = work_dir + '/output.out'
+    out_path = work_dir + '/' + name + '.out'
 
     if license == 'research':
         lic_str = 'aa_r'
@@ -243,7 +243,7 @@ def write_total_results(filename, output_path, excluded_nodes=None, node_disp=No
 
 
 def extract_rst_data(structure, fields='all', steps='last'):
-    # write_results_from_rst(structure, fields, steps)
+    write_results_from_rst(structure, fields, steps)
     load_to_results(structure, fields, steps)
 
 
@@ -276,27 +276,37 @@ def load_to_results(structure, fields, steps):
     out_path = structure.path + structure.name + '_output/'
     if steps == 'all':
         steps = structure.steps.keys()
-    if type(steps) == str:
+    elif steps == 'last':
+        steps = [structure.steps_order[-1]]
+    elif type(steps) == str:
         steps = [steps]
 
     for step in steps:
-        rdicts = []
-        if 'u' in fields or 'all' in fields:
-            rdicts.append(get_displacements_from_result_files(out_path, step))
-        if 's' in fields or 'all' in fields:
-            rdicts.append(get_nodal_stresses_from_result_files(out_path, step))
-        if 'r' in fields or 'all' in fields:
-            rdicts.append(get_reactions_from_result_files(out_path, step))
-        if 'e' in fields or 'all' in fields:
-            rdicts.append(get_principal_strains_from_result_files(out_path, step))
-        if 'sp' in fields or 'all' in fields:
-            rdicts.append(get_principal_stresses_from_result_files(out_path, step))
-        if 'ss' in fields or 'all' in fields:
-            rdicts.append(get_shear_stresses_from_result_files(out_path, step))
+        if structure.steps[step].__name__ == 'StaticStep':
+            rdict = []
+            if 'u' in fields or 'all' in fields:
+                rdict.append(get_displacements_from_result_files(out_path, step))
+            if 's' in fields or 'all' in fields:
+                rdict.append(get_nodal_stresses_from_result_files(out_path, step))
+            if 'r' in fields or 'all' in fields:
+                rdict.append(get_reactions_from_result_files(out_path, step))
+            if 'e' in fields or 'all' in fields:
+                rdict.append(get_principal_strains_from_result_files(out_path, step))
+            if 'sp' in fields or 'all' in fields:
+                rdict.append(get_principal_stresses_from_result_files(out_path, step))
+            if 'ss' in fields or 'all' in fields:
+                rdict.append(get_shear_stresses_from_result_files(out_path, step))
+        elif structure.steps[step].__name__ == 'ModalStep':
+            rdict = []
+            if 'u' in fields or 'all' in fields:
+                rdict.append(get_modal_shapes_from_result_files(out_path))
+            if 'f' in fields or 'all' in fields:
+                fdict = get_modal_freq_from_result_files(out_path)
+                structure.results['frequency'] = fdict
 
-        structure.results['nodal'][step] = rdicts[0]
-        if len(rdicts) >= 1:
-            for d in rdicts[1:]:
+        structure.results['nodal'][step] = rdict[0]
+        if len(rdict) >= 1:
+            for d in rdict[1:]:
                 for key, att in structure.results['nodal'][step].items():
                     att.update(d[key])
 
