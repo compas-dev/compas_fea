@@ -6,10 +6,9 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 from compas_blender.geometry import BlenderMesh
-
+from compas_blender.helpers import mesh_from_bmesh
 from compas_blender.utilities import clear_layer
-# from compas_blender.utilities import delete_all_materials
-# from compas_blender.utilities import draw_cuboid
+from compas_blender.utilities import draw_cuboid
 from compas_blender.utilities import draw_pipes
 from compas_blender.utilities import draw_plane
 from compas_blender.utilities import get_objects
@@ -18,19 +17,21 @@ from compas_blender.utilities import xdraw_mesh
 from compas_blender.utilities import xdraw_texts
 
 from compas_fea.utilities import colorbar
-# from compas_fea.utilities.functions import extrude_mesh
+from compas_fea.utilities import extrude_mesh
 from compas_fea.utilities import network_order
 from compas_fea.utilities import postprocess
-# from compas_fea.utilities.functions import voxels
+from compas_fea.utilities import voxels
 
 from numpy import array
+from numpy import min
+from numpy import max
 from numpy import newaxis
 
-# try:
-#     from meshpy.tet import build
-#     from meshpy.tet import MeshInfo
-# except ImportError:
-#     print('***** MeshPy not imported *****')
+try:
+    from meshpy.tet import build
+    from meshpy.tet import MeshInfo
+except ImportError:
+    print('***** MeshPy not imported *****')
 
 import json
 
@@ -49,92 +50,82 @@ __email__      = 'liew@arch.ethz.ch'
 __all__ = [
     'add_nodes_elements_from_bmesh',
     'add_nodes_elements_from_layers',
-#     'add_tets_from_bmesh',
-#     'add_nset_from_bmeshes',
+    'add_tets_from_bmesh',
+    'add_nset_from_bmeshes',
     'add_elset_from_bmeshes',
     'add_nset_from_objects',
     'plot_data',
-    'ordered_lines',
-#     'plot_voxels',
-#     'mesh_extrude'
+    'ordered_network',
+    'plot_voxels',
+    'mesh_extrude'
 ]
 
 
-node_fields = ['RF', 'RM', 'U', 'UR', 'CF', 'CM']
-element_fields = ['SF', 'SM', 'SK', 'SE', 'S', 'E', 'PE', 'RBFOR']
-
-
-def add_nodes_elements_from_bmesh(structure, bmesh, edge_type=None, face_type=None, block_type=None, acoustic=False,
-                                  thermal=False):
+def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=None, acoustic=False, thermal=False):
     """ Adds the Blender mesh's nodes, edges and faces to the Structure object.
 
     Parameters:
         structure (obj): Structure object to update.
         bmesh (obj): Blender mesh object.
-        edge_type (str): Element type for bmesh edges.
-        face_type (str): Element type for bmesh faces.
-        block_type (str): Element type for bmesh blocks.
+        line_type (str): Element type for lines (bmesh edges).
+        mesh_type (str): Element type for meshes.
         acoustic (bool): Acoustic properties on or off.
         thermal (bool): Thermal properties on or off.
 
     Returns:
         None: Nodes and elements are updated in the Structure object.
     """
+    solids = ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']
 
     blendermesh = BlenderMesh(bmesh)
-
-    try:
-        name = blendermesh.guid
-        if name[-5:-3] == '}.':
-            dic = name[:-4]
-        else:
-            dic = name
-    except:
-        pass
-
     vertices = blendermesh.get_vertex_coordinates()
     edges = blendermesh.get_edge_vertex_indices()
     faces = blendermesh.get_face_vertex_indices()
 
+    try:
+        name = blendermesh.guid
+        if name[-5:-3] == '}.':
+            name = name[:-4]
+    except:
+        pass
+
     for vertex in vertices:
         structure.add_node(vertex)
 
-    if edge_type:
+    if line_type and edges:
+
         try:
-            dic_ = json.loads(dic.replace("'", '"'))
+            dic_ = json.loads(name.replace("'", '"'))
             ex = dic_.get('ex', None)
             ey = dic_.get('ey', None)
             axes = {'ex': ex, 'ey': ey}
         except:
             axes = {}
+
         for u, v in edges:
             sp = structure.check_node_exists(vertices[u])
             ep = structure.check_node_exists(vertices[v])
-            structure.add_element(nodes=[sp, ep], type=edge_type, acoustic=acoustic, thermal=thermal, axes=axes)
+            structure.add_element(nodes=[sp, ep], type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
 
-    if face_type:
-        for face in faces:
-            nodes = [structure.check_node_exists(vertices[i]) for i in face]
-            structure.add_element(nodes=nodes, type=face_type, acoustic=acoustic, thermal=thermal)
+    if mesh_type:
 
-    if block_type:
-        nodes = [structure.check_node_exists(i) for i in vertices]
-        structure.add_element(nodes=nodes, type=block_type, acoustic=acoustic, thermal=thermal)
+        if mesh_type in solids:
+            nodes = [structure.check_node_exists(i) for i in vertices]
+            structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
+        else:
+            for face in faces:
+                nodes = [structure.check_node_exists(vertices[i]) for i in face]
+                structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
 
 
-def add_nodes_elements_from_layers(structure, layers, edge_type=None, face_type=None, block_type=None, acoustic=False,
-                                   thermal=False):
+def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, acoustic=False, thermal=False):
     """ Adds node and element data from Blender layers to Structure object.
-
-    Note:
-        - Layer is to contain only Blender mesh objects.
 
     Parameters:
         structure (obj): Structure object to update.
-        layers (list): Layers to extract nodes and elements from bmeshes.
-        edge_type (str): Element type for bmesh edges.
-        face_type (str): Element type for bmesh faces.
-        block_type (str): Element type for bmesh blocks.
+        layers (list): Layers to extract nodes and elements.
+        line_type (str): Element type for lines (bmesh edges).
+        mesh_type (str): Element type for meshes.
         acoustic (bool): Acoustic properties on or off.
         thermal (bool): Thermal properties on or off.
 
@@ -143,49 +134,52 @@ def add_nodes_elements_from_layers(structure, layers, edge_type=None, face_type=
     """
     if isinstance(layers, int):
         layers = [layers]
+
     for layer in layers:
         bmeshes = get_objects(layer=layer)
         for bmesh in bmeshes:
-            add_nodes_elements_from_bmesh(structure=structure, bmesh=bmesh, edge_type=edge_type, face_type=face_type,
-                                          block_type=block_type, acoustic=acoustic, thermal=thermal)
+            add_nodes_elements_from_bmesh(structure=structure, bmesh=bmesh, line_type=line_type, mesh_type=mesh_type, acoustic=acoustic, thermal=thermal)
 
 
-# def add_tets_from_bmesh(structure, name, bmesh, draw_tets=False, volume=None, layer=19, acoustic=False, thermal=False):
-#     """ Adds tetrahedron elements from a Blender mesh to Structure object.
+def add_tets_from_bmesh(structure, name, bmesh, draw_tets=False, volume=None, layer=19, acoustic=False, thermal=False):
+    """ Adds tetrahedron elements from a Blender mesh to the Structure object.
 
-#     Parameters:
-#         structure (obj): Structure object to update.
-#         name (str): Name for the ELSET of tetrahedrons.
-#         bmesh (ob): The Blender mesh representing the outer surface.
-#         draw_tets (bool): Draw the generated tetrahedrons.
-#         volume (float): Maximum volume for tets.
-#         layer (int): Layer to draw tetrahedrons if draw_tets=True.
-#         acoustic (bool): Acoustic properties on or off.
-#         thermal (bool): Thermal properties on or off.
+    Parameters:
+        structure (obj): Structure object to update.
+        name (str): Name for the element set of tetrahedrons.
+        bmesh (ob): The Blender mesh representing the outer surface.
+        draw_tets (bool): Draw the generated tetrahedrons.
+        volume (float): Maximum volume for tets.
+        layer (int): Layer to draw tetrahedrons if draw_tets=True.
+        acoustic (bool): Acoustic properties on or off.
+        thermal (bool): Thermal properties on or off.
 
-#     Returns:
-#         None: Nodes and elements are updated in the Structure object.
-#     """
-#     vertices, edges, faces = bmesh_data(bmesh)
-#     tets_info = MeshInfo()
-#     tets_info.set_points(vertices)
-#     tets_info.set_facets(faces)
-#     tets = build(tets_info, max_volume=volume)
+    Returns:
+        None: Nodes and elements are updated in the Structure object.
+    """
+    blendermesh = BlenderMesh(bmesh)
+    vertices = blendermesh.get_vertex_coordinates()
+    faces = blendermesh.get_face_vertex_indices()
 
-#     for point in tets.points:
-#         structure.add_node(point)
-#     ekeys = []
-#     for element in tets.elements:
-#         nodes = [structure.check_node_exists(tets.points[i]) for i in element]
-#         ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', acoustic=acoustic, thermal=thermal)
-#         ekeys.append(ekey)
-#     structure.add_set(name=name, type='element', selection=ekeys, explode=False)
+    info = MeshInfo()
+    info.set_points(vertices)
+    info.set_facets(faces)
+    tets = build(info, max_volume=volume)
 
-#     if draw_tets:
-#         tet_faces = [[0, 1, 2], [1, 3, 2], [1, 3, 0], [0, 2, 3]]
-#         for i, points in enumerate(tets.elements):
-#             xyz = [tets.points[j] for j in points]
-#             draw_bmesh(name=str(i), vertices=xyz, faces=tet_faces, layer=layer)
+    for point in tets.points:
+        structure.add_node(point)
+    ekeys = []
+    for element in tets.elements:
+        nodes = [structure.check_node_exists(tets.points[i]) for i in element]
+        ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', acoustic=acoustic, thermal=thermal)
+        ekeys.append(ekey)
+    structure.add_set(name=name, type='element', selection=ekeys, explode=False)
+
+    if draw_tets:
+        tet_faces = [[0, 1, 2], [1, 3, 2], [1, 3, 0], [0, 2, 3]]
+        for i, points in enumerate(tets.elements):
+            xyz = [tets.points[j] for j in points]
+            xdraw_mesh(name=str(i), vertices=xyz, faces=tet_faces, layer=layer)
 
 
 def add_elset_from_bmeshes(structure, name, bmeshes=None, layer=None, explode=False):
@@ -196,7 +190,7 @@ def add_elset_from_bmeshes(structure, name, bmeshes=None, layer=None, explode=Fa
 
     Parameters:
         structure (obj): Structure object to update.
-        name (str): Name of the new ELSET.
+        name (str): Name of the new element set.
         bmeshes (list): Blender mesh objects to extract edges and faces.
         layer (int): Layer to get bmeshes from if bmeshes are not given.
         explode (bool): Explode the set into sets for each member of selection.
@@ -205,10 +199,11 @@ def add_elset_from_bmeshes(structure, name, bmeshes=None, layer=None, explode=Fa
         None
     """
     if layer is not None:
-        bmeshes = get_objects(layer=layer)
+        bmeshes = [object for object in get_objects(layer=layer) if object.type == 'MESH']
 
     elements = []
     for bmesh in bmeshes:
+
         blendermesh = BlenderMesh(bmesh)
         vertices = blendermesh.get_vertex_coordinates()
         edges = blendermesh.get_edge_vertex_indices()
@@ -230,34 +225,37 @@ def add_elset_from_bmeshes(structure, name, bmeshes=None, layer=None, explode=Fa
     structure.add_set(name=name, type='element', selection=elements, explode=explode)
 
 
-# def add_nset_from_bmeshes(structure, name, bmeshes=None, layer=None, explode=False):
-#     """ Adds the Blender meshes' vertices as a node set.
+def add_nset_from_bmeshes(structure, name, bmeshes=None, layer=None, explode=False):
+    """ Adds the Blender meshes' vertices as a node set.
 
-#     Note:
-#         - Either bmeshes or layer should be given, not both.
+    Note:
+        - Either bmeshes or layer should be given, not both.
 
-#     Parameters:
-#         structure (obj): Structure object to update.
-#         name (str): Name of the new NSET.
-#         bmeshes (list): Blender mesh objects to extract vertices.
-#         layer (int): Layer to get bmeshes from if bmeshes are not given.
-#         explode (bool): Explode the set into sets for each member of selection.
+    Parameters:
+        structure (obj): Structure object to update.
+        name (str): Name of the new node set.
+        bmeshes (list): Blender mesh objects to extract vertices.
+        layer (int): Layer to get bmeshes from if bmeshes are not given.
+        explode (bool): Explode the set into sets for each member of selection.
 
-#     Returns:
-#         None
-#     """
-#     if layer is not None:
-#         bmeshes = get_objects(layer)
-#     nodes = []
-#     for bmesh in bmeshes:
-#         vertices, edges, faces = bmesh_data(bmesh)
+    Returns:
+        None
+    """
+    if layer is not None:
+        bmeshes = [object for object in get_objects(layer=layer) if object.type == 'MESH']
 
-#         for vertex in vertices:
-#             node = structure.check_node_exists(vertex)
-#             if node is not None:
-#                 nodes.append(node)
+    nodes = []
+    for bmesh in bmeshes:
 
-#     structure.add_set(name=name, type='node', selection=nodes, explode=explode)
+        blendermesh = BlenderMesh(bmesh)
+        vertices = blendermesh.get_vertex_coordinates()
+
+        for vertex in vertices:
+            node = structure.check_node_exists(vertex)
+            if node is not None:
+                nodes.append(node)
+
+    structure.add_set(name=name, type='node', selection=nodes, explode=explode)
 
 
 def add_nset_from_objects(structure, name, objects=None, layer=None, explode=False):
@@ -268,7 +266,7 @@ def add_nset_from_objects(structure, name, objects=None, layer=None, explode=Fal
 
     Parameters:
         structure (obj): Structure object to update.
-        name (str): Name of the new NSET.
+        name (str): Name of the new node set.
         objects (list): Objects to use location values.
         layer (int): Layer to get objects from if objects are not given.
         explode (bool): Explode the set into sets for each member of selection.
@@ -282,31 +280,28 @@ def add_nset_from_objects(structure, name, objects=None, layer=None, explode=Fal
     structure.add_set(name=name, type='node', selection=nodes, explode=explode)
 
 
-# def add_elset_from_objects():
-#     raise NotImplementedError
+def mesh_extrude(structure, bmesh, nz, dz, setname):
+    """ Extrudes a Blender mesh into cells of many layers and adds to Structure.
+
+    Note:
+        - Extrusion is along the vertex normals.
+        - Elements are added automatically to the Structure object.
+
+    Parameters:
+        structure (obj): Structure object to update.
+        bmesh (obj): Blender mesh object.
+        nz (int): Number of layers.
+        dz (float): Layer thickness.
+        setname (str): Name of set for added elements.
+
+    Returns:
+        None
+    """
+    mesh = mesh_from_bmesh(bmesh)
+    extrude_mesh(structure=structure, mesh=mesh, nz=nz, dz=dz, setname=setname)
 
 
-# def mesh_extrude(structure, bmesh, nz, dz):
-#     """ Extrudes a Blender mesh into cells of many layers.
-
-#     Note:
-#         - Extrusion is along the vertex normals.
-#         - Elements are added automatically to Structure object.
-
-#     Parameters:
-#         structure (obj): Structure object to update.
-#         bmesh (obj): Blender mesh object.
-#         nz (int): Number of layers.
-#         dz (float): Layer thickness.
-
-#     Returns:
-#         None
-#     """
-#     mesh = mesh_from_bmesh(bmesh)
-#     extrude_mesh(structure, mesh, nz, dz)
-
-
-def ordered_lines(structure, network, layer):
+def ordered_network(structure, network, layer):
     """ Extract node and element orders from a Network for a given start-point.
 
     Note:
@@ -323,16 +318,16 @@ def ordered_lines(structure, network, layer):
         list: Cumulative lengths at element mid-points.
         float: Total length.
     """
-    sp = get_object_location(object=get_objects(layer=layer)[0])
-    return network_order(sp, structure=structure, network=network)
+    sp_xyz = get_object_location(object=get_objects(layer=layer)[0])
+    return network_order(sp_xyz=sp_xyz, structure=structure, network=network)
 
 
 def plot_axes():
     raise NotImplementedError
 
 
-def plot_data(structure, step, field='U', component='magnitude', scale=1.0, radius=0.05, iptype='mean', nodal='mean',
-              cbar=[None, None], layer=0):
+def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
+              nodal='mean'):
     """ Plots analysis results on the deformed shape of the Structure.
 
     Note:
@@ -341,75 +336,70 @@ def plot_data(structure, step, field='U', component='magnitude', scale=1.0, radi
     Parameters:
         structure (obj): Structure object.
         step (str): Name of the Step.
-#         field (str): Field to plot, e.g. 'U', 'S', 'SM'.
-#         component (str): Component to plot, e.g. 'U1', 'RF2'.
-#         scale (float): Scale displacements for the deformed plot.
-#         radius (float): Radius of the pipe visualisation meshes.
-#         iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
-#         nodal (str): 'mean', 'max' or 'min' for nodal values.
-#         cbar (list): Minimum and maximum limits on the colourbar.
+        field (str): Field to plot, e.g. 'um', 'sxx', 'sm1'.
         layer (int): Layer number for plotting.
+        scale (float): Scale displacements for the deformed plot.
+        radius (float): Radius of the pipe visualisation meshes.
+        cbar (list): Minimum and maximum limits on the colorbar.
+        iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
+        nodal (str): 'mean', 'max' or 'min' for nodal values.
 
     Returns:
         None
     """
-
-    name = structure.name
-    path = structure.path
-    temp = '{0}{1}/'.format(path, name)
-
     clear_layer(layer=layer)
+
+    # Node and element data
+
+    nkeys = sorted(structure.nodes, key=int)
+    nodes = [structure.node_xyz(nkey) for nkey in nkeys]
+
+    ekeys = sorted(structure.elements, key=int)
+    elements = [structure.elements[ekey].nodes for ekey in ekeys]
+
+    nodal_data = structure.results[step]['nodal']
+    elemental_data = structure.results[step]['element']
+    ux = [nodal_data['ux'][str(key)] for key in nkeys]
+    uy = [nodal_data['uy'][str(key)] for key in nkeys]
+    uz = [nodal_data['uz'][str(key)] for key in nkeys]
 
     # Process data
 
-    with open('{0}{1}-elements.json'.format(temp, name), 'r') as f:
-        elements = json.load(f)
+    try:
+        data = [nodal_data[field][str(key)] for key in nkeys]
+        dtype = 'nodal'
+    except:
+        data = elemental_data[field]
+        dtype = 'elemental'
 
-    toc, cnodes, celements, cnodal, fabs, nabs, U, fscaled, nscaled = postprocess(
-        temp, name, step, field, component, scale, iptype, nodal, cbar[0], cbar[1], type=1)
+    toc, U, cnodes, fabs, _ = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1, iptype, nodal)
 
-    # Print info
-
-    with open('{0}{1}-{2}-info.json'.format(temp, name, step), 'r') as f:
-        info = json.load(f)
-
-    print('\nStep summary: {0}'.format(step))
-    print('--------------' + '-' * len(step))
-    print('Frame description: {0}'.format(info['description']))
+    print('\n***** Data processed : {0} s *****'.format(toc))
 
     # Plot meshes
 
-#     mesh_faces = []
     npts = 8
-    for ekey, nodes in elements.items():
+    mesh_faces = []
+
+    for nodes in elements:
         n = len(nodes)
 
         if n == 2:
             u, v = nodes
             pipe = draw_pipes(start=[U[u]], end=[U[v]], radius=radius, layer=layer)[0]
-            if field in node_fields:
-                col1 = [list(cnodes[u])] * npts
-                col2 = [list(cnodes[v])] * npts
-            elif field in element_fields:
-                col1 = [list(celements[int(ekey)])] * npts
-                col2 = [list(celements[int(ekey)])] * npts
+            col1 = [list(cnodes[u])] * npts
+            col2 = [list(cnodes[v])] * npts
             blendermesh = BlenderMesh(pipe)
             blendermesh.set_vertex_colors(vertices=range(0, 2 * npts, 2), colors=col1)
             blendermesh.set_vertex_colors(vertices=range(1, 2 * npts, 2), colors=col2)
 
-#         elif n in [3, 4]:
-#             mesh_faces.append(nodes)
+        elif n in [3, 4]:
+            mesh_faces.append(nodes)
 
-#     if mesh_faces:
-#         bmesh = draw_bmesh(name='bmesh', vertices=U, faces=mesh_faces, layer=layer)
-#         nv = U.shape[0]
-#         if field in node_fields:
-#             colour_bmesh_vertices(bmesh=bmesh, vertices=range(nv), colours=list(cnodes))
-#         elif field in element_fields:
-#             colour_bmesh_vertices(bmesh=bmesh, vertices=range(nv), colours=list(cnodal))
-
-#     if field in element_fields:
-#         fabs = max([fabs, nabs])
+    if mesh_faces:
+        bmesh = xdraw_mesh(name='bmesh', vertices=U, faces=mesh_faces, layer=layer)
+        blendermesh = BlenderMesh(bmesh)
+        blendermesh.set_vertex_colors(vertices=range(U.shape[0]), colors=list(cnodes))
 
     # Plot colourbar
 
@@ -420,53 +410,50 @@ def plot_data(structure, step, field='U', component='magnitude', scale=1.0, radi
 
     blendermesh = BlenderMesh(cmesh)
     vertices = blendermesh.get_vertex_coordinates()
+    faces = blendermesh.get_face_vertex_indices()
     x = array(vertices)[:, 0]
     y = array(vertices)[:, 1]
-    xmin = min(x)
-    xmax = max(x)
+    xmin, xmax, ymin = min(x), max(x), min(y)
     xran = xmax - xmin
-    ymin = min(y)
+    h = xran / 20.
 
-    colors = colorbar(((x - xmin - xran / 2) / (xran / 2))[:, newaxis], input='array', type=1)
-    faces = blendermesh.get_face_vertex_indices()
+    colors = colorbar(((x - xmin - 0.5 * xran) * 2 / xran)[:, newaxis], input='array', type=1)
     bmesh = xdraw_mesh(name='colorbar', vertices=vertices, faces=faces, layer=layer)
     blendermesh = BlenderMesh(bmesh)
     blendermesh.set_vertex_colors(vertices=range(len(vertices)), colors=colors)
 
-    h = xran / 20.
     texts = [
         {'radius': 2 * h, 'pos': [xmax, ymin - 2 * h, 0], 'text': '{0:.4g}'.format(+fabs), 'layer': layer},
         {'radius': 2 * h, 'pos': [xmin, ymin - 2 * h, 0], 'text': '{0:.4g}'.format(-fabs), 'layer': layer},
-        {'radius': 2 * h, 'pos': [xmin + xran / 2., ymin - 2 * h, 0], 'text': '0', 'layer': layer}]
+        {'radius': 2 * h, 'pos': [xmin + 0.5 * xran, ymin - 2 * h, 0], 'text': '0', 'layer': layer}]
     xdraw_texts(texts)
 
 
-# def plot_voxels(structure, path, name, step, field='S', component='mises', iptype='max', nodal='max', vdx=1,
-#                 cbar=[0, 1], cube_size=[10, 10, 10], layer=0):
-#     """ Applies a base voxel material and texture to a cube for 4D visualisation.
+def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',
+                vdx=None, cube_size=[10, 10, 10]):
+    """ Applies a base voxel material and texture to a cube for 4D visualisation.
 
-#     Note:
-#         - Texture ramping should be done manually afterwards.
-#         - Voxel display works best with cube dimensions >= 10.
-#         - The absolute value is plotted, ranged between [0, 1].
+    Note:
+        - Texture ramping should be done manually afterwards.
+        - Voxel display works best with cube dimensions >= 10.
+        - The absolute value is plotted, ranged between [0, 1].
 
-#      Parameters:
-#         structure (obj): Structure object.
-#         path (str): Folder where results files are stored.
-#         name (str): Structure name.
-#         step (str): Name of the Step.
-#         field (str): Field to plot, e.g. 'U', 'S'.
-#         component (str): Component to plot, e.g. 'U1', 'mises'.
-#         iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
-#         nodal (str): 'mean', 'max' or 'min' for nodal values.
-#         vdx (float): Voxel data spacing.
-#         cbar (list): Minimum and maximum limits on the colorbar.
-#         cube_size (list): x, y, and z lengths of the cube.
-#         layer (int): Layer to plot voxel cuboid on.
+     Parameters:
+        structure (obj): Structure object.
+        step (str): Name of the Step.
+        field (str): Field to plot, e.g. 'smises'.
+        layer (int): Layer to plot voxel cuboid on.
+        scale (float): Scale displacements for the deformed plot.
+        cbar (list): Minimum and maximum limits on the colorbar.
+        iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
+        nodal (str): 'mean', 'max' or 'min' for nodal values.
+        vdx (float): Voxel spacing.
+        cube_size (list): x, y, and z lengths of the cube.
 
-#     Returns:
-#         None
-#     """
+    Returns:
+        None
+    """
+    pass
 
 #     # Load data
 

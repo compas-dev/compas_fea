@@ -54,10 +54,10 @@ class AngleSection(object):
         xc = (b**2 + h * t - t**2) / (2. * (b + h - t))
         yc = (h**2 + b * t - t**2) / (2. * (b + h - t))
         A = t * (b + h - t)
-        I11 = (1. / 3) * (b * h**3 - (b - t) * (h - t)**3) - A * (h - yc)**2
-        I22 = (1. / 3) * (h * b**3 - (h - t) * (b - t)**3) - A * (b - xc)**2
+        Ixx = (1. / 3) * (b * h**3 - (b - t) * (h - t)**3) - A * (h - yc)**2
+        Iyy = (1. / 3) * (h * b**3 - (h - t) * (b - t)**3) - A * (b - xc)**2
         self.__name__ = 'AngleSection'
-        self.geometry = {'b': b, 'h': h, 't': t, 'A': A, 'I11': I11, 'I22': I22, 'I12': 0}
+        self.geometry = {'b': b, 'h': h, 't': t, 'A': A, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
         self.name = name
 
 
@@ -78,10 +78,10 @@ class BoxSection(object):
 
     def __init__(self, name, b, h, tw, tf):
         A = b * h - (b - 2 * tw) * (h - 2 * tf)
-        I11 = (b * h**3) / 12. - ((b - 2 * tw) * (h - 2 * tf)**3) / 12.
-        I22 = (h * b**3) / 12. - ((h - 2 * tf) * (b - 2 * tw)**3) / 12.
+        Ixx = (b * h**3) / 12. - ((b - 2 * tw) * (h - 2 * tf)**3) / 12.
+        Iyy = (h * b**3) / 12. - ((h - 2 * tf) * (b - 2 * tw)**3) / 12.
         self.__name__ = 'BoxSection'
-        self.geometry = {'b': b, 'h': h, 'tw': tw, 'tf': tf, 'A': A, 'I11': I11, 'I22': I22, 'I12': 0}
+        self.geometry = {'b': b, 'h': h, 'tw': tw, 'tf': tf, 'A': A, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
         self.name = name
 
 
@@ -100,10 +100,11 @@ class CircularSection(object):
     def __init__(self, name, r):
         D = 2 * r
         A = 0.25 * pi * D**2
-        I11 = (pi * D**4) / 64.
-        I22 = (pi * D**4) / 64.
+        Ixx = (pi * D**4) / 64.
+        Iyy = (pi * D**4) / 64.
+        J = (pi * D**4) / 32
         self.__name__ = 'CircularSection'
-        self.geometry = {'r': r, 'D': D, 'A': A, 'I11': I11, 'I22': I22, 'I12': 0}
+        self.geometry = {'r': r, 'D': D, 'A': A, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0, 'J': J}
         self.name = name
 
 
@@ -114,9 +115,9 @@ class GeneralSection(object):
     Parameters:
         name (str): Section name.
         A (float): Area.
-        I11 (float): Second moment of area about axis 1-1.
-        I12 (float): Cross moment of area.
-        I22 (float): Second moment of area about axis 2-2.
+        Ixx (float): Second moment of area about axis 1-1.
+        Ixy (float): Cross moment of area.
+        Iyy (float): Second moment of area about axis 2-2.
         J (float): Torsional rigidity.
         g0 (float): Sectorial moment.
         gw (float): Warping constant.
@@ -125,9 +126,9 @@ class GeneralSection(object):
         None
     """
 
-    def __init__(self, name, A, I11, I12, I22, J, g0, gw):
+    def __init__(self, name, A, Ixx, Ixy, Iyy, J, g0, gw):
         self.__name__ = 'GeneralSection'
-        self.geometry = {'A': A, 'I11': I11, 'I12': I12, 'I22': I22, 'J': J, 'g0': g0, 'gw': gw}
+        self.geometry = {'A': A, 'Ixx': Ixx, 'Ixy': Ixy, 'Iyy': Iyy, 'J': J, 'g0': g0, 'gw': gw}
         self.name = name
 
 
@@ -148,10 +149,10 @@ class ISection(object):
 
     def __init__(self, name, b, h, tw, tf):
         A = 2 * b * tf + (h - 2 * tf) * tw
-        I11 = (tw * (h - 2 * tf)**3) / 12. + 2 * ((tf**3) * b / 12. + b * tf * (h / 2. - tf / 2.)**2)
-        I22 = ((h - 2 * tf) * tw**3) / 12. + 2 * ((b**3) * tf / 12.)
+        Ixx = (tw * (h - 2 * tf)**3) / 12. + 2 * ((tf**3) * b / 12. + b * tf * (h / 2. - tf / 2.)**2)
+        Iyy = ((h - 2 * tf) * tw**3) / 12. + 2 * ((b**3) * tf / 12.)
         self.__name__ = 'ISection'
-        self.geometry = {'b': b, 'h': h, 'tw': tw, 'tf': tf, 'c': h / 2., 'A': A, 'I11': I11, 'I22': I22, 'I12': 0}
+        self.geometry = {'b': b, 'h': h, 'tw': tw, 'tf': tf, 'c': h / 2., 'A': A, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
         self.name = name
 
 
@@ -171,10 +172,10 @@ class PipeSection(object):
     def __init__(self, name, r, t):
         D = 2 * r
         A = 0.25 * pi * (D**2 - (D - 2 * t)**2)
-        I11 = 0.25 * pi * (r**4 - (r - t)**4)
-        I22 = 0.25 * pi * (r**4 - (r - t)**4)
+        Ixx = 0.25 * pi * (r**4 - (r - t)**4)
+        Iyy = 0.25 * pi * (r**4 - (r - t)**4)
         self.__name__ = 'PipeSection'
-        self.geometry = {'r': r, 't': t, 'D': D, 'A': A, 'I11': I11, 'I22': I22, 'I12': 0}
+        self.geometry = {'r': r, 't': t, 'D': D, 'A': A, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
         self.name = name
 
 
@@ -193,10 +194,10 @@ class RectangularSection(object):
 
     def __init__(self, name, b, h):
         A = b * h
-        I11 = (1 / 12.) * b * h**3
-        I22 = (1 / 12.) * h * b**3
+        Ixx = (1 / 12.) * b * h**3
+        Iyy = (1 / 12.) * h * b**3
         self.__name__ = 'RectangularSection'
-        self.geometry = {'b': b, 'h': h, 'A': A, 'I11': I11, 'I22': I22, 'I12': 0}
+        self.geometry = {'b': b, 'h': h, 'A': A, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
         self.name = name
 
 
@@ -217,10 +218,10 @@ class TrapezoidalSection(object):
     def __init__(self, name, b1, b2, h):
         c = (h * (2 * b2 + b1)) / (3. * (b1 + b2))
         A = 0.5 * (b1 + b2) * h
-        I11 = (1 / 12.) * (3 * b2 + b1) * h**3
-        I22 = (1 / 48.) * h * (b1 + b2) * (b2**2 + 7 * b1**2)
+        Ixx = (1 / 12.) * (3 * b2 + b1) * h**3
+        Iyy = (1 / 48.) * h * (b1 + b2) * (b2**2 + 7 * b1**2)
         self.__name__ = 'TrapezoidalSection'
-        self.geometry = {'b1': b1, 'b2': b2, 'h': h, 'A': A, 'c': c, 'I11': I11, 'I22': I22, 'I12': 0}
+        self.geometry = {'b1': b1, 'b2': b2, 'h': h, 'A': A, 'c': c, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
         self.name = name
 
 

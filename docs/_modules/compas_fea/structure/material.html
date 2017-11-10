@@ -46,8 +46,8 @@
 <span class="sd">For creating and/or selecting linear and non-linear material model classes.</span>
 <span class="sd">"""</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">log</span>
 
@@ -95,6 +95,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">E</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'E'</span><span class="p">:</span> <span class="n">E</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'v'</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'G'</span><span class="p">:</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">E</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">v</span><span class="p">)}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tension</span> <span class="o">=</span> <span class="n">tension</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="n">compression</span></div>
@@ -153,8 +154,8 @@
 <span class="sd">        E (float, list): Young's modulus E.</span>
 <span class="sd">        v (float, list): Poisson's ratio v.</span>
 <span class="sd">        p (float, list): Density.</span>
-<span class="sd">        f (list): Plastic stress data.</span>
-<span class="sd">        e (list): Plastic strain data.</span>
+<span class="sd">        f (list): Plastic stress data (positive tension values).</span>
+<span class="sd">        e (list): Plastic strain data (positive tension values).</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
@@ -165,8 +166,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">E</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'E'</span><span class="p">:</span> <span class="n">E</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'v'</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'G'</span><span class="p">:</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">E</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">v</span><span class="p">)}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'f'</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span> <span class="n">e</span><span class="p">}</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+        <span class="n">ec</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">e</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'f'</span><span class="p">:</span> <span class="n">fc</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span> <span class="n">ec</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tension</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'f'</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span> <span class="n">e</span><span class="p">}</span></div>
 
 
@@ -190,16 +194,19 @@
 <span class="sd">        None</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">210</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">7850</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'elastic-plastic'</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">210</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">7850</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'elastic-plastic'</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'Steel'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">E</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'E'</span><span class="p">:</span> <span class="n">E</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'v'</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'G'</span><span class="p">:</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">E</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">v</span><span class="p">)}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
         <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s1">'elastic-plastic'</span><span class="p">:</span>
             <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="n">fy</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">]</span>
             <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'f'</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span> <span class="n">e</span><span class="p">}</span>
+        <span class="n">fc</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+        <span class="n">ec</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">e</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'f'</span><span class="p">:</span> <span class="n">fc</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span> <span class="n">ec</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tension</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'f'</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span> <span class="n">e</span><span class="p">}</span></div>
 
 
@@ -386,11 +393,11 @@
             
 
             
-                Last updated on Oct 12, 2017.
+                Last updated on Nov 10, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
 <script type="text/javascript">

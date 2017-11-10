@@ -27,7 +27,7 @@ blender
     add_elset_from_bmeshes
     add_nset_from_objects
     plot_data
-    ordered_lines
+    ordered_network
     plot_voxels
     mesh_extrude
 
@@ -48,9 +48,10 @@ rhino
     add_sets_from_layers
     mesh_extrude
     network_from_lines
-    ordered_lines
+    ordered_network
     plot_axes
     plot_data
+    plot_voxels
     plot_principal_stresses
 
 

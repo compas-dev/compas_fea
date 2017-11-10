@@ -48,35 +48,47 @@
 <h1>HarmonicStep</h1>
 <dl class="class">
 <dt id="compas_fea.structure.step.HarmonicStep">
-<em class="property">class </em><code class="descclassname">compas_fea.structure.step.</code><code class="descname">HarmonicStep</code><span class="sig-paren">(</span><em>name</em>, <em>displacements=[]</em>, <em>loads=[]</em>, <em>factor=1.0</em>, <em>freq_range=None</em>, <em>freq_steps=None</em>, <em>damping=None</em>, <em>type='HARMONIC'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/step.html#HarmonicStep"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="descclassname">compas_fea.structure.step.</code><code class="descname">HarmonicStep</code><span class="sig-paren">(</span><em>name</em>, <em>freq_range</em>, <em>freq_steps</em>, <em>displacements=[]</em>, <em>loads=[]</em>, <em>factor=1.0</em>, <em>damping=None</em>, <em>type='harmonic'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/step.html#HarmonicStep"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal">object</code></a></p>
 <p>Initialises HarmonicStep object analysis type.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul>
-<li><p><strong>name</strong> (<em>str</em>) – Name of the HarmonicStep.</p></li>
-<li><p><strong>displacements</strong> (<em>list</em>) – Displacement object names (str).</p></li>
-<li><p><strong>loads</strong> (<em>list</em>) – Load object names (str).</p></li>
-<li><p><strong>factor</strong> (<em>float</em>) – Proportionality factor on the loads and displacements.</p></li>
-<li><p><strong>freq_range</strong> (<em>list</em>) – First and last frequencies to analyse.</p></li>
-<li><p><strong>freq_steps</strong> (<em>int</em>) – The number of frequency steps.</p></li>
-<li><p><strong>damping</strong> (<em>float</em>) – Constant harmonic damping ratio.</p></li>
-<li><p><strong>type</strong> (<em>str</em>) – ‘HARMONIC’.</p></li>
+<table class="docutils field-list table table-responsive table-bordered" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first">
+<li><p class="first"><strong>name</strong> (<em>str</em>) – Name of the HarmonicStep.</p>
+</li>
+<li><p class="first"><strong>freq_range</strong> (<em>list</em>) – First and last frequencies to analyse.</p>
+</li>
+<li><p class="first"><strong>freq_steps</strong> (<em>int</em>) – The number of equally spaced frequency steps.</p>
+</li>
+<li><p class="first"><strong>displacements</strong> (<em>list</em>) – Displacement object names (str).</p>
+</li>
+<li><p class="first"><strong>loads</strong> (<em>list</em>) – Load object names (str).</p>
+</li>
+<li><p class="first"><strong>factor</strong> (<em>float</em>) – Proportionality factor on the loads and displacements.</p>
+</li>
+<li><p class="first"><strong>damping</strong> (<em>float</em>) – Constant harmonic damping ratio.</p>
+</li>
+<li><p class="first"><strong>type</strong> (<em>str</em>) – ‘harmonic’.</p>
+</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Methods</p>
-<table class="longtable docutils table table-responsive table-bordered">
+<table border="1" class="longtable docutils table table-responsive table-bordered">
 <colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
+<col width="10%"/>
+<col width="90%"/>
 </colgroup>
-<tbody>
-<tr class=""><td><p><code class="xref py py-obj docutils literal">__init__</code>(name[, displacements, loads, …])</p></td>
-<td><p></p></td>
+<tbody valign="top">
+<tr class=""><td><code class="xref py py-obj docutils literal">__init__</code>(name, freq_range, freq_steps[, ...])</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -136,11 +148,11 @@
             
 
             
-                Last updated on Oct 12, 2017.
+                Last updated on Nov 10, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
 <script type="text/javascript">

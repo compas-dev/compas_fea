@@ -49,44 +49,47 @@
 <div class="section">
 <h2>abaq</h2>
 <p><code class="xref py py-mod docutils literal">compas_fea.fea.abaq</code></p>
-<table class="longtable docutils table table-responsive table-bordered">
+<table border="1" class="longtable docutils table table-responsive table-bordered">
 <colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
+<col width="10%"/>
+<col width="90%"/>
 </colgroup>
-<tbody>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.abaqus_launch_process.html" title="compas_fea.fea.abaq.abaqus_launch_process"><code class="xref py py-obj docutils literal">abaqus_launch_process</code></a>(structure, path, name, …)</p></td>
-<td><p>Runs the analysis through the chosen FEA software/library.</p></td>
+<tbody valign="top">
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.abaqus_launch_process.html" title="compas_fea.fea.abaq.abaqus_launch_process"><code class="xref py py-obj docutils literal">abaqus_launch_process</code></a>(structure, exe, cpus)</td>
+<td>Runs the analysis through Abaqus.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.inp_write_constraints.html" title="compas_fea.fea.abaq.inp_write_constraints"><code class="xref py py-obj docutils literal">inp_write_constraints</code></a>(f, constraints)</p></td>
-<td><p>Writes the constraints information to the Abaqus .inp file.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.extract_odb_data.html" title="compas_fea.fea.abaq.extract_odb_data"><code class="xref py py-obj docutils literal">extract_odb_data</code></a>(structure, fields, exe)</td>
+<td>Extract data from the Abaqus .odb file.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.inp_write_elements.html" title="compas_fea.fea.abaq.inp_write_elements"><code class="xref py py-obj docutils literal">inp_write_elements</code></a>(f, elements)</p></td>
-<td><p>Writes the element information to the Abaqus .inp file.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_constraints.html" title="compas_fea.fea.abaq.input_write_constraints"><code class="xref py py-obj docutils literal">input_write_constraints</code></a>(f, constraints)</td>
+<td>Writes the constraints information to the Abaqus .inp file.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.inp_generate.html" title="compas_fea.fea.abaq.inp_generate"><code class="xref py py-obj docutils literal">inp_generate</code></a>(structure, filename[, units])</p></td>
-<td><p>Creates the Abaqus .inp file from the Structure object.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_elements.html" title="compas_fea.fea.abaq.input_write_elements"><code class="xref py py-obj docutils literal">input_write_elements</code></a>(f, elements)</td>
+<td>Writes the element information to the Abaqus .inp file.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.inp_write_heading.html" title="compas_fea.fea.abaq.inp_write_heading"><code class="xref py py-obj docutils literal">inp_write_heading</code></a>(f)</p></td>
-<td><p>Creates the Abaqus .inp file heading.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_generate.html" title="compas_fea.fea.abaq.input_generate"><code class="xref py py-obj docutils literal">input_generate</code></a>(structure, fields[, units])</td>
+<td>Creates the Abaqus .inp file from the Structure object.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.inp_write_materials.html" title="compas_fea.fea.abaq.inp_write_materials"><code class="xref py py-obj docutils literal">inp_write_materials</code></a>(f, materials)</p></td>
-<td><p>Writes materials to the Abaqus .inp file.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_heading.html" title="compas_fea.fea.abaq.input_write_heading"><code class="xref py py-obj docutils literal">input_write_heading</code></a>(f)</td>
+<td>Creates the Abaqus .inp file heading.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.inp_write_misc.html" title="compas_fea.fea.abaq.inp_write_misc"><code class="xref py py-obj docutils literal">inp_write_misc</code></a>(f, misc)</p></td>
-<td><p>Writes misc class info to the Abaqus .inp file.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_materials.html" title="compas_fea.fea.abaq.input_write_materials"><code class="xref py py-obj docutils literal">input_write_materials</code></a>(f, materials)</td>
+<td>Writes materials to the Abaqus .inp file.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.inp_write_nodes.html" title="compas_fea.fea.abaq.inp_write_nodes"><code class="xref py py-obj docutils literal">inp_write_nodes</code></a>(f, nodes, units)</p></td>
-<td><p>Writes the nodal co-ordinates information to the Abaqus .inp file.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_misc.html" title="compas_fea.fea.abaq.input_write_misc"><code class="xref py py-obj docutils literal">input_write_misc</code></a>(f, misc)</td>
+<td>Writes misc class info to the Abaqus .inp file.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.inp_write_properties.html" title="compas_fea.fea.abaq.inp_write_properties"><code class="xref py py-obj docutils literal">inp_write_properties</code></a>(f, sections, …)</p></td>
-<td><p>Writes the section information to the Abaqus .inp file.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_nodes.html" title="compas_fea.fea.abaq.input_write_nodes"><code class="xref py py-obj docutils literal">input_write_nodes</code></a>(f, nodes, units)</td>
+<td>Writes the nodal co-ordinates information to the Abaqus .inp file.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.inp_write_sets.html" title="compas_fea.fea.abaq.inp_write_sets"><code class="xref py py-obj docutils literal">inp_write_sets</code></a>(f, sets)</p></td>
-<td><p>Creates the Abaqus .inp file node sets NSETs and element sets ELSETs.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_properties.html" title="compas_fea.fea.abaq.input_write_properties"><code class="xref py py-obj docutils literal">input_write_properties</code></a>(f, sections, ...)</td>
+<td>Writes the section information to the Abaqus .inp file.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.inp_write_steps.html" title="compas_fea.fea.abaq.inp_write_steps"><code class="xref py py-obj docutils literal">inp_write_steps</code></a>(f, structure, steps, loads, …)</p></td>
-<td><p>Writes step information to the Abaqus .inp file.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_sets.html" title="compas_fea.fea.abaq.input_write_sets"><code class="xref py py-obj docutils literal">input_write_sets</code></a>(f, sets)</td>
+<td>Creates the Abaqus .inp file node sets NSETs and element sets ELSETs.</td>
+</tr>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_steps.html" title="compas_fea.fea.abaq.input_write_steps"><code class="xref py py-obj docutils literal">input_write_steps</code></a>(f, structure, steps, ...)</td>
+<td>Writes step information to the Abaqus .inp file.</td>
 </tr>
 </tbody>
 </table>
@@ -94,35 +97,35 @@
 <div class="section">
 <h2>ansys</h2>
 <p><code class="xref py py-mod docutils literal">compas_fea.fea.ansys</code></p>
-<table class="longtable docutils table table-responsive table-bordered">
+<table border="1" class="longtable docutils table table-responsive table-bordered">
 <colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
+<col width="10%"/>
+<col width="90%"/>
 </colgroup>
-<tbody>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.inp_generate.html" title="compas_fea.fea.ansys.inp_generate"><code class="xref py py-obj docutils literal">inp_generate</code></a>(structure, filename, output_path)</p></td>
-<td><p></p></td>
+<tbody valign="top">
+<tr class=""><td><code class="xref py py-obj docutils literal">input_generate</code></td>
+<td></td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_static.html" title="compas_fea.fea.ansys.make_command_file_static"><code class="xref py py-obj docutils literal">make_command_file_static</code></a>(structure, …)</p></td>
-<td><p></p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_static.html" title="compas_fea.fea.ansys.make_command_file_static"><code class="xref py py-obj docutils literal">make_command_file_static</code></a>(structure, ...)</td>
+<td></td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_static_combined.html" title="compas_fea.fea.ansys.make_command_file_static_combined"><code class="xref py py-obj docutils literal">make_command_file_static_combined</code></a>(structure, …)</p></td>
-<td><p></p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_static_combined.html" title="compas_fea.fea.ansys.make_command_file_static_combined"><code class="xref py py-obj docutils literal">make_command_file_static_combined</code></a>(structure, ...)</td>
+<td></td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_modal.html" title="compas_fea.fea.ansys.make_command_file_modal"><code class="xref py py-obj docutils literal">make_command_file_modal</code></a>(structure, …)</p></td>
-<td><p></p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_modal.html" title="compas_fea.fea.ansys.make_command_file_modal"><code class="xref py py-obj docutils literal">make_command_file_modal</code></a>(structure, ...)</td>
+<td></td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_harmonic.html" title="compas_fea.fea.ansys.make_command_file_harmonic"><code class="xref py py-obj docutils literal">make_command_file_harmonic</code></a>(structure, …)</p></td>
-<td><p></p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_harmonic.html" title="compas_fea.fea.ansys.make_command_file_harmonic"><code class="xref py py-obj docutils literal">make_command_file_harmonic</code></a>(structure, ...)</td>
+<td></td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.ansys_launch_process.html" title="compas_fea.fea.ansys.ansys_launch_process"><code class="xref py py-obj docutils literal">ansys_launch_process</code></a>(output_path, filename)</p></td>
-<td><p></p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.ansys.ansys_launch_process.html" title="compas_fea.fea.ansys.ansys_launch_process"><code class="xref py py-obj docutils literal">ansys_launch_process</code></a>(output_path, filename, ...)</td>
+<td></td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.delete_result_files.html" title="compas_fea.fea.ansys.delete_result_files"><code class="xref py py-obj docutils literal">delete_result_files</code></a>(structure, output_path)</p></td>
-<td><p></p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.ansys.delete_result_files.html" title="compas_fea.fea.ansys.delete_result_files"><code class="xref py py-obj docutils literal">delete_result_files</code></a>(structure, output_path)</td>
+<td></td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.write_total_results.html" title="compas_fea.fea.ansys.write_total_results"><code class="xref py py-obj docutils literal">write_total_results</code></a>(filename, output_path[, …])</p></td>
-<td><p></p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.ansys.write_total_results.html" title="compas_fea.fea.ansys.write_total_results"><code class="xref py py-obj docutils literal">write_total_results</code></a>(filename, output_path[, ...])</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -186,11 +189,11 @@
             
 
             
-                Last updated on Oct 12, 2017.
+                Last updated on Nov 10, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
 <script type="text/javascript">

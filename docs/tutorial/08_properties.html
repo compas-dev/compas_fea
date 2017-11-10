@@ -44,16 +44,15 @@
 </nav>
 <div class="section">
 <h1>Properties</h1>
-<p>This page shows how <strong>ElementProperties</strong> objects are added to the <strong>Structure</strong> object, here given as <code class="docutils literal">mdl</code>.</p>
+<p>This page shows how <strong>ElementProperties</strong> objects are added to the <strong>Structure</strong> object, here given as a <strong>Structure</strong> named <code class="docutils literal">mdl</code>.</p>
 <div class="section">
 <h2>Adding properties</h2>
-<p>To associate <strong>Material</strong> and <strong>Section</strong> objects to specific elements, an <strong>ElementProperties</strong> object is used. Without this, the materials and sections will still exist in the <strong>Structure</strong> object, but are unassigned and so not active. The <strong>ElementProperties</strong> class is first imported from  module <strong>compas_fea.structure.element_properties</strong> and then an object added to the <code class="docutils literal">.element_properties</code> dictionary of the <strong>Structure</strong> object with <code class="docutils literal">name</code> as the string key using method <code class="docutils literal">add_element_properties()</code>. The argument <code class="docutils literal">elsets</code> of the method can be a list of element sets for multiple assignments of the properties, while <code class="docutils literal">material</code> and <code class="docutils literal">section</code> are the string names of the respective <strong>Material</strong> and <strong>Section</strong> objects to associate.</p>
+<p>To associate <strong>Material</strong> and <strong>Section</strong> objects to specific elements, an <strong>ElementProperties</strong> object is used. Without this association between objects, the materials and sections will still exist as objects in the main <strong>Structure</strong> object, but are unassigned to any elements and so not active. The <strong>ElementProperties</strong> class is first imported from  module <strong>compas_fea.structure.element_properties</strong> and then an object added to the <code class="docutils literal">.element_properties</code> dictionary of the <strong>Structure</strong> object with <code class="docutils literal">name</code> as the string key using the method <code class="docutils literal">add_element_properties()</code>. The arguments <code class="docutils literal">elsets</code> or <code class="docutils literal">elements</code> of the method can be a list of element sets or elements for multiple assignments of the properties, while <code class="docutils literal">material</code> and <code class="docutils literal">section</code> are the string names of the respective <strong>Material</strong> and <strong>Section</strong> objects to link.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElementProperties</span>
 
 <span class="n">ep</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_elastic'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_circ'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">'elset_beams'</span><span class="p">)</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'ep_circ'</span><span class="p">)</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Accessing properties</h2>
@@ -67,7 +66,10 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_properties</span><span class="p">[</span><span class="s1">'ep_circ'</span><span class="p">]</span><span class="o">.</span><span class="n">elsets</span>
 <span class="go">'elset_beams'</span>
 </code></pre></div>
-
+</div>
+<div class="section">
+<h2>Reinforcement</h2>
+<p>To do.</p>
 </div>
 </div>
 <nav class="compas-sideways">
@@ -120,6 +122,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="#">Properties</a><ul class="nav">
 <li class="nav-item"><a class="nav-link reference internal" href="#adding-properties">Adding properties</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#accessing-properties">Accessing properties</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#reinforcement">Reinforcement</a></li>
 </ul>
 </li>
 </ul>
@@ -134,11 +137,11 @@
             
 
             
-                Last updated on Oct 12, 2017.
+                Last updated on Nov 10, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
 <script type="text/javascript">

@@ -44,109 +44,101 @@
 </nav>
 <div class="section">
 <h1>Structure</h1>
-<p>The following shows some of the basics of importing and the main <strong>Structure</strong> object.</p>
+<p>The following shows some of the basics of importing compas_fea Classes and the main <strong>Structure</strong> object, as well as some of the <strong>Structure</strong> object’s most useful methods.</p>
 <div class="section">
 <h2>Importing modules and classes</h2>
-<p>A <strong>.py</strong> file is created for every compas_fea analysis, which is where a <strong>Structure</strong> object is first instantiated and then populated with the components needed for the particular project. To import these components and use other helper functions from the core compas or compas_fea package, <code class="docutils literal">import</code> statements are needed in the first few lines of the file. For example, if the user wishes to use a CAD environment for extracting geometry or visualising analysis results, either of the following could be written to use Rhinoceros or Blender. These imports will make a variety of functions available from the <strong>compas_fea.cad.blender</strong> and <strong>compas_fea.cad.rhino</strong> modules.</p>
+<p>A <strong>.py</strong> file is generally created for every compas_fea model and analysis, which is where an empty <strong>Structure</strong> object is first instantiated and then populated with the components needed for the model. To import these components and use other helper functions from the core compas or compas_fea package, <code class="docutils literal">import</code> statements are needed in the first few lines of the file.</p>
+<p>For example, if the user wishes to use a CAD environment for extracting geometry or visualising analysis results, either of the following below could be written to use Rhinoceros or Blender. These imports will make a variety of functions available from the <strong>compas_fea.cad.blender</strong> and <strong>compas_fea.cad.rhino</strong> modules.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">rhino</span>
 </code></pre></div>
-
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">blender</span>
 </code></pre></div>
+<p>It is also useful to use modules and functions from the core compas library, especially geometry and datastructure imports to help build the <strong>Structure</strong> object:</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_rhino.helpers</span> <span class="kn">import</span> <span class="n">mesh_from_guid</span>
 
-<p>Similarly, depending on which finite element analysis software or library is being used, one of the following imports would be used:</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.fea.abaq</span> <span class="kn">import</span> <span class="n">abaq</span>
-</code></pre></div>
+<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Mesh</span>
 
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.fea.ansys</span> <span class="kn">import</span> <span class="n">ansys</span>
-</code></pre></div>
-
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.fea.opensees</span> <span class="kn">import</span> <span class="n">opensees</span>
-</code></pre></div>
-
-<p>It is also useful to pull modules from the core compas library, especially geometry and datastructure imports to help build the <strong>Structure</strong> object:</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_rhino.helpers.mesh</span> <span class="kn">import</span> <span class="n">mesh_from_guid</span>
-<span class="kn">from</span> <span class="nn">compas.datastructures.mesh.mesh</span> <span class="kn">import</span> <span class="n">Mesh</span>
 <span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">distance_point_point</span>
 </code></pre></div>
-
-<p>as well as various functions from the core compas CAD packages, for creating, editing or deleting objects and layers:</p>
+<p>and various functions from the core compas CAD packages, for creating, editing or deleting objects and layers:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="kn">import</span> <span class="n">clear_layers</span>
-<span class="kn">from</span> <span class="nn">compas_blender.helpers</span> <span class="kn">import</span> <span class="n">network_from_bmesh</span>
+<span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="kn">import</span> <span class="n">delete_objects</span>
 </code></pre></div>
-
-<p>The most important imports will be for retrieving classes from the <strong>compas_fea/structure/</strong> folder, including the main <strong>Structure</strong> class itself:</p>
+<p>The most important imports will be for retrieving classes from <strong>compas_fea.structure</strong>, including the main <strong>Structure</strong> class itself:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GeneralStep</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PointLoad</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Structure</span>
 </code></pre></div>
-
-<p>These special classes will be described in more detail throughout the various topics.</p>
-</div>
-<div class="section">
-<h2>File and folder names</h2>
-<p>The most important files that are generated when using the compas_fea package, will be saved to folder <code class="docutils literal">path</code> and with the prefix <code class="docutils literal">name</code>.</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">name</span> <span class="o">=</span> <span class="s1">'simple-truss'</span>
-<span class="n">path</span> <span class="o">=</span> <span class="s1">'/home/al/Temp/'</span>
-</code></pre></div>
-
-<p>The above pairing will produce files such as <strong>/home/al/Temp/simple-truss.inp</strong> and <strong>/home/al/Temp/simple-truss.obj</strong>. Additional temporary files, including output <strong>.json</strong> data and analysis output databases such as an Abaqus <strong>.odb</strong> file will be stored in a separate folder within <code class="docutils literal">path</code> with folder name <code class="docutils literal">name</code>, this is to keep things organised as an analysis will often generate hundreds of output files. These output files are explained in more detail in the Analysis topic.</p>
+<p>These special classes make important objects for the model and will be described in more detail throughout the various topics.</p>
 </div>
 <div class="section">
 <h2>Structure object</h2>
-<p>The container for all information is the <strong>Structure</strong> object, created from the <strong>Structure</strong> class. All of the attributes and methods of this class can be browsed in the source-code at <strong>compas_fea/structure/structure.py</strong>, with the most important methods demonstrated here-in. The following code creates an empty <strong>Structure</strong> object named <strong>mdl</strong> (used in examples as a shortcut for model). See the various topics on the left-hand-side to understand how to add all the various data and objects to the <strong>Structure</strong> object.</p>
+<p>The container for all data is the <strong>Structure</strong> object, created from the <strong>Structure</strong> class. All of the attributes and methods of this class can be found at <strong>compas_fea.structure.structure</strong>, with the most important methods demonstrated here-in. The following code creates an empty <strong>Structure</strong> object named <code class="docutils literal">mdl</code> (used in examples as a shortcut for model). See the various topics on the left-hand-side to understand how to add all the various data and objects to the <strong>Structure</strong> object.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Structure</span>
 
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">()</span>
+<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'simple-truss'</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">'/home/al/Temp/'</span><span class="p">)</span>
 </code></pre></div>
-
+<p>The most important files that are generated when using the compas_fea package, will be saved to folder <code class="docutils literal">path</code> and with the prefix <code class="docutils literal">name</code>. These can be passed when instantiating the <strong>Structure</strong> object, or by changing the attributes directly.</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">'new-truss'</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s1">'/home/al/Folder/'</span>
+</code></pre></div>
+<p>The above pairing will produce files such as <strong>/home/al/Folder/new-truss.inp</strong> (Abaqus input file) and <strong>/home/al/Folder/new-truss.obj</strong>. Additional temporary files, including output <strong>.json</strong> data and analysis output databases such as an Abaqus <strong>.odb</strong> file will be stored in a separate folder within <code class="docutils literal">path</code> with folder name <code class="docutils literal">name</code>, this is to keep things organised as an analysis will often generate hundreds of output files. These output files are explained in more detail in the Analysis topic.</p>
 </div>
 <div class="section">
 <h2>Summary</h2>
-<p>Once constructed, a top-down summary of the <strong>Structure</strong> object can be printed with method <code class="docutils literal">.summary()</code>. This will print information such as the number of nodes and elements, the name of sets and how many items in their selection, and the name and type of added objects such as <strong>Materials</strong>, <strong>Sections</strong>, <strong>Loads</strong>, <strong>Displacements</strong> and <strong>Steps</strong>. This summary is useful for checking that nodes, elements and objects have been added correctly before any analysis is performed.</p>
+<p>Once constructed, a top-down summary of the <strong>Structure</strong> object can be printed with method <code class="docutils literal">.summary()</code> or by printing the object e.g. <code class="docutils literal">print(mdl)</code>. This will print information such as the number of nodes and elements, the name of sets and how many items in their selection, and the name and type of added objects such as <strong>Materials</strong>, <strong>Sections</strong>, <strong>Loads</strong>, <strong>Displacements</strong> and <strong>Steps</strong>. This summary is useful for checking that nodes, elements and objects have been added correctly before any analysis is performed.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-<span class="go">--------------------------------------------------</span>
-<span class="go">Structure summary</span>
-<span class="go">--------------------------------------------------</span>
-<span class="go">Nodes: 5</span>
-<span class="go">Elements: 5</span>
-<span class="go">Sets:</span>
+<span class="go">++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="go">compas_fea structure: simple-truss</span>
+<span class="go">++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+
+<span class="go">- Number of nodes: 5</span>
+
+<span class="go">- Number of elements: 5</span>
+
+<span class="go">- Sets:</span>
 <span class="go">    nset_base : 4 node(s)</span>
 <span class="go">    nset_top : 1 node(s)</span>
 <span class="go">    elset_beams : 4 element(s)</span>
 <span class="go">    elset_shell : 1 element(s)</span>
-<span class="go">Materials:</span>
+
+<span class="go">- Materials:</span>
 <span class="go">    mat_elastic : ElasticIsotropic</span>
-<span class="go">Sections:</span>
+
+<span class="go">- Sections:</span>
 <span class="go">    sec_circ : CircularSection</span>
 <span class="go">    sec_shell : ShellSection</span>
-<span class="go">Loads:</span>
+
+<span class="go">- Loads:</span>
 <span class="go">    load_point : PointLoad</span>
 <span class="go">    load_gravity : GravityLoad</span>
-<span class="go">Displacements:</span>
+
+<span class="go">- Displacements:</span>
 <span class="go">    disp_pinned : PinnedDisplacement</span>
-<span class="go">Constraints:</span>
-<span class="go">Interactions:</span>
-<span class="go">Misc:</span>
-<span class="go">Steps:</span>
+
+<span class="go">- Constraints:</span>
+<span class="go">    n/a</span>
+
+<span class="go">- Interactions:</span>
+<span class="go">    n/a</span>
+
+<span class="go">- Misc:</span>
+<span class="go">    n/a</span>
+
+<span class="go">- Steps:</span>
 <span class="go">    step_bc : GeneralStep</span>
 <span class="go">    step_loads : GeneralStep</span>
-<span class="go">--------------------------------------------------</span>
 </code></pre></div>
-
 </div>
 <div class="section">
 <h2>Loading and saving</h2>
-<p>The method and function to save and load a created <strong>Structure</strong> object are <code class="docutils literal">.save_to_obj()</code> and <code class="docutils literal">load_from_obj()</code> respectively, where a filename string is given for the location of the file. This will save or load data as a pickled <code class="docutils literal">.obj</code> containing all populated dictionaries and objects. A confirmation message will be displayed upon save and load.</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">save_to_obj</span><span class="p">(</span><span class="s1">'/home/al/Temp/simple-truss.obj'</span><span class="p">)</span>
-<span class="go">***** Structure saved as: /home/al/Temp/simple-truss.obj *****</span>
+<p>The methods to save and load a <strong>Structure</strong> object are <code class="docutils literal">.save_to_obj()</code> and <code class="docutils literal">.load_from_obj()</code>. Saving the <strong>Structure</strong> will use the <code class="docutils literal">.path</code> and <code class="docutils literal">.name</code> strings for creating the file name, whilst the file name string <code class="docutils literal">fnm</code> must be given for loading an existing <strong>.obj</strong>. These operations will save or load data as a pickled object containing all populated dictionaries and objects. A confirmation message will be displayed upon save and load.</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">save_to_obj</span><span class="p">()</span>
+<span class="go">***** Structure saved to: /home/al/Temp/simple-truss.obj *****</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas_fea.structure.structure</span> <span class="kn">import</span> <span class="n">load_from_obj</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span> <span class="o">=</span> <span class="n">load_from_obj</span><span class="p">(</span><span class="s1">'/home/al/Temp/simple-truss.obj'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="o">.</span><span class="n">load_from_obj</span><span class="p">(</span><span class="n">fnm</span><span class="o">=</span><span class="s1">'/home/al/Temp/simple-truss.obj'</span><span class="p">)</span>
 <span class="go">***** Structure loaded from: /home/al/Temp/simple-truss.obj *****</span>
 </code></pre></div>
-
 </div>
 </div>
 <nav class="compas-sideways">
@@ -198,7 +190,6 @@
 <ul class="nav flex-column" id="compas-localnav">
 <li class="nav-item"><a class="nav-link reference internal" href="#">Structure</a><ul class="nav">
 <li class="nav-item"><a class="nav-link reference internal" href="#importing-modules-and-classes">Importing modules and classes</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#file-and-folder-names">File and folder names</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#structure-object">Structure object</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#summary">Summary</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#loading-and-saving">Loading and saving</a></li>
@@ -216,11 +207,11 @@
             
 
             
-                Last updated on Oct 12, 2017.
+                Last updated on Nov 10, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
 <script type="text/javascript">

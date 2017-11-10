@@ -1,5 +1,5 @@
 """
-Abaqus launch job.
+Launch an Abaqus job.
 """
 
 try:

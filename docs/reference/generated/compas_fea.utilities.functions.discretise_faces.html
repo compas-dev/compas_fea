@@ -18,7 +18,7 @@
 <link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
 <link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
 <link href="compas_fea.utilities.functions.extrude_mesh.html" rel="next" title="extrude_mesh"/>
-<link href="compas_fea.utilities.functions.colorbar.html" rel="prev" title="colorbar"/>
+<link href="compas_fea.utilities.functions.combine_all_sets.html" rel="prev" title="combine_all_sets"/>
 <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
 </head>
 <body data-spy="scroll" data-target="#compas-localnav">
@@ -50,26 +50,36 @@
 <dt id="compas_fea.utilities.functions.discretise_faces">
 <code class="descclassname">compas_fea.utilities.functions.</code><code class="descname">discretise_faces</code><span class="sig-paren">(</span><em>vertices</em>, <em>faces</em>, <em>target</em>, <em>min_angle=15</em>, <em>factor=3</em>, <em>iterations=100</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/utilities/functions.html#discretise_faces"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Make an FE mesh from an input coarse mesh data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul>
-<li><p><strong>vertices</strong> (<em>list</em>) – Co-ordinates of coarse mesh vertices.</p></li>
-<li><p><strong>faces</strong> (<em>list</em>) – Vertex numbers of each face of the coarse mesh.</p></li>
-<li><p><strong>target</strong> (<em>float</em>) – Target length of each triangle.</p></li>
-<li><p><strong>min_angle</strong> (<em>float</em>) – Minimum internal angle of triangles.</p></li>
-<li><p><strong>factor</strong> (<em>float</em>) – Factor on the maximum area of each triangle.</p></li>
-<li><p><strong>iterations</strong> (<em>int</em>) – Number of iterations per face.</p></li>
+<table class="docutils field-list table table-responsive table-bordered" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first">
+<li><p class="first"><strong>vertices</strong> (<em>list</em>) – Co-ordinates of coarse mesh vertices.</p>
+</li>
+<li><p class="first"><strong>faces</strong> (<em>list</em>) – Vertex numbers of each face of the coarse mesh.</p>
+</li>
+<li><p class="first"><strong>target</strong> (<em>float</em>) – Target length of each triangle.</p>
+</li>
+<li><p class="first"><strong>min_angle</strong> (<em>float</em>) – Minimum internal angle of triangles.</p>
+</li>
+<li><p class="first"><strong>factor</strong> (<em>float</em>) – Factor on the maximum area of each triangle.</p>
+</li>
+<li><p class="first"><strong>iterations</strong> (<em>int</em>) – Number of iterations per face.</p>
+</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><em>list</em> – Vertices of discretised faces.
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>list</em> – Vertices of discretised faces.
 list: Triangles of discretised faces.</p>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 </div>
 <nav class="compas-sideways">
-<a class="btn btn-primary compas-prev" href="compas_fea.utilities.functions.colorbar.html" role="button">colorbar</a>
+<a class="btn btn-primary compas-prev" href="compas_fea.utilities.functions.combine_all_sets.html" role="button">combine_all_sets</a>
 <a class="btn btn-primary compas-next" href="compas_fea.utilities.functions.extrude_mesh.html" role="button">extrude_mesh</a>
 </nav>
 </main>
@@ -122,11 +132,11 @@ list: Triangles of discretised faces.</p>
             
 
             
-                Last updated on Oct 12, 2017.
+                Last updated on Nov 10, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
 <script type="text/javascript">

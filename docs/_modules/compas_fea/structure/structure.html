@@ -50,10 +50,12 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 
 <span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">centroid_points</span>
+
 <span class="kn">from</span> <span class="nn">compas.utilities</span> <span class="k">import</span> <span class="n">geometric_key</span>
 
 <span class="kn">from</span> <span class="nn">compas_fea.fea.abaq</span> <span class="k">import</span> <span class="n">abaq</span>
 <span class="kn">from</span> <span class="nn">compas_fea.fea.ansys</span> <span class="k">import</span> <span class="n">ansys</span>
+<span class="kn">from</span> <span class="nn">compas_fea.fea.opensees</span> <span class="k">import</span> <span class="n">opensees</span>
 
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="o">*</span>
 
@@ -72,7 +74,6 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">'Structure'</span><span class="p">,</span>
-    <span class="s1">'load_from_obj'</span>
 <span class="p">]</span>
 
 
@@ -90,8 +91,10 @@
 <span class="sd">        loads (dic): Load objects.</span>
 <span class="sd">        materials (dic): Material objects.</span>
 <span class="sd">        misc (dic): Misc objects.</span>
+<span class="sd">        name (str): Structure name.</span>
 <span class="sd">        nodes (dic): Node co-ordinates and local axes.</span>
 <span class="sd">        node_index (dic): Index of nodes (geometric keys).</span>
+<span class="sd">        path (str): Path to save files.</span>
 <span class="sd">        results (dic): Results from analysis.</span>
 <span class="sd">        sections (dic): Section objects.</span>
 <span class="sd">        sets (dic): Node, element and surface sets.</span>
@@ -103,7 +106,7 @@
 <span class="sd">        None</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'compas_fea-Structure'</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'compas_fea-Structure'</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="p">{}</span>
@@ -112,10 +115,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">interactions</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loads</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">materials</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">misc</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">node_index</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sections</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sets</span> <span class="o">=</span> <span class="p">{}</span>
@@ -124,10 +128,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="s1">'3'</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
         <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_count</span><span class="p">()</span>
         <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_count</span><span class="p">()</span>
-
         <span class="n">structure_data</span> <span class="o">=</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">,</span>
@@ -153,17 +155,36 @@
 <span class="s2">compas_fea structure: </span><span class="si">{}</span><span class="s2"></span>
 <span class="s2">++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 
-<span class="s2">- Number of nodes: </span><span class="si">{}</span><span class="se">\n</span><span class="s2"></span>
-<span class="s2">- Number of elements: </span><span class="si">{}</span><span class="se">\n</span><span class="s2"></span>
-<span class="s2">- Sets:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2"></span>
-<span class="s2">- Materials:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2"></span>
-<span class="s2">- Sections:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2"></span>
-<span class="s2">- Loads:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2"></span>
-<span class="s2">- Displacements:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2"></span>
-<span class="s2">- Constraints:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2"></span>
-<span class="s2">- Interactions:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2"></span>
-<span class="s2">- Misc:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2"></span>
-<span class="s2">- Steps:</span><span class="se">\n</span><span class="si">{}</span><span class="s2"></span>
+<span class="s2">- Number of nodes: </span><span class="si">{}</span><span class="s2"></span>
+
+<span class="s2">- Number of elements: </span><span class="si">{}</span><span class="s2"></span>
+
+<span class="s2">- Sets:</span>
+<span class="si">{}</span><span class="s2"></span>
+
+<span class="s2">- Materials:</span>
+<span class="si">{}</span><span class="s2"></span>
+
+<span class="s2">- Sections:</span>
+<span class="si">{}</span><span class="s2"></span>
+
+<span class="s2">- Loads:</span>
+<span class="si">{}</span><span class="s2"></span>
+
+<span class="s2">- Displacements:</span>
+<span class="si">{}</span><span class="s2"></span>
+
+<span class="s2">- Constraints:</span>
+<span class="si">{}</span><span class="s2"></span>
+
+<span class="s2">- Interactions:</span>
+<span class="si">{}</span><span class="s2"></span>
+
+<span class="s2">- Misc:</span>
+<span class="si">{}</span><span class="s2"></span>
+
+<span class="s2">- Steps:</span>
+<span class="si">{}</span><span class="s2"></span>
 
 <span class="s2">"""</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">dt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dt</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">dt</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">dt</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">dt</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">dt</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">dt</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">dt</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
 
@@ -176,7 +197,7 @@
         <span class="sd">""" Adds a node to structure.nodes at co-ordinates xyz with local frame [ex, ey, ez].</span>
 
 <span class="sd">        Note:</span>
-<span class="sd">            - Nodes are numbered sequentially starting from 0 (Python based).</span>
+<span class="sd">            - Nodes are numbered sequentially starting from 0.</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            xyz (list): [x, y, z] co-ordinates of the node.</span>
@@ -198,13 +219,13 @@
         <span class="sd">""" Adds a list of nodes to structure.nodes at given co-ordinates all with local frame [ex, ey, ez].</span>
 
 <span class="sd">        Note:</span>
-<span class="sd">            - Nodes are numbered sequentially starting from 0 (Python based).</span>
+<span class="sd">            - Nodes are numbered sequentially starting from 0.</span>
 
 <span class="sd">        Parameters:</span>
-<span class="sd">            nodes (list): [x, y, z] co-ordinates for each node.</span>
-<span class="sd">            ex (list): Node's local x axis.</span>
-<span class="sd">            ey (list): Node's local y axis.</span>
-<span class="sd">            ez (list): Node's local z axis.</span>
+<span class="sd">            nodes (list): [[x, y, z], ..] co-ordinates for each node.</span>
+<span class="sd">            ex (list): Nodes' local x axis.</span>
+<span class="sd">            ey (list): Nodes' local y axis.</span>
+<span class="sd">            ez (list): Nodes' local z axis.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            list: Keys of the added or pre-existing nodes.</span>
@@ -239,6 +260,22 @@
         <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">f'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">gkey</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">edit_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr_dic</span><span class="p">):</span>
+        <span class="sd">""" Edit a node's data.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            key (int): Key of the node to edit.</span>
+<span class="sd">            attr_dic (dic): Atribute dictionary of data to edit.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">f'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_index</span><span class="p">[</span><span class="n">gkey</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">attr_dic</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_node_to_node_index</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+
     <span class="k">def</span> <span class="nf">make_node_index_dic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">""" Makes a node_index dictionary from existing structure.nodes.</span>
 
@@ -248,7 +285,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            None</span>
 <span class="sd">        """</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
             <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">f'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">node_index</span><span class="p">[</span><span class="n">gkey</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span>
 
@@ -291,12 +328,25 @@
         <span class="sd">""" Return the xyz co-ordinates of a node.</span>
 
 <span class="sd">        Parameters:</span>
-<span class="sd">            Node (int): Node number.</span>
+<span class="sd">            node (int): Node number.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            list: [x, y, z] co-ordinates.</span>
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="s1">'xyz'</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">nodes_xyz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">""" Return the xyz co-ordinates of given or all nodes.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            nodes (list): Node numbers.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: [[x, y, z] ...] co-ordinates.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">nodes</span><span class="p">:</span>
+            <span class="n">nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">]</span>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -304,10 +354,10 @@
 <span class="c1"># ==============================================================================</span>
 
     <span class="k">def</span> <span class="nf">add_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">""" Adds element to structure.elements with centroid geometric key.</span>
+        <span class="sd">""" Adds an element to structure.elements with centroid geometric key.</span>
 
 <span class="sd">        Note:</span>
-<span class="sd">            - Elements are numbered sequentially starting from 0 (Python based).</span>
+<span class="sd">            - Elements are numbered sequentially starting from 0.</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            nodes (list): Nodes the element is connected to.</span>
@@ -330,6 +380,7 @@
                     <span class="s1">'PentahedronElement'</span><span class="p">:</span> <span class="n">PentahedronElement</span><span class="p">,</span>
                     <span class="s1">'HexahedronElement'</span><span class="p">:</span> <span class="n">HexahedronElement</span><span class="p">}</span>
         <span class="n">func</span> <span class="o">=</span> <span class="n">func_dic</span><span class="p">[</span><span class="nb">type</span><span class="p">]</span>
+
         <span class="n">ekey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ekey</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">ekey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_count</span><span class="p">()</span>
@@ -342,6 +393,25 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">ekey</span><span class="p">]</span> <span class="o">=</span> <span class="n">element</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_element_to_element_index</span><span class="p">(</span><span class="n">ekey</span><span class="p">,</span> <span class="n">nodes</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ekey</span>
+
+    <span class="k">def</span> <span class="nf">add_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="sd">""" Adds multiple elements of the same type to structure.elements.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            - Elements are numbered sequentially starting from 0.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            elements (list): List of the nodes the elements are connected to.</span>
+<span class="sd">            type (str): Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.</span>
+<span class="sd">            acoustic (bool): Acoustic properties on or off.</span>
+<span class="sd">            thermal (bool): Thermal properties on or off.</span>
+<span class="sd">            axes (dic): The local element axes 'ex', 'ey' and 'ez'.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: Keys of the added or existing elements.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="n">acoustic</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="n">thermal</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">nodes</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">add_element_to_element_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
         <span class="sd">""" Adds the element to the element_index dictionary.</span>
@@ -357,15 +427,15 @@
         <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="n">centroid</span><span class="p">,</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">f'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">element_index</span><span class="p">[</span><span class="n">gkey</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span>
 
-    <span class="k">def</span> <span class="nf">check_element_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xyz</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">""" Check if an element already exists based on its centroid.</span>
+    <span class="k">def</span> <span class="nf">check_element_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">xyz</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">""" Check if an element already exists based on the nodes it connects to or its centroid.</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            - Geometric key check is made according to self.tol [m] tolerance.</span>
 
 <span class="sd">        Parameters:</span>
-<span class="sd">            nodes (list) : Node numbers the element is connected to.</span>
-<span class="sd">            xyz (list): Direct co-ordinates of the element centroid.</span>
+<span class="sd">            nodes (list): Node numbers the element is connected to.</span>
+<span class="sd">            xyz (list): Direct co-ordinates of the element centroid to check.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            int: The element index if the element already exists, None if not.</span>
@@ -398,9 +468,7 @@
 <span class="sd">        """</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">nodes</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">nodes</span>
-            <span class="n">centroid</span> <span class="o">=</span> <span class="n">centroid_points</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])</span>
-            <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="n">centroid</span><span class="p">,</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">f'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">element_index</span><span class="p">[</span><span class="n">gkey</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_element_to_element_index</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">element_centroid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
         <span class="sd">""" Return the centroid of an element.</span>
@@ -418,6 +486,7 @@
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># constructors</span>
 <span class="c1"># ==============================================================================</span>
+
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_mesh</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
 
@@ -523,7 +592,7 @@
 <span class="sd">        Parameters:</span>
 <span class="sd">            name (str): Name of the set.</span>
 <span class="sd">            type (str): 'node', 'element', 'surface_node', surface_element'.</span>
-<span class="sd">            selection (list): The keys of the nodes, elements or elements and sides.</span>
+<span class="sd">            selection (list, dic): The keys of the nodes, elements or elements and sides.</span>
 <span class="sd">            explode (bool): Explode the set into sets for each member of selection.</span>
 
 <span class="sd">        Returns:</span>
@@ -605,6 +674,19 @@
         <span class="n">displacement</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">displacements</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="n">displacement</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">displacement</span>
 
+    <span class="k">def</span> <span class="nf">add_displacements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">displacements</span><span class="p">):</span>
+        <span class="sd">""" Adds Displacement objects to structure.displacements.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            displacements (list): The Displacement objects.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">displacement</span> <span class="ow">in</span> <span class="n">displacements</span><span class="p">:</span>
+            <span class="n">displacement</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">displacements</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="n">displacement</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">displacement</span>
+
     <span class="k">def</span> <span class="nf">add_element_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_properties</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">""" Adds an ElementProperties object to structure.element_properties.</span>
 
@@ -645,6 +727,19 @@
         <span class="n">load</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loads</span><span class="p">[</span><span class="n">load</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">load</span>
 
+    <span class="k">def</span> <span class="nf">add_loads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loads</span><span class="p">):</span>
+        <span class="sd">""" Adds Load objects to structure.loads.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            loads (list): The Load objects.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="n">loads</span><span class="p">:</span>
+            <span class="n">load</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loads</span><span class="p">[</span><span class="n">load</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">load</span>
+
     <span class="k">def</span> <span class="nf">add_material</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material</span><span class="p">):</span>
         <span class="sd">""" Adds a Material object to structure.materials.</span>
 
@@ -656,6 +751,19 @@
 <span class="sd">        """</span>
         <span class="n">material</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="n">material</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">material</span>
+
+    <span class="k">def</span> <span class="nf">add_materials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">materials</span><span class="p">):</span>
+        <span class="sd">""" Adds Material objects to structure.materials.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            materials (list): The Material objects.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">material</span> <span class="ow">in</span> <span class="n">materials</span><span class="p">:</span>
+            <span class="n">material</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="n">material</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">material</span>
 
     <span class="k">def</span> <span class="nf">add_misc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">misc</span><span class="p">):</span>
         <span class="sd">""" Adds a Misc object to structure.misc.</span>
@@ -681,6 +789,19 @@
         <span class="n">section</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="n">section</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">section</span>
 
+    <span class="k">def</span> <span class="nf">add_sections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sections</span><span class="p">):</span>
+        <span class="sd">""" Adds Section objects to structure.sections.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            sections (list): The Section objects.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">:</span>
+            <span class="n">section</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="n">section</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">section</span>
+
     <span class="k">def</span> <span class="nf">add_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
         <span class="sd">""" Adds a Step object to structure.steps.</span>
 
@@ -692,6 +813,19 @@
 <span class="sd">        """</span>
         <span class="n">step</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span>
+
+    <span class="k">def</span> <span class="nf">add_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steps</span><span class="p">):</span>
+        <span class="sd">""" Adds Step objects to structure.steps.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            steps (list): The Step objects.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
+            <span class="n">step</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -709,56 +843,107 @@
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="n">order</span>
 
-    <span class="k">def</span> <span class="nf">combine_static_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">""" Combines the static steps in structure.steps.</span>
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># analysis</span>
+<span class="c1"># ==============================================================================</span>
+
+    <span class="k">def</span> <span class="nf">fields_dic_from_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields_list</span><span class="p">):</span>
+        <span class="sd">""" Creates a fields dictionary from a fields list.</span>
 
 <span class="sd">        Parameters:</span>
-<span class="sd">            None</span>
+<span class="sd">            fields_list (list): List of fields and/or components.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            str: The name of the newly created combined Step.</span>
+<span class="sd">            dic: Conversion to a fields dictionary.</span>
 <span class="sd">        """</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s1">''</span>
-        <span class="n">disp_dic</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">loads_dic</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">nlgeom</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">for</span> <span class="n">skey</span><span class="p">,</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'STATIC'</span><span class="p">,</span> <span class="s1">'STATIC,RIKS'</span><span class="p">]:</span>
-                <span class="n">factor</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">factor</span>
-                <span class="n">disp_dic</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_displacements</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">displacements</span><span class="p">,</span> <span class="n">factor</span><span class="p">))</span>
-                <span class="n">loads_dic</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_loads</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">loads</span><span class="p">,</span> <span class="n">factor</span><span class="p">))</span>
-                <span class="n">name</span> <span class="o">+=</span> <span class="n">skey</span> <span class="o">+</span> <span class="s1">'_'</span>
-                <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">nlgeom</span><span class="p">:</span>
-                    <span class="n">nlgeom</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="n">disp_dic</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="n">loads_dic</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'STATIC'</span><span class="p">,</span> <span class="n">nlgeom</span><span class="o">=</span><span class="n">nlgeom</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">name</span>
+        <span class="n">node_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'rf'</span><span class="p">,</span> <span class="s1">'rm'</span><span class="p">,</span> <span class="s1">'u'</span><span class="p">,</span> <span class="s1">'ur'</span><span class="p">,</span> <span class="s1">'cf'</span><span class="p">,</span> <span class="s1">'cm'</span><span class="p">]</span>
+        <span class="n">element_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'sf'</span><span class="p">,</span> <span class="s1">'sm'</span><span class="p">,</span> <span class="s1">'sk'</span><span class="p">,</span> <span class="s1">'se'</span><span class="p">,</span> <span class="s1">'s'</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">,</span> <span class="s1">'pe'</span><span class="p">,</span> <span class="s1">'rbfor'</span><span class="p">]</span>
 
+        <span class="n">fields_dic</span> <span class="o">=</span> <span class="p">{}</span>
 
-<span class="c1"># ==============================================================================</span>
-<span class="c1"># analyse</span>
-<span class="c1"># ==============================================================================</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">node_fields</span> <span class="o">+</span> <span class="n">element_fields</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields_list</span><span class="p">:</span>
+                <span class="n">fields_dic</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'all'</span>
 
-    <span class="k">def</span> <span class="nf">analyse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-        <span class="sd">""" Runs the analysis through the chosen FEA software/library.</span>
+        <span class="k">return</span> <span class="n">fields_dic</span>
+
+    <span class="k">def</span> <span class="nf">write_input_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">'u'</span><span class="p">]):</span>
+        <span class="sd">""" Writes the FE software's input file.</span>
 
 <span class="sd">        Parameters:</span>
-<span class="sd">            path (str): Folder to save data.</span>
-<span class="sd">            name (str): Name of the Structure object and analysis files.</span>
-<span class="sd">            software (str): Analysis software or library to use, 'abaqus' or 'ansys'.</span>
-<span class="sd">            fields (str): Data fields to extract e.g 'U,S,SM'.</span>
-<span class="sd">            exe (str): Full terminal command to bypass subprocess defaults.</span>
-<span class="sd">            cpus (int): Number of CPU cores to use.</span>
+<span class="sd">            software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.</span>
+<span class="sd">            fields (list): Data field requests.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            None</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'abaqus'</span><span class="p">:</span>
-
-            <span class="n">abaq</span><span class="o">.</span><span class="n">abaqus_launch_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">exe</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">cpus</span><span class="p">)</span>
+            <span class="n">abaq</span><span class="o">.</span><span class="n">input_generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'ansys'</span><span class="p">:</span>
+            <span class="k">pass</span>
 
-            <span class="n">ansys</span><span class="o">.</span><span class="n">ansys_launch_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'opensees'</span><span class="p">:</span>
+            <span class="n">opensees</span><span class="o">.</span><span class="n">input_generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">analyse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s1">'research'</span><span class="p">):</span>
+        <span class="sd">""" Runs the analysis through the chosen FEA software/library.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.</span>
+<span class="sd">            exe (str): Full terminal command to bypass subprocess defaults.</span>
+<span class="sd">            cpus (int): Number of CPU cores to use.</span>
+<span class="sd">            license (str): FE software license type (if required): 'research', 'student'.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'abaqus'</span><span class="p">:</span>
+            <span class="n">abaq</span><span class="o">.</span><span class="n">abaqus_launch_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exe</span><span class="p">,</span> <span class="n">cpus</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'ansys'</span><span class="p">:</span>
+            <span class="n">ansys</span><span class="o">.</span><span class="n">ansys_launch_process</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">cpus</span><span class="p">,</span> <span class="n">license</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'opensees'</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">extract_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">'all'</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">""" Extracts data from the FE software's output.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            software (str): Analysis software or library used, 'abaqus', 'opensees' or 'ansys'.</span>
+<span class="sd">            fields (dic): Data field requests.</span>
+<span class="sd">            exe (str): Full terminal command to bypass subprocess defaults.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'abaqus'</span><span class="p">:</span>
+            <span class="n">abaq</span><span class="o">.</span><span class="n">extract_odb_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="n">exe</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'ansys'</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'opensees'</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">analyse_and_extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">'u'</span><span class="p">],</span> <span class="n">exe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s1">'research'</span><span class="p">):</span>
+        <span class="sd">""" Runs the analysis through the chosen FEA software/library and extracts data.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.</span>
+<span class="sd">            fields (list): Data field requests.</span>
+<span class="sd">            exe (str): Full terminal command to bypass subprocess defaults.</span>
+<span class="sd">            cpus (int): Number of CPU cores to use.</span>
+<span class="sd">            license (str): FE software license type (if required): 'research', 'student'.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_input_file</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analyse</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="n">software</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="n">exe</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="n">cpus</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="n">license</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extract_data</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="n">exe</span><span class="p">)</span>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -795,6 +980,7 @@
 <span class="sd">        """</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">compas_fea.viewers.app</span> <span class="k">import</span> <span class="n">App</span>
+
             <span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="n">app</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="k">except</span><span class="p">:</span>
@@ -805,37 +991,39 @@
 <span class="c1"># save</span>
 <span class="c1"># ==============================================================================</span>
 
-    <span class="k">def</span> <span class="nf">save_to_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fnm</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">save_to_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">""" Exports the Structure object to an .obj file through Pickle.</span>
 
 <span class="sd">        Parameters:</span>
-<span class="sd">            fnm (str): Path to save the Structure .obj to.</span>
+<span class="sd">            None</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            None</span>
 <span class="sd">        """</span>
+        <span class="n">fnm</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">.obj'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fnm</span><span class="p">,</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">'***** Structure saved as: </span><span class="si">{0}</span><span class="s1"> *****'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fnm</span><span class="p">))</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'***** Structure saved to: </span><span class="si">{0}</span><span class="s1"> *****</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fnm</span><span class="p">))</span>
 
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># load</span>
 <span class="c1"># ==============================================================================</span>
 
-<div class="viewcode-block" id="load_from_obj"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.structure.load_from_obj.html#compas_fea.structure.structure.load_from_obj">[docs]</a><span class="k">def</span> <span class="nf">load_from_obj</span><span class="p">(</span><span class="n">fnm</span><span class="p">):</span>
-    <span class="sd">""" Imports a Structure object from an .obj file through Pickle.</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load_from_obj</span><span class="p">(</span><span class="n">fnm</span><span class="p">):</span>
+        <span class="sd">""" Imports a Structure object from an .obj file through Pickle.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        fnm (str): Path to load the Structure .obj from.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            fnm (str): Path to load the Structure .obj from.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        obj: Imported Structure object.</span>
-<span class="sd">    """</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fnm</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">structure</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">'***** Structure loaded from: </span><span class="si">{0}</span><span class="s1"> *****'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fnm</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">structure</span></div>
+<span class="sd">        Returns:</span>
+<span class="sd">            obj: Imported Structure object.</span>
+<span class="sd">        """</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fnm</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">structure</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'***** Structure loaded from: </span><span class="si">{0}</span><span class="s1"> *****'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fnm</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">structure</span></div>
 </code></pre></div>
 <nav class="compas-sideways">
 </nav>
@@ -877,11 +1065,11 @@
             
 
             
-                Last updated on Oct 12, 2017.
+                Last updated on Nov 10, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
 <script type="text/javascript">

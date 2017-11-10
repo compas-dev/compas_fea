@@ -76,7 +76,7 @@
 <span class="sd">        nlgeom (bool): Analyse non-linear geometry effects.</span>
 <span class="sd">        displacements (list): Displacement object names (str).</span>
 <span class="sd">        loads (list): Load object names (str).</span>
-<span class="sd">        type (str): 'STATIC','STATIC,RIKS'.</span>
+<span class="sd">        type (str): 'static','static,riks'.</span>
 <span class="sd">        temperatures (str): Name of Temperature object to apply.</span>
 <span class="sd">        duration (float): Duration of step.</span>
 
@@ -84,7 +84,7 @@
 <span class="sd">        None</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">nlgeom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'STATIC'</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">nlgeom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'static'</span><span class="p">,</span>
                  <span class="n">temperatures</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'GeneralStep'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -134,20 +134,18 @@
 <span class="sd">        name (str): Name of the ModalStep.</span>
 <span class="sd">        modes (int): Number of modes to analyse.</span>
 <span class="sd">        increments (int): Number of increments.</span>
-<span class="sd">        nlgeom (bool): Analyse non-linear geometry effects.</span>
 <span class="sd">        displacements (list): Displacement object names (str).</span>
-<span class="sd">        type (str): 'MODAL'.</span>
+<span class="sd">        type (str): 'modal'.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">nlgeom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'MODAL'</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'modal'</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'ModalStep'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modes</span> <span class="o">=</span> <span class="n">modes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">increments</span> <span class="o">=</span> <span class="n">increments</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nlgeom</span> <span class="o">=</span> <span class="n">nlgeom</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="n">displacements</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span></div>
 
@@ -158,27 +156,27 @@
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        name (str): Name of the HarmonicStep.</span>
+<span class="sd">        freq_range (list): First and last frequencies to analyse.</span>
+<span class="sd">        freq_steps (int): The number of equally spaced frequency steps.</span>
 <span class="sd">        displacements (list): Displacement object names (str).</span>
 <span class="sd">        loads (list): Load object names (str).</span>
 <span class="sd">        factor (float): Proportionality factor on the loads and displacements.</span>
-<span class="sd">        freq_range (list): First and last frequencies to analyse.</span>
-<span class="sd">        freq_steps (int): The number of frequency steps.</span>
 <span class="sd">        damping (float): Constant harmonic damping ratio.</span>
-<span class="sd">        type (str): 'HARMONIC'.</span>
+<span class="sd">        type (str): 'harmonic'.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">freq_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">freq_steps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="nb">type</span><span class="o">=</span><span class="s1">'HARMONIC'</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">freq_range</span><span class="p">,</span> <span class="n">freq_steps</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="nb">type</span><span class="o">=</span><span class="s1">'harmonic'</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'HarmonicStepStep'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freq_range</span> <span class="o">=</span> <span class="n">freq_range</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freq_steps</span> <span class="o">=</span> <span class="n">freq_steps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="n">displacements</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loads</span> <span class="o">=</span> <span class="n">loads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">factor</span> <span class="o">=</span> <span class="n">factor</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">freq_range</span> <span class="o">=</span> <span class="n">freq_range</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">freq_steps</span> <span class="o">=</span> <span class="n">freq_steps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">damping</span> <span class="o">=</span> <span class="n">damping</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span></div>
 
@@ -192,23 +190,20 @@
 <span class="sd">        modes (int): Number of modes to analyse.</span>
 <span class="sd">        increments (int): Number of increments.</span>
 <span class="sd">        factor (float): Proportionality factor on the loads and displacements.</span>
-<span class="sd">        nlgeom (bool): Analyse non-linear geometry effects.</span>
 <span class="sd">        displacements (list): Displacement object names (str).</span>
 <span class="sd">        loads (list): Load object names (str).</span>
-<span class="sd">        type (str): 'BUCKLE'.</span>
+<span class="sd">        type (str): 'buckle'.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">nlgeom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span>
-                 <span class="nb">type</span><span class="o">=</span><span class="s1">'BUCKLE'</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'buckle'</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'BucklingStep'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modes</span> <span class="o">=</span> <span class="n">modes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">increments</span> <span class="o">=</span> <span class="n">increments</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">factor</span> <span class="o">=</span> <span class="n">factor</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nlgeom</span> <span class="o">=</span> <span class="n">nlgeom</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="n">displacements</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loads</span> <span class="o">=</span> <span class="n">loads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span></div>
@@ -253,11 +248,11 @@
             
 
             
-                Last updated on Oct 12, 2017.
+                Last updated on Nov 10, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
 <script type="text/javascript">

@@ -1,11 +1,11 @@
-"""An example compas_fea package use for beams in a gridshell."""
+"""An example compas_fea package use for beams in a grid."""
 
 # Note: Sliding at the joints is not included.
 
 from compas_fea.cad import rhino
 
 from compas_fea.structure import ElasticIsotropic
-from compas_fea.structure import ElementProperties
+from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralDisplacement
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import GravityLoad
@@ -51,7 +51,7 @@ mdl.add_material(ElasticIsotropic(name='mat_elastic', E=5*10**9, v=0.3, p=1000))
 
 mdl.add_section(RectangularSection(name='sec_rectangular', h=0.005, b=0.005))
 for beam in beams:
-    ep = ElementProperties(material='mat_elastic', section='sec_rectangular', elsets=beam)
+    ep = Properties(material='mat_elastic', section='sec_rectangular', elsets=beam)
     mdl.add_element_properties(ep, 'ep_{0}'.format(beam))
 
 # Add loads
@@ -62,22 +62,25 @@ mdl.add_load(GravityLoad(name='load_gravity', elements='elset_all'))
 
 bc = []
 for beam in beams:
-    sp_nset = '{0}_sp'.format(beam)
-    ep_nset = '{0}_ep'.format(beam)
+    sp = '{0}_sp'.format(beam)
+    ep = '{0}_ep'.format(beam)
     if 'X' in beam:
-        mdl.add_displacement(RollerDisplacementX(name=sp_nset, nodes=sp_nset))
-        mdl.add_displacement(RollerDisplacementX(name=ep_nset, nodes=ep_nset))
+        mdl.add_displacements([
+            RollerDisplacementX(name=sp, nodes=sp),
+            RollerDisplacementX(name=ep, nodes=ep)])
     if 'Y' in beam:
-        mdl.add_displacement(RollerDisplacementY(name=sp_nset, nodes=sp_nset))
-        mdl.add_displacement(RollerDisplacementY(name=ep_nset, nodes=ep_nset))
-    bc.extend([sp_nset, ep_nset])
+        mdl.add_displacements([
+            RollerDisplacementY(name=sp, nodes=sp),
+            RollerDisplacementY(name=ep, nodes=ep)])
+    bc.extend([sp, ep])
 mdl.add_displacement(GeneralDisplacement(name='disp_lift', nodes='lift_points', z=0.270))
 
 # Add steps
 
-mdl.add_step(GeneralStep(name='step_bc', displacements=bc))
-mdl.add_step(GeneralStep(name='step_lift', displacements=['disp_lift']))
-mdl.set_steps_order(['step_bc', 'step_lift'])
+mdl.add_steps([
+    GeneralStep(name='step_bc', displacements=bc),
+    GeneralStep(name='step_lift', displacements=['disp_lift'])])
+mdl.steps_order = ['step_bc', 'step_lift']
 
 # Structure summary
 
@@ -85,14 +88,14 @@ mdl.summary()
 
 # Run and extract data
 
-mdl.analyse_and_extract(software='abaqus', fields={'U': 'all', 'SF': 'all', 'SM': 'all'})
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'sf', 'sm'])
 
 # Plot displacements
 
-rhino.plot_data(mdl, step='step_lift', field='U', component='magnitude', radius=0.005)
+rhino.plot_data(mdl, step='step_lift', field='um', radius=0.005)
 
 # Plot section forces/moments
 
-rhino.plot_data(mdl, step='step_lift', field='SF', component='SF1', radius=0.005)
-rhino.plot_data(mdl, step='step_lift', field='SF', component='SF3', radius=0.005)
-rhino.plot_data(mdl, step='step_lift', field='SM', component='SM2', radius=0.005)
+rhino.plot_data(mdl, step='step_lift', field='sfnx', radius=0.005)
+rhino.plot_data(mdl, step='step_lift', field='sfvy', radius=0.005)
+rhino.plot_data(mdl, step='step_lift', field='smy', radius=0.005)

@@ -16,50 +16,52 @@ __all__ = [
     'input_generate',
     'input_write_heading',
     'input_write_nodes',
-    'input_write_steps'
+    'input_write_steps',
+    'input_write_elements'
 ]
 
 
-def input_generate(structure, filename, fields, units='m'):
-    """ Creates the OpenSees input file from the Structure object.
+def input_generate(structure, fields, units='m'):
+    """ Creates the OpenSees .tcl file from the Structure object.
 
     Parameters:
         structure (obj): The Structure object to read from.
-        filename (str): Path to save the input file to.
-        fields (dic): Data field requests.
+        fields (list): Data field requests.
         units (str): Units of the nodal co-ordinates 'm','cm','mm'.
 
     Returns:
         None
     """
+    filename = '{0}{1}.tcl'.format(structure.path, structure.name)
+
     with open(filename, 'w') as f:
 
-        # constraints = structure.constraints
+        constraints = structure.constraints
         displacements = structure.displacements
         elements = structure.elements
         interactions = structure.interactions
         loads = structure.loads
-        # materials = structure.materials
+        materials = structure.materials
         misc = structure.misc
         nodes = structure.nodes
-        # properties = structure.element_properties
-        # sections = structure.sections
-        # sets = structure.sets
+        properties = structure.element_properties
+        sections = structure.sections
+        sets = structure.sets
         steps = structure.steps
 
         input_write_heading(f)
         input_write_nodes(f, nodes, units)
-        # input_write_elements(f, elements)
         input_write_steps(f, structure, steps, loads, displacements, interactions, misc)
+        input_write_elements(f, sections, properties, elements, sets, materials)
 
     print('***** OpenSees input file generated: {0} *****\n'.format(filename))
 
 
 def input_write_heading(f):
-    """ Creates the input file heading.
+    """ Creates the OpenSees .tcl file heading.
 
     Parameters:
-        f (obj): The open file object for the input file.
+        f (obj): The open file object for the .tcl file.
 
     Returns:
         None
@@ -79,10 +81,10 @@ def input_write_heading(f):
 
 
 def input_write_nodes(f, nodes, units):
-    """ Writes the nodal co-ordinates information to the OpenSees input file.
+    """ Writes the nodal co-ordinates information to the OpenSees .tcl file.
 
     Parameters:
-        f (obj): The open file object for the input file.
+        f (obj): The open file object for the .tcl file.
         nodes (dic): Node dictionary from structure.nodes.
         units (str): Units of the nodal co-ordinates.
 
@@ -102,13 +104,14 @@ def input_write_nodes(f, nodes, units):
 
 
 def input_write_steps(f, structure, steps, loads, displacements, interactions, misc):
-    """ Writes step information to the OpenSees input file.
+    """ Writes step information to the OpenSees .tcl file.
 
     Note:
         - Steps are analysed in the order given by structure.steps_order.
+        - The first Step should be the boundary conditions.
 
     Parameters:
-        f (obj): The open file object for the input file.
+        f (obj): The open file object for the .tcl file.
         structure (obj): Struture object.
         steps (dic): Step objects from structure.steps.
         loads (dic): Load objects from structure.loads.
@@ -127,8 +130,8 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
     for key in structure.steps_order:
         step = steps[key]
         stype = step.__name__
-#         increments = step.increments
-#         method = step.type
+        # increments = step.increments
+        # method = step.type
         f.write('##\n')
         f.write('## {0}\n'.format(key))
         f.write('## ' + '-' * len(key) + '\n')
@@ -143,6 +146,7 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
                 displacement = displacements[k]
                 com = displacement.components
                 nset = displacement.nodes
+
                 f.write('##\n')
                 f.write('## {0}\n'.format(k))
                 f.write('## ' + '-' * len(k) + '\n')
@@ -159,4 +163,68 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
                             j.append('0')
                     f.write('fix {0} {1};\n'.format(node + 1, ' '.join(j)))
 
-# equalDOF rigidDiaphragm rigidLink for tie constraints etc
+
+def input_write_elements(f, sections, properties, elements, sets, materials):
+    """ Writes the element and section information to the OpenSees .tcl file.
+
+    Parameters:
+        f (obj): The open file object for the .tcl file.
+        sections (dic): Section objects from structure.sections.
+        properties (dic): ElementProperties objects from structure.element_properties.
+        elements (dic): Element objects from structure.elements.
+        sets (dic): Sets from structure.sets.
+        materials (dic): Material objects from structure.materials.
+
+    Returns:
+        None
+    """
+
+    # Sections:
+
+    shells = ['ShellSection']
+    solids = ['SolidSection', 'TrussSection']
+
+    # Write data
+
+    f.write('## -----------------------------------------------------------------------------\n')
+    f.write('## -------------------------------------------------------------------- Elements\n')
+
+    f.write('##\n')
+    f.write('geomTransf Linear 1\n')
+
+    for key, property in properties.items():
+        material = property.material
+        elsets = property.elsets
+        # reinforcement = property.reinforcement
+        section = sections[property.section]
+        stype = section.__name__
+        geometry = section.geometry
+
+        f.write('##\n')
+        f.write('## Section: {0}\n'.format(key))
+        f.write('## ---------' + '-' * (len(key)) + '\n')
+        f.write('##\n')
+
+        if isinstance(elsets, str):
+            elsets = [elsets]
+
+        for elset in elsets:
+            selection = sets[elset]['selection']
+
+            # Beam sections
+
+            if (stype not in shells) and (stype not in solids):
+
+                f.write('## eType, No., node.start, node.end, A[m2], E[Pa], G[Pa], J[m^4], Iyy[m^4], Ixx[m^4], trans\n')
+                for select in selection:
+                    sp, ep = elements[select].nodes
+                    n = select + 1
+                    i = sp + 1
+                    j = ep + 1
+                    A = geometry['A']
+                    E = materials[material].E['E']
+                    G = materials[material].G['G']
+                    J = geometry['J']
+                    Ixx = geometry['Ixx']
+                    Iyy = geometry['Iyy']
+                    f.write('element elasticBeamColumn {0} {1} {2} {3} {4} {5} {6} {7} {8} 1\n'.format(n, i, j, A, E, G, J, Ixx, Iyy))

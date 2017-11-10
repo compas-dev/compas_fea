@@ -19,7 +19,6 @@ structure
     :toctree: generated/
 
     Structure
-    load_from_obj
 
 
 constraint

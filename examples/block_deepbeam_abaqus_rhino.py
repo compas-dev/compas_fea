@@ -5,7 +5,7 @@
 from compas_fea.cad import rhino
 
 from compas_fea.structure import ElasticIsotropic
-from compas_fea.structure import ElementProperties
+from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import PinnedDisplacement
 from compas_fea.structure import PointLoad
@@ -28,7 +28,7 @@ mdl = Structure(name='block_deepbeam', path='C:/Temp/')
 # Extrude mesh
 
 nz = 20
-rhino.mesh_extrude(mdl, guid=rs.ObjectsByLayer('base_mesh'), nz=nz, dz=1./nz)
+rhino.mesh_extrude(mdl, guid=rs.ObjectsByLayer('base_mesh'), nz=nz, dz=1./nz, setname='blocks')
 
 # Add node and element sets
 
@@ -44,7 +44,7 @@ mdl.add_section(SolidSection(name='sec_solid'))
 
 # Add element properties
 
-ep = ElementProperties(material='mat_elastic', section='sec_solid', elsets='elset_all')
+ep = Properties(material='mat_elastic', section='sec_solid', elsets='blocks')
 mdl.add_element_properties(ep, 'ep_solid')
 
 # Add loads
@@ -58,7 +58,7 @@ mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_supports
 # Add steps
 
 mdl.add_step(GeneralStep(name='step', displacements=['disp_pinned'], loads=['load_point']))
-mdl.set_steps_order(['step'])
+mdl.steps_order = ['step']
 
 # Structure summary
 
@@ -66,8 +66,8 @@ mdl.summary()
 
 # Run and extract data
 
-mdl.analyse_and_extract(software='abaqus', fields={'U': 'all', 'S': 'all'})
+mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
 # Plot displacements
 
-rhino.plot_data(mdl, step='step', field='S', component='mises', cbar=[0, 2], voxel=0.3, vdx=1./nz)
+rhino.plot_voxels(mdl, step='step', field='smises', cbar=[0, 2], vmin=0.3, vdx=1./nz)

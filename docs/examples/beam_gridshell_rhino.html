@@ -17,7 +17,7 @@
 <!-- compas CSS -->
 <link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
 <link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
-<link href="beam_simple_rhino.html" rel="next" title="beam_simple Rhino"/>
+<link href="beam_simple_blender.html" rel="next" title="beam_simple Blender"/>
 <link href="../examples.html" rel="prev" title="Examples"/>
 <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
 </head>
@@ -47,15 +47,14 @@
 <figure class="figure">
 <img alt="../images/beam_gridshell_rhino.png" class="figure-img img-fluid" src="../images/beam_gridshell_rhino.png"/>
 </figure>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="sd">"""An example compas_fea package use for beams in a gridshell."""</span>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="sd">"""An example compas_fea package use for beams in a grid."""</span>
 
 <span class="c1"># Note: Sliding at the joints is not included.</span>
 
-<span class="kn">from</span> <span class="nn">compas_fea.fea.abaq</span> <span class="k">import</span> <span class="n">abaq</span>
 <span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">rhino</span>
 
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElasticIsotropic</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralDisplacement</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralStep</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GravityLoad</span>
@@ -73,12 +72,9 @@
 <span class="n">__email__</span>      <span class="o">=</span> <span class="s1">'liew@arch.ethz.ch'</span>
 
 
-<span class="n">name</span> <span class="o">=</span> <span class="s1">'beam_gridshell'</span>
-<span class="n">path</span> <span class="o">=</span> <span class="s1">'C:/Temp/'</span>
-
 <span class="c1"># Create empty Structure object</span>
 
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">()</span>
+<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'beam_gridshell'</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">'C:/Temp/'</span><span class="p">)</span>
 
 <span class="c1"># Add beam elements</span>
 
@@ -104,7 +100,7 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">RectangularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_rectangular'</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.005</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">beam</span> <span class="ow">in</span> <span class="n">beams</span><span class="p">:</span>
-    <span class="n">ep</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_elastic'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_rectangular'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="n">beam</span><span class="p">)</span>
+    <span class="n">ep</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_elastic'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_rectangular'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="n">beam</span><span class="p">)</span>
     <span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="s1">'ep_</span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">beam</span><span class="p">))</span>
 
 <span class="c1"># Add loads</span>
@@ -115,50 +111,48 @@
 
 <span class="n">bc</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">beam</span> <span class="ow">in</span> <span class="n">beams</span><span class="p">:</span>
-    <span class="n">sp_nset</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">_sp'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">beam</span><span class="p">)</span>
-    <span class="n">ep_nset</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">_ep'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">beam</span><span class="p">)</span>
+    <span class="n">sp</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">_sp'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">beam</span><span class="p">)</span>
+    <span class="n">ep</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">_ep'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">beam</span><span class="p">)</span>
     <span class="k">if</span> <span class="s1">'X'</span> <span class="ow">in</span> <span class="n">beam</span><span class="p">:</span>
-        <span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">RollerDisplacementX</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">sp_nset</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">sp_nset</span><span class="p">))</span>
-        <span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">RollerDisplacementX</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">ep_nset</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">ep_nset</span><span class="p">))</span>
+        <span class="n">mdl</span><span class="o">.</span><span class="n">add_displacements</span><span class="p">([</span>
+            <span class="n">RollerDisplacementX</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">sp</span><span class="p">),</span>
+            <span class="n">RollerDisplacementX</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">ep</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">ep</span><span class="p">)])</span>
     <span class="k">if</span> <span class="s1">'Y'</span> <span class="ow">in</span> <span class="n">beam</span><span class="p">:</span>
-        <span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">RollerDisplacementY</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">sp_nset</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">sp_nset</span><span class="p">))</span>
-        <span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">RollerDisplacementY</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">ep_nset</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">ep_nset</span><span class="p">))</span>
-    <span class="n">bc</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">sp_nset</span><span class="p">,</span> <span class="n">ep_nset</span><span class="p">])</span>
+        <span class="n">mdl</span><span class="o">.</span><span class="n">add_displacements</span><span class="p">([</span>
+            <span class="n">RollerDisplacementY</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">sp</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">sp</span><span class="p">),</span>
+            <span class="n">RollerDisplacementY</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">ep</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">ep</span><span class="p">)])</span>
+    <span class="n">bc</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">sp</span><span class="p">,</span> <span class="n">ep</span><span class="p">])</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">GeneralDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'disp_lift'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">'lift_points'</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.270</span><span class="p">))</span>
 
 <span class="c1"># Add steps</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'step_bc'</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="n">bc</span><span class="p">))</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'step_lift'</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">'disp_lift'</span><span class="p">]))</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">set_steps_order</span><span class="p">([</span><span class="s1">'step_bc'</span><span class="p">,</span> <span class="s1">'step_lift'</span><span class="p">])</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_steps</span><span class="p">([</span>
+    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'step_bc'</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="n">bc</span><span class="p">),</span>
+    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'step_lift'</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">'disp_lift'</span><span class="p">])])</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'step_bc'</span><span class="p">,</span> <span class="s1">'step_lift'</span><span class="p">]</span>
 
 <span class="c1"># Structure summary</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
 
-<span class="c1"># Generate .inp file</span>
-
-<span class="n">abaq</span><span class="o">.</span><span class="n">inp_generate</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">.inp'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
-
 <span class="c1"># Run and extract data</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">software</span><span class="o">=</span><span class="s1">'abaqus'</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">'U,SF,SM'</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">'abaqus'</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">'u'</span><span class="p">,</span> <span class="s1">'sf'</span><span class="p">,</span> <span class="s1">'sm'</span><span class="p">])</span>
 
 <span class="c1"># Plot displacements</span>
 
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_lift'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'U'</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">'magnitude'</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_lift'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'um'</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
 
 <span class="c1"># Plot section forces/moments</span>
 
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_lift'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'SF'</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">'SF1'</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_lift'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'SF'</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">'SF3'</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_lift'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'SM'</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="s1">'SM2'</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_lift'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'sfnx'</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_lift'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'sfvy'</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_lift'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'smy'</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
 </code></pre></div>
-
 </div>
 <nav class="compas-sideways">
 <a class="btn btn-primary compas-prev" href="../examples.html" role="button">Examples</a>
-<a class="btn btn-primary compas-next" href="beam_simple_rhino.html" role="button">beam_simple Rhino</a>
+<a class="btn btn-primary compas-next" href="beam_simple_blender.html" role="button">beam_simple Blender</a>
 </nav>
 </main>
 <!-- sidebar navigation -->
@@ -179,8 +173,8 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../examples.html">Examples</a><ul class="nav active">
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">beam_gridshell Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_rhino.html">beam_simple Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_rhino.html">beam_simple Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_tree_rhino.html">beam_tree Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_rhino.html">block_deepbeam Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_blender.html">block_deepbeam Blender</a></li>
@@ -188,15 +182,13 @@
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_rhino.html">mesh_floor Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_blender.html">mesh_floor Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_bridge_rhino.html">mesh_bridge Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_rhino.html">mesh_mould Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_strip_rhino.html">mesh_strip Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_tris_blender.html">mesh_tris Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_yieldline_rhino.html">mesh_yieldline Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="script_introduction_abaqus.html">script_introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_blender.html">truss_tower Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower Rhino</a></li>
 </ul>
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
@@ -222,11 +214,11 @@
             
 
             
-                Last updated on Oct 12, 2017.
+                Last updated on Nov 10, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
 <script type="text/javascript">

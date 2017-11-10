@@ -35,8 +35,8 @@ class Load(object):
         name (str): Name of the Load object.
         axes (str): Load applied via 'local' or 'global' axes.
         components (dic): Load components.
-        nodes (str, list): NSET or nodes the load is applied to.
-        elements (str, list): ELSET or elements the load is applied to.
+        nodes (str, list): Node set or nodes the load is applied to.
+        elements (str, list): Element set or elements the load is applied to.
 
     Returns:
         None

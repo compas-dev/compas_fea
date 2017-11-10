@@ -7,6 +7,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 from compas.geometry import centroid_points
+
 from compas.utilities import geometric_key
 
 from compas_fea.fea.abaq import abaq
@@ -30,7 +31,6 @@ __email__      = 'liew@arch.ethz.ch'
 
 __all__ = [
     'Structure',
-    'load_from_obj'
 ]
 
 
@@ -48,6 +48,7 @@ class Structure(object):
         loads (dic): Load objects.
         materials (dic): Material objects.
         misc (dic): Misc objects.
+        name (str): Structure name.
         nodes (dic): Node co-ordinates and local axes.
         node_index (dic): Index of nodes (geometric keys).
         path (str): Path to save files.
@@ -71,8 +72,8 @@ class Structure(object):
         self.interactions = {}
         self.loads = {}
         self.materials = {}
-        self.name = name
         self.misc = {}
+        self.name = name
         self.nodes = {}
         self.node_index = {}
         self.path = path
@@ -84,10 +85,8 @@ class Structure(object):
         self.tol = '3'
 
     def __str__(self):
-
         n = self.node_count()
         m = self.element_count()
-
         structure_data = [
             self.materials,
             self.sections,
@@ -113,17 +112,36 @@ class Structure(object):
 compas_fea structure: {}
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-- Number of nodes: {}\n
-- Number of elements: {}\n
-- Sets:\n{}\n
-- Materials:\n{}\n
-- Sections:\n{}\n
-- Loads:\n{}\n
-- Displacements:\n{}\n
-- Constraints:\n{}\n
-- Interactions:\n{}\n
-- Misc:\n{}\n
-- Steps:\n{}
+- Number of nodes: {}
+
+- Number of elements: {}
+
+- Sets:
+{}
+
+- Materials:
+{}
+
+- Sections:
+{}
+
+- Loads:
+{}
+
+- Displacements:
+{}
+
+- Constraints:
+{}
+
+- Interactions:
+{}
+
+- Misc:
+{}
+
+- Steps:
+{}
 
 """.format(self.name, n, m, dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8])
 
@@ -136,7 +154,7 @@ compas_fea structure: {}
         """ Adds a node to structure.nodes at co-ordinates xyz with local frame [ex, ey, ez].
 
         Note:
-            - Nodes are numbered sequentially starting from 0 (Python based).
+            - Nodes are numbered sequentially starting from 0.
 
         Parameters:
             xyz (list): [x, y, z] co-ordinates of the node.
@@ -158,13 +176,13 @@ compas_fea structure: {}
         """ Adds a list of nodes to structure.nodes at given co-ordinates all with local frame [ex, ey, ez].
 
         Note:
-            - Nodes are numbered sequentially starting from 0 (Python based).
+            - Nodes are numbered sequentially starting from 0.
 
         Parameters:
-            nodes (list): [x, y, z] co-ordinates for each node.
-            ex (list): Node's local x axis.
-            ey (list): Node's local y axis.
-            ez (list): Node's local z axis.
+            nodes (list): [[x, y, z], ..] co-ordinates for each node.
+            ex (list): Nodes' local x axis.
+            ey (list): Nodes' local y axis.
+            ez (list): Nodes' local z axis.
 
         Returns:
             list: Keys of the added or pre-existing nodes.
@@ -199,6 +217,22 @@ compas_fea structure: {}
         gkey = geometric_key(xyz, '{0}f'.format(self.tol))
         return self.node_index.get(gkey, None)
 
+    def edit_node(self, key, attr_dic):
+        """ Edit a node's data.
+
+        Parameters:
+            key (int): Key of the node to edit.
+            attr_dic (dic): Atribute dictionary of data to edit.
+
+        Returns:
+            None
+        """
+        gkey = geometric_key(self.node_xyz(key), '{0}f'.format(self.tol))
+        del self.node_index[gkey]
+        for attr, item in attr_dic.items():
+            self.nodes[key][attr] = item
+        self.add_node_to_node_index(key, self.node_xyz(key))
+
     def make_node_index_dic(self):
         """ Makes a node_index dictionary from existing structure.nodes.
 
@@ -208,7 +242,7 @@ compas_fea structure: {}
         Returns:
             None
         """
-        for key in list(self.nodes.keys()):
+        for key in self.nodes:
             gkey = geometric_key(self.node_xyz(key), '{0}f'.format(self.tol))
             self.node_index[gkey] = key
 
@@ -251,12 +285,25 @@ compas_fea structure: {}
         """ Return the xyz co-ordinates of a node.
 
         Parameters:
-            Node (int): Node number.
+            node (int): Node number.
 
         Returns:
             list: [x, y, z] co-ordinates.
         """
         return [self.nodes[node][i] for i in 'xyz']
+
+    def nodes_xyz(self, nodes=[]):
+        """ Return the xyz co-ordinates of given or all nodes.
+
+        Parameters:
+            nodes (list): Node numbers.
+
+        Returns:
+            list: [[x, y, z] ...] co-ordinates.
+        """
+        if not nodes:
+            nodes = self.nodes
+        return [self.node_xyz(node=node) for node in nodes]
 
 
 # ==============================================================================
@@ -264,10 +311,10 @@ compas_fea structure: {}
 # ==============================================================================
 
     def add_element(self, nodes, type, acoustic=False, thermal=False, axes={}):
-        """ Adds element to structure.elements with centroid geometric key.
+        """ Adds an element to structure.elements with centroid geometric key.
 
         Note:
-            - Elements are numbered sequentially starting from 0 (Python based).
+            - Elements are numbered sequentially starting from 0.
 
         Parameters:
             nodes (list): Nodes the element is connected to.
@@ -290,6 +337,7 @@ compas_fea structure: {}
                     'PentahedronElement': PentahedronElement,
                     'HexahedronElement': HexahedronElement}
         func = func_dic[type]
+
         ekey = self.check_element_exists(nodes)
         if ekey is None:
             ekey = self.element_count()
@@ -302,6 +350,25 @@ compas_fea structure: {}
             self.elements[ekey] = element
             self.add_element_to_element_index(ekey, nodes)
         return ekey
+
+    def add_elements(self, elements, type, acoustic=False, thermal=False, axes={}):
+        """ Adds multiple elements of the same type to structure.elements.
+
+        Note:
+            - Elements are numbered sequentially starting from 0.
+
+        Parameters:
+            elements (list): List of the nodes the elements are connected to.
+            type (str): Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
+            acoustic (bool): Acoustic properties on or off.
+            thermal (bool): Thermal properties on or off.
+            axes (dic): The local element axes 'ex', 'ey' and 'ez'.
+
+        Returns:
+            list: Keys of the added or existing elements.
+        """
+        return [self.add_element(nodes=nodes, type=type, acoustic=acoustic, thermal=thermal, axes=axes)
+                for nodes in elements]
 
     def add_element_to_element_index(self, key, nodes):
         """ Adds the element to the element_index dictionary.
@@ -317,15 +384,15 @@ compas_fea structure: {}
         gkey = geometric_key(centroid, '{0}f'.format(self.tol))
         self.element_index[gkey] = key
 
-    def check_element_exists(self, nodes=None, xyz=None):
-        """ Check if an element already exists based on its centroid.
+    def check_element_exists(self, nodes, xyz=None):
+        """ Check if an element already exists based on the nodes it connects to or its centroid.
 
         Note:
             - Geometric key check is made according to self.tol [m] tolerance.
 
         Parameters:
-            nodes (list) : Node numbers the element is connected to.
-            xyz (list): Direct co-ordinates of the element centroid.
+            nodes (list): Node numbers the element is connected to.
+            xyz (list): Direct co-ordinates of the element centroid to check.
 
         Returns:
             int: The element index if the element already exists, None if not.
@@ -358,9 +425,7 @@ compas_fea structure: {}
         """
         for key, element in self.elements.items():
             nodes = element.nodes
-            centroid = centroid_points([self.node_xyz(node) for node in nodes])
-            gkey = geometric_key(centroid, '{0}f'.format(self.tol))
-            self.element_index[gkey] = key
+            self.add_element_to_element_index(key=key, nodes=nodes)
 
     def element_centroid(self, element):
         """ Return the centroid of an element.
@@ -484,7 +549,7 @@ compas_fea structure: {}
         Parameters:
             name (str): Name of the set.
             type (str): 'node', 'element', 'surface_node', surface_element'.
-            selection (list): The keys of the nodes, elements or elements and sides.
+            selection (list, dic): The keys of the nodes, elements or elements and sides.
             explode (bool): Explode the set into sets for each member of selection.
 
         Returns:
@@ -566,6 +631,19 @@ compas_fea structure: {}
         displacement.index = len(self.displacements)
         self.displacements[displacement.name] = displacement
 
+    def add_displacements(self, displacements):
+        """ Adds Displacement objects to structure.displacements.
+
+        Parameters:
+            displacements (list): The Displacement objects.
+
+        Returns:
+            None
+        """
+        for displacement in displacements:
+            displacement.index = len(self.displacements)
+            self.displacements[displacement.name] = displacement
+
     def add_element_properties(self, element_properties, name=None):
         """ Adds an ElementProperties object to structure.element_properties.
 
@@ -606,6 +684,19 @@ compas_fea structure: {}
         load.index = len(self.loads)
         self.loads[load.name] = load
 
+    def add_loads(self, loads):
+        """ Adds Load objects to structure.loads.
+
+        Parameters:
+            loads (list): The Load objects.
+
+        Returns:
+            None
+        """
+        for load in loads:
+            load.index = len(self.loads)
+            self.loads[load.name] = load
+
     def add_material(self, material):
         """ Adds a Material object to structure.materials.
 
@@ -617,6 +708,19 @@ compas_fea structure: {}
         """
         material.index = len(self.materials)
         self.materials[material.name] = material
+
+    def add_materials(self, materials):
+        """ Adds Material objects to structure.materials.
+
+        Parameters:
+            materials (list): The Material objects.
+
+        Returns:
+            None
+        """
+        for material in materials:
+            material.index = len(self.materials)
+            self.materials[material.name] = material
 
     def add_misc(self, misc):
         """ Adds a Misc object to structure.misc.
@@ -642,6 +746,19 @@ compas_fea structure: {}
         section.index = len(self.sections)
         self.sections[section.name] = section
 
+    def add_sections(self, sections):
+        """ Adds Section objects to structure.sections.
+
+        Parameters:
+            sections (list): The Section objects.
+
+        Returns:
+            None
+        """
+        for section in sections:
+            section.index = len(self.sections)
+            self.sections[section.name] = section
+
     def add_step(self, step):
         """ Adds a Step object to structure.steps.
 
@@ -653,6 +770,19 @@ compas_fea structure: {}
         """
         step.index = len(self.steps)
         self.steps[step.name] = step
+
+    def add_steps(self, steps):
+        """ Adds Step objects to structure.steps.
+
+        Parameters:
+            steps (list): The Step objects.
+
+        Returns:
+            None
+        """
+        for step in steps:
+            step.index = len(self.steps)
+            self.steps[step.name] = step
 
 
 # ==============================================================================
@@ -675,43 +805,62 @@ compas_fea structure: {}
 # analysis
 # ==============================================================================
 
-    def write_input_file(self, software, fields='all'):
+    def fields_dic_from_list(self, fields_list):
+        """ Creates a fields dictionary from a fields list.
+
+        Parameters:
+            fields_list (list): List of fields and/or components.
+
+        Returns:
+            dic: Conversion to a fields dictionary.
+        """
+        node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
+        element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor']
+
+        fields_dic = {}
+
+        for field in node_fields + element_fields:
+            if field in fields_list:
+                fields_dic[field] = 'all'
+
+        return fields_dic
+
+    def write_input_file(self, software, fields=['u']):
         """ Writes the FE software's input file.
 
         Parameters:
             software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
-            fields (dic): Data field requests.
+            fields (list): Data field requests.
 
         Returns:
             None
         """
         if software == 'abaqus':
-            abaq.input_generate(self, filename='{0}{1}.inp'.format(self.path, self.name), fields=fields)
+            abaq.input_generate(self, fields=fields)
 
         elif software == 'ansys':
             pass
 
         elif software == 'opensees':
-            opensees.input_generate(self, filename='{0}{1}.tcl'.format(self.path, self.name), fields=fields)
+            opensees.input_generate(self, fields=fields)
 
-    def analyse(self, software, fields='all', exe=None, cpus=2, license='research'):
+    def analyse(self, software, exe=None, cpus=2, license='research'):
         """ Runs the analysis through the chosen FEA software/library.
 
         Parameters:
             software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
-            fields (dic): Data field requests.
             exe (str): Full terminal command to bypass subprocess defaults.
             cpus (int): Number of CPU cores to use.
-            license (str): FE software license type: 'research', 'student'.
+            license (str): FE software license type (if required): 'research', 'student'.
 
         Returns:
             None
         """
         if software == 'abaqus':
-            abaq.abaqus_launch_process(self, exe, fields, cpus)
+            abaq.abaqus_launch_process(self, exe, cpus)
 
         elif software == 'ansys':
-            ansys.ansys_launch_process(self.path, self.name, fields, cpus, license)
+            ansys.ansys_launch_process(self.path, self.name, cpus, license)
 
         elif software == 'opensees':
             pass
@@ -736,21 +885,21 @@ compas_fea structure: {}
         elif software == 'opensees':
             pass
 
-    def analyse_and_extract(self, software, fields='all', exe=None, cpus=2, license='research'):
+    def analyse_and_extract(self, software, fields=['u'], exe=None, cpus=2, license='research'):
         """ Runs the analysis through the chosen FEA software/library and extracts data.
 
         Parameters:
             software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
-            fields (dic): Data field requests.
+            fields (list): Data field requests.
             exe (str): Full terminal command to bypass subprocess defaults.
             cpus (int): Number of CPU cores to use.
-            license (str): FE software license type: 'research', 'student'.
+            license (str): FE software license type (if required): 'research', 'student'.
 
         Returns:
             None
         """
         self.write_input_file(software=software, fields=fields)
-        self.analyse(software=software, fields=fields, exe=exe, cpus=cpus, license=license)
+        self.analyse(software=software, exe=exe, cpus=cpus, license=license)
         self.extract_data(software=software, fields=fields, exe=exe)
 
 
@@ -788,6 +937,7 @@ compas_fea structure: {}
         """
         try:
             from compas_fea.viewers.app import App
+
             app = App(self)
             app.start()
         except:
@@ -810,23 +960,24 @@ compas_fea structure: {}
         fnm = '{0}{1}.obj'.format(self.path, self.name)
         with open(fnm, 'wb') as f:
             pickle.dump(self, f)
-        print('***** Structure saved as: {0} *****\n'.format(fnm))
+        print('***** Structure saved to: {0} *****\n'.format(fnm))
 
 
 # ==============================================================================
 # load
 # ==============================================================================
 
-def load_from_obj(fnm):
-    """ Imports a Structure object from an .obj file through Pickle.
+    @staticmethod
+    def load_from_obj(fnm):
+        """ Imports a Structure object from an .obj file through Pickle.
 
-    Parameters:
-        fnm (str): Path to load the Structure .obj from.
+        Parameters:
+            fnm (str): Path to load the Structure .obj from.
 
-    Returns:
-        obj: Imported Structure object.
-    """
-    with open(fnm, 'rb') as f:
-        structure = pickle.load(f)
-        print('***** Structure loaded from: {0} *****'.format(fnm))
-    return structure
+        Returns:
+            obj: Imported Structure object.
+        """
+        with open(fnm, 'rb') as f:
+            structure = pickle.load(f)
+            print('***** Structure loaded from: {0} *****'.format(fnm))
+        return structure

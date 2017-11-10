@@ -3,7 +3,7 @@ Properties
 ********************************************************************************
 
 
-This page shows how **ElementProperties** objects are added to the **Structure** object, here given as ``mdl``.
+This page shows how **ElementProperties** objects are added to the **Structure** object, here given as a **Structure** named ``mdl``.
 
 .. .. contents::
 
@@ -12,7 +12,7 @@ This page shows how **ElementProperties** objects are added to the **Structure**
 Adding properties
 =================
 
-To associate **Material** and **Section** objects to specific elements, an **ElementProperties** object is used. Without this, the materials and sections will still exist in the **Structure** object, but are unassigned and so not active. The **ElementProperties** class is first imported from  module **compas_fea.structure.element_properties** and then an object added to the ``.element_properties`` dictionary of the **Structure** object with ``name`` as the string key using method ``add_element_properties()``. The argument ``elsets`` of the method can be a list of element sets for multiple assignments of the properties, while ``material`` and ``section`` are the string names of the respective **Material** and **Section** objects to associate.
+To associate **Material** and **Section** objects to specific elements, an **ElementProperties** object is used. Without this association between objects, the materials and sections will still exist as objects in the main **Structure** object, but are unassigned to any elements and so not active. The **ElementProperties** class is first imported from  module **compas_fea.structure.element_properties** and then an object added to the ``.element_properties`` dictionary of the **Structure** object with ``name`` as the string key using the method ``add_element_properties()``. The arguments ``elsets`` or ``elements`` of the method can be a list of element sets or elements for multiple assignments of the properties, while ``material`` and ``section`` are the string names of the respective **Material** and **Section** objects to link.
 
 .. code-block:: python
 
@@ -38,3 +38,10 @@ The input data can be viewed or manipulated as usual through the object's string
 
    >>> mdl.element_properties['ep_circ'].elsets
    'elset_beams'
+
+
+=============
+Reinforcement
+=============
+
+To do.

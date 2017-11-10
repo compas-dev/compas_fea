@@ -5,14 +5,14 @@ Sections
 
 This page shows how **Section** objects are added to the **Structure** object, here given as ``mdl``.
 
-.. .. contents::
+.. contents::
 
 
 ===============
 Adding sections
 ===============
 
-Elements that are added do not have a complete description of their geometry and must have a **Section** object associated with them. **Section** classes are first imported from module **compas_fea.structure.sections** and added to the dictionary ``.sections`` of the **Structure** object with ``name`` as its string key using method ``add_section()``.  As the section geometry will differ for each class, the input data will vary, in the following example the radius ``r`` and thickness ``t`` are needed.
+Elements that are added to the **Structure** do not yet have a complete description of their geometry, and so must have a **Section** object associated with them. **Section** classes are first imported from module **compas_fea.structure.sections** and then objects instantiated and added to the dictionary ``.sections`` of the **Structure** object with ``name`` as its string key.  This is done with method ``add_section()``. As the section geometry will differ for each class, the input data will vary for the differen types of **Section** objects, in the following example the radius ``r`` and thickness ``t`` are needed for a **CircularSection** object and a **ShellSection** object.
 
 .. code-block:: python
 
@@ -27,23 +27,23 @@ Elements that are added do not have a complete description of their geometry and
    mdl.add_section(ShellSection(name='sec_shell', t=0.005))
 
 
-==========
-Properties
-==========
+====================
+Geometric properties
+====================
 
-Not only will the input data be available using the string key to access the **Section** object attributes, but other geometric data will also be calculated, such as the area and second moments of area.
+Not only will the input data be available using the string key to access the **Section** object attributes, but other geometric data will also be automatically calculated, such as the area and second moments of area.
 
 .. code-block:: python
 
    >>> mdl.sections['sec_circ'].geometry
-   {'r': 0.01, 'D': 0.02, 'A': 0.0003141592653, 'I11': 7.853981633e-09, 'I22': 7.853981633e-09, 'I12': 0}
+   {'r': 0.01, 'D': 0.02, 'A': 0.0003141592653, 'Ixx': 7.853981633e-09, 'Iyy': 7.853981633e-09, 'Ixy': 0}
 
 
 =====
 Types
 =====
 
-There are a variety of 1D: **AngleSection**, **BoxSection**, **CircularSection**, **GeneralSection**, **ISection**, **PipeSection**, **RectangularSection**, **TrapezoidalSection**, **TrussSection**, 2D: **ShellSection** and 3D: **SolidSection** objects that can be added with the ``add_section()`` method.
+There are a variety of 1D: **AngleSection**, **BoxSection**, **CircularSection**, **GeneralSection**, **ISection**, **PipeSection**, **RectangularSection**, **TrapezoidalSection**, **TrussSection**, 2D: **ShellSection** and 3D: **SolidSection** objects that can be imported and then added with the ``add_section()`` method.
 
 -----
 Truss
@@ -85,6 +85,7 @@ A **CircularSection** requires the radius ``r``.
    mdl.add_section(CircularSection(name='sec_circular', r=0.01))
 
 .. image:: /_images/circ-ip.png
+   :scale: 40 %
 
 ---
 I
@@ -160,13 +161,13 @@ An **TrapezoidalSection** requires the base width ``b1``, top width ``b2`` and h
 General
 -------
 
-A **GeneralSection** takes explicit cross-section information: area ``A``, second moment of area about axis 1-1 (ex) ``I11``, cross moment of area ``I12``, second moment of area about axis 2-2 (ey) ``I22``, torsional rigidity ``J``, sectorial moment ``g0``, warping constant ``gw``.
+A **GeneralSection** takes explicit cross-section information: area ``A``, second moment of area about axis (ex) ``Ixx``, cross moment of area ``Ixy``, second moment of area about axis (ey) ``Iyy``, torsional rigidity ``J``, sectorial moment ``g0``, warping constant ``gw``.
 
 -----
 Shell
 -----
 
-The area of a shell or membrane element is known from the geometry of the element through the co-ordinates of the nodes it connects to. All that is needed for the definition of a **ShellSection** is the thickness ``t``. For a **MembraneElement**, the dimensions will be used to calculate the element area for membrane forces, while a **ShellElement** will also use the geometry for shear forces, bending moments and torsional moments.
+The area of a shell or membrane element is known from the geometry of the element through the co-ordinates of the nodes it connects to. All that is needed for the definition of a **ShellSection** is the thickness ``t``. For a **MembraneElement**, the dimensions will be used to calculate the element cross-section area for membrane forces, while a **ShellElement** will also use the geometry for shear forces, bending moments and torsional moments.
 
 .. code-block:: python
 

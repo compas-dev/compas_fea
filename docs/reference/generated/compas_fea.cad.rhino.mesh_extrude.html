@@ -48,28 +48,40 @@
 <h1>mesh_extrude</h1>
 <dl class="function">
 <dt id="compas_fea.cad.rhino.mesh_extrude">
-<code class="descclassname">compas_fea.cad.rhino.</code><code class="descname">mesh_extrude</code><span class="sig-paren">(</span><em>structure</em>, <em>guid</em>, <em>nz</em>, <em>dz</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/cad/rhino.html#mesh_extrude"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Extrudes a Rhino mesh into cells of many layers.</p>
+<code class="descclassname">compas_fea.cad.rhino.</code><code class="descname">mesh_extrude</code><span class="sig-paren">(</span><em>structure</em>, <em>guid</em>, <em>nz</em>, <em>dz</em>, <em>setname</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/cad/rhino.html#mesh_extrude"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Extrudes a Rhino mesh into cells of many layers and adds to Structure.</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul>
-<li><p>Extrusion is along the vertex normals.</p></li>
-<li><p>Elements are added automatically to the Structure object.</p></li>
+<p class="first admonition-title">Note</p>
+<ul class="last">
+<li><p class="first">Extrusion is along the vertex normals.</p>
+</li>
+<li><p class="first">Elements are added automatically to the Structure object.</p>
+</li>
 </ul>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul>
-<li><p><strong>structure</strong> (<em>obj</em>) – Structure object to update.</p></li>
-<li><p><strong>guid</strong> (<em>guid</em>) – Rhino mesh guid.</p></li>
-<li><p><strong>nz</strong> (<em>int</em>) – Number of layers.</p></li>
-<li><p><strong>dz</strong> (<em>float</em>) – Layer thickness.</p></li>
+<table class="docutils field-list table table-responsive table-bordered" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first">
+<li><p class="first"><strong>structure</strong> (<em>obj</em>) – Structure object to update.</p>
+</li>
+<li><p class="first"><strong>guid</strong> (<em>guid</em>) – Rhino mesh guid.</p>
+</li>
+<li><p class="first"><strong>nz</strong> (<em>int</em>) – Number of layers.</p>
+</li>
+<li><p class="first"><strong>dz</strong> (<em>float</em>) – Layer thickness.</p>
+</li>
+<li><p class="first"><strong>setname</strong> (<em>str</em>) – Name of set for added elements.</p>
+</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 </div>
 <nav class="compas-sideways">
@@ -126,11 +138,11 @@
             
 
             
-                Last updated on Oct 12, 2017.
+                Last updated on Nov 10, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
 <script type="text/javascript">

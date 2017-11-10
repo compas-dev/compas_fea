@@ -23,19 +23,18 @@ mdl = Structure(name='introduction', path='/home/al/Temp/')
 
 # Add nodes
 
-mdl.add_nodes([[-5., -5., 0.], [5., -5., 0.], [5., 5., 0.], [-5., 5., 0.], [0., 0., 5.]])
+mdl.add_nodes(nodes=[[-5., -5., 0.], [5., -5., 0.], [5., 5., 0.], [-5., 5., 0.], [0., 0., 5.]])
 
 # print('Node number 3:', mdl.nodes[3])
 # print('Node number 3 xyz:', mdl.node_xyz(3))
 # print('Node count: ', mdl.node_count())
 # print('Node index: ', mdl.node_index)
-# print('Check node at [0, 0, 0]: ', mdl.check_node_exists([0., 0., 0.]))
-# print('Check node at [5, 5, 0]: ', mdl.check_node_exists([5., 5., 0.]))
+# print('Check node at [0, 0, 0]: ', mdl.check_node_exists([0, 0, 0]))
+# print('Check node at [5, 5, 0]: ', mdl.check_node_exists([5, 5, 0]))
 
 # Add elements
 
-for uv in [[0, 4], [1, 4], [2, 4], [3, 4]]:
-    mdl.add_element(nodes=uv, type='BeamElement')
+mdl.add_elements(elements=[[0, 4], [1, 4], [2, 4], [3, 4]], type='BeamElement')
 mdl.add_element(nodes=[0, 1, 4], type='ShellElement')
 
 # print('Element 3 nodes: ', mdl.elements[3].nodes)
@@ -78,19 +77,19 @@ mdl.add_element_properties(ep2, name='ep_shell')
 mdl.add_load(PointLoad(name='load_point', nodes='nset_top', x=10000, z=-10000))
 mdl.add_load(GravityLoad(name='load_gravity', elements='elset_all'))
 
-# print('Point load components: ', mdl.loads['load_point'].components)
+# print('load_point components: ', mdl.loads['load_point'].components)
 
 # Add displacements
 
 mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_base'))
 
-# print('Pinned components: ', mdl.displacements['disp_pinned'].components)
+# print('disp_pinned components: ', mdl.displacements['disp_pinned'].components)
 
 # Add steps
 
 mdl.add_step(GeneralStep(name='step_bc', displacements=['disp_pinned']))
 mdl.add_step(GeneralStep(name='step_loads', loads=['load_point', 'load_gravity']))
-mdl.set_steps_order(['step_bc', 'step_loads'])
+mdl.steps_order = ['step_bc', 'step_loads']
 
 # Structure summary
 
@@ -99,5 +98,5 @@ mdl.save_to_obj()
 
 # Generate input files
 
-mdl.write_input_file(software='abaqus', fields={'S': 'all', 'U': 'all', 'CF': 'all'})
-mdl.write_input_file(software='opensees', fields={'S': 'all', 'U': 'all', 'CF': 'all'})
+mdl.write_input_file(software='abaqus', fields=['s', 'u'])
+mdl.write_input_file(software='opensees', fields=['s', 'u'])

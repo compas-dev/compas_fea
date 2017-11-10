@@ -3,8 +3,8 @@ compas_fea.structure.material : Material classes.
 For creating and/or selecting linear and non-linear material model classes.
 """
 
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import print_function
 
 from math import log
 
@@ -52,6 +52,7 @@ class ElasticIsotropic(object):
         self.name = name
         self.E = {'E': E}
         self.v = {'v': v}
+        self.G = {'G': 0.5 * E / (1 + v)}
         self.p = p
         self.tension = tension
         self.compression = compression
@@ -110,8 +111,8 @@ class ElasticPlastic(object):
         E (float, list): Young's modulus E.
         v (float, list): Poisson's ratio v.
         p (float, list): Density.
-        f (list): Plastic stress data.
-        e (list): Plastic strain data.
+        f (list): Plastic stress data (positive tension values).
+        e (list): Plastic strain data (positive tension values).
 
     Returns:
         None
@@ -122,8 +123,11 @@ class ElasticPlastic(object):
         self.name = name
         self.E = {'E': E}
         self.v = {'v': v}
+        self.G = {'G': 0.5 * E / (1 + v)}
         self.p = p
-        self.compression = {'f': f, 'e': e}
+        fc = [-i for i in f]
+        ec = [-i for i in e]
+        self.compression = {'f': fc, 'e': ec}
         self.tension = {'f': f, 'e': e}
 
 
@@ -152,11 +156,14 @@ class Steel(object):
         self.name = name
         self.E = {'E': E}
         self.v = {'v': v}
+        self.G = {'G': 0.5 * E / (1 + v)}
         self.p = p
         if type == 'elastic-plastic':
             f = [fy * 10**6]
             e = [0]
-        self.compression = {'f': f, 'e': e}
+        fc = [-i for i in f]
+        ec = [-i for i in e]
+        self.compression = {'f': fc, 'e': ec}
         self.tension = {'f': f, 'e': e}
 
 

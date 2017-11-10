@@ -21,9 +21,11 @@ functions
     :toctree: generated/
 
     colorbar
+    combine_all_sets
     discretise_faces
     extrude_mesh
-    load_data
+    group_keys_by_attribute
+    group_keys_by_attributes
     network_order
     normalise_data
     postprocess

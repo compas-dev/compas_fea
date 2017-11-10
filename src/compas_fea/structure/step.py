@@ -33,7 +33,7 @@ class GeneralStep(object):
         nlgeom (bool): Analyse non-linear geometry effects.
         displacements (list): Displacement object names (str).
         loads (list): Load object names (str).
-        type (str): 'STATIC','STATIC,RIKS'.
+        type (str): 'static','static,riks'.
         temperatures (str): Name of Temperature object to apply.
         duration (float): Duration of step.
 
@@ -41,7 +41,7 @@ class GeneralStep(object):
         None
     """
 
-    def __init__(self, name, increments=200, factor=1.0, nlgeom=True, displacements=[], loads=[], type='STATIC',
+    def __init__(self, name, increments=200, factor=1.0, nlgeom=True, displacements=[], loads=[], type='static',
                  temperatures=None, duration=1):
         self.__name__ = 'GeneralStep'
         self.name = name
@@ -91,20 +91,18 @@ class ModalStep(object):
         name (str): Name of the ModalStep.
         modes (int): Number of modes to analyse.
         increments (int): Number of increments.
-        nlgeom (bool): Analyse non-linear geometry effects.
         displacements (list): Displacement object names (str).
-        type (str): 'MODAL'.
+        type (str): 'modal'.
 
     Returns:
         None
     """
 
-    def __init__(self, name, modes=10, increments=200, nlgeom=False, displacements=[], type='MODAL'):
+    def __init__(self, name, modes=10, increments=200, displacements=[], type='modal'):
         self.__name__ = 'ModalStep'
         self.name = name
         self.modes = modes
         self.increments = increments
-        self.nlgeom = nlgeom
         self.displacements = displacements
         self.type = type
 
@@ -115,27 +113,27 @@ class HarmonicStep(object):
 
     Parameters:
         name (str): Name of the HarmonicStep.
+        freq_range (list): First and last frequencies to analyse.
+        freq_steps (int): The number of equally spaced frequency steps.
         displacements (list): Displacement object names (str).
         loads (list): Load object names (str).
         factor (float): Proportionality factor on the loads and displacements.
-        freq_range (list): First and last frequencies to analyse.
-        freq_steps (int): The number of frequency steps.
         damping (float): Constant harmonic damping ratio.
-        type (str): 'HARMONIC'.
+        type (str): 'harmonic'.
 
     Returns:
         None
     """
 
-    def __init__(self, name, displacements=[], loads=[], factor=1.0, freq_range=None, freq_steps=None, damping=None,
-                 type='HARMONIC'):
+    def __init__(self, name, freq_range, freq_steps, displacements=[], loads=[], factor=1.0, damping=None,
+                 type='harmonic'):
         self.__name__ = 'HarmonicStepStep'
         self.name = name
+        self.freq_range = freq_range
+        self.freq_steps = freq_steps
         self.displacements = displacements
         self.loads = loads
         self.factor = factor
-        self.freq_range = freq_range
-        self.freq_steps = freq_steps
         self.damping = damping
         self.type = type
 
@@ -149,23 +147,20 @@ class BucklingStep(object):
         modes (int): Number of modes to analyse.
         increments (int): Number of increments.
         factor (float): Proportionality factor on the loads and displacements.
-        nlgeom (bool): Analyse non-linear geometry effects.
         displacements (list): Displacement object names (str).
         loads (list): Load object names (str).
-        type (str): 'BUCKLE'.
+        type (str): 'buckle'.
 
     Returns:
         None
     """
 
-    def __init__(self, name, modes=10, increments=200, factor=1.0, nlgeom=False, displacements=[], loads=[],
-                 type='BUCKLE'):
+    def __init__(self, name, modes=10, increments=200, factor=1.0, displacements=[], loads=[], type='buckle'):
         self.__name__ = 'BucklingStep'
         self.name = name
         self.modes = modes
         self.increments = increments
         self.factor = factor
-        self.nlgeom = nlgeom
         self.displacements = displacements
         self.loads = loads
         self.type = type

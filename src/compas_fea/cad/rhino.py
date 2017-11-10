@@ -5,13 +5,13 @@ compas_fea.cad.rhino : Rhinoceros specific functions.
 from __future__ import print_function
 from __future__ import absolute_import
 
-from subprocess import Popen
-from subprocess import PIPE
+from compas.utilities import XFunc
 
 from compas.datastructures.mesh import Mesh
-from compas.datastructures.network import Network
+from compas.datastructures import Network
 
 from compas_rhino.helpers.mesh import mesh_from_guid
+from compas_rhino.utilities import clear_layer
 
 from compas.geometry import add_vectors
 from compas.geometry import centroid_points
@@ -19,9 +19,9 @@ from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
 
 from compas_fea import utilities
-from compas_fea.utilities.functions import colorbar
-from compas_fea.utilities.functions import extrude_mesh
-from compas_fea.utilities.functions import network_order
+from compas_fea.utilities import colorbar
+from compas_fea.utilities import extrude_mesh
+from compas_fea.utilities import network_order
 
 from math import atan2
 from math import cos
@@ -51,15 +51,12 @@ __all__ = [
     'add_sets_from_layers',
     'mesh_extrude',
     'network_from_lines',
-    'ordered_lines',
+    'ordered_network',
     'plot_axes',
     'plot_data',
+    'plot_voxels',
     'plot_principal_stresses',
 ]
-
-
-node_fields = ['RF', 'RM', 'U', 'UR', 'CF', 'CM']
-element_fields = ['SF', 'SM', 'SK', 'SE', 'S', 'E', 'PE', 'RBFOR']
 
 
 def add_element_set(structure, guids, name, explode=False):
@@ -85,7 +82,7 @@ def add_element_set(structure, guids, name, explode=False):
             ep = structure.check_node_exists(rs.CurveEndPoint(guid))
             element = structure.check_element_exists([sp, ep])
             if element is not None:
-                elements.append(element)
+                        elements.append(element)
 
         if rs.IsMesh(guid):
             vertices = rs.MeshVertices(guid)
@@ -123,37 +120,39 @@ def add_node_set(structure, guids, name, explode=False):
     """
     nodes = []
     for guid in guids:
+
         node = structure.check_node_exists(rs.PointCoordinates(guid))
+
         if node is not None:
             nodes.append(node)
+
     structure.add_set(name=name, type='node', selection=nodes, explode=explode)
 
 
-def add_nodes_elements_from_layers(structure, element_type, layers, acoustic=False, thermal=False):
+def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, acoustic=False, thermal=False):
     """ Adds node and element data from Rhino layers to Structure object.
-
-    Note:
-        - The element_type should be applicable to all objects in the given layers.
 
     Parameters:
         structure (obj): Structure object to update.
-        element_type (str): Element type: 'TetrahedronElement', 'ShellElement', 'TrussElement' etc.
-        layers (list): Layer names to extract nodes or elements from.
+        layers (list): Layers to extract nodes and elements.
+        line_type (str): Element type for lines.
+        mesh_type (str): Element type for meshes.
         acoustic (bool): Acoustic properties on or off.
         thermal (bool): Thermal properties on or off.
 
     Returns:
         None: Nodes and elements are updated in the Structure object.
     """
+    solids = ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']
+
     if isinstance(layers, str):
         layers = [layers]
+
     for layer in layers:
         guids = rs.ObjectsByLayer(layer)
         for guid in guids:
 
-            if rs.IsCurve(guid):
-                sp = structure.add_node(rs.CurveStartPoint(guid))
-                ep = structure.add_node(rs.CurveEndPoint(guid))
+            if line_type and rs.IsCurve(guid):
                 try:
                     dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
                     ex = dic.get('ex', None)
@@ -161,24 +160,27 @@ def add_nodes_elements_from_layers(structure, element_type, layers, acoustic=Fal
                     axes = {'ex': ex, 'ey': ey}
                 except:
                     axes = {}
-                structure.add_element(nodes=[sp, ep], type=element_type, acoustic=acoustic, thermal=thermal, axes=axes)
+                sp = structure.add_node(rs.CurveStartPoint(guid))
+                ep = structure.add_node(rs.CurveEndPoint(guid))
+                structure.add_element(nodes=[sp, ep], type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
 
-            elif rs.IsMesh(guid):
+            elif mesh_type and rs.IsMesh(guid):
                 vertices = rs.MeshVertices(guid)
                 nodes = [structure.add_node(vertex) for vertex in vertices]
-                if element_type in ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']:
-                    structure.add_element(nodes=nodes, type=element_type, acoustic=acoustic, thermal=thermal)
+
+                if mesh_type in solids:
+                    structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
                 else:
                     faces = rs.MeshFaceVertices(guid)
                     for face in faces:
                         nodes = [structure.check_node_exists(vertices[i]) for i in face]
                         if nodes[-1] == nodes[-2]:
                             del nodes[-1]
-                        structure.add_element(nodes=nodes, type=element_type, acoustic=acoustic, thermal=thermal)
+                        structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
 
 
 def add_sets_from_layers(structure, layers, explode=False):
-    """ Add node or element sets to the Structure object from layers.
+    """ Add node or element sets to the Structure object from Rhino layers.
 
     Note:
         - Layers should exclusively contain nodes or elements.
@@ -186,7 +188,7 @@ def add_sets_from_layers(structure, layers, explode=False):
 
     Parameters:
         structure (obj): Structure object to update.
-        list (list): List of layer names to take objects from.
+        layers (list): List of layer names to take objects from.
         explode (bool): Explode the set into sets for each member of selection.
 
     Returns:
@@ -194,19 +196,22 @@ def add_sets_from_layers(structure, layers, explode=False):
     """
     if isinstance(layers, str):
         layers = [layers]
+
     for layer in layers:
         guids = rs.ObjectsByLayer(layer)
         if guids:
             check_points = [rs.IsPoint(guid) for guid in guids]
             name = layer.split('::')[-1] if '::' in layer else layer
+
             if all(check_points):
                 add_node_set(structure=structure, guids=guids, name=name, explode=explode)
+
             elif not all(check_points):
                 add_element_set(structure=structure, guids=guids, name=name, explode=explode)
 
 
-def mesh_extrude(structure, guid, nz, dz):
-    """ Extrudes a Rhino mesh into cells of many layers.
+def mesh_extrude(structure, guid, nz, dz, setname):
+    """ Extrudes a Rhino mesh into cells of many layers and adds to Structure.
 
     Note:
         - Extrusion is along the vertex normals.
@@ -217,28 +222,32 @@ def mesh_extrude(structure, guid, nz, dz):
         guid (guid): Rhino mesh guid.
         nz (int): Number of layers.
         dz (float): Layer thickness.
+        setname (str): Name of set for added elements.
 
     Returns:
         None
     """
     mesh = mesh_from_guid(Mesh(), guid)
-    extrude_mesh(structure, mesh, nz, dz)
+    extrude_mesh(structure=structure, mesh=mesh, nz=nz, dz=dz, setname=setname)
 
 
-def network_from_lines(guids):
+def network_from_lines(guids=[], layer=None):
     """ Creates a Network datastructure object from a list of curve guids.
 
     Parameters:
         guids (list): guids of the Rhino curves to be made into a Network.
+        layer(str): Layer to grab line guids from.
 
     Returns:
         obj: Network datastructure object.
     """
+    if layer:
+        guids = rs.ObjectsByLayer(layer)
     lines = [[rs.CurveStartPoint(guid), rs.CurveEndPoint(guid)] for guid in guids]
     return Network.from_lines(lines)
 
 
-def ordered_lines(structure, network, layer):
+def ordered_network(structure, network, layer):
     """ Extract node and element orders from a Network for a given start-point.
 
     Note:
@@ -256,20 +265,18 @@ def ordered_lines(structure, network, layer):
         float: Total length.
     """
     sp_xyz = rs.PointCoordinates(rs.ObjectsByLayer(layer))
-    return network_order(sp_xyz, structure, network)
+    return network_order(sp_xyz=sp_xyz, structure=structure, network=network)
 
 
-def plot_axes(xyz, e11, e22, e33, sc=1):
+def plot_axes(xyz, e11, e22, e33, layer, sc=1):
     """ Plots a set of axes.
-
-    Note:
-        - Axes are plotted in the active layer.
 
     Parameters:
         xyz (list): Origin of the axes.
-        e11 (list): First axis component [x, y, z].
-        e22 (list): Second axis component [x, y, z].
-        e33 (list): Third axis component [x, y, z].
+        e11 (list): First axis component [x1, y1, z1].
+        e22 (list): Second axis component [x2, y2, z2].
+        e33 (list): Third axis component [x3, y3, z3].
+        layer (str): Layer to plot on.
         sc (float) : Size of the axis lines.
 
     Returns:
@@ -278,13 +285,18 @@ def plot_axes(xyz, e11, e22, e33, sc=1):
     ex = rs.AddLine(xyz, add_vectors(xyz, scale_vector(e11, sc)))
     ey = rs.AddLine(xyz, add_vectors(xyz, scale_vector(e22, sc)))
     ez = rs.AddLine(xyz, add_vectors(xyz, scale_vector(e33, sc)))
+
     rs.ObjectColor(ex, [255, 0, 0])
     rs.ObjectColor(ey, [0, 255, 0])
     rs.ObjectColor(ez, [0, 0, 255])
 
+    rs.ObjectLayer(ex, layer)
+    rs.ObjectLayer(ey, layer)
+    rs.ObjectLayer(ez, layer)
 
-def plot_data(structure, step, field='U', component='magnitude', scale=1.0, radius=0.05, iptype='mean', nodal='mean',
-              cbar=[None, None], layer=None, voxel=None, vdx=0):
+
+def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
+              nodal='mean'):
     """ Plots analysis results on the deformed shape of the Structure.
 
     Note:
@@ -293,16 +305,13 @@ def plot_data(structure, step, field='U', component='magnitude', scale=1.0, radi
     Parameters:
         structure (obj): Structure object.
         step (str): Name of the Step.
-        field (str): Field to plot, e.g. 'U', 'S', 'SM'.
-        component (str): Component to plot, e.g. 'U1', 'RF2'.
+        field (str): Field to plot, e.g. 'um', 'sxx', 'sm1'.
+        layer (str): Layer name for plotting.
         scale (float): Scale displacements for the deformed plot.
         radius (float): Radius of the pipe visualisation meshes.
+        cbar (list): Minimum and maximum limits on the colorbar.
         iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
         nodal (str): 'mean', 'max' or 'min' for nodal values.
-        cbar (list): Minimum and maximum limits on the colorbar.
-        layer (str): Layer name for plotting.
-        voxel (float): Plot voxel data, and cull values below value voxel (0 1].
-        vdx (float): Voxel spacing.
 
     Returns:
         None
@@ -315,60 +324,48 @@ def plot_data(structure, step, field='U', component='magnitude', scale=1.0, radi
     # Create and clear Rhino layer
 
     if not layer:
-        layer = '{0}-{1}-{2}'.format(step, field, component)
+        layer = '{0}-{1}'.format(step, field)
     rs.CurrentLayer(rs.AddLayer(layer))
-    rs.DeleteObjects(rs.ObjectsByLayer(layer))
+    clear_layer(layer)
     rs.EnableRedraw(False)
 
-    # Start postprocess
+    # Node and element data
 
-    script = utilities.__file__.replace('__init__.py', 'postprocess.py')
-    cmin = str(cbar[0]) if cbar[0] is not None else 'None'
-    cmax = str(cbar[1]) if cbar[1] is not None else 'None'
-    voxel = str(voxel) if voxel is not None else 'None'
-    args = ['python', script, '--', str(vdx), voxel, cmin, cmax, nodal, iptype, str(scale), temp, name,
-            step, field, component]
-    p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
-    while True:
-        line = p.stdout.readline()
-        if not line:
-            break
-        line = line.strip()
-        print(line)
-    stdout, stderr = p.communicate()
-    print(stdout)
-    print(stderr)
+    nkeys = sorted(structure.nodes, key=int)
+    nodes = [structure.node_xyz(nkey) for nkey in nkeys]
 
-    # Return results
+    ekeys = sorted(structure.elements, key=int)
+    elements = [structure.elements[ekey].nodes for ekey in ekeys]
 
-    with open('{0}{1}-elements.json'.format(temp, name), 'r') as f:
-        elements = json.load(f)
-    with open('{0}{1}-postprocess.json'.format(temp, name), 'r') as f:
-        data = json.load(f)
+    nodal_data = structure.results[step]['nodal']
+    elemental_data = structure.results[step]['element']
+    ux = [nodal_data['ux'][str(key)] for key in nkeys]
+    uy = [nodal_data['uy'][str(key)] for key in nkeys]
+    uz = [nodal_data['uz'][str(key)] for key in nkeys]
 
-    toc       = data['toc']
-    cnodes    = data['cnodes']
-    celements = data['celements']
-    cnodal    = data['cnodal']
-    fabs      = data['fabs']
-    nabs      = data['nabs']
-    U         = data['U']
+    # Postprocess
 
-    # Print info
+    try:
+        data = [nodal_data[field][str(key)] for key in nkeys]
+        dtype = 'nodal'
+    except:
+        data = elemental_data[field]
+        dtype = 'elemental'
 
-    with open('{0}{1}-{2}-info.json'.format(temp, name, step), 'r') as f:
-        info = json.load(f)
+    basedir = utilities.__file__.split('__init__.py')[0]
+    xfunc = XFunc(basedir=basedir, tmpdir=temp, mode=1)
+    xfunc.funcname = 'functions.postprocess'
+    toc, U, cnodes, fabs, _ = xfunc(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)['data']
 
-    print('\nStep summary: {0}'.format(step))
-    print('--------------' + '-' * len(step))
-    print('Frame description: {0}'.format(info['description']))
+    print('\n***** Data processed : {0} s *****'.format(toc))
 
     # Plot meshes
 
     mesh_faces = []
     beam_faces = [[0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]]
     block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
-    for ekey, nodes in elements.items():
+
+    for nodes in elements:
         n = len(nodes)
 
         if n == 2:
@@ -387,13 +384,9 @@ def plot_data(structure, step, field='U', component='magnitude', scale=1.0, radi
                    add_vectors(ep, xa_pr), add_vectors(ep, ya_pr),
                    add_vectors(ep, xa_mr), add_vectors(ep, ya_mr)]
             guid = rs.AddMesh(pts, beam_faces)
-            if field in node_fields:
-                col1 = cnodes[u]
-                col2 = cnodes[v]
-                rs.MeshVertexColors(guid, [col1] * 4 + [col2] * 4)
-            elif field in element_fields:
-                col = celements[int(ekey)]
-                rs.MeshVertexColors(guid, [col] * 8)
+            col1 = cnodes[u]
+            col2 = cnodes[v]
+            rs.MeshVertexColors(guid, [col1] * 4 + [col2] * 4)
 
         elif n == 3:
             mesh_faces.append(nodes + [nodes[-1]])
@@ -404,15 +397,10 @@ def plot_data(structure, step, field='U', component='magnitude', scale=1.0, radi
         elif n == 8:
             for block in block_faces:
                 mesh_faces.append([nodes[i] for i in block])
-    if mesh_faces:
-        id_mesh = rs.AddMesh(U, mesh_faces)
-        if field in node_fields:
-            rs.MeshVertexColors(id_mesh, cnodes)
-        elif field in element_fields:
-            rs.MeshVertexColors(id_mesh, cnodal)
 
-    if field in element_fields:
-        fabs = max([fabs, nabs])
+    if mesh_faces:
+        guid = rs.AddMesh(U, mesh_faces)
+        rs.MeshVertexColors(guid, cnodes)
 
     # Plot colorbar
 
@@ -420,7 +408,7 @@ def plot_data(structure, step, field='U', component='magnitude', scale=1.0, radi
         guid = rs.ObjectsByLayer('colorbar')
     except:
         rs.CurrentLayer(rs.AddLayer('colorbar'))
-        rs.DeleteObjects(rs.ObjectsByLayer('colorbar'))
+        clear_layer('colorbar')
         x = [i * 0.1 for i in range(11)]
         y = [i * 0.1 - 1 for i in range(2)]
         vertices = [[xi, yi, 0] for yi in y for xi in x]
@@ -432,19 +420,92 @@ def plot_data(structure, step, field='U', component='magnitude', scale=1.0, radi
     vertices = rs.MeshVertices(guid)
     x = [i[0] for i in vertices]
     y = [i[1] for i in vertices]
-    xmin = min(x)
-    xmax = max(x)
+    xmin, xmax, ymin = min(x), max(x), min(y)
     xran = xmax - xmin
-    ymin = min(y)
+    h = xran / 20.
 
-    colors = [colorbar((x[c] - xmin - xran / 2.) / (xran / 2.), input='float') for c in range(len(vertices))]
+    colors = [colorbar(2 * (xi - xmin - 0.5 * xran) / xran, input='float', type=255) for xi in x]
     id = rs.AddMesh(vertices, rs.MeshFaceVertices(guid))
     rs.MeshVertexColors(id, colors)
 
-    h = xran / 20.
-    rs.AddText('{0:.4g}'.format(+fabs), [xmax, ymin - 1.5 * h, 0], height=h)
-    rs.AddText('{0:.4g}'.format(-fabs), [xmin, ymin - 1.5 * h, 0], height=h)
-    rs.AddText('0', [xmin + xran / 2., ymin - 1.5 * h, 0], height=h)
+    rs.AddText('{0:.4g}'.format(float(+fabs)), [xmax, ymin - 1.5 * h, 0], height=h)
+    rs.AddText('{0:.4g}'.format(float(-fabs)), [xmin, ymin - 1.5 * h, 0], height=h)
+    rs.AddText('0', [xmin + 0.5 * xran, ymin - 1.5 * h, 0], height=h)
+
+    # Return to Default layer
+
+    rs.CurrentLayer(rs.AddLayer('Default'))
+    rs.LayerVisible('colorbar', False)
+    rs.LayerVisible(layer, False)
+    rs.EnableRedraw(True)
+
+
+def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',
+                vmin=0, vdx=None):
+    """ Plots voxels results for 4D data with mayavi.
+
+    Parameters:
+        structure (obj): Structure object.
+        step (str): Name of the Step.
+        field (str): Scalar field to plot, e.g. 'smises'.
+        layer (str): Layer name for plotting.
+        scale (float): Scale displacements for the deformed plot.
+        cbar (list): Minimum and maximum limits on the colorbar.
+        iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
+        nodal (str): 'mean', 'max' or 'min' for nodal values.
+        vmin (float): Plot voxel data, and cull values below value voxel (0 1].
+        vdx (float): Voxel spacing.
+
+    Returns:
+        None
+    """
+
+    name = structure.name
+    path = structure.path
+    temp = '{0}{1}/'.format(path, name)
+
+    # Create and clear Rhino layer
+
+    if not layer:
+        layer = '{0}-{1}'.format(step, field)
+    rs.CurrentLayer(rs.AddLayer(layer))
+    clear_layer(layer)
+    rs.EnableRedraw(False)
+
+    # Node and element data
+
+    nkeys = sorted(structure.nodes, key=int)
+    nodes = [structure.node_xyz(nkey) for nkey in nkeys]
+
+    ekeys = sorted(structure.elements, key=int)
+    elements = [structure.elements[ekey].nodes for ekey in ekeys]
+
+    nodal_data = structure.results[step]['nodal']
+    elemental_data = structure.results[step]['element']
+    ux = [nodal_data['ux'][str(key)] for key in nkeys]
+    uy = [nodal_data['uy'][str(key)] for key in nkeys]
+    uz = [nodal_data['uz'][str(key)] for key in nkeys]
+
+    # Postprocess
+
+    try:
+        data = [nodal_data[field][str(key)] for key in nkeys]
+        dtype = 'nodal'
+    except:
+        data = elemental_data[field]
+        dtype = 'elemental'
+
+    basedir = utilities.__file__.split('__init__.py')[0]
+    xfunc = XFunc(basedir=basedir, tmpdir=temp, mode=1)
+    xfunc.funcname = 'functions.postprocess'
+    toc, U, cnodes, fabs, fscaled = xfunc(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)['data']
+
+    print('\n***** Data processed : {0} s *****'.format(toc))
+
+    # Plot voxels
+
+    xfunc.funcname = 'functions.voxels'
+    xfunc(fscaled, vmin, U, vdx, None, None)['data']
 
     # Return to Default layer
 
@@ -472,62 +533,63 @@ def plot_principal_stresses(structure, step, ptype, scale, layer):
     Returns:
         None
     """
+    pass
 
-    name = structure.name
-    path = structure.path
+#     name = structure.name
+#     path = structure.path
 
-    # Clear and create layer
+#     # Clear and create layer
 
-    if not layer:
-        layer = '{0}_principal_{1}'.format(step, ptype)
-    rs.CurrentLayer(rs.AddLayer(layer))
-    rs.DeleteObjects(rs.ObjectsByLayer(layer))
+#     if not layer:
+#         layer = '{0}_principal_{1}'.format(step, ptype)
+#     rs.CurrentLayer(rs.AddLayer(layer))
+#     rs.DeleteObjects(rs.ObjectsByLayer(layer))
 
-    # Process and plot
+#     # Process and plot
 
-    rs.EnableRedraw(False)
+#     rs.EnableRedraw(False)
 
-    temp = '{0}{1}/'.format(path, name)
-    with open('{0}{1}-{2}-S.json'.format(temp, name, step), 'r') as f:
-        S = json.load(f)
-    S11, S22, S12, axes = S['S11'], S['S22'], S['S12'], S['axes']
-    SPr = S['{0}Principal'.format(ptype)]
-    sp1_keys = ['ip3_sp1', 'ip4_sp1', 'ip2_sp1', 'ip1_sp1']
-    sp5_keys = ['ip3_sp5', 'ip2_sp5', 'ip4_sp5', 'ip1_sp5']
-    ipkeys = sp1_keys + sp5_keys
+#     temp = '{0}{1}/'.format(path, name)
+#     with open('{0}{1}-{2}-S.json'.format(temp, name, step), 'r') as f:
+#         S = json.load(f)
+#     S11, S22, S12, axes = S['S11'], S['S22'], S['S12'], S['axes']
+#     SPr = S['{0}Principal'.format(ptype)]
+#     sp1_keys = ['ip3_sp1', 'ip4_sp1', 'ip2_sp1', 'ip1_sp1']
+#     sp5_keys = ['ip3_sp5', 'ip2_sp5', 'ip4_sp5', 'ip1_sp5']
+#     ipkeys = sp1_keys + sp5_keys
 
-    print('Plotting principal stress vectors ...')
+#     print('Plotting principal stress vectors ...')
 
-    for ekey in SPr:
+#     for ekey in SPr:
 
-        if len(structure.elements[int(ekey)].nodes) == 4:
-            th1 = [0.5 * atan2(S12[ekey][ip], 0.5 * (S11[ekey][ip] - S22[ekey][ip])) for ip in sp1_keys]
-            th5 = [0.5 * atan2(S12[ekey][ip], 0.5 * (S11[ekey][ip] - S22[ekey][ip])) for ip in sp5_keys]
-            th1m = sum(th1) / len(th1) + pi / 2
-            th5m = sum(th5) / len(th5) + pi / 2
-            pr1 = [i for i in [SPr[ekey][ip] for ip in sp1_keys] if i is not None]
-            pr5 = [i for i in [SPr[ekey][ip] for ip in sp5_keys] if i is not None]
-            e11 = centroid_points([axes[ekey][ip][0] for ip in ipkeys])
-            e22 = centroid_points([axes[ekey][ip][1] for ip in ipkeys])
-            # e33 = centroid_points([axes[ekey][ip][2] for ip in ipkeys])
-            c = structure.element_centroid(int(ekey))
-            if pr1:
-                pr1m = sum(pr1) / len(pr1)
-                ex1 = scale_vector(e11, cos(th1m))
-                ey1 = scale_vector(e22, sin(th1m))
-                er1 = add_vectors(ex1, ey1)
-                vec1 = add_vectors(c, scale_vector(er1, (pr1m * scale / 10**7) + 0.0001))
-                id1 = rs.AddLine(c, vec1)
-                col1 = [255, 0, 0] if pr1m > 0 else [0, 0, 255]
-                rs.ObjectColor(id1, col1)
-            if pr5:
-                pr5m = sum(pr5) / len(pr5)
-                ex5 = scale_vector(e11, cos(th5m))
-                ey5 = scale_vector(e22, sin(th5m))
-                er5 = add_vectors(ex5, ey5)
-                vec5 = add_vectors(c, scale_vector(er5, (pr5m * scale / 10**7) + 0.0001))
-                id5 = rs.AddLine(c, vec5)
-                col5 = [255, 0, 0] if pr5m > 0 else [0, 0, 255]
-                rs.ObjectColor(id5, col5)
+#         if len(structure.elements[int(ekey)].nodes) == 4:
+#             th1 = [0.5 * atan2(S12[ekey][ip], 0.5 * (S11[ekey][ip] - S22[ekey][ip])) for ip in sp1_keys]
+#             th5 = [0.5 * atan2(S12[ekey][ip], 0.5 * (S11[ekey][ip] - S22[ekey][ip])) for ip in sp5_keys]
+#             th1m = sum(th1) / len(th1) + pi / 2
+#             th5m = sum(th5) / len(th5) + pi / 2
+#             pr1 = [i for i in [SPr[ekey][ip] for ip in sp1_keys] if i is not None]
+#             pr5 = [i for i in [SPr[ekey][ip] for ip in sp5_keys] if i is not None]
+#             e11 = centroid_points([axes[ekey][ip][0] for ip in ipkeys])
+#             e22 = centroid_points([axes[ekey][ip][1] for ip in ipkeys])
+#             # e33 = centroid_points([axes[ekey][ip][2] for ip in ipkeys])
+#             c = structure.element_centroid(int(ekey))
+#             if pr1:
+#                 pr1m = sum(pr1) / len(pr1)
+#                 ex1 = scale_vector(e11, cos(th1m))
+#                 ey1 = scale_vector(e22, sin(th1m))
+#                 er1 = add_vectors(ex1, ey1)
+#                 vec1 = add_vectors(c, scale_vector(er1, (pr1m * scale / 10**7) + 0.0001))
+#                 id1 = rs.AddLine(c, vec1)
+#                 col1 = [255, 0, 0] if pr1m > 0 else [0, 0, 255]
+#                 rs.ObjectColor(id1, col1)
+#             if pr5:
+#                 pr5m = sum(pr5) / len(pr5)
+#                 ex5 = scale_vector(e11, cos(th5m))
+#                 ey5 = scale_vector(e22, sin(th5m))
+#                 er5 = add_vectors(ex5, ey5)
+#                 vec5 = add_vectors(c, scale_vector(er5, (pr5m * scale / 10**7) + 0.0001))
+#                 id5 = rs.AddLine(c, vec5)
+#                 col5 = [255, 0, 0] if pr5m > 0 else [0, 0, 255]
+#                 rs.ObjectColor(id5, col5)
 
-    rs.EnableRedraw(True)
+#     rs.EnableRedraw(True)

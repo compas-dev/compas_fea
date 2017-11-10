@@ -35,7 +35,7 @@ class GeneralDisplacement(object):
 
     Parameters:
         name (str): Name of the GeneralDisplacement object.
-        nodes (str, list): NSET or nodes the displacement is applied to.
+        nodes (str, list): Node set or nodes the displacement is applied to.
         x (float): Value of x displacement.
         y (float): Value of y displacement.
         z (float): Value of z displacement.
@@ -62,7 +62,7 @@ class FixedDisplacement(GeneralDisplacement):
 
     Parameters:
         name (str): Name of the FixedDisplacement object.
-        nodes (str, list): NSET or nodes the displacement is applied to.
+        nodes (str, list): Node set or nodes the displacement is applied to.
         axes (str): 'local' or 'global' co-ordinate axes.
 
     Returns:
@@ -81,7 +81,7 @@ class PinnedDisplacement(GeneralDisplacement):
 
     Parameters:
         name (str): Name of the PinnedDisplacement object.
-        nodes (str, list): NSET or nodes the displacement is applied to.
+        nodes (str, list): Node set or nodes the displacement is applied to.
         axes (str): 'local' or 'global' co-ordinate axes.
 
     Returns:
@@ -99,7 +99,7 @@ class FixedDisplacementXX(PinnedDisplacement):
 
     Parameters:
         name (str): Name of the FixedDisplacementXX object.
-        nodes (str, list): NSET or nodes the displacement is applied to.
+        nodes (str, list): Node set or nodes the displacement is applied to.
         axes (str): 'local' or 'global' co-ordinate axes.
 
     Returns:
@@ -118,7 +118,7 @@ class FixedDisplacementYY(PinnedDisplacement):
 
     Parameters:
         name (str): Name of the FixedDisplacementYY object.
-        nodes (str, list): NSET or nodes the displacement is applied to.
+        nodes (str, list): Node set or nodes the displacement is applied to.
         axes (str): 'local' or 'global' co-ordinate axes.
 
     Returns:
@@ -137,7 +137,7 @@ class FixedDisplacementZZ(PinnedDisplacement):
 
     Parameters:
         name (str): Name of the FixedDisplacementZZ object.
-        nodes (str, list): NSET or nodes the displacement is applied to.
+        nodes (str, list): Node set or nodes the displacement is applied to.
         axes (str): 'local' or 'global' co-ordinate axes.
 
     Returns:
@@ -156,7 +156,7 @@ class RollerDisplacementX(PinnedDisplacement):
 
     Parameters:
         name (str): Name of the RollerDisplacementX object.
-        nodes (str, list): NSET or nodes the displacement is applied to.
+        nodes (str, list): Node set or nodes the displacement is applied to.
         axes (str): 'local' or 'global' co-ordinate axes.
 
     Returns:
@@ -175,7 +175,7 @@ class RollerDisplacementY(PinnedDisplacement):
 
     Parameters:
         name (str): Name of the RollerDisplacementY object.
-        nodes (str, list): NSET or nodes the displacement is applied to.
+        nodes (str, list): Node set or nodes the displacement is applied to.
         axes (str): 'local' or 'global' co-ordinate axes.
 
     Returns:
@@ -194,7 +194,7 @@ class RollerDisplacementZ(PinnedDisplacement):
 
     Parameters:
         name (str): Name of the RollerDisplacementZ object.
-        nodes (str, list): NSET or nodes the displacement is applied to.
+        nodes (str, list): Node set or nodes the displacement is applied to.
         axes (str): 'local' or 'global' co-ordinate axes.
 
     Returns:
@@ -213,7 +213,7 @@ class RollerDisplacementXY(PinnedDisplacement):
 
     Parameters:
         name (str): Name of the RollerDisplacementXY object.
-        nodes (str, list): NSET or nodes the displacement is applied to.
+        nodes (str, list): Node set or nodes the displacement is applied to.
         axes (str): 'local' or 'global' co-ordinate axes.
 
     Returns:
@@ -233,7 +233,7 @@ class RollerDisplacementYZ(PinnedDisplacement):
 
     Parameters:
         name (str): Name of the RollerDisplacementYZ object.
-        nodes (str, list): NSET or nodes the displacement is applied to.
+        nodes (str, list): Node set or nodes the displacement is applied to.
         axes (str): 'local' or 'global' co-ordinate axes.
 
     Returns:
@@ -253,7 +253,7 @@ class RollerDisplacementXZ(PinnedDisplacement):
 
     Parameters:
         name (str): Name of the RollerDisplacementXZ object.
-        nodes (str, list): NSET or nodes the displacement is applied to.
+        nodes (str, list): Node set or nodes the displacement is applied to.
         axes (str): 'local' or 'global' co-ordinate axes.
 
     Returns:

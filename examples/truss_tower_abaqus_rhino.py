@@ -2,7 +2,7 @@
 
 from compas_fea.cad import rhino
 
-from compas_fea.structure import ElementProperties
+from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import PinnedDisplacement
 from compas_fea.structure import PointLoad
@@ -23,7 +23,7 @@ mdl = Structure(name='truss_tower', path='C:/Temp/')
 
 # Add truss elements
 
-rhino.add_nodes_elements_from_layers(mdl, element_type='TrussElement', layers=['elset_struts'])
+rhino.add_nodes_elements_from_layers(mdl, line_type='TrussElement', layers=['elset_struts'])
 
 # Add node and element sets
 
@@ -39,7 +39,7 @@ mdl.add_section(TrussSection(name='sec_truss', A=0.0050))
 
 # Add element properties
 
-ep = ElementProperties(material='mat_steel', section='sec_truss', elsets='elset_struts')
+ep = Properties(material='mat_steel', section='sec_truss', elsets='elset_struts')
 mdl.add_element_properties(ep, name='ep_strut')
 
 # Add loads
@@ -54,20 +54,20 @@ mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
 
 mdl.add_step(GeneralStep(name='step_bc', displacements=['disp_pinned']))
 mdl.add_step(GeneralStep(name='step_load', loads=['load_top']))
-mdl.set_steps_order(['step_bc', 'step_load'])
+mdl.steps_order = ['step_bc', 'step_load']
 
-# Structure summary
+# Structure summary`
 
 mdl.summary()
 
 # Run and extract data
 
-mdl.analyse_and_extract(software='abaqus', fields={'U': 'all', 'S': 'all'})
+mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
 # Plot displacements
 
-rhino.plot_data(mdl, step='step_load', field='U', component='magnitude')
+rhino.plot_data(mdl, step='step_load', field='um')
 
 # Plot stress
 
-rhino.plot_data(mdl, step='step_load', field='S', component='mises', iptype='max')
+rhino.plot_data(mdl, step='step_load', field='smises', iptype='max', nodal='max')

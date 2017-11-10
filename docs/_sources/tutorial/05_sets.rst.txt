@@ -3,7 +3,7 @@ Sets
 ********************************************************************************
 
 
-This page shows how sets can be used to gather groups of nodes and elements with the **Structure** object, here given as ``mdl``.
+This page shows how sets can be used to gather groups of nodes, elements and surfaces with the **Structure** object, here given as ``mdl``.
 
 .. .. contents::
 
@@ -12,13 +12,15 @@ This page shows how sets can be used to gather groups of nodes and elements with
 Adding sets
 ===========
 
-A set, is a group of nodes, elements or surfaces that are given a name. By assigning a name to such a group, it is easier and more meaningful to refer to them in other classes, instead of giving a longer list of numbers. Sets are stored in a dictionary at ``.sets`` through the method ``add_set()``, where the string key is the ``name`` of the set, the ``type`` of the set is the string ``'node'``, ``'element'``, ``'surface_node'`` or ``'surface_element'`` (the latter two are described in more detail later on this page), and the ``selection`` stores the nodes and elements of interest.
+A set, is a group of nodes, elements or surfaces that are given a name. By assigning a name to such a group, it is easier and more meaningful to refer to them in other classes, instead of giving (and keeping track of) a longer list of numbers. Sets are stored in a dictionary at ``.sets`` through the method ``add_set()``, where the string key is the ``name`` of the set, the ``type`` of the set is the string ``'node'``, ``'element'``, ``'surface_node'`` or ``'surface_element'``, and the ``selection`` stores the nodes, elements and surfaces of interest. To add node or element sets, use ``add_set()`` like the following:
 
 .. code-block:: python
 
    mdl.add_set(name='nset_top', type='node', selection=[4], explode=False)
 
    mdl.add_set(name='elset_shell', type='element', selection=[7, 8], explode=False)
+
+Sets may be viewed and edited through their name keys, and then by changing the dictionary as needed.
 
 .. code-block:: python
 
@@ -27,6 +29,20 @@ A set, is a group of nodes, elements or surfaces that are given a name. By assig
 
    >>> mdl.sets['elset_shell']
    {'type': 'element', 'selection': [7, 8], 'explode': False}
+
+From the node and element geometry of the **Structure** object, a surface can be defined by one of two surface set types. The first is by using ``type='surface_node'`` when creating a set with the ``add_set()`` method, and describes a surface by the nodes it connects to in the ``selection`` list. This surface type can be created like:
+
+.. code-block:: python
+
+   mdl.add_set(name='surf_set', type='surface_node', selection=[1, 3, 4, 5, 9, 10])
+
+The second way to define a surface set is with ``type='surface_element'``, where instead of a list of nodes for ``selection``, a dictionary of element number keys and list of element string sides is given. So for example, to add sides 1 and 2 (``'S1'`` and ``'S2'``) of solid element 4, and the top side (``'SPOS'`` for top and ```SNEG``` for bottom) of shell element 7 as an element surface set use:
+
+.. code-block:: python
+
+   mdl.add_set(name='surf_set', type='surface_element', selection={4: ['S1', 'S2'], 7: ['SPOS']})
+
+For both types, the ``explode`` argument can be kept as ``False``, as it currently has no meaning in a surface set definition.
 
 
 =========
@@ -60,22 +76,3 @@ The same exploding method works for node sets:
 
     >>> mdl.sets['node_2']
     {'type': 'node', 'selection': [2], 'explode': False}
-
-
-============
-Surface sets
-============
-
-From the node and element geometry of the **Structure** object, a surface can be defined by one of two surface set types. The first is by using ``type='surface_node'`` when creating a set with the ``add_set()`` method, and describes a surface by the nodes it connects to in the ``selection`` list. This surface type can be created like:
-
-.. code-block:: python
-
-   mdl.add_set(name='surf_set', type='surface_node', selection=[1, 3, 4, 5, 9, 10])
-
-The second way to define a surface set is with ``type='surface_element'``, where instead of a list of nodes for ``selection``, a dictionary of element number keys and list of element string sides is given. So for example, to add sides 1 and 2 of solid element 4, and the top side (``'SPOS'`` for top and ```SNEG``` for bottom) of shell element 7 as an element surface set use:
-
-.. code-block:: python
-
-   mdl.add_set(name='surf_set', type='surface_element', selection={4: ['S1', 'S2'], 7: ['SPOS']})
-
-For both types, the ``explode`` argument can be kept as ``False``, as it currently has no meaning in a surface set definition.

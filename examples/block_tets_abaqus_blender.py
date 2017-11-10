@@ -1,9 +1,8 @@
 """An example compas_fea package use for tetrahedron elements."""
 
-from compas_fea.fea.abaq import abaq
 from compas_fea.cad import blender
 
-from compas_fea.structure import ElementProperties
+from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import PinnedDisplacement
 from compas_fea.structure import PointLoad
@@ -20,12 +19,9 @@ __license__    = 'MIT License'
 __email__      = 'liew@arch.ethz.ch'
 
 
-name = 'block_tets'
-path = '/home/al/Temp/'
-
 # Create empty Structure object
 
-mdl = Structure()
+mdl = Structure(name='block-tets', path='/home/al/Temp/')
 
 # Add tetrahedrons
 
@@ -46,7 +42,7 @@ mdl.add_section(SolidSection(name='sec_solid'))
 
 # Add element properties
 
-ep = ElementProperties(material='mat_steel', section='sec_solid', elsets='elset_tets')
+ep = Properties(material='mat_steel', section='sec_solid', elsets='elset_tets')
 mdl.add_element_properties(ep, name='ep_tets')
 
 # Add loads
@@ -59,22 +55,19 @@ mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_bot'))
 
 # Add steps
 
-mdl.add_step(GeneralStep(name='step_bc', displacements=['disp_pinned']))
-mdl.add_step(GeneralStep(name='step_load', loads=['load_top']))
-mdl.set_steps_order(['step_bc', 'step_load'])
+mdl.add_steps([
+    GeneralStep(name='step_bc', displacements=['disp_pinned']),
+    GeneralStep(name='step_load', loads=['load_top'])])
+mdl.steps_order = ['step_bc', 'step_load']
 
 # Structure summary
 
 mdl.summary()
 
-# Generate .inp file
-
-abaq.inp_generate(mdl, filename='{0}{1}.inp'.format(path, name))
-
 # Run and extract data
 
-mdl.analyse(path, name, software='abaqus', fields='U,S')
+mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
 # Plot voxels
 
-blender.plot_voxels(mdl, path, name, step='step_load', vdx=0.02, cbar=[0, 200], cube_size=[10, 10, 20], layer=3)
+blender.plot_voxels(mdl, step='step_load', vdx=0.02, cbar=[0, 200], cube_size=[10, 10, 20], layer=3)

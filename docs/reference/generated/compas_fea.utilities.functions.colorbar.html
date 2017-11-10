@@ -17,7 +17,7 @@
 <!-- compas CSS -->
 <link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
 <link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
-<link href="compas_fea.utilities.functions.discretise_faces.html" rel="next" title="discretise_faces"/>
+<link href="compas_fea.utilities.functions.combine_all_sets.html" rel="next" title="combine_all_sets"/>
 <link href="../compas_fea.utilities.html" rel="prev" title="utilities"/>
 <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
 </head>
@@ -50,23 +50,30 @@
 <dt id="compas_fea.utilities.functions.colorbar">
 <code class="descclassname">compas_fea.utilities.functions.</code><code class="descname">colorbar</code><span class="sig-paren">(</span><em>fsc</em>, <em>input='array'</em>, <em>type=255</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/utilities/functions.html#colorbar"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Creates RGB color information from -1 to 1 scaled values.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul>
-<li><p><strong>fsc</strong> (<em>array, float</em>) – (n x 1) array of normalised data, or single float value</p></li>
-<li><p><strong>input</strong> (<em>str</em>) – Input given as an ‘array’ of numbers or a ‘float’.</p></li>
-<li><p><strong>type</strong> (<em>int</em>) – 255 for RGB or 1 for normalised.</p></li>
+<table class="docutils field-list table table-responsive table-bordered" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first">
+<li><p class="first"><strong>fsc</strong> (<em>array, float</em>) – (n x 1) array of normalised data, or a single float value.</p>
+</li>
+<li><p class="first"><strong>input</strong> (<em>str</em>) – Input given as an ‘array’ of numbers or a ‘float’.</p>
+</li>
+<li><p class="first"><strong>type</strong> (<em>int</em>) – RGB as 255 or 1 scaled.</p>
+</li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><em>array, list</em> – (n x 3) array of RGB values or single RGB list.</p>
-</dd>
-</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>array, list</em> – (n x 3) array of RGB values or single RGB list.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 </div>
 <nav class="compas-sideways">
 <a class="btn btn-primary compas-prev" href="../compas_fea.utilities.html" role="button">utilities</a>
-<a class="btn btn-primary compas-next" href="compas_fea.utilities.functions.discretise_faces.html" role="button">discretise_faces</a>
+<a class="btn btn-primary compas-next" href="compas_fea.utilities.functions.combine_all_sets.html" role="button">combine_all_sets</a>
 </nav>
 </main>
 <!-- sidebar navigation -->
@@ -118,11 +125,11 @@
             
 
             
-                Last updated on Oct 12, 2017.
+                Last updated on Nov 10, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
 <script type="text/javascript">

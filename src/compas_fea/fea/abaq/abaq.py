@@ -41,17 +41,16 @@ __all__ = [
 ]
 
 
-node_fields = ['RF', 'RM', 'U', 'UR', 'CF', 'CM']
-element_fields = ['SF', 'SM', 'SK', 'SE', 'S', 'E', 'PE', 'RBFOR']
+node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
+element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor']
 
 
-def abaqus_launch_process(structure, exe, fields, cpus):
-    """ Runs the analysis through the chosen FEA software/library.
+def abaqus_launch_process(structure, exe, cpus):
+    """ Runs the analysis through Abaqus.
 
     Parameters:
         structure (obj): Structure object.
         exe (str): Full terminal command to bypass subprocess defaults.
-        fields (dic): Data field requests.
         cpus (int): Number of CPU cores to use.
 
     Returns:
@@ -69,20 +68,6 @@ def abaqus_launch_process(structure, exe, fields, cpus):
     except:
         os.mkdir(temp)
 
-    # Save node data
-
-    nkeys = sorted(structure.nodes, key=int)
-    nodes = {nkey: structure.node_xyz(nkey) for nkey in nkeys}
-    with open('{0}{1}-nodes.json'.format(temp, name), 'w') as f:
-        json.dump(nodes, f)
-
-    # Save elements' nodes data
-
-    ekeys = sorted(structure.elements, key=int)
-    elements = {ekey: structure.elements[ekey].nodes for ekey in ekeys}
-    with open('{0}{1}-elements.json'.format(temp, name), 'w') as f:
-        json.dump(elements, f)
-
     # Run sub-process file
 
     loc = launch_job.__file__
@@ -92,6 +77,7 @@ def abaqus_launch_process(structure, exe, fields, cpus):
 
     success = False
     if not exe:
+
         args = ['abaqus', 'cae', subprocess, '--', str(cpus), path, name]
         p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
         while True:
@@ -108,8 +94,10 @@ def abaqus_launch_process(structure, exe, fields, cpus):
 
         if not success:
             print('***** Analysis failed - attempting to read error logs *****')
+
             try:
                 print('\n***** Attempting to read .msg log *****')
+
                 with open('{0}{1}.msg'.format(temp, name)) as f:
                     lines = f.readlines()
                     for c, line in enumerate(lines):
@@ -118,8 +106,10 @@ def abaqus_launch_process(structure, exe, fields, cpus):
                             print(lines[c + 1][:-2])
             except:
                 print('***** Loading .msg log failed *****')
+
             try:
                 print('\n***** Attempting to read abaqus.rpy log *****')
+
                 with open('{0}abaqus.rpy'.format(temp)) as f:
                     lines = f.readlines()
                     for c, line in enumerate(lines):
@@ -127,16 +117,19 @@ def abaqus_launch_process(structure, exe, fields, cpus):
                             print(lines[c])
             except:
                 print('***** Loading abaqus.rpy log failed *****')
+
         else:
             print('***** Analysis successful *****')
 
     else:
+
         args = '{0} -- {1} {2} {3}'.format(subprocess, cpus, path, name)
         os.chdir(temp)
         os.system('{0}{1}'.format(exe, args))
 
     toc = time() - tic
-    print('\n***** Abaqus analysis time : {0}s *****'.format(toc))
+
+    print('\n***** Abaqus analysis time : {0} s *****'.format(toc))
 
 
 def extract_odb_data(structure, fields, exe):
@@ -144,7 +137,7 @@ def extract_odb_data(structure, fields, exe):
 
     Parameters:
         structure (obj): Structure object.
-        fields (dic): Data field requests.
+        fields (list): Data field requests.
         exe (str): Full terminal command to bypass subprocess defaults.
 
     Returns:
@@ -155,17 +148,13 @@ def extract_odb_data(structure, fields, exe):
     path = structure.path
     temp = '{0}{1}/'.format(path, name)
 
-    # Run sub-process file
-
     loc = odb_extract.__file__
     subprocess = 'noGUI={0}'.format(loc.replace('\\', '/'))
 
     tic = time()
 
-    if fields == 'all':
-        fields = ','.join(node_fields + element_fields)
-    else:
-        fields = ','.join(list(fields.keys()))
+    if isinstance(fields, list):
+        fields = ','.join(list(structure.fields_dic_from_list(fields).keys()))
 
     if not exe:
         args = ['abaqus', 'cae', subprocess, '--', fields, name, temp]
@@ -191,11 +180,13 @@ def extract_odb_data(structure, fields, exe):
         with open('{0}{1}-results.json'.format(temp, name), 'r') as f:
             structure.results = json.load(f)
         structure.save_to_obj()
+
         print('***** Saving data to structure.results successful *****')
+
     except:
         print('***** Saving data to structure.results unsuccessful *****')
 
-    print('\n***** Data extracted from Abaqus .odb file : {0}s *****'.format(toc))
+    print('\n***** Data extracted from Abaqus .odb file : {0} s *****'.format(toc))
 
 
 def input_write_constraints(f, constraints):
@@ -211,17 +202,22 @@ def input_write_constraints(f, constraints):
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** ----------------------------------------------------------------- Constraints\n')
     f.write('**\n')
+
     for key, constraint in constraints.items():
+
+        ctype = constraint.__name__
+
         f.write('** {0}\n'.format(key))
         f.write('** ' + '-' * len(key) + '\n')
-        ctype = constraint.__name__
 
         # Tie constraint
 
         if ctype == 'TieConstraint':
+
             tol = constraint.tol
             slave = constraint.slave
             master = constraint.master
+
             f.write('*TIE, POSITION TOLERANCE={0}, NAME={1}, ADJUST=NO\n'.format(tol, key))
             f.write('** SLAVE, MASTER\n')
             f.write('{0}, {1}\n'.format(slave, master))
@@ -258,35 +254,48 @@ def input_write_elements(f, elements):
 
     etypes = ['T3D2', 'B31', 'S3', 'S4', 'M3D3', 'M3D4', 'C3D4', 'C3D6', 'C3D8', 'DC3D4', 'DC3D6', 'DC3D8']
     edic = {i: [] for i in etypes}
+
     for ekey in sorted(elements, key=int):
+
         element = elements[ekey]
         nodes = [node + 1 for node in element.nodes]
         data = [element.number + 1] + nodes
         etype = element.__name__
+
         if etype == 'TrussElement':
             estr = 'T3D2'
+
         elif etype == 'BeamElement':
             estr = 'B31'
+
         elif etype == 'ShellElement':
             estr = 'S{0}'.format(len(nodes))
+
         elif etype == 'MembraneElement':
             estr = 'M3D{0}'.format(len(nodes))
+
         elif etype == 'TetrahedronElement':
             estr = 'C3D4'
+
         elif etype == 'PentahedronElement':
             estr = 'C3D6'
+
         elif etype == 'HexahedronElement':
             estr = 'C3D8'
-        if element.thermal:
+
+        if element.thermal and estr in ['C3D4', 'C3D6', 'C3D8']:
             estr = 'D{0}'.format(estr)
+
         edic[estr].append(data)
 
     # Write element data
 
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** -------------------------------------------------------------------- Elements\n')
+
     elset_all = []
     for key, edata in edic.items():
+
         if edata:
             f.write('**\n')
             f.write('** {0}\n'.format(key))
@@ -295,10 +304,13 @@ def input_write_elements(f, elements):
             f.write('*ELEMENT, TYPE={0}, ELSET=elset_{0}\n'.format(key))
             f.write('** No., nodes\n')
             f.write('**\n')
+
             for j in edata:
                 f.write('{0}, {1}\n'.format(j[0], ','.join([str(i) for i in j[1:]])))
             elset_all.append('elset_{0}'.format(key))
+
             f.write('**\n')
+
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** ------------------------------------------------------------------------ Sets\n')
     f.write('**\n')
@@ -311,18 +323,19 @@ def input_write_elements(f, elements):
     f.write('\n**\n')
 
 
-def input_generate(structure, filename, fields, units='m'):
+def input_generate(structure, fields, units='m'):
     """ Creates the Abaqus .inp file from the Structure object.
 
     Parameters:
         structure (obj): The Structure object to read from.
-        filename (str): Path to save the .inp file to.
-        fields (dic): Data field requests.
+        fields (list): Data field requests.
         units (str): Units of the nodal co-ordinates 'm','cm','mm'.
 
     Returns:
         None
     """
+    filename = '{0}{1}.inp'.format(structure.path, structure.name)
+
     with open(filename, 'w') as f:
 
         constraints = structure.constraints
@@ -364,7 +377,7 @@ def input_write_heading(f):
     f.write('** --------------------------------------------------------------------- Heading\n')
     f.write('**\n')
     f.write('*HEADING\n')
-    f.write('                               ABAQUS input file                                \n')
+    f.write('                               Abaqus input file                                \n')
     f.write('                            SI units: [N, m, kg, s]                             \n')
     f.write('              compas_fea package: Dr Andrew Liew - liew@arch.ethz.ch            \n')
     f.write('**\n')
@@ -390,8 +403,11 @@ def input_write_materials(f, materials):
     """
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** ------------------------------------------------------------------- Materials\n')
+
     for key, material in materials.items():
+
         mtype = material.__name__
+
         f.write('**\n')
         f.write('** {0}\n'.format(key))
         f.write('** ' + '-' * len(key) + '\n')
@@ -402,11 +418,13 @@ def input_write_materials(f, materials):
 
         f.write('**\n')
         f.write('*DENSITY\n')
+
         if isinstance(material.p, list):
             f.write('** p[kg/m3], T[C]\n')
             f.write('**\n')
             for p, T in material.p:
                 f.write('{0}, {1}\n'.format(p, T))
+
         else:
             f.write('** p[kg/m3]\n')
             f.write('**\n')
@@ -416,34 +434,42 @@ def input_write_materials(f, materials):
 
         if mtype == 'ElasticOrthotropic':
             raise NotImplementedError
+
         elif mtype == 'ThermalMaterial':
             pass
+
         else:
             f.write('**\n')
             f.write('*ELASTIC\n')
             E = material.E['E']
             v = material.v['v']
+
             if isinstance(E, list):
                 f.write('** E[Pa], v[-], T[C]\n')
                 f.write('**\n')
                 for j in range(len(E)):
                     f.write('{0}, {1}, {2}\n'.format(E[j][0], v[j][0], E[j][1]))
+
             else:
                 f.write('** E[Pa], v[-]\n')
                 f.write('**\n')
                 f.write('{0}, {1}\n'.format(E, v))
+
             if not material.compression:
                 f.write('*NO COMPRESSION\n')
+
             if not material.tension:
                 f.write('*NO TENSION\n')
 
         # Concrete smeared crack
 
         if mtype in ['ConcreteSmearedCrack', 'Concrete']:
+
             f.write('**\n')
             f.write('*CONCRETE\n')
             f.write('** f[Pa], e[-] : COMPRESSION\n')
             f.write('**\n')
+
             compression = material.compression
             for cf, ce in zip(compression['f'], compression['e']):
                 f.write('{0}, {1}\n'.format(cf, ce))
@@ -451,6 +477,7 @@ def input_write_materials(f, materials):
             f.write('*TENSION STIFFENING\n')
             f.write('** f[Pa], e[-] : TENSION\n')
             f.write('**\n')
+
             tension = material.tension
             for tf, te in zip(tension['f'], tension['e']):
                 f.write('{0}, {1}\n'.format(tf, te))
@@ -462,18 +489,21 @@ def input_write_materials(f, materials):
         # Concrete damaged plasticity
 
         elif mtype == 'ConcreteDamagedPlasticity':
+
             f.write('**\n')
             f.write('*CONCRETE DAMAGED PLASTICITY\n')
             f.write('** psi[deg], e[-], sr[-], Kc[-], mu[-]\n')
             f.write('**\n')
             f.write(', '.join([str(i) for i in material.damage]) + '\n')
             f.write('**\n')
+
             f.write('*CONCRETE COMPRESSION HARDENING\n')
             f.write('** fy[Pa], eu[-], , T[C]\n')
             f.write('**\n')
             for i in material.hardening:
                 f.write(', '.join([str(j) for j in i]) + '\n')
             f.write('**\n')
+
             f.write('*CONCRETE TENSION STIFFENING, TYPE=GFI\n')
             f.write('** ft[Pa], et[-], etd[1/s], T[C]\n')
             f.write('**\n')
@@ -483,23 +513,27 @@ def input_write_materials(f, materials):
         # Plastic
 
         elif mtype in ['ElasticPlastic', 'Steel']:
+
             f.write('**\n')
             f.write('*PLASTIC\n')
             f.write('** f[Pa], e[-] : COMPRESSION-TENSION\n')
             f.write('**\n')
-            compression = material.compression
-            for i, j in zip(compression['f'], compression['e']):
+
+            tension = material.tension
+            for i, j in zip(tension['f'], tension['e']):
                 f.write('{0}, {1}\n'.format(i, j))
 
         # Thermal
 
         elif mtype == 'ThermalMaterial':
+
             f.write('**\n')
             f.write('*CONDUCTIVITY\n')
             f.write('** k[W/mK]\n')
             f.write('**\n')
             for i in material.conductivity:
                 f.write(', '.join([str(j) for j in i]) + '\n')
+
             f.write('**\n')
             f.write('*SPECIFIC HEAT\n')
             f.write('** c[J/kgK]\n')
@@ -523,9 +557,13 @@ def input_write_misc(f, misc):
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** ------------------------------------------------------------------------ Misc\n')
     f.write('**\n')
+
     for key, misc in misc.items():
+
         mtype = misc.__name__
+
         if mtype in ['Amplitude']:
+
             f.write('** {0}\n'.format(key))
             f.write('** ' + '-' * len(key) + '\n')
             f.write('**\n')
@@ -533,6 +571,7 @@ def input_write_misc(f, misc):
         # Amplitude
 
         if mtype == 'Amplitude':
+
             f.write('*AMPLITUDE, NAME={0}\n'.format(key))
             f.write('**\n')
             for i, j in misc.values:
@@ -556,15 +595,19 @@ def input_write_nodes(f, nodes, units):
         None
     """
     cl = {'m': 1., 'cm': 0.01, 'mm': 0.001}
+
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** ----------------------------------------------------------------------- Nodes\n')
     f.write('**\n')
     f.write('*NODE, NSET=nset_all\n')
     f.write('** No., x[m], y[m], z[m]\n')
     f.write('**\n')
+
     for key in sorted(nodes, key=int):
+
         xyz = [str(nodes[key][i] * cl[units]) for i in 'xyz']
         f.write(', '.join([str(key + 1)] + xyz) + '\n')
+
     f.write('**\n')
 
 
@@ -603,79 +646,99 @@ def input_write_properties(f, sections, properties, elements, sets):
 
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** -------------------------------------------------------------------- Sections\n')
+
     for key, property in properties.items():
+
         material = property.material
         elsets = property.elsets
         reinforcement = property.reinforcement
         section = sections[property.section]
         stype = section.__name__
         geometry = section.geometry
+        sname = sdata[stype]['name']
 
         f.write('**\n')
         f.write('** Section: {0}\n'.format(key))
-        f.write('** --------' + '-' * (len(key)) + '\n')
+        f.write('** ---------' + '-' * (len(key)) + '\n')
         f.write('**\n')
 
         if isinstance(elsets, str):
             elsets = [elsets]
+
         for elset in elsets:
+            explode = sets[elset]['explode']
+            selection = sets[elset]['selection']
 
             # Beam sections
 
             if (stype not in shells) and (stype not in solids):
-                s1 = sdata[stype]['name']
-                if sets[elset]['explode']:
-                    for select in sets[elset]['selection']:
+
+                if explode:
+                    for select in selection:
+                        if stype == 'GeneralSection':
+                            f.write('*BEAM GENERAL SECTION')
+                        else:
+                            f.write('*BEAM SECTION')
                         e1 = 'element_{0}'.format(select)
-                        f.write('*BEAM SECTION, SECTION={0}, ELSET={1}, MATERIAL={2}\n'.format(s1, e1, material))
+                        f.write(', SECTION={0}, ELSET={1}, MATERIAL={2}\n'.format(sname, e1, material))
                         f.write(', '.join([str(geometry[j]) for j in sdata[stype]['geometry']]) + '\n')
+
                         ex = elements[select].axes.get('ex', None)
                         if ex:
                             f.write(', '.join([str(j) for j in ex]) + '\n')
                         f.write('**\n')
+
                 else:
                     if stype == 'GeneralSection':
-                        f.write('*BEAM GENERAL SECTION, SECTION={0}, ELSET={1}, MATERIAL={2}\n'.format(s1, elset, material))
+                        f.write('*BEAM GENERAL SECTION')
                     else:
-                        f.write('*BEAM SECTION, SECTION={0}, ELSET={1}, MATERIAL={2}\n'.format(s1, elset, material))
+                        f.write('*BEAM SECTION')
+                    f.write(', SECTION={0}, ELSET={1}, MATERIAL={2}\n'.format(sname, elset, material))
                     f.write(', '.join([str(geometry[j]) for j in sdata[stype]['geometry']]) + '\n')
 
             # Shell sections
 
             elif stype in shells:
-                if sets[elset]['explode']:
-                    for select in sets[elset]['selection']:
+
+                if explode:
+                    for select in selection:
                         e1 = 'element_{0}'.format(select)
                         f.write('*SHELL SECTION, ELSET={0}, MATERIAL={1}\n'.format(e1, material))
                         f.write(', '.join([str(geometry[j]) for j in sdata[stype]['geometry']]) + '\n')
+
                 else:
                     f.write('*SHELL SECTION, ELSET={0}, MATERIAL={1}\n'.format(elset, material))
                     f.write(', '.join([str(geometry[j]) for j in sdata[stype]['geometry']]) + '\n')
+
+                    # Reinforcement
+
                     if reinforcement:
-                        orientation = reinforcement['orientation']
-                        spacing = reinforcement['spacing']
-                        offset = reinforcement['offset']
-                        rmaterial = reinforcement['material']
-                        dia = reinforcement['dia']
-                        area = 0.25 * pi * dia**2
-                        if orientation:
-                            pass
-                            # f.write('*REBAR LAYER, ORIENTATION=ORIENT_{0}\n'.format(element))
-                        else:
-                            f.write('*REBAR LAYER\n')
-                        f.write('U1, {0}, {1}, {2}, {3}, {4}\n'.format(area, spacing, +offset, rmaterial, 0))
-                        f.write('U2, {0}, {1}, {2}, {3}, {4}\n'.format(area, spacing, +offset - dia, rmaterial, 90))
-                        f.write('L1, {0}, {1}, {2}, {3}, {4}\n'.format(area, spacing, -offset, rmaterial, 0))
-                        f.write('L2, {0}, {1}, {2}, {3}, {4}\n'.format(area, spacing, -offset + dia, rmaterial, 90))
-                        if orientation:
-                            pass
-                            # f.write('*ORIENTATION, SYSTEM=RECTANGULAR, NAME=ORIENT_{0}\n'.format(element))
-                            # ex, ey, origin points
-                        f.write('**\n')
+                        pass
+        #                 orientation = reinforcement['orientation']
+        #                 spacing = reinforcement['spacing']
+        #                 offset = reinforcement['offset']
+        #                 rmaterial = reinforcement['material']
+        #                 dia = reinforcement['dia']
+        #                 area = 0.25 * pi * dia**2
+        #                 if orientation:
+        #                     pass
+        #                     # f.write('*REBAR LAYER, ORIENTATION=ORIENT_{0}\n'.format(element))
+        #                 else:
+        #                     f.write('*REBAR LAYER\n')
+        #                 f.write('U1, {0}, {1}, {2}, {3}, {4}\n'.format(area, spacing, +offset, rmaterial, 0))
+        #                 f.write('U2, {0}, {1}, {2}, {3}, {4}\n'.format(area, spacing, +offset - dia, rmaterial, 90))
+        #                 f.write('L1, {0}, {1}, {2}, {3}, {4}\n'.format(area, spacing, -offset, rmaterial, 0))
+        #                 f.write('L2, {0}, {1}, {2}, {3}, {4}\n'.format(area, spacing, -offset + dia, rmaterial, 90))
+        #                 if orientation:
+        #                     pass
+        #                     # f.write('*ORIENTATION, SYSTEM=RECTANGULAR, NAME=ORIENT_{0}\n'.format(element))
+        #                     # ex, ey, origin points
+        #                 f.write('**\n')
 
             # Solid sections
 
             elif stype in solids:
+
                 f.write('*SOLID SECTION, ELSET={0}, MATERIAL={1}\n'.format(elset, material))
                 if stype == 'TrussSection':
                     f.write('{0}\n'.format(geometry['A']))
@@ -698,19 +761,25 @@ def input_write_sets(f, sets):
     """
     cm = 9
     for key, set in sets.items():
+
         stype = set['type']
+
         f.write('**\n')
         f.write('** {0}\n'.format(key))
         f.write('** ' + '-' * len(key) + '\n')
         f.write('**\n')
 
         if stype in ['node', 'element', 'surface_node']:
+
             if stype == 'node':
                 f.write('*NSET, NSET={0}\n'.format(key))
+
             elif stype == 'element':
                 f.write('*ELSET, ELSET={0}\n'.format(key))
+
             elif stype == 'surface_node':
                 f.write('*SURFACE, TYPE=NODE, NAME={0}\n'.format(key))
+
             selection = [i + 1 for i in set['selection']]
             cnt = 0
             for j in selection:
@@ -725,8 +794,10 @@ def input_write_sets(f, sets):
                     f.write('\n')
 
         if stype == 'surface_element':
+
             f.write('*SURFACE, TYPE=ELEMENT, NAME={0}\n'.format(key))
             f.write('** ELEMENT, SIDE\n')
+
             selection = set['selection']
             for element, sides in selection.items():
                 for side in sides:
@@ -751,7 +822,7 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
         displacements (dic): Displacement objects from structure.displacements.
         interactions (dic): Interaction objects from structure.interactions.
         misc (dic): Misc objects from structure.misc.
-        fields (dic): Data field requests.
+        fields (list): Data field requests.
 
     Returns:
         None
@@ -762,10 +833,12 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
     dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 
     for key in structure.steps_order:
+
         step = steps[key]
         stype = step.__name__
         increments = step.increments
         method = step.type
+
         f.write('**\n')
         f.write('** {0}\n'.format(key))
         f.write('** ' + '-' * len(key) + '\n')
@@ -777,27 +850,34 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
 
             # Header
 
-            nlgeom = 'YES' if step.nlgeom else 'NO'
+            if stype == 'BucklingStep':
+                nlgeom = 'NO'
+            else:
+                nlgeom = 'YES' if step.nlgeom else 'NO'
             perturbation = ', PERTURBATION' if stype == 'BucklingStep' else ''
             lf = step.factor
             f.write('*STEP, NLGEOM={0}, NAME={1}{2}, INC={3}\n'.format(nlgeom, key, perturbation, increments))
-            f.write('*{0}\n'.format(method))
+            f.write('*{0}\n'.format(method.upper()))
+            f.write('**\n')
 
             # Modes
 
             if stype == 'BucklingStep':
+
                 modes = step.modes
                 f.write('{0}, {1}, {2}, {3}\n'.format(modes, modes, 2 * modes, increments))
 
             # Loads
 
             for k in step.loads:
+
                 load = loads[k]
                 ltype = load.__name__
                 com = load.components
                 axes = load.axes
                 nset = load.nodes
                 elset = load.elements
+
                 f.write('**\n')
                 f.write('** {0}\n'.format(k))
                 f.write('** ' + '-' * len(k) + '\n')
@@ -808,14 +888,17 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
                 if ltype in ['PointLoad', 'TributaryLoad']:
                     f.write('*CLOAD\n')
                     f.write('** NSET, dof, CLOAD\n')
+
                 if ltype in ['LineLoad', 'AreaLoad', 'GravityLoad', 'BodyLoad']:
                     f.write('*DLOAD\n')
                     f.write('** ELSET, component, DLOAD\n')
+
                 f.write('**\n')
 
                 # Point load
 
                 if ltype == 'PointLoad':
+
                     for c, dof in enumerate(dofs, 1):
                         if com[dof]:
                             f.write('{0}, {1}, {2}'.format(nset, c, lf * com[dof]) + '\n')
@@ -823,21 +906,25 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
                 # Line load
 
                 elif ltype == 'LineLoad':
+
                     if axes == 'global':
                         for dof in dofs[:3]:
                             if com[dof]:
                                 f.write('{0}, P{1}, {2}'.format(elset, dof.upper(), lf * com[dof]) + '\n')
+
                     elif axes == 'local':
+                        if com['x']:
+                            f.write('{0}, P1, {1}'.format(elset, lf * com['x']) + '\n')
                         if com['y']:
-                            f.write('{0}, P1, {1}'.format(elset, lf * com['y']) + '\n')
-                        if com['z']:
-                            f.write('{0}, P2, {1}'.format(elset, lf * com['z']) + '\n')
+                            f.write('{0}, P2, {1}'.format(elset, lf * com['y']) + '\n')
 
                 # Area load
 
                 elif ltype == 'AreaLoad':
+
                     if axes == 'global':
                         raise NotImplementedError
+
                     elif axes == 'local':
                         # x COMPONENT
                         # y COMPONENT
@@ -852,6 +939,7 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
                 # Gravity load
 
                 elif ltype == 'GravityLoad':
+
                     g = load.g
                     gx = 1 if com['x'] else 0
                     gy = 1 if com['y'] else 0
@@ -861,6 +949,7 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
                 # Tributary load
 
                 elif ltype == 'TributaryLoad':
+
                     for node in sorted(com, key=int):
                         for c, dof in enumerate(dofs[:3], 1):
                             if com[node][dof]:
@@ -871,9 +960,11 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
             # Displacements
 
             for k in step.displacements:
+
                 displacement = displacements[k]
                 com = displacement.components
                 nset = displacement.nodes
+
                 f.write('**\n')
                 f.write('** {0}\n'.format(k))
                 f.write('** ' + '-' * len(k) + '\n')
@@ -881,22 +972,23 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
                 f.write('*BOUNDARY\n')
                 f.write('** NSET, dof.start, dof.end, displacement\n')
                 f.write('**\n')
+
                 for c, dof in enumerate(dofs, 1):
                     if com[dof] is not None:
                         f.write('{0}, {1}, {1}, {2}\n'.format(nset, c, com[dof] * lf))
 
             # Temperatures
 
-        # try:
-        #     duration = step.duration
-        # except:
-        #     duration = 1
-        #     temperatures = steps[key].temperatures
-        #     if temperatures:
-        #         file = misc[temperatures].file
-        #         einc = str(misc[temperatures].einc)
-        #         f.write('**\n')
-        #         f.write('*TEMPERATURE, FILE={0}, BSTEP=1, BINC=1, ESTEP=1, EINC={1}, INTERPOLATE\n'.format(file, einc))
+            # try:
+            #     duration = step.duration
+            # except:
+            #     duration = 1
+            #     temperatures = steps[key].temperatures
+            #     if temperatures:
+            #         file = misc[temperatures].file
+            #         einc = str(misc[temperatures].einc)
+            #         f.write('**\n')
+            #         f.write('*TEMPERATURE, FILE={0}, BSTEP=1, BINC=1, ESTEP=1, EINC={1}, INTERPOLATE\n'.format(file, einc))
 
             # fieldOutputs
 
@@ -907,24 +999,27 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
             f.write('*OUTPUT, FIELD\n')
             f.write('**\n')
 
+            if isinstance(fields, list):
+                fields = structure.fields_dic_from_list(fields)
+
             f.write('*NODE OUTPUT\n')
             if fields == 'all':
-                f.write('RF, RM, U, UR, CF, CM, NT\n')
+                f.write(', '.join([i.upper() for i in node_fields]) + '\n')
             else:
-                f.write(', '.join([i for i in node_fields if i in fields]) + '\n')
+                f.write(', '.join([i.upper() for i in node_fields if i in fields]) + '\n')
             f.write('**\n')
 
             f.write('*ELEMENT OUTPUT\n')
             if fields == 'all':
-                f.write('SF, SM, SE, SK, S, E, PE\n')
+                f.write(', '.join([i.upper() for i in element_fields]) + '\n')
             else:
-                f.write(', '.join([i for i in element_fields if (i in fields and i != 'RBFOR')]) + '\n')
+                f.write(', '.join([i.upper() for i in element_fields if (i in fields and i != 'rbfor')]) + '\n')
             f.write('**\n')
 
-            if (fields == 'all') or ('RBFOR' in fields):
-                f.write('*ELEMENT OUTPUT, REBAR\n')
-                f.write('RBFOR\n')
-            f.write('**\n')
+#             if (fields == 'all') or ('RBFOR' in fields):
+#                 f.write('*ELEMENT OUTPUT, REBAR\n')
+#                 f.write('RBFOR\n')
+#             f.write('**\n')
 
             f.write('*END STEP\n')
 

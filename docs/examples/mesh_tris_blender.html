@@ -49,18 +49,17 @@
 </figure>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="sd">"""An example compas_fea package use for meshing."""</span>
 
-<span class="kn">from</span> <span class="nn">compas_fea.fea.abaq</span> <span class="k">import</span> <span class="n">abaq</span>
+<span class="c1"># Note: testing for meshing functions.</span>
+
 <span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">blender</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
 
-<span class="kn">from</span> <span class="nn">compas_blender.geometry</span> <span class="k">import</span> <span class="n">bmesh_data</span>
-<span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="k">import</span> <span class="n">draw_bmesh</span>
+<span class="kn">from</span> <span class="nn">compas_blender.geometry</span> <span class="k">import</span> <span class="n">BlenderMesh</span>
+<span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="k">import</span> <span class="n">xdraw_bmesh</span>
 <span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="k">import</span> <span class="n">get_objects</span>
-<span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="k">import</span> <span class="n">clear_layers</span>
+<span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="k">import</span> <span class="n">clear_layer</span>
 
-<span class="kn">from</span> <span class="nn">compas_fea.utilities.functions</span> <span class="k">import</span> <span class="n">discretise_faces</span>
-
-<span class="c1"># Note: test for meshing function.</span>
+<span class="kn">from</span> <span class="nn">compas_fea.utilities</span> <span class="k">import</span> <span class="n">discretise_faces</span>
 
 
 <span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">'Andrew Liew &lt;liew@arch.ethz.ch&gt;'</span><span class="p">]</span>
@@ -69,32 +68,27 @@
 <span class="n">__email__</span>      <span class="o">=</span> <span class="s1">'liew@arch.ethz.ch'</span>
 
 
-<span class="n">clear_layers</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-
-<span class="n">name</span> <span class="o">=</span> <span class="s1">'mesh_triangle'</span>
-<span class="n">path</span> <span class="o">=</span> <span class="s1">'/home/al/Temp/'</span>
+<span class="n">clear_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># Create empty Structure object</span>
 
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">()</span>
+<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mesh_triangle'</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">'/home/al/Temp/'</span><span class="p">)</span>
 
 <span class="c1"># Discretise mesh</span>
 
-<span class="n">pts</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">fcs</span> <span class="o">=</span> <span class="n">bmesh_data</span><span class="p">(</span><span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">blendermesh</span> <span class="o">=</span> <span class="n">BlenderMesh</span><span class="p">(</span><span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">pts</span> <span class="o">=</span> <span class="n">blendermesh</span><span class="o">.</span><span class="n">get_vertex_coordinates</span><span class="p">()</span>
+<span class="n">fcs</span> <span class="o">=</span> <span class="n">blendermesh</span><span class="o">.</span><span class="n">get_face_vertex_indices</span><span class="p">()</span>
+
 <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span> <span class="o">=</span> <span class="n">discretise_faces</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">pts</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">fcs</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">min_angle</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">points</span><span class="p">,</span> <span class="n">face</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">):</span>
-    <span class="n">bmesh</span> <span class="o">=</span> <span class="n">draw_bmesh</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'face'</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="n">points</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">face</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">wire</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">blender</span><span class="o">.</span><span class="n">add_nodes_elements_from_bmesh</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">bmesh</span><span class="o">=</span><span class="n">bmesh</span><span class="p">,</span> <span class="n">face_type</span><span class="o">=</span><span class="s1">'ShellElement'</span><span class="p">)</span>
+    <span class="n">bmesh</span> <span class="o">=</span> <span class="n">xdraw_bmesh</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'face'</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="n">points</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">face</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">wire</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">blender</span><span class="o">.</span><span class="n">add_nodes_elements_from_bmesh</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">bmesh</span><span class="o">=</span><span class="n">bmesh</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="s1">'ShellElement'</span><span class="p">)</span>
 
 <span class="c1"># Structure summary</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-
-<span class="c1"># Generate .inp file</span>
-
-<span class="n">abaq</span><span class="o">.</span><span class="n">inp_generate</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">.inp'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
 </code></pre></div>
-
 </div>
 <nav class="compas-sideways">
 <a class="btn btn-primary compas-prev" href="mesh_strip_rhino.html" role="button">mesh_strip Rhino</a>
@@ -119,8 +113,8 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../examples.html">Examples</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="beam_gridshell_rhino.html">beam_gridshell Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_rhino.html">beam_simple Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_rhino.html">beam_simple Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_tree_rhino.html">beam_tree Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_rhino.html">block_deepbeam Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_blender.html">block_deepbeam Blender</a></li>
@@ -128,15 +122,13 @@
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_rhino.html">mesh_floor Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_blender.html">mesh_floor Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_bridge_rhino.html">mesh_bridge Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_rhino.html">mesh_mould Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_strip_rhino.html">mesh_strip Rhino</a></li>
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">mesh_tris Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_yieldline_rhino.html">mesh_yieldline Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="script_introduction_abaqus.html">script_introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_blender.html">truss_tower Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower Rhino</a></li>
 </ul>
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
@@ -162,11 +154,11 @@
             
 
             
-                Last updated on Oct 12, 2017.
+                Last updated on Nov 10, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
 <script type="text/javascript">

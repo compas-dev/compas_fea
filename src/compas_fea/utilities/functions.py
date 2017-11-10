@@ -6,7 +6,7 @@ Support functions for the compas_fea package.
 from __future__ import print_function
 from __future__ import absolute_import
 
-from compas.datastructures.network.algorithms.traversal import network_dijkstra_path
+from compas.topology import dijkstra_path
 
 from compas.geometry import add_vectors
 from compas.geometry import angles_points_xy
@@ -26,7 +26,7 @@ from time import time
 
 try:
     from numpy import abs
-    from numpy import arccos
+    # from numpy import arccos
     from numpy import arctan2
     from numpy import array
     from numpy import asarray
@@ -43,7 +43,7 @@ try:
     from numpy import sin
     from numpy import squeeze
     from numpy import sum
-    from numpy import vdot
+    # from numpy import vdot
     from numpy import vstack
     from numpy import zeros
     from numpy.linalg import inv
@@ -64,10 +64,8 @@ try:
 except ImportError:
     print('***** mayavi not imported *****')
 
-import json
 
-
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
+__author__     = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
 __license__    = 'MIT License'
 __email__      = 'liew@arch.ethz.ch'
@@ -80,7 +78,6 @@ __all__ = [
     'extrude_mesh',
     'group_keys_by_attribute',
     'group_keys_by_attributes',
-    'load_data',
     'network_order',
     'normalise_data',
     'postprocess',
@@ -89,34 +86,32 @@ __all__ = [
 ]
 
 
-node_fields = ['RF', 'RM', 'U', 'UR', 'CF', 'CM']
-element_fields = ['SF', 'SM', 'SK', 'SE', 'S', 'E', 'PE', 'RBFOR']
-
-
 def colorbar(fsc, input='array', type=255):
     """ Creates RGB color information from -1 to 1 scaled values.
 
     Parameters:
-        fsc (array, float): (n x 1) array of normalised data, or single float value
+        fsc (array, float): (n x 1) array of normalised data, or a single float value.
         input (str): Input given as an 'array' of numbers or a 'float'.
-        type (int): 255 for RGB or 1 for normalised.
+        type (int): RGB as 255 or 1 scaled.
 
     Returns:
         array, list: (n x 3) array of RGB values or single RGB list.
     """
-    red = abs(fsc + 0.25) * 2 - 0.5
-    green = -abs(fsc - 0.25) * 2 + 1.5
-    blue = -(fsc - 0.25) * 2
+    r = abs(fsc + 0.25) * 2 - 0.5
+    g = -abs(fsc - 0.25) * 2 + 1.5
+    b = -(fsc - 0.25) * 2
+
     if input == 'array':
-        rgb = hstack([red, green, blue])
+        rgb = hstack([r, g, b])
         rgb[rgb > 1] = 1
         rgb[rgb < 0] = 0
         return rgb * type
+
     elif input == 'float':
-        red = max([0, min([1, red])])
-        green = max([0, min([1, green])])
-        blue = max([0, min([1, blue])])
-        return [i * type for i in [red, green, blue]]
+        r = max([0, min([1, r])])
+        g = max([0, min([1, g])])
+        b = max([0, min([1, b])])
+        return [i * type for i in [r, g, b]]
 
 
 def combine_all_sets(a, b):
@@ -242,45 +237,48 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
     return points_all, faces_all
 
 
-def extrude_mesh(structure, mesh, nz, dz):
-    """ Extrudes a Mesh into cells of many layers.
+def extrude_mesh(structure, mesh, nz, dz, setname):
+    """ Extrudes a Mesh into cells of many layers and adds to Structure.
 
     Note:
-        - Extrusion is along the vertex normals.
-        - Elements are added automatically to Structure object.
+        - Extrusion is along the Mesh vertex normals.
+        - Elements are added automatically to the Structure object.
 
     Parameters:
         structure (obj): Structure object to update.
         mesh (obj): Mesh datastructure to extrude.
         nz (int): Number of layers.
         dz (float): Layer thickness.
+        setname (str): Name of set for added elements.
 
     Returns:
         None
     """
     ki = {}
-    for key in list(mesh.vertices()):
+    elements = []
+
+    for key in mesh.vertices():
         normal = normalize_vector(mesh.vertex_normal(key))
         xyz = mesh.vertex_coordinates(key)
-        x, y, z = xyz
-        mesh.add_vertex(key='{0}_0'.format(key), attr_dict={'x': x, 'y': y, 'z': z})
         ki['{0}_0'.format(key)] = structure.add_node(xyz)
         for i in range(nz):
             xyzi = add_vectors(xyz, scale_vector(normal, (i + 1) * dz))
-            x, y, z = xyzi
-            mesh.add_vertex(key='{0}_{1}'.format(key, i + 1), attr_dict={'x': x, 'y': y, 'z': z})
             ki['{0}_{1}'.format(key, i + 1)] = structure.add_node(xyzi)
-    for face in list(mesh.faces()):
-        vs = mesh.face_vertices(face, ordered=True)
+
+    for face in mesh.faces():
+        vs = mesh.face_vertices(face)
         if len(vs) == 3:
-            element_type = 'PentahedronElement'
+            type = 'PentahedronElement'
         elif len(vs) == 4:
-            element_type = 'HexahedronElement'
+            type = 'HexahedronElement'
         for i in range(nz):
             bot = ['{0}_{1}'.format(j, i + 0) for j in vs]
             top = ['{0}_{1}'.format(j, i + 1) for j in vs]
             nodes = [ki[j] for j in bot + top]
-            structure.add_element(nodes, element_type, acoustic=False, thermal=False)
+            ekey = structure.add_element(nodes=nodes, type=type, acoustic=False, thermal=False)
+            elements.append(ekey)
+
+    structure.add_set(name=setname, type='element', selection=elements)
 
 
 def group_keys_by_attribute(adict, name, tol='3f'):
@@ -333,41 +331,6 @@ def group_keys_by_attributes(adict, names, tol='3f'):
     return groups
 
 
-def load_data(temp, name, step, field, component):
-    """ Load data from .json results files.
-
-    Parameters:
-        temp (str): Folder where .json results files are stored.
-        name (str): Structure name.
-        step (str): Name of the Step.
-        field (str): Results to plot, e.g. 'U', 'S', 'SM'.
-        component (str): The component to plot, e.g. 'U1', 'RF2'.
-
-    Returns:
-        array: Original nodal [x, y, z] co-ordinates.
-        array: Relative nodal displacements [Ux, Uy, Uz].
-        list: Node numbers of each element.
-        dic: Complete unprocessed data for field and component.
-        int: Number of nodes
-    """
-    with open('{0}{1}-nodes.json'.format(temp, name), 'r') as f:
-        nodes = json.load(f)
-    with open('{0}{1}-elements.json'.format(temp, name), 'r') as f:
-        elements = json.load(f)
-    with open('{0}{1}-{2}-U.json'.format(temp, name, step), 'r') as f:
-        u = json.load(f)
-    with open('{0}{1}-{2}-{3}.json'.format(temp, name, step, field), 'r') as f:
-        data = json.load(f)[component]
-
-    nkeys = sorted(nodes, key=int)
-    ekeys = sorted(elements, key=int)
-    X = array([nodes[nkey] for nkey in nkeys])
-    U = array([[u[i][nkey] for i in ['U1', 'U2', 'U3']] for nkey in nkeys])
-    enodes = [elements[ekey] for ekey in ekeys]
-
-    return X, U, enodes, data, len(nkeys)
-
-
 def network_order(sp_xyz, structure, network):
     """ Extract node and element orders from a Network for a given start-point.
 
@@ -382,18 +345,19 @@ def network_order(sp_xyz, structure, network):
         list: Cumulative lengths at element mid-points.
         float: Total length.
     """
-    nodes, elements, arclengths, L = [], [], [], 0
-    sp_gkey = geometric_key(sp_xyz, '{0}f'.format(structure.tol))
+    gkey_key = network.gkey_key()
+    start = gkey_key[geometric_key(sp_xyz, '{0}f'.format(structure.tol))]
     leaves = network.leaves()
-    leaves_xyz = [network.vertex_coordinates(i) for i in leaves]
-    leaves_gkey = [geometric_key(i, '{0}f'.format(structure.tol)) for i in leaves_xyz]
-    sp = leaves[leaves_gkey.index(sp_gkey)]
-    leaves.remove(sp)
-    ep = leaves[0]
-    weight = dict(((u, v), 1) for u, v in network.edges())
+    leaves.remove(start)
+    end = leaves[0]
+
+    adjacency = {key: network.vertex_neighbours(key) for key in network.vertices()}
+    weight = {(u, v): network.edge_length(u, v) for u, v in network.edges()}
     weight.update({(v, u): weight[(u, v)] for u, v in network.edges()})
-    path = network_dijkstra_path(network.adjacency, weight, sp, ep)
+    path = dijkstra_path(adjacency, weight, start, end)
+
     nodes = [structure.check_node_exists(network.vertex_coordinates(i)) for i in path]
+    elements, arclengths, length = [], [], 0
 
     for i in range(len(nodes) - 1):
         sp = nodes[i]
@@ -402,9 +366,10 @@ def network_order(sp_xyz, structure, network):
         xyz_sp = structure.node_xyz(sp)
         xyz_ep = structure.node_xyz(ep)
         dL = distance_point_point(xyz_sp, xyz_ep)
-        arclengths.append(L + dL / 2.)
-        L += dL
-    return nodes, elements, arclengths, L
+        arclengths.append(length + dL / 2.)
+        length += dL
+
+    return nodes, elements, arclengths, length
 
 
 def normalise_data(data, cmin, cmax):
@@ -420,124 +385,125 @@ def normalise_data(data, cmin, cmax):
         float: The maximum absolute unscaled value.
     """
     f = asarray(data)
+
     fmax = cmax if cmax is not None else max(abs(f))
     fmin = cmin if cmin is not None else min(abs(f))
     fabs = max([abs(fmin), abs(fmax)])
+
     fscaled = f / fabs if fabs else f
     fscaled[fscaled > +1] = +1
     fscaled[fscaled < -1] = -1
+
     return fscaled, fabs
 
 
-def postprocess(temp, name, step, field, component, scale, iptype, nodal, cmin, cmax, type, input='array'):
+def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, iptype, nodal):
     """ Post-process data from analysis results for given step and field.
 
     Parameters:
-        temp (str): Folder of saved raw data.
-        name (str): Structure name.
-        step (str): Name of the Step.
-        field (str): Results to plot, e.g. 'U', 'S', 'SM'.
-        component (str): The component to plot, e.g. 'U1', 'RF2'.
+        nodes (list): [[x, y, z], ..] co-ordinates of each node.
+        elements (list): Node numbers that each element connects.
+        ux (list): List of nodal x displacements.
+        uy (list): List of nodal y displacements.
+        uz (list): List of nodal z displacements.
+        data (dic): Unprocessed data.
+        dtype (str): 'nodal' or 'elemental'.
         scale (float): Scale displacements for the deformed plot.
+        cbar (list): Minimum and maximum limits on the colorbar.
+        ctype (int): RGB color type, 1 or 255.
         iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
         nodal (str): 'mean', 'max' or 'min' for nodal values.
-        cmin (float): Minimum cap on colorbar.
-        cmax (float): Maximum cap on colorbar.
-        type (int): RGB type, 1 or 255.
 
     Returns:
-        float: toc for time taken to process data.
-        array: Colors for node data.
-        array: Colors for element data.
-        array: Colors for nodal data.
-        float: Absolute max node or element data value.
-        float: Absolute max nodal data value.
-        array: Scaled nodal displacements.
-        array: Scaled node or element data.
-        array: Scaled nodal data.
+        float: Time taken to process data.
+        list: Scaled deformed nodal co-ordinates.
+        list: Nodal colors.
+        float: Absolute maximum data value.
+        list: Normalised data values.
     """
+    # print('debug')
     tic = time()
 
-    X, dU, enodes, data, n = load_data(temp, name, step, field, component)
-    U = X + dU * float(scale)
-    fnodes, felements, fnodal = process_data(field, data, iptype, nodal, enodes, n)
+    dU = hstack([array(ux)[:, newaxis], array(uy)[:, newaxis], array(uz)[:, newaxis]])
 
-    if field in node_fields:
-        fscaled, fabs = normalise_data(data=fnodes, cmin=cmin, cmax=cmax)
-        cnodes = colorbar(fsc=fscaled, input=input, type=type)
-        cnodal, celements = None, None
-        nabs, nscaled = None, None
+    U = [list(i) for i in list(array(nodes) + scale * dU)]
 
-    elif field in element_fields:
-        fscaled, fabs = normalise_data(data=felements, cmin=cmin, cmax=cmax)
-        nscaled, nabs = normalise_data(data=fnodal, cmin=cmin, cmax=cmax)
-        cnodes = None
-        celements = colorbar(fsc=fscaled, input=input, type=type)
-        cnodal = colorbar(fsc=nscaled, input=input, type=type)
+    values = process_data(data=data, dtype=dtype, iptype=iptype, nodal=nodal, elements=elements, n=len(nodes))
+
+    fscaled, fabs = normalise_data(data=values, cmin=cbar[0], cmax=cbar[1])
+
+    cnodes = colorbar(fsc=fscaled, input='array', type=ctype)
+
+    cnodes_ = [list(i) for i in list(cnodes)]
+
+    fscaled = [float(i) for i in list(fscaled)]
 
     toc = time() - tic
-    return toc, cnodes, celements, cnodal, fabs, nabs, U, fscaled, nscaled
+
+    return toc, U, cnodes_, fabs, fscaled
 
 
-def process_data(field, data, iptype, nodal, enodes, n):
+def process_data(data, dtype, iptype, nodal, elements, n):
     """ Processes the raw data.
 
     Parameters:
-        field (str): Data field to process, e.g. 'U', 'S', 'SM'.
         data (dic): Unprocessed data.
+        dtype (str): 'nodal' or 'elemental'.
         iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
         nodal (str): 'mean', 'max' or 'min' for nodal values.
-        enodes (list): Node numbers for each element.
+        elements (list): Node numbers that each element connects.
         n (int): Number of nodes.
 
     Returns:
-        array: Data at each node.
-        array: Data at each element.
-        array: Data at each node from elements.
+        array: Data values at each node.
     """
-    dkeys = sorted(data, key=int)
+    if dtype == 'nodal':
+        values = array(data)[:, newaxis]
 
-    if field in node_fields:
-        felements, fnodal = None, None
-        fnodes = array([data[dkey] for dkey in dkeys])[:, newaxis]
+    elif dtype == 'elemental':
+        m = len(list(data.keys()))
+        values_ = zeros((m, 1))
+        values = zeros((n, 1))
 
-    elif field in element_fields:
-        fnodes = None
-        m = len(dkeys)
-        felements = zeros((m, 1))
-        for dkey in dkeys:
-            fdata = list(data[dkey].values())
-            for i in range(len(fdata)):
-                if fdata[i] is None:
+        for dkey, item in data.items():
+
+            fdata = list(item.values())
+            for i, c in enumerate(fdata):
+                if c is None:
                     fdata[i] = 0
+
             if iptype == 'max':
                 value = max(fdata)
             elif iptype == 'min':
                 value = min(fdata)
             elif iptype == 'mean':
                 value = sum(fdata) / len(fdata)
-            felements[int(dkey)] = value
+            values_[int(dkey)] = value
+
         srows, scols = [], []
-        for c, i in enumerate(enodes):
+        for c, i in enumerate(elements):
             srows.extend([c] * len(i))
             scols.extend(i)
         sdata = [1] * len(srows)
         A = csr_matrix((sdata, (srows, scols)), shape=(m, n))
         AT = A.transpose()
+
         if nodal == 'mean':
-            fnodal = AT.dot(felements) / sum(AT, 1)
+            values = asarray(AT.dot(values_) / sum(AT, 1))
+
         else:
             rows, cols, vals = find(AT)
             dic = {i: [] for i in range(n)}
             for row, col in zip(rows, cols):
-                dic[row].append(felements[col, 0])
-            fnodal = zeros((n, 1))
+                dic[row].append(values_[col, 0])
+
             for i in range(n):
                 if nodal == 'max':
-                    fnodal[i] = max(dic[i])
+                    values[i] = max(dic[i])
                 elif nodal == 'min':
-                    fnodal[i] = min(dic[i])
-    return fnodes, felements, fnodal
+                    values[i] = min(dic[i])
+
+    return values
 
 
 def voxels(values, vmin, U, vdx, plot=None, indexing=None):
@@ -546,9 +512,10 @@ def voxels(values, vmin, U, vdx, plot=None, indexing=None):
     Parameters:
         values (array): Normalised data at nodes.
         vmin (float): Cull values below vmin.
-        U (array): Nodal co-ordinates.
+        U (array, list): Nodal co-ordinates.
         vdx (float): Spacing of voxel grid.
         plot (str): 'mayavi'.
+        indexing (str): Meshgrid indexing type.
 
     Returns:
         None
@@ -566,13 +533,15 @@ def voxels(values, vmin, U, vdx, plot=None, indexing=None):
         Xm, Ym, Zm = meshgrid(X, Y, Z)
     else:
         Zm, Ym, Xm = meshgrid(X, Y, Z, indexing=indexing)
+
     f = abs(asarray(values))
     Am = squeeze(griddata(U, f, (Xm, Ym, Zm), method='linear', fill_value=0))
     Am[isnan(Am)] = 0
     if plot == 'mayavi':
         mlab.pipeline.volume(mlab.pipeline.scalar_field(Am), vmin=vmin)
         mlab.show()
-    return Am
+    else:
+        return Am
 
 
 # ==============================================================================
@@ -581,6 +550,7 @@ def voxels(values, vmin, U, vdx, plot=None, indexing=None):
 
 if __name__ == "__main__":
 
-    vertices = [[1, 3, 4], [2, 0, 3], [4, 4, 1], [3, 3, 3]]
-    faces = [[0, 1, 2], [1, 2, 3]]
-    pts, fcs = discretise_faces(vertices, faces, target=0.2, min_angle=15, factor=3, iterations=200)
+    pass
+#     vertices = [[1, 3, 4], [2, 0, 3], [4, 4, 1], [3, 3, 3]]
+#     faces = [[0, 1, 2], [1, 2, 3]]
+#     pts, fcs = discretise_faces(vertices, faces, target=0.2, min_angle=15, factor=3, iterations=200)

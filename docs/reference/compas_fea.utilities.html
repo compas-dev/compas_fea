@@ -49,38 +49,44 @@
 <div class="section">
 <h2>functions</h2>
 <p><code class="xref py py-mod docutils literal">compas_fea.utilities.functions</code></p>
-<table class="longtable docutils table table-responsive table-bordered">
+<table border="1" class="longtable docutils table table-responsive table-bordered">
 <colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
+<col width="10%"/>
+<col width="90%"/>
 </colgroup>
-<tbody>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.utilities.functions.colorbar.html" title="compas_fea.utilities.functions.colorbar"><code class="xref py py-obj docutils literal">colorbar</code></a>(fsc[, input, type])</p></td>
-<td><p>Creates RGB color information from -1 to 1 scaled values.</p></td>
+<tbody valign="top">
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.utilities.functions.colorbar.html" title="compas_fea.utilities.functions.colorbar"><code class="xref py py-obj docutils literal">colorbar</code></a>(fsc[, input, type])</td>
+<td>Creates RGB color information from -1 to 1 scaled values.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.utilities.functions.discretise_faces.html" title="compas_fea.utilities.functions.discretise_faces"><code class="xref py py-obj docutils literal">discretise_faces</code></a>(vertices, faces, target[, …])</p></td>
-<td><p>Make an FE mesh from an input coarse mesh data.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.utilities.functions.combine_all_sets.html" title="compas_fea.utilities.functions.combine_all_sets"><code class="xref py py-obj docutils literal">combine_all_sets</code></a>(a, b)</td>
+<td></td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.utilities.functions.extrude_mesh.html" title="compas_fea.utilities.functions.extrude_mesh"><code class="xref py py-obj docutils literal">extrude_mesh</code></a>(structure, mesh, nz, dz)</p></td>
-<td><p>Extrudes a Mesh into cells of many layers.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.utilities.functions.discretise_faces.html" title="compas_fea.utilities.functions.discretise_faces"><code class="xref py py-obj docutils literal">discretise_faces</code></a>(vertices, faces, target[, ...])</td>
+<td>Make an FE mesh from an input coarse mesh data.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.utilities.functions.load_data.html" title="compas_fea.utilities.functions.load_data"><code class="xref py py-obj docutils literal">load_data</code></a>(temp, name, step, field, component)</p></td>
-<td><p>Load data from .json results files.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.utilities.functions.extrude_mesh.html" title="compas_fea.utilities.functions.extrude_mesh"><code class="xref py py-obj docutils literal">extrude_mesh</code></a>(structure, mesh, nz, dz, setname)</td>
+<td>Extrudes a Mesh into cells of many layers and adds to Structure.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.utilities.functions.network_order.html" title="compas_fea.utilities.functions.network_order"><code class="xref py py-obj docutils literal">network_order</code></a>(sp_xyz, structure, network)</p></td>
-<td><p>Extract node and element orders from a Network for a given start-point.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.utilities.functions.group_keys_by_attribute.html" title="compas_fea.utilities.functions.group_keys_by_attribute"><code class="xref py py-obj docutils literal">group_keys_by_attribute</code></a>(adict, name[, tol])</td>
+<td>Make group keys by shared attribute values.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.utilities.functions.normalise_data.html" title="compas_fea.utilities.functions.normalise_data"><code class="xref py py-obj docutils literal">normalise_data</code></a>(data, cmin, cmax)</p></td>
-<td><p>Normalise a vector of data to between -1 and 1.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.utilities.functions.group_keys_by_attributes.html" title="compas_fea.utilities.functions.group_keys_by_attributes"><code class="xref py py-obj docutils literal">group_keys_by_attributes</code></a>(adict, names[, tol])</td>
+<td>Make group keys by shared values of attributes.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.utilities.functions.postprocess.html" title="compas_fea.utilities.functions.postprocess"><code class="xref py py-obj docutils literal">postprocess</code></a>(temp, name, step, field, …[, …])</p></td>
-<td><p>Post-process data from analysis results for given step and field.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.utilities.functions.network_order.html" title="compas_fea.utilities.functions.network_order"><code class="xref py py-obj docutils literal">network_order</code></a>(sp_xyz, structure, network)</td>
+<td>Extract node and element orders from a Network for a given start-point.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.utilities.functions.process_data.html" title="compas_fea.utilities.functions.process_data"><code class="xref py py-obj docutils literal">process_data</code></a>(field, data, iptype, nodal, …)</p></td>
-<td><p>Processes the raw data.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.utilities.functions.normalise_data.html" title="compas_fea.utilities.functions.normalise_data"><code class="xref py py-obj docutils literal">normalise_data</code></a>(data, cmin, cmax)</td>
+<td>Normalise a vector of data to between -1 and 1.</td>
 </tr>
-<tr class=""><td><p><a class="reference internal" href="generated/compas_fea.utilities.functions.voxels.html" title="compas_fea.utilities.functions.voxels"><code class="xref py py-obj docutils literal">voxels</code></a>(values, vmin, U, vdx[, plot, indexing])</p></td>
-<td><p>Plot normalised [0 1] values as voxel data.</p></td>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.utilities.functions.postprocess.html" title="compas_fea.utilities.functions.postprocess"><code class="xref py py-obj docutils literal">postprocess</code></a>(nodes, elements, ux, uy, uz, ...)</td>
+<td>Post-process data from analysis results for given step and field.</td>
+</tr>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.utilities.functions.process_data.html" title="compas_fea.utilities.functions.process_data"><code class="xref py py-obj docutils literal">process_data</code></a>(data, dtype, iptype, nodal, ...)</td>
+<td>Processes the raw data.</td>
+</tr>
+<tr class=""><td><a class="reference internal" href="generated/compas_fea.utilities.functions.voxels.html" title="compas_fea.utilities.functions.voxels"><code class="xref py py-obj docutils literal">voxels</code></a>(values, vmin, U, vdx[, plot, indexing])</td>
+<td>Plot normalised [0 1] values as voxel data.</td>
 </tr>
 </tbody>
 </table>
@@ -143,11 +149,11 @@
             
 
             
-                Last updated on Oct 12, 2017.
+                Last updated on Nov 10, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
 <script type="text/javascript">

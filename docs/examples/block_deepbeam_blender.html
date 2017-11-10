@@ -49,11 +49,10 @@
 </figure>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="sd">"""An example compas_fea package for block elements."""</span>
 
-<span class="kn">from</span> <span class="nn">compas_fea.fea.abaq</span> <span class="k">import</span> <span class="n">abaq</span>
 <span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">blender</span>
 
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElasticIsotropic</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralStep</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">SolidSection</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PinnedDisplacement</span>
@@ -61,7 +60,7 @@
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
 
 <span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="k">import</span> <span class="n">draw_plane</span>
-<span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="k">import</span> <span class="n">clear_layers</span>
+<span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="k">import</span> <span class="n">clear_layer</span>
 
 
 <span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">'Andrew Liew &lt;liew@arch.ethz.ch&gt;'</span><span class="p">]</span>
@@ -70,23 +69,21 @@
 <span class="n">__email__</span>      <span class="o">=</span> <span class="s1">'liew@arch.ethz.ch'</span>
 
 
-<span class="n">clear_layers</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-
-<span class="n">name</span> <span class="o">=</span> <span class="s1">'block_deepbeam'</span>
-<span class="n">path</span> <span class="o">=</span> <span class="s1">'/home/al/Temp/'</span>
+<span class="n">clear_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># Create empty Structure object</span>
 
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">()</span>
+<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'block-deepbeam'</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">'/home/al/Temp/'</span><span class="p">)</span>
 
 <span class="c1"># Extrude mesh</span>
 
 <span class="n">ds</span> <span class="o">=</span> <span class="mf">0.05</span>
-<span class="n">blender</span><span class="o">.</span><span class="n">mesh_extrude</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">bmesh</span><span class="o">=</span><span class="n">draw_plane</span><span class="p">(</span><span class="n">Lx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">Ly</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">ds</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">ds</span><span class="p">),</span> <span class="n">nz</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">ds</span><span class="p">),</span> <span class="n">dz</span><span class="o">=</span><span class="n">ds</span><span class="p">)</span>
+<span class="n">blender</span><span class="o">.</span><span class="n">mesh_extrude</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">bmesh</span><span class="o">=</span><span class="n">draw_plane</span><span class="p">(</span><span class="n">Lx</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">Ly</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">ds</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">ds</span><span class="p">),</span> <span class="n">nz</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">ds</span><span class="p">),</span> <span class="n">dz</span><span class="o">=</span><span class="n">ds</span><span class="p">)</span>
 
 <span class="c1"># Add node and element sets</span>
 
-<span class="n">supports</span> <span class="o">=</span> <span class="p">[</span><span class="n">mdl</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[[</span><span class="n">ds</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ds</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ds</span><span class="p">,</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">ds</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">ds</span><span class="p">,</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">ds</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]]</span>
+<span class="n">pins</span> <span class="o">=</span> <span class="p">[[</span><span class="n">ds</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ds</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ds</span><span class="p">,</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">ds</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">ds</span><span class="p">,</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">ds</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+<span class="n">supports</span> <span class="o">=</span> <span class="p">[</span><span class="n">mdl</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pins</span><span class="p">]</span>
 <span class="n">top</span> <span class="o">=</span> <span class="p">[</span><span class="n">mdl</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])]</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'nset_supports'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'node'</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">supports</span><span class="p">)</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'nset_load'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'node'</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">top</span><span class="p">)</span>
@@ -101,7 +98,7 @@
 
 <span class="c1"># Add element properties</span>
 
-<span class="n">ep</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_elastic'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_solid'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">'elset_all'</span><span class="p">)</span>
+<span class="n">ep</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_elastic'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_solid'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">'elset_all'</span><span class="p">)</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'ep_solid'</span><span class="p">)</span>
 
 <span class="c1"># Add loads</span>
@@ -115,23 +112,19 @@
 <span class="c1"># Add steps</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'step'</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">'disp_pinned'</span><span class="p">],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">'load_point'</span><span class="p">]))</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">set_steps_order</span><span class="p">([</span><span class="s1">'step'</span><span class="p">])</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'step'</span><span class="p">]</span>
 
 <span class="c1"># Structure summary</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
 
-<span class="c1"># Generate .inp file</span>
-
-<span class="n">abaq</span><span class="o">.</span><span class="n">inp_generate</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">.inp'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
-
 <span class="c1"># Run and extract data</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">software</span><span class="o">=</span><span class="s1">'abaqus'</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">'U,S'</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">'abaqus'</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">'u'</span><span class="p">,</span> <span class="s1">'s'</span><span class="p">])</span>
 
 <span class="c1"># Plot voxels</span>
 
-<span class="n">blender</span><span class="o">.</span><span class="n">plot_voxels</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step'</span><span class="p">,</span> <span class="n">vdx</span><span class="o">=</span><span class="n">ds</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="n">cube_size</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">blender</span><span class="o">.</span><span class="n">plot_voxels</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'smises'</span><span class="p">,</span> <span class="n">vdx</span><span class="o">=</span><span class="n">ds</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="n">cube_size</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </code></pre></div>
 
 </div>
@@ -158,8 +151,8 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../examples.html">Examples</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="beam_gridshell_rhino.html">beam_gridshell Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_rhino.html">beam_simple Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_rhino.html">beam_simple Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_tree_rhino.html">beam_tree Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_rhino.html">block_deepbeam Rhino</a></li>
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">block_deepbeam Blender</a></li>
@@ -167,15 +160,13 @@
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_rhino.html">mesh_floor Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_blender.html">mesh_floor Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_bridge_rhino.html">mesh_bridge Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_rhino.html">mesh_mould Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_strip_rhino.html">mesh_strip Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_tris_blender.html">mesh_tris Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_yieldline_rhino.html">mesh_yieldline Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="script_introduction_abaqus.html">script_introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_blender.html">truss_tower Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower Rhino</a></li>
 </ul>
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
@@ -201,11 +192,11 @@
             
 
             
-                Last updated on Oct 12, 2017.
+                Last updated on Nov 10, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
 <script type="text/javascript">

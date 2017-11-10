@@ -25,9 +25,9 @@ class ElementProperties(object):
     Parameters:
         material str): Name of the material to assign.
         section (str): Name of the section to assign.
-        elsets (list): ELSETs the properties are assigned to.
+        elsets (list, str): Element sets the properties are assigned to.
         elements (list): Elements the properties are assigned to.
-        reinforcement (dic): Reinforcement information for the element/section.
+        reinforcement (dic): Reinforcement information.
 
     Returns:
         None
