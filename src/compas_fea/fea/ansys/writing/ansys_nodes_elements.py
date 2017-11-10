@@ -267,7 +267,7 @@ def write_request_element_nodes(output_path, filename):
     cFile.write('*vfill,nds(1),ramp,1,1 \n')
     cFile.write('*cfopen,' + output_path + '/output/nodes,txt \n')
     cFile.write('*vwrite, nds(1) , \',\'  , nodeX(1) ,   \',\' ,   nodeY(1) ,   \',\' ,  nodeZ(1) \n')
-    cFile.write('(          F,       A,       ES,           A,          ES,          A,      ES) \n')
+    cFile.write('(          F8.0,       A,       ES,           A,          ES,          A,      ES) \n')
     cFile.write('*cfclose \n')
     cFile.write('!\n')
     cFile.write('!\n')
@@ -321,24 +321,24 @@ def write_request_element_nodes(output_path, filename):
     cFile.close()
 
 
-def write_request_node_displacements(output_path, filename, step_name, mode=None):
-
+def write_request_node_displacements(path, name, step_name, mode=None):
+    out_path = path + '/' + name + '_output/'
+    filename = name + '_extract.txt'
     if mode:
         fname = 'modal_shape_' + str(mode)
-        name = 'nds_d' + str(mode)
+        name_ = 'nds_d' + str(mode)
         name_x = 'dispX' + str(mode)
         name_y = 'dispY' + str(mode)
         name_z = 'dispZ' + str(mode)
-        path = output_path + '/output/modal_out'
+        out_path += 'modal_out/'
     else:
         fname = str(step_name) + '_' + 'displacements'
-        name = 'nds_d'
+        name_ = 'nds_d'
         name_x = 'dispX'
         name_y = 'dispY'
         name_z = 'dispZ'
-        path = output_path + '/output'
 
-    cFile = open(output_path + filename, 'a')
+    cFile = open(path + filename, 'a')
     cFile.write('/POST1 \n')
     cFile.write('!\n')
     cFile.write('*get,numNodes,node,,count \n')
@@ -348,15 +348,15 @@ def write_request_node_displacements(output_path, filename, step_name, mode=None
     cFile.write('*dim,' + name_y + ',array,numNodes,1 \n')
     cFile.write('*set,' + name_z + ', \n')
     cFile.write('*dim,' + name_z + ',array,numNodes,1 \n')
-    cFile.write('*dim,' + name + ', ,numNodes \n')
+    cFile.write('*dim,' + name_ + ', ,numNodes \n')
     cFile.write('*VGET, ' + name_x + ', node, all, u, X,,,2 \n')
     cFile.write('*VGET, ' + name_y + ', node, all, u, Y,,,2 \n')
     cFile.write('*VGET, ' + name_z + ', node, all, u, Z,,,2 \n')
-    cFile.write('*vfill,' + name + '(1),ramp,1,1 \n')
-    cFile.write('*cfopen,' + path + '/' + fname + ',txt \n')
-    cFile.write('*vwrite, ' + name + '(1) , \',\'  , ' + name_x + '(1) , \',\' , ')
+    cFile.write('*vfill,' + name_ + '(1),ramp,1,1 \n')
+    cFile.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
+    cFile.write('*vwrite, ' + name_ + '(1) , \',\'  , ' + name_x + '(1) , \',\' , ')
     cFile.write(name_y + '(1) , \',\' ,' + name_z + '(1) \n')
-    cFile.write('(          F,       A,       ES,           A,          ES,          A,      ES) \n')
+    cFile.write('(          F9.0,       A,       ES,           A,          ES,          A,      ES) \n')
     cFile.write('*cfclose \n')
     cFile.write('!\n')
     cFile.write('!\n')

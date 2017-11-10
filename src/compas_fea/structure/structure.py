@@ -39,6 +39,10 @@ class Structure(object):
     """ Initialises empty Structure object for use in finite element analysis.
 
     Parameters:
+        name (str, optional) : Name of the structure.
+        path (str, optional) : Path to save files.
+
+    Attributes:
         constraints (dic): Constraint objects.
         displacements (dic): Displacement objects.
         elements (dic): Element objects.
@@ -52,7 +56,7 @@ class Structure(object):
         nodes (dic): Node co-ordinates and local axes.
         node_index (dic): Index of nodes (geometric keys).
         path (str): Path to save files.
-        results (dic): Results from analysis.
+        results (dic): Dictionary containing a StepResults object per step.
         sections (dic): Section objects.
         sets (dic): Node, element and surface sets.
         steps (dic): Step objects.
@@ -77,7 +81,7 @@ class Structure(object):
         self.nodes = {}
         self.node_index = {}
         self.path = path
-        self.results = {}
+        self.results = {'nodal': {}, 'elements': {}}
         self.sections = {}
         self.sets = {}
         self.steps = {}
@@ -446,7 +450,16 @@ compas_fea structure: {}
 
     @classmethod
     def from_mesh(cls, mesh):
+        """ Creates a structure object based on data contained in a compas Mesh
+        object. The mesh object must contain displacements, materials, sections
+        and loads.
 
+        Parameters:
+            mesh (obj): Mesh datastructure object.
+
+        Returns:
+            Structure: The resulting Structure object.
+        """
         structure = cls()
 
         # add nodes and elements from mesh -------------------------------------
@@ -830,21 +843,22 @@ compas_fea structure: {}
 
         Parameters:
             software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
-            fields (list): Data field requests.
+            fields (list, str): Data field requests.
 
         Returns:
             None
         """
+        self.save_to_obj()
         if software == 'abaqus':
             abaq.input_generate(self, fields=fields)
 
         elif software == 'ansys':
-            pass
+            ansys.input_generate(self)
 
         elif software == 'opensees':
             opensees.input_generate(self, fields=fields)
 
-    def analyse(self, software, exe=None, cpus=2, license='research'):
+    def analyse(self, software, exe=None, cpus=2, license='research', delete=True):
         """ Runs the analysis through the chosen FEA software/library.
 
         Parameters:
@@ -865,12 +879,13 @@ compas_fea structure: {}
         elif software == 'opensees':
             pass
 
-    def extract_data(self, software, fields='all', exe=None):
+    def extract_data(self, software, fields='u', steps='last', exe=None):
         """ Extracts data from the FE software's output.
 
         Parameters:
             software (str): Analysis software or library used, 'abaqus', 'opensees' or 'ansys'.
-            fields (dic): Data field requests.
+            fields (list, str): Data field requests.
+            steps (list) : Loads steps to extract from.
             exe (str): Full terminal command to bypass subprocess defaults.
 
         Returns:
@@ -880,17 +895,17 @@ compas_fea structure: {}
             abaq.extract_odb_data(self, fields=fields, exe=exe)
 
         elif software == 'ansys':
-            pass
+            ansys.extract_rst_data(self, fields=fields, steps=steps)
 
         elif software == 'opensees':
             pass
 
-    def analyse_and_extract(self, software, fields=['u'], exe=None, cpus=2, license='research'):
+    def analyse_and_extract(self, software, fields='u', exe=None, cpus=2, license='research'):
         """ Runs the analysis through the chosen FEA software/library and extracts data.
 
         Parameters:
             software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
-            fields (list): Data field requests.
+            fields (list, str): Data field requests.
             exe (str): Full terminal command to bypass subprocess defaults.
             cpus (int): Number of CPU cores to use.
             license (str): FE software license type (if required): 'research', 'student'.
@@ -901,6 +916,30 @@ compas_fea structure: {}
         self.write_input_file(software=software, fields=fields)
         self.analyse(software=software, exe=exe, cpus=cpus, license=license)
         self.extract_data(software=software, fields=fields, exe=exe)
+
+# ==============================================================================
+# results
+# ==============================================================================
+
+    def get_results(self, step, fields, nodes=None, elements=None):
+        if nodes:
+            data = {}
+            rdict = self.results['nodal']
+            if nodes == 'all':
+                nodes = self.nodes.keys()
+            elif isinstance(nodes, str):
+                nodes = self.sets[nodes]['selection']
+
+            if fields == 'all':
+                for nkey in nodes:
+                    data[nkey] = {f: rdict[step][nkey][f] for f in rdict[step][nkey].keys()}
+            else:
+                for nkey in nodes:
+                    data[nkey] = {f: rdict[step][nkey][f] for f in fields}
+            return data
+
+        elif elements:
+            return None
 
 
 # ==============================================================================

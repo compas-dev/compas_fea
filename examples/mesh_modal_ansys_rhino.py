@@ -1,6 +1,6 @@
 import rhinoscriptsyntax as rs
 import os
-import compas_rhino as rhino
+from compas_rhino.helpers.mesh import mesh_from_guid
 from compas_fea import structure
 from compas_fea.fea import ansys
 from compas_fea.structure import PinnedDisplacement
@@ -23,9 +23,9 @@ __license__    = 'MIT License'
 __email__      = 'mendez@arch.ethz.ch'
 
 
-def modal(mesh, pts, num_modes, path, filename):
+def modal(mesh, pts, num_modes, path, name):
     # add shell elements from mesh ---------------------------------------------
-    s = structure.Structure()
+    s = structure.Structure(name=name, path=path)
     s.add_nodes_elements_from_mesh(mesh, element_type='ShellElement')
 
     # add displacements --------------------------------------------------------
@@ -49,9 +49,13 @@ def modal(mesh, pts, num_modes, path, filename):
 
     step = ModalStep(name='modal_analysis', displacements=['supports'], modes=num_modes)
     s.add_step(step)
-    fnm = path + filename
-    ansys.inp_generate(s, filename=fnm, out_path=path)
-    s.analyse(path=path, name=filename, fields=None, software='ansys')
+    s.set_steps_order(['modal_analysis'])
+    
+    # analyse ------------------------------------------------------------------
+    fields = ['F']
+    s.write_input_file(software='ansys', fields=fields)
+    s.analyse(software='ansys', fields=fields, cpus=4)
+    s.extract_data(software='ansys', fields=fields, steps='last')
     return s
 
 
@@ -91,15 +95,15 @@ def draw_modal_shapes(path, amp, name):
 
 
 if __name__ == '__main__':
-    layers = ['s1', 's2']
+    layers = ['s1','s2']
     path = os.path.dirname(os.path.abspath(__file__)) + '/'
-    num_modes = 5
+    num_modes = 6
 
     for layer in layers:
-        filename = layer + '.inp'
+        name = layer
         pts = rs.ObjectsByLayer(layer + '_pts')
         pts = [list(rs.PointCoordinates(pt)) for pt in pts]
         guid = rs.ObjectsByLayer(layer)[0]
-        mesh = rhino.mesh_from_guid(Mesh, guid)
-        modal(mesh, pts, num_modes, path, filename)
-        draw_modal_shapes(path, 50, layer)
+        mesh = mesh_from_guid(Mesh, guid)
+        modal(mesh, pts, num_modes, path, name)
+        # draw_modal_shapes(path, 50, layer)

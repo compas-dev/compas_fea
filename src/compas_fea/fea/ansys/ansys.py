@@ -1,8 +1,9 @@
 import os
+import shutil
 import subprocess
-import warnings
 
 from compas_fea.fea.ansys.writing import *
+from compas_fea.fea.ansys.reading import *
 
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
@@ -11,9 +12,8 @@ __email__      = 'mendez@arch.ethz.ch'
 
 
 __all__ = [
-    'inp_generate',
+    'input_generate',
     'make_command_file_static',
-    'make_command_file_static_combined',
     'make_command_file_modal',
     'make_command_file_harmonic',
     'ansys_launch_process',
@@ -23,76 +23,50 @@ __all__ = [
 ]
 
 
-def inp_generate(structure, filename, output_path, ):
-    filename = os.path.basename(filename)
+def input_generate(structure):
+    name = structure.name
+    path = structure.path
     stypes = [structure.steps[skey].type for skey in structure.steps]
 
     if 'STATIC' in stypes:
-        make_command_file_static(structure, output_path, filename)
-        # static_step_key = structure.combine_static_steps()
-        # make_command_file_static_combined(structure, output_path, filename, static_step_key)
+        make_command_file_static(structure, path, name)
     elif 'MODAL' in stypes:
-        make_command_file_modal(structure, output_path, filename, skey)
+        make_command_file_modal(structure, path, name)
     elif 'HARMONIC' in stypes:
-        make_command_file_harmonic(structure, output_path, filename, skey)
+        make_command_file_harmonic(structure, path, name, skey)
     else:
         raise ValueError('This analysis type has not yet been implemented for Compas Ansys')
 
 
-def make_command_file_static(structure, output_path, filename):
-    if not os.path.exists(output_path):
-        os.makedirs(output_path)
+def make_command_file_static(structure, path, name):
 
-    if not os.path.exists(output_path + 'output/'):
-        os.makedirs(output_path + 'output/')
-
-    write_static_analysis_request(structure, output_path, filename)
+    write_static_analysis_request(structure, path, name)
 
 
-def make_command_file_static_combined(structure, output_path, filename, skey):
-    step = structure.steps[skey]
-    nlgeom = step.nlgeom
-    displacements = step.displacements
-    factor = step.factor
-    loads = step.loads
-    write_preprocess(output_path, filename)
-    write_all_materials(structure, output_path, filename)
-    write_nodes(structure, output_path, filename)
-    write_elements(structure, output_path, filename)
-    write_constraint_nodes(structure, output_path, filename, displacements)
-    write_loads(structure, output_path, filename, loads, factor)
-    write_step(output_path, filename, skey, nlgeom)
-    write_analysis_request_static(structure, output_path, filename)
+def make_command_file_modal(structure, path, name):
 
-
-def make_command_file_modal(structure, output_path, filename, skey):
-    if not os.path.exists(output_path):
-        os.makedirs(output_path)
-
-    if not os.path.exists(output_path + '/output/modal_out/'):
-        os.makedirs(output_path + '/output/modal_out/')
-
-    write_modal_analysis_request(structure, output_path, filename, skey)
+    write_modal_analysis_request(structure, path, name)
 
 
 def make_command_file_harmonic(structure, output_path, filename, skey):
-    if not os.path.exists(output_path):
-        os.makedirs(output_path)
-
-    if not os.path.exists(output_path + 'output/harmonic_out/'):
-        os.makedirs(output_path + 'output/harmonic_out/')
 
     write_harmonic_analysis_request(structure, output_path, filename, skey)
 
 
-def ansys_launch_process(output_path, filename, fields, cpus, license):
+def ansys_launch_process(path, name, fields, cpus, license, delete=True):
+
+    if not os.path.exists(path + name + '_output/'):
+        os.makedirs(path + name + '_output/')
+    elif delete:
+        delete_result_files(path, name)
+
     ansys_path = 'MAPDL.exe'
-    inp_path = output_path + '/' + filename
-    work_dir = output_path + 'output/'
+    inp_path = path + '/' + name + '.txt'
+    work_dir = path + name + '_output/'
 
     if not os.path.exists(work_dir):
         os.makedirs(work_dir)
-    out_path = work_dir + '/output.out'
+    out_path = work_dir + '/' + name + '.out'
 
     if license == 'research':
         lic_str = 'aa_r'
@@ -103,30 +77,36 @@ def ansys_launch_process(output_path, filename, fields, cpus, license):
 
     launch_string = '\"' + ansys_path + '\" -p ' + lic_str + ' -np ' + str(cpus)
     launch_string += ' -dir \"' + work_dir
-    launch_string += '\" -j \"compas_ansys\" -s read -l en-us -b -i \"'
+    launch_string += '\" -j \"' + name + '\" -s read -l en-us -b -i \"'
     launch_string += inp_path + ' \" -o \"' + out_path + '\"'
 
-    print(launch_string)
     subprocess.call(launch_string)
 
 
-def delete_result_files(structure, output_path):
-    filenames = [
-        'displacements',
-        'elements',
-        'nodalStresses',
-        'nodes',
-        'principalStresses',
-        'shear_stresses',
-        'principalStrains',
-        'reactions',
-        'modal_freq'
-    ]
-    for name in filenames:
-        try:
-            os.remove(output_path + name + '.txt')
-        except:
-            continue
+def ansys_launch_process_extract(path, name, cpus=2, license='research'):
+
+    ansys_path = 'MAPDL.exe'
+    inp_path = path + '/' + name + '_extract.txt'
+    work_dir = path + name + '_output/'
+    out_path = work_dir + '/output_extract.out'
+
+    if license == 'research':
+        lic_str = 'aa_r'
+    elif license == 'student':
+        lic_str = 'aa_t_a'
+    else:
+        lic_str = 'aa_t_a'  # temporary default.
+
+    launch_string = '\"' + ansys_path + '\" -p ' + lic_str + ' -np ' + str(cpus)
+    launch_string += ' -dir \"' + work_dir
+    launch_string += '\" -j \"' + name + '\" -s read -l en-us -b -i \"'
+    launch_string += inp_path + ' \" -o \"' + out_path + '\"'
+    subprocess.call(launch_string)
+
+
+def delete_result_files(path, filename):
+    out_path = path + '/' + filename + '_output/'
+    shutil.rmtree(out_path)
 
 
 def write_total_results(filename, output_path, excluded_nodes=None, node_disp=None):
@@ -262,10 +242,72 @@ def write_total_results(filename, output_path, excluded_nodes=None, node_disp=No
     r_file.close()
 
 
-def write_static_results_from_ansys_rst(filename, output_path, step_index=1, step_name='step'):
-    write_preprocess(output_path, filename)
-    write_post_process(output_path, filename)
-    set_current_step(output_path, filename, step_index)
-    write_request_element_nodes(output_path, filename)
-    write_request_static_results(output_path, filename, step_name)
-    ansys_launch_process(output_path, filename)
+def extract_rst_data(structure, fields='all', steps='last'):
+    write_results_from_rst(structure, fields, steps)
+    load_to_results(structure, fields, steps)
+
+
+def write_results_from_rst(structure, fields, steps):
+    filename = structure.name + '_extract.txt'
+    path = structure.path
+    if steps == 'last':
+        steps = [structure.steps_order[-1]]
+    elif steps == 'all':
+        steps = structure.steps_order
+    ansys_open_post_process(path, filename)
+    for skey in steps:
+        step_index = steps.index(skey)
+        stype = structure.steps[skey].type
+        if stype == 'STATIC':
+            set_current_step(path, filename, step_index=step_index)
+            write_static_results_from_ansys_rst(structure.name, path, fields,
+                                                step_index=step_index, step_name=skey)
+        elif stype == 'MODAL':
+            num_modes = structure.steps[skey].modes
+            write_modal_results_from_ansys_rst(structure.name, path, fields, num_modes,
+                                               step_index=step_index, step_name=skey)
+        elif stype == 'HARMONIC':
+            pass
+    ansys_launch_process_extract(path, structure.name)
+    os.remove(path + '/' + filename)
+
+
+def load_to_results(structure, fields, steps):
+    out_path = structure.path + structure.name + '_output/'
+    if steps == 'all':
+        steps = structure.steps.keys()
+    elif steps == 'last':
+        steps = [structure.steps_order[-1]]
+    elif type(steps) == str:
+        steps = [steps]
+
+    for step in steps:
+        if structure.steps[step].__name__ == 'StaticStep':
+            rdict = []
+            if 'u' in fields or 'all' in fields:
+                rdict.append(get_displacements_from_result_files(out_path, step))
+            if 's' in fields or 'all' in fields:
+                rdict.append(get_nodal_stresses_from_result_files(out_path, step))
+            if 'r' in fields or 'all' in fields:
+                rdict.append(get_reactions_from_result_files(out_path, step))
+            if 'e' in fields or 'all' in fields:
+                rdict.append(get_principal_strains_from_result_files(out_path, step))
+            if 'sp' in fields or 'all' in fields:
+                rdict.append(get_principal_stresses_from_result_files(out_path, step))
+            if 'ss' in fields or 'all' in fields:
+                rdict.append(get_shear_stresses_from_result_files(out_path, step))
+        elif structure.steps[step].__name__ == 'ModalStep':
+            rdict = []
+            if 'u' in fields or 'all' in fields:
+                rdict.append(get_modal_shapes_from_result_files(out_path))
+            if 'f' in fields or 'all' in fields:
+                fdict = get_modal_freq_from_result_files(out_path)
+                structure.results['frequency'] = fdict
+
+        structure.results['nodal'][step] = rdict[0]
+        if len(rdict) >= 1:
+            for d in rdict[1:]:
+                for key, att in structure.results['nodal'][step].items():
+                    att.update(d[key])
+
+

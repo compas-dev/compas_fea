@@ -114,12 +114,23 @@ def colorbar(fsc, input='array', type=255):
         return [i * type for i in [r, g, b]]
 
 
-def combine_all_sets(a, b):
+def combine_all_sets(sets_a, sets_b):
+    """ Combines two nested lists of node or element sets into the minimum
+    ammount of set combinations. Is used to determine the necesary element
+    property sets, given sets of materials and sections.
+
+    Parameters:
+        sets_a (list): First nested list containing lists of element or node keys.
+        sets_b (list): Second nested list containing lists of element or node keys.
+
+    Returns:
+        dict: A dictionary containing the minimum number of set combinations.
+    """
     comb = {}
-    for i in a:
-        for j in b:
-            for x in a[i]:
-                if x in b[j]:
+    for i in sets_a:
+        for j in sets_b:
+            for x in sets_a[i]:
+                if x in sets_b[j]:
                     comb.setdefault(str(i) + ',' + str(j), []).append(x)
     return comb
 
