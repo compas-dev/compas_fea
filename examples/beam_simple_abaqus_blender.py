@@ -116,5 +116,4 @@ blender.plot_data(mdl, step='step_load', field='ury', radius=0.01, layer=5)
 # Plot section forces/moments
 
 blender.plot_data(mdl, step='step_load', field='sfnx', radius=0.01, layer=6)
-blender.plot_data(mdl, step='step_load', field='sfvy', radius=0.01, layer=7)
-blender.plot_data(mdl, step='step_load', field='smy', radius=0.01, layer=8)
+blender.plot_data(mdl, step='step_load', field='smy', radius=0.01, layer=7)

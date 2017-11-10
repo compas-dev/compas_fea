@@ -153,8 +153,9 @@ def extract_odb_data(structure, fields, exe):
 
     tic = time()
 
-    if isinstance(fields, list):
-        fields = ','.join(list(structure.fields_dic_from_list(fields).keys()))
+    if isinstance(fields, str):
+        fields = [fields]
+    fields = ','.join(list(structure.fields_dic_from_list(fields).keys()))
 
     if not exe:
         args = ['abaqus', 'cae', subprocess, '--', fields, name, temp]
@@ -186,7 +187,7 @@ def extract_odb_data(structure, fields, exe):
     except:
         print('***** Saving data to structure.results unsuccessful *****')
 
-    print('\n***** Data extracted from Abaqus .odb file : {0} s *****'.format(toc))
+    print('\n***** Data extracted from Abaqus .odb file : {0} s *****\n'.format(toc))
 
 
 def input_write_constraints(f, constraints):
@@ -335,6 +336,9 @@ def input_generate(structure, fields, units='m'):
         None
     """
     filename = '{0}{1}.inp'.format(structure.path, structure.name)
+
+    if isinstance(fields, str):
+        fields = [fields]
 
     with open(filename, 'w') as f:
 

@@ -67,4 +67,4 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 'pe'])
 
 # Plot strain
 
-rhino.plot_data(mdl, step='step_loads', field='pemaxp', cbar=[None, 0.01])
+rhino.plot_data(mdl, step='step_loads', field='pemaxp', cbar=[None, 0.01], scale=0)

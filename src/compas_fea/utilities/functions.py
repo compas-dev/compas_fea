@@ -51,11 +51,11 @@ except ImportError:
     print('***** NumPy functions not imported *****')
 
 try:
-    from scipy.interpolate import griddata
+    # from scipy.interpolate import griddata
     from scipy.sparse import csr_matrix
     from scipy.sparse import find
-    from scipy.spatial import Delaunay
-    from scipy.spatial import distance_matrix
+    # from scipy.spatial import Delaunay
+    # from scipy.spatial import distance_matrix
 except ImportError:
     print('***** SciPy functions not imported *****')
 
@@ -116,7 +116,7 @@ def colorbar(fsc, input='array', type=255):
 
 def combine_all_sets(sets_a, sets_b):
     """ Combines two nested lists of node or element sets into the minimum
-    ammount of set combinations. Is used to determine the necesary element
+    ammount of set combinations. Used to determine the necesary element
     property sets, given sets of materials and sections.
 
     Parameters:
@@ -124,7 +124,7 @@ def combine_all_sets(sets_a, sets_b):
         sets_b (list): Second nested list containing lists of element or node keys.
 
     Returns:
-        dict: A dictionary containing the minimum number of set combinations.
+        dic: A dictionary containing the minimum number of set combinations.
     """
     comb = {}
     for i in sets_a:

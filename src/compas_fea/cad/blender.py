@@ -373,6 +373,7 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
         dtype = 'elemental'
 
     toc, U, cnodes, fabs, _ = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1, iptype, nodal)
+    U = array(U)
 
     print('\n***** Data processed : {0} s *****'.format(toc))
 
@@ -387,8 +388,8 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
         if n == 2:
             u, v = nodes
             pipe = draw_pipes(start=[U[u]], end=[U[v]], radius=radius, layer=layer)[0]
-            col1 = [list(cnodes[u])] * npts
-            col2 = [list(cnodes[v])] * npts
+            col1 = [cnodes[u]] * npts
+            col2 = [cnodes[v]] * npts
             blendermesh = BlenderMesh(pipe)
             blendermesh.set_vertex_colors(vertices=range(0, 2 * npts, 2), colors=col1)
             blendermesh.set_vertex_colors(vertices=range(1, 2 * npts, 2), colors=col2)
@@ -399,7 +400,7 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
     if mesh_faces:
         bmesh = xdraw_mesh(name='bmesh', vertices=U, faces=mesh_faces, layer=layer)
         blendermesh = BlenderMesh(bmesh)
-        blendermesh.set_vertex_colors(vertices=range(U.shape[0]), colors=list(cnodes))
+        blendermesh.set_vertex_colors(vertices=range(U.shape[0]), colors=cnodes)
 
     # Plot colourbar
 

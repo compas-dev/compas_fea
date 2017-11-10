@@ -264,7 +264,7 @@ def ordered_network(structure, network, layer):
         list: Cumulative lengths at element mid-points.
         float: Total length.
     """
-    sp_xyz = rs.PointCoordinates(rs.ObjectsByLayer(layer))
+    sp_xyz = rs.PointCoordinates(rs.ObjectsByLayer(layer)[0])
     return network_order(sp_xyz=sp_xyz, structure=structure, network=network)
 
 
