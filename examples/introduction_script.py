@@ -94,9 +94,7 @@ mdl.steps_order = ['step_bc', 'step_loads']
 # Structure summary
 
 mdl.summary()
-mdl.save_to_obj()
 
 # Generate input files
 
 mdl.write_input_file(software='abaqus', fields=['s', 'u'])
-mdl.write_input_file(software='opensees', fields=['s', 'u'])

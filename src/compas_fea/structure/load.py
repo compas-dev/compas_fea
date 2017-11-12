@@ -111,8 +111,8 @@ class LineLoad(Load):
         None
     """
 
-    def __init__(self, name, elements, x=0, y=0, z=0, xx=0, yy=0, zz=0):
-        Load.__init__(self, name=name, elements=elements, axes='local')
+    def __init__(self, name, elements, x=0, y=0, z=0, xx=0, yy=0, zz=0, axes='local'):
+        Load.__init__(self, name=name, elements=elements, axes=axes)
         self.__name__ = 'LineLoad'
         self.components = {'x': x, 'y': y, 'z': z, 'xx': xx, 'yy': yy, 'zz': zz}
 
