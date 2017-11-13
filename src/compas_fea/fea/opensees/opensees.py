@@ -249,62 +249,82 @@ def input_write_patterns(f, structure, steps, loads):
         None
     """
     f.write('## -----------------------------------------------------------------------------\n')
-    f.write('## -------------------------------------------------------------------- Patterns\n')
+    f.write('## -------------------------------------------------------------------- Analysis\n')
 
     dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 
-    for key in structure.steps_order[1:]:
-        step = steps[key]
-        stype = step.__name__
-        index = step.index
-        factor = step.factor
+    key = structure.steps_order[1]
+    step = steps[key]
+    stype = step.__name__
+    index = step.index
+    factor = step.factor
+    tolerance = step.tolerance
+    iterations = step.iterations
+    increments = step.increments
 
-        f.write('##\n')
-        f.write('## {0}\n'.format(key))
-        f.write('## ' + '-' * len(key) + '\n')
-        f.write('##\n')
+    f.write('##\n')
+    f.write('## {0}\n'.format(key))
+    f.write('## ' + '-' * len(key) + '\n')
+    f.write('##\n')
 
-        f.write('timeSeries Linear {0} -factor 1.0\n'.format(index))
-        f.write('pattern Plain {0} {0} -fact {1} {2}\n'.format(index, factor, '{'))
+    f.write('timeSeries Constant {0} -factor 1.0\n'.format(index))
+    f.write('pattern Plain {0} {0} -fact {1} {2}\n'.format(index, factor, '{'))
 
-        # Mechanical
+    # Mechanical
 
-        if stype in ['GeneralStep', 'BucklingStep']:
+    if stype in ['GeneralStep', 'BucklingStep']:
 
-            # Loads
+        # Loads
 
-            for k in step.loads:
-                f.write('##\n')
+        for k in step.loads:
+            f.write('##\n')
 
-                load = loads[k]
-                ltype = load.__name__
-                com = load.components
-                axes = load.axes
-                nset = load.nodes
-                elset = load.elements
+            load = loads[k]
+            ltype = load.__name__
+            com = load.components
+            axes = load.axes
+            nset = load.nodes
+            elset = load.elements
 
-                # Point load
+            # Point load
 
-                if ltype == 'PointLoad':
+            if ltype == 'PointLoad':
 
-                    coms = ' '.join([str(com[dof]) for dof in dofs])
-                    for node in structure.sets[nset]['selection']:
-                        f.write('load {0} {1}\n'.format(node + 1, coms))
+                coms = ' '.join([str(com[dof]) for dof in dofs])
+                for node in structure.sets[nset]['selection']:
+                    f.write('load {0} {1}\n'.format(node + 1, coms))
 
-                # Line load
+            # Line load
 
-                elif ltype == 'LineLoad':
+            elif ltype == 'LineLoad':
 
-                    if axes == 'global':
-                        raise NotImplementedError
+                if axes == 'global':
+                    raise NotImplementedError
 
-                    elif axes == 'local':
-                        elements = ' '.join([str(i + 1) for i in structure.sets[elset]['selection']])
-                        f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, com['y'], com['x']))
+                elif axes == 'local':
+                    pass
+                    # elements = ' '.join([str(i + 1) for i in structure.sets[elset]['selection']])
+                    # f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, com['y'], com['x']))
 
-        f.write('##\n')
-        f.write('{0}\n'.format('}'))
+    f.write('##\n')
+    f.write('{0}\n'.format('}'))
 
+    f.write('##\n')
+    f.write('constraints Plain\n')
+    f.write('##\n')
+    f.write('numberer RCM\n')
+    f.write('##\n')
+    f.write('system ProfileSPD\n')
+    f.write('##\n')
+    f.write('test RelativeNormUnbalance {0} {1} 2\n'.format(tolerance, iterations))
+    f.write('##\n')
+    f.write('algorithm Newton\n')
+    f.write('##\n')
+    f.write('integrator LoadControl {0}\n'.format(1./increments))
+    f.write('##\n')
+    f.write('analysis Static\n')
+    f.write('##\n')
+    f.write('analyze {0}\n'.format(increments))
     f.write('##\n')
 
 

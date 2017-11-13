@@ -31,11 +31,11 @@ rhino.add_sets_from_layers(mdl, layers=['elset_mesh', 'nset_supports', 'nset_loa
 
 # Add materials
 
-mdl.add_material(Steel(name='mat_yield', fy=355))
+mdl.add_material(Steel(name='mat_yield', fy=100))
 
 # Add sections
 
-mdl.add_section(ShellSection(name='sec_yield', t=0.020))
+mdl.add_section(ShellSection(name='sec_yield', t=0.010))
 
 # Add element properties
 
@@ -44,7 +44,8 @@ mdl.add_element_properties(ep, name='ep_yield')
 
 # Add loads
 
-mdl.add_load(PointLoad(name='load_points', nodes='nset_loads', z=-1000))
+pz = 5000 / mdl.node_count()
+mdl.add_load(PointLoad(name='load_points', nodes='nset_loads', z=-pz))
 
 # Add displacements
 
@@ -54,7 +55,7 @@ mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_supports
 
 mdl.add_steps([
     GeneralStep(name='step_bc', type='STATIC', displacements=['disp_pinned']),
-    GeneralStep(name='step_loads', type='STATIC,RIKS', loads=['load_points'], increments=30)])
+    GeneralStep(name='step_loads', nlgeom=True, type='STATIC,RIKS', loads=['load_points'], increments=30)])
 mdl.steps_order = ['step_bc', 'step_loads']
 
 # Structure summary
@@ -67,4 +68,4 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 'pe'])
 
 # Plot strain
 
-rhino.plot_data(mdl, step='step_loads', field='pemaxp', cbar=[None, 0.01], scale=0)
+rhino.plot_data(mdl, step='step_loads', field='pemaxp', cbar=[None, 0.001], scale=0)

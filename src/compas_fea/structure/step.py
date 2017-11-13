@@ -29,6 +29,7 @@ class GeneralStep(object):
     Parameters:
         name (str): Name of the GeneralStep.
         increments (int): Number of step increments.
+        iterations (int): Number of step iterations.
         factor (float): Proportionality factor on the loads and displacements.
         nlgeom (bool): Analyse non-linear geometry effects.
         displacements (list): Displacement object names (str).
@@ -36,16 +37,18 @@ class GeneralStep(object):
         type (str): 'static','static,riks'.
         temperatures (str): Name of Temperature object to apply.
         duration (float): Duration of step.
+        tolerance (float): A tolerance for analysis solvers.
 
     Returns:
         None
     """
 
-    def __init__(self, name, increments=200, factor=1.0, nlgeom=True, displacements=[], loads=[], type='static',
-                 temperatures=None, duration=1):
+    def __init__(self, name, increments=100, iterations=10, factor=1.0, nlgeom=True, displacements=[], loads=[],
+                 type='static', temperatures=None, duration=1, tolerance=0.01):
         self.__name__ = 'GeneralStep'
         self.name = name
         self.increments = increments
+        self.iterations = iterations
         self.factor = factor
         self.nlgeom = nlgeom
         self.displacements = displacements
@@ -53,6 +56,7 @@ class GeneralStep(object):
         self.type = type
         self.temperatures = temperatures
         self.duration = duration
+        self.tolerance = tolerance
 
 
 class HeatStep(object):
@@ -72,7 +76,7 @@ class HeatStep(object):
         None
     """
 
-    def __init__(self, name, interaction, increments=200, temp0=20, dTmax=1, type='HEAT TRANSFER', duration=1):
+    def __init__(self, name, interaction, increments=100, temp0=20, dTmax=1, type='HEAT TRANSFER', duration=1):
         self.__name__ = 'HeatStep'
         self.name = name
         self.interaction = interaction
@@ -98,7 +102,7 @@ class ModalStep(object):
         None
     """
 
-    def __init__(self, name, modes=10, increments=200, displacements=[], type='modal'):
+    def __init__(self, name, modes=10, increments=100, displacements=[], type='modal'):
         self.__name__ = 'ModalStep'
         self.name = name
         self.modes = modes
@@ -155,7 +159,7 @@ class BucklingStep(object):
         None
     """
 
-    def __init__(self, name, modes=10, increments=200, factor=1.0, displacements=[], loads=[], type='buckle'):
+    def __init__(self, name, modes=10, increments=100, factor=1.0, displacements=[], loads=[], type='buckle'):
         self.__name__ = 'BucklingStep'
         self.name = name
         self.modes = modes

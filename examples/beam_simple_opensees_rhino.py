@@ -4,7 +4,7 @@ from compas_fea.structure import CircularSection
 from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
-from compas_fea.structure import PinnedDisplacement
+from compas_fea.structure import GeneralDisplacement
 from compas_fea.structure import PointLoad
 from compas_fea.structure import LineLoad
 from compas_fea.structure import Structure
@@ -50,18 +50,19 @@ mdl.add_element_properties(ep, name='ep')
 
 # Add displacements
 
-mdl.add_displacement(PinnedDisplacement(name='disp_pins', nodes='nset_pins'))
+mdl.add_displacement(GeneralDisplacement(name='disp_pins', nodes='nset_pins', x=0, y=0, z=0))
+mdl.add_displacement(GeneralDisplacement(name='disp_rollers', nodes='nset_1_2', z=0))
 
 # Add loads
 
-mdl.add_load(PointLoad(name='load_x', nodes='nset_1_2', x=1000))
-mdl.add_load(LineLoad(name='load_y', elements='elset_1', y=1000, axes='local'))
+mdl.add_load(PointLoad(name='load_x', nodes='nset_1_2', x=70))
+mdl.add_load(LineLoad(name='load_y', elements='elset_1', y=0, axes='local'))
 
 # Add steps
 
 mdl.add_steps([
-    GeneralStep(name='step_bc', displacements=['disp_pins']),
-    GeneralStep(name='step_loads', loads=['load_x', 'load_y'])])
+    GeneralStep(name='step_bc', displacements=['disp_pins', 'disp_rollers']),
+    GeneralStep(name='step_loads', loads=['load_x', 'load_y'], iterations=50)])
 mdl.steps_order = ['step_bc', 'step_loads']
 
 # Structure summary
