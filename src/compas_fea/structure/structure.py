@@ -81,7 +81,7 @@ class Structure(object):
         self.nodes = {}
         self.node_index = {}
         self.path = path
-        self.results = {'nodal': {}, 'elements': {}}
+        self.results = {}
         self.sections = {}
         self.sets = {}
         self.steps = {}
@@ -882,7 +882,7 @@ compas_fea structure: {}
             ansys.ansys_launch_process(self.path, self.name, cpus, license)
 
         elif software == 'opensees':
-            pass
+            opensees.opensees_launch_process(self, exe)
 
     def extract_data(self, software, fields='u', steps='last', exe=None):
         """ Extracts data from the FE software's output.
@@ -903,7 +903,7 @@ compas_fea structure: {}
             ansys.extract_rst_data(self, fields=fields, steps=steps)
 
         elif software == 'opensees':
-            pass
+            opensees.extract_out_data(self)
 
     def analyse_and_extract(self, software, fields='u', exe=None, cpus=2, license='research'):
         """ Runs the analysis through the chosen FEA software/library and extracts data.

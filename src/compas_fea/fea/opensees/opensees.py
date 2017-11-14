@@ -5,6 +5,11 @@ compas_fea.fea.opensees : OpenSEES file creator.
 from __future__ import print_function
 from __future__ import absolute_import
 
+from subprocess import Popen
+from subprocess import PIPE
+
+from time import time
+
 import os
 
 
@@ -21,8 +26,87 @@ __all__ = [
     'input_write_bcs',
     'input_write_elements',
     'input_write_recorders',
-    'input_write_patterns'
+    'input_write_patterns',
+    'opensees_launch_process'
 ]
+
+
+def extract_out_data(structure):
+    """ Extract data from the OpenSees .out files.
+
+    Parameters:
+        structure (obj): Structure object.
+
+    Returns:
+        None
+    """
+    name = structure.name
+    path = structure.path
+    temp = '{0}{1}/'.format(path, name)
+
+    step = structure.steps_order[1]
+    structure.results[step] = {}
+    structure.results[step]['nodal'] = {}
+    structure.results[step]['element'] = {}
+
+    # Nodal data
+
+    with open('{0}node_u.out'.format(temp), 'r') as f:
+        lines = f.readlines()
+    u_out = [float(i) for i in lines[-1].split(' ')[1:]]
+
+    with open('{0}node_ur.out'.format(temp), 'r') as f:
+        lines = f.readlines()
+    ur_out = [float(i) for i in lines[-1].split(' ')[1:]]
+
+    structure.results[step]['nodal']['u'] = {}
+    structure.results[step]['nodal']['ur'] = {}
+
+    for node in structure.nodes:
+        structure.results[step]['nodal']['u'][node] = [u_out[node * 3 + i] for i in range(3)]
+        structure.results[step]['nodal']['ur'][node] = [ur_out[node * 3 + i] for i in range(3)]
+
+
+def opensees_launch_process(structure, exe):
+    """ Runs the analysis through OpenSees.
+
+    Parameters:
+        structure (obj): Structure object.
+        exe (str): Full terminal command to bypass subprocess defaults.
+
+    Returns:
+        None
+    """
+    name = structure.name
+    path = structure.path
+    temp = '{0}{1}/'.format(path, name)
+
+    # Run sub-process file
+
+    tic = time()
+
+    if not exe:
+
+        'Please re-run giving executable path exe'
+
+    else:
+
+        command = '{0} {1}{2}.tcl'.format(exe, path, name)
+        print(command)
+        p = Popen(command, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+        while True:
+            line = p.stdout.readline()
+            if not line:
+                break
+            line = str(line.strip())
+            print(line)
+        stdout, stderr = p.communicate()
+        print(stdout)
+        print(stderr)
+
+    toc = time() - tic
+
+    print('\n***** OpenSees analysis time : {0} s *****'.format(toc))
 
 
 def input_generate(structure, fields, units='m'):

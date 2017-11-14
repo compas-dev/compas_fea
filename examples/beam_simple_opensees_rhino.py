@@ -71,4 +71,8 @@ mdl.summary()
 
 # Generate input files
 
-mdl.write_input_file(software='opensees', fields=['u'])
+exe = '/home/al/bin/OpenSees'
+mdl.analyse_and_extract(software='opensees', exe=exe, fields=['u'])
+
+for node in mdl.nodes:
+    print(mdl.results['step_loads']['nodal']['u'][node])
