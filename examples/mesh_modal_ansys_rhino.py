@@ -8,14 +8,10 @@ from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ShellSection
 from compas_fea.structure import ElementProperties
 from compas_fea.structure import ModalStep
-
-from compas_fea.fea.ansys.reading import get_nodes_elements_from_result_files
-from compas_fea.fea.ansys.reading import get_modal_data_from_result_files
-
+from compas_fea.cad.rhino import plot_data
 from compas.datastructures.mesh.mesh import Mesh
-from compas.utilities.colors import i_to_rgb
-
 from math import sqrt
+
 
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
@@ -52,58 +48,20 @@ def modal(mesh, pts, num_modes, path, name):
     s.set_steps_order(['modal_analysis'])
     
     # analyse ------------------------------------------------------------------
-    fields = ['F']
+    fields = 'all'
     s.write_input_file(software='ansys', fields=fields)
-    s.analyse(software='ansys', fields=fields, cpus=4)
+    s.analyse(software='ansys', cpus=4)
     s.extract_data(software='ansys', fields=fields, steps='last')
     return s
 
-
-def draw_modal_shapes(path, amp, name):
-    nodes, elements = get_nodes_elements_from_result_files(path)
-    modes_dict, modal_freqs = get_modal_data_from_result_files(path)
-    vkeys = sorted(nodes.keys(), key=int)
-    vert = [[nodes[k]['x'], nodes[k]['y'], nodes[k]['z']] for k in vkeys]
-    fkeys = sorted(elements.keys(), key=int)
-    faces = [elements[k]['topology'] for k in fkeys]
-    freqs = sorted(modal_freqs.keys(), key=int)
-    for freq in freqs:
-        print freq
-        lname = name + '_mode ' + str(freq) + ' _ ' + str(round(modal_freqs[freq], 2)) + 'Hz'
-        rs.AddLayer(lname)
-        rs.CurrentLayer(lname)
-        disp = modes_dict[freq]
-        dkeys = sorted(disp.keys(), key=int)
-        disp = [[disp[k]['x'] * amp, disp[k]['y'] * amp, disp[k]['z'] * amp] for k in dkeys]
-        dvert = []
-        dlens = []
-        for i in range(len(vert)):
-            v = vert[i]
-            d = disp[i]
-            dlens.append(sqrt(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]))
-            dvert.append([v[0] + d[0], v[1] + d[1], v[2] + d[2]])
-        colors = []
-        maxd = max(dlens)
-        mind = min(dlens)
-        if mind == maxd:
-            colors = [0, 0, 0] * len(vert)
-        else:
-            for dlen in dlens:
-                value = (dlen - mind) / (maxd - mind)
-                colors.append(i_to_rgb(value))
-        rs.AddMesh(dvert, faces, vertex_colors=colors)
-
-
 if __name__ == '__main__':
-    layers = ['s1','s2']
     path = os.path.dirname(os.path.abspath(__file__)) + '/'
     num_modes = 6
-
-    for layer in layers:
-        name = layer
-        pts = rs.ObjectsByLayer(layer + '_pts')
-        pts = [list(rs.PointCoordinates(pt)) for pt in pts]
-        guid = rs.ObjectsByLayer(layer)[0]
-        mesh = mesh_from_guid(Mesh, guid)
-        modal(mesh, pts, num_modes, path, name)
-        # draw_modal_shapes(path, 50, layer)
+    name = 's1'
+    pts = rs.ObjectsByLayer(name + '_pts')
+    pts = [list(rs.PointCoordinates(pt)) for pt in pts]
+    guid = rs.ObjectsByLayer(name)[0]
+    mesh = mesh_from_guid(Mesh, guid)
+    s = modal(mesh, pts, num_modes, path, name)
+    print s.results['modal_analysis']['nodal']['ux2']
+    plot_data(s, 'modal_analysis', layer='mode0',scale=1, mode=2)

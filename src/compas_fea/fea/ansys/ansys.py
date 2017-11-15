@@ -28,11 +28,11 @@ def input_generate(structure):
     path = structure.path
     stypes = [structure.steps[skey].type for skey in structure.steps]
 
-    if 'STATIC' in stypes:
+    if 'static' in stypes:
         make_command_file_static(structure, path, name)
-    elif 'MODAL' in stypes:
+    elif 'modal' in stypes:
         make_command_file_modal(structure, path, name)
-    elif 'HARMONIC' in stypes:
+    elif 'harmonic' in stypes:
         make_command_file_harmonic(structure, path, name, skey)
     else:
         raise ValueError('This analysis type has not yet been implemented for Compas Ansys')
@@ -53,7 +53,7 @@ def make_command_file_harmonic(structure, output_path, filename, skey):
     write_harmonic_analysis_request(structure, output_path, filename, skey)
 
 
-def ansys_launch_process(path, name, fields, cpus, license, delete=True):
+def ansys_launch_process(path, name, cpus, license, delete=True):
 
     if not os.path.exists(path + name + '_output/'):
         os.makedirs(path + name + '_output/')
@@ -258,15 +258,15 @@ def write_results_from_rst(structure, fields, steps):
     for skey in steps:
         step_index = steps.index(skey)
         stype = structure.steps[skey].type
-        if stype == 'STATIC':
+        if stype == 'static':
             set_current_step(path, filename, step_index=step_index)
             write_static_results_from_ansys_rst(structure.name, path, fields,
                                                 step_index=step_index, step_name=skey)
-        elif stype == 'MODAL':
+        elif stype == 'modal':
             num_modes = structure.steps[skey].modes
             write_modal_results_from_ansys_rst(structure.name, path, fields, num_modes,
                                                step_index=step_index, step_name=skey)
-        elif stype == 'HARMONIC':
+        elif stype == 'harmonic':
             pass
     ansys_launch_process_extract(path, structure.name)
     os.remove(path + '/' + filename)
@@ -282,32 +282,30 @@ def load_to_results(structure, fields, steps):
         steps = [steps]
 
     for step in steps:
+        structure.results[step] = {}
         if structure.steps[step].__name__ == 'StaticStep':
-            rdict = []
+            rlist = []
             if 'u' in fields or 'all' in fields:
-                rdict.append(get_displacements_from_result_files(out_path, step))
+                rlist.append(get_displacements_from_result_files(out_path, step))
             if 's' in fields or 'all' in fields:
-                rdict.append(get_nodal_stresses_from_result_files(out_path, step))
+                rlist.append(get_nodal_stresses_from_result_files(out_path, step))
             if 'r' in fields or 'all' in fields:
-                rdict.append(get_reactions_from_result_files(out_path, step))
+                rlist.append(get_reactions_from_result_files(out_path, step))
             if 'e' in fields or 'all' in fields:
-                rdict.append(get_principal_strains_from_result_files(out_path, step))
+                rlist.append(get_principal_strains_from_result_files(out_path, step))
             if 'sp' in fields or 'all' in fields:
-                rdict.append(get_principal_stresses_from_result_files(out_path, step))
+                rlist.append(get_principal_stresses_from_result_files(out_path, step))
             if 'ss' in fields or 'all' in fields:
-                rdict.append(get_shear_stresses_from_result_files(out_path, step))
+                rlist.append(get_shear_stresses_from_result_files(out_path, step))
         elif structure.steps[step].__name__ == 'ModalStep':
-            rdict = []
+            rlist = []
             if 'u' in fields or 'all' in fields:
-                rdict.append(get_modal_shapes_from_result_files(out_path))
+                rlist.append(get_modal_shapes_from_result_files(out_path))
             if 'f' in fields or 'all' in fields:
                 fdict = get_modal_freq_from_result_files(out_path)
                 structure.results['frequency'] = fdict
-
-        structure.results['nodal'][step] = rdict[0]
-        if len(rdict) >= 1:
-            for d in rdict[1:]:
-                for key, att in structure.results['nodal'][step].items():
+        structure.results[step].setdefault('nodal', rlist[0])
+        if len(rlist) >= 1:
+            for d in rlist[1:]:
+                for key, att in structure.results[step]['nodal'].items():
                     att.update(d[key])
-
-

@@ -296,7 +296,7 @@ def plot_axes(xyz, e11, e22, e33, layer, sc=1):
 
 
 def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
-              nodal='mean'):
+              nodal='mean', mode=''):
     """ Plots analysis results on the deformed shape of the Structure.
 
     Note:
@@ -312,6 +312,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         cbar (list): Minimum and maximum limits on the colorbar.
         iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
         nodal (str): 'mean', 'max' or 'min' for nodal values.
+        mode (int): mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
 
     Returns:
         None
@@ -335,20 +336,20 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     nodes = [structure.node_xyz(nkey) for nkey in nkeys]
 
     ekeys = sorted(structure.elements, key=int)
-    elements = [structure.elements[ekey].nodes for ekey in ekeys]
 
     nodal_data = structure.results[step]['nodal']
-    elemental_data = structure.results[step]['element']
-    ux = [nodal_data['ux'][str(key)] for key in nkeys]
-    uy = [nodal_data['uy'][str(key)] for key in nkeys]
-    uz = [nodal_data['uz'][str(key)] for key in nkeys]
+    ux = [nodal_data['ux{0}'.format(str(mode))][key] for key in nkeys]
+    uy = [nodal_data['uy{0}'.format(str(mode))][key] for key in nkeys]
+    uz = [nodal_data['uz{0}'.format(str(mode))][key] for key in nkeys]
 
     # Postprocess
 
     try:
-        data = [nodal_data[field][str(key)] for key in nkeys]
+        data = [nodal_data[field + str(mode)][key] for key in nkeys]
         dtype = 'nodal'
-    except:
+    except(Exception):
+        elemental_data = structure.results[step]['element']
+        elements = [structure.elements[ekey].nodes for ekey in ekeys]
         data = elemental_data[field]
         dtype = 'elemental'
 
