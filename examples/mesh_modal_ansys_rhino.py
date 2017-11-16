@@ -8,7 +8,7 @@ from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ShellSection
 from compas_fea.structure import ElementProperties
 from compas_fea.structure import ModalStep
-from compas_fea.cad.rhino import plot_data
+from compas_fea.cad.rhino import plot_mode_shapes
 from compas.datastructures.mesh.mesh import Mesh
 from math import sqrt
 
@@ -64,4 +64,4 @@ if __name__ == '__main__':
     mesh = mesh_from_guid(Mesh, guid)
     s = modal(mesh, pts, num_modes, path, name)
     print s.results['modal_analysis']['nodal']['ux2']
-    plot_data(s, 'modal_analysis', layer='mode0',scale=1, mode=2)
+    plot_mode_shapes(s, 'modal_analysis', layer='mode',scale=100)

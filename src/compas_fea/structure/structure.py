@@ -926,43 +926,55 @@ compas_fea structure: {}
 # results
 # ==============================================================================
 
-    def get_results(self, step, field, nodes=None, elements=None):
+    def get_nodal_results(self, step, field, nodes='all'):
         """ Extract results from self.results.
 
         Parameters:
             step (str): Step to extract from.
             field (str): Data field request.
             nodes (str, list): Extract 'all' or a node set/list.
-            elements (str, list): Extract 'all' or an element set/list.
 
         Returns:
-            None
+            (dict): The nodal results for the requested field.
         """
         data = {}
 
-        if nodes:
-            rdict = self.results['nodal']
-            if nodes == 'all':
-                keys = list(self.nodes.keys())
-            elif isinstance(nodes, str):
-                keys = self.sets[nodes]['selection']
-            else:
-                keys = nodes
-
-        elif elements:
-            rdict = self.results['element']
-            if elements == 'all':
-                keys = list(self.elements.keys())
-            elif isinstance(elements, str):
-                keys = self.sets[elements]['selection']
-            else:
-                keys = elements
+        rdict = self.results['nodal']
+        if nodes == 'all':
+            keys = list(self.nodes.keys())
+        elif isinstance(nodes, str):
+            keys = self.sets[nodes]['selection']
+        else:
+            keys = nodes
 
         for key in keys:
             data[key] = {rdict[step][field][key] for key in keys}
         return data
 
+    def get_element_results(self, step, field, elements='all'):
+        """ Extract results from self.results.
 
+        Parameters:
+            step (str): Step to extract from.
+            field (str): Data field request.
+            elements (str, list): Extract 'all' or an element set/list.
+
+        Returns:
+            (dict): The element results for the requested field.
+        """
+        data = {}
+
+        rdict = self.results['element']
+        if elements == 'all':
+            keys = list(self.elements.keys())
+        elif isinstance(elements, str):
+            keys = self.sets[elements]['selection']
+        else:
+            keys = elements
+
+        for key in keys:
+            data[key] = {rdict[step][field][key] for key in keys}
+        return data
 # ==============================================================================
 # summary
 # ==============================================================================

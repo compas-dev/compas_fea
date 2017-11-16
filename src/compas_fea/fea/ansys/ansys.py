@@ -303,7 +303,7 @@ def load_to_results(structure, fields, steps):
                 rlist.append(get_modal_shapes_from_result_files(out_path))
             if 'f' in fields or 'all' in fields:
                 fdict = get_modal_freq_from_result_files(out_path)
-                structure.results['frequency'] = fdict
+                structure.results[step]['frequencies'] = fdict
         structure.results[step].setdefault('nodal', rlist[0])
         if len(rlist) >= 1:
             for d in rlist[1:]:
