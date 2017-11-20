@@ -28,7 +28,8 @@ __all__ = [
     'TrapezoidalSection',
     'TrussSection',
     'StrutSection',
-    'TieSection'
+    'TieSection',
+    'SpringSection'
 ]
 
 
@@ -174,8 +175,9 @@ class PipeSection(object):
         A = 0.25 * pi * (D**2 - (D - 2 * t)**2)
         Ixx = 0.25 * pi * (r**4 - (r - t)**4)
         Iyy = 0.25 * pi * (r**4 - (r - t)**4)
+        J = (2. / 3) * pi * (r + 0.5 * t) * t**3
         self.__name__ = 'PipeSection'
-        self.geometry = {'r': r, 't': t, 'D': D, 'A': A, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
+        self.geometry = {'r': r, 't': t, 'D': D, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
         self.name = name
 
 
@@ -275,6 +277,30 @@ class TieSection(TrussSection):
     def __init__(self, name, A):
         TrussSection.__init__(self, name=name, A=A)
         self.__name__ = 'TieSection'
+
+
+class SpringSection(object):
+
+    """ For use with spring elements.
+
+    Note:
+        - Force and displacement data should start from negative to positive.
+
+    Parameters:
+        name (str): Section name.
+        forces (list): Forces data.
+        displacements (list): Displacements data.
+
+    Returns:
+        None
+    """
+
+    def __init__(self, name, forces, displacements):
+        self.__name__ = 'SpringSection'
+        self.name = name
+        self.geometry = None
+        self.forces = forces
+        self.displacements = displacements
 
 
 # ==============================================================================

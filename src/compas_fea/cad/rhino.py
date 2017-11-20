@@ -339,23 +339,23 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
     nodal_data = structure.results[step]['nodal']
     elemental_data = structure.results[step]['element']
-    ux = [nodal_data['ux'][str(key)] for key in nkeys]
-    uy = [nodal_data['uy'][str(key)] for key in nkeys]
-    uz = [nodal_data['uz'][str(key)] for key in nkeys]
+    ux = [nodal_data['ux'][key] for key in nkeys]
+    uy = [nodal_data['uy'][key] for key in nkeys]
+    uz = [nodal_data['uz'][key] for key in nkeys]
 
     # Postprocess
 
     try:
-        data = [nodal_data[field][str(key)] for key in nkeys]
+        data = [nodal_data[field][key] for key in nkeys]
         dtype = 'nodal'
     except:
         data = elemental_data[field]
-        dtype = 'elemental'
+        dtype = 'element'
 
     basedir = utilities.__file__.split('__init__.py')[0]
     xfunc = XFunc(basedir=basedir, tmpdir=temp, mode=1)
     xfunc.funcname = 'functions.postprocess'
-    toc, U, cnodes, fabs, _ = xfunc(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)['data']
+    toc, U, cnodes, fabs = xfunc(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)['data']
 
     print('\n***** Data processed : {0} s *****'.format(toc))
 

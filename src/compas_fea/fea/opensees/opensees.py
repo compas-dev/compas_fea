@@ -10,6 +10,8 @@ from subprocess import PIPE
 
 from time import time
 
+from math import sqrt
+
 import os
 
 
@@ -45,9 +47,7 @@ def extract_out_data(structure):
     temp = '{0}{1}/'.format(path, name)
 
     step = structure.steps_order[1]
-    structure.results[step] = {}
-    structure.results[step]['nodal'] = {}
-    structure.results[step]['element'] = {}
+    structure.results[step] = {'nodal': {}, 'element': {}}
 
     # Nodal data
 
@@ -59,12 +59,27 @@ def extract_out_data(structure):
         lines = f.readlines()
     ur_out = [float(i) for i in lines[-1].split(' ')[1:]]
 
-    structure.results[step]['nodal']['u'] = {}
-    structure.results[step]['nodal']['ur'] = {}
+    nodal = structure.results[step]['nodal']
+    elemental = structure.results[step]['element']
+
+    for dof in 'xyz':
+        nodal['u{0}'.format(dof)] = {}
+        nodal['ur{0}'.format(dof)] = {}
+    nodal['um'] = {}
+    nodal['urm'] = {}
 
     for node in structure.nodes:
-        structure.results[step]['nodal']['u'][node] = [u_out[node * 3 + i] for i in range(3)]
-        structure.results[step]['nodal']['ur'][node] = [ur_out[node * 3 + i] for i in range(3)]
+        u_sum2 = 0
+        ur_sum2 = 0
+        for c, dof in enumerate('xyz'):
+            u_val = u_out[node * 3 + c]
+            ur_val = ur_out[node * 3 + c]
+            nodal['u{0}'.format(dof)][node] = u_val
+            nodal['ur{0}'.format(dof)][node] = ur_val
+            u_sum2 += u_val**2
+            ur_sum2 += ur_val**2
+        nodal['um'][node] = sqrt(u_sum2)
+        nodal['urm'][node] = sqrt(ur_sum2)
 
 
 def opensees_launch_process(structure, exe):
@@ -86,23 +101,20 @@ def opensees_launch_process(structure, exe):
     tic = time()
 
     if not exe:
+        exe = 'C:/OpenSees.exe'
 
-        'Please re-run giving executable path exe'
-
-    else:
-
-        command = '{0} {1}{2}.tcl'.format(exe, path, name)
-        print(command)
-        p = Popen(command, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
-        while True:
-            line = p.stdout.readline()
-            if not line:
-                break
-            line = str(line.strip())
-            print(line)
-        stdout, stderr = p.communicate()
-        print(stdout)
-        print(stderr)
+    command = '{0} {1}{2}.tcl'.format(exe, path, name)
+    print(command)
+    p = Popen(command, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+    while True:
+        line = p.stdout.readline()
+        if not line:
+            break
+        line = str(line.strip())
+        print(line)
+    stdout, stderr = p.communicate()
+    print(stdout)
+    print(stderr)
 
     toc = time() - tic
 
@@ -393,19 +405,19 @@ def input_write_patterns(f, structure, steps, loads):
     f.write('##\n')
     f.write('{0}\n'.format('}'))
 
-    f.write('##\n')
-    f.write('constraints Plain\n')
-    f.write('##\n')
-    f.write('numberer RCM\n')
-    f.write('##\n')
-    f.write('system ProfileSPD\n')
-    f.write('##\n')
-    f.write('test RelativeNormUnbalance {0} {1} 2\n'.format(tolerance, iterations))
-    f.write('##\n')
-    f.write('algorithm Newton\n')
-    f.write('##\n')
-    f.write('integrator LoadControl {0}\n'.format(1./increments))
-    f.write('##\n')
+    # f.write('##\n')
+    # f.write('constraints Plain\n')
+    # f.write('##\n')
+    # f.write('numberer RCM\n')
+    # f.write('##\n')
+    # f.write('system ProfileSPD\n')
+    # f.write('##\n')
+    # f.write('test RelativeNormUnbalance {0} {1} 2\n'.format(tolerance, iterations))
+    # f.write('##\n')
+    # f.write('algorithm Newton\n')
+    # f.write('##\n')
+    # f.write('integrator LoadControl {0}\n'.format(1./increments))
+    # f.write('##\n')
     f.write('analysis Static\n')
     f.write('##\n')
     f.write('analyze {0}\n'.format(increments))

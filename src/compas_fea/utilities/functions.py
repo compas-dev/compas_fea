@@ -51,11 +51,11 @@ except ImportError:
     print('***** NumPy functions not imported *****')
 
 try:
-    # from scipy.interpolate import griddata
+    from scipy.interpolate import griddata
     from scipy.sparse import csr_matrix
     from scipy.sparse import find
-    # from scipy.spatial import Delaunay
-    # from scipy.spatial import distance_matrix
+    from scipy.spatial import Delaunay
+    from scipy.spatial import distance_matrix
 except ImportError:
     print('***** SciPy functions not imported *****')
 
@@ -408,7 +408,7 @@ def normalise_data(data, cmin, cmax):
     return fscaled, fabs
 
 
-def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, iptype, nodal):
+def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, iptype, nodal, scaled=None):
     """ Post-process data from analysis results for given step and field.
 
     Parameters:
@@ -424,6 +424,7 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
         ctype (int): RGB color type, 1 or 255.
         iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
         nodal (str): 'mean', 'max' or 'min' for nodal values.
+        scaled (bool): Return scaled data values or not.
 
     Returns:
         float: Time taken to process data.
@@ -432,7 +433,6 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
         float: Absolute maximum data value.
         list: Normalised data values.
     """
-    # print('debug')
     tic = time()
 
     dU = hstack([array(ux)[:, newaxis], array(uy)[:, newaxis], array(uz)[:, newaxis]])
@@ -447,11 +447,16 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
 
     cnodes_ = [list(i) for i in list(cnodes)]
 
-    fscaled = [float(i) for i in list(fscaled)]
+    fscaled_ = [float(i) for i in list(fscaled)]
+
+    fabs = float(fabs)
 
     toc = time() - tic
 
-    return toc, U, cnodes_, fabs, fscaled
+    if scaled:
+        return toc, U, cnodes_, fabs, fscaled_
+    else:
+        return toc, U, cnodes_, fabs
 
 
 def process_data(data, dtype, iptype, nodal, elements, n):
@@ -471,7 +476,7 @@ def process_data(data, dtype, iptype, nodal, elements, n):
     if dtype == 'nodal':
         values = array(data)[:, newaxis]
 
-    elif dtype == 'elemental':
+    elif dtype == 'element':
         m = len(list(data.keys()))
         values_ = zeros((m, 1))
         values = zeros((n, 1))

@@ -4,7 +4,7 @@ from compas_fea.cad import rhino
 
 from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
-from compas_fea.structure import PinnedDisplacement
+from compas_fea.structure import GeneralDisplacement
 from compas_fea.structure import PointLoad
 from compas_fea.structure import ShellSection
 from compas_fea.structure import Steel
@@ -23,11 +23,11 @@ mdl = Structure(name='mesh_yieldline', path='C:/Temp/')
 
 # Add shell elements
 
-rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers=['elset_mesh'])
+rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers='elset_mesh')
 
 # Add node and element sets
 
-rhino.add_sets_from_layers(mdl, layers=['elset_mesh', 'nset_supports', 'nset_loads'])
+rhino.add_sets_from_layers(mdl, layers=['elset_mesh', 'nset_roller_x', 'nset_roller_y', 'nset_loads'])
 
 # Add materials
 
@@ -44,18 +44,20 @@ mdl.add_element_properties(ep, name='ep_yield')
 
 # Add loads
 
-pz = 5000 / mdl.node_count()
+pz = 110000 / mdl.node_count()
 mdl.add_load(PointLoad(name='load_points', nodes='nset_loads', z=-pz))
 
 # Add displacements
 
-mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_supports'))
+mdl.add_displacements([
+    GeneralDisplacement(name='disp_x', nodes='nset_roller_x', z=0, y=0),
+    GeneralDisplacement(name='disp_y', nodes='nset_roller_y', z=0, x=0)])
 
 # Add steps
 
 mdl.add_steps([
-    GeneralStep(name='step_bc', type='STATIC', displacements=['disp_pinned']),
-    GeneralStep(name='step_loads', nlgeom=True, type='STATIC,RIKS', loads=['load_points'], increments=30)])
+    GeneralStep(name='step_bc', type='STATIC', displacements=['disp_x', 'disp_y']),
+    GeneralStep(name='step_loads', nlgeom=0, type='STATIC', loads=['load_points'])])
 mdl.steps_order = ['step_bc', 'step_loads']
 
 # Structure summary
@@ -68,4 +70,4 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 'pe'])
 
 # Plot strain
 
-rhino.plot_data(mdl, step='step_loads', field='pemaxp', cbar=[None, 0.001], scale=0)
+rhino.plot_data(mdl, step='step_loads', field='pemaxp', cbar=[None, 0.0005], scale=0)

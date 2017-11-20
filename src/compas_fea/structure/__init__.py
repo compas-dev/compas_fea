@@ -70,6 +70,7 @@ element
 
     Element
     BeamElement
+    SpringElement
     TrussElement
     StrutElement
     TieElement
@@ -186,6 +187,7 @@ section
     TrussSection
     StrutSection
     TieSection
+    SpringSection
 
 
 step

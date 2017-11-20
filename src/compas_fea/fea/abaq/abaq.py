@@ -177,9 +177,26 @@ def extract_odb_data(structure, fields, exe):
 
     toc = time() - tic
 
+    print('\n***** Data extracted from Abaqus .odb file : {0} s *****\n'.format(toc))
+
+    tic = time()
+
     try:
         with open('{0}{1}-results.json'.format(temp, name), 'r') as f:
-            structure.results = json.load(f)
+            results = json.load(f)
+
+        for step in results:
+            structure.results[step] = {}
+
+            for type in results[step]:
+                structure.results[step][type] = {}
+
+                for field in results[step][type]:
+                    structure.results[step][type][field] = {}
+
+                    for key in results[step][type][field]:
+                        structure.results[step][type][field][int(key)] = results[step][type][field][key]
+
         structure.save_to_obj()
 
         print('***** Saving data to structure.results successful *****')
@@ -187,7 +204,9 @@ def extract_odb_data(structure, fields, exe):
     except:
         print('***** Saving data to structure.results unsuccessful *****')
 
-    print('\n***** Data extracted from Abaqus .odb file : {0} s *****\n'.format(toc))
+    toc = time() - tic
+
+    print('\n***** Data saved to structure.results : {0} s *****\n'.format(toc))
 
 
 def input_write_constraints(f, constraints):
@@ -230,18 +249,19 @@ def input_write_elements(f, elements):
     """ Writes the element information to the Abaqus .inp file.
 
     Note:
-        - T3D2  truss    2 nodes elset_T3D2.
-        - B31   beam     2 nodes elset_B31.
-        - S3    shell    3 nodes elset_S3.
-        - S4    shell    4 nodes elset_S4.
-        - M3D3  membrane 3 nodes elset_M3D3.
-        - M3D4  membrane 4 nodes elset_M3D4.
-        - C3D4  solid    4 nodes elset_C3D4.
-        - C3D6  solid    6 nodes elset_C3D6.
-        - C3D8  solid    8 nodes elset_C3D8.
-        - DC3D4 solid    4 nodes elset_DC3D4 thermal.
-        - DC3D6 solid    6 nodes elset_DC3D6 thermal.
-        - DC3D8 solid    8 nodes elset_DC3D8 thermal.
+        - T3D2    truss     2 nodes elset_T3D2.
+        - CONN3D2 connector 2 nodes elset_CONN3D2
+        - B31     beam      2 nodes elset_B31.
+        - S3      shell     3 nodes elset_S3.
+        - S4      shell     4 nodes elset_S4.
+        - M3D3    membrane  3 nodes elset_M3D3.
+        - M3D4    membrane  4 nodes elset_M3D4.
+        - C3D4    solid     4 nodes elset_C3D4.
+        - C3D6    solid     6 nodes elset_C3D6.
+        - C3D8    solid     8 nodes elset_C3D8.
+        - DC3D4   solid     4 nodes elset_DC3D4 thermal.
+        - DC3D6   solid     6 nodes elset_DC3D6 thermal.
+        - DC3D8   solid     8 nodes elset_DC3D8 thermal.
 
     Parameters:
         f (obj): The open file object for the .inp file.
@@ -253,7 +273,7 @@ def input_write_elements(f, elements):
 
     # Sort elements
 
-    etypes = ['T3D2', 'B31', 'S3', 'S4', 'M3D3', 'M3D4', 'C3D4', 'C3D6', 'C3D8', 'DC3D4', 'DC3D6', 'DC3D8']
+    etypes = ['T3D2', 'CONN3D2', 'B31', 'S3', 'S4', 'M3D3', 'M3D4', 'C3D4', 'C3D6', 'C3D8', 'DC3D4', 'DC3D6', 'DC3D8']
     edic = {i: [] for i in etypes}
 
     for ekey in sorted(elements, key=int):
@@ -268,6 +288,9 @@ def input_write_elements(f, elements):
 
         elif etype == 'BeamElement':
             estr = 'B31'
+
+        elif etype == 'SpringElement':
+            estr = 'CONN3D2'
 
         elif etype == 'ShellElement':
             estr = 'S{0}'.format(len(nodes))
@@ -659,7 +682,8 @@ def input_write_properties(f, sections, properties, elements, sets):
         section = sections[property.section]
         stype = section.__name__
         geometry = section.geometry
-        sname = sdata[stype]['name']
+        if geometry:
+            sname = sdata[stype]['name']
 
         f.write('**\n')
         f.write('** Section: {0}\n'.format(key))
@@ -673,9 +697,19 @@ def input_write_properties(f, sections, properties, elements, sets):
             explode = sets[elset]['explode']
             selection = sets[elset]['selection']
 
+            # Springs
+
+            if stype == 'SpringSection':
+
+                f.write('*CONNECTOR SECTION, ELSET={0}, BEHAVIOR=BEH_{1}\n'.format(elset, section.name))
+                f.write('AXIAL\n')
+                f.write('**\n')
+                # for i, j in zip(section.forces, section.displacements):
+                    # f.write('{0}, {1}\n'.format(i, j))
+
             # Beam sections
 
-            if (stype not in shells) and (stype not in solids):
+            elif (stype not in shells) and (stype not in solids):
 
                 if explode:
                     for select in selection:

@@ -169,6 +169,7 @@ compas_fea structure: {}
         Returns:
             int: Key of the added or pre-existing node.
         """
+        xyz = [float(i) for i in xyz]
         key = self.check_node_exists(xyz)
         if key is None:
             key = self.node_count()
@@ -331,6 +332,7 @@ compas_fea structure: {}
             int: Key of the added or existing element.
         """
         func_dic = {'BeamElement': BeamElement,
+                    'SpringElement': SpringElement,
                     'TrussElement': TrussElement,
                     'StrutElement': StrutElement,
                     'TieElement': TieElement,
