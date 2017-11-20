@@ -32,7 +32,7 @@ def write_modal_analysis_request(structure, path, name):
     write_nodes(structure, path, filename)
     write_elements(structure, path, filename)
     for skey in structure.steps_order:
-        if structure.steps[skey].type == 'MODAL':
+        if structure.steps[skey].type == 'modal':
             displacements = structure.steps[skey].displacements
             write_modal_solve(structure, path, filename, skey)
             write_constraint_nodes(structure, path, filename, displacements)

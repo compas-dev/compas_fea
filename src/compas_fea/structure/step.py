@@ -131,7 +131,7 @@ class HarmonicStep(object):
 
     def __init__(self, name, freq_range, freq_steps, displacements=[], loads=[], factor=1.0, damping=None,
                  type='harmonic'):
-        self.__name__ = 'HarmonicStepStep'
+        self.__name__ = 'HarmonicStep'
         self.name = name
         self.freq_range = freq_range
         self.freq_steps = freq_steps

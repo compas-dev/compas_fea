@@ -1,4 +1,5 @@
 import os
+from compas.geometry import length_vector
 
 
 def get_nodes_elements_from_result_files(path):
@@ -109,14 +110,19 @@ def get_modal_shapes_from_result_files(out_path):
 
     modes_dict = {}
     for i, f in enumerate(modal_files):
+        modes_dict['ux' + str(i)] = {}
+        modes_dict['uy' + str(i)] = {}
+        modes_dict['uz' + str(i)] = {}
+        modes_dict['um' + str(i)] = {}
         mode = f.readlines()
-        # modes_dict[i] = {}
         for j in range(len(mode)):
             string = mode[j].split(',')
             a = map(float, string)
             nkey = int(a[0]) - 1
-            modes_dict.setdefault(nkey, {})
-            modes_dict[nkey].update({'ux' + str(i): a[1], 'uy' + str(i): a[2], 'uz' + str(i): a[3]})
+            modes_dict['ux' + str(i)][nkey] = a[1]
+            modes_dict['uy' + str(i)][nkey] = a[2]
+            modes_dict['uz' + str(i)][nkey] = a[3]
+            modes_dict['um' + str(i)][nkey] = length_vector((a[1], a[2], a[3]))
         f.close()
 
     return modes_dict

@@ -53,6 +53,7 @@ __all__ = [
     'network_from_lines',
     'ordered_network',
     'plot_axes',
+    'plot_mode_shapes',
     'plot_data',
     'plot_voxels',
     'plot_principal_stresses',
@@ -295,8 +296,25 @@ def plot_axes(xyz, e11, e22, e33, layer, sc=1):
     rs.ObjectLayer(ez, layer)
 
 
+def plot_mode_shapes(structure, step, layer=None, scale=1.0):
+    """Plots modal shapes.results
+
+    Parameters:
+        structure (obj): Structure object.
+        step (str): Name of the Step.
+        layer (str): Each mode will be place in a layer with this string as base.
+        scale (float): Scale displacements for the deformed plot.
+
+    Returns:
+        None
+        """
+    freq = structure.results[step]['frequencies']
+    for fk in freq:
+        plot_data(structure, step, 'um', layer + str(fk), scale=scale, mode=fk)
+
+
 def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
-              nodal='mean'):
+              nodal='mean', mode=''):
     """ Plots analysis results on the deformed shape of the Structure.
 
     Note:
@@ -312,14 +330,13 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         cbar (list): Minimum and maximum limits on the colorbar.
         iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
         nodal (str): 'mean', 'max' or 'min' for nodal values.
+        mode (int): mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
 
     Returns:
         None
     """
 
-    name = structure.name
     path = structure.path
-    temp = '{0}{1}/'.format(path, name)
 
     # Create and clear Rhino layer
 
@@ -339,21 +356,22 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
     nodal_data = structure.results[step]['nodal']
     elemental_data = structure.results[step]['element']
-    ux = [nodal_data['ux'][key] for key in nkeys]
-    uy = [nodal_data['uy'][key] for key in nkeys]
-    uz = [nodal_data['uz'][key] for key in nkeys]
+    ux = [nodal_data['ux{0}'.format(str(mode))][key] for key in nkeys]
+    uy = [nodal_data['uy{0}'.format(str(mode))][key] for key in nkeys]
+    uz = [nodal_data['uz{0}'.format(str(mode))][key] for key in nkeys]
 
     # Postprocess
 
     try:
-        data = [nodal_data[field][key] for key in nkeys]
+        data = [nodal_data[field + str(mode)][key] for key in nkeys]
         dtype = 'nodal'
-    except:
+    except(Exception):
+        elemental_data = structure.results[step]['element']
         data = elemental_data[field]
         dtype = 'element'
 
     basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc(basedir=basedir, tmpdir=temp, mode=1)
+    xfunc = XFunc(basedir=basedir, tmpdir=path, mode=1)
     xfunc.funcname = 'functions.postprocess'
     toc, U, cnodes, fabs = xfunc(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)['data']
 
@@ -406,7 +424,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
     try:
         guid = rs.ObjectsByLayer('colorbar')
-    except:
+    except(Exception):
         rs.CurrentLayer(rs.AddLayer('colorbar'))
         clear_layer('colorbar')
         x = [i * 0.1 for i in range(11)]
@@ -431,6 +449,9 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     rs.AddText('{0:.4g}'.format(float(+fabs)), [xmax, ymin - 1.5 * h, 0], height=h)
     rs.AddText('{0:.4g}'.format(float(-fabs)), [xmin, ymin - 1.5 * h, 0], height=h)
     rs.AddText('0', [xmin + 0.5 * xran, ymin - 1.5 * h, 0], height=h)
+    if mode != '':
+        freq = str(round(structure.results[step]['frequencies'][mode], 3))
+        rs.AddText('Mode_{0} Freq_{1}Hz'.format(mode, freq), [xmin, ymin + 3 * h, 0], height=h)
 
     # Return to Default layer
 
