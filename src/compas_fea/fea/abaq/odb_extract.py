@@ -64,7 +64,7 @@ def extract_odb_data(temp, name, fields, steps='all'):
 
         results[step] = {}
         frame = odb.steps[step].frames[-1]
-        description = frame.description
+        # description = frame.description
         fieldoutputs = frame.fieldOutputs
 
         # Node data

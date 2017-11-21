@@ -1,5 +1,5 @@
 """
-compas_fea.fea.abaq : Abaqus .inp file creator.
+compas_fea.fea.abaq : Abaqus specific functions.
 """
 
 from __future__ import print_function
@@ -186,18 +186,11 @@ def extract_odb_data(structure, fields, exe):
             results = json.load(f)
 
         for step in results:
-            structure.results[step] = {}
+            for dtype in results[step]:
+                for field in results[step][dtype]:
+                    results[step][dtype][field] = {int(k): v for k, v in results[step][dtype][field].items()}
 
-            for type in results[step]:
-                structure.results[step][type] = {}
-
-                for field in results[step][type]:
-                    structure.results[step][type][field] = {}
-
-                    for key in results[step][type][field]:
-                        structure.results[step][type][field][int(key)] = results[step][type][field][key]
-
-        structure.save_to_obj()
+        structure.results = results
 
         print('***** Saving data to structure.results successful *****')
 

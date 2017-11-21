@@ -111,11 +111,11 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 'ur', 'sf', 'sm'])
 
 # Plot displacements
 
-rhino.plot_data(mdl, step='step_load', field='um', radius=0.01)
-rhino.plot_data(mdl, step='step_load', field='ury', radius=0.01)
+rhino.plot_data(mdl, step='step_load', field='um', radius=0.01, colorbar_size=0.3)
+rhino.plot_data(mdl, step='step_load', field='ury', radius=0.01, colorbar_size=0.3)
 
 # Plot section forces/moments
 
-rhino.plot_data(mdl, step='step_load', field='sfnx', radius=0.01)
-rhino.plot_data(mdl, step='step_load', field='sfvy', radius=0.01)
-rhino.plot_data(mdl, step='step_load', field='smy', radius=0.01)
+rhino.plot_data(mdl, step='step_load', field='sfnx', radius=0.01, colorbar_size=0.3)
+rhino.plot_data(mdl, step='step_load', field='sfvy', radius=0.01, colorbar_size=0.3)
+rhino.plot_data(mdl, step='step_load', field='smy', radius=0.01, colorbar_size=0.3)

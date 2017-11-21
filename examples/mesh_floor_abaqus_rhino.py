@@ -93,8 +93,9 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
 # Plot displacements
 
-rhino.plot_data(mdl, step='step_loads', field='um', radius=0.02)
+rhino.plot_data(mdl, step='step_loads', field='um', radius=0.02, colorbar_size=0.5)
 
 # Plot stress
 
-rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.02, cbar=[0, 3*10**6], nodal='max')
+rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.02, 
+                cbar=[0, 3*10**6], nodal='max', colorbar_size=0.5)

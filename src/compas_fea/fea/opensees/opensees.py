@@ -60,7 +60,7 @@ def extract_out_data(structure):
     ur_out = [float(i) for i in lines[-1].split(' ')[1:]]
 
     nodal = structure.results[step]['nodal']
-    elemental = structure.results[step]['element']
+    # elemental = structure.results[step]['element']
 
     for dof in 'xyz':
         nodal['u{0}'.format(dof)] = {}
@@ -136,13 +136,10 @@ def input_generate(structure, fields, units='m'):
 
     with open(filename, 'w') as f:
 
-        constraints = structure.constraints
         displacements = structure.displacements
         elements = structure.elements
-        interactions = structure.interactions
         loads = structure.loads
         materials = structure.materials
-        misc = structure.misc
         nodes = structure.nodes
         properties = structure.element_properties
         sections = structure.sections
@@ -154,7 +151,7 @@ def input_generate(structure, fields, units='m'):
         input_write_bcs(f, structure, steps, displacements)
         input_write_elements(f, sections, properties, elements, sets, materials)
         input_write_recorders(f, structure)
-        input_write_patterns(f, structure, steps, loads)
+        input_write_patterns(f, structure, steps, loads, sets)
 
     print('***** OpenSees input file generated: {0} *****\n'.format(filename))
 
@@ -332,7 +329,7 @@ def input_write_elements(f, sections, properties, elements, sets, materials):
     f.write('##\n')
 
 
-def input_write_patterns(f, structure, steps, loads):
+def input_write_patterns(f, structure, steps, loads, sets):
     """ Writes the load patterns information to the OpenSees .tcl file.
 
     Parameters:
@@ -340,6 +337,7 @@ def input_write_patterns(f, structure, steps, loads):
         structure (obj): The Structure object to read from.
         steps (dic): Step objects from structure.steps.
         loads (dic): Load objects from structure.loads.
+        sets (dic): Sets from strctures.sets.
 
     Returns:
         None
@@ -354,8 +352,8 @@ def input_write_patterns(f, structure, steps, loads):
     stype = step.__name__
     index = step.index
     factor = step.factor
-    tolerance = step.tolerance
-    iterations = step.iterations
+    # tolerance = step.tolerance
+    # iterations = step.iterations
     increments = step.increments
 
     f.write('##\n')
@@ -387,7 +385,7 @@ def input_write_patterns(f, structure, steps, loads):
             if ltype == 'PointLoad':
 
                 coms = ' '.join([str(com[dof]) for dof in dofs])
-                for node in structure.sets[nset]['selection']:
+                for node in sets[nset]['selection']:
                     f.write('load {0} {1}\n'.format(node + 1, coms))
 
             # Line load
@@ -398,19 +396,18 @@ def input_write_patterns(f, structure, steps, loads):
                     raise NotImplementedError
 
                 elif axes == 'local':
-                    pass
-                    # elements = ' '.join([str(i + 1) for i in structure.sets[elset]['selection']])
-                    # f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, com['y'], com['x']))
+                    elements = ' '.join([str(i + 1) for i in sets[elset]['selection']])
+                    f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, com['y'], com['x']))
 
     f.write('##\n')
     f.write('{0}\n'.format('}'))
 
-    # f.write('##\n')
-    # f.write('constraints Plain\n')
-    # f.write('##\n')
-    # f.write('numberer RCM\n')
-    # f.write('##\n')
-    # f.write('system ProfileSPD\n')
+    f.write('##\n')
+    f.write('constraints Plain\n')
+    f.write('##\n')
+    f.write('numberer RCM\n')
+    f.write('##\n')
+    f.write('system ProfileSPD\n')
     # f.write('##\n')
     # f.write('test RelativeNormUnbalance {0} {1} 2\n'.format(tolerance, iterations))
     # f.write('##\n')

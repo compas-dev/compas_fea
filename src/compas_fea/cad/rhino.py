@@ -297,12 +297,12 @@ def plot_axes(xyz, e11, e22, e33, layer, sc=1):
 
 
 def plot_mode_shapes(structure, step, layer=None, scale=1.0):
-    """Plots modal shapes.results
+    """Plots modal shapes from structure.results
 
     Parameters:
         structure (obj): Structure object.
         step (str): Name of the Step.
-        layer (str): Each mode will be place in a layer with this string as base.
+        layer (str): Each mode will be placed in a layer with this string as its base.
         scale (float): Scale displacements for the deformed plot.
 
     Returns:
@@ -310,11 +310,12 @@ def plot_mode_shapes(structure, step, layer=None, scale=1.0):
         """
     freq = structure.results[step]['frequencies']
     for fk in freq:
-        plot_data(structure, step, 'um', layer + str(fk), scale=scale, mode=fk)
+        layerk = layer + str(fk)
+        plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=fk)
 
 
 def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
-              nodal='mean', mode=''):
+              nodal='mean', mode='', colorbar_size=1):
     """ Plots analysis results on the deformed shape of the Structure.
 
     Note:
@@ -331,6 +332,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
         nodal (str): 'mean', 'max' or 'min' for nodal values.
         mode (int): mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
+        colorbar_size (float): Scale on the size of the colorbar.
 
     Returns:
         None
@@ -355,7 +357,6 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     elements = [structure.elements[ekey].nodes for ekey in ekeys]
 
     nodal_data = structure.results[step]['nodal']
-    elemental_data = structure.results[step]['element']
     ux = [nodal_data['ux{0}'.format(str(mode))][key] for key in nkeys]
     uy = [nodal_data['uy{0}'.format(str(mode))][key] for key in nkeys]
     uz = [nodal_data['uz{0}'.format(str(mode))][key] for key in nkeys]
@@ -422,41 +423,43 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
     # Plot colorbar
 
-    try:
-        guid = rs.ObjectsByLayer('colorbar')
-    except(Exception):
-        rs.CurrentLayer(rs.AddLayer('colorbar'))
-        clear_layer('colorbar')
-        x = [i * 0.1 for i in range(11)]
-        y = [i * 0.1 - 1 for i in range(2)]
-        vertices = [[xi, yi, 0] for yi in y for xi in x]
-        faces = [[j * 11 + i, j * 11 + i + 1, (j + 1) * 11 + i + 1, (j + 1) * 11 + i + 0]
-                 for i in range(10) for j in range(1)]
-        guid = rs.AddMesh(vertices, faces)
-        rs.CurrentLayer(layer)
+    xr, yr, _ = structure.node_bounds()
+    yran = yr[1] - yr[0]
+    if not yran:
+        yran = 1
+    s = yran * 0.1 * colorbar_size
+    xmin = xr[1] + 3 * s
+    ymin = yr[0]
 
-    vertices = rs.MeshVertices(guid)
-    x = [i[0] for i in vertices]
+    xl = [xmin, xmin + s]
+    yl = [ymin + i * s for i in range(11)]
+    vertices = [[xi, yi, 0] for xi in xl for yi in yl]
+    faces = [[i, i + 1, i + 12, i + 11] for i in range(10)]
     y = [i[1] for i in vertices]
-    xmin, xmax, ymin = min(x), max(x), min(y)
-    xran = xmax - xmin
-    h = xran / 20.
 
-    colors = [colorbar(2 * (xi - xmin - 0.5 * xran) / xran, input='float', type=255) for xi in x]
-    id = rs.AddMesh(vertices, rs.MeshFaceVertices(guid))
+    yn = yran * colorbar_size
+    colors = [colorbar(2 * (yi - ymin - 0.5 * yn) / yn, input='float', type=255) for yi in y]
+    id = rs.AddMesh(vertices, faces)
     rs.MeshVertexColors(id, colors)
 
-    rs.AddText('{0:.4g}'.format(float(+fabs)), [xmax, ymin - 1.5 * h, 0], height=h)
-    rs.AddText('{0:.4g}'.format(float(-fabs)), [xmin, ymin - 1.5 * h, 0], height=h)
-    rs.AddText('0', [xmin + 0.5 * xran, ymin - 1.5 * h, 0], height=h)
+    h = 0.6 * s
+    for i in range(5):
+        x0 = xmin + 1.2 * s
+        yu = ymin + (5.8 + i) * s
+        yl = ymin + (3.8 - i) * s
+        valu = float(+fabs * (i + 1) / 5.)
+        vall = float(-fabs * (i + 1) / 5.)
+        rs.AddText('{0:.5g}'.format(valu), [x0, yu, 0], height=h)
+        rs.AddText('{0:.5g}'.format(vall), [x0, yl, 0], height=h)
+        rs.AddText('0', [x0, ymin + 4.8 * s, 0], height=h)
+    rs.AddText('Step:{0}   Field:{1}'.format(step, field), [xmin, ymin + 12 * s, 0], height=h)
     if mode != '':
         freq = str(round(structure.results[step]['frequencies'][mode], 3))
-        rs.AddText('Mode_{0} Freq_{1}Hz'.format(mode, freq), [xmin, ymin + 3 * h, 0], height=h)
+        rs.AddText('Mode:{0}   Freq:{1}Hz'.format(mode, freq), [xmin, ymin - 1.5 * s, 0], height=h)
 
     # Return to Default layer
 
     rs.CurrentLayer(rs.AddLayer('Default'))
-    rs.LayerVisible('colorbar', False)
     rs.LayerVisible(layer, False)
     rs.EnableRedraw(True)
 

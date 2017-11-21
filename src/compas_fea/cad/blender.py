@@ -349,85 +349,85 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
     """
     clear_layer(layer=layer)
 
-    # Node and element data
+    # # Node and element data
 
-    nkeys = sorted(structure.nodes, key=int)
-    nodes = [structure.node_xyz(nkey) for nkey in nkeys]
+    # nkeys = sorted(structure.nodes, key=int)
+    # nodes = [structure.node_xyz(nkey) for nkey in nkeys]
 
-    ekeys = sorted(structure.elements, key=int)
-    elements = [structure.elements[ekey].nodes for ekey in ekeys]
+    # ekeys = sorted(structure.elements, key=int)
+    # elements = [structure.elements[ekey].nodes for ekey in ekeys]
 
-    nodal_data = structure.results[step]['nodal']
-    elemental_data = structure.results[step]['element']
-    ux = [nodal_data['ux'][str(key)] for key in nkeys]
-    uy = [nodal_data['uy'][str(key)] for key in nkeys]
-    uz = [nodal_data['uz'][str(key)] for key in nkeys]
+    # nodal_data = structure.results[step]['nodal']
+    # elemental_data = structure.results[step]['element']
+    # ux = [nodal_data['ux'][key] for key in nkeys]
+    # uy = [nodal_data['uy'][key] for key in nkeys]
+    # uz = [nodal_data['uz'][key] for key in nkeys]
 
-    # Process data
+    # # Process data
 
-    try:
-        data = [nodal_data[field][str(key)] for key in nkeys]
-        dtype = 'nodal'
-    except:
-        data = elemental_data[field]
-        dtype = 'elemental'
+    # try:
+    #     data = [nodal_data[field][str(key)] for key in nkeys]
+    #     dtype = 'nodal'
+    # except:
+    #     data = elemental_data[field]
+    #     dtype = 'elemental'
 
-    toc, U, cnodes, fabs, _ = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1, iptype, nodal)
-    U = array(U)
+    # toc, U, cnodes, fabs, _ = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1, iptype, nodal)
+    # U = array(U)
 
-    print('\n***** Data processed : {0} s *****'.format(toc))
+    # print('\n***** Data processed : {0} s *****'.format(toc))
 
-    # Plot meshes
+    # # Plot meshes
 
-    npts = 8
-    mesh_faces = []
+    # npts = 8
+    # mesh_faces = []
 
-    for nodes in elements:
-        n = len(nodes)
+    # for nodes in elements:
+    #     n = len(nodes)
 
-        if n == 2:
-            u, v = nodes
-            pipe = draw_pipes(start=[U[u]], end=[U[v]], radius=radius, layer=layer)[0]
-            col1 = [cnodes[u]] * npts
-            col2 = [cnodes[v]] * npts
-            blendermesh = BlenderMesh(pipe)
-            blendermesh.set_vertex_colors(vertices=range(0, 2 * npts, 2), colors=col1)
-            blendermesh.set_vertex_colors(vertices=range(1, 2 * npts, 2), colors=col2)
+    #     if n == 2:
+    #         u, v = nodes
+    #         pipe = draw_pipes(start=[U[u]], end=[U[v]], radius=radius, layer=layer)[0]
+    #         col1 = [cnodes[u]] * npts
+    #         col2 = [cnodes[v]] * npts
+    #         blendermesh = BlenderMesh(pipe)
+    #         blendermesh.set_vertex_colors(vertices=range(0, 2 * npts, 2), colors=col1)
+    #         blendermesh.set_vertex_colors(vertices=range(1, 2 * npts, 2), colors=col2)
 
-        elif n in [3, 4]:
-            mesh_faces.append(nodes)
+    #     elif n in [3, 4]:
+    #         mesh_faces.append(nodes)
 
-    if mesh_faces:
-        bmesh = xdraw_mesh(name='bmesh', vertices=U, faces=mesh_faces, layer=layer)
-        blendermesh = BlenderMesh(bmesh)
-        blendermesh.set_vertex_colors(vertices=range(U.shape[0]), colors=cnodes)
+    # if mesh_faces:
+    #     bmesh = xdraw_mesh(name='bmesh', vertices=U, faces=mesh_faces, layer=layer)
+    #     blendermesh = BlenderMesh(bmesh)
+    #     blendermesh.set_vertex_colors(vertices=range(U.shape[0]), colors=cnodes)
 
-    # Plot colourbar
+    # # Plot colourbar
 
-    try:
-        cmesh = get_objects(layer=19)[0]
-    except:
-        cmesh = draw_plane(name='colorbar', Lx=1, dx=0.1, Ly=0.1, dy=0.1, layer=19)
+    # try:
+    #     cmesh = get_objects(layer=19)[0]
+    # except:
+    #     cmesh = draw_plane(name='colorbar', Lx=1, dx=0.1, Ly=0.1, dy=0.1, layer=19)
 
-    blendermesh = BlenderMesh(cmesh)
-    vertices = blendermesh.get_vertex_coordinates()
-    faces = blendermesh.get_face_vertex_indices()
-    x = array(vertices)[:, 0]
-    y = array(vertices)[:, 1]
-    xmin, xmax, ymin = min(x), max(x), min(y)
-    xran = xmax - xmin
-    h = xran / 20.
+    # blendermesh = BlenderMesh(cmesh)
+    # vertices = blendermesh.get_vertex_coordinates()
+    # faces = blendermesh.get_face_vertex_indices()
+    # x = array(vertices)[:, 0]
+    # y = array(vertices)[:, 1]
+    # xmin, xmax, ymin = min(x), max(x), min(y)
+    # xran = xmax - xmin
+    # h = xran / 20.
 
-    colors = colorbar(((x - xmin - 0.5 * xran) * 2 / xran)[:, newaxis], input='array', type=1)
-    bmesh = xdraw_mesh(name='colorbar', vertices=vertices, faces=faces, layer=layer)
-    blendermesh = BlenderMesh(bmesh)
-    blendermesh.set_vertex_colors(vertices=range(len(vertices)), colors=colors)
+    # colors = colorbar(((x - xmin - 0.5 * xran) * 2 / xran)[:, newaxis], input='array', type=1)
+    # bmesh = xdraw_mesh(name='colorbar', vertices=vertices, faces=faces, layer=layer)
+    # blendermesh = BlenderMesh(bmesh)
+    # blendermesh.set_vertex_colors(vertices=range(len(vertices)), colors=colors)
 
-    texts = [
-        {'radius': 2 * h, 'pos': [xmax, ymin - 2 * h, 0], 'text': '{0:.4g}'.format(+fabs), 'layer': layer},
-        {'radius': 2 * h, 'pos': [xmin, ymin - 2 * h, 0], 'text': '{0:.4g}'.format(-fabs), 'layer': layer},
-        {'radius': 2 * h, 'pos': [xmin + 0.5 * xran, ymin - 2 * h, 0], 'text': '0', 'layer': layer}]
-    xdraw_texts(texts)
+    # texts = [
+    #     {'radius': 2 * h, 'pos': [xmax, ymin - 2 * h, 0], 'text': '{0:.4g}'.format(+fabs), 'layer': layer},
+    #     {'radius': 2 * h, 'pos': [xmin, ymin - 2 * h, 0], 'text': '{0:.4g}'.format(-fabs), 'layer': layer},
+    #     {'radius': 2 * h, 'pos': [xmin + 0.5 * xran, ymin - 2 * h, 0], 'text': '0', 'layer': layer}]
+    # xdraw_texts(texts)
 
 
 def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',

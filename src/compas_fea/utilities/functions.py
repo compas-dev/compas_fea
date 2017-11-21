@@ -436,19 +436,15 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
     tic = time()
 
     dU = hstack([array(ux)[:, newaxis], array(uy)[:, newaxis], array(uz)[:, newaxis]])
-
     U = [list(i) for i in list(array(nodes) + scale * dU)]
 
     values = process_data(data=data, dtype=dtype, iptype=iptype, nodal=nodal, elements=elements, n=len(nodes))
-
     fscaled, fabs = normalise_data(data=values, cmin=cbar[0], cmax=cbar[1])
 
     cnodes = colorbar(fsc=fscaled, input='array', type=ctype)
-
     cnodes_ = [list(i) for i in list(cnodes)]
 
     fscaled_ = [float(i) for i in list(fscaled)]
-
     fabs = float(fabs)
 
     toc = time() - tic
