@@ -42,7 +42,7 @@ __all__ = [
 
 
 node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
-element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor']
+element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
 
 
 def abaqus_launch_process(structure, exe, cpus):
@@ -694,11 +694,31 @@ def input_write_properties(f, sections, properties, elements, sets):
 
             if stype == 'SpringSection':
 
-                f.write('*CONNECTOR SECTION, ELSET={0}, BEHAVIOR=BEH_{1}\n'.format(elset, section.name))
-                f.write('AXIAL\n')
-                f.write('**\n')
-                # for i, j in zip(section.forces, section.displacements):
-                    # f.write('{0}, {1}\n'.format(i, j))
+                if explode:
+                    for select in selection:
+                        e1 = 'element_{0}'.format(select)
+                        f.write('*CONNECTOR SECTION, ELSET={0}, BEHAVIOR=BEH_{1}\n'.format(e1, section.name))
+                        f.write('AXIAL\n')
+                        f.write('ORI_{0}_{1}\n'.format(select, section.name))
+                        f.write('**\n')
+                        f.write('*ORIENTATION, NAME=ORI_{0}_{1}\n'.format(select, section.name))
+                        ey = elements[select].axes.get('ey', None)
+                        ez = elements[select].axes.get('ez', None)
+                        f.write(', '.join([str(j) for j in ez]) + ', ')
+                        f.write(', '.join([str(j) for j in ey]) + '\n')
+                        f.write('**\n')
+
+                    f.write('*CONNECTOR BEHAVIOR, NAME=BEH_{0}\n'.format(section.name))
+                    f.write('**\n')
+                    if section.stiffness:
+                        f.write('*CONNECTOR ELASTICITY, COMPONENT=1\n')
+                        f.write('{0}\n'.format(section.stiffness))
+                    else:
+                        f.write('*CONNECTOR ELASTICITY, COMPONENT=1, NONLINEAR\n')
+                        for i, j in zip(section.forces, section.displacements):
+                            f.write('{0}, {1}\n'.format(i, j))
+                else:
+                    pass
 
             # Beam sections
 
@@ -1032,6 +1052,9 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
 
             if isinstance(fields, list):
                 fields = structure.fields_dic_from_list(fields)
+            if 'spf' in fields:
+                fields['ctf'] = 'all'
+                del fields['spf']
 
             f.write('*NODE OUTPUT\n')
             if fields == 'all':

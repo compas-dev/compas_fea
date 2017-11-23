@@ -15,6 +15,7 @@ from compas_rhino.utilities import clear_layer
 
 from compas.geometry import add_vectors
 from compas.geometry import centroid_points
+from compas.geometry import cross_vectors
 from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
 
@@ -154,15 +155,17 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
         for guid in guids:
 
             if line_type and rs.IsCurve(guid):
+                sp = structure.add_node(rs.CurveStartPoint(guid))
+                ep = structure.add_node(rs.CurveEndPoint(guid))
                 try:
                     dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
                     ex = dic.get('ex', None)
                     ey = dic.get('ey', None)
-                    axes = {'ex': ex, 'ey': ey}
                 except:
-                    axes = {}
-                sp = structure.add_node(rs.CurveStartPoint(guid))
-                ep = structure.add_node(rs.CurveEndPoint(guid))
+                    ex = None
+                    ey = None
+                ez = subtract_vectors(structure.node_xyz(ep), structure.node_xyz(sp))
+                axes = {'ex': ex, 'ey': ey, 'ez': ez}
                 structure.add_element(nodes=[sp, ep], type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
 
             elif mesh_type and rs.IsMesh(guid):
@@ -345,7 +348,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     if not layer:
         layer = '{0}-{1}'.format(step, field)
     rs.CurrentLayer(rs.AddLayer(layer))
-    clear_layer(layer)
+    rs.DeleteObjects(rs.ObjectsByLayer(layer))
     rs.EnableRedraw(False)
 
     # Node and element data

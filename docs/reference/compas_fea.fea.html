@@ -1,155 +1,205 @@
 
-<!DOCTYPE html>
 
+
+<!DOCTYPE html>
 <html lang="en">
-<head>
-<title>compas_fea -- FEA package for compas</title>
-<!-- Required meta tags -->
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
-<!-- compas meta tags -->
-<meta content="" name="author"/>
-<meta content="" name="description"/>
-<!-- Bootstrap CSS -->
-<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
-<!-- highlight CSS -->
-<link href="https://compas-dev.github.io/css/github.css" rel="stylesheet" type="text/css"/>
-<!-- compas CSS -->
-<link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
-<link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
-<link href="generated/compas_fea.fea.abaq.abaqus_launch_process.html" rel="next" title="abaqus_launch_process"/>
-<link href="generated/compas_fea.cad.rhino.plot_principal_stresses.html" rel="prev" title="plot_principal_stresses"/>
-<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
-</head>
-<body data-spy="scroll" data-target="#compas-localnav">
-<!-- main navigation bar -->
-<header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
-<a class="navbar-brand" href="https://compas-dev.github.io">compas</a>
-<ul class="navbar-nav">
-<li class="nav-item">
-<a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
-</li>
-</ul>
-</header>
-<!-- page container -->
-<div class="container-fluid compas-container">
-<div class="row flex-xl-nowrap">
-<!-- main page content -->
-<main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
-<nav class="breadcrumb">
-<a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
-<a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
-<a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
-<a class="breadcrumb-item" href="../reference.html">reference</a>
-<a accesskey="U" class="breadcrumb-item" href="compas_fea.html">compas_fea</a>
-</nav>
-<div class="section">
+    <head>
+        <title>compas_fea -- FEA package for compas</title>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+        <!-- compas meta tags -->
+        <meta name="author" content="" />
+        <meta name="description" content="" />
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+
+        <!-- highlight CSS -->
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/github.css" />
+
+        <!-- compas CSS -->
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas-reference.css" />
+
+        
+            <link rel="next" title="abaqus_launch_process" href="generated/compas_fea.fea.abaq.abaqus_launch_process.html" />
+        
+        
+        
+            <link rel="prev" title="plot_principal_stresses" href="generated/compas_fea.cad.rhino.plot_principal_stresses.html" />
+        
+
+        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    </head>
+    <body data-spy="scroll" data-target="#compas-localnav">
+        <!-- main navigation bar -->
+        <header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
+            <a class="navbar-brand" href="https://compas-dev.github.io">compas</a>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+                    </li>
+                </ul>
+        </header>
+        
+        <!-- page container -->
+        <div class="container-fluid compas-container">
+            <div class="row flex-xl-nowrap">
+
+                <!-- main page content -->
+                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+
+                    
+
+                        
+        <nav class="breadcrumb">
+            <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
+            <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
+            <a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+            
+                
+                    <a class="breadcrumb-item" href="../reference.html" >reference</a>
+                
+                    <a class="breadcrumb-item" href="compas_fea.html" accesskey="U">compas_fea</a>
+                
+            
+        </nav>
+
+
+                        
+
+                        
+
+                        <div class="section" id="module-compas_fea.fea">
 <span id="fea"></span><span id="compas-fea-fea"></span><h1>fea</h1>
 <p>The compas_fea package supports ABAQUS, ANSYS and OpenSEES as analysis backends.</p>
-<div class="section">
+<div class="section" id="abaq">
 <h2>abaq</h2>
-<p><code class="xref py py-mod docutils literal">compas_fea.fea.abaq</code></p>
-<table border="1" class="longtable docutils table table-responsive table-bordered">
+<p><code class="xref py py-mod docutils literal"><span class="pre">compas_fea.fea.abaq</span></code></p>
+<table border="1" class="longtable docutils">
 <colgroup>
-<col width="10%"/>
-<col width="90%"/>
+<col width="10%" />
+<col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.abaqus_launch_process.html" title="compas_fea.fea.abaq.abaqus_launch_process"><code class="xref py py-obj docutils literal">abaqus_launch_process</code></a>(structure, exe, cpus)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/compas_fea.fea.abaq.abaqus_launch_process.html#compas_fea.fea.abaq.abaqus_launch_process" title="compas_fea.fea.abaq.abaqus_launch_process"><code class="xref py py-obj docutils literal"><span class="pre">abaqus_launch_process</span></code></a>(structure,&nbsp;exe,&nbsp;cpus)</td>
 <td>Runs the analysis through Abaqus.</td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.extract_odb_data.html" title="compas_fea.fea.abaq.extract_odb_data"><code class="xref py py-obj docutils literal">extract_odb_data</code></a>(structure, fields, exe)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/compas_fea.fea.abaq.extract_odb_data.html#compas_fea.fea.abaq.extract_odb_data" title="compas_fea.fea.abaq.extract_odb_data"><code class="xref py py-obj docutils literal"><span class="pre">extract_odb_data</span></code></a>(structure,&nbsp;fields,&nbsp;exe)</td>
 <td>Extract data from the Abaqus .odb file.</td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_constraints.html" title="compas_fea.fea.abaq.input_write_constraints"><code class="xref py py-obj docutils literal">input_write_constraints</code></a>(f, constraints)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_constraints.html#compas_fea.fea.abaq.input_write_constraints" title="compas_fea.fea.abaq.input_write_constraints"><code class="xref py py-obj docutils literal"><span class="pre">input_write_constraints</span></code></a>(f,&nbsp;constraints)</td>
 <td>Writes the constraints information to the Abaqus .inp file.</td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_elements.html" title="compas_fea.fea.abaq.input_write_elements"><code class="xref py py-obj docutils literal">input_write_elements</code></a>(f, elements)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_elements.html#compas_fea.fea.abaq.input_write_elements" title="compas_fea.fea.abaq.input_write_elements"><code class="xref py py-obj docutils literal"><span class="pre">input_write_elements</span></code></a>(f,&nbsp;elements)</td>
 <td>Writes the element information to the Abaqus .inp file.</td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_generate.html" title="compas_fea.fea.abaq.input_generate"><code class="xref py py-obj docutils literal">input_generate</code></a>(structure, fields[, units])</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_generate.html#compas_fea.fea.abaq.input_generate" title="compas_fea.fea.abaq.input_generate"><code class="xref py py-obj docutils literal"><span class="pre">input_generate</span></code></a>(structure,&nbsp;fields[,&nbsp;units])</td>
 <td>Creates the Abaqus .inp file from the Structure object.</td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_heading.html" title="compas_fea.fea.abaq.input_write_heading"><code class="xref py py-obj docutils literal">input_write_heading</code></a>(f)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_heading.html#compas_fea.fea.abaq.input_write_heading" title="compas_fea.fea.abaq.input_write_heading"><code class="xref py py-obj docutils literal"><span class="pre">input_write_heading</span></code></a>(f)</td>
 <td>Creates the Abaqus .inp file heading.</td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_materials.html" title="compas_fea.fea.abaq.input_write_materials"><code class="xref py py-obj docutils literal">input_write_materials</code></a>(f, materials)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_materials.html#compas_fea.fea.abaq.input_write_materials" title="compas_fea.fea.abaq.input_write_materials"><code class="xref py py-obj docutils literal"><span class="pre">input_write_materials</span></code></a>(f,&nbsp;materials)</td>
 <td>Writes materials to the Abaqus .inp file.</td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_misc.html" title="compas_fea.fea.abaq.input_write_misc"><code class="xref py py-obj docutils literal">input_write_misc</code></a>(f, misc)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_misc.html#compas_fea.fea.abaq.input_write_misc" title="compas_fea.fea.abaq.input_write_misc"><code class="xref py py-obj docutils literal"><span class="pre">input_write_misc</span></code></a>(f,&nbsp;misc)</td>
 <td>Writes misc class info to the Abaqus .inp file.</td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_nodes.html" title="compas_fea.fea.abaq.input_write_nodes"><code class="xref py py-obj docutils literal">input_write_nodes</code></a>(f, nodes, units)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_nodes.html#compas_fea.fea.abaq.input_write_nodes" title="compas_fea.fea.abaq.input_write_nodes"><code class="xref py py-obj docutils literal"><span class="pre">input_write_nodes</span></code></a>(f,&nbsp;nodes,&nbsp;units)</td>
 <td>Writes the nodal co-ordinates information to the Abaqus .inp file.</td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_properties.html" title="compas_fea.fea.abaq.input_write_properties"><code class="xref py py-obj docutils literal">input_write_properties</code></a>(f, sections, ...)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_properties.html#compas_fea.fea.abaq.input_write_properties" title="compas_fea.fea.abaq.input_write_properties"><code class="xref py py-obj docutils literal"><span class="pre">input_write_properties</span></code></a>(f,&nbsp;sections,&nbsp;...)</td>
 <td>Writes the section information to the Abaqus .inp file.</td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_sets.html" title="compas_fea.fea.abaq.input_write_sets"><code class="xref py py-obj docutils literal">input_write_sets</code></a>(f, sets)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_sets.html#compas_fea.fea.abaq.input_write_sets" title="compas_fea.fea.abaq.input_write_sets"><code class="xref py py-obj docutils literal"><span class="pre">input_write_sets</span></code></a>(f,&nbsp;sets)</td>
 <td>Creates the Abaqus .inp file node sets NSETs and element sets ELSETs.</td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_steps.html" title="compas_fea.fea.abaq.input_write_steps"><code class="xref py py-obj docutils literal">input_write_steps</code></a>(f, structure, steps, ...)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/compas_fea.fea.abaq.input_write_steps.html#compas_fea.fea.abaq.input_write_steps" title="compas_fea.fea.abaq.input_write_steps"><code class="xref py py-obj docutils literal"><span class="pre">input_write_steps</span></code></a>(f,&nbsp;structure,&nbsp;steps,&nbsp;...)</td>
 <td>Writes step information to the Abaqus .inp file.</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="section">
+<div class="section" id="ansys">
 <h2>ansys</h2>
-<p><code class="xref py py-mod docutils literal">compas_fea.fea.ansys</code></p>
-<table border="1" class="longtable docutils table table-responsive table-bordered">
+<p><code class="xref py py-mod docutils literal"><span class="pre">compas_fea.fea.ansys</span></code></p>
+<table border="1" class="longtable docutils">
 <colgroup>
-<col width="10%"/>
-<col width="90%"/>
+<col width="10%" />
+<col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class=""><td><code class="xref py py-obj docutils literal">input_generate</code></td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/compas_fea.fea.ansys.input_generate.html#compas_fea.fea.ansys.input_generate" title="compas_fea.fea.ansys.input_generate"><code class="xref py py-obj docutils literal"><span class="pre">input_generate</span></code></a></td>
 <td></td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_static.html" title="compas_fea.fea.ansys.make_command_file_static"><code class="xref py py-obj docutils literal">make_command_file_static</code></a>(structure, ...)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_static.html#compas_fea.fea.ansys.make_command_file_static" title="compas_fea.fea.ansys.make_command_file_static"><code class="xref py py-obj docutils literal"><span class="pre">make_command_file_static</span></code></a>(structure,&nbsp;...)</td>
 <td></td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_static_combined.html" title="compas_fea.fea.ansys.make_command_file_static_combined"><code class="xref py py-obj docutils literal">make_command_file_static_combined</code></a>(structure, ...)</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">make_command_file_static_combined</span></code>(structure,&nbsp;...)</td>
 <td></td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_modal.html" title="compas_fea.fea.ansys.make_command_file_modal"><code class="xref py py-obj docutils literal">make_command_file_modal</code></a>(structure, ...)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_modal.html#compas_fea.fea.ansys.make_command_file_modal" title="compas_fea.fea.ansys.make_command_file_modal"><code class="xref py py-obj docutils literal"><span class="pre">make_command_file_modal</span></code></a>(structure,&nbsp;...)</td>
 <td></td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_harmonic.html" title="compas_fea.fea.ansys.make_command_file_harmonic"><code class="xref py py-obj docutils literal">make_command_file_harmonic</code></a>(structure, ...)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_harmonic.html#compas_fea.fea.ansys.make_command_file_harmonic" title="compas_fea.fea.ansys.make_command_file_harmonic"><code class="xref py py-obj docutils literal"><span class="pre">make_command_file_harmonic</span></code></a>(structure,&nbsp;...)</td>
 <td></td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.ansys.ansys_launch_process.html" title="compas_fea.fea.ansys.ansys_launch_process"><code class="xref py py-obj docutils literal">ansys_launch_process</code></a>(output_path, filename, ...)</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/compas_fea.fea.ansys.ansys_launch_process.html#compas_fea.fea.ansys.ansys_launch_process" title="compas_fea.fea.ansys.ansys_launch_process"><code class="xref py py-obj docutils literal"><span class="pre">ansys_launch_process</span></code></a>(output_path,&nbsp;filename,&nbsp;...)</td>
 <td></td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.ansys.delete_result_files.html" title="compas_fea.fea.ansys.delete_result_files"><code class="xref py py-obj docutils literal">delete_result_files</code></a>(structure, output_path)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/compas_fea.fea.ansys.delete_result_files.html#compas_fea.fea.ansys.delete_result_files" title="compas_fea.fea.ansys.delete_result_files"><code class="xref py py-obj docutils literal"><span class="pre">delete_result_files</span></code></a>(structure,&nbsp;output_path)</td>
 <td></td>
 </tr>
-<tr class=""><td><a class="reference internal" href="generated/compas_fea.fea.ansys.write_total_results.html" title="compas_fea.fea.ansys.write_total_results"><code class="xref py py-obj docutils literal">write_total_results</code></a>(filename, output_path[, ...])</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/compas_fea.fea.ansys.write_total_results.html#compas_fea.fea.ansys.write_total_results" title="compas_fea.fea.ansys.write_total_results"><code class="xref py py-obj docutils literal"><span class="pre">write_total_results</span></code></a>(filename,&nbsp;output_path[,&nbsp;...])</td>
 <td></td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<nav class="compas-sideways">
-<a class="btn btn-primary compas-prev" href="generated/compas_fea.cad.rhino.plot_principal_stresses.html" role="button">plot_principal_stresses</a>
-<a class="btn btn-primary compas-next" href="generated/compas_fea.fea.abaq.abaqus_launch_process.html" role="button">abaqus_launch_process</a>
-</nav>
-</main>
-<!-- sidebar navigation -->
-<div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
-<div class="navbar-light">
-<form action="../search.html" class="d-flex compas-searchbox" id="" method="get">
-<input class="form-control" name="q" placeholder="Search docs" type="text"/>
-<input name="check_keywords" type="hidden" value="yes"/>
-<input name="area" type="hidden" value="default"/>
-<button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
-<span class="navbar-toggler-icon"></span>
-</button>
-</form>
-<div class="navbar-expand-md">
-<div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
-<ul class="nav flex-column active">
+
+                        
+                        <nav class="compas-sideways">
+                            
+                                <a href="generated/compas_fea.cad.rhino.plot_principal_stresses.html" class="btn btn-primary compas-prev" role="button">plot_principal_stresses</a>
+                            
+
+                            
+                                <a href="generated/compas_fea.fea.abaq.abaqus_launch_process.html" class="btn btn-primary compas-next" role="button">abaqus_launch_process</a>
+                            
+                        </nav>
+
+                    
+
+                </main>
+
+                <!-- sidebar navigation -->
+                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
+                    <div class="navbar-light">
+
+                        <form id="" class="d-flex compas-searchbox" action="../search.html" method="get">
+                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
+                            <input type="hidden" name="check_keywords" value="yes" />
+                            <input type="hidden" name="area" value="default" />
+
+                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                        </form>
+
+                        
+                        
+
+                            <div class="navbar-expand-md">
+                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
+
+                                <ul class="nav flex-column active">
 <li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
@@ -165,38 +215,53 @@
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
 </ul>
-</div>
-</div>
-</div>
-</div>
-<!-- toc of current page -->
-<div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
-<ul class="nav flex-column" id="compas-localnav">
+
+
+                                </div>
+                            </div>
+
+                        
+
+                    </div>
+                </div>
+                
+                <!-- toc of current page -->
+                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+
+                    
+
+                    <ul class="nav flex-column" id="compas-localnav">
 <li class="nav-item"><a class="nav-link reference internal" href="#">fea</a><ul class="nav">
 <li class="nav-item"><a class="nav-link reference internal" href="#abaq">abaq</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#ansys">ansys</a></li>
 </ul>
 </li>
 </ul>
-</div>
-</div>
-</div>
-<footer class="compas-footer">
+
+
+                </div>
+            </div>
+        </div>
+
+        <footer class="compas-footer">
             
                 
-                    © Copyright 2017, Block Research Group.
+                    &#169; Copyright 2017, Block Research Group.
                 
             
 
             
-                Last updated on Nov 10, 2017.
+                Last updated on Nov 23, 2017.
             
 
             
                 Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
-<script type="text/javascript">
+
+        
+
+            <script type="text/javascript">
               var DOCUMENTATION_OPTIONS = {
                 URL_ROOT:    '',
                 VERSION:     '',
@@ -206,19 +271,25 @@
                 SOURCELINK_SUFFIX: '.txt'
               };
             </script>
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
-<script src="https://compas-dev.github.io/js/underscore.js"></script>
-<script src="https://compas-dev.github.io/js/doctools.js"></script>
-<script src="https://compas-dev.github.io/js/searchtools_.js"></script>
-<script>
+
+            <!-- Optional JavaScript -->
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+
+            <script src="https://compas-dev.github.io/js/underscore.js"></script>
+            <script src="https://compas-dev.github.io/js/doctools.js"></script>
+            <script src="https://compas-dev.github.io/js/searchtools_.js"></script>
+
+            <script>
                 hljs.initHighlightingOnLoad();
                 anchors.add();
             </script>
-</body>
+
+        
+    </body>
 </html>

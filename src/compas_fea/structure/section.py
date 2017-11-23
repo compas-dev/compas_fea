@@ -288,19 +288,21 @@ class SpringSection(object):
 
     Parameters:
         name (str): Section name.
-        forces (list): Forces data.
-        displacements (list): Displacements data.
+        forces (list): Forces data for non-linear springs.
+        displacements (list): Displacements data for non-linear springs.
+        stiffness (float): Elastic stiffness for linear springs.
 
     Returns:
         None
     """
 
-    def __init__(self, name, forces, displacements):
+    def __init__(self, name, forces=[], displacements=[], stiffness=0):
         self.__name__ = 'SpringSection'
         self.name = name
         self.geometry = None
         self.forces = forces
         self.displacements = displacements
+        self.stiffness = stiffness
 
 
 # ==============================================================================

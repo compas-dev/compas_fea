@@ -163,6 +163,8 @@ Element fields
 
 - ``'sf'`` (beams): section forces, axial force in ``'sfnx'`` , shear force `x` ``'sfvx'`` and shear force `y` ``'sfvy'``.
 
+- ``'spf'`` (springs): spring forces.
+
 .. - ``'sf'`` (shells): section forces per width, axial force in `x` ``'sfnx'``, shear force `x` ``'sfvx'``, shear force `y` ``'sfvy'``, transverse shear force `x` ``'sfwx'`` and transverse shear force `y` ``'sfwy'``.
 
 - ``'sm'`` (beams): section moments, bending moment about `x` ``'smx'``, bending moment about `y` ``'smy'`` and torsion moment ``'smz'``.

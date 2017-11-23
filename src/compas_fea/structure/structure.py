@@ -834,7 +834,7 @@ compas_fea structure: {}
             dic: Conversion to a fields dictionary.
         """
         node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
-        element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor']
+        element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'spf']
 
         fields_dic = {}
 
