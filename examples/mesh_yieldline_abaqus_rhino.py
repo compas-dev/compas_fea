@@ -2,12 +2,12 @@
 
 from compas_fea.cad import rhino
 
+from compas_fea.structure import Concrete
 from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
-from compas_fea.structure import PinnedDisplacement
-from compas_fea.structure import PointLoad
+from compas_fea.structure import GeneralDisplacement
+from compas_fea.structure import GravityLoad
 from compas_fea.structure import ShellSection
-from compas_fea.structure import Steel
 from compas_fea.structure import Structure
 
 
@@ -23,39 +23,40 @@ mdl = Structure(name='mesh_yieldline', path='C:/Temp/')
 
 # Add shell elements
 
-rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers=['elset_mesh'])
+rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers='elset_mesh')
 
 # Add node and element sets
 
-rhino.add_sets_from_layers(mdl, layers=['elset_mesh', 'nset_supports', 'nset_loads'])
+rhino.add_sets_from_layers(mdl, layers=['elset_mesh', 'nset_roller_x', 'nset_roller_y'])
 
 # Add materials
 
-mdl.add_material(Steel(name='mat_yield', fy=100))
+mdl.add_material(Concrete(name='mat_concrete', fck=50))
 
 # Add sections
 
-mdl.add_section(ShellSection(name='sec_yield', t=0.010))
+mdl.add_section(ShellSection(name='sec_concrete', t=0.010))
 
 # Add element properties
 
-ep = Properties(material='mat_yield', section='sec_yield', elsets='elset_mesh')
-mdl.add_element_properties(ep, name='ep_yield')
+ep = Properties(material='mat_concrete', section='sec_concrete', elsets='elset_mesh')
+mdl.add_element_properties(ep, name='ep_concrete')
 
 # Add loads
 
-pz = 5000 / mdl.node_count()
-mdl.add_load(PointLoad(name='load_points', nodes='nset_loads', z=-pz))
+mdl.add_load(GravityLoad(name='load_gravity', elements='elset_mesh'))
 
 # Add displacements
 
-mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_supports'))
+mdl.add_displacements([
+    GeneralDisplacement(name='disp_x', nodes='nset_roller_x', z=0, y=0),
+    GeneralDisplacement(name='disp_y', nodes='nset_roller_y', z=0, x=0)])
 
 # Add steps
 
 mdl.add_steps([
-    GeneralStep(name='step_bc', type='STATIC', displacements=['disp_pinned']),
-    GeneralStep(name='step_loads', nlgeom=True, type='STATIC,RIKS', loads=['load_points'], increments=30)])
+    GeneralStep(name='step_bc', type='STATIC', displacements=['disp_x', 'disp_y']),
+    GeneralStep(name='step_loads', increments=10, type='STATIC,RIKS', loads=['load_gravity'])])
 mdl.steps_order = ['step_bc', 'step_loads']
 
 # Structure summary
@@ -64,8 +65,8 @@ mdl.summary()
 
 # Run and extract data
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'pe'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'e'])
 
 # Plot strain
 
-rhino.plot_data(mdl, step='step_loads', field='pemaxp', cbar=[None, 0.001], scale=0)
+rhino.plot_data(mdl, step='step_loads', field='pemaxp', cbar=[None, 0.0010], scale=0)

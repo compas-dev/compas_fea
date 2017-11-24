@@ -13,8 +13,12 @@ from compas_blender.utilities import draw_pipes
 from compas_blender.utilities import draw_plane
 from compas_blender.utilities import get_objects
 from compas_blender.utilities import get_object_location
+from compas_blender.utilities import set_object_location
 from compas_blender.utilities import xdraw_mesh
 from compas_blender.utilities import xdraw_texts
+
+from compas.geometry import cross_vectors
+from compas.geometry import subtract_vectors
 
 from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
@@ -98,13 +102,16 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
             dic_ = json.loads(name.replace("'", '"'))
             ex = dic_.get('ex', None)
             ey = dic_.get('ey', None)
-            axes = {'ex': ex, 'ey': ey}
         except:
-            axes = {}
+            ex = None
+            ey = None
+        axes = {'ex': ex, 'ey': ey}
 
         for u, v in edges:
             sp = structure.check_node_exists(vertices[u])
             ep = structure.check_node_exists(vertices[v])
+            ez = subtract_vectors(structure.node_xyz(ep), structure.node_xyz(sp))
+            axes['ez'] = ez
             structure.add_element(nodes=[sp, ep], type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
 
     if mesh_type:
@@ -327,7 +334,7 @@ def plot_axes():
 
 
 def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
-              nodal='mean'):
+              nodal='mean', mode='', colorbar_size=1):
     """ Plots analysis results on the deformed shape of the Structure.
 
     Note:
@@ -343,6 +350,8 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
         cbar (list): Minimum and maximum limits on the colorbar.
         iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
         nodal (str): 'mean', 'max' or 'min' for nodal values.
+        mode (int): mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
+        colorbar_size (float): Scale on the size of the colorbar.
 
     Returns:
         None
@@ -358,21 +367,21 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
     elements = [structure.elements[ekey].nodes for ekey in ekeys]
 
     nodal_data = structure.results[step]['nodal']
-    elemental_data = structure.results[step]['element']
-    ux = [nodal_data['ux'][str(key)] for key in nkeys]
-    uy = [nodal_data['uy'][str(key)] for key in nkeys]
-    uz = [nodal_data['uz'][str(key)] for key in nkeys]
+    ux = [nodal_data['ux{0}'.format(str(mode))][key] for key in nkeys]
+    uy = [nodal_data['uy{0}'.format(str(mode))][key] for key in nkeys]
+    uz = [nodal_data['uz{0}'.format(str(mode))][key] for key in nkeys]
 
     # Process data
 
     try:
-        data = [nodal_data[field][str(key)] for key in nkeys]
+        data = [nodal_data[field + str(mode)][key] for key in nkeys]
         dtype = 'nodal'
-    except:
+    except(Exception):
+        elemental_data = structure.results[step]['element']
         data = elemental_data[field]
-        dtype = 'elemental'
+        dtype = 'element'
 
-    toc, U, cnodes, fabs, _ = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1, iptype, nodal)
+    toc, U, cnodes, fabs = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1, iptype, nodal)
     U = array(U)
 
     print('\n***** Data processed : {0} s *****'.format(toc))
@@ -404,29 +413,39 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
 
     # Plot colourbar
 
-    try:
-        cmesh = get_objects(layer=19)[0]
-    except:
-        cmesh = draw_plane(name='colorbar', Lx=1, dx=0.1, Ly=0.1, dy=0.1, layer=19)
+    xr, yr, _ = structure.node_bounds()
+    yran = yr[1] - yr[0]
+    if not yran:
+        yran = 1
+    s = yran * 0.1 * colorbar_size
+    xmin = xr[1] + 3 * s
+    ymin = yr[0]
 
+    cmesh = draw_plane(name='colorbar', Lx=s, dx=s, Ly=10*s, dy=s, layer=layer)
+    set_object_location(object=cmesh, location=[xmin, ymin, 0])
     blendermesh = BlenderMesh(cmesh)
     vertices = blendermesh.get_vertex_coordinates()
-    faces = blendermesh.get_face_vertex_indices()
-    x = array(vertices)[:, 0]
     y = array(vertices)[:, 1]
-    xmin, xmax, ymin = min(x), max(x), min(y)
-    xran = xmax - xmin
-    h = xran / 20.
 
-    colors = colorbar(((x - xmin - 0.5 * xran) * 2 / xran)[:, newaxis], input='array', type=1)
-    bmesh = xdraw_mesh(name='colorbar', vertices=vertices, faces=faces, layer=layer)
-    blendermesh = BlenderMesh(bmesh)
+    yn = yran * colorbar_size
+    colors = colorbar(((y - ymin - 0.5 * yn) * 2 / yn)[:, newaxis], input='array', type=1)
     blendermesh.set_vertex_colors(vertices=range(len(vertices)), colors=colors)
 
-    texts = [
-        {'radius': 2 * h, 'pos': [xmax, ymin - 2 * h, 0], 'text': '{0:.4g}'.format(+fabs), 'layer': layer},
-        {'radius': 2 * h, 'pos': [xmin, ymin - 2 * h, 0], 'text': '{0:.4g}'.format(-fabs), 'layer': layer},
-        {'radius': 2 * h, 'pos': [xmin + 0.5 * xran, ymin - 2 * h, 0], 'text': '0', 'layer': layer}]
+    h = 0.6 * s
+    texts = []
+    for i in range(5):
+        x0 = xmin + 1.2 * s
+        yu = ymin + (5.8 + i) * s
+        yl = ymin + (3.8 - i) * s
+        valu = float(+fabs * (i + 1) / 5.)
+        vall = float(-fabs * (i + 1) / 5.)
+        texts.extend([
+            {'radius': h, 'pos': [x0, yu, 0], 'text': '{0:.5g}'.format(valu), 'layer': layer},
+            {'radius': h, 'pos': [x0, yl, 0], 'text': '{0:.5g}'.format(vall), 'layer': layer}])
+    texts.extend([
+        {'radius': h, 'pos': [x0, ymin + 4.8 * s, 0], 'text': '0', 'layer': layer},
+        {'radius': h, 'pos': [xmin, ymin + 12 * s, 0], 'text': 'Step:{0}   Field:{1}'.format(step, field), 'layer': layer}])
+
     xdraw_texts(texts)
 
 

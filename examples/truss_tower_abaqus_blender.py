@@ -54,8 +54,9 @@ mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
 
 # Add steps
 
-mdl.add_step(GeneralStep(name='step_bc', displacements=['disp_pinned']))
-mdl.add_step(GeneralStep(name='step_load', loads=['load_point']))
+mdl.add_steps([
+    GeneralStep(name='step_bc', displacements=['disp_pinned']),
+    GeneralStep(name='step_load', loads=['load_point'])])
 mdl.steps_order = ['step_bc', 'step_load']
 
 # Structure summary

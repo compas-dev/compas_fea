@@ -110,10 +110,10 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 'ur', 'sf', 'sm'])
 
 # Plot displacements
 
-blender.plot_data(mdl, step='step_load', field='um', radius=0.01, layer=4)
-blender.plot_data(mdl, step='step_load', field='ury', radius=0.01, layer=5)
+blender.plot_data(mdl, step='step_load', field='um', radius=0.01, layer=4, colorbar_size=0.5)
+blender.plot_data(mdl, step='step_load', field='ury', radius=0.01, layer=5, colorbar_size=0.5)
 
 # Plot section forces/moments
 
-blender.plot_data(mdl, step='step_load', field='sfnx', radius=0.01, layer=6)
-blender.plot_data(mdl, step='step_load', field='smy', radius=0.01, layer=7)
+blender.plot_data(mdl, step='step_load', field='sfnx', radius=0.01, layer=6, colorbar_size=0.5)
+blender.plot_data(mdl, step='step_load', field='smy', radius=0.01, layer=7, colorbar_size=0.5)

@@ -93,7 +93,18 @@ If the analysis was successful, a confirmation message like below will appear in
 
    ***** Abaqus analysis time : 17.1095 s *****
 
-To do, common error messages and solution.
+Note: If the analysis is unsuccessful, the terminal will look similar to the following:
+
+.. code-block:: python
+
+   Abaqus/Analysis exited with errors
+   Abaqus Error: cae exited with an error.
+
+   ***** Analysis failed - attempting to read error logs *****
+
+If this is the case, the data extraction will still continue, reading the last frame of the output database file. It will then plot the results (if possible) to help identify what may have gone wrong in the model. This frame is NOT the final frame, and should be respected as an equilibrium state taking actions less than those applied. Often this frame will be at the stage that the given number of increments managed to progress with, and so increasing this increments number may help reach the final state.
+
+To do, other common error messages and solution.
 
 
 ===============
@@ -151,6 +162,8 @@ Element fields
 --------------
 
 - ``'sf'`` (beams): section forces, axial force in ``'sfnx'`` , shear force `x` ``'sfvx'`` and shear force `y` ``'sfvy'``.
+
+- ``'spf'`` (springs): spring forces.
 
 .. - ``'sf'`` (shells): section forces per width, axial force in `x` ``'sfnx'``, shear force `x` ``'sfvx'``, shear force `y` ``'sfvy'``, transverse shear force `x` ``'sfwx'`` and transverse shear force `y` ``'sfwy'``.
 

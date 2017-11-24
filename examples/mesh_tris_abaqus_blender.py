@@ -6,7 +6,7 @@ from compas_fea.cad import blender
 from compas_fea.structure import Structure
 
 from compas_blender.geometry import BlenderMesh
-from compas_blender.utilities import xdraw_bmesh
+from compas_blender.utilities import xdraw_mesh
 from compas_blender.utilities import get_objects
 from compas_blender.utilities import clear_layer
 
@@ -33,7 +33,7 @@ fcs = blendermesh.get_face_vertex_indices()
 
 vertices, faces = discretise_faces(vertices=pts, faces=fcs, target=0.15, min_angle=15, factor=1, iterations=200)
 for points, face in zip(vertices, faces):
-    bmesh = xdraw_bmesh(name='face', vertices=points, faces=face, layer=1, wire=True)
+    bmesh = xdraw_mesh(name='face', vertices=points, faces=face, layer=1, wire=True)
     blender.add_nodes_elements_from_bmesh(mdl, bmesh=bmesh, mesh_type='ShellElement')
 
 # Structure summary

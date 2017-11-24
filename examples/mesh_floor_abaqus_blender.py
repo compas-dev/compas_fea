@@ -94,8 +94,8 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
 # Plot displacements
 
-blender.plot_data(mdl, step='step_loads', field='um', radius=0.02, layer=6)
+blender.plot_data(mdl, step='step_loads', field='um', radius=0.02, layer=6, colorbar_size=0.5)
 
 # Plot stress
 
-blender.plot_data(mdl, step='step_loads', field='smises', radius=0.02, cbar=[0, 3*10**6], layer=7)
+blender.plot_data(mdl, step='step_loads', field='smises', radius=0.02, cbar=[0, 3*10**6], layer=7, colorbar_size=0.5)

@@ -71,3 +71,6 @@ rhino.plot_data(mdl, step='step_load', field='um')
 # Plot stress
 
 rhino.plot_data(mdl, step='step_load', field='smises', iptype='max', nodal='max')
+
+print(mdl.get_nodal_results(step='step_load', field='um', nodes=[10]))
+print(mdl.get_element_results(step='step_load', field='smises', elements=[10]))

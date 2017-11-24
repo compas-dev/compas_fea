@@ -25,7 +25,7 @@ __all__ = [
 ]
 
 
-conversion = {  # needs a separate conversion for shells, SF SE is incompatible.
+conversion = {
     'U1': 'ux', 'U2': 'uy', 'U3': 'uz',
     'UR1': 'urx', 'UR2': 'ury', 'UR3': 'urz',
     'S11': 'sxx', 'S22': 'syy', 'S33': 'szz', 'S12': 'sxy', 'S13': 'sxz', 'S23': 'sxz',
@@ -64,7 +64,7 @@ def extract_odb_data(temp, name, fields, steps='all'):
 
         results[step] = {}
         frame = odb.steps[step].frames[-1]
-        description = frame.description
+        # description = frame.description
         fieldoutputs = frame.fieldOutputs
 
         # Node data
@@ -154,10 +154,10 @@ def extract_odb_data(temp, name, fields, steps='all'):
                                 ref[field + 'maxp'][element][id] = None
                                 ref[field + 'minp'][element][id] = None
 
-#                     if field is not 'RBFOR':
+                    # if field is not 'RBFOR':
                     # results[step]['nodal'][field + 'm'][node] = float(value.magnitude)
-#                         dic['minPrincipal'][element][id] = float(value.minPrincipal) if value.minPrincipal else None
-#                         dic['axes'][element][id] = value.localCoordSystem
+                        # dic['minPrincipal'][element][id] = float(value.minPrincipal) if value.minPrincipal else None
+                        # dic['axes'][element][id] = value.localCoordSystem
 
     with open('{0}{1}-results.json'.format(temp, name), 'w') as f:
         json.dump(results, f)

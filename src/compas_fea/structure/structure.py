@@ -169,6 +169,7 @@ compas_fea structure: {}
         Returns:
             int: Key of the added or pre-existing node.
         """
+        xyz = [float(i) for i in xyz]
         key = self.check_node_exists(xyz)
         if key is None:
             key = self.node_count()
@@ -331,6 +332,7 @@ compas_fea structure: {}
             int: Key of the added or existing element.
         """
         func_dic = {'BeamElement': BeamElement,
+                    'SpringElement': SpringElement,
                     'TrussElement': TrussElement,
                     'StrutElement': StrutElement,
                     'TieElement': TieElement,
@@ -831,7 +833,7 @@ compas_fea structure: {}
             dic: Conversion to a fields dictionary.
         """
         node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
-        element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor']
+        element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'spf']
 
         fields_dic = {}
 
@@ -921,12 +923,13 @@ compas_fea structure: {}
         self.analyse(software=software, exe=exe, cpus=cpus, license=license)
         self.extract_data(software=software, fields=fields, exe=exe)
 
+
 # ==============================================================================
 # results
 # ==============================================================================
 
     def get_nodal_results(self, step, field, nodes='all'):
-        """ Extract results from self.results.
+        """ Extract nodal results from self.results.
 
         Parameters:
             step (str): Step to extract from.
@@ -937,8 +940,8 @@ compas_fea structure: {}
             (dict): The nodal results for the requested field.
         """
         data = {}
+        rdict = self.results[step]['nodal']
 
-        rdict = self.results['nodal']
         if nodes == 'all':
             keys = list(self.nodes.keys())
         elif isinstance(nodes, str):
@@ -947,11 +950,11 @@ compas_fea structure: {}
             keys = nodes
 
         for key in keys:
-            data[key] = {rdict[step][field][key] for key in keys}
+            data[key] = rdict[field][key]
         return data
 
     def get_element_results(self, step, field, elements='all'):
-        """ Extract results from self.results.
+        """ Extract element results from self.results.
 
         Parameters:
             step (str): Step to extract from.
@@ -962,8 +965,8 @@ compas_fea structure: {}
             (dict): The element results for the requested field.
         """
         data = {}
+        rdict = self.results[step]['element']
 
-        rdict = self.results['element']
         if elements == 'all':
             keys = list(self.elements.keys())
         elif isinstance(elements, str):
@@ -972,8 +975,10 @@ compas_fea structure: {}
             keys = elements
 
         for key in keys:
-            data[key] = {rdict[step][field][key] for key in keys}
+            data[key] = rdict[field][key]
         return data
+
+
 # ==============================================================================
 # summary
 # ==============================================================================

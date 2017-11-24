@@ -128,6 +128,7 @@ A **PipeSection** requires the radius ``r`` and thickness ``t``.
    mdl.add_section(PipeSection(name='sec_pipe', r=0.1, t=0.005))
 
 .. image:: /_images/pipe-ip.png
+   :scale: 40 %
 
 -----------
 Rectangular
@@ -142,6 +143,7 @@ A **RectangularSection** requires the width ``b`` and height ``h``.
    mdl.add_section(RectangularSection(name='sec_rectangular', b=0.1, h=0.2))
 
 .. image:: /_images/rect-ip.png
+   :scale: 40 %
 
 -----------
 Trapezoidal
@@ -156,6 +158,7 @@ An **TrapezoidalSection** requires the base width ``b1``, top width ``b2`` and h
    mdl.add_section(TrapezoidalSection(name='sec_trapezoidal', b1=0.1, b2=0.05, h=0.2))
 
 .. image:: /_images/trap-ip.png
+   :scale: 40 %
 
 -------
 General

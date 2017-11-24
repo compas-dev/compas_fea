@@ -67,7 +67,7 @@ mdl.add_load(GravityLoad(name='load_gravity', elements='elset_concrete'))
 # Add tributary loads from mesh
 
 mesh = mesh_from_guid(Mesh(), rs.ObjectsByLayer('load_mesh')[0])
-mdl.add_load(TributaryLoad(mdl, name='load_tributary', mesh=mesh, z=-2000))
+mdl.add_load(TributaryLoad(mdl, name='load_tributary', mesh=mesh, z=-1000))
 
 # Add displacements
 
@@ -80,7 +80,7 @@ mdl.add_displacements([
 
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements=['disp_roller', 'disp_pinned', 'disp_xdof']),
-    GeneralStep(name='step_loads', loads=['load_gravity', 'load_tributary'], factor=1.5)])
+    GeneralStep(name='step_loads', loads=['load_gravity', 'load_tributary'], factor=1.1)])
 mdl.steps_order = ['step_bc', 'step_loads']
 
 # Structure summary
@@ -93,8 +93,9 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
 # Plot displacements
 
-rhino.plot_data(mdl, step='step_loads', field='um', radius=0.02)
+rhino.plot_data(mdl, step='step_loads', field='um', radius=0.02, colorbar_size=0.5)
 
 # Plot stress
 
-rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.02, cbar=[0, 4*10**6], nodal='max')
+rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.02, 
+                cbar=[0, 3*10**6], nodal='max', colorbar_size=0.5)

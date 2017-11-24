@@ -16,6 +16,7 @@ __email__      = 'liew@arch.ethz.ch'
 __all__ = [
     'Element',
     'BeamElement',
+    'SpringElement',
     'TrussElement',
     'StrutElement',
     'TieElement',
@@ -73,6 +74,22 @@ class BeamElement(Element):
     def __init__(self):
         Element.__init__(self)
         self.__name__ = 'BeamElement'
+
+
+class SpringElement(Element):
+
+    """ A 1D spring element.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
+
+    def __init__(self):
+        Element.__init__(self)
+        self.__name__ = 'SpringElement'
 
 
 class TrussElement(BeamElement):
