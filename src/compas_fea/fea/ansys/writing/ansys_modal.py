@@ -6,6 +6,7 @@ from .ansys_nodes_elements import write_elements
 from .ansys_materials import write_all_materials
 from compas_fea.fea.ansys.writing.ansys_process import *
 from compas_fea.fea.ansys.writing.ansys_steps import *
+from compas_fea.fea.ansys.writing.ansys_nodes_elements import *
 
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
@@ -125,3 +126,5 @@ def write_modal_results_from_ansys_rst(name, path, fields, num_modes, step_index
         write_request_modal_shapes(path, name, step_name, num_modes, step_index)
     if 'f' in fields or 'all' in fields:
         write_request_modal_freq(path, name, step_name, num_modes, step_index)
+    if 'geo' in fields:
+        write_request_element_nodes(path, name)

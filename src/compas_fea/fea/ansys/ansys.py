@@ -304,8 +304,14 @@ def load_to_results(structure, fields, steps):
             if 'f' in fields or 'all' in fields:
                 fdict = get_modal_freq_from_result_files(out_path)
                 structure.results[step]['frequencies'] = fdict
-        structure.results[step].setdefault('nodal', rlist[0])
-        if len(rlist) >= 1:
-            for d in rlist[1:]:
-                for key, att in structure.results[step]['nodal'].items():
-                    att.update(d[key])
+        if 'geo' in fields:
+            nodes, elements = get_nodes_elements_from_result_files(out_path)
+            structure.nodes = nodes
+            for ekey in elements:
+                structure.add_element(elements[ekey]['nodes'], elements[ekey]['type'])
+        if rlist:
+            structure.results[step].setdefault('nodal', rlist[0])
+            if len(rlist) >= 1:
+                for d in rlist[1:]:
+                    for key, att in structure.results[step]['nodal'].items():
+                        att.update(d[key])

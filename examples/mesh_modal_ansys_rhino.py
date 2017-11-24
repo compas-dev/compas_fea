@@ -63,5 +63,4 @@ if __name__ == '__main__':
     guid = rs.ObjectsByLayer(name)[0]
     mesh = mesh_from_guid(Mesh, guid)
     s = modal(mesh, pts, num_modes, path, name)
-    print s.results['modal_analysis']['nodal']['ux2']
     plot_mode_shapes(s, 'modal_analysis', layer='mode',scale=100)

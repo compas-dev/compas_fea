@@ -246,8 +246,11 @@ def write_circular_section(output_path, filename, radius, sec_index):
     cFile.close()
 
 
-def write_request_element_nodes(output_path, filename):
-    cFile = open(output_path + "/" + filename, 'a')
+def write_request_element_nodes(path, name):
+    out_path = path + '/' + name + '_output/'
+    filename = name + '_extract.txt'
+
+    cFile = open(path + filename, 'a')
     cFile.write('/PREP7 \n')
     cFile.write('!\n')
     cFile.write('!\n')
@@ -265,9 +268,9 @@ def write_request_element_nodes(output_path, filename):
     cFile.write('*VGET, nodeY, node, all, loc, Y,,,2 \n')
     cFile.write('*VGET, nodeZ, node, all, loc, Z,,,2 \n')
     cFile.write('*vfill,nds(1),ramp,1,1 \n')
-    cFile.write('*cfopen,' + output_path + '/output/nodes,txt \n')
+    cFile.write('*cfopen,' + out_path + '/nodes,txt \n')
     cFile.write('*vwrite, nds(1) , \',\'  , nodeX(1) ,   \',\' ,   nodeY(1) ,   \',\' ,  nodeZ(1) \n')
-    cFile.write('(          F8.0,       A,       ES,           A,          ES,          A,      ES) \n')
+    cFile.write('(F8.0, A, ES, A, ES, A, ES) \n')
     cFile.write('*cfclose \n')
     cFile.write('!\n')
     cFile.write('!\n')
@@ -308,7 +311,7 @@ def write_request_element_nodes(output_path, filename):
     cFile.write('*VGET, elemMat, elem, all,attr,mat,,,2 \n')
     cFile.write('*VGET, elemSec, elem, all,attr,secn,,,2 \n')
 
-    cFile.write('*cfopen,' + output_path + '/output/elements,txt \n')
+    cFile.write('*cfopen,' + out_path + '/elements,txt \n')
     cFile.write('*vwrite,  elem1(1),elem2(1),elem3(1),elem4(1),elem5(1),elem6(1)')
     cFile.write(',elem7(1),elem8(1), \',\',elemType(1),elemMat(1),elemSec(1) \n')
     cFile.write('(F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ',')
