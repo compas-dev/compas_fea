@@ -157,14 +157,16 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
             if line_type and rs.IsCurve(guid):
                 sp = structure.add_node(rs.CurveStartPoint(guid))
                 ep = structure.add_node(rs.CurveEndPoint(guid))
+                ez = subtract_vectors(structure.node_xyz(ep), structure.node_xyz(sp))
                 try:
                     dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
                     ex = dic.get('ex', None)
                     ey = dic.get('ey', None)
+                    if ex and not ey:
+                        ey = cross_vectors(ex, ez)
                 except:
                     ex = None
                     ey = None
-                ez = subtract_vectors(structure.node_xyz(ep), structure.node_xyz(sp))
                 axes = {'ex': ex, 'ey': ey, 'ez': ez}
                 structure.add_element(nodes=[sp, ep], type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
 
@@ -487,9 +489,7 @@ def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[No
         None
     """
 
-    name = structure.name
     path = structure.path
-    temp = '{0}{1}/'.format(path, name)
 
     # Create and clear Rhino layer
 
@@ -523,7 +523,7 @@ def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[No
         dtype = 'elemental'
 
     basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc(basedir=basedir, tmpdir=temp, mode=1)
+    xfunc = XFunc(basedir=basedir, tmpdir=path, mode=1)
     xfunc.funcname = 'functions.postprocess'
     toc, U, cnodes, fabs, fscaled = xfunc(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)['data']
 
@@ -560,7 +560,7 @@ def plot_principal_stresses(structure, step, ptype, scale, layer):
     Returns:
         None
     """
-    pass
+    pass  # make this function external
 
 #     name = structure.name
 #     path = structure.path

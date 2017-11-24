@@ -21,6 +21,8 @@ To associate **Material** and **Section** objects to specific elements, an **Ele
    ep = ElementProperties(material='mat_elastic', section='sec_circ', elsets='elset_beams')
    mdl.add_element_properties(ep, name='ep_circ')
 
+Note: A **SpringElement** does not require a material to be defined, and can be handed ``None``. A spring will define itself through its **SpringSection**.
+
 
 ====================
 Accessing properties

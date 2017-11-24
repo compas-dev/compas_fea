@@ -667,6 +667,8 @@ def input_write_properties(f, sections, properties, elements, sets):
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** -------------------------------------------------------------------- Sections\n')
 
+    written_springs = []
+
     for key, property in properties.items():
 
         material = property.material
@@ -697,6 +699,7 @@ def input_write_properties(f, sections, properties, elements, sets):
                 if explode:
                     for select in selection:
                         e1 = 'element_{0}'.format(select)
+                        behaviour = 'BEH_{0}'.format(section.name)
                         f.write('*CONNECTOR SECTION, ELSET={0}, BEHAVIOR=BEH_{1}\n'.format(e1, section.name))
                         f.write('AXIAL\n')
                         f.write('ORI_{0}_{1}\n'.format(select, section.name))
@@ -708,15 +711,17 @@ def input_write_properties(f, sections, properties, elements, sets):
                         f.write(', '.join([str(j) for j in ey]) + '\n')
                         f.write('**\n')
 
-                    f.write('*CONNECTOR BEHAVIOR, NAME=BEH_{0}\n'.format(section.name))
-                    f.write('**\n')
-                    if section.stiffness:
-                        f.write('*CONNECTOR ELASTICITY, COMPONENT=1\n')
-                        f.write('{0}\n'.format(section.stiffness))
-                    else:
-                        f.write('*CONNECTOR ELASTICITY, COMPONENT=1, NONLINEAR\n')
-                        for i, j in zip(section.forces, section.displacements):
-                            f.write('{0}, {1}\n'.format(i, j))
+                        if behaviour not in written_springs:
+                            f.write('*CONNECTOR BEHAVIOR, NAME=BEH_{0}\n'.format(section.name))
+                            f.write('**\n')
+                            if section.stiffness:
+                                f.write('*CONNECTOR ELASTICITY, COMPONENT=1\n')
+                                f.write('{0}\n'.format(section.stiffness))
+                            else:
+                                f.write('*CONNECTOR ELASTICITY, COMPONENT=1, NONLINEAR\n')
+                                for i, j in zip(section.forces, section.displacements):
+                                    f.write('{0}, {1}\n'.format(i, j))
+                            written_springs.append(behaviour)
                 else:
                     pass
 
@@ -764,27 +769,26 @@ def input_write_properties(f, sections, properties, elements, sets):
                     # Reinforcement
 
                     if reinforcement:
-                        pass
-        #                 orientation = reinforcement['orientation']
-        #                 spacing = reinforcement['spacing']
-        #                 offset = reinforcement['offset']
-        #                 rmaterial = reinforcement['material']
-        #                 dia = reinforcement['dia']
-        #                 area = 0.25 * pi * dia**2
-        #                 if orientation:
-        #                     pass
-        #                     # f.write('*REBAR LAYER, ORIENTATION=ORIENT_{0}\n'.format(element))
-        #                 else:
-        #                     f.write('*REBAR LAYER\n')
-        #                 f.write('U1, {0}, {1}, {2}, {3}, {4}\n'.format(area, spacing, +offset, rmaterial, 0))
-        #                 f.write('U2, {0}, {1}, {2}, {3}, {4}\n'.format(area, spacing, +offset - dia, rmaterial, 90))
-        #                 f.write('L1, {0}, {1}, {2}, {3}, {4}\n'.format(area, spacing, -offset, rmaterial, 0))
-        #                 f.write('L2, {0}, {1}, {2}, {3}, {4}\n'.format(area, spacing, -offset + dia, rmaterial, 90))
-        #                 if orientation:
-        #                     pass
-        #                     # f.write('*ORIENTATION, SYSTEM=RECTANGULAR, NAME=ORIENT_{0}\n'.format(element))
-        #                     # ex, ey, origin points
-        #                 f.write('**\n')
+                        f.write('**\n')
+                        for name, rebar in reinforcement.items():
+                            pos = rebar['pos']
+                            spacing = rebar['spacing']
+                            rmaterial = rebar['material']
+                            angle = rebar['angle']
+                            dia = rebar['dia']
+                            A = 0.25 * pi * dia**2
+                            # orientation = reinforcement['orientation']
+                            # if orientation:
+                            # pass
+                            # f.write('*REBAR LAYER, ORIENTATION=ORIENT_{0}\n'.format(element))
+                            # else:
+                            f.write('*REBAR LAYER\n')
+                            f.write('{0}, {1}, {2}, {3}, {4}, {5}\n'.format(name, A, spacing, pos, rmaterial, angle))
+                            # if orientation:
+                            # pass
+                            # f.write('*ORIENTATION, SYSTEM=RECTANGULAR, NAME=ORIENT_{0}\n'.format(element))
+                            # ex, ey, origin point
+                            f.write('**\n')
 
             # Solid sections
 
@@ -1070,10 +1074,10 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
                 f.write(', '.join([i.upper() for i in element_fields if (i in fields and i != 'rbfor')]) + '\n')
             f.write('**\n')
 
-#             if (fields == 'all') or ('RBFOR' in fields):
-#                 f.write('*ELEMENT OUTPUT, REBAR\n')
-#                 f.write('RBFOR\n')
-#             f.write('**\n')
+            if (fields == 'all') or ('rbfor' in fields):
+                f.write('*ELEMENT OUTPUT, REBAR\n')
+                f.write('RBFOR\n')
+            f.write('**\n')
 
             f.write('*END STEP\n')
 

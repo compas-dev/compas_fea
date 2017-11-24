@@ -35,10 +35,12 @@ conversion = {
     'SM1': 'smx', 'SM2': 'smy', 'SM3': 'smz',
     'SK1': 'skx', 'SK2': 'sky', 'SK3': 'skz',
     'SE1': 'senx', 'SE2': 'sevy', 'SE3': 'sevx',
+    'CTF1': 'spfx', 'CTF2': 'spfy', 'CTF3': 'spfz',
+    'VALUE': 'rbfor',
 }
 
 node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
-element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor']
+element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'spf', 'rbfor']
 
 
 def extract_odb_data(temp, name, fields, steps='all'):
@@ -97,9 +99,16 @@ def extract_odb_data(temp, name, fields, steps='all'):
         for field in element_fields:
             if field in fields.split(','):
 
-                clabels = list(fieldoutputs[field.upper()].componentLabels)
-                # call, clabels = ['VALUE'], ['VALUE']
                 ref = results[step]['element']
+
+                if field == 'spf':
+                    field = 'ctf'
+
+                if field == 'rbfor':
+                    clabels = ['VALUE']
+                else:
+                    clabels = list(fieldoutputs[field.upper()].componentLabels)
+
                 for c in clabels:
                     ref[conversion[c]] = {}
 
@@ -155,8 +164,6 @@ def extract_odb_data(temp, name, fields, steps='all'):
                                 ref[field + 'minp'][element][id] = None
 
                     # if field is not 'RBFOR':
-                    # results[step]['nodal'][field + 'm'][node] = float(value.magnitude)
-                        # dic['minPrincipal'][element][id] = float(value.minPrincipal) if value.minPrincipal else None
                         # dic['axes'][element][id] = value.localCoordSystem
 
     with open('{0}{1}-results.json'.format(temp, name), 'w') as f:

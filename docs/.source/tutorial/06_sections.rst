@@ -166,6 +166,20 @@ General
 
 A **GeneralSection** takes explicit cross-section information: area ``A``, second moment of area about axis (ex) ``Ixx``, cross moment of area ``Ixy``, second moment of area about axis (ey) ``Iyy``, torsional rigidity ``J``, sectorial moment ``g0``, warping constant ``gw``.
 
+------
+Spring
+------
+
+A **SpringSection** can currently take only axial forces (no shear forces or bending and torsion moments). It requires either the ``stiffness``, for which a linear elastic spring will be made, or lists of ``forces`` and ``displacements`` for the definition of a non-linear spring. The ``forces`` and ``displacements`` should be given from negatiive (compression) to positive (tension).
+
+.. code-block:: python
+
+   from compas_fea.structure import SpringSection
+
+   mdl.add_section(SpringSection(name='sec_elastic', stiffness=100000))
+
+   mdl.add_section(SpringSection(name='sec_inelastic', forces=[-1000, 0, 1000], displacements=[-0.1, 0, 0.1]))
+
 -----
 Shell
 -----

@@ -7,7 +7,9 @@ from __future__ import absolute_import
 
 from compas_blender.geometry import BlenderMesh
 from compas_blender.helpers import mesh_from_bmesh
+
 from compas_blender.utilities import clear_layer
+from compas_blender.utilities import delete_all_materials
 from compas_blender.utilities import draw_cuboid
 from compas_blender.utilities import draw_pipes
 from compas_blender.utilities import draw_plane
@@ -27,8 +29,6 @@ from compas_fea.utilities import postprocess
 from compas_fea.utilities import voxels
 
 from numpy import array
-from numpy import min
-from numpy import max
 from numpy import newaxis
 
 try:
@@ -45,10 +45,10 @@ except ImportError:
     pass
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
@@ -111,6 +111,9 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
             sp = structure.check_node_exists(vertices[u])
             ep = structure.check_node_exists(vertices[v])
             ez = subtract_vectors(structure.node_xyz(ep), structure.node_xyz(sp))
+            if ex and not ey:
+                ey = cross_vectors(ex, ez)
+            axes['ey'] = ey
             axes['ez'] = ez
             structure.add_element(nodes=[sp, ep], type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
 
@@ -450,7 +453,7 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
 
 
 def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',
-                vdx=None, cube_size=[10, 10, 10]):
+                vdx=None, cube_size=[10, 10, 10], mode='', colorbar_size=1):
     """ Applies a base voxel material and texture to a cube for 4D visualisation.
 
     Note:
@@ -469,61 +472,83 @@ def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None,
         nodal (str): 'mean', 'max' or 'min' for nodal values.
         vdx (float): Voxel spacing.
         cube_size (list): x, y, and z lengths of the cube.
+        mode (int): mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
+        colorbar_size (float): Scale on the size of the colorbar.
 
     Returns:
         None
     """
-    pass
 
-#     # Load data
+    # Node and element data
 
-#     temp = '{0}{1}/'.format(path, name)
-#     cmin, cmax = cbar
-#     toc, cnodes, celements, cnodal, fabs, nabs, U, fscaled, nscaled = postprocess(
-#         temp, name, step, field, component, 1, iptype, nodal, cmin, cmax, type=1)
+    nkeys = sorted(structure.nodes, key=int)
+    nodes = [structure.node_xyz(nkey) for nkey in nkeys]
 
-#     # Process data
+    ekeys = sorted(structure.elements, key=int)
+    elements = [structure.elements[ekey].nodes for ekey in ekeys]
 
-#     if field in node_fields:
-#         data = fscaled
-#     elif field in element_fields:
-#         data = nscaled
-#     Am = voxels(values=data, vmin=None, U=U, vdx=vdx, plot=None, indexing='ij')
-#     sx, sy, sz = Am.shape
+    nodal_data = structure.results[step]['nodal']
+    ux = [nodal_data['ux{0}'.format(str(mode))][key] for key in nkeys]
+    uy = [nodal_data['uy{0}'.format(str(mode))][key] for key in nkeys]
+    uz = [nodal_data['uz{0}'.format(str(mode))][key] for key in nkeys]
 
-#     # Save bvox data
+    # # Process data
 
-#     header = array([sx, sy, sz, 1])
-#     data = Am.flatten()
-#     fnm_bvox = '{0}{1}-voxels.bvox'.format(temp, name)
-#     with open(fnm_bvox, 'wb') as fnm:
-#         header.astype('<i4').tofile(fnm)
-#         data.astype('<f4').tofile(fnm)
+    try:
+        data = [nodal_data[field + str(mode)][key] for key in nkeys]
+        dtype = 'nodal'
+    except(Exception):
+        elemental_data = structure.results[step]['element']
+        data = elemental_data[field]
+        dtype = 'element'
 
-#     # Create cube with volumetric material
+    toc, U, cnodes, fabs, data = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1, iptype, nodal, 1)
+    U = array(U)
+    print('\n***** Data processed : {0} s *****'.format(toc))
 
-#     clear_layers([layer])
-#     delete_all_materials()
-#     material = bpy.data.materials.new('material')
-#     material.type = 'VOLUME'
-#     material.volume.density = 0
-#     material.volume.density_scale = 5
-#     material.volume.scattering = 0.5
-#     cx, cy, cz = cube_size
-#     cube = draw_cuboid(cx, cy, cz, location=[0, 0, 0], layer=layer)
-#     cube.data.materials.append(material)
+    # Process data
 
-#     # Create base voxel texture
+    Am = voxels(values=data, vmin=None, U=U, vdx=vdx, plot=None, indexing='ij')
+    sx, sy, sz = Am.shape
 
-#     texture = bpy.data.textures.new('texture', type='VOXEL_DATA')
-#     texture.voxel_data.file_format = 'BLENDER_VOXEL'
-#     texture.voxel_data.filepath = fnm_bvox
-#     texture.voxel_data.extension = 'EXTEND'
-#     texture.voxel_data.interpolation = 'TRILINEAR'
-#     slot = cube.data.materials['material'].texture_slots.add()
-#     slot.texture = texture
-#     slot.texture_coords = 'ORCO'
-#     slot.mapping = 'FLAT'
-#     slot.use_map_density = True
-#     slot.use_map_emission = True
-#     slot.use_map_color_emission = True
+    # Save bvox data
+
+    name = structure.name
+    path = structure.path
+    temp = '{0}{1}/'.format(path, name)
+
+    header = array([sx, sy, sz, 1])
+    data = Am.flatten()
+    fnm_bvox = '{0}{1}-voxels.bvox'.format(temp, name)
+    with open(fnm_bvox, 'wb') as fnm:
+        header.astype('<i4').tofile(fnm)
+        data.astype('<f4').tofile(fnm)
+    print('***** bvox file created *****')
+
+    # Create cube with volumetric material
+
+    clear_layer(layer=layer)
+    cx, cy, cz = cube_size
+    cube = draw_cuboid(cx, cy, cz, pos=[0, 0, 0], layer=layer)
+    delete_all_materials()
+    material = bpy.data.materials.new('material')
+    material.type = 'VOLUME'
+    material.volume.density = 0
+    material.volume.density_scale = 5
+    material.volume.scattering = 0.5
+    cube.data.materials.append(material)
+
+    # Create base voxel texture
+
+    texture = bpy.data.textures.new('texture', type='VOXEL_DATA')
+    texture.voxel_data.file_format = 'BLENDER_VOXEL'
+    texture.voxel_data.filepath = fnm_bvox
+    texture.voxel_data.extension = 'EXTEND'
+    texture.voxel_data.interpolation = 'TRILINEAR'
+    slot = cube.data.materials['material'].texture_slots.add()
+    slot.texture = texture
+    slot.texture_coords = 'ORCO'
+    slot.mapping = 'FLAT'
+    slot.use_map_density = True
+    slot.use_map_emission = True
+    slot.use_map_color_emission = True

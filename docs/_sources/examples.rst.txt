@@ -11,6 +11,9 @@ Examples
     examples/beam_simple_blender
     examples/beam_simple_rhino
     examples/beam_tree_rhino
+    examples/beam_frame_rhino
+
+    examples/spring_simple_rhino
 
     examples/block_deepbeam_rhino
     examples/block_deepbeam_blender
@@ -19,8 +22,8 @@ Examples
     examples/mesh_floor_rhino
     examples/mesh_floor_blender
     examples/mesh_bridge_rhino
-    .. examples/mesh_mould_blender
-    .. examples/mesh_mould_rhino
+    examples/mesh_mould_blender
+    examples/mesh_mould_rhino
     examples/mesh_strip_rhino
     examples/mesh_tris_blender
     examples/mesh_yieldline_rhino

@@ -51,6 +51,7 @@ rhino
     ordered_network
     plot_axes
     plot_data
+    plot_mode_shapes
     plot_voxels
     plot_principal_stresses
 

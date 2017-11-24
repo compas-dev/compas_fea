@@ -40,9 +40,9 @@ OpenSees
 
 The opensource finite element library `OpenSees <http://opensees.berkeley.edu/wiki/index.php/OpenSees_User>`_ by the Pacific Earthquake Engineering (PEER) Center, has cross-platform support and is in active development.
 
-For Windows, the necessary installation files can be found on the `Download <http://opensees.berkeley.edu/OpenSees/user/download.php>`_ page for registered (free) users, for which the current tested version is 2.5.0.
+For Windows, the executable files can be found on the `Download <http://opensees.berkeley.edu/OpenSees/user/download.php>`_ page for registered (free) users, for which the current tested version is 2.5.0. Once Tcl has been installed, the ``OpenSees.exe`` should ideally be saved to ``C:/OpenSees.exe`` for the compas_fea package to pick it up easily. It can be stored in a different location if preferred, but this location will need to be given as a string for each analysis.
 
-For Linux, make sure the Tcl scripting language and Tk windowing toolkit packages are installed on the system. The OpenSees source code may be downloaded via `SVN <http://opensees.berkeley.edu/OpenSees/developer/svn.php>`_ with further ``make`` instruction at the `builds <http://opensees.berkeley.edu/OpenSees/developer/builds.php>`_ page. Alternatively, OpenSees packages may already be available for your Linux distribution: `archlinux <https://aur.archlinux.org/packages/opensees/>`_.
+For Linux, make sure the Tcl scripting language and Tk windowing toolkit packages are installed on the system. The OpenSees source code may be downloaded via `SVN <http://opensees.berkeley.edu/OpenSees/developer/svn.php>`_ with further ``make`` instruction at the `builds <http://opensees.berkeley.edu/OpenSees/developer/builds.php>`_ page. This download includes a variety of template ``Makefile.def`` files, which should be read carefully to set-up OpenSees for your specific system. Alternatively, OpenSees packages may already be available for your Linux distribution: `archlinux <https://aur.archlinux.org/packages/opensees/>`_. The location of where the OpenSees program has been built to, will need to be given as a string for each analysis.
 
 
 ======

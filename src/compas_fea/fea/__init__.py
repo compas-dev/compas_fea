@@ -46,7 +46,6 @@ ansys
 
     input_generate
     make_command_file_static
-    make_command_file_static_combined
     make_command_file_modal
     make_command_file_harmonic
     ansys_launch_process

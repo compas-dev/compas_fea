@@ -46,6 +46,21 @@ When written, a confirmation message like below will appear in the terminal:
 
    ***** Abaqus input file generated: C:/Temp/truss_tower.inp *****
 
+--------
+OpenSees
+--------
+
+The input file for generating an OpenSees structural model is the ``.tcl`` input file. A ``basic`` model type will be made in 3D (``-ndm 3``) with all degrees-of-freedom at each node (``-ndf 6``). Nodes and elements will be numbered starting from 1, and then 1 subtracted for the storage of data after the analysis, so that it is consistent with the input **Structure** object.
+
+An important difference (currently) with OpenSees is that the structural model should have only two steps: the first step representing all of the boundary conditions containing only **Displacement** objects, and the second step representing all applied **Load** objects.
+
+Beam elements must be given an ``ex`` local axis orientation for ``geomTransf Linear``, as OpenSees will not make an assumption for the cross-section orientation. This should be defined either directly when adding the elements with ``axes``, or added to the element name (``{'ex': [0, 1, 0]}`` for example) in a CAD environment.
+
+When written, a confirmation message like below will appear in the terminal:
+
+.. code-block:: python
+
+   ***** OpenSees input file generated: C:/Temp/beam_frame.tcl *****
 
 ==============
 Model analysis
@@ -106,6 +121,30 @@ If this is the case, the data extraction will still continue, reading the last f
 
 To do, other common error messages and solution.
 
+--------
+OpenSees
+--------
+
+The input file will be sent for analysis via OpenSees in a Python subprocess that launches the executable, given by the ``exe`` string, or assuming ``C:/OpenSees.exe`` for Windows. No graphical user interface is launched, feedback will be presented in the terminal while the ``.tcl`` file is being run:
+
+.. code-block:: python
+
+             OpenSees -- Open System For Earthquake Engineering Simulation
+                  Pacific Earthquake Engineering Research Center
+                         Version 2.5.0 (rev 6536) 64-Bit
+
+        (c) Copyright 1999-2016 The Regents of the University of California
+                                All Rights Reserved
+   (Copyright and Disclaimer @ http://www.berkeley.edu/OpenSees/copyright.html)
+
+Followed by a completion message after the analysis:
+
+.. code-block:: python
+
+   ***** OpenSees analysis time : 0.9063 s *****
+
+Only simple constant static loads are implemented with ``system ProfileSPD``, ``numberer RCM``, ``constraints Plain`` and ``analysis Static``.
+
 
 ===============
 Extracting data
@@ -131,6 +170,12 @@ If there was a problem with saving the data the following error will occur:
 .. code-block:: bash
 
    ***** Saving data to structure.results unsuccessful *****
+
+--------
+OpenSees
+--------
+
+As OpenSees support is still in development, only limited output is currently implemented (``'u'``: displacements and ``'ur'``: rotations). Data will be stored as for all nodes and elements as ``.out`` text files such as ``node_u.out``. These files are organised with OpenSees defaults, which list analysis incremements vertically and data horizontally. Note that plotting functions currently use only the final incremement, i.e. the last line of the file.
 
 
 ===========================
@@ -163,7 +208,7 @@ Element fields
 
 - ``'sf'`` (beams): section forces, axial force in ``'sfnx'`` , shear force `x` ``'sfvx'`` and shear force `y` ``'sfvy'``.
 
-- ``'spf'`` (springs): spring forces.
+- ``'spf'`` (springs): spring forces ``'spfx'``, ``'spfy'`` and ``'spfz'``.
 
 .. - ``'sf'`` (shells): section forces per width, axial force in `x` ``'sfnx'``, shear force `x` ``'sfvx'``, shear force `y` ``'sfvy'``, transverse shear force `x` ``'sfwx'`` and transverse shear force `y` ``'sfwy'``.
 

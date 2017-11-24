@@ -1,0 +1,13 @@
+.. _beam_frame_rhino:
+
+********************************************************************************
+beam_frame Rhino
+********************************************************************************
+
+This example works for: Abaqus, OpenSees.
+
+.. figure:: /_images/beam_frame_rhino.png
+    :figclass: figure
+    :class: figure-img img-fluid
+
+.. literalinclude:: /../../examples/beam_frame_opensees-abaqus_rhino.py

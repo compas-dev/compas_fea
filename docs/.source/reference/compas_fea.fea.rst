@@ -46,11 +46,29 @@ ansys
 
     input_generate
     make_command_file_static
-    make_command_file_static_combined
     make_command_file_modal
     make_command_file_harmonic
     ansys_launch_process
     delete_result_files
     write_total_results
 
+
+opensees
+========
+
+.. currentmodule:: compas_fea.fea.opensees
+
+:mod:`compas_fea.fea.opensees`
+
+.. autosummary::
+    :toctree: generated/
+
+    input_generate
+    input_write_heading
+    input_write_nodes
+    input_write_bcs
+    input_write_elements
+    input_write_recorders
+    input_write_patterns
+    opensees_launch_process
 

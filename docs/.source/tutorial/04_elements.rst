@@ -14,7 +14,7 @@ Adding elements
 
 **Element** objects are added to the **Structure** object with the ``add_element()`` and ``add_elements()`` methods, by giving the list or lists of nodes that the element connects to and the element type as a string. The **Element** objects are added to the ``.elements`` dictionary, from the classes found in module **compas_fea.structure.elements**, where the class names match the string entered for ``type``.
 
-The element types include, amongst others, 1D elements: **BeamElement**, **TrussElement**, 2D elements: **ShellElement**, **MembraneElement**, and 3D elements: **PentahedronElement**, **TetrahedronElement**, **HexahedronElement**. As with nodes, the elements will be added with integer keys numbered sequentially starting from 0.
+The element types include, amongst others, 1D elements: **SpringElement**, **BeamElement**, **TrussElement**, 2D elements: **ShellElement**, **MembraneElement**, and 3D elements: **PentahedronElement**, **TetrahedronElement**, **HexahedronElement**. As with nodes, the elements will be added with integer keys numbered sequentially starting from 0.
 
 .. code-block:: python
 
