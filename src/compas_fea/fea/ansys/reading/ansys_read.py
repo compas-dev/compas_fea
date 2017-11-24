@@ -4,15 +4,15 @@ from compas.geometry import length_vector
 
 def get_nodes_elements_from_result_files(path):
     try:
-        node_file    = open(path + 'output/nodes.txt', 'r')
-    except:
+        node_file    = open(path + 'nodes.txt', 'r')
+    except(Exception):
         node_file = None
     try:
-        elementFile    = open(path + 'output/elements.txt', 'r')
-    except:
+        elementFile    = open(path + 'elements.txt', 'r')
+    except(Exception):
         elementFile = None
 
-    elem_type_dict = {1: 'shell8', 2: 'shell4', 3: 'beam', 4: 'tie', 5: 'solid8'}
+    elem_type_dict = {1: 'ShellElement', 2: 'ShellElement', 3: 'BeamElement', 4: 'TieElement', 5: 'SolidElement'}
     nodes = {}
     elements = {}
     if node_file and elementFile:
@@ -34,9 +34,13 @@ def get_nodes_elements_from_result_files(path):
             topology[:] = [int(x - 1) for x in topology if x != 0]
             attr = map(float, attr)
             elem_type, mat_index, sec_index = map(int, attr)
-            elem_type = elem_type_dict[elem_type]
-            elements[str(i)] = {'topology': topology, 'sec': sec_index,
-                                'mat': mat_index, 'elem_type': elem_type}
+
+            if len(topology) == 2:
+                elem_type = 'TieElement'
+            else:
+                elem_type = 'ShellElement'
+            elements[i] = {'nodes': topology, 'sec': sec_index,
+                           'mat': mat_index, 'type': elem_type}
 
     return nodes, elements
 

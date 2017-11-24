@@ -343,7 +343,6 @@ compas_fea structure: {}
                     'PentahedronElement': PentahedronElement,
                     'HexahedronElement': HexahedronElement}
         func = func_dic[type]
-
         ekey = self.check_element_exists(nodes)
         if ekey is None:
             ekey = self.element_count()
@@ -881,7 +880,7 @@ compas_fea structure: {}
             abaq.abaqus_launch_process(self, exe, cpus)
 
         elif software == 'ansys':
-            ansys.ansys_launch_process(self.path, self.name, cpus, license)
+            ansys.ansys_launch_process(self.path, self.name, cpus, license, delete=delete)
 
         elif software == 'opensees':
             opensees.opensees_launch_process(self, exe)
