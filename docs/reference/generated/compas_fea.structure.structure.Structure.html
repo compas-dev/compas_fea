@@ -51,20 +51,14 @@
 <em class="property">class </em><code class="descclassname">compas_fea.structure.structure.</code><code class="descname">Structure</code><span class="sig-paren">(</span><em>name='compas_fea-Structure'</em>, <em>path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/structure.html#Structure"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal">object</code></a></p>
 <p>Initialises empty Structure object for use in finite element analysis.</p>
-<table class="docutils field-list table table-responsive table-bordered" frame="void" rules="none">
-<col class="field-name"/>
-<col class="field-body"/>
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last">
-<li><p class="first"><strong>name</strong> (<em>str</em>) – Name of the structure.</p>
-</li>
-<li><p class="first"><strong>path</strong> (<em>str</em>) – Path to save files.</p>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul>
+<li><p><strong>name</strong> (<em>str</em>) – Name of the structure.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to save files.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.constraints">
 <code class="descname">constraints</code></dt>
@@ -160,167 +154,164 @@
 <code class="descname">tol</code></dt>
 <dd><p><em>str</em> – Geometric key tolerance.</p>
 </dd></dl>
-<table class="docutils field-list table table-responsive table-bordered" frame="void" rules="none">
-<col class="field-name"/>
-<col class="field-body"/>
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
 <p class="rubric">Methods</p>
-<table border="1" class="longtable docutils table table-responsive table-bordered">
+<table class="longtable docutils table table-responsive table-bordered">
 <colgroup>
-<col width="10%"/>
-<col width="90%"/>
+<col style="width: 10%"></col>
+<col style="width: 90%"></col>
 </colgroup>
-<tbody valign="top">
-<tr class=""><td><code class="xref py py-obj docutils literal">__init__</code>([name, path])</td>
-<td></td>
+<tbody>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">__init__</code>([name, path])</p></td>
+<td><p></p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_constraint</code>(constraint)</td>
-<td>Adds a Constraint object to structure.constraints.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_constraint</code>(constraint)</p></td>
+<td><p>Adds a Constraint object to structure.constraints.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_displacement</code>(displacement)</td>
-<td>Adds a Displacement object to structure.displacements.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_displacement</code>(displacement)</p></td>
+<td><p>Adds a Displacement object to structure.displacements.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_displacements</code>(displacements)</td>
-<td>Adds Displacement objects to structure.displacements.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_displacements</code>(displacements)</p></td>
+<td><p>Adds Displacement objects to structure.displacements.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_element</code>(nodes, type[, acoustic, ...])</td>
-<td>Adds an element to structure.elements with centroid geometric key.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_element</code>(nodes, type[, acoustic, …])</p></td>
+<td><p>Adds an element to structure.elements with centroid geometric key.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_element_properties</code>(element_properties[, ...])</td>
-<td>Adds an ElementProperties object to structure.element_properties.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_element_properties</code>(element_properties[, …])</p></td>
+<td><p>Adds an ElementProperties object to structure.element_properties.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_element_to_element_index</code>(key, nodes)</td>
-<td>Adds the element to the element_index dictionary.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_element_to_element_index</code>(key, nodes)</p></td>
+<td><p>Adds the element to the element_index dictionary.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_elements</code>(elements, type[, acoustic, ...])</td>
-<td>Adds multiple elements of the same type to structure.elements.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_elements</code>(elements, type[, acoustic, …])</p></td>
+<td><p>Adds multiple elements of the same type to structure.elements.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_interaction</code>(interaction)</td>
-<td>Adds an Interaction object to structure.interactions.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_interaction</code>(interaction)</p></td>
+<td><p>Adds an Interaction object to structure.interactions.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_load</code>(load)</td>
-<td>Adds a Load object to structure.loads.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_load</code>(load)</p></td>
+<td><p>Adds a Load object to structure.loads.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_loads</code>(loads)</td>
-<td>Adds Load objects to structure.loads.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_loads</code>(loads)</p></td>
+<td><p>Adds Load objects to structure.loads.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_material</code>(material)</td>
-<td>Adds a Material object to structure.materials.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_material</code>(material)</p></td>
+<td><p>Adds a Material object to structure.materials.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_materials</code>(materials)</td>
-<td>Adds Material objects to structure.materials.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_materials</code>(materials)</p></td>
+<td><p>Adds Material objects to structure.materials.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_misc</code>(misc)</td>
-<td>Adds a Misc object to structure.misc.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_misc</code>(misc)</p></td>
+<td><p>Adds a Misc object to structure.misc.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_node</code>(xyz[, ex, ey, ez])</td>
-<td>Adds a node to structure.nodes at co-ordinates xyz with local frame [ex, ey, ez].</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_node</code>(xyz[, ex, ey, ez])</p></td>
+<td><p>Adds a node to structure.nodes at co-ordinates xyz with local frame [ex, ey, ez].</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_node_to_node_index</code>(key, xyz)</td>
-<td>Adds the node to the node_index dictionary.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_node_to_node_index</code>(key, xyz)</p></td>
+<td><p>Adds the node to the node_index dictionary.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_nodes</code>(nodes[, ex, ey, ez])</td>
-<td>Adds a list of nodes to structure.nodes at given co-ordinates all with local frame [ex, ey, ez].</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_nodes</code>(nodes[, ex, ey, ez])</p></td>
+<td><p>Adds a list of nodes to structure.nodes at given co-ordinates all with local frame [ex, ey, ez].</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_nodes_elements_from_mesh</code>(mesh, element_type)</td>
-<td>Adds the nodes and faces of a Mesh to the Structure object.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_nodes_elements_from_mesh</code>(mesh, element_type)</p></td>
+<td><p>Adds the nodes and faces of a Mesh to the Structure object.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_nodes_elements_from_network</code>(network, ...)</td>
-<td>Adds the nodes and edges of a Network to the Structure object.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_nodes_elements_from_network</code>(network, …)</p></td>
+<td><p>Adds the nodes and edges of a Network to the Structure object.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_section</code>(section)</td>
-<td>Adds a Section object to structure.sections.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_section</code>(section)</p></td>
+<td><p>Adds a Section object to structure.sections.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_sections</code>(sections)</td>
-<td>Adds Section objects to structure.sections.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_sections</code>(sections)</p></td>
+<td><p>Adds Section objects to structure.sections.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_set</code>(name, type, selection[, explode])</td>
-<td>Adds a node, element or surface set to structure.sets.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_set</code>(name, type, selection[, explode])</p></td>
+<td><p>Adds a node, element or surface set to structure.sets.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_step</code>(step)</td>
-<td>Adds a Step object to structure.steps.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_step</code>(step)</p></td>
+<td><p>Adds a Step object to structure.steps.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">add_steps</code>(steps)</td>
-<td>Adds Step objects to structure.steps.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_steps</code>(steps)</p></td>
+<td><p>Adds Step objects to structure.steps.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">analyse</code>(software[, exe, cpus, license, delete])</td>
-<td>Runs the analysis through the chosen FEA software/library.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">analyse</code>(software[, exe, cpus, license, delete])</p></td>
+<td><p>Runs the analysis through the chosen FEA software/library.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">analyse_and_extract</code>(software[, fields, exe, ...])</td>
-<td>Runs the analysis through the chosen FEA software/library and extracts data.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">analyse_and_extract</code>(software[, fields, exe, …])</p></td>
+<td><p>Runs the analysis through the chosen FEA software/library and extracts data.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">check_element_exists</code>(nodes[, xyz])</td>
-<td>Check if an element already exists based on the nodes it connects to or its centroid.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">check_element_exists</code>(nodes[, xyz])</p></td>
+<td><p>Check if an element already exists based on the nodes it connects to or its centroid.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">check_node_exists</code>(xyz)</td>
-<td>Check if a node already exists at given x, y, z co-ordinates.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">check_node_exists</code>(xyz)</p></td>
+<td><p>Check if a node already exists at given x, y, z co-ordinates.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">edit_node</code>(key, attr_dic)</td>
-<td>Edit a node’s data.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">edit_node</code>(key, attr_dic)</p></td>
+<td><p>Edit a node’s data.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">element_centroid</code>(element)</td>
-<td>Return the centroid of an element.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">element_centroid</code>(element)</p></td>
+<td><p>Return the centroid of an element.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">element_count</code>()</td>
-<td>Return the number of elements in structure.elements.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">element_count</code>()</p></td>
+<td><p>Return the number of elements in structure.elements.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">extract_data</code>(software[, fields, steps, exe])</td>
-<td>Extracts data from the FE software’s output.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">extract_data</code>(software[, fields, steps, exe])</p></td>
+<td><p>Extracts data from the FE software’s output.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">fields_dic_from_list</code>(fields_list)</td>
-<td>Creates a fields dictionary from a fields list.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">fields_dic_from_list</code>(fields_list)</p></td>
+<td><p>Creates a fields dictionary from a fields list.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">from_mesh</code>(mesh)</td>
-<td>Creates a Structure object based on data contained in a compas Mesh datastructure.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">from_mesh</code>(mesh)</p></td>
+<td><p>Creates a Structure object based on data contained in a compas Mesh datastructure.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">from_network</code>(network)</td>
-<td></td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">from_network</code>(network)</p></td>
+<td><p></p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">load_from_obj</code>(fnm)</td>
-<td>Imports a Structure object from an .obj file through Pickle.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">load_from_obj</code>(fnm)</p></td>
+<td><p>Imports a Structure object from an .obj file through Pickle.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">make_element_index_dic</code>()</td>
-<td>Makes an element_index dictionary from existing structure.elements.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">make_element_index_dic</code>()</p></td>
+<td><p>Makes an element_index dictionary from existing structure.elements.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">make_node_index_dic</code>()</td>
-<td>Makes a node_index dictionary from existing structure.nodes.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">make_node_index_dic</code>()</p></td>
+<td><p>Makes a node_index dictionary from existing structure.nodes.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">node_bounds</code>()</td>
-<td>Return the bounds formed by the Structure’s nodal co-ordinates.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">node_bounds</code>()</p></td>
+<td><p>Return the bounds formed by the Structure’s nodal co-ordinates.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">node_count</code>()</td>
-<td>Return the number of nodes in structure.nodes.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">node_count</code>()</p></td>
+<td><p>Return the number of nodes in structure.nodes.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">node_xyz</code>(node)</td>
-<td>Return the xyz co-ordinates of a node.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">node_xyz</code>(node)</p></td>
+<td><p>Return the xyz co-ordinates of a node.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">nodes_xyz</code>([nodes])</td>
-<td>Return the xyz co-ordinates of given or all nodes.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">nodes_xyz</code>([nodes])</p></td>
+<td><p>Return the xyz co-ordinates of given or all nodes.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">save_to_obj</code>()</td>
-<td>Exports the Structure object to an .obj file through Pickle.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">save_to_obj</code>()</p></td>
+<td><p>Exports the Structure object to an .obj file through Pickle.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">scale_displacements</code>(displacements, factor)</td>
-<td>Scales displacements by a given factor.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">scale_displacements</code>(displacements, factor)</p></td>
+<td><p>Scales displacements by a given factor.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">scale_loads</code>(loads, factor)</td>
-<td>Scales loads by a given factor.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">scale_loads</code>(loads, factor)</p></td>
+<td><p>Scales loads by a given factor.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">set_steps_order</code>(order)</td>
-<td>Sets the order the Steps will be analysed.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">set_steps_order</code>(order)</p></td>
+<td><p>Sets the order the Steps will be analysed.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">summary</code>()</td>
-<td>Prints a summary of the Structure object contents.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">summary</code>()</p></td>
+<td><p>Prints a summary of the Structure object contents.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">view</code>()</td>
-<td>Starts the QT app for visualisation.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">view</code>()</p></td>
+<td><p>Starts the QT app for visualisation.</p></td>
 </tr>
-<tr class=""><td><code class="xref py py-obj docutils literal">write_input_file</code>(software[, fields])</td>
-<td>Writes the FE software’s input file.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">write_input_file</code>(software[, fields])</p></td>
+<td><p>Writes the FE software’s input file.</p></td>
 </tr>
 </tbody>
 </table>
@@ -380,11 +371,11 @@
             
 
             
-                Last updated on Nov 24, 2017.
+                Last updated on Nov 25, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
             
         </footer>
 <script type="text/javascript">

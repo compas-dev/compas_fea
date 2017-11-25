@@ -48,40 +48,31 @@
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul>
-<li><p class="first"><a class="reference internal" href="#analysis" id="id5">Analysis</a></p>
+<li><p><a class="reference internal" href="#analysis" id="id5">Analysis</a></p>
 <ul>
-<li><p class="first"><a class="reference internal" href="#writing-the-input-file" id="id6">Writing the input file</a></p>
+<li><p><a class="reference internal" href="#writing-the-input-file" id="id6">Writing the input file</a></p>
 <ul>
-<li><p class="first"><a class="reference internal" href="#abaqus" id="id7">Abaqus</a></p>
-</li>
-<li><p class="first"><a class="reference internal" href="#opensees" id="id8">OpenSees</a></p>
-</li>
+<li><p><a class="reference internal" href="#abaqus" id="id7">Abaqus</a></p></li>
+<li><p><a class="reference internal" href="#opensees" id="id8">OpenSees</a></p></li>
 </ul>
 </li>
-<li><p class="first"><a class="reference internal" href="#model-analysis" id="id9">Model analysis</a></p>
+<li><p><a class="reference internal" href="#model-analysis" id="id9">Model analysis</a></p>
 <ul>
-<li><p class="first"><a class="reference internal" href="#id1" id="id10">Abaqus</a></p>
-</li>
-<li><p class="first"><a class="reference internal" href="#id2" id="id11">OpenSees</a></p>
-</li>
+<li><p><a class="reference internal" href="#id1" id="id10">Abaqus</a></p></li>
+<li><p><a class="reference internal" href="#id2" id="id11">OpenSees</a></p></li>
 </ul>
 </li>
-<li><p class="first"><a class="reference internal" href="#extracting-data" id="id12">Extracting data</a></p>
+<li><p><a class="reference internal" href="#extracting-data" id="id12">Extracting data</a></p>
 <ul>
-<li><p class="first"><a class="reference internal" href="#id3" id="id13">Abaqus</a></p>
-</li>
-<li><p class="first"><a class="reference internal" href="#id4" id="id14">OpenSees</a></p>
-</li>
+<li><p><a class="reference internal" href="#id3" id="id13">Abaqus</a></p></li>
+<li><p><a class="reference internal" href="#id4" id="id14">OpenSees</a></p></li>
 </ul>
 </li>
-<li><p class="first"><a class="reference internal" href="#fields-components-and-data" id="id15">Fields, components and data</a></p>
+<li><p><a class="reference internal" href="#fields-components-and-data" id="id15">Fields, components and data</a></p>
 <ul>
-<li><p class="first"><a class="reference internal" href="#node-fields" id="id16">Node fields</a></p>
-</li>
-<li><p class="first"><a class="reference internal" href="#element-fields" id="id17">Element fields</a></p>
-</li>
-<li><p class="first"><a class="reference internal" href="#integration-and-section-points" id="id18">Integration and section points</a></p>
-</li>
+<li><p><a class="reference internal" href="#node-fields" id="id16">Node fields</a></p></li>
+<li><p><a class="reference internal" href="#element-fields" id="id17">Element fields</a></p></li>
+<li><p><a class="reference internal" href="#integration-and-section-points" id="id18">Integration and section points</a></p></li>
 </ul>
 </li>
 </ul>
@@ -90,12 +81,9 @@
 </div>
 <p>There are three steps in analysing a <strong>Structure</strong> object for a specific finite element software package or library:</p>
 <ul>
-<li><p class="first">Write the required input file for the FE software.</p>
-</li>
-<li><p class="first">Send the input file to the FE solver for analysis.</p>
-</li>
-<li><p class="first">Extract the data from the analysis results and store in <strong>structure.results</strong>.</p>
-</li>
+<li><p>Write the required input file for the FE software.</p></li>
+<li><p>Send the input file to the FE solver for analysis.</p></li>
+<li><p>Extract the data from the analysis results and store in <strong>structure.results</strong>.</p></li>
 </ul>
 <p>These three steps are performed in sequence with the method <code class="docutils literal">.analyse_and_extract()</code>, which takes the <code class="docutils literal">software</code> string (<code class="docutils literal">'abaqus'</code>, <code class="docutils literal">'ansys'</code>, <code class="docutils literal">'opensees'</code>), a list of the interested <code class="docutils literal">fields</code>, the number of processors to use <code class="docutils literal">cpus</code>, and if needed some information on the <code class="docutils literal">license</code> type. A call to this method looks like:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">'abaqus'</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">'u'</span><span class="p">,</span> <span class="s1">'s'</span><span class="p">])</span>
@@ -107,12 +95,9 @@
 <h3><a class="toc-backref" href="#id7">Abaqus</a></h3>
 <p>The input file for generating an Abaqus structural model is the <code class="docutils literal">.inp</code> input file. With this file, it is possible to generate and analyse a structural model, as well as request certain output data to be written to an output database <code class="docutils literal">.odb</code> file. Because the official reference documentation for Abaqus <code class="docutils literal">.inp</code> files is vast, it will not be described here what every line of the <code class="docutils literal">.inp</code> file means. For users interested or experienced in Abaqus input file generation, see the Abaqus Documentation, particularly the Keywords Manual, which can be set-up during installation. There are a few important points to highlight about the Python procedure and data format of the <strong>Structure</strong> object, and the generated input file format:</p>
 <ul>
-<li><p class="first">Abaqus uses a numbering system that starts from 1, therefore for the input file, every node and element from the <strong>Structure</strong> object has the number 1 added to it, which is then subtracted for all results data so that it remains consistent with the input.</p>
-</li>
-<li><p class="first">A node set <strong>nset_all</strong> is automatically generated containing all nodes of the <strong>Structure</strong>, as well as an element set <strong>elset_all</strong> for all elements, regardless of element type. Separate element sets for each element type are also automatically constructed, such as <strong>elset_S4</strong> for any four-noded shell elements.</p>
-</li>
-<li><p class="first">When making an exploded set, because of the different numbering systems of Python and Abaqus, an exploded  element set <strong>element_4</strong> will refer to Abaqus element 5.</p>
-</li>
+<li><p>Abaqus uses a numbering system that starts from 1, therefore for the input file, every node and element from the <strong>Structure</strong> object has the number 1 added to it, which is then subtracted for all results data so that it remains consistent with the input.</p></li>
+<li><p>A node set <strong>nset_all</strong> is automatically generated containing all nodes of the <strong>Structure</strong>, as well as an element set <strong>elset_all</strong> for all elements, regardless of element type. Separate element sets for each element type are also automatically constructed, such as <strong>elset_S4</strong> for any four-noded shell elements.</p></li>
+<li><p>When making an exploded set, because of the different numbering systems of Python and Abaqus, an exploded  element set <strong>element_4</strong> will refer to Abaqus element 5.</p></li>
 </ul>
 <p>When written, a confirmation message like below will appear in the terminal:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="o">*****</span> <span class="n">Abaqus</span> <span class="nb">input</span> <span class="nb">file</span> <span class="n">generated</span><span class="p">:</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">Temp</span><span class="o">/</span><span class="n">truss_tower</span><span class="o">.</span><span class="n">inp</span> <span class="o">*****</span>
@@ -211,59 +196,38 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 <div class="section">
 <h3><a class="toc-backref" href="#id16">Node fields</a></h3>
 <ul>
-<li><p class="first"><code class="docutils literal">'rf'</code>: reaction forces <code class="docutils literal">'rfx'</code>, <code class="docutils literal">'rfy'</code>, <code class="docutils literal">'rfz'</code> and magnitude <code class="docutils literal">'rfm'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'rm'</code>: reaction moments <code class="docutils literal">'rmx'</code>, <code class="docutils literal">'rmy'</code>, <code class="docutils literal">'rmz'</code> and magnitude <code class="docutils literal">'rmm'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'u'</code>: displacements <code class="docutils literal">'ux'</code>, <code class="docutils literal">'uy'</code>, <code class="docutils literal">'uz'</code> and magnitude <code class="docutils literal">'um'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'ur'</code>: rotations <code class="docutils literal">'urx'</code>, <code class="docutils literal">'ury'</code>, <code class="docutils literal">'urz'</code> and magnitude <code class="docutils literal">'urm'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'cf'</code>: concentrated forces <code class="docutils literal">'cfx'</code>, <code class="docutils literal">'cfy'</code>, <code class="docutils literal">'cfz'</code> and magnitude <code class="docutils literal">'cfm'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'cm'</code>: concentrated moments <code class="docutils literal">'cmx'</code>, <code class="docutils literal">'cmy'</code>, <code class="docutils literal">'cmz'</code> and magnitude <code class="docutils literal">'cmm'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'nt'</code>: nodal temperatures.</p>
-</li>
+<li><p><code class="docutils literal">'rf'</code>: reaction forces <code class="docutils literal">'rfx'</code>, <code class="docutils literal">'rfy'</code>, <code class="docutils literal">'rfz'</code> and magnitude <code class="docutils literal">'rfm'</code>.</p></li>
+<li><p><code class="docutils literal">'rm'</code>: reaction moments <code class="docutils literal">'rmx'</code>, <code class="docutils literal">'rmy'</code>, <code class="docutils literal">'rmz'</code> and magnitude <code class="docutils literal">'rmm'</code>.</p></li>
+<li><p><code class="docutils literal">'u'</code>: displacements <code class="docutils literal">'ux'</code>, <code class="docutils literal">'uy'</code>, <code class="docutils literal">'uz'</code> and magnitude <code class="docutils literal">'um'</code>.</p></li>
+<li><p><code class="docutils literal">'ur'</code>: rotations <code class="docutils literal">'urx'</code>, <code class="docutils literal">'ury'</code>, <code class="docutils literal">'urz'</code> and magnitude <code class="docutils literal">'urm'</code>.</p></li>
+<li><p><code class="docutils literal">'cf'</code>: concentrated forces <code class="docutils literal">'cfx'</code>, <code class="docutils literal">'cfy'</code>, <code class="docutils literal">'cfz'</code> and magnitude <code class="docutils literal">'cfm'</code>.</p></li>
+<li><p><code class="docutils literal">'cm'</code>: concentrated moments <code class="docutils literal">'cmx'</code>, <code class="docutils literal">'cmy'</code>, <code class="docutils literal">'cmz'</code> and magnitude <code class="docutils literal">'cmm'</code>.</p></li>
+<li><p><code class="docutils literal">'nt'</code>: nodal temperatures.</p></li>
 </ul>
 </div>
 <div class="section">
 <h3><a class="toc-backref" href="#id17">Element fields</a></h3>
 <ul>
-<li><p class="first"><code class="docutils literal">'sf'</code> (beams): section forces, axial force in <code class="docutils literal">'sfnx'</code> , shear force <cite>x</cite> <code class="docutils literal">'sfvx'</code> and shear force <cite>y</cite> <code class="docutils literal">'sfvy'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'spf'</code> (springs): spring forces <code class="docutils literal">'spfx'</code>, <code class="docutils literal">'spfy'</code> and <code class="docutils literal">'spfz'</code>.</p>
-</li>
+<li><p><code class="docutils literal">'sf'</code> (beams): section forces, axial force in <code class="docutils literal">'sfnx'</code> , shear force <cite>x</cite> <code class="docutils literal">'sfvx'</code> and shear force <cite>y</cite> <code class="docutils literal">'sfvy'</code>.</p></li>
+<li><p><code class="docutils literal">'spf'</code> (springs): spring forces <code class="docutils literal">'spfx'</code>, <code class="docutils literal">'spfy'</code> and <code class="docutils literal">'spfz'</code>.</p></li>
 </ul>
 <ul>
-<li><p class="first"><code class="docutils literal">'sm'</code> (beams): section moments, bending moment about <cite>x</cite> <code class="docutils literal">'smx'</code>, bending moment about <cite>y</cite> <code class="docutils literal">'smy'</code> and torsion moment <code class="docutils literal">'smz'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'sm'</code> (shells): section moments per width, bending moment about <cite>y</cite> <code class="docutils literal">'smx'</code>, bending moment about <cite>x</cite> <code class="docutils literal">'smy'</code> and torsion moment <code class="docutils literal">'smz'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'se'</code> (beams): section strains, axial strain <code class="docutils literal">'senx'</code>, shear strain in <cite>y</cite> <code class="docutils literal">'sevy'</code> and shear strain in <cite>x</cite> <code class="docutils literal">'sevx'</code>.</p>
-</li>
+<li><p><code class="docutils literal">'sm'</code> (beams): section moments, bending moment about <cite>x</cite> <code class="docutils literal">'smx'</code>, bending moment about <cite>y</cite> <code class="docutils literal">'smy'</code> and torsion moment <code class="docutils literal">'smz'</code>.</p></li>
+<li><p><code class="docutils literal">'sm'</code> (shells): section moments per width, bending moment about <cite>y</cite> <code class="docutils literal">'smx'</code>, bending moment about <cite>x</cite> <code class="docutils literal">'smy'</code> and torsion moment <code class="docutils literal">'smz'</code>.</p></li>
+<li><p><code class="docutils literal">'se'</code> (beams): section strains, axial strain <code class="docutils literal">'senx'</code>, shear strain in <cite>y</cite> <code class="docutils literal">'sevy'</code> and shear strain in <cite>x</cite> <code class="docutils literal">'sevx'</code>.</p></li>
 </ul>
 <ul>
-<li><p class="first"><code class="docutils literal">'sk'</code> (beams): section curvatures, curvature about <cite>x</cite> <code class="docutils literal">'skx'</code> , curvature about <cite>y</cite> <code class="docutils literal">'sky'</code> and twist <code class="docutils literal">'skz'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'sk'</code> (shells): section curvatures, curvature about <cite>y</cite> <code class="docutils literal">'skx'</code>, curvature about <cite>x</cite> <code class="docutils literal">'sky'</code> and twist <code class="docutils literal">'skz'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'s'</code> basic (beams): axial stress <code class="docutils literal">'sxx'</code>, hoop stress <code class="docutils literal">'syy'</code> and shear stresse (torsion) <code class="docutils literal">'sxy'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'s'</code> basic (shells): axial stresses <code class="docutils literal">'sxx'</code> <code class="docutils literal">'syy'</code> and shear stress <code class="docutils literal">'sxy'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'s'</code> derived (shells and beams): Von Mises stress <code class="docutils literal">'smises'</code>, max principal stress <code class="docutils literal">'smaxp'</code> and min principal stress <code class="docutils literal">'sminp'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'e'</code> basic (beams): axial strain <code class="docutils literal">'exx'</code>, hoop strain <code class="docutils literal">'eyy'</code> and shear strain (torsion) <code class="docutils literal">'exy'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'e'</code> basic (shells): axial strains <code class="docutils literal">'exx'</code> <code class="docutils literal">'eyy'</code> and shear strain <code class="docutils literal">'exy'</code>.</p>
-</li>
-<li><p class="first"><code class="docutils literal">'e'</code> derived (shells and beams): max principal strain <code class="docutils literal">'emaxp'</code> and min principal strain <code class="docutils literal">'eminp'</code>.</p>
-</li>
+<li><p><code class="docutils literal">'sk'</code> (beams): section curvatures, curvature about <cite>x</cite> <code class="docutils literal">'skx'</code> , curvature about <cite>y</cite> <code class="docutils literal">'sky'</code> and twist <code class="docutils literal">'skz'</code>.</p></li>
+<li><p><code class="docutils literal">'sk'</code> (shells): section curvatures, curvature about <cite>y</cite> <code class="docutils literal">'skx'</code>, curvature about <cite>x</cite> <code class="docutils literal">'sky'</code> and twist <code class="docutils literal">'skz'</code>.</p></li>
+<li><p><code class="docutils literal">'s'</code> basic (beams): axial stress <code class="docutils literal">'sxx'</code>, hoop stress <code class="docutils literal">'syy'</code> and shear stresse (torsion) <code class="docutils literal">'sxy'</code>.</p></li>
+<li><p><code class="docutils literal">'s'</code> basic (shells): axial stresses <code class="docutils literal">'sxx'</code> <code class="docutils literal">'syy'</code> and shear stress <code class="docutils literal">'sxy'</code>.</p></li>
+<li><p><code class="docutils literal">'s'</code> derived (shells and beams): Von Mises stress <code class="docutils literal">'smises'</code>, max principal stress <code class="docutils literal">'smaxp'</code> and min principal stress <code class="docutils literal">'sminp'</code>.</p></li>
+<li><p><code class="docutils literal">'e'</code> basic (beams): axial strain <code class="docutils literal">'exx'</code>, hoop strain <code class="docutils literal">'eyy'</code> and shear strain (torsion) <code class="docutils literal">'exy'</code>.</p></li>
+<li><p><code class="docutils literal">'e'</code> basic (shells): axial strains <code class="docutils literal">'exx'</code> <code class="docutils literal">'eyy'</code> and shear strain <code class="docutils literal">'exy'</code>.</p></li>
+<li><p><code class="docutils literal">'e'</code> derived (shells and beams): max principal strain <code class="docutils literal">'emaxp'</code> and min principal strain <code class="docutils literal">'eminp'</code>.</p></li>
 </ul>
 <ul>
-<li><p class="first"><code class="docutils literal">'rbfor'</code>: reinforcement forces.</p>
-</li>
+<li><p><code class="docutils literal">'rbfor'</code>: reinforcement forces.</p></li>
 </ul>
 </div>
 <div class="section">
@@ -271,12 +235,9 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 <p>For <code class="docutils literal">'nodal'</code> data, accessing the displacement in <cite>z</cite>, for step <code class="docutils literal">'step_load'</code>, and for node 4 would be <code class="docutils literal">structure.results['step_load']['nodal']['uz'][4]</code>, which would give a single float value. For <code class="docutils literal">'element'</code> data, there is no single data value that can represent the entire element, as each element has physical dimensions and requires many data values across its volume. During a finite element analysis, specific points are evaluated across an element and  section related to the element shape function and cross-section shape (Gauss points). Each of these data-points is stored for the element as an integration point–section point string key. This key looks  like <code class="docutils literal">'ip4_sp1'</code>, which would be the data for integration point 4 and section point 1 (see the Elements and Sections topics for the locations of these points).</p>
 <p>The data request <code class="docutils literal">structure.results['step_load']['element']['smises'][4]</code>, will, for an example shell element, return a dictionary of data with keys as the integration point–section point keys. For a four noded shell element these would be four integration points (the four internal points, unless a reduced integration scheme is used leading to one point) and two section points (top and bottom layers by default). When data stored in this format are converted to nodal data, the following points must be observed:</p>
 <ul>
-<li><p class="first">Taking a mean value of all points could give meaningless or misleading results, for example, the mean value of normal stresses in a beam under pure bending would be zero, as positive and negative normal stresses would cancel each other out.</p>
-</li>
-<li><p class="first">Selecting one representative integration point is not possible without some understanding of the structural model and loading. For instance, any given point of a beam section will have completely different stress values depending on the degree of major axis or minor axis bending.</p>
-</li>
-<li><p class="first">Picking a maximum value of Von Mises stress could be used to find a critical heavily stressed point, as these stresses are always positive. But picking a maximum or minimum value for a stress where the sign matters, as with  compression or tension, is not so straightforward.</p>
-</li>
+<li><p>Taking a mean value of all points could give meaningless or misleading results, for example, the mean value of normal stresses in a beam under pure bending would be zero, as positive and negative normal stresses would cancel each other out.</p></li>
+<li><p>Selecting one representative integration point is not possible without some understanding of the structural model and loading. For instance, any given point of a beam section will have completely different stress values depending on the degree of major axis or minor axis bending.</p></li>
+<li><p>Picking a maximum value of Von Mises stress could be used to find a critical heavily stressed point, as these stresses are always positive. But picking a maximum or minimum value for a stress where the sign matters, as with  compression or tension, is not so straightforward.</p></li>
 </ul>
 </div>
 </div>
@@ -364,11 +325,11 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
             
 
             
-                Last updated on Nov 24, 2017.
+                Last updated on Nov 25, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
             
         </footer>
 <script type="text/javascript">

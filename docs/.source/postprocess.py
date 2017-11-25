@@ -1,4 +1,5 @@
 import os
+import BeautifulSoup
 from bs4 import BeautifulSoup
 
 for path, dirs, files in os.walk('../'):

@@ -48,20 +48,15 @@
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul>
-<li><p class="first"><a class="reference internal" href="#steps" id="id1">Steps</a></p>
+<li><p><a class="reference internal" href="#steps" id="id1">Steps</a></p>
 <ul>
-<li><p class="first"><a class="reference internal" href="#adding-steps" id="id2">Adding steps</a></p>
-</li>
-<li><p class="first"><a class="reference internal" href="#step-types" id="id3">Step types</a></p>
+<li><p><a class="reference internal" href="#adding-steps" id="id2">Adding steps</a></p></li>
+<li><p><a class="reference internal" href="#step-types" id="id3">Step types</a></p>
 <ul>
-<li><p class="first"><a class="reference internal" href="#generalstep" id="id4">GeneralStep</a></p>
-</li>
-<li><p class="first"><a class="reference internal" href="#bucklingstep" id="id5">BucklingStep</a></p>
-</li>
-<li><p class="first"><a class="reference internal" href="#modalstep" id="id6">ModalStep</a></p>
-</li>
-<li><p class="first"><a class="reference internal" href="#harmonicstep" id="id7">HarmonicStep</a></p>
-</li>
+<li><p><a class="reference internal" href="#generalstep" id="id4">GeneralStep</a></p></li>
+<li><p><a class="reference internal" href="#bucklingstep" id="id5">BucklingStep</a></p></li>
+<li><p><a class="reference internal" href="#modalstep" id="id6">ModalStep</a></p></li>
+<li><p><a class="reference internal" href="#harmonicstep" id="id7">HarmonicStep</a></p></li>
 </ul>
 </li>
 </ul>
@@ -95,14 +90,10 @@
 </code></pre></div>
 <p>There are additionally other useful arguments to pass which require the following explanations:</p>
 <ul>
-<li><p class="first"><code class="docutils literal">increments</code> (default <code class="docutils literal">200</code>) is the integer number of increments the analysis step can take to complete, a higher number of increments may be needed for a model that shows highly non-linear behaviour due to material and/or geometric effects. A stiff linear analysis will often use only a few or even one of these increments. If the analysis does not converge for even a high number of increments, it may mean that the structure is struggling to find equilibrium for the given applied actions. This may indicate that the structure needs to be stiffer or stronger, that the loads need to be reduced, or that there may be mechanisms or modelling problems in the structure.</p>
-</li>
-<li><p class="first"><code class="docutils literal">factor</code> (default <code class="docutils literal">1.0</code>) is the float proportionality factor on the loads and displacements. By default, no scaling of the load and displacement components will occur. Defining a value other than unity is useful for creating <strong>Step</strong> objects that represent load combinations for design code checks, without having to change the base <strong>Load</strong> and <strong>Displacement</strong> objects. For instance, factors of 1.35 and 1.5 might be applied to dead and live loads.</p>
-</li>
-<li><p class="first"><code class="docutils literal">nlgeom</code> (default <code class="docutils literal">True</code>) is a boolean to toggle on or off the effects of non-linear geometry in the analysis. If the structure is relatively stiff, meaning that it does not displace significantly under the applied actions, then it is likely that the deformed geometry does not affect significantly the internal forces and moments. However, a coupling of large forces and deformations can lead to second order effects, which can lead to further deformations and potential structural instability. To incorporate these and other non-linear geometric effects, keep this to <code class="docutils literal">True</code> and a second order analysis will be performed. If this is not needed, then a first order analysis with <code class="docutils literal">nlgeom=False</code> can be used. <strong>Note</strong>; turning off <code class="docutils literal">nlgeom</code> just to get the analysis to run can be misleading and dangerous, as non-convergence in a <code class="docutils literal">nlgeom=True</code> analysis can be a warning signal for local or global instability.</p>
-</li>
-<li><p class="first"><code class="docutils literal">type</code> (default <code class="docutils literal">'static'</code>) the default <code class="docutils literal">'static'</code> analysis type will incrementally increase the loads (or displacements) until equilibrium is ideally achieved for the requested load/displacement level. The loads are generally increased from zero, and the structure follows its load–displacement curve up until a peak load, in increments related to the tangent stiffness (gradient) at any point on the curve. If the applied load exceeds the peak load of the structure, it cannot be in equilibrium and will fail prematurely. A monotonically increasing load controlled analysis will not give information on the post-peak load behaviour on the load–displacement curve, as loads are now decreasing. For this post-peak load information, it is required to use either a displacement controlled analysis or to change the <code class="docutils literal">type</code> to <code class="docutils literal">'static,riks'</code>, which is an arc-length based analysis process.</p>
-</li>
+<li><p><code class="docutils literal">increments</code> (default <code class="docutils literal">200</code>) is the integer number of increments the analysis step can take to complete, a higher number of increments may be needed for a model that shows highly non-linear behaviour due to material and/or geometric effects. A stiff linear analysis will often use only a few or even one of these increments. If the analysis does not converge for even a high number of increments, it may mean that the structure is struggling to find equilibrium for the given applied actions. This may indicate that the structure needs to be stiffer or stronger, that the loads need to be reduced, or that there may be mechanisms or modelling problems in the structure.</p></li>
+<li><p><code class="docutils literal">factor</code> (default <code class="docutils literal">1.0</code>) is the float proportionality factor on the loads and displacements. By default, no scaling of the load and displacement components will occur. Defining a value other than unity is useful for creating <strong>Step</strong> objects that represent load combinations for design code checks, without having to change the base <strong>Load</strong> and <strong>Displacement</strong> objects. For instance, factors of 1.35 and 1.5 might be applied to dead and live loads.</p></li>
+<li><p><code class="docutils literal">nlgeom</code> (default <code class="docutils literal">True</code>) is a boolean to toggle on or off the effects of non-linear geometry in the analysis. If the structure is relatively stiff, meaning that it does not displace significantly under the applied actions, then it is likely that the deformed geometry does not affect significantly the internal forces and moments. However, a coupling of large forces and deformations can lead to second order effects, which can lead to further deformations and potential structural instability. To incorporate these and other non-linear geometric effects, keep this to <code class="docutils literal">True</code> and a second order analysis will be performed. If this is not needed, then a first order analysis with <code class="docutils literal">nlgeom=False</code> can be used. <strong>Note</strong>; turning off <code class="docutils literal">nlgeom</code> just to get the analysis to run can be misleading and dangerous, as non-convergence in a <code class="docutils literal">nlgeom=True</code> analysis can be a warning signal for local or global instability.</p></li>
+<li><p><code class="docutils literal">type</code> (default <code class="docutils literal">'static'</code>) the default <code class="docutils literal">'static'</code> analysis type will incrementally increase the loads (or displacements) until equilibrium is ideally achieved for the requested load/displacement level. The loads are generally increased from zero, and the structure follows its load–displacement curve up until a peak load, in increments related to the tangent stiffness (gradient) at any point on the curve. If the applied load exceeds the peak load of the structure, it cannot be in equilibrium and will fail prematurely. A monotonically increasing load controlled analysis will not give information on the post-peak load behaviour on the load–displacement curve, as loads are now decreasing. For this post-peak load information, it is required to use either a displacement controlled analysis or to change the <code class="docutils literal">type</code> to <code class="docutils literal">'static,riks'</code>, which is an arc-length based analysis process.</p></li>
 </ul>
 </div>
 <div class="section">
@@ -201,11 +192,11 @@
             
 
             
-                Last updated on Nov 24, 2017.
+                Last updated on Nov 25, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
             
         </footer>
 <script type="text/javascript">

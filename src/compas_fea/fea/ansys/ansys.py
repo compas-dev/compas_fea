@@ -26,7 +26,7 @@ __all__ = [
 
 
 def input_generate(structure):
-    """ Generates Ansys input file for the given Structure.
+    """ Generates Ansys input file.
 
     Parameters:
         structure (obj): Structure object.
@@ -92,7 +92,7 @@ def ansys_launch_process(path, name, cpus, license, delete=True):
         name (str): Name of the structure.
         cpus (int): Number of CPU cores to use.
         license (str): Type of Ansys license.
-        delete (Boolean): Path to the Ansys input file.
+        delete (Bool): Path to the Ansys input file.
 
     Returns:
         None
