@@ -17,13 +17,23 @@ __all__ = [
     'make_command_file_modal',
     'make_command_file_harmonic',
     'ansys_launch_process',
+    'ansys_launch_process_extract',
     'delete_result_files',
-    'write_total_results',
-    'write_static_results_from_ansys_rst'
+    'extract_rst_data',
+    'write_results_from_rst',
+    'load_to_results'
 ]
 
 
 def input_generate(structure):
+    """ Generates Ansys input file for the given Structure.
+
+    Parameters:
+        structure (obj): Structure object.
+
+    Returns:
+        None
+    """
     name = structure.name
     path = structure.path
     stypes = [structure.steps[skey].type for skey in structure.steps]
@@ -39,22 +49,54 @@ def input_generate(structure):
 
 
 def make_command_file_static(structure, path, name):
+    """ Generates Ansys input file for static analysis.
 
+    Parameters:
+        structure (obj): Structure object.
+
+    Returns:
+        None
+    """
     write_static_analysis_request(structure, path, name)
 
 
 def make_command_file_modal(structure, path, name):
+    """ Generates Ansys input file for modal analysis.
 
+    Parameters:
+        structure (obj): Structure object.
+
+    Returns:
+        None
+    """
     write_modal_analysis_request(structure, path, name)
 
 
 def make_command_file_harmonic(structure, output_path, filename, skey):
+    """ Generates Ansys input file for harmonic analysis.
 
+    Parameters:
+        structure (obj): Structure object.
+
+    Returns:
+        None
+    """
     write_harmonic_analysis_request(structure, output_path, filename, skey)
 
 
 def ansys_launch_process(path, name, cpus, license, delete=True):
+    """ Launches an analysis using Ansys.
 
+    Parameters:
+        path (str): Path to the Ansys input file.
+        name (str): Name of the structure.
+        cpus (int): Number of CPU cores to use.
+        license (str): Type of Ansys license.
+        delete (Boolean): Path to the Ansys input file.
+
+    Returns:
+        None
+    """
     if not os.path.exists(path + name + '_output/'):
         os.makedirs(path + name + '_output/')
     elif delete:
@@ -84,7 +126,17 @@ def ansys_launch_process(path, name, cpus, license, delete=True):
 
 
 def ansys_launch_process_extract(path, name, cpus=2, license='research'):
+    """ Calls an extraction of results from Ansys.
 
+    Parameters:
+        path (str): Path to the Ansys input file.
+        name (str): Name of the structure.
+        cpus (int): Number of CPU cores to use.
+        license (str): Type of Ansys license.
+
+    Returns:
+        None
+    """
     ansys_path = 'MAPDL.exe'
     inp_path = path + '/' + name + '_extract.txt'
     work_dir = path + name + '_output/'
@@ -104,150 +156,46 @@ def ansys_launch_process_extract(path, name, cpus=2, license='research'):
     subprocess.call(launch_string)
 
 
-def delete_result_files(path, filename):
-    out_path = path + '/' + filename + '_output/'
+def delete_result_files(path, name):
+    """ Deletes Ansys result files.
+
+    Parameters:
+        path (str): Path to the Ansys input file.
+        name (str): Name of the structure.
+
+    Returns:
+        None
+    """
+    out_path = path + '/' + name + '_output/'
     shutil.rmtree(out_path)
 
 
-def write_total_results(filename, output_path, excluded_nodes=None, node_disp=None):
-
-    r_file = open(output_path + '/' + str(filename), 'w')
-
-    try:
-        stresses_file   = open(output_path + 'nodal_stresses_.txt', 'r')
-    except:
-        stresses_file = None
-    try:
-        p_stresses_file   = open(output_path + 'principal_stresses_.txt', 'r')
-    except:
-        p_stresses_file = None
-    try:
-        shear_stresses_file   = open(output_path + 'shear_stresses_.txt', 'r')
-    except:
-        shear_stresses_file = None
-    try:
-        displacements_file = open(output_path + 'displacements.txt', 'r')
-    except:
-        displacements_file = None
-
-    stresses = stresses_file.readlines()
-    p_stresses = p_stresses_file.readlines()
-    shear_stresses = shear_stresses_file.readlines()
-    displacements = displacements_file.readlines()
-
-    if excluded_nodes:
-        nodes = sorted(excluded_nodes)
-        for i in range(len(nodes)):
-            node = nodes[-1 - i]
-            del stresses[node]
-            del p_stresses[node]
-            del shear_stresses[node]
-            del displacements[node]
-
-    s = []
-    for stress in stresses:
-        stressString = stress.split(',')
-        del stressString[0]
-        for string in stressString:
-            try:
-                temp = float(string)
-            except:
-                pass
-            s.append(temp)
-
-    ps = []
-    for stress in p_stresses:
-        stressString = stress.split(',')
-        del stressString[0]
-        for string in stressString:
-            try:
-                temp = float(string)
-            except:
-                pass
-            ps.append(temp)
-
-    ss = []
-    for stress in shear_stresses:
-        stressString = stress.split(',')
-        del stressString[0]
-        for string in stressString:
-            try:
-                temp = float(string)
-            except:
-                pass
-            ss.append(temp)
-
-    d = []
-    for displ in displacements:
-        dispString = displ.split(',')
-        del dispString[0]
-        temp = []
-        for string in dispString:
-            try:
-                temp.append((float(string)))
-            except:
-                temp = None
-        d.append(abs((temp[0]**2 + temp[1]**2 + temp[2]**2)**0.5))
-
-    max_compression = min(s)
-    max_tension = max(s)
-    max_pcompression = min(ps)
-    max_ptension = max(ps)
-    max_scompression = min(ss)
-    max_stension = max(ss)
-    max_disp = max(d)
-    avg_disp = sum(d) / float(len(d))
-
-    r_file.write(str(filename))
-    r_file.write(' \n')
-
-    r_file.write('maximum compression stress,')
-    r_file.write(str(max_compression))
-    r_file.write(' \n')
-
-    r_file.write('maximum tension stress,')
-    r_file.write(str(max_tension))
-    r_file.write(' \n')
-
-    r_file.write('maximum principal compression stress,')
-    r_file.write(str(max_pcompression))
-    r_file.write(' \n')
-
-    r_file.write('maximum principal tension stress,')
-    r_file.write(str(max_ptension))
-    r_file.write(' \n')
-
-    r_file.write('maximum shear compression stress,')
-    r_file.write(str(max_scompression))
-    r_file.write(' \n')
-
-    r_file.write('maximum shear tension stress,')
-    r_file.write(str(max_stension))
-    r_file.write(' \n')
-
-    r_file.write('maximum displacement,')
-    r_file.write(str(max_disp))
-    r_file.write(' \n')
-
-    r_file.write('average displacement,')
-    r_file.write(str(avg_disp))
-    r_file.write(' \n')
-
-    if node_disp:
-        r_file.write('displacement node '+str(node_disp)+' \n')
-        r_file.write(str(d[int(node_disp)]))
-        r_file.write(' \n')
-        r_file.write(' \n')
-
-    r_file.close()
-
-
 def extract_rst_data(structure, fields='all', steps='last'):
+    """ Extracts results from Ansys rst file.
+
+    Parameters:
+        structure (obj): Structure object.
+        fields (list, str): Data field requests.
+        steps (list): Loads steps to extract from.
+
+    Returns:
+        None
+    """
     write_results_from_rst(structure, fields, steps)
     load_to_results(structure, fields, steps)
 
 
 def write_results_from_rst(structure, fields, steps):
+    """ Writes results request file from Ansys.
+
+    Parameters:
+        structure (obj): Structure object.
+        fields (list, str): Data field requests.
+        steps (list): Loads steps to extract from.
+
+    Returns:
+        None
+    """
     filename = structure.name + '_extract.txt'
     path = structure.path
     if steps == 'last':
@@ -273,6 +221,16 @@ def write_results_from_rst(structure, fields, steps):
 
 
 def load_to_results(structure, fields, steps):
+    """ Loads results from Ansys txt files to Structure object.
+
+    Parameters:
+        structure (obj): Structure object.
+        fields (list, str): Data field requests.
+        steps (list): Loads steps to extract from.
+
+    Returns:
+        None
+    """
     out_path = structure.path + structure.name + '_output/'
     if steps == 'all':
         steps = structure.steps.keys()

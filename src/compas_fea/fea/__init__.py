@@ -49,9 +49,11 @@ ansys
     make_command_file_modal
     make_command_file_harmonic
     ansys_launch_process
+    ansys_launch_process_extract
     delete_result_files
-    write_total_results
-
+    extract_rst_data
+    write_results_from_rst
+    load_to_results
 
 opensees
 ========
