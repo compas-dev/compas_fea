@@ -8,6 +8,7 @@ from compas_fea.structure import GeneralStep
 from compas_fea.structure import GeneralDisplacement
 from compas_fea.structure import GravityLoad
 from compas_fea.structure import ShellSection
+from compas_fea.structure import Steel
 from compas_fea.structure import Structure
 
 
@@ -31,15 +32,21 @@ rhino.add_sets_from_layers(mdl, layers=['elset_mesh', 'nset_roller_x', 'nset_rol
 
 # Add materials
 
-mdl.add_material(Concrete(name='mat_concrete', fck=50))
+mdl.add_materials([
+    Concrete(name='mat_concrete', fck=30),
+    Steel(name='mat_steel', fy=500)])
 
 # Add sections
 
-mdl.add_section(ShellSection(name='sec_concrete', t=0.010))
+mdl.add_section(ShellSection(name='sec_concrete', t=0.100))
 
 # Add element properties
 
-ep = Properties(material='mat_concrete', section='sec_concrete', elsets='elset_mesh')
+rebar = {
+    'l2': {'pos': -0.035, 'spacing': 0.100, 'material': 'mat_steel', 'dia': 0.010, 'angle': 90},
+    'l1': {'pos': -0.040, 'spacing': 0.100, 'material': 'mat_steel', 'dia': 0.010, 'angle': 0}}
+
+ep = Properties(material='mat_concrete', section='sec_concrete', elsets='elset_mesh', reinforcement=rebar)
 mdl.add_element_properties(ep, name='ep_concrete')
 
 # Add loads
@@ -56,7 +63,7 @@ mdl.add_displacements([
 
 mdl.add_steps([
     GeneralStep(name='step_bc', type='STATIC', displacements=['disp_x', 'disp_y']),
-    GeneralStep(name='step_loads', increments=10, type='STATIC,RIKS', loads=['load_gravity'])])
+    GeneralStep(name='step_loads', increments=100, type='STATIC,RIKS', loads=['load_gravity'])])
 mdl.steps_order = ['step_bc', 'step_loads']
 
 # Structure summary
@@ -65,8 +72,8 @@ mdl.summary()
 
 # Run and extract data
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'e'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'e', 'pe', 's', 'rbfor'])
 
 # Plot strain
 
-rhino.plot_data(mdl, step='step_loads', field='pemaxp', cbar=[None, 0.0010], scale=0)
+#rhino.plot_data(mdl, step='step_loads', field='emaxp', cbar=[None, 0.0001], scale=0)

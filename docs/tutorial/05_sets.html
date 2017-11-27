@@ -1,114 +1,170 @@
 
+
+
 <!DOCTYPE html>
-
 <html lang="en">
-<head>
-<title>compas_fea -- FEA package for compas</title>
-<!-- Required meta tags -->
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
-<!-- compas meta tags -->
-<meta content="" name="author"/>
-<meta content="" name="description"/>
-<!-- Bootstrap CSS -->
-<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
-<!-- highlight CSS -->
-<link href="https://compas-dev.github.io/css/github.css" rel="stylesheet" type="text/css"/>
-<!-- compas CSS -->
-<link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
-<link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
-<link href="06_sections.html" rel="next" title="Sections"/>
-<link href="04_elements.html" rel="prev" title="Elements"/>
-<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
-</head>
-<body data-spy="scroll" data-target="#compas-localnav">
-<!-- main navigation bar -->
-<header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
-<a class="navbar-brand" href="https://compas-dev.github.io">compas</a>
-<ul class="navbar-nav">
-<li class="nav-item">
-<a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
-</li>
-</ul>
-</header>
-<!-- page container -->
-<div class="container-fluid compas-container">
-<div class="row flex-xl-nowrap">
-<!-- main page content -->
-<main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
-<nav class="breadcrumb">
-<a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
-<a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
-<a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
-<a accesskey="U" class="breadcrumb-item" href="../tutorial.html">tutorial</a>
-</nav>
-<div class="section">
+    <head>
+        <title>compas_fea -- FEA package for compas</title>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+        <!-- compas meta tags -->
+        <meta name="author" content="" />
+        <meta name="description" content="" />
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+
+        <!-- highlight CSS -->
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/github.css" />
+
+        <!-- compas CSS -->
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas-reference.css" />
+
+        
+            <link rel="next" title="Sections" href="06_sections.html" />
+        
+        
+        
+            <link rel="prev" title="Elements" href="04_elements.html" />
+        
+
+        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    </head>
+    <body data-spy="scroll" data-target="#compas-localnav">
+        <!-- main navigation bar -->
+        <header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
+            <a class="navbar-brand" href="https://compas-dev.github.io">compas</a>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+                    </li>
+                </ul>
+        </header>
+        
+        <!-- page container -->
+        <div class="container-fluid compas-container">
+            <div class="row flex-xl-nowrap">
+
+                <!-- main page content -->
+                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+
+                    
+
+                        
+        <nav class="breadcrumb">
+            <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
+            <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
+            <a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+            
+                
+                    <a class="breadcrumb-item" href="../tutorial.html" accesskey="U">tutorial</a>
+                
+            
+        </nav>
+
+
+                        
+
+                        
+
+                        <div class="section" id="sets">
 <h1>Sets</h1>
-<p>This page shows how sets can be used to gather groups of nodes, elements and surfaces with the <strong>Structure</strong> object, here given as <code class="docutils literal">mdl</code>.</p>
-<div class="section">
+<p>This page shows how sets can be used to gather groups of nodes, elements and surfaces with the <strong>Structure</strong> object, here given as <code class="docutils literal"><span class="pre">mdl</span></code>.</p>
+<div class="section" id="adding-sets">
 <h2>Adding sets</h2>
-<p>A set, is a group of nodes, elements or surfaces that are given a name. By assigning a name to such a group, it is easier and more meaningful to refer to them in other classes, instead of giving (and keeping track of) a longer list of numbers. Sets are stored in a dictionary at <code class="docutils literal">.sets</code> through the method <code class="docutils literal">add_set()</code>, where the string key is the <code class="docutils literal">name</code> of the set, the <code class="docutils literal">type</code> of the set is the string <code class="docutils literal">'node'</code>, <code class="docutils literal">'element'</code>, <code class="docutils literal">'surface_node'</code> or <code class="docutils literal">'surface_element'</code>, and the <code class="docutils literal">selection</code> stores the nodes, elements and surfaces of interest. To add node or element sets, use <code class="docutils literal">add_set()</code> like the following:</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'nset_top'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'node'</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">explode</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<p>A set, is a group of nodes, elements or surfaces that are given a name. By assigning a name to such a group, it is easier and more meaningful to refer to them in other classes, instead of giving (and keeping track of) a longer list of numbers. Sets are stored in a dictionary at <code class="docutils literal"><span class="pre">.sets</span></code> through the method <code class="docutils literal"><span class="pre">add_set()</span></code>, where the string key is the <code class="docutils literal"><span class="pre">name</span></code> of the set, the <code class="docutils literal"><span class="pre">type</span></code> of the set is the string <code class="docutils literal"><span class="pre">'node'</span></code>, <code class="docutils literal"><span class="pre">'element'</span></code>, <code class="docutils literal"><span class="pre">'surface_node'</span></code> or <code class="docutils literal"><span class="pre">'surface_element'</span></code>, and the <code class="docutils literal"><span class="pre">selection</span></code> stores the nodes, elements and surfaces of interest. To add node or element sets, use <code class="docutils literal"><span class="pre">add_set()</span></code> like the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;nset_top&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">explode</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'elset_shell'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'element'</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">explode</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;elset_shell&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">explode</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </code></pre></div>
+</div>
 <p>Sets may be viewed and edited through their name keys, and then by changing the dictionary as needed.</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">'nset_top'</span><span class="p">]</span>
-<span class="go">{'type': 'node', 'selection': [4], 'explode': False}</span>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">&#39;nset_top&#39;</span><span class="p">]</span>
+<span class="go">{&#39;type&#39;: &#39;node&#39;, &#39;selection&#39;: [4], &#39;explode&#39;: False}</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">'elset_shell'</span><span class="p">]</span>
-<span class="go">{'type': 'element', 'selection': [7, 8], 'explode': False}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">&#39;elset_shell&#39;</span><span class="p">]</span>
+<span class="go">{&#39;type&#39;: &#39;element&#39;, &#39;selection&#39;: [7, 8], &#39;explode&#39;: False}</span>
 </code></pre></div>
-<p>From the node and element geometry of the <strong>Structure</strong> object, a surface can be defined by one of two surface set types. The first is by using <code class="docutils literal">type='surface_node'</code> when creating a set with the <code class="docutils literal">add_set()</code> method, and describes a surface by the nodes it connects to in the <code class="docutils literal">selection</code> list. This surface type can be created like:</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'surf_set'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'surface_node'</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
-</code></pre></div>
-<p>The second way to define a surface set is with <code class="docutils literal">type='surface_element'</code>, where instead of a list of nodes for <code class="docutils literal">selection</code>, a dictionary of element number keys and list of element string sides is given. So for example, to add sides 1 and 2 (<code class="docutils literal">'S1'</code> and <code class="docutils literal">'S2'</code>) of solid element 4, and the top side (<code class="docutils literal">'SPOS'</code> for top and <code class="docutils literal">`SNEG`</code> for bottom) of shell element 7 as an element surface set use:</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'surf_set'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'surface_element'</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">{</span><span class="mi">4</span><span class="p">:</span> <span class="p">[</span><span class="s1">'S1'</span><span class="p">,</span> <span class="s1">'S2'</span><span class="p">],</span> <span class="mi">7</span><span class="p">:</span> <span class="p">[</span><span class="s1">'SPOS'</span><span class="p">]})</span>
-</code></pre></div>
-<p>For both types, the <code class="docutils literal">explode</code> argument can be kept as <code class="docutils literal">False</code>, as it currently has no meaning in a surface set definition.</p>
 </div>
-<div class="section">
+<p>From the node and element geometry of the <strong>Structure</strong> object, a surface can be defined by one of two surface set types. The first is by using <code class="docutils literal"><span class="pre">type='surface_node'</span></code> when creating a set with the <code class="docutils literal"><span class="pre">add_set()</span></code> method, and describes a surface by the nodes it connects to in the <code class="docutils literal"><span class="pre">selection</span></code> list. This surface type can be created like:</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;surf_set&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;surface_node&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+</code></pre></div>
+</div>
+<p>The second way to define a surface set is with <code class="docutils literal"><span class="pre">type='surface_element'</span></code>, where instead of a list of nodes for <code class="docutils literal"><span class="pre">selection</span></code>, a dictionary of element number keys and list of element string sides is given. So for example, to add sides 1 and 2 (<code class="docutils literal"><span class="pre">'S1'</span></code> and <code class="docutils literal"><span class="pre">'S2'</span></code>) of solid element 4, and the top side (<code class="docutils literal"><span class="pre">'SPOS'</span></code> for top and <code class="docutils literal"><span class="pre">`SNEG`</span></code> for bottom) of shell element 7 as an element surface set use:</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;surf_set&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;surface_element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">{</span><span class="mi">4</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;S1&#39;</span><span class="p">,</span> <span class="s1">&#39;S2&#39;</span><span class="p">],</span> <span class="mi">7</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;SPOS&#39;</span><span class="p">]})</span>
+</code></pre></div>
+</div>
+<p>For both types, the <code class="docutils literal"><span class="pre">explode</span></code> argument can be kept as <code class="docutils literal"><span class="pre">False</span></code>, as it currently has no meaning in a surface set definition.</p>
+</div>
+<div class="section" id="exploding">
 <h2>Exploding</h2>
-<p>The argument <code class="docutils literal">explode</code> is a boolean that if <code class="docutils literal">True</code> (default <code class="docutils literal">False</code>) will take all elements of that set, and make an individual set for each element in the selection. For example:</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'elset_exploded'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'element'</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="n">explode</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<p>The argument <code class="docutils literal"><span class="pre">explode</span></code> is a boolean that if <code class="docutils literal"><span class="pre">True</span></code> (default <code class="docutils literal"><span class="pre">False</span></code>) will take all elements of that set, and make an individual set for each element in the selection. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;elset_exploded&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="n">explode</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </code></pre></div>
-<p>will additionally make two new element sets named <code class="docutils literal">'element_4'</code> and <code class="docutils literal">'element_6'</code> with <code class="docutils literal">selection=[4]</code> and <code class="docutils literal">selection=[6]</code>. The utility of this is, the user can break up a larger set knowing that individual sets can now be referenced to, to individually assign a thickness, material, section or cross-section orientation to specific elements by their number.</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">'element_4'</span><span class="p">]</span>
-<span class="go">{'type': 'element', 'selection': [4], 'explode': False}</span>
+</div>
+<p>will additionally make two new element sets named <code class="docutils literal"><span class="pre">'element_4'</span></code> and <code class="docutils literal"><span class="pre">'element_6'</span></code> with <code class="docutils literal"><span class="pre">selection=[4]</span></code> and <code class="docutils literal"><span class="pre">selection=[6]</span></code>. The utility of this is, the user can break up a larger set knowing that individual sets can now be referenced to, to individually assign a thickness, material, section or cross-section orientation to specific elements by their number.</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">&#39;element_4&#39;</span><span class="p">]</span>
+<span class="go">{&#39;type&#39;: &#39;element&#39;, &#39;selection&#39;: [4], &#39;explode&#39;: False}</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">'element_6'</span><span class="p">]</span>
-<span class="go">{'type': 'element', 'selection': [6], 'explode': False}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">&#39;element_6&#39;</span><span class="p">]</span>
+<span class="go">{&#39;type&#39;: &#39;element&#39;, &#39;selection&#39;: [6], &#39;explode&#39;: False}</span>
 </code></pre></div>
+</div>
 <p>The same exploding method works for node sets:</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'nset_exploded'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'node'</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">explode</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;nset_exploded&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">explode</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">'node_1'</span><span class="p">]</span>
-<span class="go">{'type': 'node', 'selection': [1], 'explode': False}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">&#39;node_1&#39;</span><span class="p">]</span>
+<span class="go">{&#39;type&#39;: &#39;node&#39;, &#39;selection&#39;: [1], &#39;explode&#39;: False}</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">'node_2'</span><span class="p">]</span>
-<span class="go">{'type': 'node', 'selection': [2], 'explode': False}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">&#39;node_2&#39;</span><span class="p">]</span>
+<span class="go">{&#39;type&#39;: &#39;node&#39;, &#39;selection&#39;: [2], &#39;explode&#39;: False}</span>
 </code></pre></div>
 </div>
 </div>
-<nav class="compas-sideways">
-<a class="btn btn-primary compas-prev" href="04_elements.html" role="button">Elements</a>
-<a class="btn btn-primary compas-next" href="06_sections.html" role="button">Sections</a>
-</nav>
-</main>
-<!-- sidebar navigation -->
-<div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
-<div class="navbar-light">
-<form action="../search.html" class="d-flex compas-searchbox" id="" method="get">
-<input class="form-control" name="q" placeholder="Search docs" type="text"/>
-<input name="check_keywords" type="hidden" value="yes"/>
-<input name="area" type="hidden" value="default"/>
-<button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
-<span class="navbar-toggler-icon"></span>
-</button>
-</form>
-<div class="navbar-expand-md">
-<div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
-<ul class="nav flex-column active">
+</div>
+
+                        
+                        <nav class="compas-sideways">
+                            
+                                <a href="04_elements.html" class="btn btn-primary compas-prev" role="button">Elements</a>
+                            
+
+                            
+                                <a href="06_sections.html" class="btn btn-primary compas-next" role="button">Sections</a>
+                            
+                        </nav>
+
+                    
+
+                </main>
+
+                <!-- sidebar navigation -->
+                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
+                    <div class="navbar-light">
+
+                        <form id="" class="d-flex compas-searchbox" action="../search.html" method="get">
+                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
+                            <input type="hidden" name="check_keywords" value="yes" />
+                            <input type="hidden" name="area" value="default" />
+
+                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                        </form>
+
+                        
+                        
+
+                            <div class="navbar-expand-md">
+                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
+
+                                <ul class="nav flex-column active">
 <li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="01_setup.html">Setup</a></li>
@@ -130,38 +186,53 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
 </ul>
-</div>
-</div>
-</div>
-</div>
-<!-- toc of current page -->
-<div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
-<ul class="nav flex-column" id="compas-localnav">
+
+
+                                </div>
+                            </div>
+
+                        
+
+                    </div>
+                </div>
+                
+                <!-- toc of current page -->
+                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+
+                    
+
+                    <ul class="nav flex-column" id="compas-localnav">
 <li class="nav-item"><a class="nav-link reference internal" href="#">Sets</a><ul class="nav">
 <li class="nav-item"><a class="nav-link reference internal" href="#adding-sets">Adding sets</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#exploding">Exploding</a></li>
 </ul>
 </li>
 </ul>
-</div>
-</div>
-</div>
-<footer class="compas-footer">
+
+
+                </div>
+            </div>
+        </div>
+
+        <footer class="compas-footer">
             
                 
-                    © Copyright 2017, Block Research Group.
+                    &#169; Copyright 2017, Block Research Group.
                 
             
 
             
-                Last updated on Nov 25, 2017.
+                Last updated on Nov 27, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
-<script type="text/javascript">
+
+        
+
+            <script type="text/javascript">
               var DOCUMENTATION_OPTIONS = {
                 URL_ROOT:    '',
                 VERSION:     '',
@@ -171,19 +242,25 @@
                 SOURCELINK_SUFFIX: '.txt'
               };
             </script>
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
-<script src="https://compas-dev.github.io/js/underscore.js"></script>
-<script src="https://compas-dev.github.io/js/doctools.js"></script>
-<script src="https://compas-dev.github.io/js/searchtools_.js"></script>
-<script>
+
+            <!-- Optional JavaScript -->
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+
+            <script src="https://compas-dev.github.io/js/underscore.js"></script>
+            <script src="https://compas-dev.github.io/js/doctools.js"></script>
+            <script src="https://compas-dev.github.io/js/searchtools_.js"></script>
+
+            <script>
                 hljs.initHighlightingOnLoad();
                 anchors.add();
             </script>
-</body>
+
+        
+    </body>
 </html>

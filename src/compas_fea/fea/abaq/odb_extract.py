@@ -30,6 +30,7 @@ conversion = {
     'UR1': 'urx', 'UR2': 'ury', 'UR3': 'urz',
     'S11': 'sxx', 'S22': 'syy', 'S33': 'szz', 'S12': 'sxy', 'S13': 'sxz', 'S23': 'sxz',
     'E11': 'exx', 'E22': 'eyy', 'E33': 'ezz', 'E12': 'exy', 'E13': 'exz', 'E23': 'exz',
+    'LE11': 'exx', 'LE22': 'eyy', 'LE33': 'ezz', 'LE12': 'exy', 'LE13': 'exz', 'LE23': 'exz',
     'PE11': 'pexx', 'PE22': 'peyy', 'PE33': 'pezz', 'PE12': 'pexy', 'PE13': 'pexz', 'PE23': 'pexz',
     'SF1': 'sfnx', 'SF2': 'sfvy', 'SF3': 'sfvx',
     'SM1': 'smx', 'SM2': 'smy', 'SM3': 'smz',
@@ -103,6 +104,8 @@ def extract_odb_data(temp, name, fields, steps='all'):
 
                 if field == 'spf':
                     field = 'ctf'
+                if field == 'e':
+                    field = 'le'
 
                 if field == 'rbfor':
                     clabels = ['VALUE']
@@ -118,6 +121,9 @@ def extract_odb_data(temp, name, fields, steps='all'):
                 if field in ['s', 'e', 'pe']:
                     ref[field + 'maxp'] = {}
                     ref[field + 'minp'] = {}
+                elif field == 'le':
+                    ref['emaxp'] = {}
+                    ref['eminp'] = {}
 
                 for value in fieldoutputs[field.upper()].values:
                     data = value.data
@@ -162,6 +168,20 @@ def extract_odb_data(temp, name, fields, steps='all'):
                             except:
                                 ref[field + 'maxp'][element][id] = None
                                 ref[field + 'minp'][element][id] = None
+
+                    if field == 'le':  # temp fix
+                        try:
+                            ref['emaxp'][element][id] = float(value.maxPrincipal)
+                            ref['eminp'][element][id] = float(value.minPrincipal)
+                        except:
+                            ref['emaxp'][element] = {}
+                            ref['eminp'][element] = {}
+                            try:
+                                ref['emaxp'][element][id] = float(value.maxPrincipal)
+                                ref['eminp'][element][id] = float(value.minPrincipal)
+                            except:
+                                ref['emaxp'][element][id] = None
+                                ref['eminp'][element][id] = None
 
                     # if field is not 'RBFOR':
                         # dic['axes'][element][id] = value.localCoordSystem

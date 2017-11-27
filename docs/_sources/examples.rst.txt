@@ -26,7 +26,7 @@ Examples
     examples/mesh_mould_rhino
     examples/mesh_strip_rhino
     examples/mesh_tris_blender
-    examples/mesh_yieldline_rhino
+    .. examples/mesh_yieldline_rhino
 
     examples/script_introduction_abaqus
 

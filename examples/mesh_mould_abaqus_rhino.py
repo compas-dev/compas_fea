@@ -64,7 +64,7 @@ epw = Properties(material='mat_concrete', section='sec_wall', elsets='elset_wall
 mdl.add_element_properties(epp, name='ep_plinth')
 mdl.add_element_properties(epw, name='ep_wall')
 
-# Add loads`
+# Add loads
 
 mdl.add_load(GravityLoad(name='load_gravity', elements='elset_all'))
 loads = ['load_gravity']

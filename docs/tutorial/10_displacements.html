@@ -1,140 +1,200 @@
 
-<!DOCTYPE html>
 
+
+<!DOCTYPE html>
 <html lang="en">
-<head>
-<title>compas_fea -- FEA package for compas</title>
-<!-- Required meta tags -->
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
-<!-- compas meta tags -->
-<meta content="" name="author"/>
-<meta content="" name="description"/>
-<!-- Bootstrap CSS -->
-<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
-<!-- highlight CSS -->
-<link href="https://compas-dev.github.io/css/github.css" rel="stylesheet" type="text/css"/>
-<!-- compas CSS -->
-<link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
-<link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
-<link href="11_steps.html" rel="next" title="Steps"/>
-<link href="09_loads.html" rel="prev" title="Loads"/>
-<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
-</head>
-<body data-spy="scroll" data-target="#compas-localnav">
-<!-- main navigation bar -->
-<header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
-<a class="navbar-brand" href="https://compas-dev.github.io">compas</a>
-<ul class="navbar-nav">
-<li class="nav-item">
-<a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
-</li>
-</ul>
-</header>
-<!-- page container -->
-<div class="container-fluid compas-container">
-<div class="row flex-xl-nowrap">
-<!-- main page content -->
-<main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
-<nav class="breadcrumb">
-<a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
-<a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
-<a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
-<a accesskey="U" class="breadcrumb-item" href="../tutorial.html">tutorial</a>
-</nav>
-<div class="section">
+    <head>
+        <title>compas_fea -- FEA package for compas</title>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+        <!-- compas meta tags -->
+        <meta name="author" content="" />
+        <meta name="description" content="" />
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+
+        <!-- highlight CSS -->
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/github.css" />
+
+        <!-- compas CSS -->
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas-reference.css" />
+
+        
+            <link rel="next" title="Steps" href="11_steps.html" />
+        
+        
+        
+            <link rel="prev" title="Loads" href="09_loads.html" />
+        
+
+        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    </head>
+    <body data-spy="scroll" data-target="#compas-localnav">
+        <!-- main navigation bar -->
+        <header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
+            <a class="navbar-brand" href="https://compas-dev.github.io">compas</a>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+                    </li>
+                </ul>
+        </header>
+        
+        <!-- page container -->
+        <div class="container-fluid compas-container">
+            <div class="row flex-xl-nowrap">
+
+                <!-- main page content -->
+                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+
+                    
+
+                        
+        <nav class="breadcrumb">
+            <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
+            <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
+            <a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+            
+                
+                    <a class="breadcrumb-item" href="../tutorial.html" accesskey="U">tutorial</a>
+                
+            
+        </nav>
+
+
+                        
+
+                        
+
+                        <div class="section" id="displacements">
 <h1><a class="toc-backref" href="#id1">Displacements</a></h1>
-<p>This page shows how <strong>Displacement</strong> objects are added to the <strong>Structure</strong> object, here given as a <strong>Structure</strong> named <code class="docutils literal">mdl</code>.</p>
+<p>This page shows how <strong>Displacement</strong> objects are added to the <strong>Structure</strong> object, here given as a <strong>Structure</strong> named <code class="docutils literal"><span class="pre">mdl</span></code>.</p>
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul>
-<li><p><a class="reference internal" href="#displacements" id="id1">Displacements</a></p>
+<li><p class="first"><a class="reference internal" href="#displacements" id="id1">Displacements</a></p>
 <ul>
-<li><p><a class="reference internal" href="#adding-displacements" id="id2">Adding displacements</a></p></li>
-<li><p><a class="reference internal" href="#accessing-displacements" id="id3">Accessing displacements</a></p></li>
-<li><p><a class="reference internal" href="#types" id="id4">Types</a></p>
+<li><p class="first"><a class="reference internal" href="#adding-displacements" id="id2">Adding displacements</a></p>
+</li>
+<li><p class="first"><a class="reference internal" href="#accessing-displacements" id="id3">Accessing displacements</a></p>
+</li>
+<li><p class="first"><a class="reference internal" href="#types" id="id4">Types</a></p>
 <ul>
-<li><p><a class="reference internal" href="#pinned" id="id5">Pinned</a></p></li>
-<li><p><a class="reference internal" href="#fixed" id="id6">Fixed</a></p></li>
-<li><p><a class="reference internal" href="#rollers" id="id7">Rollers</a></p></li>
+<li><p class="first"><a class="reference internal" href="#pinned" id="id5">Pinned</a></p>
+</li>
+<li><p class="first"><a class="reference internal" href="#fixed" id="id6">Fixed</a></p>
+</li>
+<li><p class="first"><a class="reference internal" href="#rollers" id="id7">Rollers</a></p>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </div>
-<div class="section">
+<div class="section" id="adding-displacements">
 <h2><a class="toc-backref" href="#id2">Adding displacements</a></h2>
-<p><strong>Displacement</strong> objects are used to apply boundary conditions as well as impose movements directly at selected nodes. Along with <strong>Load</strong> objects, they form the main actions acting on a structure during the analysis with <strong>Step</strong> objects. The following example shows how a <strong>PinnedDisplacement</strong> class is first imported, an object instantiated and then added to the dictionary <code class="docutils literal">.displacements</code> of the <strong>Structure</strong> object. All objects currently use only the global co-ordinate system with <code class="docutils literal">axes='global'</code>.</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PinnedDisplacement</span>
+<p><strong>Displacement</strong> objects are used to apply boundary conditions as well as impose movements directly at selected nodes. Along with <strong>Load</strong> objects, they form the main actions acting on a structure during the analysis with <strong>Step</strong> objects. The following example shows how a <strong>PinnedDisplacement</strong> class is first imported, an object instantiated and then added to the dictionary <code class="docutils literal"><span class="pre">.displacements</span></code> of the <strong>Structure</strong> object. All objects currently use only the global co-ordinate system with <code class="docutils literal"><span class="pre">axes='global'</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PinnedDisplacement</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'disp_pinned'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">'nset_base'</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_base&#39;</span><span class="p">))</span>
 </code></pre></div>
 </div>
-<div class="section">
+</div>
+<div class="section" id="accessing-displacements">
 <h2><a class="toc-backref" href="#id3">Accessing displacements</a></h2>
 <p>To access the data stored on a <strong>Displacement</strong> object, use its string key and view or edit its attributes as needed:</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="s1">'disp_pinned'</span><span class="p">]</span><span class="o">.</span><span class="n">components</span>
-<span class="go">{'x': 0, 'y': 0, 'z': 0, 'xx': None, 'yy': None, 'zz': None}</span>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">components</span>
+<span class="go">{&#39;x&#39;: 0, &#39;y&#39;: 0, &#39;z&#39;: 0, &#39;xx&#39;: None, &#39;yy&#39;: None, &#39;zz&#39;: None}</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="s1">'disp_pinned'</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
-<span class="go">'nset_base'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
+<span class="go">&#39;nset_base&#39;</span>
 </code></pre></div>
-<p>The example <strong>PinnedDisplacement</strong> object above restrains translations in all directions but allows rotations about any axis, as indicated by the automatic assignment of zero for <code class="docutils literal">x</code>, <code class="docutils literal">y</code> and <code class="docutils literal">z</code>, and <code class="docutils literal">None</code> values for <code class="docutils literal">xx</code>, <code class="docutils literal">yy</code> and <code class="docutils literal">zz</code>. Non-zero values for the six components could be given to simulate support settlements or to perform a displacement controlled analysis.</p>
 </div>
-<div class="section">
+<p>The example <strong>PinnedDisplacement</strong> object above restrains translations in all directions but allows rotations about any axis, as indicated by the automatic assignment of zero for <code class="docutils literal"><span class="pre">x</span></code>, <code class="docutils literal"><span class="pre">y</span></code> and <code class="docutils literal"><span class="pre">z</span></code>, and <code class="docutils literal"><span class="pre">None</span></code> values for <code class="docutils literal"><span class="pre">xx</span></code>, <code class="docutils literal"><span class="pre">yy</span></code> and <code class="docutils literal"><span class="pre">zz</span></code>. Non-zero values for the six components could be given to simulate support settlements or to perform a displacement controlled analysis.</p>
+</div>
+<div class="section" id="types">
 <h2><a class="toc-backref" href="#id4">Types</a></h2>
 <p>Different support types are available from the classes in <strong>compas_fea.structure.displacement</strong>, these are detailed below:</p>
-<div class="section">
+<div class="section" id="pinned">
 <h3><a class="toc-backref" href="#id5">Pinned</a></h3>
-<p>A <strong>PinnedDisplacement</strong> object is used for restraining all spatial translations, but still allows rotations to occur. The object has components <code class="docutils literal">x=y=z=0</code> and <code class="docutils literal">xx=yy=zz=None</code>, which are all defined automatically. The <code class="docutils literal">name</code> of the object, and the nodes it should act on must both be given.</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PinnedDisplacement</span>
+<p>A <strong>PinnedDisplacement</strong> object is used for restraining all spatial translations, but still allows rotations to occur. The object has components <code class="docutils literal"><span class="pre">x=y=z=0</span></code> and <code class="docutils literal"><span class="pre">xx=yy=zz=None</span></code>, which are all defined automatically. The <code class="docutils literal"><span class="pre">name</span></code> of the object, and the nodes it should act on must both be given.</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PinnedDisplacement</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'disp_pinned'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">'nset_base'</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_base&#39;</span><span class="p">))</span>
 </code></pre></div>
 </div>
-<div class="section">
+</div>
+<div class="section" id="fixed">
 <h3><a class="toc-backref" href="#id6">Fixed</a></h3>
-<p>A <strong>FixedDisplacement</strong> object is used for restraining all spatial translations and rotations. The object has components <code class="docutils literal">x=y=z=xx=yy=zz=0</code>, which are all defined automatically. The <code class="docutils literal">name</code> of the object, and the nodes it should act on must both be given.</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">FixedDisplacement</span>
+<p>A <strong>FixedDisplacement</strong> object is used for restraining all spatial translations and rotations. The object has components <code class="docutils literal"><span class="pre">x=y=z=xx=yy=zz=0</span></code>, which are all defined automatically. The <code class="docutils literal"><span class="pre">name</span></code> of the object, and the nodes it should act on must both be given.</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">FixedDisplacement</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">FixedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'disp_fixed'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">'nset_base'</span><span class="p">))</span>
-</code></pre></div>
-<p>There are additionally three other types of fixed displacement objects, <strong>FixedDisplacementXX</strong>, <strong>FixedDisplacementYY</strong> and <strong>FixedDisplacementZZ</strong>, which all posess zero translation displacements <code class="docutils literal">x=y=z=0</code> with the rotations fixed for the indicated axis. So, <strong>FixedDisplacementXX</strong> clamps <code class="docutils literal">xx=0</code>, <strong>FixedDisplacementYY</strong> clamps <code class="docutils literal">yy=0</code> and <strong>FixedDisplacementZZ</strong> <code class="docutils literal">zz=0</code>. These objects are created in the same way, for example like:</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">FixedDisplacementXX</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">FixedDisplacementXX</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'disp_fixedxx'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">'nset_base'</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">FixedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_fixed&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_base&#39;</span><span class="p">))</span>
 </code></pre></div>
 </div>
-<div class="section">
+<p>There are additionally three other types of fixed displacement objects, <strong>FixedDisplacementXX</strong>, <strong>FixedDisplacementYY</strong> and <strong>FixedDisplacementZZ</strong>, which all posess zero translation displacements <code class="docutils literal"><span class="pre">x=y=z=0</span></code> with the rotations fixed for the indicated axis. So, <strong>FixedDisplacementXX</strong> clamps <code class="docutils literal"><span class="pre">xx=0</span></code>, <strong>FixedDisplacementYY</strong> clamps <code class="docutils literal"><span class="pre">yy=0</span></code> and <strong>FixedDisplacementZZ</strong> <code class="docutils literal"><span class="pre">zz=0</span></code>. These objects are created in the same way, for example like:</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">FixedDisplacementXX</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">FixedDisplacementXX</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_fixedxx&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_base&#39;</span><span class="p">))</span>
+</code></pre></div>
+</div>
+</div>
+<div class="section" id="rollers">
 <h3><a class="toc-backref" href="#id7">Rollers</a></h3>
-<p>There are six types of roller displacement objects, <strong>RollerDisplacementX</strong>, <strong>RollerDisplacementY</strong>,   <strong>RollerDisplacementZ</strong>, <strong>RollerDisplacementXY</strong>, <strong>RollerDisplacementYZ</strong> and <strong>RollerDisplacementXZ</strong>. These are all based on a <strong>PinnedDisplacement</strong> object, with the indicated translational degrees-of-freedom released.  So for example, <strong>RollerDisplacementX</strong> is released in <cite>x</cite> with <code class="docutils literal">x=None</code>, and so has <code class="docutils literal">y=z=0</code>, while <strong>RollerDisplacementXY</strong> is released in both <cite>x</cite> and <cite>y</cite> with <code class="docutils literal">x=y=None</code> leaving only <code class="docutils literal">z=0</code>.</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">RollerDisplacementXY</span>
+<p>There are six types of roller displacement objects, <strong>RollerDisplacementX</strong>, <strong>RollerDisplacementY</strong>,   <strong>RollerDisplacementZ</strong>, <strong>RollerDisplacementXY</strong>, <strong>RollerDisplacementYZ</strong> and <strong>RollerDisplacementXZ</strong>. These are all based on a <strong>PinnedDisplacement</strong> object, with the indicated translational degrees-of-freedom released.  So for example, <strong>RollerDisplacementX</strong> is released in <cite>x</cite> with <code class="docutils literal"><span class="pre">x=None</span></code>, and so has <code class="docutils literal"><span class="pre">y=z=0</span></code>, while <strong>RollerDisplacementXY</strong> is released in both <cite>x</cite> and <cite>y</cite> with <code class="docutils literal"><span class="pre">x=y=None</span></code> leaving only <code class="docutils literal"><span class="pre">z=0</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">RollerDisplacementXY</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">RollerDisplacementXY</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'disp_roller'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">'nset_base'</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">RollerDisplacementXY</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_roller&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_base&#39;</span><span class="p">))</span>
 </code></pre></div>
 </div>
 </div>
 </div>
-<nav class="compas-sideways">
-<a class="btn btn-primary compas-prev" href="09_loads.html" role="button">Loads</a>
-<a class="btn btn-primary compas-next" href="11_steps.html" role="button">Steps</a>
-</nav>
-</main>
-<!-- sidebar navigation -->
-<div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
-<div class="navbar-light">
-<form action="../search.html" class="d-flex compas-searchbox" id="" method="get">
-<input class="form-control" name="q" placeholder="Search docs" type="text"/>
-<input name="check_keywords" type="hidden" value="yes"/>
-<input name="area" type="hidden" value="default"/>
-<button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
-<span class="navbar-toggler-icon"></span>
-</button>
-</form>
-<div class="navbar-expand-md">
-<div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
-<ul class="nav flex-column active">
+</div>
+
+                        
+                        <nav class="compas-sideways">
+                            
+                                <a href="09_loads.html" class="btn btn-primary compas-prev" role="button">Loads</a>
+                            
+
+                            
+                                <a href="11_steps.html" class="btn btn-primary compas-next" role="button">Steps</a>
+                            
+                        </nav>
+
+                    
+
+                </main>
+
+                <!-- sidebar navigation -->
+                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
+                    <div class="navbar-light">
+
+                        <form id="" class="d-flex compas-searchbox" action="../search.html" method="get">
+                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
+                            <input type="hidden" name="check_keywords" value="yes" />
+                            <input type="hidden" name="area" value="default" />
+
+                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                        </form>
+
+                        
+                        
+
+                            <div class="navbar-expand-md">
+                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
+
+                                <ul class="nav flex-column active">
 <li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="01_setup.html">Setup</a></li>
@@ -156,13 +216,22 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
 </ul>
-</div>
-</div>
-</div>
-</div>
-<!-- toc of current page -->
-<div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
-<ul class="nav flex-column" id="compas-localnav">
+
+
+                                </div>
+                            </div>
+
+                        
+
+                    </div>
+                </div>
+                
+                <!-- toc of current page -->
+                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+
+                    
+
+                    <ul class="nav flex-column" id="compas-localnav">
 <li class="nav-item"><a class="nav-link reference internal" href="#">Displacements</a><ul class="nav">
 <li class="nav-item"><a class="nav-link reference internal" href="#adding-displacements">Adding displacements</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#accessing-displacements">Accessing displacements</a></li>
@@ -175,25 +244,31 @@
 </ul>
 </li>
 </ul>
-</div>
-</div>
-</div>
-<footer class="compas-footer">
+
+
+                </div>
+            </div>
+        </div>
+
+        <footer class="compas-footer">
             
                 
-                    © Copyright 2017, Block Research Group.
+                    &#169; Copyright 2017, Block Research Group.
                 
             
 
             
-                Last updated on Nov 25, 2017.
+                Last updated on Nov 27, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
-<script type="text/javascript">
+
+        
+
+            <script type="text/javascript">
               var DOCUMENTATION_OPTIONS = {
                 URL_ROOT:    '',
                 VERSION:     '',
@@ -203,19 +278,25 @@
                 SOURCELINK_SUFFIX: '.txt'
               };
             </script>
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
-<script src="https://compas-dev.github.io/js/underscore.js"></script>
-<script src="https://compas-dev.github.io/js/doctools.js"></script>
-<script src="https://compas-dev.github.io/js/searchtools_.js"></script>
-<script>
+
+            <!-- Optional JavaScript -->
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+
+            <script src="https://compas-dev.github.io/js/underscore.js"></script>
+            <script src="https://compas-dev.github.io/js/doctools.js"></script>
+            <script src="https://compas-dev.github.io/js/searchtools_.js"></script>
+
+            <script>
                 hljs.initHighlightingOnLoad();
                 anchors.add();
             </script>
-</body>
+
+        
+    </body>
 </html>

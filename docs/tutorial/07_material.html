@@ -1,142 +1,187 @@
 
-<!DOCTYPE html>
 
+
+<!DOCTYPE html>
 <html lang="en">
-<head>
-<title>compas_fea -- FEA package for compas</title>
-<!-- Required meta tags -->
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
-<!-- compas meta tags -->
-<meta content="" name="author"/>
-<meta content="" name="description"/>
-<!-- Bootstrap CSS -->
-<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
-<!-- highlight CSS -->
-<link href="https://compas-dev.github.io/css/github.css" rel="stylesheet" type="text/css"/>
-<!-- compas CSS -->
-<link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
-<link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
-<link href="08_properties.html" rel="next" title="Properties"/>
-<link href="06_sections.html" rel="prev" title="Sections"/>
-<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
-</head>
-<body data-spy="scroll" data-target="#compas-localnav">
-<!-- main navigation bar -->
-<header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
-<a class="navbar-brand" href="https://compas-dev.github.io">compas</a>
-<ul class="navbar-nav">
-<li class="nav-item">
-<a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
-</li>
-</ul>
-</header>
-<!-- page container -->
-<div class="container-fluid compas-container">
-<div class="row flex-xl-nowrap">
-<!-- main page content -->
-<main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
-<nav class="breadcrumb">
-<a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
-<a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
-<a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
-<a accesskey="U" class="breadcrumb-item" href="../tutorial.html">tutorial</a>
-</nav>
-<div class="section">
+    <head>
+        <title>compas_fea -- FEA package for compas</title>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+        <!-- compas meta tags -->
+        <meta name="author" content="" />
+        <meta name="description" content="" />
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+
+        <!-- highlight CSS -->
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/github.css" />
+
+        <!-- compas CSS -->
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas-reference.css" />
+
+        
+            <link rel="next" title="Properties" href="08_properties.html" />
+        
+        
+        
+            <link rel="prev" title="Sections" href="06_sections.html" />
+        
+
+        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    </head>
+    <body data-spy="scroll" data-target="#compas-localnav">
+        <!-- main navigation bar -->
+        <header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
+            <a class="navbar-brand" href="https://compas-dev.github.io">compas</a>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+                    </li>
+                </ul>
+        </header>
+        
+        <!-- page container -->
+        <div class="container-fluid compas-container">
+            <div class="row flex-xl-nowrap">
+
+                <!-- main page content -->
+                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+
+                    
+
+                        
+        <nav class="breadcrumb">
+            <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
+            <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
+            <a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+            
+                
+                    <a class="breadcrumb-item" href="../tutorial.html" accesskey="U">tutorial</a>
+                
+            
+        </nav>
+
+
+                        
+
+                        
+
+                        <div class="section" id="materials">
 <h1><a class="toc-backref" href="#id2">Materials</a></h1>
-<p>This page shows how <strong>Material</strong> objects are added to the <strong>Structure</strong> object, here given as <code class="docutils literal">mdl</code>.</p>
+<p>This page shows how <strong>Material</strong> objects are added to the <strong>Structure</strong> object, here given as <code class="docutils literal"><span class="pre">mdl</span></code>.</p>
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul>
-<li><p><a class="reference internal" href="#materials" id="id2">Materials</a></p>
+<li><p class="first"><a class="reference internal" href="#materials" id="id2">Materials</a></p>
 <ul>
-<li><p><a class="reference internal" href="#adding-materials" id="id3">Adding materials</a></p></li>
-<li><p><a class="reference internal" href="#accessing-materials" id="id4">Accessing materials</a></p></li>
-<li><p><a class="reference internal" href="#id1" id="id5">Materials</a></p>
+<li><p class="first"><a class="reference internal" href="#adding-materials" id="id3">Adding materials</a></p>
+</li>
+<li><p class="first"><a class="reference internal" href="#accessing-materials" id="id4">Accessing materials</a></p>
+</li>
+<li><p class="first"><a class="reference internal" href="#id1" id="id5">Materials</a></p>
 <ul>
-<li><p><a class="reference internal" href="#elastic" id="id6">Elastic</a></p></li>
-<li><p><a class="reference internal" href="#elastic-plastic" id="id7">Elastic–plastic</a></p></li>
-<li><p><a class="reference internal" href="#steel" id="id8">Steel</a></p></li>
-<li><p><a class="reference internal" href="#concrete" id="id9">Concrete</a></p></li>
+<li><p class="first"><a class="reference internal" href="#elastic" id="id6">Elastic</a></p>
+</li>
+<li><p class="first"><a class="reference internal" href="#elastic-plastic" id="id7">Elastic&#8211;plastic</a></p>
+</li>
+<li><p class="first"><a class="reference internal" href="#steel" id="id8">Steel</a></p>
+</li>
+<li><p class="first"><a class="reference internal" href="#concrete" id="id9">Concrete</a></p>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </div>
-<div class="section">
+<div class="section" id="adding-materials">
 <h2><a class="toc-backref" href="#id3">Adding materials</a></h2>
-<p><strong>Material</strong> classes are first imported from module <strong>compas_fea.structure.material</strong> and added to the dictionary <code class="docutils literal">.materials</code> of the <strong>Structure</strong> object with <code class="docutils literal">name</code> as its string key and by using the method <code class="docutils literal">add_material()</code>. Here, a simple elastic and isotropic material is added as an example, requiring the Young’s modulus, Poisson’s ratio and density.</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElasticIsotropic</span>
+<p><strong>Material</strong> classes are first imported from module <strong>compas_fea.structure.material</strong> and added to the dictionary <code class="docutils literal"><span class="pre">.materials</span></code> of the <strong>Structure</strong> object with <code class="docutils literal"><span class="pre">name</span></code> as its string key and by using the method <code class="docutils literal"><span class="pre">add_material()</span></code>. Here, a simple elastic and isotropic material is added as an example, requiring the Young&#8217;s modulus, Poisson&#8217;s ratio and density.</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElasticIsotropic</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_elastic'</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1500</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_elastic&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1500</span><span class="p">))</span>
 </code></pre></div>
 </div>
-<div class="section">
+</div>
+<div class="section" id="accessing-materials">
 <h2><a class="toc-backref" href="#id4">Accessing materials</a></h2>
 <p>Data are stored and accessed through the attributes of the <strong>Material</strong> object and its string key. Data on any <strong>Material</strong> object can be changed as needed.</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="s1">'mat_elastic'</span><span class="p">]</span><span class="o">.</span><span class="n">E</span>
-<span class="go">{'E': 10000000000}</span>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="s1">&#39;mat_elastic&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">E</span>
+<span class="go">{&#39;E&#39;: 10000000000}</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="s1">'mat_elastic'</span><span class="p">]</span><span class="o">.</span><span class="n">v</span>
-<span class="go">{'v': 0.3}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="s1">&#39;mat_elastic&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">v</span>
+<span class="go">{&#39;v&#39;: 0.3}</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="s1">'mat_elastic'</span><span class="p">]</span><span class="o">.</span><span class="n">p</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="s1">&#39;mat_elastic&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">p</span>
 <span class="go">1500</span>
 </code></pre></div>
 </div>
-<div class="section">
+</div>
+<div class="section" id="id1">
 <h2><a class="toc-backref" href="#id5">Materials</a></h2>
 <p>Classes exist for commonly used materials such as concrete, steel and timber, which will first assume typical design values for the material parameters, but still allow them to be changed by the user. Other classes require all material data to be provided explicitly. The following section details the available material models.</p>
-<div class="section">
+<div class="section" id="elastic">
 <h3><a class="toc-backref" href="#id6">Elastic</a></h3>
-<p>The simplest material model is the elastic, isotropic and homogeneous material, called <strong>ElasticIsotropic</strong>. This takes the Young’s modulus <code class="docutils literal">E</code>, Poisson’s ratio <code class="docutils literal">v</code> and density <code class="docutils literal">p</code>. Additionally, it can be stated if the material should allow <code class="docutils literal">tension</code> or <code class="docutils literal">compression</code>, given as booleans.</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElasticIsotropic</span>
+<p>The simplest material model is the elastic, isotropic and homogeneous material, called <strong>ElasticIsotropic</strong>. This takes the Young&#8217;s modulus <code class="docutils literal"><span class="pre">E</span></code>, Poisson&#8217;s ratio <code class="docutils literal"><span class="pre">v</span></code> and density <code class="docutils literal"><span class="pre">p</span></code>. Additionally, it can be stated if the material should allow <code class="docutils literal"><span class="pre">tension</span></code> or <code class="docutils literal"><span class="pre">compression</span></code>, given as booleans.</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElasticIsotropic</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_elastic'</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span> <span class="n">tension</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_elastic&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span> <span class="n">tension</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
 </code></pre></div>
-<a class="reference internal image-reference" href="../_images/material-elastic.png"><img alt="../images/material-elastic.png" src="../images/material-elastic.png" style="width: 408.0px; height: 340.4px;"/></a>
-<a class="reference internal image-reference" href="../_images/material-elastic-no-tension.png"><img alt="../images/material-elastic-no-tension.png" src="../images/material-elastic-no-tension.png" style="width: 408.0px; height: 340.4px;"/></a>
-<p>To allow only compression, set <code class="docutils literal">tension=False</code>.</p>
-<a class="reference internal image-reference" href="../_images/material-elastic-no-compression.png"><img alt="../images/material-elastic-no-compression.png" src="../images/material-elastic-no-compression.png" style="width: 408.0px; height: 340.4px;"/></a>
-<p>To allow only tension, set <code class="docutils literal">compression=False</code>.</p>
 </div>
-<div class="section">
-<h3><a class="toc-backref" href="#id7">Elastic–plastic</a></h3>
-<p>The <strong>ElasticPlastic</strong> class can be used to make a general isotropic non-linear material object, with the same shape of stress–strain curve in both compression and tension. The elastic input data is the same as with the <strong>ElasticIsotropic</strong> class, given by arguments: Young’s modulus <code class="docutils literal">E</code>, Poisson’s ratio <code class="docutils literal">v</code> and density <code class="docutils literal">p</code>. For the plastic description of the material, use lists of plastic stresses <code class="docutils literal">f</code> and plastic strains <code class="docutils literal">e</code> (total strain minus yield strain). The first value of <code class="docutils literal">f</code> should be the stress at the end of the elastic region, i.e. the yield stress, and the first value of <code class="docutils literal">e</code> should be zero, i.e. the beginning of plastic straining. Continue to give pairs of plastic stress and plastic strain to define the complete behaviour. To add the general elastic–plastic stress–strain data curve below as data to the <strong>ElasticIsotropic</strong> class, the input (with variables representing numbers) would look like:</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElasticPlastic</span>
+<a class="reference internal image-reference" href="../_images/material-elastic.png"><img alt="../_images/material-elastic.png" src="../_images/material-elastic.png" style="width: 408.0px; height: 340.4px;" /></a>
+<a class="reference internal image-reference" href="../_images/material-elastic-no-tension.png"><img alt="../_images/material-elastic-no-tension.png" src="../_images/material-elastic-no-tension.png" style="width: 408.0px; height: 340.4px;" /></a>
+<p>To allow only compression, set <code class="docutils literal"><span class="pre">tension=False</span></code>.</p>
+<a class="reference internal image-reference" href="../_images/material-elastic-no-compression.png"><img alt="../_images/material-elastic-no-compression.png" src="../_images/material-elastic-no-compression.png" style="width: 408.0px; height: 340.4px;" /></a>
+<p>To allow only tension, set <code class="docutils literal"><span class="pre">compression=False</span></code>.</p>
+</div>
+<div class="section" id="elastic-plastic">
+<h3><a class="toc-backref" href="#id7">Elastic&#8211;plastic</a></h3>
+<p>The <strong>ElasticPlastic</strong> class can be used to make a general isotropic non-linear material object, with the same shape of stress&#8211;strain curve in both compression and tension. The elastic input data is the same as with the <strong>ElasticIsotropic</strong> class, given by arguments: Young&#8217;s modulus <code class="docutils literal"><span class="pre">E</span></code>, Poisson&#8217;s ratio <code class="docutils literal"><span class="pre">v</span></code> and density <code class="docutils literal"><span class="pre">p</span></code>. For the plastic description of the material, use lists of plastic stresses <code class="docutils literal"><span class="pre">f</span></code> and plastic strains <code class="docutils literal"><span class="pre">e</span></code> (total strain minus yield strain). The first value of <code class="docutils literal"><span class="pre">f</span></code> should be the stress at the end of the elastic region, i.e. the yield stress, and the first value of <code class="docutils literal"><span class="pre">e</span></code> should be zero, i.e. the beginning of plastic straining. Continue to give pairs of plastic stress and plastic strain to define the complete behaviour. To add the general elastic&#8211;plastic stress&#8211;strain data curve below as data to the <strong>ElasticIsotropic</strong> class, the input (with variables representing numbers) would look like:</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElasticPlastic</span>
 
 <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="n">fy</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span><span class="p">]</span>
 <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">e1</span> <span class="o">-</span> <span class="n">ey</span><span class="p">,</span> <span class="n">e2</span> <span class="o">-</span> <span class="n">ey</span><span class="p">,</span> <span class="n">e3</span> <span class="o">-</span> <span class="n">ey</span><span class="p">]</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ElasticPlastic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_plastic'</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="n">v</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="n">e</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ElasticPlastic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_plastic&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="n">v</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="n">e</span><span class="p">))</span>
 </code></pre></div>
-<a class="reference internal image-reference" href="../_images/material-elastic-plastic.png"><img alt="../images/material-elastic-plastic.png" src="../images/material-elastic-plastic.png" style="width: 393.6px; height: 337.6px;"/></a>
 </div>
-<div class="section">
+<a class="reference internal image-reference" href="../_images/material-elastic-plastic.png"><img alt="../_images/material-elastic-plastic.png" src="../_images/material-elastic-plastic.png" style="width: 393.6px; height: 337.6px;" /></a>
+</div>
+<div class="section" id="steel">
 <h3><a class="toc-backref" href="#id8">Steel</a></h3>
-<p>The following use of the <strong>Steel</strong> class will create an object and add it to the <strong>Structure</strong> named <strong>mdl</strong>. The string <code class="docutils literal">name</code> for the material must be given, while the yield stress <code class="docutils literal">fy</code>, Young’s modulus <code class="docutils literal">E</code>, Poisson’s ratio <code class="docutils literal">v</code> and density <code class="docutils literal">p</code> will default to common values used in design if no user specific values are given. The <code class="docutils literal">type</code> represents what the material behaviour is like after first yield, where <code class="docutils literal">'elastic-plastic'</code> defines a perfectly flat plastic plateau after the initial linear elastic range up to <code class="docutils literal">fy</code>.</p>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Steel</span>
+<p>The following use of the <strong>Steel</strong> class will create an object and add it to the <strong>Structure</strong> named <strong>mdl</strong>. The string <code class="docutils literal"><span class="pre">name</span></code> for the material must be given, while the yield stress <code class="docutils literal"><span class="pre">fy</span></code>, Young&#8217;s modulus <code class="docutils literal"><span class="pre">E</span></code>, Poisson&#8217;s ratio <code class="docutils literal"><span class="pre">v</span></code> and density <code class="docutils literal"><span class="pre">p</span></code> will default to common values used in design if no user specific values are given. The <code class="docutils literal"><span class="pre">type</span></code> represents what the material behaviour is like after first yield, where <code class="docutils literal"><span class="pre">'elastic-plastic'</span></code> defines a perfectly flat plastic plateau after the initial linear elastic range up to <code class="docutils literal"><span class="pre">fy</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Steel</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">Steel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_steel'</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">210</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">7850</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'elastic-plastic'</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">Steel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">210</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">7850</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;elastic-plastic&#39;</span><span class="p">))</span>
 </code></pre></div>
-<a class="reference internal image-reference" href="../_images/material-steel-perfect.png"><img alt="../images/material-steel-perfect.png" src="../images/material-steel-perfect.png" style="width: 408.0px; height: 340.4px;"/></a>
 </div>
-<div class="section">
+<a class="reference internal image-reference" href="../_images/material-steel-perfect.png"><img alt="../_images/material-steel-perfect.png" src="../_images/material-steel-perfect.png" style="width: 408.0px; height: 340.4px;" /></a>
+</div>
+<div class="section" id="concrete">
 <h3><a class="toc-backref" href="#id9">Concrete</a></h3>
 <p>There are currently three material models for concrete, a Eurocode 2 model with class <strong>Concrete</strong>, a smeared crack model <strong>ConcreteSmearedCrack</strong>, and a damaged plasticity model <strong>ConcreteDamagedPlasticity</strong>. The key features of these three models are described below:</p>
 <ul>
-<li><p>The easiest concrete material object to create is with the <strong>Concrete</strong> class, which requires the characteristic (5%) 28 day cylinder strength in MPa, up to 90 MPa. Default values of the Poisson’s ratio <code class="docutils literal">v=0.2</code> and density <code class="docutils literal">p=2400</code> are taken unless specified otherwise. As per Eurocode 2 Part 1-1 (particularly Table 3.1), key material data is derived from knowing the characteristic cylinder strength <code class="docutils literal">fck</code>. The <strong>Concrete</strong> model includes: 1) the compressive stress–strain model of Clause 3.1.5, 2) the mean Young’s modulus, tensile and compressive stresses from Table 3.1, and 3) will assume a linear elastic response until the tensile cracking stress, followed by a drop to zero tensile stress at 0.1 % strain.</p></li>
+<li><p class="first">The easiest concrete material object to create is with the <strong>Concrete</strong> class, which requires the characteristic (5%) 28 day cylinder strength in MPa, up to 90 MPa. Default values of the Poisson&#8217;s ratio <code class="docutils literal"><span class="pre">v=0.2</span></code> and density <code class="docutils literal"><span class="pre">p=2400</span></code> are taken unless specified otherwise. As per Eurocode 2 Part 1-1 (particularly Table 3.1), key material data is derived from knowing the characteristic cylinder strength <code class="docutils literal"><span class="pre">fck</span></code>. The <strong>Concrete</strong> model includes: 1) the compressive stress&#8211;strain model of Clause 3.1.5, 2) the mean Young&#8217;s modulus, tensile and compressive stresses from Table 3.1, and 3) will assume a linear elastic response until the tensile cracking stress, followed by a drop to zero tensile stress at 0.1 % strain.</p>
+</li>
 </ul>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Concrete</span>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Concrete</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">Concrete</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_concrete'</span><span class="p">,</span> <span class="n">fck</span><span class="o">=</span><span class="mi">90</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">Concrete</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">fck</span><span class="o">=</span><span class="mi">90</span><span class="p">))</span>
 </code></pre></div>
-<a class="reference internal image-reference" href="../_images/concrete_f-e.png"><img alt="../images/concrete_f-e.png" src="../images/concrete_f-e.png" style="width: 408.0px; height: 360.4px;"/></a>
+</div>
+<a class="reference internal image-reference" href="../_images/concrete_f-e.png"><img alt="../_images/concrete_f-e.png" src="../_images/concrete_f-e.png" style="width: 408.0px; height: 360.4px;" /></a>
 <ul>
-<li><p>The <strong>ConcreteSmearedCrack</strong> class (based on the Abaqus smeared crack material) creates a more general concrete material model object. Cracks are smeared across cracking areas, not individually modelled. The Young’s modulus <code class="docutils literal">E</code>, Poisson’s ratio <code class="docutils literal">v</code> and density <code class="docutils literal">p</code> are all explicitly given, as no defaults are assumed. The compressive stress–strain data are given with (positive) plastic stresses <code class="docutils literal">fc</code> in Pascals and (positive) plastic strains <code class="docutils literal">ec</code> in exactly the same way as <strong>ElasticPlastic</strong>. The first value of <code class="docutils literal">fc</code> is the stress at the end of the elastic region defined by slope <code class="docutils literal">E</code>, paired with the first value of <code class="docutils literal">ec</code> of zero. For the tensile stresses, tension stiffening uses <code class="docutils literal">ft</code> and <code class="docutils literal">et</code>, where <code class="docutils literal">ft</code> are not the absolute values of tensile stress, but the relative tensile stress from the point of cracking. So the first data pairs are <code class="docutils literal">ft</code> as 1 at <code class="docutils literal">et</code> of 0, then dropping to <code class="docutils literal">ft</code> as 0 at another value of <code class="docutils literal">et</code> (0.001 recommended). Before cracking, the tensile stress–strain behaviour is linear, using the same Young’s modulus <code class="docutils literal">E</code> as for compression. Finally, the failure ratios <code class="docutils literal">fr</code> are given, which are the ratio of the ultimate bi-axial to uni-axial compressive ultimate stress (default 1.16) and the ratio of uni-axial tensile to compressive stress at failure (default 0.0836), the latter will give a tensile failure stress of 35 * 0.0836 = 2.926 if the concrete maximum compressive stress is 35 MPa. To add the general concrete stress–strain data curve below as data to the <strong>ConcreteSmearedCrack</strong> class, the input (with variables representing numbers, and the cracking stress as 10% of peak stress f3) would look like:</p></li>
+<li><p class="first">The <strong>ConcreteSmearedCrack</strong> class (based on the Abaqus smeared crack material) creates a more general concrete material model object. Cracks are smeared across cracking areas, not individually modelled. The Young&#8217;s modulus <code class="docutils literal"><span class="pre">E</span></code>, Poisson&#8217;s ratio <code class="docutils literal"><span class="pre">v</span></code> and density <code class="docutils literal"><span class="pre">p</span></code> are all explicitly given, as no defaults are assumed. The compressive stress&#8211;strain data are given with (positive) plastic stresses <code class="docutils literal"><span class="pre">fc</span></code> in Pascals and (positive) plastic strains <code class="docutils literal"><span class="pre">ec</span></code> in exactly the same way as <strong>ElasticPlastic</strong>. The first value of <code class="docutils literal"><span class="pre">fc</span></code> is the stress at the end of the elastic region defined by slope <code class="docutils literal"><span class="pre">E</span></code>, paired with the first value of <code class="docutils literal"><span class="pre">ec</span></code> of zero. For the tensile stresses, tension stiffening uses <code class="docutils literal"><span class="pre">ft</span></code> and <code class="docutils literal"><span class="pre">et</span></code>, where <code class="docutils literal"><span class="pre">ft</span></code> are not the absolute values of tensile stress, but the relative tensile stress from the point of cracking. So the first data pairs are <code class="docutils literal"><span class="pre">ft</span></code> as 1 at <code class="docutils literal"><span class="pre">et</span></code> of 0, then dropping to <code class="docutils literal"><span class="pre">ft</span></code> as 0 at another value of <code class="docutils literal"><span class="pre">et</span></code> (0.001 recommended). Before cracking, the tensile stress&#8211;strain behaviour is linear, using the same Young&#8217;s modulus <code class="docutils literal"><span class="pre">E</span></code> as for compression. Finally, the failure ratios <code class="docutils literal"><span class="pre">fr</span></code> are given, which are the ratio of the ultimate bi-axial to uni-axial compressive ultimate stress (default 1.16) and the ratio of uni-axial tensile to compressive stress at failure (default 0.0836), the latter will give a tensile failure stress of 35 * 0.0836 = 2.926 if the concrete maximum compressive stress is 35 MPa. To add the general concrete stress&#8211;strain data curve below as data to the <strong>ConcreteSmearedCrack</strong> class, the input (with variables representing numbers, and the cracking stress as 10% of peak stress f3) would look like:</p>
+</li>
 </ul>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ConcreteSmearedCrack</span>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ConcreteSmearedCrack</span>
 
 <span class="n">fc</span> <span class="o">=</span> <span class="p">[</span><span class="n">fy</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span><span class="p">]</span>
 <span class="n">ec</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">e1</span> <span class="o">-</span> <span class="n">ey</span><span class="p">,</span> <span class="n">e2</span> <span class="o">-</span> <span class="n">ey</span><span class="p">,</span> <span class="n">e3</span> <span class="o">-</span> <span class="n">ey</span><span class="p">]</span>
@@ -144,34 +189,54 @@
 <span class="n">et</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">etu</span><span class="p">]</span>
 <span class="n">fr</span> <span class="o">=</span> <span class="n">fr</span><span class="o">=</span><span class="p">[</span><span class="mf">1.16</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">]</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ConcreteSmearedCrack</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_concrete'</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">ec</span><span class="p">,</span> <span class="n">ft</span><span class="p">,</span> <span class="n">et</span><span class="p">,</span> <span class="n">fr</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ConcreteSmearedCrack</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">ec</span><span class="p">,</span> <span class="n">ft</span><span class="p">,</span> <span class="n">et</span><span class="p">,</span> <span class="n">fr</span><span class="p">))</span>
 </code></pre></div>
-<a class="reference internal image-reference" href="../_images/smeared-crack.png"><img alt="../images/smeared-crack.png" src="../images/smeared-crack.png" style="width: 408.0px; height: 360.4px;"/></a>
+</div>
+<a class="reference internal image-reference" href="../_images/smeared-crack.png"><img alt="../_images/smeared-crack.png" src="../_images/smeared-crack.png" style="width: 408.0px; height: 360.4px;" /></a>
 <ul>
-<li><p>The <strong>ConcreteDamagedPlasticity</strong> material model is used for concrete and other quasi-brittle materials (and is based here and quoted from the Abaqus damaged plasticity material). The class takes the Young’s modulus <code class="docutils literal">E</code>, Poisson’s ratio <code class="docutils literal">v</code> and density <code class="docutils literal">p</code> as no defaults are assumed, as well as lists <code class="docutils literal">damage</code>, <code class="docutils literal">hardening</code> and <code class="docutils literal">stiffening</code>. For <code class="docutils literal">damage</code>, a list is given of: the dilation angle in degrees, flow potential eccentricity, the ratio of initial equibiaxial to uni-axial compressive yield stress, the ratio of the second stress invariant on the tensile meridian to that on the compressive meridian, and the viscosity parameter.. For the input <code class="docutils literal">hardening</code>, a list is given of: the compressive yield stress, inelastic crushing strain, inelastic crushing strain rate, and  temperature. Finally, for <code class="docutils literal">stiffening</code>, a list of: remaining direct stress after cracking, direct cracking strain, direct cracking strain rate, and temperature.</p></li>
+<li><p class="first">The <strong>ConcreteDamagedPlasticity</strong> material model is used for concrete and other quasi-brittle materials (and is based here and quoted from the Abaqus damaged plasticity material). The class takes the Young&#8217;s modulus <code class="docutils literal"><span class="pre">E</span></code>, Poisson&#8217;s ratio <code class="docutils literal"><span class="pre">v</span></code> and density <code class="docutils literal"><span class="pre">p</span></code> as no defaults are assumed, as well as lists <code class="docutils literal"><span class="pre">damage</span></code>, <code class="docutils literal"><span class="pre">hardening</span></code> and <code class="docutils literal"><span class="pre">stiffening</span></code>. For <code class="docutils literal"><span class="pre">damage</span></code>, a list is given of: the dilation angle in degrees, flow potential eccentricity, the ratio of initial equibiaxial to uni-axial compressive yield stress, the ratio of the second stress invariant on the tensile meridian to that on the compressive meridian, and the viscosity parameter.. For the input <code class="docutils literal"><span class="pre">hardening</span></code>, a list is given of: the compressive yield stress, inelastic crushing strain, inelastic crushing strain rate, and  temperature. Finally, for <code class="docutils literal"><span class="pre">stiffening</span></code>, a list of: remaining direct stress after cracking, direct cracking strain, direct cracking strain rate, and temperature.</p>
+</li>
 </ul>
 </div>
 </div>
 </div>
-<nav class="compas-sideways">
-<a class="btn btn-primary compas-prev" href="06_sections.html" role="button">Sections</a>
-<a class="btn btn-primary compas-next" href="08_properties.html" role="button">Properties</a>
-</nav>
-</main>
-<!-- sidebar navigation -->
-<div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
-<div class="navbar-light">
-<form action="../search.html" class="d-flex compas-searchbox" id="" method="get">
-<input class="form-control" name="q" placeholder="Search docs" type="text"/>
-<input name="check_keywords" type="hidden" value="yes"/>
-<input name="area" type="hidden" value="default"/>
-<button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
-<span class="navbar-toggler-icon"></span>
-</button>
-</form>
-<div class="navbar-expand-md">
-<div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
-<ul class="nav flex-column active">
+
+                        
+                        <nav class="compas-sideways">
+                            
+                                <a href="06_sections.html" class="btn btn-primary compas-prev" role="button">Sections</a>
+                            
+
+                            
+                                <a href="08_properties.html" class="btn btn-primary compas-next" role="button">Properties</a>
+                            
+                        </nav>
+
+                    
+
+                </main>
+
+                <!-- sidebar navigation -->
+                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
+                    <div class="navbar-light">
+
+                        <form id="" class="d-flex compas-searchbox" action="../search.html" method="get">
+                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
+                            <input type="hidden" name="check_keywords" value="yes" />
+                            <input type="hidden" name="area" value="default" />
+
+                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                        </form>
+
+                        
+                        
+
+                            <div class="navbar-expand-md">
+                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
+
+                                <ul class="nav flex-column active">
 <li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="01_setup.html">Setup</a></li>
@@ -193,19 +258,28 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
 </ul>
-</div>
-</div>
-</div>
-</div>
-<!-- toc of current page -->
-<div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
-<ul class="nav flex-column" id="compas-localnav">
+
+
+                                </div>
+                            </div>
+
+                        
+
+                    </div>
+                </div>
+                
+                <!-- toc of current page -->
+                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+
+                    
+
+                    <ul class="nav flex-column" id="compas-localnav">
 <li class="nav-item"><a class="nav-link reference internal" href="#">Materials</a><ul class="nav">
 <li class="nav-item"><a class="nav-link reference internal" href="#adding-materials">Adding materials</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#accessing-materials">Accessing materials</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#id1">Materials</a><ul class="nav">
 <li class="nav-item"><a class="nav-link reference internal" href="#elastic">Elastic</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#elastic-plastic">Elastic–plastic</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#elastic-plastic">Elastic&#8211;plastic</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#steel">Steel</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#concrete">Concrete</a></li>
 </ul>
@@ -213,25 +287,31 @@
 </ul>
 </li>
 </ul>
-</div>
-</div>
-</div>
-<footer class="compas-footer">
+
+
+                </div>
+            </div>
+        </div>
+
+        <footer class="compas-footer">
             
                 
-                    © Copyright 2017, Block Research Group.
+                    &#169; Copyright 2017, Block Research Group.
                 
             
 
             
-                Last updated on Nov 25, 2017.
+                Last updated on Nov 27, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
             
         </footer>
-<script type="text/javascript">
+
+        
+
+            <script type="text/javascript">
               var DOCUMENTATION_OPTIONS = {
                 URL_ROOT:    '',
                 VERSION:     '',
@@ -241,19 +321,25 @@
                 SOURCELINK_SUFFIX: '.txt'
               };
             </script>
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
-<script src="https://compas-dev.github.io/js/underscore.js"></script>
-<script src="https://compas-dev.github.io/js/doctools.js"></script>
-<script src="https://compas-dev.github.io/js/searchtools_.js"></script>
-<script>
+
+            <!-- Optional JavaScript -->
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+
+            <script src="https://compas-dev.github.io/js/underscore.js"></script>
+            <script src="https://compas-dev.github.io/js/doctools.js"></script>
+            <script src="https://compas-dev.github.io/js/searchtools_.js"></script>
+
+            <script>
                 hljs.initHighlightingOnLoad();
                 anchors.add();
             </script>
-</body>
+
+        
+    </body>
 </html>
