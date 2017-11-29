@@ -1,62 +1,39 @@
 
-
-
 <!DOCTYPE html>
+
 <html lang="en">
-    <head>
-        <title>compas_fea -- FEA package for compas</title>
-
-        <!-- Required meta tags -->
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    
-        <!-- compas meta tags -->
-        <meta name="author" content="" />
-        <meta name="description" content="" />
-
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
-
-        <!-- highlight CSS -->
-        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/github.css" />
-
-        <!-- compas CSS -->
-        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas.css" />
-        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas-reference.css" />
-
-        
-            <link rel="next" title="TieConstraint" href="compas_fea.structure.constraint.TieConstraint.html" />
-        
-        
-        
-            <link rel="prev" title="structure" href="../compas_fea.structure.html" />
-        
-
-        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-
-    </head>
-    <body data-spy="scroll" data-target="#compas-localnav">
-        <!-- main navigation bar -->
-        <header class="navbar navbar-expand navbar-dark bg-dark compas-navbar">
-            <a class="navbar-brand" href="https://compas-dev.github.io">compas</a>
-
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
-                    </li>
-                </ul>
-        </header>
-        
-        <!-- page container -->
-        <div class="container-fluid compas-container">
-            <div class="row flex-xl-nowrap">
-
-                <!-- main page content -->
-                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
-
-                    
-
-                        
+<head>
+<title>compas_fea -- FEA package for compas</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+<meta content="" name="author"/>
+<meta content="" name="description"/>
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
+<link href="https://compas-dev.github.io/css/github.css" rel="stylesheet" type="text/css"/>
+<link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
+<link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
+<link href="compas_fea.structure.constraint.TieConstraint.html" rel="next" title="TieConstraint"/>
+<link href="../compas_fea.structure.html" rel="prev" title="structure"/>
+<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+</head>
+<body data-spy="scroll" data-target="#compas-localnav">
+<header class="navbar navbar-expand compas-navbar">
+<a class="navbar-brand" href="/">
+<img alt="compas" height="36px" src="/images/compas_icon_blue-01.png" width="36px"/>
+</a>
+<ul class="navbar-nav">
+<li class="nav-item">
+<a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="http://forum.compas-framework.org/c/compas-fea">Forum</a>
+</li>
+</ul>
+</header>
+<div class="container-fluid compas-container">
+<div class="row flex-xl-nowrap">
+<main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+<!-- 
         <nav class="breadcrumb">
             <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
             <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
@@ -71,317 +48,281 @@
                 
             
         </nav>
-
-
-                        
-
-                        
-
-                        <div class="section" id="structure">
+ -->
+<div class="section">
 <h1>Structure</h1>
 <dl class="class">
 <dt id="compas_fea.structure.structure.Structure">
 <em class="property">class </em><code class="descclassname">compas_fea.structure.structure.</code><code class="descname">Structure</code><span class="sig-paren">(</span><em>name='compas_fea-Structure'</em>, <em>path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/structure.html#Structure"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal">object</code></a></p>
 <p>Initialises empty Structure object for use in finite element analysis.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last">
-<li><p class="first"><strong>name</strong> (<em>str</em>) &#8211; Name of the structure.</p>
-</li>
-<li><p class="first"><strong>path</strong> (<em>str</em>) &#8211; Path to save files.</p>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul>
+<li><p><strong>name</strong> (<em>str</em>) – Name of the structure.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to save files.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.constraints">
 <code class="descname">constraints</code></dt>
-<dd><p><em>dic</em> &#8211; Constraint objects.</p>
+<dd><p><em>dic</em> – Constraint objects.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.displacements">
 <code class="descname">displacements</code></dt>
-<dd><p><em>dic</em> &#8211; Displacement objects.</p>
+<dd><p><em>dic</em> – Displacement objects.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.elements">
 <code class="descname">elements</code></dt>
-<dd><p><em>dic</em> &#8211; Element objects.</p>
+<dd><p><em>dic</em> – Element objects.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.element_index">
 <code class="descname">element_index</code></dt>
-<dd><p><em>dic</em> &#8211; Index of elements (geometric keys).</p>
+<dd><p><em>dic</em> – Index of elements (geometric keys).</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.element_properties">
 <code class="descname">element_properties</code></dt>
-<dd><p><em>dic</em> &#8211; Element properties objects.</p>
+<dd><p><em>dic</em> – Element properties objects.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.interactions">
 <code class="descname">interactions</code></dt>
-<dd><p><em>dic</em> &#8211; Interaction objects.</p>
+<dd><p><em>dic</em> – Interaction objects.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.loads">
 <code class="descname">loads</code></dt>
-<dd><p><em>dic</em> &#8211; Load objects.</p>
+<dd><p><em>dic</em> – Load objects.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.materials">
 <code class="descname">materials</code></dt>
-<dd><p><em>dic</em> &#8211; Material objects.</p>
+<dd><p><em>dic</em> – Material objects.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.misc">
 <code class="descname">misc</code></dt>
-<dd><p><em>dic</em> &#8211; Misc objects.</p>
+<dd><p><em>dic</em> – Misc objects.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.name">
 <code class="descname">name</code></dt>
-<dd><p><em>str</em> &#8211; Structure name.</p>
+<dd><p><em>str</em> – Structure name.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.nodes">
 <code class="descname">nodes</code></dt>
-<dd><p><em>dic</em> &#8211; Node co-ordinates and local axes.</p>
+<dd><p><em>dic</em> – Node co-ordinates and local axes.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.node_index">
 <code class="descname">node_index</code></dt>
-<dd><p><em>dic</em> &#8211; Index of nodes (geometric keys).</p>
+<dd><p><em>dic</em> – Index of nodes (geometric keys).</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.path">
 <code class="descname">path</code></dt>
-<dd><p><em>str</em> &#8211; Path to save files.</p>
+<dd><p><em>str</em> – Path to save files.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.results">
 <code class="descname">results</code></dt>
-<dd><p><em>dic</em> &#8211; Dictionary containing a StepResults object per step.</p>
+<dd><p><em>dic</em> – Dictionary containing a StepResults object per step.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.sections">
 <code class="descname">sections</code></dt>
-<dd><p><em>dic</em> &#8211; Section objects.</p>
+<dd><p><em>dic</em> – Section objects.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.sets">
 <code class="descname">sets</code></dt>
-<dd><p><em>dic</em> &#8211; Node, element and surface sets.</p>
+<dd><p><em>dic</em> – Node, element and surface sets.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.steps">
 <code class="descname">steps</code></dt>
-<dd><p><em>dic</em> &#8211; Step objects.</p>
+<dd><p><em>dic</em> – Step objects.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.steps_order">
 <code class="descname">steps_order</code></dt>
-<dd><p><em>list</em> &#8211; Sorted list of Step object names.</p>
+<dd><p><em>list</em> – Sorted list of Step object names.</p>
 </dd></dl>
-
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.tol">
 <code class="descname">tol</code></dt>
-<dd><p><em>str</em> &#8211; Geometric key tolerance.</p>
+<dd><p><em>str</em> – Geometric key tolerance.</p>
 </dd></dl>
-
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
 <p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils table table-responsive table-bordered">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%"/>
+<col style="width: 90%"/>
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code>([name,&nbsp;path])</td>
-<td></td>
+<tbody>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">__init__</code>([name, path])</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_constraint</span></code>(constraint)</td>
-<td>Adds a Constraint object to structure.constraints.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_constraint</code>(constraint)</p></td>
+<td><p>Adds a Constraint object to structure.constraints.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">add_displacement</span></code>(displacement)</td>
-<td>Adds a Displacement object to structure.displacements.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_displacement</code>(displacement)</p></td>
+<td><p>Adds a Displacement object to structure.displacements.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_displacements</span></code>(displacements)</td>
-<td>Adds Displacement objects to structure.displacements.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_displacements</code>(displacements)</p></td>
+<td><p>Adds Displacement objects to structure.displacements.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">add_element</span></code>(nodes,&nbsp;type[,&nbsp;acoustic,&nbsp;...])</td>
-<td>Adds an element to structure.elements with centroid geometric key.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_element</code>(nodes, type[, acoustic, …])</p></td>
+<td><p>Adds an element to structure.elements with centroid geometric key.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_element_properties</span></code>(element_properties[,&nbsp;...])</td>
-<td>Adds an ElementProperties object to structure.element_properties.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_element_properties</code>(element_properties[, …])</p></td>
+<td><p>Adds an ElementProperties object to structure.element_properties.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">add_element_to_element_index</span></code>(key,&nbsp;nodes)</td>
-<td>Adds the element to the element_index dictionary.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_element_to_element_index</code>(key, nodes)</p></td>
+<td><p>Adds the element to the element_index dictionary.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_elements</span></code>(elements,&nbsp;type[,&nbsp;acoustic,&nbsp;...])</td>
-<td>Adds multiple elements of the same type to structure.elements.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_elements</code>(elements, type[, acoustic, …])</p></td>
+<td><p>Adds multiple elements of the same type to structure.elements.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">add_interaction</span></code>(interaction)</td>
-<td>Adds an Interaction object to structure.interactions.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_interaction</code>(interaction)</p></td>
+<td><p>Adds an Interaction object to structure.interactions.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_load</span></code>(load)</td>
-<td>Adds a Load object to structure.loads.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_load</code>(load)</p></td>
+<td><p>Adds a Load object to structure.loads.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">add_loads</span></code>(loads)</td>
-<td>Adds Load objects to structure.loads.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_loads</code>(loads)</p></td>
+<td><p>Adds Load objects to structure.loads.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_material</span></code>(material)</td>
-<td>Adds a Material object to structure.materials.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_material</code>(material)</p></td>
+<td><p>Adds a Material object to structure.materials.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">add_materials</span></code>(materials)</td>
-<td>Adds Material objects to structure.materials.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_materials</code>(materials)</p></td>
+<td><p>Adds Material objects to structure.materials.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_misc</span></code>(misc)</td>
-<td>Adds a Misc object to structure.misc.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_misc</code>(misc)</p></td>
+<td><p>Adds a Misc object to structure.misc.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">add_node</span></code>(xyz[,&nbsp;ex,&nbsp;ey,&nbsp;ez])</td>
-<td>Adds a node to structure.nodes at co-ordinates xyz with local frame [ex, ey, ez].</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_node</code>(xyz[, ex, ey, ez])</p></td>
+<td><p>Adds a node to structure.nodes at co-ordinates xyz with local frame [ex, ey, ez].</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_node_to_node_index</span></code>(key,&nbsp;xyz)</td>
-<td>Adds the node to the node_index dictionary.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_node_to_node_index</code>(key, xyz)</p></td>
+<td><p>Adds the node to the node_index dictionary.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">add_nodes</span></code>(nodes[,&nbsp;ex,&nbsp;ey,&nbsp;ez])</td>
-<td>Adds a list of nodes to structure.nodes at given co-ordinates all with local frame [ex, ey, ez].</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_nodes</code>(nodes[, ex, ey, ez])</p></td>
+<td><p>Adds a list of nodes to structure.nodes at given co-ordinates all with local frame [ex, ey, ez].</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_nodes_elements_from_mesh</span></code>(mesh,&nbsp;element_type)</td>
-<td>Adds the nodes and faces of a Mesh to the Structure object.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_nodes_elements_from_mesh</code>(mesh, element_type)</p></td>
+<td><p>Adds the nodes and faces of a Mesh to the Structure object.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">add_nodes_elements_from_network</span></code>(network,&nbsp;...)</td>
-<td>Adds the nodes and edges of a Network to the Structure object.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_nodes_elements_from_network</code>(network, …)</p></td>
+<td><p>Adds the nodes and edges of a Network to the Structure object.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_section</span></code>(section)</td>
-<td>Adds a Section object to structure.sections.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_section</code>(section)</p></td>
+<td><p>Adds a Section object to structure.sections.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">add_sections</span></code>(sections)</td>
-<td>Adds Section objects to structure.sections.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_sections</code>(sections)</p></td>
+<td><p>Adds Section objects to structure.sections.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_set</span></code>(name,&nbsp;type,&nbsp;selection[,&nbsp;explode])</td>
-<td>Adds a node, element or surface set to structure.sets.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_set</code>(name, type, selection[, explode])</p></td>
+<td><p>Adds a node, element or surface set to structure.sets.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">add_step</span></code>(step)</td>
-<td>Adds a Step object to structure.steps.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_step</code>(step)</p></td>
+<td><p>Adds a Step object to structure.steps.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">add_steps</span></code>(steps)</td>
-<td>Adds Step objects to structure.steps.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">add_steps</code>(steps)</p></td>
+<td><p>Adds Step objects to structure.steps.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">analyse</span></code>(software[,&nbsp;exe,&nbsp;cpus,&nbsp;license,&nbsp;delete])</td>
-<td>Runs the analysis through the chosen FEA software/library.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">analyse</code>(software[, exe, cpus, license, delete])</p></td>
+<td><p>Runs the analysis through the chosen FEA software/library.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">analyse_and_extract</span></code>(software[,&nbsp;fields,&nbsp;exe,&nbsp;...])</td>
-<td>Runs the analysis through the chosen FEA software/library and extracts data.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">analyse_and_extract</code>(software[, fields, exe, …])</p></td>
+<td><p>Runs the analysis through the chosen FEA software/library and extracts data.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">check_element_exists</span></code>(nodes[,&nbsp;xyz])</td>
-<td>Check if an element already exists based on the nodes it connects to or its centroid.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">check_element_exists</code>(nodes[, xyz])</p></td>
+<td><p>Check if an element already exists based on the nodes it connects to or its centroid.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">check_node_exists</span></code>(xyz)</td>
-<td>Check if a node already exists at given x, y, z co-ordinates.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">check_node_exists</code>(xyz)</p></td>
+<td><p>Check if a node already exists at given x, y, z co-ordinates.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">edit_node</span></code>(key,&nbsp;attr_dic)</td>
-<td>Edit a node&#8217;s data.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">edit_node</code>(key, attr_dic)</p></td>
+<td><p>Edit a node’s data.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">element_centroid</span></code>(element)</td>
-<td>Return the centroid of an element.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">element_centroid</code>(element)</p></td>
+<td><p>Return the centroid of an element.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">element_count</span></code>()</td>
-<td>Return the number of elements in structure.elements.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">element_count</code>()</p></td>
+<td><p>Return the number of elements in structure.elements.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">extract_data</span></code>(software[,&nbsp;fields,&nbsp;steps,&nbsp;exe])</td>
-<td>Extracts data from the FE software&#8217;s output.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">extract_data</code>(software[, fields, steps, exe])</p></td>
+<td><p>Extracts data from the FE software’s output.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">fields_dic_from_list</span></code>(fields_list)</td>
-<td>Creates a fields dictionary from a fields list.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">fields_dic_from_list</code>(fields_list)</p></td>
+<td><p>Creates a fields dictionary from a fields list.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">from_mesh</span></code>(mesh)</td>
-<td>Creates a Structure object based on data contained in a compas Mesh datastructure.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">from_mesh</code>(mesh)</p></td>
+<td><p>Creates a Structure object based on data contained in a compas Mesh datastructure.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">from_network</span></code>(network)</td>
-<td></td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">from_network</code>(network)</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">load_from_obj</span></code>(fnm)</td>
-<td>Imports a Structure object from an .obj file through Pickle.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">load_from_obj</code>(fnm)</p></td>
+<td><p>Imports a Structure object from an .obj file through Pickle.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">make_element_index_dic</span></code>()</td>
-<td>Makes an element_index dictionary from existing structure.elements.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">make_element_index_dic</code>()</p></td>
+<td><p>Makes an element_index dictionary from existing structure.elements.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">make_node_index_dic</span></code>()</td>
-<td>Makes a node_index dictionary from existing structure.nodes.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">make_node_index_dic</code>()</p></td>
+<td><p>Makes a node_index dictionary from existing structure.nodes.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">node_bounds</span></code>()</td>
-<td>Return the bounds formed by the Structure&#8217;s nodal co-ordinates.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">node_bounds</code>()</p></td>
+<td><p>Return the bounds formed by the Structure’s nodal co-ordinates.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">node_count</span></code>()</td>
-<td>Return the number of nodes in structure.nodes.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">node_count</code>()</p></td>
+<td><p>Return the number of nodes in structure.nodes.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">node_xyz</span></code>(node)</td>
-<td>Return the xyz co-ordinates of a node.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">node_xyz</code>(node)</p></td>
+<td><p>Return the xyz co-ordinates of a node.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">nodes_xyz</span></code>([nodes])</td>
-<td>Return the xyz co-ordinates of given or all nodes.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">nodes_xyz</code>([nodes])</p></td>
+<td><p>Return the xyz co-ordinates of given or all nodes.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">save_to_obj</span></code>()</td>
-<td>Exports the Structure object to an .obj file through Pickle.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">save_to_obj</code>()</p></td>
+<td><p>Exports the Structure object to an .obj file through Pickle.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">scale_displacements</span></code>(displacements,&nbsp;factor)</td>
-<td>Scales displacements by a given factor.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">scale_displacements</code>(displacements, factor)</p></td>
+<td><p>Scales displacements by a given factor.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">scale_loads</span></code>(loads,&nbsp;factor)</td>
-<td>Scales loads by a given factor.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">scale_loads</code>(loads, factor)</p></td>
+<td><p>Scales loads by a given factor.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">set_steps_order</span></code>(order)</td>
-<td>Sets the order the Steps will be analysed.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">set_steps_order</code>(order)</p></td>
+<td><p>Sets the order the Steps will be analysed.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">summary</span></code>()</td>
-<td>Prints a summary of the Structure object contents.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">summary</code>()</p></td>
+<td><p>Prints a summary of the Structure object contents.</p></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">view</span></code>()</td>
-<td>Starts the QT app for visualisation.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">view</code>()</p></td>
+<td><p>Starts the QT app for visualisation.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">write_input_file</span></code>(software[,&nbsp;fields])</td>
-<td>Writes the FE software&#8217;s input file.</td>
+<tr class=""><td><p><code class="xref py py-obj docutils literal">write_input_file</code>(software[, fields])</p></td>
+<td><p>Writes the FE software’s input file.</p></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
-
 </div>
-
-                        
-                        <nav class="compas-sideways">
+<!-- <nav class="compas-sideways">
                             
                                 <a href="../compas_fea.structure.html" class="btn btn-primary compas-prev" role="button">structure</a>
                             
@@ -389,33 +330,21 @@
                             
                                 <a href="compas_fea.structure.constraint.TieConstraint.html" class="btn btn-primary compas-next" role="button">TieConstraint</a>
                             
-                        </nav>
-
-                    
-
-                </main>
-
-                <!-- sidebar navigation -->
-                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
-                    <div class="navbar-light">
-
-                        <form id="" class="d-flex compas-searchbox" action="../../search.html" method="get">
-                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
-                            <input type="hidden" name="check_keywords" value="yes" />
-                            <input type="hidden" name="area" value="default" />
-
-                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                        </form>
-
-                        
-                        
-
-                            <div class="navbar-expand-md">
-                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
-
-                                <ul class="nav flex-column active">
+                        </nav> -->
+</main>
+<div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
+<div class="navbar-light">
+<form action="../../search.html" class="d-flex compas-searchbox" id="" method="get">
+<input class="form-control" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+<button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+</form>
+<div class="navbar-expand-md">
+<div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
+<ul class="nav flex-column active">
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../tutorial.html">Tutorial</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
@@ -431,77 +360,93 @@
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../license.html">License</a></li>
 </ul>
-
-
-                                </div>
-                            </div>
-
-                        
-
-                    </div>
-                </div>
-                
-                <!-- toc of current page -->
-                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
-
-                    
-
-                    <ul class="nav flex-column" id="compas-localnav">
+</div>
+</div>
+</div>
+</div>
+<div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+<ul class="nav flex-column" id="compas-localnav">
 <li class="nav-item"><a class="nav-link reference internal" href="#">Structure</a></li>
 </ul>
-
-
-                </div>
-            </div>
-        </div>
-
-        <footer class="compas-footer">
+</div>
+</div>
+</div>
+<footer class="compas-footer">
             
                 
-                    &#169; Copyright 2017, Block Research Group.
+                    © Copyright 2017, Block Research Group.
                 
             
 
             
-                Last updated on Nov 27, 2017.
+                Last updated on Nov 29, 2017.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
             
         </footer>
-
-        
-
-            <script type="text/javascript">
-              var DOCUMENTATION_OPTIONS = {
-                URL_ROOT:    '',
-                VERSION:     '',
-                COLLAPSE_INDEX: false,
-                FILE_SUFFIX: '.html',
-                HAS_SOURCE:  true,
-                SOURCELINK_SUFFIX: '.txt'
-              };
+<script type="text/javascript">
+var DOCUMENTATION_OPTIONS = {
+    URL_ROOT:    '',
+    VERSION:     '',
+    COLLAPSE_INDEX: false,
+    FILE_SUFFIX: '.html',
+    HAS_SOURCE:  true,
+    SOURCELINK_SUFFIX: '.txt'
+};
             </script>
+<script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+<script src="https://compas-dev.github.io/js/underscore.js"></script>
+<script src="https://compas-dev.github.io/js/doctools.js"></script>
+<!-- <script src="https://compas-dev.github.io/js/searchtools_.js"></script> -->
+<script>
+hljs.initHighlightingOnLoad();
+anchors.add();
 
-            <!-- Optional JavaScript -->
-            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-            
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+var pre = document.getElementsByTagName('pre');
 
-            <script src="https://compas-dev.github.io/js/underscore.js"></script>
-            <script src="https://compas-dev.github.io/js/doctools.js"></script>
-            <script src="https://compas-dev.github.io/js/searchtools_.js"></script>
+for (var i = 0; i < pre.length; i++) {
 
-            <script>
-                hljs.initHighlightingOnLoad();
-                anchors.add();
+    var is_code = pre[i].children[0].className.indexOf('language-python');
+
+    if (is_code === 0) {
+
+        var button = document.createElement('button');
+
+        button.className = 'btn btn-secondary copy-code mt-4';
+        button.textContent = 'Copy code';
+        button.type = 'button';
+
+        pre[i].appendChild(button);
+    }
+}
+
+var copy_code = new Clipboard('.copy-code', {
+    target: function(trigger) {
+        return trigger.previousElementSibling;
+    }
+});
+
+copy_code.on('success', function(event) {
+    event.clearSelection();
+    event.trigger.textContent = 'Copied!';
+    window.setTimeout(function() {
+        event.trigger.textContent = 'Copy code';
+    }, 2000);
+});
+
+copy_code.on('error', function(event) { 
+    event.trigger.textContent = 'Press "Ctrl + C" to copy...';
+    window.setTimeout(function() {
+        event.trigger.textContent = 'Copy code';
+    }, 2000);
+});
             </script>
-
-        
-    </body>
+</body>
 </html>
