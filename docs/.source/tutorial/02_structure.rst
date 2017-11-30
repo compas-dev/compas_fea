@@ -5,7 +5,7 @@ Structure
 
 The following shows some of the basics of importing compas_fea Classes and the main **Structure** object, as well as some of the **Structure** object's most useful methods.
 
-.. .. contents::
+.. contents::
 
 
 =============================

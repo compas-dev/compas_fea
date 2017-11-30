@@ -1,10 +1,11 @@
 """
-compas_fea.structure.structure : The compas_fea main Structure class.
+compas_fea.structure.structure : The main compas_fea Structure class.
 The main datastructure for all structural model information and methods.
 """
 
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 from compas.geometry import centroid_points
 
@@ -23,10 +24,10 @@ from compas_fea.utilities import group_keys_by_attributes
 import pickle
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
+__copyright__ = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
@@ -35,7 +36,6 @@ __all__ = [
 
 
 class Structure(object):
-
     """ Initialises empty Structure object for use in finite element analysis.
 
     Parameters:

@@ -453,6 +453,8 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
         return toc, U, cnodes_, fabs, fscaled_
     else:
         return toc, U, cnodes_, fabs
+    # print('debug')
+    # return 0, 0, 0, 0
 
 
 def process_data(data, dtype, iptype, nodal, elements, n):
