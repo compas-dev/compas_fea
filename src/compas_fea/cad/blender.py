@@ -35,7 +35,7 @@ try:
     from meshpy.tet import build
     from meshpy.tet import MeshInfo
 except ImportError:
-    print('***** MeshPy not imported *****')
+    pass
 
 import json
 
@@ -68,16 +68,27 @@ __all__ = [
 def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=None, acoustic=False, thermal=False):
     """ Adds the Blender mesh's nodes, edges and faces to the Structure object.
 
-    Parameters:
-        structure (obj): Structure object to update.
-        bmesh (obj): Blender mesh object.
-        line_type (str): Element type for lines (bmesh edges).
-        mesh_type (str): Element type for meshes.
-        acoustic (bool): Acoustic properties on or off.
-        thermal (bool): Thermal properties on or off.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    bmesh : obj
+        Blender mesh object.
+    line_type : str
+        Element type for lines (bmesh edges).
+    mesh_type : str
+        Element type for meshes.
+    acoustic : bool
+        Acoustic properties on or off.
+    thermal : bool
+        Thermal properties on or off.
 
-    Returns:
-        None: Nodes and elements are updated in the Structure object.
+    Returns
+    -------
+    list
+        Node keys that were added to the Structure.
+    list
+        Element keys that were added to the Structure.
     """
     solids = ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']
 
@@ -93,8 +104,12 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
     except:
         pass
 
+    created_nodes = set()
+    created_elements = set()
+
     for vertex in vertices:
-        structure.add_node(vertex)
+        node = structure.add_node(vertex)
+        created_nodes.add(node)
 
     if line_type and edges:
 
@@ -108,53 +123,80 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
         axes = {'ex': ex, 'ey': ey}
 
         for u, v in edges:
-            sp = structure.check_node_exists(vertices[u])
-            ep = structure.check_node_exists(vertices[v])
-            ez = subtract_vectors(structure.node_xyz(ep), structure.node_xyz(sp))
+            sp_xyz = vertices[u]
+            ep_xyz = vertices[v]
+            sp = structure.check_node_exists(sp_xyz)
+            ep = structure.check_node_exists(ep_xyz)
+            ez = subtract_vectors(ep_xyz, sp_xyz)
             if ex and not ey:
                 ey = cross_vectors(ex, ez)
             axes['ey'] = ey
             axes['ez'] = ez
-            structure.add_element(nodes=[sp, ep], type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
+            e = structure.add_element(nodes=[sp, ep], type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
+            created_elements.add(e)
 
     if mesh_type:
 
         if mesh_type in solids:
             nodes = [structure.check_node_exists(i) for i in vertices]
-            structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
+            e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
+            created_elements.add(e)
+
         else:
             for face in faces:
                 nodes = [structure.check_node_exists(vertices[i]) for i in face]
-                structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
+                e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
+                created_elements.add(e)
+
+    return list(created_nodes), list(created_elements)
 
 
 def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, acoustic=False, thermal=False):
     """ Adds node and element data from Blender layers to Structure object.
 
-    Parameters:
-        structure (obj): Structure object to update.
-        layers (list): Layers to extract nodes and elements.
-        line_type (str): Element type for lines (bmesh edges).
-        mesh_type (str): Element type for meshes.
-        acoustic (bool): Acoustic properties on or off.
-        thermal (bool): Thermal properties on or off.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    layers : list
+        Layers to extract nodes and elements.
+    line_type : str
+        Element type for lines (bmesh edges).
+    mesh_type : str
+        Element type for meshes.
+    acoustic : bool
+        Acoustic properties on or off.
+    thermal : bool
+        Thermal properties on or off.
 
-    Returns:
-        None: Nodes and elements are updated in the Structure object.
+    Returns
+    -------
+    list
+        Node keys that were added to the Structure.
+    list
+        Element keys that were added to the Structure.
     """
     if isinstance(layers, int):
         layers = [layers]
 
+    created_nodes = set()
+    created_elements = set()
+
     for layer in layers:
-        bmeshes = get_objects(layer=layer)
-        for bmesh in bmeshes:
-            add_nodes_elements_from_bmesh(structure=structure, bmesh=bmesh, line_type=line_type, mesh_type=mesh_type, acoustic=acoustic, thermal=thermal)
+        for bmesh in get_objects(layer=layer):
+
+            nodes, elements = add_nodes_elements_from_bmesh(structure=structure, bmesh=bmesh, line_type=line_type, mesh_type=mesh_type, acoustic=acoustic, thermal=thermal)
+            created_nodes.update(nodes)
+            created_elements.update(elements)
+
+    return list(created_nodes), list(created_elements)
 
 
 def add_tets_from_bmesh(structure, name, bmesh, draw_tets=False, volume=None, layer=19, acoustic=False, thermal=False):
     """ Adds tetrahedron elements from a Blender mesh to the Structure object.
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object to update.
         name (str): Name for the element set of tetrahedrons.
         bmesh (ob): The Blender mesh representing the outer surface.
@@ -164,7 +206,8 @@ def add_tets_from_bmesh(structure, name, bmesh, draw_tets=False, volume=None, la
         acoustic (bool): Acoustic properties on or off.
         thermal (bool): Thermal properties on or off.
 
-    Returns:
+    Returns
+    -------
         None: Nodes and elements are updated in the Structure object.
     """
     blendermesh = BlenderMesh(bmesh)
@@ -198,14 +241,16 @@ def add_elset_from_bmeshes(structure, name, bmeshes=None, layer=None, explode=Fa
     Note:
         - Either bmeshes or layer should be given, not both.
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object to update.
         name (str): Name of the new element set.
         bmeshes (list): Blender mesh objects to extract edges and faces.
         layer (int): Layer to get bmeshes from if bmeshes are not given.
         explode (bool): Explode the set into sets for each member of selection.
 
-    Returns:
+    Returns
+    -------
         None
     """
     if layer is not None:
@@ -241,14 +286,16 @@ def add_nset_from_bmeshes(structure, name, bmeshes=None, layer=None, explode=Fal
     Note:
         - Either bmeshes or layer should be given, not both.
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object to update.
         name (str): Name of the new node set.
         bmeshes (list): Blender mesh objects to extract vertices.
         layer (int): Layer to get bmeshes from if bmeshes are not given.
         explode (bool): Explode the set into sets for each member of selection.
 
-    Returns:
+    Returns
+    -------
         None
     """
     if layer is not None:
@@ -274,14 +321,16 @@ def add_nset_from_objects(structure, name, objects=None, layer=None, explode=Fal
     Note:
         - Either objects or layer should be given, not both.
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object to update.
         name (str): Name of the new node set.
         objects (list): Objects to use location values.
         layer (int): Layer to get objects from if objects are not given.
         explode (bool): Explode the set into sets for each member of selection.
 
-    Returns:
+    Returns
+    -------
         None
     """
     if layer is not None:
@@ -297,14 +346,16 @@ def mesh_extrude(structure, bmesh, nz, dz, setname):
         - Extrusion is along the vertex normals.
         - Elements are added automatically to the Structure object.
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object to update.
         bmesh (obj): Blender mesh object.
         nz (int): Number of layers.
         dz (float): Layer thickness.
         setname (str): Name of set for added elements.
 
-    Returns:
+    Returns
+    -------
         None
     """
     mesh = mesh_from_bmesh(bmesh)
@@ -317,12 +368,14 @@ def ordered_network(structure, network, layer):
     Note:
         - Function is for a Network representing a single structural element.
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object.
         network (obj): Network object.
         layer (str): Layer to extract start-point (Blender object).
 
-    Returns:
+    Returns
+    -------
         list: Ordered nodes.
         list: Ordered elements.
         list: Cumulative lengths at element mid-points.
@@ -343,7 +396,8 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
     Note:
         - Pipe visualisation of line elements is not based on the element section.
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object.
         step (str): Name of the Step.
         field (str): Field to plot, e.g. 'um', 'sxx', 'sm1'.
@@ -356,7 +410,8 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
         mode (int): mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
         colorbar_size (float): Scale on the size of the colorbar.
 
-    Returns:
+    Returns
+    -------
         None
     """
     clear_layer(layer=layer)
@@ -461,7 +516,8 @@ def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None,
         - Voxel display works best with cube dimensions >= 10.
         - The absolute value is plotted, ranged between [0, 1].
 
-     Parameters:
+     Parameters
+    ----------
         structure (obj): Structure object.
         step (str): Name of the Step.
         field (str): Field to plot, e.g. 'smises'.
@@ -475,7 +531,8 @@ def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None,
         mode (int): mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
         colorbar_size (float): Scale on the size of the colorbar.
 
-    Returns:
+    Returns
+    -------
         None
     """
 

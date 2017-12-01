@@ -48,7 +48,7 @@ try:
     from numpy import zeros
     from numpy.linalg import inv
 except ImportError:
-    print('***** NumPy functions not imported *****')
+    pass
 
 try:
     from scipy.interpolate import griddata
@@ -57,12 +57,12 @@ try:
     from scipy.spatial import Delaunay
     from scipy.spatial import distance_matrix
 except ImportError:
-    print('***** SciPy functions not imported *****')
+    pass
 
 try:
     from mayavi import mlab
 except ImportError:
-    print('***** mayavi not imported *****')
+    pass
 
 
 __author__     = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']

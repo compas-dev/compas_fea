@@ -67,13 +67,15 @@ def add_element_set(structure, guids, name, explode=False):
     Note:
         - Meshes representing solids must have 'solid' in their name.
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object to update.
         guids (list): Rhino curve and Rhino mesh guids.
         name (str): Set name.
         explode (bool): Explode the set into sets for each member of selection.
 
-    Returns:
+    Returns
+    -------
         None
     """
     elements = []
@@ -111,13 +113,15 @@ def add_element_set(structure, guids, name, explode=False):
 def add_node_set(structure, guids, name, explode=False):
     """ Adds node set information from Rhino point guids.
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object to update.
         guids (list): Rhino point guids.
         name (str): Set name.
         explode (bool): Explode the set into sets for each member of selection.
 
-    Returns:
+    Returns
+    -------
         None
     """
     nodes = []
@@ -134,30 +138,49 @@ def add_node_set(structure, guids, name, explode=False):
 def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, acoustic=False, thermal=False):
     """ Adds node and element data from Rhino layers to Structure object.
 
-    Parameters:
-        structure (obj): Structure object to update.
-        layers (list): Layers to extract nodes and elements.
-        line_type (str): Element type for lines.
-        mesh_type (str): Element type for meshes.
-        acoustic (bool): Acoustic properties on or off.
-        thermal (bool): Thermal properties on or off.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    layers : list
+        Layers to extract nodes and elements.
+    line_type : str
+        Element type for lines.
+    mesh_type : str
+        Element type for meshes.
+    acoustic : bool
+        Acoustic properties on or off.
+    thermal : bool
+        Thermal properties on or off.
 
-    Returns:
-        None: Nodes and elements are updated in the Structure object.
+    Returns
+    -------
+    list
+        Node keys that were added to the Structure.
+    list
+        Element keys that were added to the Structure.
     """
     solids = ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']
 
     if isinstance(layers, str):
         layers = [layers]
 
+    created_nodes = set()
+    created_elements = set()
+
     for layer in layers:
-        guids = rs.ObjectsByLayer(layer)
-        for guid in guids:
+        for guid in rs.ObjectsByLayer(layer):
 
             if line_type and rs.IsCurve(guid):
-                sp = structure.add_node(rs.CurveStartPoint(guid))
-                ep = structure.add_node(rs.CurveEndPoint(guid))
-                ez = subtract_vectors(structure.node_xyz(ep), structure.node_xyz(sp))
+
+                sp_xyz = rs.CurveStartPoint(guid)
+                ep_xyz = rs.CurveEndPoint(guid)
+                sp = structure.add_node(sp_xyz)
+                ep = structure.add_node(ep_xyz)
+                created_nodes.add(sp)
+                created_nodes.add(ep)
+
+                ez = subtract_vectors(ep_xyz, sp_xyz)
                 try:
                     dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
                     ex = dic.get('ex', None)
@@ -168,21 +191,30 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                     ex = None
                     ey = None
                 axes = {'ex': ex, 'ey': ey, 'ez': ez}
-                structure.add_element(nodes=[sp, ep], type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
+
+                sp_ep = [sp, ep]
+                e = structure.add_element(nodes=sp_ep, type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
+                created_elements.add(e)
 
             elif mesh_type and rs.IsMesh(guid):
+
                 vertices = rs.MeshVertices(guid)
                 nodes = [structure.add_node(vertex) for vertex in vertices]
+                created_nodes.update(nodes)
 
                 if mesh_type in solids:
-                    structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
+                    e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
+                    created_elements.add(e)
+
                 else:
-                    faces = rs.MeshFaceVertices(guid)
-                    for face in faces:
+                    for face in rs.MeshFaceVertices(guid):
                         nodes = [structure.check_node_exists(vertices[i]) for i in face]
                         if nodes[-1] == nodes[-2]:
                             del nodes[-1]
-                        structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
+                        e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
+                        created_elements.add(e)
+
+    return list(created_nodes), list(created_elements)
 
 
 def add_sets_from_layers(structure, layers, explode=False):
@@ -192,12 +224,14 @@ def add_sets_from_layers(structure, layers, explode=False):
         - Layers should exclusively contain nodes or elements.
         - Sets will inherit the layer names as their keys.
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object to update.
         layers (list): List of layer names to take objects from.
         explode (bool): Explode the set into sets for each member of selection.
 
-    Returns:
+    Returns
+    -------
         None
     """
     if isinstance(layers, str):
@@ -223,14 +257,16 @@ def mesh_extrude(structure, guid, nz, dz, setname):
         - Extrusion is along the vertex normals.
         - Elements are added automatically to the Structure object.
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object to update.
         guid (guid): Rhino mesh guid.
         nz (int): Number of layers.
         dz (float): Layer thickness.
         setname (str): Name of set for added elements.
 
-    Returns:
+    Returns
+    -------
         None
     """
     mesh = mesh_from_guid(Mesh(), guid)
@@ -240,11 +276,13 @@ def mesh_extrude(structure, guid, nz, dz, setname):
 def network_from_lines(guids=[], layer=None):
     """ Creates a Network datastructure object from a list of curve guids.
 
-    Parameters:
+    Parameters
+    ----------
         guids (list): guids of the Rhino curves to be made into a Network.
         layer(str): Layer to grab line guids from.
 
-    Returns:
+    Returns
+    -------
         obj: Network datastructure object.
     """
     if layer:
@@ -259,12 +297,14 @@ def ordered_network(structure, network, layer):
     Note:
         - Function is for a Network representing a single structural element.
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object.
         network (obj): Network object.
         layer (str): Layer to extract start-point (Rhino point).
 
-    Returns:
+    Returns
+    -------
         list: Ordered nodes.
         list: Ordered elements.
         list: Cumulative lengths at element mid-points.
@@ -277,7 +317,8 @@ def ordered_network(structure, network, layer):
 def plot_axes(xyz, e11, e22, e33, layer, sc=1):
     """ Plots a set of axes.
 
-    Parameters:
+    Parameters
+    ----------
         xyz (list): Origin of the axes.
         e11 (list): First axis component [x1, y1, z1].
         e22 (list): Second axis component [x2, y2, z2].
@@ -285,7 +326,8 @@ def plot_axes(xyz, e11, e22, e33, layer, sc=1):
         layer (str): Layer to plot on.
         sc (float) : Size of the axis lines.
 
-    Returns:
+    Returns
+    -------
         None
     """
     ex = rs.AddLine(xyz, add_vectors(xyz, scale_vector(e11, sc)))
@@ -304,13 +346,15 @@ def plot_axes(xyz, e11, e22, e33, layer, sc=1):
 def plot_mode_shapes(structure, step, layer=None, scale=1.0):
     """Plots modal shapes from structure.results
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object.
         step (str): Name of the Step.
         layer (str): Each mode will be placed in a layer with this string as its base.
         scale (float): Scale displacements for the deformed plot.
 
-    Returns:
+    Returns
+    -------
         None
         """
     freq = structure.results[step]['frequencies']
@@ -326,7 +370,8 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     Note:
         - Pipe visualisation of line elements is not based on the element section.
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object.
         step (str): Name of the Step.
         field (str): Field to plot, e.g. 'um', 'sxx', 'sm1'.
@@ -339,7 +384,8 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         mode (int): mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
         colorbar_size (float): Scale on the size of the colorbar.
 
-    Returns:
+    Returns
+    -------
         None
     """
 
@@ -473,7 +519,8 @@ def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[No
                 vmin=0, vdx=None):
     """ Plots voxels results for 4D data with mayavi.
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object.
         step (str): Name of the Step.
         field (str): Scalar field to plot, e.g. 'smises'.
@@ -485,7 +532,8 @@ def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[No
         vmin (float): Plot voxel data, and cull values below value voxel (0 1].
         vdx (float): Voxel spacing.
 
-    Returns:
+    Returns
+    -------
         None
     """
 
@@ -548,7 +596,8 @@ def plot_principal_stresses(structure, step, ptype, scale, layer):
     Note:
         - Currently alpha script and for only four-noded S4 shell elements.
 
-    Parameters:
+    Parameters
+    ----------
         structure (obj): Structure object.
         path (str): Folder where results files are stored.
         name (str): Structure name.
@@ -557,7 +606,8 @@ def plot_principal_stresses(structure, step, ptype, scale, layer):
         scale (float): Scale on the length of the line markers.
         layer (str): Layer name for plotting.
 
-    Returns:
+    Returns
+    -------
         None
     """
     pass  # make this function external
