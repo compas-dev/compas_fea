@@ -84,12 +84,11 @@ def make_command_file_harmonic(structure, output_path, filename, skey):
     write_harmonic_analysis_request(structure, output_path, filename, skey)
 
 
-def ansys_launch_process(path, name, cpus, license, delete=True):
+def ansys_launch_process(structure, cpus, license, delete=True):
     """ Launches an analysis using Ansys.
 
     Parameters:
-        path (str): Path to the Ansys input file.
-        name (str): Name of the structure.
+        structure (obj): The structure object to analyse.
         cpus (int): Number of CPU cores to use.
         license (str): Type of Ansys license.
         delete (Bool): Path to the Ansys input file.
@@ -97,6 +96,8 @@ def ansys_launch_process(path, name, cpus, license, delete=True):
     Returns:
         None
     """
+    path = structure.path
+    name = structure.name
     if not os.path.exists(path + name + '_output/'):
         os.makedirs(path + name + '_output/')
     elif delete:

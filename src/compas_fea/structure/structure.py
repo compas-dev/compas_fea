@@ -998,7 +998,7 @@ Steps
             abaq.abaqus_launch_process(self, exe, cpus)
 
         elif software == 'ansys':
-            ansys.ansys_launch_process(self.path, cpus, license, delete=delete)
+            ansys.ansys_launch_process(self, cpus, license, delete=delete)
 
         elif software == 'opensees':
             opensees.opensees_launch_process(self, exe)
