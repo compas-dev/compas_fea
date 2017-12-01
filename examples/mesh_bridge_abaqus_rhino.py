@@ -1,7 +1,10 @@
 """An example compas_fea package use for meshes."""
 
-from compas.datastructures.mesh.mesh import Mesh
-from compas_rhino.helpers.mesh import mesh_from_guid
+from compas.datastructures import Mesh
+
+from compas.geometry import distance_point_point
+
+from compas_rhino.helpers import mesh_from_guid
 
 from compas_fea.cad import rhino
 
@@ -17,8 +20,6 @@ from compas_fea.structure import ShellSection
 from compas_fea.structure import Steel
 from compas_fea.structure import Structure
 from compas_fea.structure import TrussSection
-
-from compas.geometry import distance_point_point
 
 from math import pi
 

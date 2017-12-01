@@ -38,33 +38,57 @@ __all__ = [
 class Structure(object):
     """ Initialises empty Structure object for use in finite element analysis.
 
-    Parameters:
-        name (str) : Name of the structure.
-        path (str) : Path to save files.
+    Parameters
+    ----------
+    name : str
+        Name of the structure.
+    path : str
+        Path to save files.
 
-    Attributes:
-        constraints (dic): Constraint objects.
-        displacements (dic): Displacement objects.
-        elements (dic): Element objects.
-        element_index (dic): Index of elements (geometric keys).
-        element_properties (dic): Element properties objects.
-        interactions (dic): Interaction objects.
-        loads (dic): Load objects.
-        materials (dic): Material objects.
-        misc (dic): Misc objects.
-        name (str): Structure name.
-        nodes (dic): Node co-ordinates and local axes.
-        node_index (dic): Index of nodes (geometric keys).
-        path (str): Path to save files.
-        results (dic): Dictionary containing a StepResults object per step.
-        sections (dic): Section objects.
-        sets (dic): Node, element and surface sets.
-        steps (dic): Step objects.
-        steps_order (list): Sorted list of Step object names.
-        tol (str): Geometric key tolerance.
+    Attributes
+    ----------
+    constraints : dic
+        Constraint objects.
+    displacements : dic
+        Displacement objects.
+    elements : dic
+        Element objects.
+    element_index : dic
+        Index of elements (element centroid geometric keys).
+    element_properties : dic
+        Element properties objects.
+    interactions : dic
+        Interaction objects.
+    loads : dic
+        Load objects.
+    materials : dic
+        Material objects.
+    misc : dic
+        Misc objects.
+    name : str
+        Structure name.
+    nodes : dic
+        Node co-ordinates and local axes.
+    node_index : dic
+        Index of nodes (node geometric keys).
+    path : str
+        Path to save files.
+    results : dic
+        Dictionary containing analysis results.
+    sections : dic
+        Section objects.
+    sets : dic
+        Node, element and surface sets.
+    steps : dic
+        Step objects.
+    steps_order : list
+        Sorted list of Step object names.
+    tol : str
+        Geometric key tolerance.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name='compas_fea-Structure', path=None):
@@ -91,7 +115,7 @@ class Structure(object):
     def __str__(self):
         n = self.node_count()
         m = self.element_count()
-        structure_data = [
+        data = [
             self.materials,
             self.sections,
             self.loads,
@@ -99,55 +123,67 @@ class Structure(object):
             self.constraints,
             self.interactions,
             self.misc,
-            self.steps]
+            self.steps,
+        ]
 
-        dt = ['\n'.join(['  {0} : {1} {2}(s)'.format(i, len(set['selection']), set['type'])
-                         for i, set in self.sets.items()])]
-
-        for data in structure_data:
-            if data:
-                dt.append('\n'.join(['  {0} : {1}'.format(i, j.__name__) for i, j in data.items()]))
+        d = ['\n'.join(['  {0} : {1} {2}(s)'.format(i, len(j['selection']), j['type']) for i, j in self.sets.items()])]
+        for entry in data:
+            if entry:
+                d.append('\n'.join(['  {0} : {1}'.format(i, j.__name__) for i, j in entry.items()]))
             else:
-                dt.append('  n/a')
+                d.append('  n/a')
 
         return """
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-compas_fea structure: {}
+compas_fea Structure: {}
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-- Number of nodes: {}
-
-- Number of elements: {}
-
-- Sets:
+Nodes
+-----
 {}
 
-- Materials:
+Elements
+--------
 {}
 
-- Sections:
+Sets
+----
 {}
 
-- Loads:
+Materials
+---------
 {}
 
-- Displacements:
+Sections
+--------
 {}
 
-- Constraints:
+Loads
+-----
 {}
 
-- Interactions:
+Displacements
+-------------
 {}
 
-- Misc:
+Constraints
+-----------
 {}
 
-- Steps:
+Interactions
+------------
 {}
 
-""".format(self.name, n, m, dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], dt[6], dt[7], dt[8])
+Misc
+----
+{}
+
+Steps
+-----
+{}
+
+""".format(self.name, n, m, d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8])
 
 
 # ==============================================================================
@@ -160,13 +196,15 @@ compas_fea structure: {}
         Note:
             - Nodes are numbered sequentially starting from 0.
 
-        Parameters:
+        Parameters
+        ----------
             xyz (list): [x, y, z] co-ordinates of the node.
             ex (list): Node's local x axis.
             ey (list): Node's local y axis.
             ez (list): Node's local z axis.
 
-        Returns:
+        Returns
+        -------
             int: Key of the added or pre-existing node.
         """
         xyz = [float(i) for i in xyz]
@@ -183,13 +221,15 @@ compas_fea structure: {}
         Note:
             - Nodes are numbered sequentially starting from 0.
 
-        Parameters:
+        Parameters
+        ----------
             nodes (list): [[x, y, z], ..] co-ordinates for each node.
             ex (list): Nodes' local x axis.
             ey (list): Nodes' local y axis.
             ez (list): Nodes' local z axis.
 
-        Returns:
+        Returns
+        -------
             list: Keys of the added or pre-existing nodes.
         """
         return [self.add_node(xyz=node, ex=ex, ey=ey, ez=ez) for node in nodes]
@@ -197,12 +237,14 @@ compas_fea structure: {}
     def add_node_to_node_index(self, key, xyz):
         """ Adds the node to the node_index dictionary.
 
-        Parameters:
+        Parameters
+        ----------
             key (int): Prescribed node key.
             xyz (list): [x, y, z] co-ordinates of the node.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         gkey = geometric_key(xyz, '{0}f'.format(self.tol))
         self.node_index[gkey] = key
@@ -213,10 +255,12 @@ compas_fea structure: {}
         Note:
             - Geometric key check is made according to self.tol [m] tolerance.
 
-        Parameters:
+        Parameters
+        ----------
             xyz (list): [x, y, z] co-ordinates of node to check.
 
-        Returns:
+        Returns
+        -------
             int: The node index if the node already exists, None if not.
         """
         gkey = geometric_key(xyz, '{0}f'.format(self.tol))
@@ -225,12 +269,14 @@ compas_fea structure: {}
     def edit_node(self, key, attr_dic):
         """ Edit a node's data.
 
-        Parameters:
+        Parameters
+        ----------
             key (int): Key of the node to edit.
             attr_dic (dic): Atribute dictionary of data to edit.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         gkey = geometric_key(self.node_xyz(key), '{0}f'.format(self.tol))
         del self.node_index[gkey]
@@ -241,11 +287,13 @@ compas_fea structure: {}
     def make_node_index_dic(self):
         """ Makes a node_index dictionary from existing structure.nodes.
 
-        Parameters:
-            None
+        Parameters
+        ----------
+        None
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         for key in self.nodes:
             gkey = geometric_key(self.node_xyz(key), '{0}f'.format(self.tol))
@@ -254,10 +302,12 @@ compas_fea structure: {}
     def node_bounds(self):
         """ Return the bounds formed by the Structure's nodal co-ordinates.
 
-        Parameters:
-            None
+        Parameters
+        ----------
+        None
 
-        Returns:
+        Returns
+        -------
             list: [xmin, xmax].
             list: [ymin, ymax].
             list: [zmin, zmax].
@@ -278,10 +328,12 @@ compas_fea structure: {}
     def node_count(self):
         """ Return the number of nodes in structure.nodes.
 
-        Parameters:
-            None
+        Parameters
+        ----------
+        None
 
-        Returns:
+        Returns
+        -------
             int: Number of nodes stored in the Structure object.
         """
         return len(self.nodes)
@@ -289,10 +341,12 @@ compas_fea structure: {}
     def node_xyz(self, node):
         """ Return the xyz co-ordinates of a node.
 
-        Parameters:
+        Parameters
+        ----------
             node (int): Node number.
 
-        Returns:
+        Returns
+        -------
             list: [x, y, z] co-ordinates.
         """
         return [self.nodes[node][i] for i in 'xyz']
@@ -300,10 +354,12 @@ compas_fea structure: {}
     def nodes_xyz(self, nodes=[]):
         """ Return the xyz co-ordinates of given or all nodes.
 
-        Parameters:
+        Parameters
+        ----------
             nodes (list): Node numbers.
 
-        Returns:
+        Returns
+        -------
             list: [[x, y, z] ...] co-ordinates.
         """
         if not nodes:
@@ -321,14 +377,16 @@ compas_fea structure: {}
         Note:
             - Elements are numbered sequentially starting from 0.
 
-        Parameters:
+        Parameters
+        ----------
             nodes (list): Nodes the element is connected to.
             type (str): Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
             acoustic (bool): Acoustic properties on or off.
             thermal (bool): Thermal properties on or off.
             axes (dic): The local element axes 'ex', 'ey' and 'ez'.
 
-        Returns:
+        Returns
+        -------
             int: Key of the added or existing element.
         """
         func_dic = {'BeamElement': BeamElement,
@@ -362,14 +420,16 @@ compas_fea structure: {}
         Note:
             - Elements are numbered sequentially starting from 0.
 
-        Parameters:
+        Parameters
+        ----------
             elements (list): List of the nodes the elements are connected to.
             type (str): Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
             acoustic (bool): Acoustic properties on or off.
             thermal (bool): Thermal properties on or off.
             axes (dic): The local element axes 'ex', 'ey' and 'ez'.
 
-        Returns:
+        Returns
+        -------
             list: Keys of the added or existing elements.
         """
         return [self.add_element(nodes=nodes, type=type, acoustic=acoustic, thermal=thermal, axes=axes)
@@ -378,12 +438,14 @@ compas_fea structure: {}
     def add_element_to_element_index(self, key, nodes):
         """ Adds the element to the element_index dictionary.
 
-        Parameters:
+        Parameters
+        ----------
             key (int): Prescribed element key.
             nodes (list): Node numbers the element is connected to.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         centroid = centroid_points([self.node_xyz(node) for node in nodes])
         gkey = geometric_key(centroid, '{0}f'.format(self.tol))
@@ -395,11 +457,13 @@ compas_fea structure: {}
         Note:
             - Geometric key check is made according to self.tol [m] tolerance.
 
-        Parameters:
+        Parameters
+        ----------
             nodes (list): Node numbers the element is connected to.
             xyz (list): Direct co-ordinates of the element centroid to check.
 
-        Returns:
+        Returns
+        -------
             int: The element index if the element already exists, None if not.
         """
         if not xyz:
@@ -411,10 +475,12 @@ compas_fea structure: {}
     def element_count(self):
         """ Return the number of elements in structure.elements.
 
-        Parameters:
-            None
+        Parameters
+        ----------
+        None
 
-        Returns:
+        Returns
+        -------
             int: Number of elements stored in the Structure object.
         """
         return len(self.elements)
@@ -422,11 +488,13 @@ compas_fea structure: {}
     def make_element_index_dic(self):
         """ Makes an element_index dictionary from existing structure.elements.
 
-        Parameters:
-            None
+        Parameters
+        ----------
+        None
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         for key, element in self.elements.items():
             nodes = element.nodes
@@ -435,10 +503,12 @@ compas_fea structure: {}
     def element_centroid(self, element):
         """ Return the centroid of an element.
 
-        Parameters:
+        Parameters
+        ----------
             element (int): Number of the element.
 
-        Returns:
+        Returns
+        -------
             list: Co-ordinates of element centroid.
         """
         nodes = self.elements[element].nodes
@@ -455,10 +525,12 @@ compas_fea structure: {}
         datastructure. The Mesh object must contain displacements, materials, sections
         and loads.
 
-        Parameters:
+        Parameters
+        ----------
             mesh (obj): Mesh datastructure object.
 
-        Returns:
+        Returns
+        -------
             obj: The resulting Structure object.
         """
         structure = cls()
@@ -522,14 +594,16 @@ compas_fea structure: {}
     def add_nodes_elements_from_mesh(self, mesh, element_type, acoustic=False, thermal=False):
         """ Adds the nodes and faces of a Mesh to the Structure object.
 
-        Parameters:
+        Parameters
+        ----------
             mesh (obj): Mesh datastructure object.
             element_type (str): Element type: 'ShellElement', 'MembraneElement' etc.
             acoustic (bool): Acoustic properties on or off.
             thermal (bool): Thermal properties on or off.
 
-        Returns:
-            None: Nodes and elements are updated in the Structure object.
+        Returns
+        -------
+        None: Nodes and elements are updated in the Structure object.
         """
         for key in sorted(list(mesh.vertices()), key=int):
             self.add_node(mesh.vertex_coordinates(key))
@@ -540,14 +614,16 @@ compas_fea structure: {}
     def add_nodes_elements_from_network(self, network, element_type, acoustic=False, thermal=False):
         """ Adds the nodes and edges of a Network to the Structure object.
 
-        Parameters:
+        Parameters
+        ----------
             network (obj): Network datastructure object.
             element_type (str): Element type: 'BeamElement', 'TrussElement' etc.
             acoustic (bool): Acoustic properties on or off.
             thermal (bool): Thermal properties on or off.
 
-        Returns:
-            None: Nodes and elements are updated in the Structure object.
+        Returns
+        -------
+        None: Nodes and elements are updated in the Structure object.
         """
         for key in sorted(list(network.vertices()), key=int):
             self.add_node(network.vertex_coordinates(key))
@@ -564,14 +640,16 @@ compas_fea structure: {}
     def add_set(self, name, type, selection, explode=False):
         """ Adds a node, element or surface set to structure.sets.
 
-        Parameters:
+        Parameters
+        ----------
             name (str): Name of the set.
             type (str): 'node', 'element', 'surface_node', surface_element'.
             selection (list, dic): The keys of the nodes, elements or elements and sides.
             explode (bool): Explode the set into sets for each member of selection.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         if explode:
             if type in ['node', 'element']:
@@ -587,11 +665,13 @@ compas_fea structure: {}
     def scale_displacements(self, displacements, factor):
         """ Scales displacements by a given factor.
 
-        Parameters:
+        Parameters
+        ----------
             displacements (dic): Dictionary containing the displacements to scale.
             factor (float): Factor to scale the displacements by.
 
-        Returns:
+        Returns
+        -------
             dic: The scaled displacements dictionary.
         """
         disp_dic = {}
@@ -605,11 +685,13 @@ compas_fea structure: {}
     def scale_loads(self, loads, factor):
         """ Scales loads by a given factor.
 
-        Parameters:
+        Parameters
+        ----------
             loads (dic): Dictionary containing the loads to scale.
             factor (float): Factor to scale the loads by.
 
-        Returns:
+        Returns
+        -------
             dic: The scaled loads dictionary.
         """
         loads_dic = {}
@@ -628,11 +710,13 @@ compas_fea structure: {}
     def add_constraint(self, constraint):
         """ Adds a Constraint object to structure.constraints.
 
-        Parameters:
+        Parameters
+        ----------
             constraint (obj): The Constraint object.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         constraint.index = len(self.constraints)
         self.constraints[constraint.name] = constraint
@@ -640,11 +724,13 @@ compas_fea structure: {}
     def add_displacement(self, displacement):
         """ Adds a Displacement object to structure.displacements.
 
-        Parameters:
+        Parameters
+        ----------
             displacement (obj): The Displacement object.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         displacement.index = len(self.displacements)
         self.displacements[displacement.name] = displacement
@@ -652,11 +738,13 @@ compas_fea structure: {}
     def add_displacements(self, displacements):
         """ Adds Displacement objects to structure.displacements.
 
-        Parameters:
+        Parameters
+        ----------
             displacements (list): The Displacement objects.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         for displacement in displacements:
             displacement.index = len(self.displacements)
@@ -665,12 +753,14 @@ compas_fea structure: {}
     def add_element_properties(self, element_properties, name=None):
         """ Adds an ElementProperties object to structure.element_properties.
 
-        Parameters:
+        Parameters
+        ----------
             element_properties (obj): The ElementProperties object.
             name (str): Name for index.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         if name:
             index = name
@@ -681,11 +771,13 @@ compas_fea structure: {}
     def add_interaction(self, interaction):
         """ Adds an Interaction object to structure.interactions.
 
-        Parameters:
+        Parameters
+        ----------
             interaction (obj): The Interaction object.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         interaction.index = len(self.interactions)
         self.interactions[interaction.name] = interaction
@@ -693,11 +785,13 @@ compas_fea structure: {}
     def add_load(self, load):
         """ Adds a Load object to structure.loads.
 
-        Parameters:
+        Parameters
+        ----------
             load (obj): The Load object.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         load.index = len(self.loads)
         self.loads[load.name] = load
@@ -705,11 +799,13 @@ compas_fea structure: {}
     def add_loads(self, loads):
         """ Adds Load objects to structure.loads.
 
-        Parameters:
+        Parameters
+        ----------
             loads (list): The Load objects.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         for load in loads:
             load.index = len(self.loads)
@@ -718,11 +814,13 @@ compas_fea structure: {}
     def add_material(self, material):
         """ Adds a Material object to structure.materials.
 
-        Parameters:
+        Parameters
+        ----------
             material (obj): The Material object.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         material.index = len(self.materials)
         self.materials[material.name] = material
@@ -730,11 +828,13 @@ compas_fea structure: {}
     def add_materials(self, materials):
         """ Adds Material objects to structure.materials.
 
-        Parameters:
+        Parameters
+        ----------
             materials (list): The Material objects.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         for material in materials:
             material.index = len(self.materials)
@@ -743,11 +843,13 @@ compas_fea structure: {}
     def add_misc(self, misc):
         """ Adds a Misc object to structure.misc.
 
-        Parameters:
+        Parameters
+        ----------
             misc (obj): The Misc object.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         misc.index = len(self.misc)
         self.misc[misc.name] = misc
@@ -755,11 +857,13 @@ compas_fea structure: {}
     def add_section(self, section):
         """ Adds a Section object to structure.sections.
 
-        Parameters:
+        Parameters
+        ----------
             section (obj): The Section object.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         section.index = len(self.sections)
         self.sections[section.name] = section
@@ -767,11 +871,13 @@ compas_fea structure: {}
     def add_sections(self, sections):
         """ Adds Section objects to structure.sections.
 
-        Parameters:
+        Parameters
+        ----------
             sections (list): The Section objects.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         for section in sections:
             section.index = len(self.sections)
@@ -780,11 +886,13 @@ compas_fea structure: {}
     def add_step(self, step):
         """ Adds a Step object to structure.steps.
 
-        Parameters:
+        Parameters
+        ----------
             step (obj): The Step object.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         step.index = len(self.steps)
         self.steps[step.name] = step
@@ -792,11 +900,13 @@ compas_fea structure: {}
     def add_steps(self, steps):
         """ Adds Step objects to structure.steps.
 
-        Parameters:
+        Parameters
+        ----------
             steps (list): The Step objects.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         for step in steps:
             step.index = len(self.steps)
@@ -810,11 +920,13 @@ compas_fea structure: {}
     def set_steps_order(self, order):
         """ Sets the order the Steps will be analysed.
 
-        Parameters:
+        Parameters
+        ----------
             order: An ordered list of the Step names.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         self.steps_order = order
 
@@ -826,10 +938,12 @@ compas_fea structure: {}
     def fields_dic_from_list(self, fields_list):
         """ Creates a fields dictionary from a fields list.
 
-        Parameters:
+        Parameters
+        ----------
             fields_list (list): List of fields and/or components.
 
-        Returns:
+        Returns
+        -------
             dic: Conversion to a fields dictionary.
         """
         node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
@@ -846,12 +960,14 @@ compas_fea structure: {}
     def write_input_file(self, software, fields='u'):
         """ Writes the FE software's input file.
 
-        Parameters:
+        Parameters
+        ----------
             software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
             fields (list, str): Data field requests.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         self.save_to_obj()
 
@@ -867,14 +983,16 @@ compas_fea structure: {}
     def analyse(self, software, exe=None, cpus=2, license='research', delete=True):
         """ Runs the analysis through the chosen FEA software/library.
 
-        Parameters:
+        Parameters
+        ----------
             software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
             exe (str): Full terminal command to bypass subprocess defaults.
             cpus (int): Number of CPU cores to use.
             license (str): FE software license type (if required): 'research', 'student'.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         if software == 'abaqus':
             abaq.abaqus_launch_process(self, exe, cpus)
@@ -888,14 +1006,16 @@ compas_fea structure: {}
     def extract_data(self, software, fields='u', steps='last', exe=None):
         """ Extracts data from the FE software's output.
 
-        Parameters:
+        Parameters
+        ----------
             software (str): Analysis software or library used, 'abaqus', 'opensees' or 'ansys'.
             fields (list, str): Data field requests.
             steps (list): Loads steps to extract from.
             exe (str): Full terminal command to bypass subprocess defaults.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         if software == 'abaqus':
             abaq.extract_odb_data(self, fields=fields, exe=exe)
@@ -909,15 +1029,17 @@ compas_fea structure: {}
     def analyse_and_extract(self, software, fields='u', exe=None, cpus=2, license='research'):
         """ Runs the analysis through the chosen FEA software/library and extracts data.
 
-        Parameters:
+        Parameters
+        ----------
             software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
             fields (list, str): Data field requests.
             exe (str): Full terminal command to bypass subprocess defaults.
             cpus (int): Number of CPU cores to use.
             license (str): FE software license type (if required): 'research', 'student'.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         self.write_input_file(software=software, fields=fields)
         self.analyse(software=software, exe=exe, cpus=cpus, license=license)
@@ -931,12 +1053,14 @@ compas_fea structure: {}
     def get_nodal_results(self, step, field, nodes='all'):
         """ Extract nodal results from self.results.
 
-        Parameters:
+        Parameters
+        ----------
             step (str): Step to extract from.
             field (str): Data field request.
             nodes (str, list): Extract 'all' or a node set/list.
 
-        Returns:
+        Returns
+        -------
             (dict): The nodal results for the requested field.
         """
         data = {}
@@ -956,12 +1080,14 @@ compas_fea structure: {}
     def get_element_results(self, step, field, elements='all'):
         """ Extract element results from self.results.
 
-        Parameters:
+        Parameters
+        ----------
             step (str): Step to extract from.
             field (str): Data field request.
             elements (str, list): Extract 'all' or an element set/list.
 
-        Returns:
+        Returns
+        -------
             (dict): The element results for the requested field.
         """
         data = {}
@@ -986,11 +1112,13 @@ compas_fea structure: {}
     def summary(self):
         """ Prints a summary of the Structure object contents.
 
-        Parameters:
-            None
+        Parameters
+        ----------
+        None
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         print(self)
 
@@ -1005,11 +1133,13 @@ compas_fea structure: {}
         Note:
             - In development.
 
-        Parameters:
-            None
+        Parameters
+        ----------
+        None
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         try:
             from compas_fea.viewers.app import App
@@ -1027,16 +1157,18 @@ compas_fea structure: {}
     def save_to_obj(self):
         """ Exports the Structure object to an .obj file through Pickle.
 
-        Parameters:
-            None
+        Parameters
+        ----------
+        None
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
-        fnm = '{0}{1}.obj'.format(self.path, self.name)
-        with open(fnm, 'wb') as f:
+        filename = '{0}{1}.obj'.format(self.path, self.name)
+        with open(filename, 'wb') as f:
             pickle.dump(self, f)
-        print('***** Structure saved to: {0} *****\n'.format(fnm))
+        print('***** Structure saved to: {0} *****\n'.format(filename))
 
 
 # ==============================================================================
@@ -1044,16 +1176,20 @@ compas_fea structure: {}
 # ==============================================================================
 
     @staticmethod
-    def load_from_obj(fnm):
+    def load_from_obj(filename):
         """ Imports a Structure object from an .obj file through Pickle.
 
-        Parameters:
-            fnm (str): Path to load the Structure .obj from.
+        Parameters
+        ----------
+        filename : str
+            Path to load the Structure .obj from.
 
-        Returns:
-            obj: Imported Structure object.
+        Returns
+        -------
+        obj
+            Imported Structure object.
         """
-        with open(fnm, 'rb') as f:
+        with open(filename, 'rb') as f:
             structure = pickle.load(f)
-            print('***** Structure loaded from: {0} *****'.format(fnm))
+            print('***** Structure loaded from: {0} *****'.format(filename))
         return structure
