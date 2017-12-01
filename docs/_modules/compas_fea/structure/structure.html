@@ -261,44 +261,56 @@
     <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xyz</span><span class="p">,</span> <span class="n">ex</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ey</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ez</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot; Adds a node to structure.nodes at co-ordinates xyz with local frame [ex, ey, ez].</span>
 
-<span class="sd">        Note:</span>
-<span class="sd">            - Nodes are numbered sequentially starting from 0.</span>
-
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            xyz (list): [x, y, z] co-ordinates of the node.</span>
-<span class="sd">            ex (list): Node&#39;s local x axis.</span>
-<span class="sd">            ey (list): Node&#39;s local y axis.</span>
-<span class="sd">            ez (list): Node&#39;s local z axis.</span>
+<span class="sd">        xyz : list</span>
+<span class="sd">            [x, y, z] co-ordinates of the node.</span>
+<span class="sd">        ex : list</span>
+<span class="sd">            Node&#39;s local x axis.</span>
+<span class="sd">        ey : list</span>
+<span class="sd">            Node&#39;s local y axis.</span>
+<span class="sd">        ez : list</span>
+<span class="sd">            Node&#39;s local z axis.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            int: Key of the added or pre-existing node.</span>
+<span class="sd">        int</span>
+<span class="sd">            Key of the added or pre-existing node.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Nodes are numbered sequentially starting from 0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">xyz</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">]</span>
         <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_count</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;ex&#39;</span><span class="p">:</span> <span class="n">ex</span><span class="p">,</span> <span class="s1">&#39;ey&#39;</span><span class="p">:</span> <span class="n">ey</span><span class="p">,</span> <span class="s1">&#39;ez&#39;</span><span class="p">:</span> <span class="n">ez</span><span class="p">}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_node_to_node_index</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">xyz</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_node_to_node_index</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">xyz</span><span class="o">=</span><span class="n">xyz</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">key</span>
 
     <span class="k">def</span> <span class="nf">add_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">ex</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ey</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ez</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot; Adds a list of nodes to structure.nodes at given co-ordinates all with local frame [ex, ey, ez].</span>
 
-<span class="sd">        Note:</span>
-<span class="sd">            - Nodes are numbered sequentially starting from 0.</span>
-
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            nodes (list): [[x, y, z], ..] co-ordinates for each node.</span>
-<span class="sd">            ex (list): Nodes&#39; local x axis.</span>
-<span class="sd">            ey (list): Nodes&#39; local y axis.</span>
-<span class="sd">            ez (list): Nodes&#39; local z axis.</span>
+<span class="sd">        nodes : list</span>
+<span class="sd">            [[x, y, z], ..] co-ordinates for each node.</span>
+<span class="sd">        ex : list</span>
+<span class="sd">            Nodes&#39; local x axis.</span>
+<span class="sd">        ey : list</span>
+<span class="sd">            Nodes&#39; local y axis.</span>
+<span class="sd">        ez : list</span>
+<span class="sd">            Nodes&#39; local z axis.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            list: Keys of the added or pre-existing nodes.</span>
+<span class="sd">        list</span>
+<span class="sd">            Keys of the added or pre-existing nodes.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Nodes are numbered sequentially starting from 0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">xyz</span><span class="o">=</span><span class="n">node</span><span class="p">,</span> <span class="n">ex</span><span class="o">=</span><span class="n">ex</span><span class="p">,</span> <span class="n">ey</span><span class="o">=</span><span class="n">ey</span><span class="p">,</span> <span class="n">ez</span><span class="o">=</span><span class="n">ez</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">]</span>
 
@@ -307,8 +319,10 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            key (int): Prescribed node key.</span>
-<span class="sd">            xyz (list): [x, y, z] co-ordinates of the node.</span>
+<span class="sd">        key : int</span>
+<span class="sd">            Prescribed node key.</span>
+<span class="sd">        xyz : list</span>
+<span class="sd">            [x, y, z] co-ordinates of the node.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -320,16 +334,19 @@
     <span class="k">def</span> <span class="nf">check_node_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xyz</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Check if a node already exists at given x, y, z co-ordinates.</span>
 
-<span class="sd">        Note:</span>
-<span class="sd">            - Geometric key check is made according to self.tol [m] tolerance.</span>
-
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            xyz (list): [x, y, z] co-ordinates of node to check.</span>
+<span class="sd">        xyz : list</span>
+<span class="sd">            [x, y, z] co-ordinates of node to check.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            int: The node index if the node already exists, None if not.</span>
+<span class="sd">        int</span>
+<span class="sd">            The node index if the node already exists, None if not.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Geometric key check is made according to self.tol [m] tolerance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">f&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">gkey</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -339,8 +356,10 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            key (int): Key of the node to edit.</span>
-<span class="sd">            attr_dic (dic): Atribute dictionary of data to edit.</span>
+<span class="sd">        key : int</span>
+<span class="sd">            Key of the node to edit.</span>
+<span class="sd">        attr_dic : dic</span>
+<span class="sd">            Atribute dictionary of data to edit.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -376,9 +395,12 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            list: [xmin, xmax].</span>
-<span class="sd">            list: [ymin, ymax].</span>
-<span class="sd">            list: [zmin, zmax].</span>
+<span class="sd">        list</span>
+<span class="sd">            [xmin, xmax].</span>
+<span class="sd">        list</span>
+<span class="sd">            [ymin, ymax].</span>
+<span class="sd">        list</span>
+<span class="sd">            [zmin, zmax].</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_count</span><span class="p">()</span>
         <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
@@ -402,7 +424,8 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            int: Number of nodes stored in the Structure object.</span>
+<span class="sd">        int</span>
+<span class="sd">            Number of nodes stored in the Structure object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
 
@@ -411,11 +434,13 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            node (int): Node number.</span>
+<span class="sd">        node : int</span>
+<span class="sd">            Node number.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            list: [x, y, z] co-ordinates.</span>
+<span class="sd">        list</span>
+<span class="sd">            [x, y, z] co-ordinates.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="s1">&#39;xyz&#39;</span><span class="p">]</span>
 
@@ -424,11 +449,13 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            nodes (list): Node numbers.</span>
+<span class="sd">        nodes : list</span>
+<span class="sd">            Node numbers, else all will be given.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            list: [[x, y, z] ...] co-ordinates.</span>
+<span class="sd">        list</span>
+<span class="sd">            [[x, y, z] ...] co-ordinates.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">nodes</span><span class="p">:</span>
             <span class="n">nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span>
@@ -1066,7 +1093,7 @@
             <span class="n">abaq</span><span class="o">.</span><span class="n">abaqus_launch_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exe</span><span class="p">,</span> <span class="n">cpus</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>
-            <span class="n">ansys</span><span class="o">.</span><span class="n">ansys_launch_process</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">cpus</span><span class="p">,</span> <span class="n">license</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="n">delete</span><span class="p">)</span>
+            <span class="n">ansys</span><span class="o">.</span><span class="n">ansys_launch_process</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">cpus</span><span class="p">,</span> <span class="n">license</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="n">delete</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
             <span class="n">opensees</span><span class="o">.</span><span class="n">opensees_launch_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exe</span><span class="p">)</span>
