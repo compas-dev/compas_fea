@@ -1,4 +1,4 @@
-from compas_fea.fea.ansys import ansys_launch_process_extract
+from compas_fea.fea.ansys import ansys_launch_process
 from compas_fea.fea.ansys.writing.ansys_process import ansys_open_post_process
 
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
@@ -10,7 +10,7 @@ __email__      = 'mendez@arch.ethz.ch'
 def run_mac(name, path, file1, lstep1, file2, lstep2, num_modes, cpus=2, license='research'):
 
     write_request_mac_ansys(name, path, file1, lstep1, file2, lstep2, num_modes)
-    ansys_launch_process_extract(path, name, cpus=cpus, license=license)
+    ansys_launch_process(path, name, cpus=cpus, license=license, delete=False)
     mac = read_mac_results_file(name, path, num_modes)
     return mac
 
@@ -19,7 +19,7 @@ def read_mac_results_file(name, path, num_modes):
     mac = {}
     for i in range(num_modes):
         filename = 'mac' + str(i) + '.txt'
-        out_path = path + '/' + name + '_output/'
+        out_path = path + '/' + name + '_output/modal_out/'
         fh = open(out_path + filename, 'r')
         lines = fh.readlines()
         mac_list = [float(l) for l in lines]
@@ -31,7 +31,7 @@ def read_mac_results_file(name, path, num_modes):
 
 def write_request_mac_ansys(name, path, file1, lstep1, file2, lstep2, num_modes):
     filename = name + '.txt'
-    out_path = path + '/' + name + '_output/'
+    out_path = path + '/' + name + '_output/modal_out/'
     ansys_open_post_process(path, filename)
 
     cFile = open(path + "/" + filename, 'a')
