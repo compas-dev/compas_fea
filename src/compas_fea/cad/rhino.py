@@ -207,11 +207,26 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                     created_elements.add(e)
 
                 else:
+                    try:
+                        dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
+                        ex = dic.get('ex', None)
+                        ey = dic.get('ey', None)
+                        if ex and ey:
+                            ez = cross_vectors(ex, ey)
+                        else:
+                            ez = None
+                    except:
+                        ex = None
+                        ey = None
+                        ez = None
+                    axes = {'ex': ex, 'ey': ey, 'ez': ez}
+
                     for face in rs.MeshFaceVertices(guid):
                         nodes = [structure.check_node_exists(vertices[i]) for i in face]
                         if nodes[-1] == nodes[-2]:
                             del nodes[-1]
-                        e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
+                        e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal,
+                                                  axes=axes)
                         created_elements.add(e)
 
     return list(created_nodes), list(created_elements)

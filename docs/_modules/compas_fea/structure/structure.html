@@ -447,33 +447,43 @@
     <span class="k">def</span> <span class="nf">add_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">{}):</span>
         <span class="sd">""" Adds an element to structure.elements with centroid geometric key.</span>
 
-<span class="sd">        Note:</span>
-<span class="sd">            - Elements are numbered sequentially starting from 0.</span>
-
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            nodes (list): Nodes the element is connected to.</span>
-<span class="sd">            type (str): Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.</span>
-<span class="sd">            acoustic (bool): Acoustic properties on or off.</span>
-<span class="sd">            thermal (bool): Thermal properties on or off.</span>
-<span class="sd">            axes (dic): The local element axes 'ex', 'ey' and 'ez'.</span>
+<span class="sd">        nodes : list</span>
+<span class="sd">            Nodes the element is connected to.</span>
+<span class="sd">        type : str</span>
+<span class="sd">            Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.</span>
+<span class="sd">        acoustic : bool</span>
+<span class="sd">            Acoustic properties on or off.</span>
+<span class="sd">        thermal : bool</span>
+<span class="sd">            Thermal properties on or off.</span>
+<span class="sd">        axes : dic</span>
+<span class="sd">            The local element axes 'ex', 'ey' and 'ez'.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            int: Key of the added or existing element.</span>
+<span class="sd">        int</span>
+<span class="sd">            Key of the added or existing element.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Elements are numbered sequentially starting from 0.</span>
 <span class="sd">        """</span>
-        <span class="n">func_dic</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'BeamElement'</span><span class="p">:</span> <span class="n">BeamElement</span><span class="p">,</span>
-                    <span class="s1">'SpringElement'</span><span class="p">:</span> <span class="n">SpringElement</span><span class="p">,</span>
-                    <span class="s1">'TrussElement'</span><span class="p">:</span> <span class="n">TrussElement</span><span class="p">,</span>
-                    <span class="s1">'StrutElement'</span><span class="p">:</span> <span class="n">StrutElement</span><span class="p">,</span>
-                    <span class="s1">'TieElement'</span><span class="p">:</span> <span class="n">TieElement</span><span class="p">,</span>
-                    <span class="s1">'ShellElement'</span><span class="p">:</span> <span class="n">ShellElement</span><span class="p">,</span>
-                    <span class="s1">'MembraneElement'</span><span class="p">:</span> <span class="n">MembraneElement</span><span class="p">,</span>
-                    <span class="s1">'SolidElement'</span><span class="p">:</span> <span class="n">SolidElement</span><span class="p">,</span>
-                    <span class="s1">'TetrahedronElement'</span><span class="p">:</span> <span class="n">TetrahedronElement</span><span class="p">,</span>
-                    <span class="s1">'PentahedronElement'</span><span class="p">:</span> <span class="n">PentahedronElement</span><span class="p">,</span>
-                    <span class="s1">'HexahedronElement'</span><span class="p">:</span> <span class="n">HexahedronElement</span><span class="p">}</span>
+        <span class="n">func_dic</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">'BeamElement'</span><span class="p">:</span> <span class="n">BeamElement</span><span class="p">,</span>
+            <span class="s1">'SpringElement'</span><span class="p">:</span> <span class="n">SpringElement</span><span class="p">,</span>
+            <span class="s1">'TrussElement'</span><span class="p">:</span> <span class="n">TrussElement</span><span class="p">,</span>
+            <span class="s1">'StrutElement'</span><span class="p">:</span> <span class="n">StrutElement</span><span class="p">,</span>
+            <span class="s1">'TieElement'</span><span class="p">:</span> <span class="n">TieElement</span><span class="p">,</span>
+            <span class="s1">'ShellElement'</span><span class="p">:</span> <span class="n">ShellElement</span><span class="p">,</span>
+            <span class="s1">'MembraneElement'</span><span class="p">:</span> <span class="n">MembraneElement</span><span class="p">,</span>
+            <span class="s1">'SolidElement'</span><span class="p">:</span> <span class="n">SolidElement</span><span class="p">,</span>
+            <span class="s1">'TetrahedronElement'</span><span class="p">:</span> <span class="n">TetrahedronElement</span><span class="p">,</span>
+            <span class="s1">'PentahedronElement'</span><span class="p">:</span> <span class="n">PentahedronElement</span><span class="p">,</span>
+            <span class="s1">'HexahedronElement'</span><span class="p">:</span> <span class="n">HexahedronElement</span><span class="p">,</span>
+        <span class="p">}</span>
         <span class="n">func</span> <span class="o">=</span> <span class="n">func_dic</span><span class="p">[</span><span class="nb">type</span><span class="p">]</span>
+
         <span class="n">ekey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ekey</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">ekey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_count</span><span class="p">()</span>
@@ -490,20 +500,27 @@
     <span class="k">def</span> <span class="nf">add_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">{}):</span>
         <span class="sd">""" Adds multiple elements of the same type to structure.elements.</span>
 
-<span class="sd">        Note:</span>
-<span class="sd">            - Elements are numbered sequentially starting from 0.</span>
-
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            elements (list): List of the nodes the elements are connected to.</span>
-<span class="sd">            type (str): Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.</span>
-<span class="sd">            acoustic (bool): Acoustic properties on or off.</span>
-<span class="sd">            thermal (bool): Thermal properties on or off.</span>
-<span class="sd">            axes (dic): The local element axes 'ex', 'ey' and 'ez'.</span>
+<span class="sd">        elements : list</span>
+<span class="sd">            List of lists of the nodes the elements are connected to.</span>
+<span class="sd">        type : str</span>
+<span class="sd">            Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.</span>
+<span class="sd">        acoustic : bool</span>
+<span class="sd">            Acoustic properties on or off.</span>
+<span class="sd">        thermal : bool</span>
+<span class="sd">            Thermal properties on or off.</span>
+<span class="sd">        axes : dic</span>
+<span class="sd">            The local element axes 'ex', 'ey' and 'ez' for all elements.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            list: Keys of the added or existing elements.</span>
+<span class="sd">        list</span>
+<span class="sd">            Keys of the added or existing elements.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Elements are numbered sequentially starting from 0.</span>
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="n">acoustic</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="n">thermal</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">nodes</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">]</span>
@@ -513,8 +530,10 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            key (int): Prescribed element key.</span>
-<span class="sd">            nodes (list): Node numbers the element is connected to.</span>
+<span class="sd">        key : int</span>
+<span class="sd">            Prescribed element key.</span>
+<span class="sd">        nodes : list</span>
+<span class="sd">            Node numbers the element is connected to.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -527,23 +546,30 @@
     <span class="k">def</span> <span class="nf">check_element_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">xyz</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">""" Check if an element already exists based on the nodes it connects to or its centroid.</span>
 
-<span class="sd">        Note:</span>
-<span class="sd">            - Geometric key check is made according to self.tol [m] tolerance.</span>
-
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            nodes (list): Node numbers the element is connected to.</span>
-<span class="sd">            xyz (list): Direct co-ordinates of the element centroid to check.</span>
+<span class="sd">        nodes : list</span>
+<span class="sd">            Node numbers the element is connected to.</span>
+<span class="sd">        xyz : list</span>
+<span class="sd">            Direct co-ordinates of the element centroid to check.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            int: The element index if the element already exists, None if not.</span>
+<span class="sd">        int</span>
+<span class="sd">            The element index if the element already exists, None if not.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Geometric key check is made according to self.tol [m] tolerance.</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">xyz</span><span class="p">:</span>
             <span class="n">xyz</span> <span class="o">=</span> <span class="n">centroid_points</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])</span>
         <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">f'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
         <span class="n">ekey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">gkey</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ekey</span>
+
+    <span class="k">def</span> <span class="nf">edit_element</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="k">def</span> <span class="nf">element_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">""" Return the number of elements in structure.elements.</span>
@@ -554,7 +580,8 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            int: Number of elements stored in the Structure object.</span>
+<span class="sd">        int</span>
+<span class="sd">            Number of elements stored in the Structure object.</span>
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
 
@@ -570,19 +597,20 @@
 <span class="sd">        None</span>
 <span class="sd">        """</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">nodes</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">nodes</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_element_to_element_index</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_element_to_element_index</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">element_centroid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
         <span class="sd">""" Return the centroid of an element.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            element (int): Number of the element.</span>
+<span class="sd">        element : int</span>
+<span class="sd">            Number of the element.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            list: Co-ordinates of element centroid.</span>
+<span class="sd">        list</span>
+<span class="sd">            Co-ordinates of the element centroid.</span>
 <span class="sd">        """</span>
         <span class="n">nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">element</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
         <span class="k">return</span> <span class="n">centroid_points</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])</span>
@@ -1308,7 +1336,7 @@
             
 
             
-                Last updated on Dec 01, 2017.
+                Last updated on Dec 04, 2017.
             
 
             

@@ -126,7 +126,8 @@ class Structure(object):
             self.steps,
         ]
 
-        d = ['\n'.join(['  {0} : {1} {2}(s)'.format(i, len(j['selection']), j['type']) for i, j in self.sets.items()])]
+        d = ['\n'.join(['  {0} : {1} {2}(s)'.format(i, len(j['selection']), j['type'])
+                        for i, j in self.sets.items() if 'element_' not in i])]
         for entry in data:
             if entry:
                 d.append('\n'.join(['  {0} : {1}'.format(i, j.__name__) for i, j in entry.items()]))
@@ -401,33 +402,43 @@ Steps
     def add_element(self, nodes, type, acoustic=False, thermal=False, axes={}):
         """ Adds an element to structure.elements with centroid geometric key.
 
-        Note:
-            - Elements are numbered sequentially starting from 0.
-
         Parameters
         ----------
-            nodes (list): Nodes the element is connected to.
-            type (str): Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
-            acoustic (bool): Acoustic properties on or off.
-            thermal (bool): Thermal properties on or off.
-            axes (dic): The local element axes 'ex', 'ey' and 'ez'.
+        nodes : list
+            Nodes the element is connected to.
+        type : str
+            Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
+        acoustic : bool
+            Acoustic properties on or off.
+        thermal : bool
+            Thermal properties on or off.
+        axes : dic
+            The local element axes 'ex', 'ey' and 'ez'.
 
         Returns
         -------
-            int: Key of the added or existing element.
+        int
+            Key of the added or existing element.
+
+        Notes
+        -----
+        - Elements are numbered sequentially starting from 0.
         """
-        func_dic = {'BeamElement': BeamElement,
-                    'SpringElement': SpringElement,
-                    'TrussElement': TrussElement,
-                    'StrutElement': StrutElement,
-                    'TieElement': TieElement,
-                    'ShellElement': ShellElement,
-                    'MembraneElement': MembraneElement,
-                    'SolidElement': SolidElement,
-                    'TetrahedronElement': TetrahedronElement,
-                    'PentahedronElement': PentahedronElement,
-                    'HexahedronElement': HexahedronElement}
+        func_dic = {
+            'BeamElement': BeamElement,
+            'SpringElement': SpringElement,
+            'TrussElement': TrussElement,
+            'StrutElement': StrutElement,
+            'TieElement': TieElement,
+            'ShellElement': ShellElement,
+            'MembraneElement': MembraneElement,
+            'SolidElement': SolidElement,
+            'TetrahedronElement': TetrahedronElement,
+            'PentahedronElement': PentahedronElement,
+            'HexahedronElement': HexahedronElement,
+        }
         func = func_dic[type]
+
         ekey = self.check_element_exists(nodes)
         if ekey is None:
             ekey = self.element_count()
@@ -444,20 +455,27 @@ Steps
     def add_elements(self, elements, type, acoustic=False, thermal=False, axes={}):
         """ Adds multiple elements of the same type to structure.elements.
 
-        Note:
-            - Elements are numbered sequentially starting from 0.
-
         Parameters
         ----------
-            elements (list): List of the nodes the elements are connected to.
-            type (str): Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
-            acoustic (bool): Acoustic properties on or off.
-            thermal (bool): Thermal properties on or off.
-            axes (dic): The local element axes 'ex', 'ey' and 'ez'.
+        elements : list
+            List of lists of the nodes the elements are connected to.
+        type : str
+            Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
+        acoustic : bool
+            Acoustic properties on or off.
+        thermal : bool
+            Thermal properties on or off.
+        axes : dic
+            The local element axes 'ex', 'ey' and 'ez' for all elements.
 
         Returns
         -------
-            list: Keys of the added or existing elements.
+        list
+            Keys of the added or existing elements.
+
+        Notes
+        -----
+        - Elements are numbered sequentially starting from 0.
         """
         return [self.add_element(nodes=nodes, type=type, acoustic=acoustic, thermal=thermal, axes=axes)
                 for nodes in elements]
@@ -467,8 +485,10 @@ Steps
 
         Parameters
         ----------
-            key (int): Prescribed element key.
-            nodes (list): Node numbers the element is connected to.
+        key : int
+            Prescribed element key.
+        nodes : list
+            Node numbers the element is connected to.
 
         Returns
         -------
@@ -481,23 +501,30 @@ Steps
     def check_element_exists(self, nodes, xyz=None):
         """ Check if an element already exists based on the nodes it connects to or its centroid.
 
-        Note:
-            - Geometric key check is made according to self.tol [m] tolerance.
-
         Parameters
         ----------
-            nodes (list): Node numbers the element is connected to.
-            xyz (list): Direct co-ordinates of the element centroid to check.
+        nodes : list
+            Node numbers the element is connected to.
+        xyz : list
+            Direct co-ordinates of the element centroid to check.
 
         Returns
         -------
-            int: The element index if the element already exists, None if not.
+        int
+            The element index if the element already exists, None if not.
+
+        Notes
+        -----
+        - Geometric key check is made according to self.tol [m] tolerance.
         """
         if not xyz:
             xyz = centroid_points([self.node_xyz(node) for node in nodes])
         gkey = geometric_key(xyz, '{0}f'.format(self.tol))
         ekey = self.element_index.get(gkey, None)
         return ekey
+
+    def edit_element(self):
+        raise NotImplementedError
 
     def element_count(self):
         """ Return the number of elements in structure.elements.
@@ -508,7 +535,8 @@ Steps
 
         Returns
         -------
-            int: Number of elements stored in the Structure object.
+        int
+            Number of elements stored in the Structure object.
         """
         return len(self.elements)
 
@@ -524,19 +552,20 @@ Steps
         None
         """
         for key, element in self.elements.items():
-            nodes = element.nodes
-            self.add_element_to_element_index(key=key, nodes=nodes)
+            self.add_element_to_element_index(key=key, nodes=element.nodes)
 
     def element_centroid(self, element):
         """ Return the centroid of an element.
 
         Parameters
         ----------
-            element (int): Number of the element.
+        element : int
+            Number of the element.
 
         Returns
         -------
-            list: Co-ordinates of element centroid.
+        list
+            Co-ordinates of the element centroid.
         """
         nodes = self.elements[element].nodes
         return centroid_points([self.node_xyz(node) for node in nodes])

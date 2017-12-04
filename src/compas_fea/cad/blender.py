@@ -143,9 +143,23 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
             created_elements.add(e)
 
         else:
+            try:
+                dic = json.loads(name.replace("'", '"'))
+                ex = dic.get('ex', None)
+                ey = dic.get('ey', None)
+                if ex and ey:
+                    ez = cross_vectors(ex, ey)
+                else:
+                    ez = None
+            except:
+                ex = None
+                ey = None
+                ez = None
+            axes = {'ex': ex, 'ey': ey, 'ez': ez}
+
             for face in faces:
                 nodes = [structure.check_node_exists(vertices[i]) for i in face]
-                e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
+                e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal, axes=axes)
                 created_elements.add(e)
 
     return list(created_nodes), list(created_elements)

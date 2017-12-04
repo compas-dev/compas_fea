@@ -759,8 +759,26 @@ def input_write_properties(f, sections, properties, elements, sets):
                 if explode:
                     for select in selection:
                         e1 = 'element_{0}'.format(select)
-                        f.write('*SHELL SECTION, ELSET={0}, MATERIAL={1}\n'.format(e1, material))
+                        ex = elements[select].axes.get('ex', None)
+                        ey = elements[select].axes.get('ey', None)
+
+                        pre = '*SHELL SECTION, ELSET='
+                        if ex and ey:
+                            ori = 'ORI_element_{0}'.format(select)
+                            f.write('*ORIENTATION, NAME={0}\n'.format(ori))
+                            f.write(', '.join([str(j) for j in ex]) + ', ')
+                            f.write(', '.join([str(j) for j in ey]) + '\n')
+                            f.write('**\n')
+                            f.write(pre + '{0}, MATERIAL={1}, ORIENTATION={2}\n'.format(e1, material, ori))
+                        else:
+                            f.write(pre + '{0}, MATERIAL={1}\n'.format(e1, material))
                         f.write(', '.join([str(geometry[j]) for j in sdata[stype]['geometry']]) + '\n')
+                        f.write('**\n')
+
+                        # Reinforcement
+
+                        if reinforcement:
+                            pass
 
                 else:
                     f.write('*SHELL SECTION, ELSET={0}, MATERIAL={1}\n'.format(elset, material))
@@ -777,17 +795,8 @@ def input_write_properties(f, sections, properties, elements, sets):
                             angle = rebar['angle']
                             dia = rebar['dia']
                             A = 0.25 * pi * dia**2
-                            # orientation = reinforcement['orientation']
-                            # if orientation:
-                            # pass
-                            # f.write('*REBAR LAYER, ORIENTATION=ORIENT_{0}\n'.format(element))
-                            # else:
                             f.write('*REBAR LAYER\n')
                             f.write('{0}, {1}, {2}, {3}, {4}, {5}\n'.format(name, A, spacing, pos, rmaterial, angle))
-                            # if orientation:
-                            # pass
-                            # f.write('*ORIENTATION, SYSTEM=RECTANGULAR, NAME=ORIENT_{0}\n'.format(element))
-                            # ex, ey, origin point
                             f.write('**\n')
 
             # Solid sections
