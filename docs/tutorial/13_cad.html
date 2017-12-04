@@ -1,58 +1,39 @@
 
-
-
 <!DOCTYPE html>
+
 <html lang="en">
-    <head>
-        <title>compas_fea -- FEA package for compas</title>
-
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    
-        <meta name="author" content="" />
-        <meta name="description" content="" />
-
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
-        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/github.css" />
-        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas.css" />
-        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas-reference.css" />
-
-        
-            <link rel="next" title="Examples" href="../examples.html" />
-        
-        
-        
-            <link rel="prev" title="Analysis" href="12_analysis.html" />
-        
-
-        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-
-    </head>
-    <body data-spy="scroll" data-target="#compas-localnav">
-
-        <header class="navbar navbar-expand compas-navbar">
-            <a class="navbar-brand" href="https://compas-dev.github.io/">
-                <img src="/images/compas_icon_blue-01.png" width="36px" height="36px" alt="compas" />
-            </a>
-
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="http://forum.compas-framework.org/c/compas-fea">Forum</a>
-                    </li>
-                </ul>
-        </header>
-        
-        <div class="container-fluid compas-container">
-            <div class="row flex-xl-nowrap">
-
-                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
-
-                    
-
-                        <!-- 
+<head>
+<title>compas_fea -- FEA package for compas</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+<meta content="" name="author"/>
+<meta content="" name="description"/>
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
+<link href="https://compas-dev.github.io/css/github.css" rel="stylesheet" type="text/css"/>
+<link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
+<link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
+<link href="../examples.html" rel="next" title="Examples"/>
+<link href="12_analysis.html" rel="prev" title="Analysis"/>
+<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+</head>
+<body data-spy="scroll" data-target="#compas-localnav">
+<header class="navbar navbar-expand compas-navbar">
+<a class="navbar-brand" href="https://compas-dev.github.io/">
+<img alt="compas" height="36px" src="/images/compas_icon_blue-01.png" width="36px"/>
+</a>
+<ul class="navbar-nav">
+<li class="nav-item">
+<a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="http://forum.compas-framework.org/c/compas-fea">Forum</a>
+</li>
+</ul>
+</header>
+<div class="container-fluid compas-container">
+<div class="row flex-xl-nowrap">
+<main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+<!-- 
         <nav class="breadcrumb">
             <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
             <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
@@ -64,20 +45,15 @@
             
         </nav>
  -->
-
-                        
-
-                        
-
-                        <div class="section" id="cad">
+<div class="section">
 <h1><a class="toc-backref" href="#id1">CAD</a></h1>
-<p>This page shows how to benefit from using computer aided design and graphics software with the compas_fea package. It will assume that either the <code class="docutils literal"><span class="pre">blender</span></code> or <code class="docutils literal"><span class="pre">rhino</span></code> module of the compas_fea package has been imported to have access to the described functions:</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">rhino</span>
+<p>This page shows how to benefit from using computer aided design and graphics software with the compas_fea package. It will assume that either the <code class="docutils literal">blender</code> or <code class="docutils literal">rhino</code> module of the compas_fea package has been imported to have access to the described functions:</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">rhino</span>
 </code></pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">blender</span>
+
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">blender</span>
 </code></pre></div>
-</div>
+
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul>
@@ -101,106 +77,104 @@
 </li>
 </ul>
 </div>
-<div class="section" id="geometry">
+<div class="section">
 <h2><a class="toc-backref" href="#id2">Geometry</a></h2>
-<div class="section" id="layers">
+<div class="section">
 <h3><a class="toc-backref" href="#id3">Layers</a></h3>
-<p>In Rhino, the function <code class="docutils literal"><span class="pre">add_nodes_elements_from_layers()</span></code> is used to extract Rhino geometry data from the model workspace and place it in the <strong>Structure</strong> object. The function takes a list <code class="docutils literal"><span class="pre">layers</span></code> of layer string names, or a single string for one layer. The Rhino geometry in these layers will be given the same <code class="docutils literal"><span class="pre">line_type</span></code> element or <code class="docutils literal"><span class="pre">mesh_type</span></code> element. The <code class="docutils literal"><span class="pre">line_type</span></code> and <code class="docutils literal"><span class="pre">mesh_type</span></code> are the string names of the element for the classes in <strong>compas_fea.structure.element</strong>. All needed nodes will be added automatically, there is no need to add Rhino points for these. For example, to add lines that are contained in Rhino layer <code class="docutils literal"><span class="pre">'elset_elements'</span></code> to <strong>mdl</strong> as <strong>TrussElement</strong> objects, use the code below. The <strong>TrussElement</strong> objects will be sent to <code class="docutils literal"><span class="pre">mdl.elements</span></code> and nodes (the line endpoints) added to <code class="docutils literal"><span class="pre">mdl.nodes</span></code>.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">line_type</span><span class="o">=</span><span class="s1">&#39;TrussElement&#39;</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="s1">&#39;elset_elements&#39;</span><span class="p">)</span>
+<p>In Rhino, the function <code class="docutils literal">add_nodes_elements_from_layers()</code> is used to extract Rhino geometry data from the model workspace and place it in the <strong>Structure</strong> object. The function takes a list <code class="docutils literal">layers</code> of layer string names, or a single string for one layer. The Rhino geometry in these layers will be given the same <code class="docutils literal">line_type</code> element or <code class="docutils literal">mesh_type</code> element. The <code class="docutils literal">line_type</code> and <code class="docutils literal">mesh_type</code> are the string names of the element for the classes in <strong>compas_fea.structure.element</strong>. All needed nodes will be added automatically, there is no need to add Rhino points for these. For example, to add lines that are contained in Rhino layer <code class="docutils literal">'elset_elements'</code> to <strong>mdl</strong> as <strong>TrussElement</strong> objects, use the code below. The <strong>TrussElement</strong> objects will be sent to <code class="docutils literal">mdl.elements</code> and nodes (the line endpoints) added to <code class="docutils literal">mdl.nodes</code>.</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">line_type</span><span class="o">=</span><span class="s1">'TrussElement'</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="s1">'elset_elements'</span><span class="p">)</span>
 </code></pre></div>
-</div>
-<p>If <code class="docutils literal"><span class="pre">mesh_type</span></code> is given, such as <code class="docutils literal"><span class="pre">'ShellElement'</span></code> or <code class="docutils literal"><span class="pre">'MembraneElement'</span></code>, Rhino meshes on the given layers will have their faces individually added as elements to the <strong>Structure</strong>.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="s1">&#39;elset_shells&#39;</span><span class="p">)</span>
+
+<p>If <code class="docutils literal">mesh_type</code> is given, such as <code class="docutils literal">'ShellElement'</code> or <code class="docutils literal">'MembraneElement'</code>, Rhino meshes on the given layers will have their faces individually added as elements to the <strong>Structure</strong>.</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="s1">'ShellElement'</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="s1">'elset_shells'</span><span class="p">)</span>
 </code></pre></div>
-</div>
-<p>If <code class="docutils literal"><span class="pre">mesh_type</span></code> is one of the solid element types <code class="docutils literal"><span class="pre">'HexahedronElement'</span></code>, <code class="docutils literal"><span class="pre">'TetrahedronElement'</span></code>, <code class="docutils literal"><span class="pre">'SolidElement'</span></code> or <code class="docutils literal"><span class="pre">'PentahedronElement'</span></code>, Rhino meshes on the layers will be treated as a solid and not broken into faces.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="s1">&#39;HexahedronElement&#39;</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="s1">&#39;elset_solids&#39;</span><span class="p">)</span>
+
+<p>If <code class="docutils literal">mesh_type</code> is one of the solid element types <code class="docutils literal">'HexahedronElement'</code>, <code class="docutils literal">'TetrahedronElement'</code>, <code class="docutils literal">'SolidElement'</code> or <code class="docutils literal">'PentahedronElement'</code>, Rhino meshes on the layers will be treated as a solid and not broken into faces.</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="s1">'HexahedronElement'</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="s1">'elset_solids'</span><span class="p">)</span>
 </code></pre></div>
-</div>
-<p>In Blender, the function with the same name is used slightly differently, as there are no clear line type objects. Instead, Blender meshes should exist in the given <code class="docutils literal"><span class="pre">layers</span></code> (use the function <code class="docutils literal"><span class="pre">add_nodes_elements_from_bmesh()</span></code> to explicitly give a Blender mesh <code class="docutils literal"><span class="pre">bmesh</span></code> rather than layer numbers). Once the meshes are picked up, the vertices of the Blender meshes will be added to the <strong>Structure</strong> object as nodes, along with: line elements represented by the edges of the mesh and added as element type <code class="docutils literal"><span class="pre">line_type</span></code> and shell elements represented by the faces of the mesh and added as element type <code class="docutils literal"><span class="pre">mesh_type</span></code>. If the entire Blender mesh is to be used as a solid element, similar to the Rhino procedure above, then give a solid element type in <code class="docutils literal"><span class="pre">mesh_type</span></code>.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">blender</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">line_type</span><span class="o">=</span><span class="s1">&#39;TrussElement&#39;</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<p>In Blender, the function with the same name is used slightly differently, as there are no clear line type objects. Instead, Blender meshes should exist in the given <code class="docutils literal">layers</code> (use the function <code class="docutils literal">add_nodes_elements_from_bmesh()</code> to explicitly give a Blender mesh <code class="docutils literal">bmesh</code> rather than layer numbers). Once the meshes are picked up, the vertices of the Blender meshes will be added to the <strong>Structure</strong> object as nodes, along with: line elements represented by the edges of the mesh and added as element type <code class="docutils literal">line_type</code> and shell elements represented by the faces of the mesh and added as element type <code class="docutils literal">mesh_type</code>. If the entire Blender mesh is to be used as a solid element, similar to the Rhino procedure above, then give a solid element type in <code class="docutils literal">mesh_type</code>.</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">blender</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">line_type</span><span class="o">=</span><span class="s1">'TrussElement'</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="s1">'ShellElement'</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </code></pre></div>
+
 </div>
-</div>
-<div class="section" id="local-axes">
+<div class="section">
 <h3><a class="toc-backref" href="#id4">Local axes</a></h3>
-<p>When adding line geometry from layers to the <strong>Structure</strong> object as <strong>Element</strong> objects, the function <code class="docutils literal"><span class="pre">add_nodes_elements_from_layers()</span></code> will also attempt to store the element’s local axis in the dictionary <code class="docutils literal"><span class="pre">.axes</span></code> of the <strong>Element</strong> object. This dictionary takes keys <code class="docutils literal"><span class="pre">'ex'</span></code>, <code class="docutils literal"><span class="pre">'ey'</span></code> and <code class="docutils literal"><span class="pre">'ez'</span></code> to store a list (the vector) of each element’s local axis direction. The function will look at the name of the layer object (<code class="docutils literal"><span class="pre">rs.ObjectName()</span></code> in Rhino, <code class="docutils literal"><span class="pre">object.name</span></code> in Blender), check that it is in a <code class="docutils literal"><span class="pre">.json</span></code> dictionary type format, and then attempt to extract lists from keys <code class="docutils literal"><span class="pre">'ex'</span></code>, <code class="docutils literal"><span class="pre">'ey'</span></code> and <code class="docutils literal"><span class="pre">'ez'</span></code>. The <code class="docutils literal"><span class="pre">'ez'</span></code> direction is not explicitly needed for lines, as it is the direction the line passes through from start to end point. While <code class="docutils literal"><span class="pre">'ex'</span></code> and <code class="docutils literal"><span class="pre">'ey'</span></code> correspond to the local <cite>x</cite> (major) and <cite>y</cite> (minor) axes, looking along the line element from start to finish (i.e. along <code class="docutils literal"><span class="pre">'ez'</span></code>). Orientations <code class="docutils literal"><span class="pre">'ex'</span></code> and <code class="docutils literal"><span class="pre">'ey'</span></code> are important for getting the correct local orientation of beam cross-sections.</p>
+<p>When adding line geometry from layers to the <strong>Structure</strong> object as <strong>Element</strong> objects, the function <code class="docutils literal">add_nodes_elements_from_layers()</code> will also attempt to store the element’s local axis in the dictionary <code class="docutils literal">.axes</code> of the <strong>Element</strong> object. This dictionary takes keys <code class="docutils literal">'ex'</code>, <code class="docutils literal">'ey'</code> and <code class="docutils literal">'ez'</code> to store a list (the vector) of each element’s local axis direction. The function will look at the name of the layer object (<code class="docutils literal">rs.ObjectName()</code> in Rhino, <code class="docutils literal">object.name</code> in Blender), check that it is in a <code class="docutils literal">.json</code> dictionary type format, and then attempt to extract lists from keys <code class="docutils literal">'ex'</code>, <code class="docutils literal">'ey'</code> and <code class="docutils literal">'ez'</code>. The <code class="docutils literal">'ez'</code> direction is not explicitly needed for lines, as it is the direction the line passes through from start to end point. While <code class="docutils literal">'ex'</code> and <code class="docutils literal">'ey'</code> correspond to the local <cite>x</cite> (major) and <cite>y</cite> (minor) axes, looking along the line element from start to finish (i.e. along <code class="docutils literal">'ez'</code>). Orientations <code class="docutils literal">'ex'</code> and <code class="docutils literal">'ey'</code> are important for getting the correct local orientation of beam cross-sections.</p>
 <p>For shell elements …</p>
 </div>
 </div>
-<div class="section" id="adding-sets">
+<div class="section">
 <h2><a class="toc-backref" href="#id5">Adding sets</a></h2>
-<p>To add Rhino geometry held in layers as sets of the <strong>Structure</strong> object, use the <code class="docutils literal"><span class="pre">add_sets_from_layers()</span></code> function. This function requires the <code class="docutils literal"><span class="pre">structure</span></code> to add to, and the <code class="docutils literal"><span class="pre">layers</span></code> to extract Rhino geometry from. Each layer in the list <code class="docutils literal"><span class="pre">layers</span></code>, should exclusively contain Rhino points or Rhino line/mesh objects, otherwise it is not possible to assign that all <cite>guids</cite> in that layer contribute to a node or element set. The name of the set does not need be given, as the function will ensure that added sets inherit the layer names as their keys. If the layer is nested such that it has a name <code class="docutils literal"><span class="pre">'a::b::c'</span></code>, then only the last part of the string, i.e. <code class="docutils literal"><span class="pre">'c'</span></code>, will be used as the name .</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_load&#39;</span><span class="p">,</span> <span class="s1">&#39;elset_elements&#39;</span><span class="p">])</span>
+<p>To add Rhino geometry held in layers as sets of the <strong>Structure</strong> object, use the <code class="docutils literal">add_sets_from_layers()</code> function. This function requires the <code class="docutils literal">structure</code> to add to, and the <code class="docutils literal">layers</code> to extract Rhino geometry from. Each layer in the list <code class="docutils literal">layers</code>, should exclusively contain Rhino points or Rhino line/mesh objects, otherwise it is not possible to assign that all <cite>guids</cite> in that layer contribute to a node or element set. The name of the set does not need be given, as the function will ensure that added sets inherit the layer names as their keys. If the layer is nested such that it has a name <code class="docutils literal">'a::b::c'</code>, then only the last part of the string, i.e. <code class="docutils literal">'c'</code>, will be used as the name .</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">'nset_pins'</span><span class="p">,</span> <span class="s1">'nset_load'</span><span class="p">,</span> <span class="s1">'elset_elements'</span><span class="p">])</span>
 </code></pre></div>
-</div>
-<p>The Blender equivalent functions are <code class="docutils literal"><span class="pre">add_nset_from_bmeshes()</span></code> and <code class="docutils literal"><span class="pre">add_elset_from_bmeshes()</span></code>, where the former function will add vertices from Blender meshes as a node set, and the latter function will add an element set from edges and faces. Either a list of the Blender mesh objects is given directly with <code class="docutils literal"><span class="pre">bmeshes</span></code> or the meshes are extracted from the layer number given by <code class="docutils literal"><span class="pre">layer</span></code>. The function <code class="docutils literal"><span class="pre">add_nset_from_objects()</span></code> can be used to add objects’ locations as a node set. The <code class="docutils literal"><span class="pre">name</span></code> of the sets must be given, as Blender layers cannot currently be named, as they are only numbered.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">blender</span><span class="o">.</span><span class="n">add_nset_from_bmeshes</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;nset_supports&#39;</span><span class="p">)</span>
 
-<span class="n">blender</span><span class="o">.</span><span class="n">add_elset_from_bmeshes</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;elset_elements&#39;</span><span class="p">)</span>
+<p>The Blender equivalent functions are <code class="docutils literal">add_nset_from_bmeshes()</code> and <code class="docutils literal">add_elset_from_bmeshes()</code>, where the former function will add vertices from Blender meshes as a node set, and the latter function will add an element set from edges and faces. Either a list of the Blender mesh objects is given directly with <code class="docutils literal">bmeshes</code> or the meshes are extracted from the layer number given by <code class="docutils literal">layer</code>. The function <code class="docutils literal">add_nset_from_objects()</code> can be used to add objects’ locations as a node set. The <code class="docutils literal">name</code> of the sets must be given, as Blender layers cannot currently be named, as they are only numbered.</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">blender</span><span class="o">.</span><span class="n">add_nset_from_bmeshes</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'nset_supports'</span><span class="p">)</span>
 
-<span class="n">blender</span><span class="o">.</span><span class="n">add_nset_from_objects</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">)</span>
+<span class="n">blender</span><span class="o">.</span><span class="n">add_elset_from_bmeshes</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'elset_elements'</span><span class="p">)</span>
+
+<span class="n">blender</span><span class="o">.</span><span class="n">add_nset_from_objects</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'nset_pins'</span><span class="p">)</span>
 </code></pre></div>
+
 </div>
-</div>
-<div class="section" id="plotting-data">
+<div class="section">
 <h2><a class="toc-backref" href="#id6">Plotting data</a></h2>
-<p>Once the <strong>Structure</strong> object has been analysed (see the Analysis topic) and the data stored in <code class="docutils literal"><span class="pre">.results</span></code>, it can be plotted in the CAD environment after a small amount of post-processing (see Processing subsection below). The plotting of these data uses the <code class="docutils literal"><span class="pre">plot_data()</span></code> function, which requires the <code class="docutils literal"><span class="pre">structure</span></code>, the <code class="docutils literal"><span class="pre">step</span></code> to plot and the <code class="docutils literal"><span class="pre">field</span></code> of interest. For element based data, the <code class="docutils literal"><span class="pre">iptype</span></code> and <code class="docutils literal"><span class="pre">nodal</span></code> string arguments need to be given. Data are currently plotted on simple meshes representing the original geometry. These are simple tubular meshes of given <code class="docutils literal"><span class="pre">radius</span></code> to represent 1D elements, 2D meshes to represent shells and membranes, and voxel based viewers for 3D solid elements.</p>
-<p>For Rhino, the meshes will be plotted in either the given <code class="docutils literal"><span class="pre">layer</span></code> name string, or a default layer named <strong>step-field</strong>, for which the layer will first be cleared. This function call could look like the following, where a print will afterwards show how much time the post-processing took:</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;um&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<p>Once the <strong>Structure</strong> object has been analysed (see the Analysis topic) and the data stored in <code class="docutils literal">.results</code>, it can be plotted in the CAD environment after a small amount of post-processing (see Processing subsection below). The plotting of these data uses the <code class="docutils literal">plot_data()</code> function, which requires the <code class="docutils literal">structure</code>, the <code class="docutils literal">step</code> to plot and the <code class="docutils literal">field</code> of interest. For element based data, the <code class="docutils literal">iptype</code> and <code class="docutils literal">nodal</code> string arguments need to be given. Data are currently plotted on simple meshes representing the original geometry. These are simple tubular meshes of given <code class="docutils literal">radius</code> to represent 1D elements, 2D meshes to represent shells and membranes, and voxel based viewers for 3D solid elements.</p>
+<p>For Rhino, the meshes will be plotted in either the given <code class="docutils literal">layer</code> name string, or a default layer named <strong>step-field</strong>, for which the layer will first be cleared. This function call could look like the following, where a print will afterwards show how much time the post-processing took:</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_load'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'um'</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 
 <span class="o">*****</span> <span class="n">Data</span> <span class="n">processed</span> <span class="p">:</span> <span class="mf">0.211</span> <span class="n">s</span> <span class="o">*****</span>
 </code></pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;sxx&#39;</span><span class="p">,</span> <span class="n">nodal</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_load'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'sxx'</span><span class="p">,</span> <span class="n">nodal</span><span class="o">=</span><span class="s1">'max'</span><span class="p">,</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">'mean'</span><span class="p">)</span>
 
 <span class="o">*****</span> <span class="n">Data</span> <span class="n">processed</span> <span class="p">:</span> <span class="mf">4.539</span> <span class="n">s</span> <span class="o">*****</span>
 </code></pre></div>
-</div>
-<p>The Blender function works in exactly the same way, with <code class="docutils literal"><span class="pre">layer</span></code> being the integer layer number and not a string as with Rhino:</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">blender</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;um&#39;</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<p>The Blender function works in exactly the same way, with <code class="docutils literal">layer</code> being the integer layer number and not a string as with Rhino:</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">blender</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_load'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'um'</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </code></pre></div>
-</div>
-<div class="section" id="processing">
+
+<div class="section">
 <h3><a class="toc-backref" href="#id7">Processing</a></h3>
-<p>A degree of data post-processing is performed before plotting, through the function <code class="docutils literal"><span class="pre">postprocess()</span></code> of the <strong>compas_fea.utilities.functions</strong> module. This post-processing requires NumPy and SciPy, and so is carried out in a subprocess (via compas XFunc) for non-CPython based CAD environments like Rhino. The function calls a selection of other functions which do the following:</p>
+<p>A degree of data post-processing is performed before plotting, through the function <code class="docutils literal">postprocess()</code> of the <strong>compas_fea.utilities.functions</strong> module. This post-processing requires NumPy and SciPy, and so is carried out in a subprocess (via compas XFunc) for non-CPython based CAD environments like Rhino. The function calls a selection of other functions which do the following:</p>
 <ul>
-<li><p>Calculate the deformed nodal co-ordinates with given <code class="docutils literal"><span class="pre">scale</span></code> factor, which become the plot meshes vertices.</p></li>
-<li><p>Process element data based on the <code class="docutils literal"><span class="pre">iptype</span></code> and <code class="docutils literal"><span class="pre">nodal</span></code> strings, see below for explanation.</p></li>
+<li><p>Calculate the deformed nodal co-ordinates with given <code class="docutils literal">scale</code> factor, which become the plot meshes vertices.</p></li>
+<li><p>Process element data based on the <code class="docutils literal">iptype</code> and <code class="docutils literal">nodal</code> strings, see below for explanation.</p></li>
 <li><p>Normalise the data between -1 and 1, using the largest absolute value in the data.</p></li>
 <li><p>Calculate the colour to plot each nodal data value from a consistent colour spectrum.</p></li>
-<li><p>Cap colour values based on the minimum and maximum values given in <code class="docutils literal"><span class="pre">cbar</span></code>.</p></li>
+<li><p>Cap colour values based on the minimum and maximum values given in <code class="docutils literal">cbar</code>.</p></li>
 </ul>
-<p>Because the raw nodal data contains single float values for each node, these values can be plotted directly as vertex colours on the plotting meshes. However as there are in general multiple data values for each element, some processing must be done to convert elemental data to suitable colour values at the nodes. The first step that the <code class="docutils literal"><span class="pre">postprocess()</span></code> function will do for elemental data, is convert all of the integration and section point data for an element to a user-directed single value with <code class="docutils literal"><span class="pre">iptype</span></code>. The string <code class="docutils literal"><span class="pre">iptype</span></code> can be <code class="docutils literal"><span class="pre">'mean'</span></code>, <code class="docutils literal"><span class="pre">'max'</span></code> or <code class="docutils literal"><span class="pre">'min'</span></code>, to take the average, maximum positive or minimum negative value of the element data. The next step is to use this data and convert it a nodal value, as each node will connect to many elements and so have many adjacent element data values. Either <code class="docutils literal"><span class="pre">'mean'</span></code>, <code class="docutils literal"><span class="pre">'max'</span></code> or <code class="docutils literal"><span class="pre">'min'</span></code> is given as a string for <code class="docutils literal"><span class="pre">nodal</span></code>, giving then a value at each node based on all elements that connect to it. So for example, to find conservatively the most heavily loaded nodal Von Mises stress value from elemental data, one would use:</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;smises&#39;</span><span class="p">,</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="n">nodal</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">)</span>
+<p>Because the raw nodal data contains single float values for each node, these values can be plotted directly as vertex colours on the plotting meshes. However as there are in general multiple data values for each element, some processing must be done to convert elemental data to suitable colour values at the nodes. The first step that the <code class="docutils literal">postprocess()</code> function will do for elemental data, is convert all of the integration and section point data for an element to a user-directed single value with <code class="docutils literal">iptype</code>. The string <code class="docutils literal">iptype</code> can be <code class="docutils literal">'mean'</code>, <code class="docutils literal">'max'</code> or <code class="docutils literal">'min'</code>, to take the average, maximum positive or minimum negative value of the element data. The next step is to use this data and convert it a nodal value, as each node will connect to many elements and so have many adjacent element data values. Either <code class="docutils literal">'mean'</code>, <code class="docutils literal">'max'</code> or <code class="docutils literal">'min'</code> is given as a string for <code class="docutils literal">nodal</code>, giving then a value at each node based on all elements that connect to it. So for example, to find conservatively the most heavily loaded nodal Von Mises stress value from elemental data, one would use:</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_load'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'smises'</span><span class="p">,</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">'max'</span><span class="p">,</span> <span class="n">nodal</span><span class="o">=</span><span class="s1">'max'</span><span class="p">)</span>
 </code></pre></div>
-</div>
+
 <p>and to plot the most compressive axial stress values use (with compression negative and local ‘x’ axis):</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;sxx&#39;</span><span class="p">,</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="n">nodal</span><span class="o">=</span><span class="s1">&#39;min&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_load'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'sxx'</span><span class="p">,</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">'min'</span><span class="p">,</span> <span class="n">nodal</span><span class="o">=</span><span class="s1">'min'</span><span class="p">)</span>
 </code></pre></div>
+
+<p><strong>Note</strong>: using <code class="docutils literal">nodal='mean'</code> with a coarse finite element mesh could give unexpected results. This is because element data can change suddenly across elements in coarse meshes, leading to a mean value at a shared node that is somewhat poorly representative. This effect can be resolved by refining the mesh in the areas where stresses may change quickly or form concentrations, such as near supports, applied loads or areas of peak internal forces and moments.</p>
 </div>
-<p><strong>Note</strong>: using <code class="docutils literal"><span class="pre">nodal='mean'</span></code> with a coarse finite element mesh could give unexpected results. This is because element data can change suddenly across elements in coarse meshes, leading to a mean value at a shared node that is somewhat poorly representative. This effect can be resolved by refining the mesh in the areas where stresses may change quickly or form concentrations, such as near supports, applied loads or areas of peak internal forces and moments.</p>
-</div>
-<div class="section" id="colorbar">
+<div class="section">
 <h3><a class="toc-backref" href="#id8">Colorbar</a></h3>
-<p>A colorbar to the data will be plotted by default in each plotting layer and to the right of the model, the size of which can be controlled by <code class="docutils literal"><span class="pre">'colorbar_size'</span></code>. The colorbar limits will range from negative to positive of the maximum data value of the field, even if the results are all positive or negative. The advantage of this, as opposed to using the minimum to maximum range, is that positive values will always be red, orange and yellow, neutral values green, and negative values blue, indigo and violet. The extremes of the plotted data, as well as some intermediate values, will be written as text boxes, along with the zero point in the middle. If minimum and maximum values of the colorbar are given in <code class="docutils literal"><span class="pre">cbar</span></code> when calling <code class="docutils literal"><span class="pre">plot_data()</span></code>, for example a maximum <code class="docutils literal"><span class="pre">cbar[1]</span></code> of 3 MPa, then the colorbar ends will cap at 3 MPa, and plot red values for all data above 3 MPa. The step and field will also be displayed as a title to the colorbar, and any mode or frequencies placed at the bottom.</p>
-<a class="reference internal image-reference" href="../_images/colorbar.png"><img alt="../_images/colorbar.png" src="../_images/colorbar.png" style="width: 239.39999999999998px; height: 284.4px;" /></a>
+<p>A colorbar to the data will be plotted by default in each plotting layer and to the right of the model, the size of which can be controlled by <code class="docutils literal">'colorbar_size'</code>. The colorbar limits will range from negative to positive of the maximum data value of the field, even if the results are all positive or negative. The advantage of this, as opposed to using the minimum to maximum range, is that positive values will always be red, orange and yellow, neutral values green, and negative values blue, indigo and violet. The extremes of the plotted data, as well as some intermediate values, will be written as text boxes, along with the zero point in the middle. If minimum and maximum values of the colorbar are given in <code class="docutils literal">cbar</code> when calling <code class="docutils literal">plot_data()</code>, for example a maximum <code class="docutils literal">cbar[1]</code> of 3 MPa, then the colorbar ends will cap at 3 MPa, and plot red values for all data above 3 MPa. The step and field will also be displayed as a title to the colorbar, and any mode or frequencies placed at the bottom.</p>
+<a class="reference internal image-reference" href="../_images/colorbar.png"><img alt="../images/colorbar.png" src="../images/colorbar.png" style="width: 239.39999999999998px; height: 284.4px;"/></a>
 </div>
-<div class="section" id="principal-stresses">
+<div class="section">
 <h3><a class="toc-backref" href="#id9">Principal stresses</a></h3>
-<p>As stress is a tensor, any material point has a local axes orientation where maximum and minimum normal stresses occur orthogonally and with zero shear stress. These are the principal stress components <code class="docutils literal"><span class="pre">'smaxp'</span></code> and <code class="docutils literal"><span class="pre">'sminp'</span></code>. From knowing (for shell elements) the <code class="docutils literal"><span class="pre">'sxx'</span></code> (normal stress in <cite>x</cite>), <code class="docutils literal"><span class="pre">'syy'</span></code> (normal stress in <cite>y</cite>) and <code class="docutils literal"><span class="pre">'sxy'</span></code> (shear stress) values at integration points, the orientation of the principal stresses can be determined relative to the element’s local axes (component <code class="docutils literal"><span class="pre">'axes'</span></code>). This calculation is based on elementary material mechanics (see Mohr Circles for reference) and has been performed in a plotting function <code class="docutils literal"><span class="pre">plot_principal_stresses()</span></code>, which takes argument <code class="docutils literal"><span class="pre">ptype</span></code> as a string <code class="docutils literal"><span class="pre">'sminp'</span></code> or <code class="docutils literal"><span class="pre">'smaxp'</span></code>, and then a relative <code class="docutils literal"><span class="pre">scale</span></code> to draw the length of vector lines. A call of the Rhino function plots the following lines below, where red and blue lines are drawn to show tension (max principal) and compression (min principal):</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">plot_principal_stresses</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;sminp&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<p>As stress is a tensor, any material point has a local axes orientation where maximum and minimum normal stresses occur orthogonally and with zero shear stress. These are the principal stress components <code class="docutils literal">'smaxp'</code> and <code class="docutils literal">'sminp'</code>. From knowing (for shell elements) the <code class="docutils literal">'sxx'</code> (normal stress in <cite>x</cite>), <code class="docutils literal">'syy'</code> (normal stress in <cite>y</cite>) and <code class="docutils literal">'sxy'</code> (shear stress) values at integration points, the orientation of the principal stresses can be determined relative to the element’s local axes (component <code class="docutils literal">'axes'</code>). This calculation is based on elementary material mechanics (see Mohr Circles for reference) and has been performed in a plotting function <code class="docutils literal">plot_principal_stresses()</code>, which takes argument <code class="docutils literal">ptype</code> as a string <code class="docutils literal">'sminp'</code> or <code class="docutils literal">'smaxp'</code>, and then a relative <code class="docutils literal">scale</code> to draw the length of vector lines. A call of the Rhino function plots the following lines below, where red and blue lines are drawn to show tension (max principal) and compression (min principal):</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rhino</span><span class="o">.</span><span class="n">plot_principal_stresses</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_loads'</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">'sminp'</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_principal_stresses</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;smaxp&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_principal_stresses</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_loads'</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">'smaxp'</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 </code></pre></div>
-</div>
-<a class="reference internal image-reference" href="../_images/principals.png"><img alt="../_images/principals.png" src="../_images/principals.png" style="width: 651.0px; height: 460.59999999999997px;" /></a>
-</div>
-</div>
-</div>
 
-                        
-                        <!-- <nav class="compas-sideways">
+<a class="reference internal image-reference" href="../_images/principals.png"><img alt="../images/principals.png" src="../images/principals.png" style="width: 651.0px; height: 460.59999999999997px;"/></a>
+</div>
+</div>
+</div>
+<!-- <nav class="compas-sideways">
                             
                                 <a href="12_analysis.html" class="btn btn-primary compas-prev" role="button">Analysis</a>
                             
@@ -209,31 +183,20 @@
                                 <a href="../examples.html" class="btn btn-primary compas-next" role="button">Examples</a>
                             
                         </nav> -->
-
-                    
-
-                </main>
-
-                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
-                    <div class="navbar-light">
-
-                        <form id="" class="d-flex compas-searchbox" action="../search.html" method="get">
-                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
-                            <input type="hidden" name="check_keywords" value="yes" />
-                            <input type="hidden" name="area" value="default" />
-
-                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                        </form>
-
-                        
-                        
-
-                            <div class="navbar-expand-md">
-                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
-
-                                <ul class="nav flex-column active">
+</main>
+<div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
+<div class="navbar-light">
+<form action="../search.html" class="d-flex compas-searchbox" id="" method="get">
+<input class="form-control" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+<button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+</form>
+<div class="navbar-expand-md">
+<div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
+<ul class="nav flex-column active">
 <li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="01_setup.html">Setup</a></li>
@@ -255,21 +218,12 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
 </ul>
-
-
-                                </div>
-                            </div>
-
-                        
-
-                    </div>
-                </div>
-                
-                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
-
-                    
-
-                    <ul class="nav flex-column" id="compas-localnav">
+</div>
+</div>
+</div>
+</div>
+<div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+<ul class="nav flex-column" id="compas-localnav">
 <li class="nav-item"><a class="nav-link reference internal" href="#">CAD</a><ul class="nav">
 <li class="nav-item"><a class="nav-link reference internal" href="#geometry">Geometry</a><ul class="nav">
 <li class="nav-item"><a class="nav-link reference internal" href="#layers">Layers</a></li>
@@ -286,16 +240,13 @@
 </ul>
 </li>
 </ul>
-
-
-                </div>
-            </div>
-        </div>
-
-        <footer class="compas-footer">
+</div>
+</div>
+</div>
+<footer class="compas-footer">
             
                 
-                    &#169; Copyright 2017, Block Research Group.
+                    © Copyright 2017, Block Research Group.
                 
             
 
@@ -307,10 +258,7 @@
                 Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
             
         </footer>
-
-        
-
-            <script type="text/javascript">
+<script type="text/javascript">
 var DOCUMENTATION_OPTIONS = {
     URL_ROOT:    '',
     VERSION:     '',
@@ -320,21 +268,16 @@ var DOCUMENTATION_OPTIONS = {
     SOURCELINK_SUFFIX: '.txt'
 };
             </script>
-
-            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-            
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-            
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
-
-            <script src="https://compas-dev.github.io/js/underscore.js"></script>
-            <script src="https://compas-dev.github.io/js/doctools.js"></script>
-            <!-- <script src="https://compas-dev.github.io/js/searchtools_.js"></script> -->
-
-            <script>
+<script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+<script src="https://compas-dev.github.io/js/underscore.js"></script>
+<script src="https://compas-dev.github.io/js/doctools.js"></script>
+<!-- <script src="https://compas-dev.github.io/js/searchtools_.js"></script> -->
+<script>
 hljs.initHighlightingOnLoad();
 anchors.add();
 
@@ -377,7 +320,5 @@ copy_code.on('error', function(event) {
     }, 2000);
 });
             </script>
-
-        
-    </body>
+</body>
 </html>

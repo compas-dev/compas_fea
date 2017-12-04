@@ -1,54 +1,37 @@
 
-
-
 <!DOCTYPE html>
+
 <html lang="en">
-    <head>
-        <title>compas_fea -- FEA package for compas</title>
-
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    
-        <meta name="author" content="" />
-        <meta name="description" content="" />
-
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
-        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/github.css" />
-        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas.css" />
-        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas-reference.css" />
-
-        
-        
-        
-
-        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-
-    </head>
-    <body data-spy="scroll" data-target="#compas-localnav">
-
-        <header class="navbar navbar-expand compas-navbar">
-            <a class="navbar-brand" href="https://compas-dev.github.io/">
-                <img src="/images/compas_icon_blue-01.png" width="36px" height="36px" alt="compas" />
-            </a>
-
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="http://forum.compas-framework.org/c/compas-fea">Forum</a>
-                    </li>
-                </ul>
-        </header>
-        
-        <div class="container-fluid compas-container">
-            <div class="row flex-xl-nowrap">
-
-                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
-
-                    
-
-                        <!-- 
+<head>
+<title>compas_fea -- FEA package for compas</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+<meta content="" name="author"/>
+<meta content="" name="description"/>
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
+<link href="https://compas-dev.github.io/css/github.css" rel="stylesheet" type="text/css"/>
+<link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
+<link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
+<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+</head>
+<body data-spy="scroll" data-target="#compas-localnav">
+<header class="navbar navbar-expand compas-navbar">
+<a class="navbar-brand" href="https://compas-dev.github.io/">
+<img alt="compas" height="36px" src="/images/compas_icon_blue-01.png" width="36px"/>
+</a>
+<ul class="navbar-nav">
+<li class="nav-item">
+<a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="http://forum.compas-framework.org/c/compas-fea">Forum</a>
+</li>
+</ul>
+</header>
+<div class="container-fluid compas-container">
+<div class="row flex-xl-nowrap">
+<main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+<!-- 
         <nav class="breadcrumb">
             <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
             <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
@@ -60,16 +43,11 @@
             
         </nav>
  -->
-
-                        
-
-                        
-
-                        <h1>Source code for compas_fea.structure.structure</h1><div class="highlight"><pre><code class="language-python border rounded">
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<h1>Source code for compas_fea.structure.structure</h1><div class="highlight"><pre><code class="language-python border rounded">
+<span></span><span class="sd">"""</span>
 <span class="sd">compas_fea.structure.structure : The main compas_fea Structure class.</span>
 <span class="sd">The main datastructure for all structural model information and methods.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
@@ -92,19 +70,19 @@
 <span class="kn">import</span> <span class="nn">pickle</span>
 
 
-<span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;Tomas Mendez &lt;mendez@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
-<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright 2017, BLOCK Research Group - ETH Zurich&#39;</span>
-<span class="n">__license__</span>   <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
-<span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
+<span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">'Andrew Liew &lt;liew@arch.ethz.ch&gt;'</span><span class="p">,</span> <span class="s1">'Tomas Mendez &lt;mendez@arch.ethz.ch&gt;'</span><span class="p">]</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">'Copyright 2017, BLOCK Research Group - ETH Zurich'</span>
+<span class="n">__license__</span>   <span class="o">=</span> <span class="s1">'MIT License'</span>
+<span class="n">__email__</span>     <span class="o">=</span> <span class="s1">'liew@arch.ethz.ch'</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;Structure&#39;</span><span class="p">,</span>
+    <span class="s1">'Structure'</span><span class="p">,</span>
 <span class="p">]</span>
 
 
 <div class="viewcode-block" id="Structure"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.structure.Structure.html#compas_fea.structure.structure.Structure">[docs]</a><span class="k">class</span> <span class="nc">Structure</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Initialises empty Structure object for use in finite element analysis.</span>
+    <span class="sd">""" Initialises empty Structure object for use in finite element analysis.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -157,9 +135,9 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;compas_fea-Structure&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'compas_fea-Structure'</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="p">{}</span>
@@ -178,7 +156,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sets</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="s1">&#39;3&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="s1">'3'</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_count</span><span class="p">()</span>
@@ -194,14 +172,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span>
         <span class="p">]</span>
 
-        <span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;  </span><span class="si">{0}</span><span class="s1"> : </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="s1">(s)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="s1">&#39;selection&#39;</span><span class="p">]),</span> <span class="n">j</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="o">.</span><span class="n">items</span><span class="p">()])]</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">'  </span><span class="si">{0}</span><span class="s1"> : </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="s1">(s)'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">j</span><span class="p">[</span><span class="s1">'selection'</span><span class="p">]),</span> <span class="n">j</span><span class="p">[</span><span class="s1">'type'</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="o">.</span><span class="n">items</span><span class="p">()])]</span>
         <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">entry</span><span class="p">:</span>
-                <span class="n">d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;  </span><span class="si">{0}</span><span class="s1"> : </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">entry</span><span class="o">.</span><span class="n">items</span><span class="p">()]))</span>
+                <span class="n">d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">'  </span><span class="si">{0}</span><span class="s1"> : </span><span class="si">{1}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">entry</span><span class="o">.</span><span class="n">items</span><span class="p">()]))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;  n/a&#39;</span><span class="p">)</span>
+                <span class="n">d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'  n/a'</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">"""</span>
 
 <span class="s2">++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="s2">compas_fea Structure: </span><span class="si">{}</span><span class="s2"></span>
@@ -251,7 +229,7 @@
 <span class="s2">-----</span>
 <span class="si">{}</span><span class="s2"></span>
 
-<span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+<span class="s2">"""</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -259,18 +237,18 @@
 <span class="c1"># ==============================================================================</span>
 
     <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xyz</span><span class="p">,</span> <span class="n">ex</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ey</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ez</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
-        <span class="sd">&quot;&quot;&quot; Adds a node to structure.nodes at co-ordinates xyz with local frame [ex, ey, ez].</span>
+        <span class="sd">""" Adds a node to structure.nodes at co-ordinates xyz with local frame [ex, ey, ez].</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        xyz : list</span>
 <span class="sd">            [x, y, z] co-ordinates of the node.</span>
 <span class="sd">        ex : list</span>
-<span class="sd">            Node&#39;s local x axis.</span>
+<span class="sd">            Node's local x axis.</span>
 <span class="sd">        ey : list</span>
-<span class="sd">            Node&#39;s local y axis.</span>
+<span class="sd">            Node's local y axis.</span>
 <span class="sd">        ez : list</span>
-<span class="sd">            Node&#39;s local z axis.</span>
+<span class="sd">            Node's local z axis.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -280,28 +258,28 @@
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 <span class="sd">        - Nodes are numbered sequentially starting from 0.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">xyz</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">]</span>
         <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_count</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;ex&#39;</span><span class="p">:</span> <span class="n">ex</span><span class="p">,</span> <span class="s1">&#39;ey&#39;</span><span class="p">:</span> <span class="n">ey</span><span class="p">,</span> <span class="s1">&#39;ez&#39;</span><span class="p">:</span> <span class="n">ez</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'x'</span><span class="p">:</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">'y'</span><span class="p">:</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">'z'</span><span class="p">:</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s1">'ex'</span><span class="p">:</span> <span class="n">ex</span><span class="p">,</span> <span class="s1">'ey'</span><span class="p">:</span> <span class="n">ey</span><span class="p">,</span> <span class="s1">'ez'</span><span class="p">:</span> <span class="n">ez</span><span class="p">}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_node_to_node_index</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">xyz</span><span class="o">=</span><span class="n">xyz</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">key</span>
 
     <span class="k">def</span> <span class="nf">add_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">ex</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ey</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ez</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
-        <span class="sd">&quot;&quot;&quot; Adds a list of nodes to structure.nodes at given co-ordinates all with local frame [ex, ey, ez].</span>
+        <span class="sd">""" Adds a list of nodes to structure.nodes at given co-ordinates all with local frame [ex, ey, ez].</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        nodes : list</span>
 <span class="sd">            [[x, y, z], ..] co-ordinates for each node.</span>
 <span class="sd">        ex : list</span>
-<span class="sd">            Nodes&#39; local x axis.</span>
+<span class="sd">            Nodes' local x axis.</span>
 <span class="sd">        ey : list</span>
-<span class="sd">            Nodes&#39; local y axis.</span>
+<span class="sd">            Nodes' local y axis.</span>
 <span class="sd">        ez : list</span>
-<span class="sd">            Nodes&#39; local z axis.</span>
+<span class="sd">            Nodes' local z axis.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -311,11 +289,11 @@
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 <span class="sd">        - Nodes are numbered sequentially starting from 0.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">xyz</span><span class="o">=</span><span class="n">node</span><span class="p">,</span> <span class="n">ex</span><span class="o">=</span><span class="n">ex</span><span class="p">,</span> <span class="n">ey</span><span class="o">=</span><span class="n">ey</span><span class="p">,</span> <span class="n">ez</span><span class="o">=</span><span class="n">ez</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">add_node_to_node_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">xyz</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds the node to the node_index dictionary.</span>
+        <span class="sd">""" Adds the node to the node_index dictionary.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -327,12 +305,12 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">f&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
+<span class="sd">        """</span>
+        <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">f'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">node_index</span><span class="p">[</span><span class="n">gkey</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span>
 
     <span class="k">def</span> <span class="nf">check_node_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xyz</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Check if a node already exists at given x, y, z co-ordinates.</span>
+        <span class="sd">""" Check if a node already exists at given x, y, z co-ordinates.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -347,12 +325,12 @@
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 <span class="sd">        - Geometric key check is made according to self.tol [m] tolerance.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">f&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
+<span class="sd">        """</span>
+        <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">f'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">gkey</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">edit_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr_dic</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Edit a node&#39;s data.</span>
+        <span class="sd">""" Edit a node's data.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -364,15 +342,15 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">f&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
+<span class="sd">        """</span>
+        <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">f'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_index</span><span class="p">[</span><span class="n">gkey</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">attr_dic</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_node_to_node_index</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">make_node_index_dic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Makes a node_index dictionary from existing structure.nodes.</span>
+        <span class="sd">""" Makes a node_index dictionary from existing structure.nodes.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -381,13 +359,13 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-            <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">f&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
+            <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">f'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">node_index</span><span class="p">[</span><span class="n">gkey</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span>
 
     <span class="k">def</span> <span class="nf">node_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Return the bounds formed by the Structure&#39;s nodal co-ordinates.</span>
+        <span class="sd">""" Return the bounds formed by the Structure's nodal co-ordinates.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -401,22 +379,22 @@
 <span class="sd">            [ymin, ymax].</span>
 <span class="sd">        list</span>
 <span class="sd">            [zmin, zmax].</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_count</span><span class="p">()</span>
         <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
         <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
         <span class="n">z</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
         <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">x</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
-            <span class="n">y</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
-            <span class="n">z</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]</span>
+            <span class="n">y</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span>
+            <span class="n">z</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s1">'z'</span><span class="p">]</span>
         <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
         <span class="n">zmin</span><span class="p">,</span> <span class="n">zmax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">],</span> <span class="p">[</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">],</span> <span class="p">[</span><span class="n">zmin</span><span class="p">,</span> <span class="n">zmax</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">node_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Return the number of nodes in structure.nodes.</span>
+        <span class="sd">""" Return the number of nodes in structure.nodes.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -426,11 +404,11 @@
 <span class="sd">        -------</span>
 <span class="sd">        int</span>
 <span class="sd">            Number of nodes stored in the Structure object.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">node_xyz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Return the xyz co-ordinates of a node.</span>
+        <span class="sd">""" Return the xyz co-ordinates of a node.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -441,11 +419,11 @@
 <span class="sd">        -------</span>
 <span class="sd">        list</span>
 <span class="sd">            [x, y, z] co-ordinates.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="s1">&#39;xyz&#39;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="s1">'xyz'</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">nodes_xyz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="p">[]):</span>
-        <span class="sd">&quot;&quot;&quot; Return the xyz co-ordinates of given or all nodes.</span>
+        <span class="sd">""" Return the xyz co-ordinates of given or all nodes.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -456,7 +434,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        list</span>
 <span class="sd">            [[x, y, z] ...] co-ordinates.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">nodes</span><span class="p">:</span>
             <span class="n">nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">]</span>
@@ -467,7 +445,7 @@
 <span class="c1"># ==============================================================================</span>
 
     <span class="k">def</span> <span class="nf">add_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot; Adds an element to structure.elements with centroid geometric key.</span>
+        <span class="sd">""" Adds an element to structure.elements with centroid geometric key.</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            - Elements are numbered sequentially starting from 0.</span>
@@ -475,26 +453,26 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">            nodes (list): Nodes the element is connected to.</span>
-<span class="sd">            type (str): Element type: &#39;HexahedronElement&#39;, &#39;BeamElement, &#39;TrussElement&#39; etc.</span>
+<span class="sd">            type (str): Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.</span>
 <span class="sd">            acoustic (bool): Acoustic properties on or off.</span>
 <span class="sd">            thermal (bool): Thermal properties on or off.</span>
-<span class="sd">            axes (dic): The local element axes &#39;ex&#39;, &#39;ey&#39; and &#39;ez&#39;.</span>
+<span class="sd">            axes (dic): The local element axes 'ex', 'ey' and 'ez'.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            int: Key of the added or existing element.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">func_dic</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;BeamElement&#39;</span><span class="p">:</span> <span class="n">BeamElement</span><span class="p">,</span>
-                    <span class="s1">&#39;SpringElement&#39;</span><span class="p">:</span> <span class="n">SpringElement</span><span class="p">,</span>
-                    <span class="s1">&#39;TrussElement&#39;</span><span class="p">:</span> <span class="n">TrussElement</span><span class="p">,</span>
-                    <span class="s1">&#39;StrutElement&#39;</span><span class="p">:</span> <span class="n">StrutElement</span><span class="p">,</span>
-                    <span class="s1">&#39;TieElement&#39;</span><span class="p">:</span> <span class="n">TieElement</span><span class="p">,</span>
-                    <span class="s1">&#39;ShellElement&#39;</span><span class="p">:</span> <span class="n">ShellElement</span><span class="p">,</span>
-                    <span class="s1">&#39;MembraneElement&#39;</span><span class="p">:</span> <span class="n">MembraneElement</span><span class="p">,</span>
-                    <span class="s1">&#39;SolidElement&#39;</span><span class="p">:</span> <span class="n">SolidElement</span><span class="p">,</span>
-                    <span class="s1">&#39;TetrahedronElement&#39;</span><span class="p">:</span> <span class="n">TetrahedronElement</span><span class="p">,</span>
-                    <span class="s1">&#39;PentahedronElement&#39;</span><span class="p">:</span> <span class="n">PentahedronElement</span><span class="p">,</span>
-                    <span class="s1">&#39;HexahedronElement&#39;</span><span class="p">:</span> <span class="n">HexahedronElement</span><span class="p">}</span>
+<span class="sd">        """</span>
+        <span class="n">func_dic</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'BeamElement'</span><span class="p">:</span> <span class="n">BeamElement</span><span class="p">,</span>
+                    <span class="s1">'SpringElement'</span><span class="p">:</span> <span class="n">SpringElement</span><span class="p">,</span>
+                    <span class="s1">'TrussElement'</span><span class="p">:</span> <span class="n">TrussElement</span><span class="p">,</span>
+                    <span class="s1">'StrutElement'</span><span class="p">:</span> <span class="n">StrutElement</span><span class="p">,</span>
+                    <span class="s1">'TieElement'</span><span class="p">:</span> <span class="n">TieElement</span><span class="p">,</span>
+                    <span class="s1">'ShellElement'</span><span class="p">:</span> <span class="n">ShellElement</span><span class="p">,</span>
+                    <span class="s1">'MembraneElement'</span><span class="p">:</span> <span class="n">MembraneElement</span><span class="p">,</span>
+                    <span class="s1">'SolidElement'</span><span class="p">:</span> <span class="n">SolidElement</span><span class="p">,</span>
+                    <span class="s1">'TetrahedronElement'</span><span class="p">:</span> <span class="n">TetrahedronElement</span><span class="p">,</span>
+                    <span class="s1">'PentahedronElement'</span><span class="p">:</span> <span class="n">PentahedronElement</span><span class="p">,</span>
+                    <span class="s1">'HexahedronElement'</span><span class="p">:</span> <span class="n">HexahedronElement</span><span class="p">}</span>
         <span class="n">func</span> <span class="o">=</span> <span class="n">func_dic</span><span class="p">[</span><span class="nb">type</span><span class="p">]</span>
         <span class="n">ekey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ekey</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -510,7 +488,7 @@
         <span class="k">return</span> <span class="n">ekey</span>
 
     <span class="k">def</span> <span class="nf">add_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot; Adds multiple elements of the same type to structure.elements.</span>
+        <span class="sd">""" Adds multiple elements of the same type to structure.elements.</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            - Elements are numbered sequentially starting from 0.</span>
@@ -518,20 +496,20 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">            elements (list): List of the nodes the elements are connected to.</span>
-<span class="sd">            type (str): Element type: &#39;HexahedronElement&#39;, &#39;BeamElement, &#39;TrussElement&#39; etc.</span>
+<span class="sd">            type (str): Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.</span>
 <span class="sd">            acoustic (bool): Acoustic properties on or off.</span>
 <span class="sd">            thermal (bool): Thermal properties on or off.</span>
-<span class="sd">            axes (dic): The local element axes &#39;ex&#39;, &#39;ey&#39; and &#39;ez&#39;.</span>
+<span class="sd">            axes (dic): The local element axes 'ex', 'ey' and 'ez'.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            list: Keys of the added or existing elements.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="n">acoustic</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="n">thermal</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">nodes</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">add_element_to_element_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds the element to the element_index dictionary.</span>
+        <span class="sd">""" Adds the element to the element_index dictionary.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -541,13 +519,13 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">centroid</span> <span class="o">=</span> <span class="n">centroid_points</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])</span>
-        <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="n">centroid</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">f&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
+        <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="n">centroid</span><span class="p">,</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">f'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">element_index</span><span class="p">[</span><span class="n">gkey</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span>
 
     <span class="k">def</span> <span class="nf">check_element_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">xyz</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Check if an element already exists based on the nodes it connects to or its centroid.</span>
+        <span class="sd">""" Check if an element already exists based on the nodes it connects to or its centroid.</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            - Geometric key check is made according to self.tol [m] tolerance.</span>
@@ -560,15 +538,15 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            int: The element index if the element already exists, None if not.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">xyz</span><span class="p">:</span>
             <span class="n">xyz</span> <span class="o">=</span> <span class="n">centroid_points</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])</span>
-        <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">f&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
+        <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">f'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
         <span class="n">ekey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">gkey</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ekey</span>
 
     <span class="k">def</span> <span class="nf">element_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Return the number of elements in structure.elements.</span>
+        <span class="sd">""" Return the number of elements in structure.elements.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -577,11 +555,11 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            int: Number of elements stored in the Structure object.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">make_element_index_dic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Makes an element_index dictionary from existing structure.elements.</span>
+        <span class="sd">""" Makes an element_index dictionary from existing structure.elements.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -590,13 +568,13 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">nodes</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">nodes</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_element_to_element_index</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">element_centroid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Return the centroid of an element.</span>
+        <span class="sd">""" Return the centroid of an element.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -605,7 +583,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            list: Co-ordinates of element centroid.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">element</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
         <span class="k">return</span> <span class="n">centroid_points</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])</span>
 
@@ -616,7 +594,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_mesh</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Creates a Structure object based on data contained in a compas Mesh</span>
+        <span class="sd">""" Creates a Structure object based on data contained in a compas Mesh</span>
 <span class="sd">        datastructure. The Mesh object must contain displacements, materials, sections</span>
 <span class="sd">        and loads.</span>
 
@@ -627,58 +605,58 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            obj: The resulting Structure object.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">structure</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
 
         <span class="c1"># Add nodes and elements from Mesh</span>
 
-        <span class="n">structure</span><span class="o">.</span><span class="n">add_nodes_elements_from_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">)</span>
+        <span class="n">structure</span><span class="o">.</span><span class="n">add_nodes_elements_from_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'ShellElement'</span><span class="p">)</span>
 
         <span class="c1"># Add displacements</span>
 
-        <span class="n">disp_groups</span> <span class="o">=</span> <span class="n">group_keys_by_attributes</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertex</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;ux&#39;</span><span class="p">,</span> <span class="s1">&#39;uy&#39;</span><span class="p">,</span> <span class="s1">&#39;uz&#39;</span><span class="p">,</span> <span class="s1">&#39;urx&#39;</span><span class="p">,</span> <span class="s1">&#39;ury&#39;</span><span class="p">,</span> <span class="s1">&#39;urz&#39;</span><span class="p">])</span>
+        <span class="n">disp_groups</span> <span class="o">=</span> <span class="n">group_keys_by_attributes</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertex</span><span class="p">,</span> <span class="p">[</span><span class="s1">'ux'</span><span class="p">,</span> <span class="s1">'uy'</span><span class="p">,</span> <span class="s1">'uz'</span><span class="p">,</span> <span class="s1">'urx'</span><span class="p">,</span> <span class="s1">'ury'</span><span class="p">,</span> <span class="s1">'urz'</span><span class="p">])</span>
         <span class="n">disp_names</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">dk</span> <span class="ow">in</span> <span class="n">disp_groups</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">dk</span> <span class="o">!=</span> <span class="s1">&#39;-_-_-_-_-_-&#39;</span><span class="p">:</span>
-                <span class="n">disp_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dk</span> <span class="o">+</span> <span class="s1">&#39;_nodes&#39;</span><span class="p">)</span>
-                <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">dk</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">disp_groups</span><span class="p">[</span><span class="n">dk</span><span class="p">])</span>
-                <span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="s1">&#39;-&#39;</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dk</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)]</span>
-                <span class="n">supports</span> <span class="o">=</span> <span class="n">GeneralDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">dk</span> <span class="o">+</span> <span class="s1">&#39;_nodes&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">dk</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="k">if</span> <span class="n">dk</span> <span class="o">!=</span> <span class="s1">'-_-_-_-_-_-'</span><span class="p">:</span>
+                <span class="n">disp_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dk</span> <span class="o">+</span> <span class="s1">'_nodes'</span><span class="p">)</span>
+                <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">dk</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'node'</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">disp_groups</span><span class="p">[</span><span class="n">dk</span><span class="p">])</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="s1">'-'</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dk</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'_'</span><span class="p">)]</span>
+                <span class="n">supports</span> <span class="o">=</span> <span class="n">GeneralDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">dk</span> <span class="o">+</span> <span class="s1">'_nodes'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">dk</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
                                                <span class="n">xx</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">yy</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">zz</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
                 <span class="n">structure</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">supports</span><span class="p">)</span>
 
         <span class="c1"># Add materials and sections</span>
 
-        <span class="n">mat_groups</span> <span class="o">=</span> <span class="n">group_keys_by_attributes</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">facedata</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">])</span>
+        <span class="n">mat_groups</span> <span class="o">=</span> <span class="n">group_keys_by_attributes</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">facedata</span><span class="p">,</span> <span class="p">[</span><span class="s1">'E'</span><span class="p">,</span> <span class="s1">'v'</span><span class="p">,</span> <span class="s1">'p'</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">mk</span> <span class="ow">in</span> <span class="n">mat_groups</span><span class="p">:</span>
-            <span class="n">m</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="s1">&#39;-&#39;</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mk</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)]</span>
-            <span class="n">material</span> <span class="o">=</span> <span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">mk</span> <span class="o">+</span> <span class="s1">&#39;_material&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="s1">'-'</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mk</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'_'</span><span class="p">)]</span>
+            <span class="n">material</span> <span class="o">=</span> <span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">mk</span> <span class="o">+</span> <span class="s1">'_material'</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
             <span class="n">structure</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">material</span><span class="p">)</span>
 
-        <span class="n">thick_groups</span> <span class="o">=</span> <span class="n">group_keys_by_attribute</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">facedata</span><span class="p">,</span> <span class="s1">&#39;thick&#39;</span><span class="p">)</span>
+        <span class="n">thick_groups</span> <span class="o">=</span> <span class="n">group_keys_by_attribute</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">facedata</span><span class="p">,</span> <span class="s1">'thick'</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">tk</span> <span class="ow">in</span> <span class="n">thick_groups</span><span class="p">:</span>
             <span class="n">t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tk</span><span class="p">)</span>
-            <span class="n">section</span> <span class="o">=</span> <span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">tk</span> <span class="o">+</span> <span class="s1">&#39;_section&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">section</span> <span class="o">=</span> <span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">tk</span> <span class="o">+</span> <span class="s1">'_section'</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
             <span class="n">structure</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
 
         <span class="n">prop_comb</span> <span class="o">=</span> <span class="n">combine_all_sets</span><span class="p">(</span><span class="n">mat_groups</span><span class="p">,</span> <span class="n">thick_groups</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">pk</span> <span class="ow">in</span> <span class="n">prop_comb</span><span class="p">:</span>
-            <span class="n">mat</span><span class="p">,</span> <span class="n">sec</span> <span class="o">=</span> <span class="n">pk</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
-            <span class="n">prop</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">mat</span> <span class="o">+</span> <span class="s1">&#39;_material&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="n">sec</span> <span class="o">+</span> <span class="s1">&#39;_section&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="n">prop_comb</span><span class="p">[</span><span class="n">pk</span><span class="p">])</span>
+            <span class="n">mat</span><span class="p">,</span> <span class="n">sec</span> <span class="o">=</span> <span class="n">pk</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span>
+            <span class="n">prop</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">mat</span> <span class="o">+</span> <span class="s1">'_material'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="n">sec</span> <span class="o">+</span> <span class="s1">'_section'</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="n">prop_comb</span><span class="p">[</span><span class="n">pk</span><span class="p">])</span>
             <span class="n">structure</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">prop</span><span class="p">)</span>
 
         <span class="c1"># Add loads</span>
 
-        <span class="n">load_groups</span> <span class="o">=</span> <span class="n">group_keys_by_attribute</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertex</span><span class="p">,</span> <span class="s1">&#39;l&#39;</span><span class="p">)</span>
+        <span class="n">load_groups</span> <span class="o">=</span> <span class="n">group_keys_by_attribute</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertex</span><span class="p">,</span> <span class="s1">'l'</span><span class="p">)</span>
         <span class="n">load_names</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">lk</span> <span class="ow">in</span> <span class="n">load_groups</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">lk</span> <span class="o">!=</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
-                <span class="n">load_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">lk</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_load&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">lk</span> <span class="o">!=</span> <span class="s1">'-'</span><span class="p">:</span>
+                <span class="n">load_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">lk</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'_load'</span><span class="p">)</span>
                 <span class="n">nkeys</span> <span class="o">=</span> <span class="n">load_groups</span><span class="p">[</span><span class="n">lk</span><span class="p">]</span>
-                <span class="n">load</span> <span class="o">=</span> <span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">lk</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_load&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">nkeys</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">lk</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">lk</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">lk</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="n">load</span> <span class="o">=</span> <span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">lk</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'_load'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">nkeys</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">lk</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">lk</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">lk</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
                 <span class="n">structure</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">load</span><span class="p">)</span>
 
-        <span class="n">gstep</span> <span class="o">=</span> <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Structure from Mesh&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="n">disp_names</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="n">load_names</span><span class="p">)</span>
+        <span class="n">gstep</span> <span class="o">=</span> <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'Structure from Mesh'</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="n">disp_names</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="n">load_names</span><span class="p">)</span>
         <span class="n">structure</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">gstep</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">structure</span>
@@ -687,19 +665,19 @@
         <span class="k">pass</span>
 
     <span class="k">def</span> <span class="nf">add_nodes_elements_from_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">element_type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds the nodes and faces of a Mesh to the Structure object.</span>
+        <span class="sd">""" Adds the nodes and faces of a Mesh to the Structure object.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">            mesh (obj): Mesh datastructure object.</span>
-<span class="sd">            element_type (str): Element type: &#39;ShellElement&#39;, &#39;MembraneElement&#39; etc.</span>
+<span class="sd">            element_type (str): Element type: 'ShellElement', 'MembraneElement' etc.</span>
 <span class="sd">            acoustic (bool): Acoustic properties on or off.</span>
 <span class="sd">            thermal (bool): Thermal properties on or off.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None: Nodes and elements are updated in the Structure object.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">()),</span> <span class="n">key</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">fkey</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">faces</span><span class="p">()):</span>
@@ -707,19 +685,19 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">face</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">element_type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="n">acoustic</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="n">thermal</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">add_nodes_elements_from_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network</span><span class="p">,</span> <span class="n">element_type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds the nodes and edges of a Network to the Structure object.</span>
+        <span class="sd">""" Adds the nodes and edges of a Network to the Structure object.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">            network (obj): Network datastructure object.</span>
-<span class="sd">            element_type (str): Element type: &#39;BeamElement&#39;, &#39;TrussElement&#39; etc.</span>
+<span class="sd">            element_type (str): Element type: 'BeamElement', 'TrussElement' etc.</span>
 <span class="sd">            acoustic (bool): Acoustic properties on or off.</span>
 <span class="sd">            thermal (bool): Thermal properties on or off.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None: Nodes and elements are updated in the Structure object.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">vertices</span><span class="p">()),</span> <span class="n">key</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">edges</span><span class="p">()):</span>
@@ -733,24 +711,24 @@
 <span class="c1"># ==============================================================================</span>
 
     <span class="k">def</span> <span class="nf">add_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds a node, element or surface set to structure.sets.</span>
+        <span class="sd">""" Adds a node, element or surface set to structure.sets.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">            name (str): Name of the set.</span>
-<span class="sd">            type (str): &#39;node&#39;, &#39;element&#39;, &#39;surface_node&#39;, surface_element&#39;.</span>
+<span class="sd">            type (str): 'node', 'element', 'surface_node', surface_element'.</span>
 <span class="sd">            selection (list, dic): The keys of the nodes, elements or elements and sides.</span>
 <span class="sd">            explode (bool): Explode the set into sets for each member of selection.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">explode</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="s1">&#39;element&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'node'</span><span class="p">,</span> <span class="s1">'element'</span><span class="p">]:</span>
                 <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">select</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="s1">&#39;selection&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">select</span><span class="p">],</span> <span class="s1">&#39;explode&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="s1">&#39;selection&#39;</span><span class="p">:</span> <span class="n">selection</span><span class="p">,</span> <span class="s1">&#39;explode&#39;</span><span class="p">:</span> <span class="n">explode</span><span class="p">}</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">_</span><span class="si">{1}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">select</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="s1">'selection'</span><span class="p">:</span> <span class="p">[</span><span class="n">select</span><span class="p">],</span> <span class="s1">'explode'</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="s1">'selection'</span><span class="p">:</span> <span class="n">selection</span><span class="p">,</span> <span class="s1">'explode'</span><span class="p">:</span> <span class="n">explode</span><span class="p">}</span>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -758,7 +736,7 @@
 <span class="c1"># ==============================================================================</span>
 
     <span class="k">def</span> <span class="nf">scale_displacements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Scales displacements by a given factor.</span>
+        <span class="sd">""" Scales displacements by a given factor.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -768,7 +746,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            dic: The scaled displacements dictionary.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">disp_dic</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">disp</span> <span class="ow">in</span> <span class="n">displacements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">dkey</span><span class="p">,</span> <span class="n">dcomp</span> <span class="ow">in</span> <span class="n">disp</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -778,7 +756,7 @@
         <span class="k">return</span> <span class="n">disp_dic</span>
 
     <span class="k">def</span> <span class="nf">scale_loads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Scales loads by a given factor.</span>
+        <span class="sd">""" Scales loads by a given factor.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -788,7 +766,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            dic: The scaled loads dictionary.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">loads_dic</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">load</span> <span class="ow">in</span> <span class="n">loads</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">lkey</span><span class="p">,</span> <span class="n">lcomp</span> <span class="ow">in</span> <span class="n">load</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -803,7 +781,7 @@
 <span class="c1"># ==============================================================================</span>
 
     <span class="k">def</span> <span class="nf">add_constraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constraint</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds a Constraint object to structure.constraints.</span>
+        <span class="sd">""" Adds a Constraint object to structure.constraints.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -812,12 +790,12 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">constraint</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constraints</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">constraints</span><span class="p">[</span><span class="n">constraint</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">constraint</span>
 
     <span class="k">def</span> <span class="nf">add_displacement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">displacement</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds a Displacement object to structure.displacements.</span>
+        <span class="sd">""" Adds a Displacement object to structure.displacements.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -826,12 +804,12 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">displacement</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">displacements</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="n">displacement</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">displacement</span>
 
     <span class="k">def</span> <span class="nf">add_displacements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">displacements</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds Displacement objects to structure.displacements.</span>
+        <span class="sd">""" Adds Displacement objects to structure.displacements.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -840,13 +818,13 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">displacement</span> <span class="ow">in</span> <span class="n">displacements</span><span class="p">:</span>
             <span class="n">displacement</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">displacements</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="n">displacement</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">displacement</span>
 
     <span class="k">def</span> <span class="nf">add_element_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_properties</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds an ElementProperties object to structure.element_properties.</span>
+        <span class="sd">""" Adds an ElementProperties object to structure.element_properties.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -856,7 +834,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
             <span class="n">index</span> <span class="o">=</span> <span class="n">name</span>
         <span class="k">else</span><span class="p">:</span>
@@ -864,7 +842,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">element_properties</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">element_properties</span>
 
     <span class="k">def</span> <span class="nf">add_interaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interaction</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds an Interaction object to structure.interactions.</span>
+        <span class="sd">""" Adds an Interaction object to structure.interactions.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -873,12 +851,12 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">interaction</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interactions</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interactions</span><span class="p">[</span><span class="n">interaction</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">interaction</span>
 
     <span class="k">def</span> <span class="nf">add_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds a Load object to structure.loads.</span>
+        <span class="sd">""" Adds a Load object to structure.loads.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -887,12 +865,12 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">load</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loads</span><span class="p">[</span><span class="n">load</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">load</span>
 
     <span class="k">def</span> <span class="nf">add_loads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loads</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds Load objects to structure.loads.</span>
+        <span class="sd">""" Adds Load objects to structure.loads.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -901,13 +879,13 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="n">loads</span><span class="p">:</span>
             <span class="n">load</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">loads</span><span class="p">[</span><span class="n">load</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">load</span>
 
     <span class="k">def</span> <span class="nf">add_material</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds a Material object to structure.materials.</span>
+        <span class="sd">""" Adds a Material object to structure.materials.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -916,12 +894,12 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">material</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="n">material</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">material</span>
 
     <span class="k">def</span> <span class="nf">add_materials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">materials</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds Material objects to structure.materials.</span>
+        <span class="sd">""" Adds Material objects to structure.materials.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -930,13 +908,13 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">material</span> <span class="ow">in</span> <span class="n">materials</span><span class="p">:</span>
             <span class="n">material</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="n">material</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">material</span>
 
     <span class="k">def</span> <span class="nf">add_misc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">misc</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds a Misc object to structure.misc.</span>
+        <span class="sd">""" Adds a Misc object to structure.misc.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -945,12 +923,12 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">misc</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">misc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">misc</span><span class="p">[</span><span class="n">misc</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">misc</span>
 
     <span class="k">def</span> <span class="nf">add_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds a Section object to structure.sections.</span>
+        <span class="sd">""" Adds a Section object to structure.sections.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -959,12 +937,12 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">section</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="n">section</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">section</span>
 
     <span class="k">def</span> <span class="nf">add_sections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sections</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds Section objects to structure.sections.</span>
+        <span class="sd">""" Adds Section objects to structure.sections.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -973,13 +951,13 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">:</span>
             <span class="n">section</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="n">section</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">section</span>
 
     <span class="k">def</span> <span class="nf">add_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds a Step object to structure.steps.</span>
+        <span class="sd">""" Adds a Step object to structure.steps.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -988,12 +966,12 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">step</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span>
 
     <span class="k">def</span> <span class="nf">add_steps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steps</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Adds Step objects to structure.steps.</span>
+        <span class="sd">""" Adds Step objects to structure.steps.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1002,7 +980,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
             <span class="n">step</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">step</span>
@@ -1013,7 +991,7 @@
 <span class="c1"># ==============================================================================</span>
 
     <span class="k">def</span> <span class="nf">set_steps_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Sets the order the Steps will be analysed.</span>
+        <span class="sd">""" Sets the order the Steps will be analysed.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1022,7 +1000,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="n">order</span>
 
 
@@ -1031,7 +1009,7 @@
 <span class="c1"># ==============================================================================</span>
 
     <span class="k">def</span> <span class="nf">fields_dic_from_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields_list</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Creates a fields dictionary from a fields list.</span>
+        <span class="sd">""" Creates a fields dictionary from a fields list.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1040,70 +1018,70 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            dic: Conversion to a fields dictionary.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">node_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;rf&#39;</span><span class="p">,</span> <span class="s1">&#39;rm&#39;</span><span class="p">,</span> <span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;ur&#39;</span><span class="p">,</span> <span class="s1">&#39;cf&#39;</span><span class="p">,</span> <span class="s1">&#39;cm&#39;</span><span class="p">]</span>
-        <span class="n">element_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sf&#39;</span><span class="p">,</span> <span class="s1">&#39;sm&#39;</span><span class="p">,</span> <span class="s1">&#39;sk&#39;</span><span class="p">,</span> <span class="s1">&#39;se&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;pe&#39;</span><span class="p">,</span> <span class="s1">&#39;rbfor&#39;</span><span class="p">,</span> <span class="s1">&#39;spf&#39;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">node_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'rf'</span><span class="p">,</span> <span class="s1">'rm'</span><span class="p">,</span> <span class="s1">'u'</span><span class="p">,</span> <span class="s1">'ur'</span><span class="p">,</span> <span class="s1">'cf'</span><span class="p">,</span> <span class="s1">'cm'</span><span class="p">]</span>
+        <span class="n">element_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'sf'</span><span class="p">,</span> <span class="s1">'sm'</span><span class="p">,</span> <span class="s1">'sk'</span><span class="p">,</span> <span class="s1">'se'</span><span class="p">,</span> <span class="s1">'s'</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">,</span> <span class="s1">'pe'</span><span class="p">,</span> <span class="s1">'rbfor'</span><span class="p">,</span> <span class="s1">'spf'</span><span class="p">]</span>
 
         <span class="n">fields_dic</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">node_fields</span> <span class="o">+</span> <span class="n">element_fields</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields_list</span><span class="p">:</span>
-                <span class="n">fields_dic</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span>
+                <span class="n">fields_dic</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'all'</span>
 
         <span class="k">return</span> <span class="n">fields_dic</span>
 
-    <span class="k">def</span> <span class="nf">write_input_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;u&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Writes the FE software&#39;s input file.</span>
+    <span class="k">def</span> <span class="nf">write_input_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">'u'</span><span class="p">):</span>
+        <span class="sd">""" Writes the FE software's input file.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            software (str): Analysis software or library to use, &#39;abaqus&#39;, &#39;opensees&#39; or &#39;ansys&#39;.</span>
+<span class="sd">            software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.</span>
 <span class="sd">            fields (list, str): Data field requests.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_to_obj</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'abaqus'</span><span class="p">:</span>
             <span class="n">abaq</span><span class="o">.</span><span class="n">input_generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'ansys'</span><span class="p">:</span>
             <span class="n">ansys</span><span class="o">.</span><span class="n">input_generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'opensees'</span><span class="p">:</span>
             <span class="n">opensees</span><span class="o">.</span><span class="n">input_generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">analyse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s1">&#39;research&#39;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Runs the analysis through the chosen FEA software/library.</span>
+    <span class="k">def</span> <span class="nf">analyse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s1">'research'</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">""" Runs the analysis through the chosen FEA software/library.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            software (str): Analysis software or library to use, &#39;abaqus&#39;, &#39;opensees&#39; or &#39;ansys&#39;.</span>
+<span class="sd">            software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.</span>
 <span class="sd">            exe (str): Full terminal command to bypass subprocess defaults.</span>
 <span class="sd">            cpus (int): Number of CPU cores to use.</span>
-<span class="sd">            license (str): FE software license type (if required): &#39;research&#39;, &#39;student&#39;.</span>
+<span class="sd">            license (str): FE software license type (if required): 'research', 'student'.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'abaqus'</span><span class="p">:</span>
             <span class="n">abaq</span><span class="o">.</span><span class="n">abaqus_launch_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exe</span><span class="p">,</span> <span class="n">cpus</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'ansys'</span><span class="p">:</span>
             <span class="n">ansys</span><span class="o">.</span><span class="n">ansys_launch_process</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">cpus</span><span class="p">,</span> <span class="n">license</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="n">delete</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'opensees'</span><span class="p">:</span>
             <span class="n">opensees</span><span class="o">.</span><span class="n">opensees_launch_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exe</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">extract_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="s1">&#39;last&#39;</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Extracts data from the FE software&#39;s output.</span>
+    <span class="k">def</span> <span class="nf">extract_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">'u'</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="s1">'last'</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">""" Extracts data from the FE software's output.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            software (str): Analysis software or library used, &#39;abaqus&#39;, &#39;opensees&#39; or &#39;ansys&#39;.</span>
+<span class="sd">            software (str): Analysis software or library used, 'abaqus', 'opensees' or 'ansys'.</span>
 <span class="sd">            fields (list, str): Data field requests.</span>
 <span class="sd">            steps (list): Loads steps to extract from.</span>
 <span class="sd">            exe (str): Full terminal command to bypass subprocess defaults.</span>
@@ -1111,31 +1089,31 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'abaqus'</span><span class="p">:</span>
             <span class="n">abaq</span><span class="o">.</span><span class="n">extract_odb_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="n">exe</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'ansys'</span><span class="p">:</span>
             <span class="n">ansys</span><span class="o">.</span><span class="n">extract_rst_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="n">steps</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">'opensees'</span><span class="p">:</span>
             <span class="n">opensees</span><span class="o">.</span><span class="n">extract_out_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">analyse_and_extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s1">&#39;research&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Runs the analysis through the chosen FEA software/library and extracts data.</span>
+    <span class="k">def</span> <span class="nf">analyse_and_extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">'u'</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s1">'research'</span><span class="p">):</span>
+        <span class="sd">""" Runs the analysis through the chosen FEA software/library and extracts data.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            software (str): Analysis software or library to use, &#39;abaqus&#39;, &#39;opensees&#39; or &#39;ansys&#39;.</span>
+<span class="sd">            software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.</span>
 <span class="sd">            fields (list, str): Data field requests.</span>
 <span class="sd">            exe (str): Full terminal command to bypass subprocess defaults.</span>
 <span class="sd">            cpus (int): Number of CPU cores to use.</span>
-<span class="sd">            license (str): FE software license type (if required): &#39;research&#39;, &#39;student&#39;.</span>
+<span class="sd">            license (str): FE software license type (if required): 'research', 'student'.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write_input_file</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">analyse</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="n">software</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="n">exe</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="n">cpus</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="n">license</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">extract_data</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="n">exe</span><span class="p">)</span>
@@ -1145,26 +1123,26 @@
 <span class="c1"># results</span>
 <span class="c1"># ==============================================================================</span>
 
-    <span class="k">def</span> <span class="nf">get_nodal_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Extract nodal results from self.results.</span>
+    <span class="k">def</span> <span class="nf">get_nodal_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">'all'</span><span class="p">):</span>
+        <span class="sd">""" Extract nodal results from self.results.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">            step (str): Step to extract from.</span>
 <span class="sd">            field (str): Data field request.</span>
-<span class="sd">            nodes (str, list): Extract &#39;all&#39; or a node set/list.</span>
+<span class="sd">            nodes (str, list): Extract 'all' or a node set/list.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            (dict): The nodal results for the requested field.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">rdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="s1">&#39;nodal&#39;</span><span class="p">]</span>
+        <span class="n">rdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="s1">'nodal'</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">nodes</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">nodes</span> <span class="o">==</span> <span class="s1">'all'</span><span class="p">:</span>
             <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="n">nodes</span><span class="p">][</span><span class="s1">&#39;selection&#39;</span><span class="p">]</span>
+            <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="n">nodes</span><span class="p">][</span><span class="s1">'selection'</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">keys</span> <span class="o">=</span> <span class="n">nodes</span>
 
@@ -1172,26 +1150,26 @@
             <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">rdict</span><span class="p">[</span><span class="n">field</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">data</span>
 
-    <span class="k">def</span> <span class="nf">get_element_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Extract element results from self.results.</span>
+    <span class="k">def</span> <span class="nf">get_element_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">'all'</span><span class="p">):</span>
+        <span class="sd">""" Extract element results from self.results.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">            step (str): Step to extract from.</span>
 <span class="sd">            field (str): Data field request.</span>
-<span class="sd">            elements (str, list): Extract &#39;all&#39; or an element set/list.</span>
+<span class="sd">            elements (str, list): Extract 'all' or an element set/list.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            (dict): The element results for the requested field.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">rdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="s1">&#39;element&#39;</span><span class="p">]</span>
+        <span class="n">rdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="s1">'element'</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">elements</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">elements</span> <span class="o">==</span> <span class="s1">'all'</span><span class="p">:</span>
             <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="n">elements</span><span class="p">][</span><span class="s1">&#39;selection&#39;</span><span class="p">]</span>
+            <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="n">elements</span><span class="p">][</span><span class="s1">'selection'</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">keys</span> <span class="o">=</span> <span class="n">elements</span>
 
@@ -1205,7 +1183,7 @@
 <span class="c1"># ==============================================================================</span>
 
     <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Prints a summary of the Structure object contents.</span>
+        <span class="sd">""" Prints a summary of the Structure object contents.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1214,7 +1192,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 
@@ -1223,7 +1201,7 @@
 <span class="c1"># ==============================================================================</span>
 
     <span class="k">def</span> <span class="nf">view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Starts the QT app for visualisation.</span>
+        <span class="sd">""" Starts the QT app for visualisation.</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            - In development.</span>
@@ -1235,14 +1213,14 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">compas_fea.viewers.app</span> <span class="k">import</span> <span class="n">App</span>
 
             <span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="n">app</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Failed to load QT App *****&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'***** Failed to load QT App *****'</span><span class="p">)</span>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -1250,7 +1228,7 @@
 <span class="c1"># ==============================================================================</span>
 
     <span class="k">def</span> <span class="nf">save_to_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Exports the Structure object to an .obj file through Pickle.</span>
+        <span class="sd">""" Exports the Structure object to an .obj file through Pickle.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1259,11 +1237,11 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">.obj&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">.obj'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Structure saved to: </span><span class="si">{0}</span><span class="s1"> *****</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'***** Structure saved to: </span><span class="si">{0}</span><span class="s1"> *****</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -1272,7 +1250,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">load_from_obj</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Imports a Structure object from an .obj file through Pickle.</span>
+        <span class="sd">""" Imports a Structure object from an .obj file through Pickle.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1283,73 +1261,49 @@
 <span class="sd">        -------</span>
 <span class="sd">        obj</span>
 <span class="sd">            Imported Structure object.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">structure</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Structure loaded from: </span><span class="si">{0}</span><span class="s1"> *****&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'***** Structure loaded from: </span><span class="si">{0}</span><span class="s1"> *****'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">structure</span></div>
 </code></pre></div>
-                        
-                        <!-- <nav class="compas-sideways">
+<!-- <nav class="compas-sideways">
                             
 
                             
                         </nav> -->
-
-                    
-
-                </main>
-
-                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
-                    <div class="navbar-light">
-
-                        <form id="" class="d-flex compas-searchbox" action="../../../search.html" method="get">
-                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
-                            <input type="hidden" name="check_keywords" value="yes" />
-                            <input type="hidden" name="area" value="default" />
-
-                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                        </form>
-
-                        
-                        
-
-                            <div class="navbar-expand-md">
-                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
-
-                                <ul class="nav flex-column">
+</main>
+<div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
+<div class="navbar-light">
+<form action="../../../search.html" class="d-flex compas-searchbox" id="" method="get">
+<input class="form-control" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+<button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+</form>
+<div class="navbar-expand-md">
+<div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
+<ul class="nav flex-column">
 <li class="nav-item"><a class="nav-link reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../tutorial.html">Tutorial</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../examples.html">Examples</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../reference.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../license.html">License</a></li>
 </ul>
-
-
-                                </div>
-                            </div>
-
-                        
-
-                    </div>
-                </div>
-                
-                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
-
-                    
-
-                    
-
-                </div>
-            </div>
-        </div>
-
-        <footer class="compas-footer">
+</div>
+</div>
+</div>
+</div>
+<div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+</div>
+</div>
+</div>
+<footer class="compas-footer">
             
                 
-                    &#169; Copyright 2017, Block Research Group.
+                    © Copyright 2017, Block Research Group.
                 
             
 
@@ -1361,10 +1315,7 @@
                 Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
             
         </footer>
-
-        
-
-            <script type="text/javascript">
+<script type="text/javascript">
 var DOCUMENTATION_OPTIONS = {
     URL_ROOT:    '',
     VERSION:     '',
@@ -1374,21 +1325,16 @@ var DOCUMENTATION_OPTIONS = {
     SOURCELINK_SUFFIX: '.txt'
 };
             </script>
-
-            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-            
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-            
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
-
-            <script src="https://compas-dev.github.io/js/underscore.js"></script>
-            <script src="https://compas-dev.github.io/js/doctools.js"></script>
-            <!-- <script src="https://compas-dev.github.io/js/searchtools_.js"></script> -->
-
-            <script>
+<script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+<script src="https://compas-dev.github.io/js/underscore.js"></script>
+<script src="https://compas-dev.github.io/js/doctools.js"></script>
+<!-- <script src="https://compas-dev.github.io/js/searchtools_.js"></script> -->
+<script>
 hljs.initHighlightingOnLoad();
 anchors.add();
 
@@ -1431,7 +1377,5 @@ copy_code.on('error', function(event) {
     }, 2000);
 });
             </script>
-
-        
-    </body>
+</body>
 </html>
