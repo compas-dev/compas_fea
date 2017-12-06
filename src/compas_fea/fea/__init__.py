@@ -55,6 +55,7 @@ ansys
     write_results_from_rst
     load_to_results
 
+
 opensees
 ========
 
@@ -73,5 +74,16 @@ opensees
     input_write_recorders
     input_write_patterns
     opensees_launch_process
+    
+    
+sofistik
+========
+
+.. currentmodule:: compas_fea.fea.sofistik
+
+:mod:`compas_fea.fea.sofistik`
+
+.. autosummary::
+    :toctree: generated/
 
 """

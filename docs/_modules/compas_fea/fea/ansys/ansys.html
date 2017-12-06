@@ -1,37 +1,54 @@
 
-<!DOCTYPE html>
 
+
+<!DOCTYPE html>
 <html lang="en">
-<head>
-<title>compas_fea -- FEA package for compas</title>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
-<meta content="" name="author"/>
-<meta content="" name="description"/>
-<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
-<link href="https://compas-dev.github.io/css/github.css" rel="stylesheet" type="text/css"/>
-<link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
-<link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
-<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
-</head>
-<body data-spy="scroll" data-target="#compas-localnav">
-<header class="navbar navbar-expand compas-navbar">
-<a class="navbar-brand" href="https://compas-dev.github.io/">
-<img alt="compas" height="36px" src="/images/compas_icon_blue-01.png" width="36px"/>
-</a>
-<ul class="navbar-nav">
-<li class="nav-item">
-<a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="http://forum.compas-framework.org/c/compas-fea">Forum</a>
-</li>
-</ul>
-</header>
-<div class="container-fluid compas-container">
-<div class="row flex-xl-nowrap">
-<main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
-<!-- 
+    <head>
+        <title>compas_fea -- FEA package for compas</title>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+        <meta name="author" content="" />
+        <meta name="description" content="" />
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/github.css" />
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas-reference.css" />
+
+        
+        
+        
+
+        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    </head>
+    <body data-spy="scroll" data-target="#compas-localnav">
+
+        <header class="navbar navbar-expand compas-navbar">
+            <a class="navbar-brand" href="https://compas-dev.github.io/">
+                <img src="/images/compas_icon_blue-01.png" width="36px" height="36px" alt="compas" />
+            </a>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://forum.compas-framework.org/c/compas-fea">Forum</a>
+                    </li>
+                </ul>
+        </header>
+        
+        <div class="container-fluid compas-container">
+            <div class="row flex-xl-nowrap">
+
+                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+
+                    
+
+                        <!-- 
         <nav class="breadcrumb">
             <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
             <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
@@ -43,7 +60,12 @@
             
         </nav>
  -->
-<h1>Source code for compas_fea.fea.ansys.ansys</h1><div class="highlight"><pre><code class="language-python border rounded">
+
+                        
+
+                        
+
+                        <h1>Source code for compas_fea.fea.ansys.ansys</h1><div class="highlight"><pre><code class="language-python border rounded">
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
@@ -51,87 +73,87 @@
 <span class="kn">from</span> <span class="nn">compas_fea.fea.ansys.writing</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">compas_fea.fea.ansys.reading</span> <span class="k">import</span> <span class="o">*</span>
 
-<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">'Tomas Mendez Echenagucia &lt;mendez@arch.ethz.ch&gt;'</span><span class="p">]</span>
-<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">'Copyright 2017, BLOCK Research Group - ETH Zurich'</span>
-<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">'MIT License'</span>
-<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">'mendez@arch.ethz.ch'</span>
+<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Tomas Mendez Echenagucia &lt;mendez@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
+<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">&#39;Copyright 2017, BLOCK Research Group - ETH Zurich&#39;</span>
+<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
+<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">&#39;mendez@arch.ethz.ch&#39;</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">'input_generate'</span><span class="p">,</span>
-    <span class="s1">'make_command_file_static'</span><span class="p">,</span>
-    <span class="s1">'make_command_file_modal'</span><span class="p">,</span>
-    <span class="s1">'make_command_file_harmonic'</span><span class="p">,</span>
-    <span class="s1">'ansys_launch_process'</span><span class="p">,</span>
-    <span class="s1">'ansys_launch_process_extract'</span><span class="p">,</span>
-    <span class="s1">'delete_result_files'</span><span class="p">,</span>
-    <span class="s1">'extract_rst_data'</span><span class="p">,</span>
-    <span class="s1">'write_results_from_rst'</span><span class="p">,</span>
-    <span class="s1">'load_to_results'</span>
+    <span class="s1">&#39;input_generate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;make_command_file_static&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;make_command_file_modal&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;make_command_file_harmonic&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ansys_launch_process&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ansys_launch_process_extract&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;delete_result_files&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;extract_rst_data&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;write_results_from_rst&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;load_to_results&#39;</span>
 <span class="p">]</span>
 
 
 <div class="viewcode-block" id="input_generate"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.input_generate.html#compas_fea.fea.ansys.input_generate">[docs]</a><span class="k">def</span> <span class="nf">input_generate</span><span class="p">(</span><span class="n">structure</span><span class="p">):</span>
-    <span class="sd">""" Generates Ansys input file.</span>
+    <span class="sd">&quot;&quot;&quot; Generates Ansys input file.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        structure (obj): Structure object.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">path</span>
     <span class="n">stypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">skey</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="k">for</span> <span class="n">skey</span> <span class="ow">in</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="s1">'static'</span> <span class="ow">in</span> <span class="n">stypes</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">&#39;static&#39;</span> <span class="ow">in</span> <span class="n">stypes</span><span class="p">:</span>
         <span class="n">make_command_file_static</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="s1">'modal'</span> <span class="ow">in</span> <span class="n">stypes</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="s1">&#39;modal&#39;</span> <span class="ow">in</span> <span class="n">stypes</span><span class="p">:</span>
         <span class="n">make_command_file_modal</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="s1">'harmonic'</span> <span class="ow">in</span> <span class="n">stypes</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="s1">&#39;harmonic&#39;</span> <span class="ow">in</span> <span class="n">stypes</span><span class="p">:</span>
         <span class="n">make_command_file_harmonic</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">skey</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'This analysis type has not yet been implemented for Compas Ansys'</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;This analysis type has not yet been implemented for Compas Ansys&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="make_command_file_static"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.make_command_file_static.html#compas_fea.fea.ansys.make_command_file_static">[docs]</a><span class="k">def</span> <span class="nf">make_command_file_static</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="sd">""" Generates Ansys input file for static analysis.</span>
+    <span class="sd">&quot;&quot;&quot; Generates Ansys input file for static analysis.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        structure (obj): Structure object.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">write_static_analysis_request</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="make_command_file_modal"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.make_command_file_modal.html#compas_fea.fea.ansys.make_command_file_modal">[docs]</a><span class="k">def</span> <span class="nf">make_command_file_modal</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="sd">""" Generates Ansys input file for modal analysis.</span>
+    <span class="sd">&quot;&quot;&quot; Generates Ansys input file for modal analysis.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        structure (obj): Structure object.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">write_modal_analysis_request</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="make_command_file_harmonic"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.make_command_file_harmonic.html#compas_fea.fea.ansys.make_command_file_harmonic">[docs]</a><span class="k">def</span> <span class="nf">make_command_file_harmonic</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">skey</span><span class="p">):</span>
-    <span class="sd">""" Generates Ansys input file for harmonic analysis.</span>
+    <span class="sd">&quot;&quot;&quot; Generates Ansys input file for harmonic analysis.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        structure (obj): Structure object.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">write_harmonic_analysis_request</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">skey</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ansys_launch_process"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.ansys_launch_process.html#compas_fea.fea.ansys.ansys_launch_process">[docs]</a><span class="k">def</span> <span class="nf">ansys_launch_process</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">cpus</span><span class="p">,</span> <span class="n">license</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">""" Launches an analysis using Ansys.</span>
+    <span class="sd">&quot;&quot;&quot; Launches an analysis using Ansys.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        path (str): Path to the Ansys input file.</span>
@@ -142,37 +164,37 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">'_output/'</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">'_output/'</span><span class="p">)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_output/&#39;</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_output/&#39;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">delete</span><span class="p">:</span>
         <span class="n">delete_result_files</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
-    <span class="n">ansys_path</span> <span class="o">=</span> <span class="s1">'MAPDL.exe'</span>
-    <span class="n">inp_path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">'/'</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">'.txt'</span>
-    <span class="n">work_dir</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">'_output/'</span>
+    <span class="n">ansys_path</span> <span class="o">=</span> <span class="s1">&#39;MAPDL.exe&#39;</span>
+    <span class="n">inp_path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span>
+    <span class="n">work_dir</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_output/&#39;</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">work_dir</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">work_dir</span><span class="p">)</span>
-    <span class="n">out_path</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">+</span> <span class="s1">'/'</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">'.out'</span>
+    <span class="n">out_path</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.out&#39;</span>
 
-    <span class="k">if</span> <span class="n">license</span> <span class="o">==</span> <span class="s1">'research'</span><span class="p">:</span>
-        <span class="n">lic_str</span> <span class="o">=</span> <span class="s1">'aa_r'</span>
-    <span class="k">elif</span> <span class="n">license</span> <span class="o">==</span> <span class="s1">'student'</span><span class="p">:</span>
-        <span class="n">lic_str</span> <span class="o">=</span> <span class="s1">'aa_t_a'</span>
+    <span class="k">if</span> <span class="n">license</span> <span class="o">==</span> <span class="s1">&#39;research&#39;</span><span class="p">:</span>
+        <span class="n">lic_str</span> <span class="o">=</span> <span class="s1">&#39;aa_r&#39;</span>
+    <span class="k">elif</span> <span class="n">license</span> <span class="o">==</span> <span class="s1">&#39;student&#39;</span><span class="p">:</span>
+        <span class="n">lic_str</span> <span class="o">=</span> <span class="s1">&#39;aa_t_a&#39;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">lic_str</span> <span class="o">=</span> <span class="s1">'aa_t_a'</span>  <span class="c1"># temporary default.</span>
+        <span class="n">lic_str</span> <span class="o">=</span> <span class="s1">&#39;aa_t_a&#39;</span>  <span class="c1"># temporary default.</span>
 
-    <span class="n">launch_string</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\"</span><span class="s1">'</span> <span class="o">+</span> <span class="n">ansys_path</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\"</span><span class="s1"> -p '</span> <span class="o">+</span> <span class="n">lic_str</span> <span class="o">+</span> <span class="s1">' -np '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cpus</span><span class="p">)</span>
-    <span class="n">launch_string</span> <span class="o">+=</span> <span class="s1">' -dir </span><span class="se">\"</span><span class="s1">'</span> <span class="o">+</span> <span class="n">work_dir</span>
-    <span class="n">launch_string</span> <span class="o">+=</span> <span class="s1">'</span><span class="se">\"</span><span class="s1"> -j </span><span class="se">\"</span><span class="s1">'</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\"</span><span class="s1"> -s read -l en-us -b -i </span><span class="se">\"</span><span class="s1">'</span>
-    <span class="n">launch_string</span> <span class="o">+=</span> <span class="n">inp_path</span> <span class="o">+</span> <span class="s1">' </span><span class="se">\"</span><span class="s1"> -o </span><span class="se">\"</span><span class="s1">'</span> <span class="o">+</span> <span class="n">out_path</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\"</span><span class="s1">'</span>
+    <span class="n">launch_string</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">ansys_path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1"> -p &#39;</span> <span class="o">+</span> <span class="n">lic_str</span> <span class="o">+</span> <span class="s1">&#39; -np &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cpus</span><span class="p">)</span>
+    <span class="n">launch_string</span> <span class="o">+=</span> <span class="s1">&#39; -dir </span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">work_dir</span>
+    <span class="n">launch_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1"> -j </span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1"> -s read -l en-us -b -i </span><span class="se">\&quot;</span><span class="s1">&#39;</span>
+    <span class="n">launch_string</span> <span class="o">+=</span> <span class="n">inp_path</span> <span class="o">+</span> <span class="s1">&#39; </span><span class="se">\&quot;</span><span class="s1"> -o </span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">out_path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span>
 
     <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">launch_string</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ansys_launch_process_extract"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.ansys_launch_process_extract.html#compas_fea.fea.ansys.ansys_launch_process_extract">[docs]</a><span class="k">def</span> <span class="nf">ansys_launch_process_extract</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s1">'research'</span><span class="p">):</span>
-    <span class="sd">""" Calls an extraction of results from Ansys.</span>
+<div class="viewcode-block" id="ansys_launch_process_extract"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.ansys_launch_process_extract.html#compas_fea.fea.ansys.ansys_launch_process_extract">[docs]</a><span class="k">def</span> <span class="nf">ansys_launch_process_extract</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s1">&#39;research&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Calls an extraction of results from Ansys.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        path (str): Path to the Ansys input file.</span>
@@ -182,28 +204,28 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
-    <span class="n">ansys_path</span> <span class="o">=</span> <span class="s1">'MAPDL.exe'</span>
-    <span class="n">inp_path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">'/'</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">'_extract.txt'</span>
-    <span class="n">work_dir</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">'_output/'</span>
-    <span class="n">out_path</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">+</span> <span class="s1">'/output_extract.out'</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ansys_path</span> <span class="o">=</span> <span class="s1">&#39;MAPDL.exe&#39;</span>
+    <span class="n">inp_path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_extract.txt&#39;</span>
+    <span class="n">work_dir</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_output/&#39;</span>
+    <span class="n">out_path</span> <span class="o">=</span> <span class="n">work_dir</span> <span class="o">+</span> <span class="s1">&#39;/output_extract.out&#39;</span>
 
-    <span class="k">if</span> <span class="n">license</span> <span class="o">==</span> <span class="s1">'research'</span><span class="p">:</span>
-        <span class="n">lic_str</span> <span class="o">=</span> <span class="s1">'aa_r'</span>
-    <span class="k">elif</span> <span class="n">license</span> <span class="o">==</span> <span class="s1">'student'</span><span class="p">:</span>
-        <span class="n">lic_str</span> <span class="o">=</span> <span class="s1">'aa_t_a'</span>
+    <span class="k">if</span> <span class="n">license</span> <span class="o">==</span> <span class="s1">&#39;research&#39;</span><span class="p">:</span>
+        <span class="n">lic_str</span> <span class="o">=</span> <span class="s1">&#39;aa_r&#39;</span>
+    <span class="k">elif</span> <span class="n">license</span> <span class="o">==</span> <span class="s1">&#39;student&#39;</span><span class="p">:</span>
+        <span class="n">lic_str</span> <span class="o">=</span> <span class="s1">&#39;aa_t_a&#39;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">lic_str</span> <span class="o">=</span> <span class="s1">'aa_t_a'</span>  <span class="c1"># temporary default.</span>
+        <span class="n">lic_str</span> <span class="o">=</span> <span class="s1">&#39;aa_t_a&#39;</span>  <span class="c1"># temporary default.</span>
 
-    <span class="n">launch_string</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\"</span><span class="s1">'</span> <span class="o">+</span> <span class="n">ansys_path</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\"</span><span class="s1"> -p '</span> <span class="o">+</span> <span class="n">lic_str</span> <span class="o">+</span> <span class="s1">' -np '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cpus</span><span class="p">)</span>
-    <span class="n">launch_string</span> <span class="o">+=</span> <span class="s1">' -dir </span><span class="se">\"</span><span class="s1">'</span> <span class="o">+</span> <span class="n">work_dir</span>
-    <span class="n">launch_string</span> <span class="o">+=</span> <span class="s1">'</span><span class="se">\"</span><span class="s1"> -j </span><span class="se">\"</span><span class="s1">'</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\"</span><span class="s1"> -s read -l en-us -b -i </span><span class="se">\"</span><span class="s1">'</span>
-    <span class="n">launch_string</span> <span class="o">+=</span> <span class="n">inp_path</span> <span class="o">+</span> <span class="s1">' </span><span class="se">\"</span><span class="s1"> -o </span><span class="se">\"</span><span class="s1">'</span> <span class="o">+</span> <span class="n">out_path</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\"</span><span class="s1">'</span>
+    <span class="n">launch_string</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">ansys_path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1"> -p &#39;</span> <span class="o">+</span> <span class="n">lic_str</span> <span class="o">+</span> <span class="s1">&#39; -np &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cpus</span><span class="p">)</span>
+    <span class="n">launch_string</span> <span class="o">+=</span> <span class="s1">&#39; -dir </span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">work_dir</span>
+    <span class="n">launch_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1"> -j </span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1"> -s read -l en-us -b -i </span><span class="se">\&quot;</span><span class="s1">&#39;</span>
+    <span class="n">launch_string</span> <span class="o">+=</span> <span class="n">inp_path</span> <span class="o">+</span> <span class="s1">&#39; </span><span class="se">\&quot;</span><span class="s1"> -o </span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">out_path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span>
     <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">launch_string</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="delete_result_files"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.delete_result_files.html#compas_fea.fea.ansys.delete_result_files">[docs]</a><span class="k">def</span> <span class="nf">delete_result_files</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="sd">""" Deletes Ansys result files.</span>
+    <span class="sd">&quot;&quot;&quot; Deletes Ansys result files.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        path (str): Path to the Ansys input file.</span>
@@ -211,13 +233,13 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
-    <span class="n">out_path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">'/'</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">'_output/'</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out_path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_output/&#39;</span>
     <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="extract_rst_data"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.extract_rst_data.html#compas_fea.fea.ansys.extract_rst_data">[docs]</a><span class="k">def</span> <span class="nf">extract_rst_data</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">'all'</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="s1">'last'</span><span class="p">):</span>
-    <span class="sd">""" Extracts results from Ansys rst file.</span>
+<div class="viewcode-block" id="extract_rst_data"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.extract_rst_data.html#compas_fea.fea.ansys.extract_rst_data">[docs]</a><span class="k">def</span> <span class="nf">extract_rst_data</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="s1">&#39;last&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Extracts results from Ansys rst file.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        structure (obj): Structure object.</span>
@@ -226,13 +248,13 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">write_results_from_rst</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">steps</span><span class="p">)</span>
     <span class="n">load_to_results</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">steps</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="write_results_from_rst"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.write_results_from_rst.html#compas_fea.fea.ansys.write_results_from_rst">[docs]</a><span class="k">def</span> <span class="nf">write_results_from_rst</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">steps</span><span class="p">):</span>
-    <span class="sd">""" Writes results request file from Ansys.</span>
+    <span class="sd">&quot;&quot;&quot; Writes results request file from Ansys.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        structure (obj): Structure object.</span>
@@ -241,33 +263,33 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">'_extract.txt'</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_extract.txt&#39;</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">path</span>
-    <span class="k">if</span> <span class="n">steps</span> <span class="o">==</span> <span class="s1">'last'</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">steps</span> <span class="o">==</span> <span class="s1">&#39;last&#39;</span><span class="p">:</span>
         <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">structure</span><span class="o">.</span><span class="n">steps_order</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-    <span class="k">elif</span> <span class="n">steps</span> <span class="o">==</span> <span class="s1">'all'</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">steps</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
         <span class="n">steps</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps_order</span>
     <span class="n">ansys_open_post_process</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">skey</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
         <span class="n">step_index</span> <span class="o">=</span> <span class="n">steps</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">skey</span><span class="p">)</span>
         <span class="n">stype</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">skey</span><span class="p">]</span><span class="o">.</span><span class="n">type</span>
-        <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">'static'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">&#39;static&#39;</span><span class="p">:</span>
             <span class="n">set_current_step</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">step_index</span><span class="o">=</span><span class="n">step_index</span><span class="p">)</span>
             <span class="n">write_static_results_from_ansys_rst</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span>
                                                 <span class="n">step_index</span><span class="o">=</span><span class="n">step_index</span><span class="p">,</span> <span class="n">step_name</span><span class="o">=</span><span class="n">skey</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">'modal'</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">&#39;modal&#39;</span><span class="p">:</span>
             <span class="n">num_modes</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">skey</span><span class="p">]</span><span class="o">.</span><span class="n">modes</span>
             <span class="n">write_modal_results_from_ansys_rst</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">num_modes</span><span class="p">,</span>
                                                <span class="n">step_index</span><span class="o">=</span><span class="n">step_index</span><span class="p">,</span> <span class="n">step_name</span><span class="o">=</span><span class="n">skey</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">'harmonic'</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">&#39;harmonic&#39;</span><span class="p">:</span>
             <span class="k">pass</span>
     <span class="n">ansys_launch_process_extract</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">'/'</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span></div>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="load_to_results"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.load_to_results.html#compas_fea.fea.ansys.load_to_results">[docs]</a><span class="k">def</span> <span class="nf">load_to_results</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">steps</span><span class="p">):</span>
-    <span class="sd">""" Loads results from Ansys txt files to Structure object.</span>
+    <span class="sd">&quot;&quot;&quot; Loads results from Ansys txt files to Structure object.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        structure (obj): Structure object.</span>
@@ -276,99 +298,126 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
-    <span class="n">out_path</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">'_output/'</span>
-    <span class="k">if</span> <span class="n">steps</span> <span class="o">==</span> <span class="s1">'all'</span><span class="p">:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out_path</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_output/&#39;</span>
+    <span class="k">if</span> <span class="n">steps</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
         <span class="n">steps</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-    <span class="k">elif</span> <span class="n">steps</span> <span class="o">==</span> <span class="s1">'last'</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">steps</span> <span class="o">==</span> <span class="s1">&#39;last&#39;</span><span class="p">:</span>
         <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">structure</span><span class="o">.</span><span class="n">steps_order</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
     <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">steps</span><span class="p">]</span>
 
     <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
         <span class="n">structure</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'StaticStep'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;StaticStep&#39;</span><span class="p">:</span>
             <span class="n">rlist</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">if</span> <span class="s1">'u'</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">'all'</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;u&#39;</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">&#39;all&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
                 <span class="n">rlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_displacements_from_result_files</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="n">step</span><span class="p">))</span>
-            <span class="k">if</span> <span class="s1">'s'</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">'all'</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;s&#39;</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">&#39;all&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
                 <span class="n">rlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_nodal_stresses_from_result_files</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="n">step</span><span class="p">))</span>
-            <span class="k">if</span> <span class="s1">'r'</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">'all'</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;r&#39;</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">&#39;all&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
                 <span class="n">rlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_reactions_from_result_files</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="n">step</span><span class="p">))</span>
-            <span class="k">if</span> <span class="s1">'e'</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">'all'</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;e&#39;</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">&#39;all&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
                 <span class="n">rlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_principal_strains_from_result_files</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="n">step</span><span class="p">))</span>
-            <span class="k">if</span> <span class="s1">'sp'</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">'all'</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;sp&#39;</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">&#39;all&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
                 <span class="n">rlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_principal_stresses_from_result_files</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="n">step</span><span class="p">))</span>
-            <span class="k">if</span> <span class="s1">'ss'</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">'all'</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;ss&#39;</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">&#39;all&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
                 <span class="n">rlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_shear_stresses_from_result_files</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="n">step</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'ModalStep'</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span><span class="p">[</span><span class="n">step</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;ModalStep&#39;</span><span class="p">:</span>
             <span class="n">rlist</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">if</span> <span class="s1">'u'</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">'all'</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;u&#39;</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">&#39;all&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
                 <span class="n">rlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_modal_shapes_from_result_files</span><span class="p">(</span><span class="n">out_path</span><span class="p">))</span>
-            <span class="k">if</span> <span class="s1">'f'</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">'all'</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;f&#39;</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">or</span> <span class="s1">&#39;all&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
                 <span class="n">fdict</span> <span class="o">=</span> <span class="n">get_modal_freq_from_result_files</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
-                <span class="n">structure</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="s1">'frequencies'</span><span class="p">]</span> <span class="o">=</span> <span class="n">fdict</span>
-        <span class="k">if</span> <span class="s1">'geo'</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                <span class="n">structure</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="s1">&#39;frequencies&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fdict</span>
+        <span class="k">if</span> <span class="s1">&#39;geo&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
             <span class="n">nodes</span><span class="p">,</span> <span class="n">elements</span> <span class="o">=</span> <span class="n">get_nodes_elements_from_result_files</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
             <span class="n">structure</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes</span>
             <span class="k">for</span> <span class="n">ekey</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
-                <span class="n">structure</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">elements</span><span class="p">[</span><span class="n">ekey</span><span class="p">][</span><span class="s1">'nodes'</span><span class="p">],</span> <span class="n">elements</span><span class="p">[</span><span class="n">ekey</span><span class="p">][</span><span class="s1">'type'</span><span class="p">])</span>
+                <span class="n">structure</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">elements</span><span class="p">[</span><span class="n">ekey</span><span class="p">][</span><span class="s1">&#39;nodes&#39;</span><span class="p">],</span> <span class="n">elements</span><span class="p">[</span><span class="n">ekey</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">rlist</span><span class="p">:</span>
-            <span class="n">structure</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">]</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">'nodal'</span><span class="p">,</span> <span class="n">rlist</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">structure</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">]</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;nodal&#39;</span><span class="p">,</span> <span class="n">rlist</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rlist</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">rlist</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-                    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">att</span> <span class="ow">in</span> <span class="n">structure</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="s1">'nodal'</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">att</span> <span class="ow">in</span> <span class="n">structure</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="s1">&#39;nodal&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                         <span class="n">att</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">])</span></div>
 </code></pre></div>
-<!-- <nav class="compas-sideways">
+                        
+                        <!-- <nav class="compas-sideways">
                             
 
                             
                         </nav> -->
-</main>
-<div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
-<div class="navbar-light">
-<form action="../../../../search.html" class="d-flex compas-searchbox" id="" method="get">
-<input class="form-control" name="q" placeholder="Search docs" type="text"/>
-<input name="check_keywords" type="hidden" value="yes"/>
-<input name="area" type="hidden" value="default"/>
-<button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
-<span class="navbar-toggler-icon"></span>
-</button>
-</form>
-<div class="navbar-expand-md">
-<div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
-<ul class="nav flex-column">
+
+                    
+
+                </main>
+
+                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
+                    <div class="navbar-light">
+
+                        <form id="" class="d-flex compas-searchbox" action="../../../../search.html" method="get">
+                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
+                            <input type="hidden" name="check_keywords" value="yes" />
+                            <input type="hidden" name="area" value="default" />
+
+                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                        </form>
+
+                        
+                        
+
+                            <div class="navbar-expand-md">
+                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
+
+                                <ul class="nav flex-column">
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../tutorial.html">Tutorial</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../examples.html">Examples</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../reference.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../license.html">License</a></li>
 </ul>
-</div>
-</div>
-</div>
-</div>
-<div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
-</div>
-</div>
-</div>
-<footer class="compas-footer">
+
+
+                                </div>
+                            </div>
+
+                        
+
+                    </div>
+                </div>
+                
+                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+
+                    
+
+                    
+
+                </div>
+            </div>
+        </div>
+
+        <footer class="compas-footer">
             
                 
-                    © Copyright 2017, Block Research Group.
+                    &#169; Copyright 2017, Block Research Group.
                 
             
 
             
-                Last updated on Dec 04, 2017.
+                Last updated on Dec 06, 2017.
             
 
             
                 Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
             
         </footer>
-<script type="text/javascript">
+
+        
+
+            <script type="text/javascript">
 var DOCUMENTATION_OPTIONS = {
     URL_ROOT:    '',
     VERSION:     '',
@@ -378,16 +427,21 @@ var DOCUMENTATION_OPTIONS = {
     SOURCELINK_SUFFIX: '.txt'
 };
             </script>
-<script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
-<script src="https://compas-dev.github.io/js/underscore.js"></script>
-<script src="https://compas-dev.github.io/js/doctools.js"></script>
-<!-- <script src="https://compas-dev.github.io/js/searchtools_.js"></script> -->
-<script>
+
+            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+            
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+
+            <script src="https://compas-dev.github.io/js/underscore.js"></script>
+            <script src="https://compas-dev.github.io/js/doctools.js"></script>
+            <!-- <script src="https://compas-dev.github.io/js/searchtools_.js"></script> -->
+
+            <script>
 hljs.initHighlightingOnLoad();
 anchors.add();
 
@@ -430,5 +484,7 @@ copy_code.on('error', function(event) {
     }, 2000);
 });
             </script>
-</body>
+
+        
+    </body>
 </html>

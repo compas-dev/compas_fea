@@ -572,6 +572,35 @@ Steps
 
 
 # ==============================================================================
+# sets
+# ==============================================================================
+
+    def add_set(self, name, type, selection, explode=False):
+        """ Adds a node, element or surface set to structure.sets.
+
+        Parameters
+        ----------
+        name : str
+            Name of the set.
+        type : str
+            'node', 'element', 'surface_node', surface_element'.
+        selection : list, dic
+            The integer keys of the nodes, elements or the element numbers and sides.
+        explode : bool
+            Explode the set into sets for each member of selection.
+
+        Returns
+        -------
+        None
+        """
+        if explode:
+            if type in ['node', 'element']:
+                for select in selection:
+                    self.sets['{0}_{1}'.format(type, select)] = {'type': type, 'selection': [select], 'explode': False}
+        self.sets[name] = {'type': type, 'selection': selection, 'explode': explode}
+
+
+# ==============================================================================
 # constructors
 # ==============================================================================
 
@@ -687,31 +716,6 @@ Steps
             sp = self.check_node_exists(network.vertex_coordinates(u))
             ep = self.check_node_exists(network.vertex_coordinates(v))
             self.add_element(nodes=[sp, ep], type=element_type, acoustic=acoustic, thermal=thermal)
-
-
-# ==============================================================================
-# sets
-# ==============================================================================
-
-    def add_set(self, name, type, selection, explode=False):
-        """ Adds a node, element or surface set to structure.sets.
-
-        Parameters
-        ----------
-            name (str): Name of the set.
-            type (str): 'node', 'element', 'surface_node', surface_element'.
-            selection (list, dic): The keys of the nodes, elements or elements and sides.
-            explode (bool): Explode the set into sets for each member of selection.
-
-        Returns
-        -------
-        None
-        """
-        if explode:
-            if type in ['node', 'element']:
-                for select in selection:
-                    self.sets['{0}_{1}'.format(type, select)] = {'type': type, 'selection': [select], 'explode': False}
-        self.sets[name] = {'type': type, 'selection': selection, 'explode': explode}
 
 
 # ==============================================================================
