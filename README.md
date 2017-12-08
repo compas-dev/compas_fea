@@ -10,3 +10,5 @@ Once the model has been constructed, it may be analysed through a finite element
 By using the **compas_fea** package, the majority of the repetitive scripting tasks needed to perform a geometrically or structurally complex analysis are eliminated, allowing for the rapid investigation of models, with easy to use and streamlined data post-processing and visualisation support.
 
 The complete documentation of the **compas_fea** package is available here: https://compas-dev.github.io/compas_fea.
+
+The **compas_fea** forum can be visited here: http://forum.compas-framework.org/c/compas-fea.
