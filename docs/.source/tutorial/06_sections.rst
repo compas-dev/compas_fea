@@ -108,13 +108,13 @@ An **ISection** requires the width ``b``, height ``h``, thickness of web ``tw`` 
 Angle
 -----
 
-An unequal **AngleSection** requires the width ``b``, height ``h``, thickness of web ``tw`` and thickness of flange ``tf``.
+An unequal **AngleSection** requires the width ``b``, height ``h`` and thickness ``t``.
 
 .. code-block:: python
 
     from compas_fea.structure import AngleSection
 
-    mdl.add_section(AngleSection(name='sec_angle', b=0.1, h=0.2, tw=0.003, tf=0.005))
+    mdl.add_section(AngleSection(name='sec_angle', b=0.1, h=0.2, t=0.003))
 
 .. image:: /_images/angle-ip.png
    :scale: 40 %

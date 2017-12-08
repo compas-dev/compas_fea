@@ -57,8 +57,9 @@ class AngleSection(object):
         A = t * (b + h - t)
         Ixx = (1. / 3) * (b * h**3 - (b - t) * (h - t)**3) - A * (h - yc)**2
         Iyy = (1. / 3) * (h * b**3 - (h - t) * (b - t)**3) - A * (b - xc)**2
+        J = (1. / 3) * (h + b - t) * t**3
         self.__name__ = 'AngleSection'
-        self.geometry = {'b': b, 'h': h, 't': t, 'A': A, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
+        self.geometry = {'b': b, 'h': h, 't': t, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
         self.name = name
 
 
@@ -81,8 +82,11 @@ class BoxSection(object):
         A = b * h - (b - 2 * tw) * (h - 2 * tf)
         Ixx = (b * h**3) / 12. - ((b - 2 * tw) * (h - 2 * tf)**3) / 12.
         Iyy = (h * b**3) / 12. - ((h - 2 * tf) * (b - 2 * tw)**3) / 12.
+        Ap = (h - tf) * (b - tw)
+        p = 2 * ((h - tf) / tw + (b - tw) / tf)
+        J = 4 * (Ap**2) / p
         self.__name__ = 'BoxSection'
-        self.geometry = {'b': b, 'h': h, 'tw': tw, 'tf': tf, 'A': A, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
+        self.geometry = {'b': b, 'h': h, 'tw': tw, 'tf': tf, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
         self.name = name
 
 
@@ -152,8 +156,10 @@ class ISection(object):
         A = 2 * b * tf + (h - 2 * tf) * tw
         Ixx = (tw * (h - 2 * tf)**3) / 12. + 2 * ((tf**3) * b / 12. + b * tf * (h / 2. - tf / 2.)**2)
         Iyy = ((h - 2 * tf) * tw**3) / 12. + 2 * ((b**3) * tf / 12.)
+        J = (1. / 3) * (2 * b * tf**3 + (h - tf) * tw**3)
         self.__name__ = 'ISection'
-        self.geometry = {'b': b, 'h': h, 'tw': tw, 'tf': tf, 'c': h / 2., 'A': A, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
+        self.geometry = {
+            'b': b, 'h': h, 'tw': tw, 'tf': tf, 'c': h / 2., 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
         self.name = name
 
 
@@ -198,8 +204,11 @@ class RectangularSection(object):
         A = b * h
         Ixx = (1 / 12.) * b * h**3
         Iyy = (1 / 12.) * h * b**3
+        l1 = max([b, h])
+        l2 = min([b, h])
+        J = (l1 * l2**3) * (0.33333 - 0.21 * (l2 / l1) * (1 - (l2**4) / (12 * l1**4)))
         self.__name__ = 'RectangularSection'
-        self.geometry = {'b': b, 'h': h, 'A': A, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
+        self.geometry = {'b': b, 'h': h, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
         self.name = name
 
 
