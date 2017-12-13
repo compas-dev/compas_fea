@@ -6,6 +6,9 @@ __license__    = 'MIT License'
 __email__      = 'mendez@arch.ethz.ch'
 
 
+et_dict = {}
+
+
 def write_elements(structure, output_path, filename):
     ep = structure.element_properties
     for key in ep:
@@ -28,6 +31,8 @@ def write_elements(structure, output_path, filename):
             write_beam_elements(structure, output_path, filename, ekeys, section, material)
         if etype == 'TieElement' or etype == 'StrutElement' or etype == 'TrussElement':
             write_tie_elements(structure, output_path, filename, ekeys, section, material, etype)
+        if etype == 'SpringElement':
+            write_spring_elements_nodal(structure, output_path, filename, ekeys, section)
 
 
 def write_nodes(structure, output_path, filename):
@@ -59,8 +64,8 @@ def write_shell4_elements(structure, output_path, filename, ekeys, section, mate
     ekeys = sorted(ekeys, key=int)
     mat_index = structure.materials[material].index
     sec_index = structure.sections[section].index
-
-    write_set_element_material(output_path, filename, mat_index, 'SHELL181', 2)
+    etkey = et_dict.setdefault('SHELL181', len(et_dict) + 1)
+    write_set_element_material(output_path, filename, mat_index, 'SHELL181', etkey)
 
     thickness = structure.sections[section].geometry['t']
     write_shell_thickness(output_path, filename, thickness, sec_index, mat_index)
@@ -98,7 +103,8 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
     mat_index = structure.materials[material].index
     sec_index = structure.sections[section].index
 
-    write_set_element_material(output_path, filename, mat_index, 'BEAM188', 3)
+    etkey = et_dict.setdefault('BEAM188', len(et_dict) + 1)
+    write_set_element_material(output_path, filename, mat_index, 'BEAM188', etkey)
     sec_type = structure.sections[section].__name__
     if sec_type == 'PipeSection':
         thickness = structure.sections[section].geometry['t']
@@ -198,7 +204,8 @@ def write_tie_elements(structure, output_path, filename, ekeys, section, materia
     mat_index = structure.materials[material].index
     sec_index = structure.sections[section].index
 
-    write_set_element_material(output_path, filename, mat_index, 'LINK180', 4)
+    etkey = et_dict.setdefault('LINK180', len(et_dict) + 1)
+    write_set_element_material(output_path, filename, mat_index, 'LINK180', etkey)
 
     # axial_force =  0 for tension and compression, 1 tension only, 2 compression only
     if etype == 'TieElement':
@@ -476,3 +483,42 @@ def write_request_mesh_areas(structure, output_path, filename, size=None, smart_
     cFile.write('!\n')
     cFile.close()
     write_request_element_nodes(output_path, filename)
+
+
+def write_spring_elements_nodal(structure, out_path, filename, ekeys, section):
+    axis_dict = {'x': 1, 'y': 2, 'z': 3}
+    kdict = section.stiffness
+    fh = open(out_path + "/" + filename, 'a')
+    for axis in kdict:
+        etkey = et_dict.setdefault('COMBIN14_' + axis, len(et_dict) + 1)
+        fh.write('ET, {0}, COMBIN14 \n'.format(etkey))
+        fh.write('KEYOPT, {0}, 1, 0 \n'.format(etkey))
+        fh.write('KEYOPT, {0}, 2, {1} \n'.format(etkey, axis_dict[axis]))
+        fh.write('KEYOPT, {0}, 3, 0 \n'.format(etkey))
+        fh.write('R, {0}, {1} \n'.format(etkey, kdict[axis]))
+        fh.write('TYPE, {0} \n'.format(etkey))
+        fh.write('REAL, {0} \n'.format(etkey))
+        fh.write('! \n')
+        for ekey in ekeys:
+            element = structure.elements[ekey].nodes
+            string = 'E, ' + str(int(element[0]) + 1) + ', ' + str(int(element[1]) + 1) + '\n'
+            fh.write(string)
+        fh.write('! \n')
+    fh.write('! \n')
+    fh.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
