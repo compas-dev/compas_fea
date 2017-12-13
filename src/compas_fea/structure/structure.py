@@ -612,12 +612,15 @@ Steps
 
         Parameters
         ----------
-            mesh (obj): Mesh datastructure object.
+        mesh : obj
+            Mesh datastructure object.
 
         Returns
         -------
-            obj: The resulting Structure object.
+        obj
+            The resulting Structure object.
         """
+
         structure = cls()
 
         # Add nodes and elements from Mesh
@@ -681,14 +684,19 @@ Steps
 
         Parameters
         ----------
-            mesh (obj): Mesh datastructure object.
-            element_type (str): Element type: 'ShellElement', 'MembraneElement' etc.
-            acoustic (bool): Acoustic properties on or off.
-            thermal (bool): Thermal properties on or off.
+        mesh : obj
+            Mesh datastructure object.
+        element_type : str
+            Element type: 'ShellElement', 'MembraneElement' etc.
+        acoustic : bool
+            Acoustic properties on or off.
+        thermal : bool
+            Thermal properties on or off.
 
         Returns
         -------
-        None: Nodes and elements are updated in the Structure object.
+        None
+            Nodes and elements are updated in the Structure object.
         """
         for key in sorted(list(mesh.vertices()), key=int):
             self.add_node(mesh.vertex_coordinates(key))
@@ -701,14 +709,19 @@ Steps
 
         Parameters
         ----------
-            network (obj): Network datastructure object.
-            element_type (str): Element type: 'BeamElement', 'TrussElement' etc.
-            acoustic (bool): Acoustic properties on or off.
-            thermal (bool): Thermal properties on or off.
+        network : obj
+            Network datastructure object.
+        element_type : str
+            Element type: 'BeamElement', 'TrussElement' etc.
+        acoustic : bool
+            Acoustic properties on or off.
+        thermal : bool
+            Thermal properties on or off.
 
         Returns
         -------
-        None: Nodes and elements are updated in the Structure object.
+        None
+            Nodes and elements are updated in the Structure object.
         """
         for key in sorted(list(network.vertices()), key=int):
             self.add_node(network.vertex_coordinates(key))
@@ -727,12 +740,15 @@ Steps
 
         Parameters
         ----------
-            displacements (dic): Dictionary containing the displacements to scale.
-            factor (float): Factor to scale the displacements by.
+        displacements : dic
+            Dictionary containing the displacements to scale.
+        factor : float
+            Factor to scale the displacements by.
 
         Returns
         -------
-            dic: The scaled displacements dictionary.
+        dic
+            The scaled displacements dictionary.
         """
         disp_dic = {}
         for key, disp in displacements.items():
@@ -747,12 +763,15 @@ Steps
 
         Parameters
         ----------
-            loads (dic): Dictionary containing the loads to scale.
-            factor (float): Factor to scale the loads by.
+        loads : dic
+            Dictionary containing the loads to scale.
+        factor : float
+            Factor to scale the loads by.
 
         Returns
         -------
-            dic: The scaled loads dictionary.
+        dic
+            The scaled loads dictionary.
         """
         loads_dic = {}
         for key, load in loads.items():
@@ -772,7 +791,8 @@ Steps
 
         Parameters
         ----------
-            constraint (obj): The Constraint object.
+        constraint : obj
+            The Constraint object.
 
         Returns
         -------
@@ -786,7 +806,8 @@ Steps
 
         Parameters
         ----------
-            displacement (obj): The Displacement object.
+        displacement : obj
+            The Displacement object.
 
         Returns
         -------
@@ -800,7 +821,8 @@ Steps
 
         Parameters
         ----------
-            displacements (list): The Displacement objects.
+        displacements : list
+            The Displacement objects.
 
         Returns
         -------
@@ -815,8 +837,10 @@ Steps
 
         Parameters
         ----------
-            element_properties (obj): The ElementProperties object.
-            name (str): Name for index.
+        element_properties : obj
+            The ElementProperties object.
+        name : str
+            Name for index.
 
         Returns
         -------
@@ -833,7 +857,8 @@ Steps
 
         Parameters
         ----------
-            interaction (obj): The Interaction object.
+        interaction : obj
+            The Interaction object.
 
         Returns
         -------
@@ -847,7 +872,8 @@ Steps
 
         Parameters
         ----------
-            load (obj): The Load object.
+        load : obj
+            The Load object.
 
         Returns
         -------
@@ -861,7 +887,8 @@ Steps
 
         Parameters
         ----------
-            loads (list): The Load objects.
+        loads : list
+            The Load objects.
 
         Returns
         -------
@@ -876,7 +903,8 @@ Steps
 
         Parameters
         ----------
-            material (obj): The Material object.
+        material : obj
+            The Material object.
 
         Returns
         -------
@@ -890,7 +918,8 @@ Steps
 
         Parameters
         ----------
-            materials (list): The Material objects.
+        materials : list
+            The Material objects.
 
         Returns
         -------
@@ -905,7 +934,8 @@ Steps
 
         Parameters
         ----------
-            misc (obj): The Misc object.
+        misc : obj
+            The Misc object.
 
         Returns
         -------
@@ -919,7 +949,8 @@ Steps
 
         Parameters
         ----------
-            section (obj): The Section object.
+        section : obj
+            The Section object.
 
         Returns
         -------
@@ -933,7 +964,8 @@ Steps
 
         Parameters
         ----------
-            sections (list): The Section objects.
+        sections : list
+            The Section objects.
 
         Returns
         -------
@@ -948,7 +980,8 @@ Steps
 
         Parameters
         ----------
-            step (obj): The Step object.
+        step : obj
+            The Step object.
 
         Returns
         -------
@@ -962,7 +995,8 @@ Steps
 
         Parameters
         ----------
-            steps (list): The Step objects.
+        steps : list
+            The Step objects.
 
         Returns
         -------
@@ -982,7 +1016,8 @@ Steps
 
         Parameters
         ----------
-            order: An ordered list of the Step names.
+        order : list
+            An ordered list of the Step names.
 
         Returns
         -------
@@ -1000,11 +1035,13 @@ Steps
 
         Parameters
         ----------
-            fields_list (list): List of fields and/or components.
+        fields_list : list
+            List of fields and/or components.
 
         Returns
         -------
-            dic: Conversion to a fields dictionary.
+        dic
+            Conversion to a fields dictionary.
         """
         node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
         element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'spf']
@@ -1022,8 +1059,10 @@ Steps
 
         Parameters
         ----------
-            software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
-            fields (list, str): Data field requests.
+        software : str
+            Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
+        fields : list, str
+            Data field requests.
 
         Returns
         -------
@@ -1045,10 +1084,14 @@ Steps
 
         Parameters
         ----------
-            software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
-            exe (str): Full terminal command to bypass subprocess defaults.
-            cpus (int): Number of CPU cores to use.
-            license (str): FE software license type (if required): 'research', 'student'.
+        software : str
+            Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
+        exe : str
+            Full terminal command to bypass subprocess defaults.
+        cpus : int
+            Number of CPU cores to use.
+        license : str
+            FE software license type (if required): 'research', 'student'.
 
         Returns
         -------
@@ -1068,10 +1111,14 @@ Steps
 
         Parameters
         ----------
-            software (str): Analysis software or library used, 'abaqus', 'opensees' or 'ansys'.
-            fields (list, str): Data field requests.
-            steps (list): Loads steps to extract from.
-            exe (str): Full terminal command to bypass subprocess defaults.
+        software : str
+            Analysis software or library used, 'abaqus', 'opensees' or 'ansys'.
+        fields : list, str
+            Data field requests.
+        steps : list
+            Loads steps to extract from.
+        exe : str
+            Full terminal command to bypass subprocess defaults.
 
         Returns
         -------
@@ -1091,11 +1138,16 @@ Steps
 
         Parameters
         ----------
-            software (str): Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
-            fields (list, str): Data field requests.
-            exe (str): Full terminal command to bypass subprocess defaults.
-            cpus (int): Number of CPU cores to use.
-            license (str): FE software license type (if required): 'research', 'student'.
+        software : str
+            Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
+        fields : list, str
+            Data field requests.
+        exe : str
+            Full terminal command to bypass subprocess defaults.
+        cpus : int
+            Number of CPU cores to use.
+        license : str
+            FE software license type (if required): 'research', 'student'.
 
         Returns
         -------
@@ -1115,13 +1167,17 @@ Steps
 
         Parameters
         ----------
-            step (str): Step to extract from.
-            field (str): Data field request.
-            nodes (str, list): Extract 'all' or a node set/list.
+        step : str
+            Step to extract from.
+        field : str
+            Data field request.
+        nodes : str, list
+            Extract 'all' or a node set/list.
 
         Returns
         -------
-            (dict): The nodal results for the requested field.
+        dic
+            The nodal results for the requested field.
         """
         data = {}
         rdict = self.results[step]['nodal']
@@ -1142,13 +1198,17 @@ Steps
 
         Parameters
         ----------
-            step (str): Step to extract from.
-            field (str): Data field request.
-            elements (str, list): Extract 'all' or an element set/list.
+        step : str
+            Step to extract from.
+        field : str
+            Data field request.
+        elements : str, list
+            Extract 'all' or an element set/list.
 
         Returns
         -------
-            (dict): The element results for the requested field.
+        dic
+            The element results for the requested field.
         """
         data = {}
         rdict = self.results[step]['element']

@@ -3,8 +3,9 @@ compas_fea.utilities.functions
 Support functions for the compas_fea package.
 """
 
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 from compas.topology import dijkstra_path
 
@@ -64,11 +65,17 @@ try:
 except ImportError:
     pass
 
+try:
+    from meshpy.tet import build
+    from meshpy.tet import MeshInfo
+except ImportError:
+    pass
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
+__copyright__ = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
@@ -82,6 +89,7 @@ __all__ = [
     'normalise_data',
     'postprocess',
     'process_data',
+    'tets_from_vertices_faces',
     'voxels',
 ]
 
@@ -556,6 +564,27 @@ def voxels(values, vmin, U, vdx, plot=None, indexing=None):
         mlab.show()
     else:
         return Am
+
+
+def tets_from_vertices_faces(vertices, faces, volume=None):
+    """ Generate tetrahedron points and elements with MeshPy (TetGen).
+
+    Parameters:
+        vertices (list): List of lists of vertex co-ordinates of input surface mesh.
+        faces (list): List of lists of face indices of input surface mesh.
+        volume (float): Volume constraint for each tetrahedron element.
+
+    Returns:
+        list: Points of the tetrahedrons.
+        list: Indices of points for each tetrahedron element.
+    """
+    info = MeshInfo()
+    info.set_points(vertices)
+    info.set_facets(faces)
+    tets = build(info, max_volume=volume)
+    tets_points = [list(i) for i in list(tets.points)]
+    tets_elements = [list(i) for i in list(tets.elements)]
+    return tets_points, tets_elements
 
 
 # ==============================================================================

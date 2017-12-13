@@ -5,7 +5,7 @@ Properties
 
 This page shows how **ElementProperties** objects are added to the **Structure** object, here given as a **Structure** named ``mdl``.
 
-.. .. contents::
+.. contents::
 
 
 =================

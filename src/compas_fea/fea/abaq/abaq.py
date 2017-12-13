@@ -896,6 +896,21 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
 
     dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 
+    for key, load in loads.items():
+
+        if load.__name__ in ['PrestressLoad']:
+
+            f.write('**\n')
+            f.write('** {0}\n'.format(key))
+            f.write('** ' + '-' * len(key) + '\n')
+            f.write('**\n')
+
+            com = load.components
+            f.write('*INITIAL CONDITIONS, TYPE=STRESS\n')
+            f.write('{0}, '.format(load.elements))
+            if com['sxx']:
+                f.write('{0}\n'.format(com['sxx']))
+
     for key in structure.steps_order:
 
         step = steps[key]

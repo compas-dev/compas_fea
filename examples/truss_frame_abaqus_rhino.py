@@ -7,6 +7,7 @@ from compas_fea.structure import GeneralStep
 from compas_fea.structure import GravityLoad
 from compas_fea.structure import PinnedDisplacement
 from compas_fea.structure import PointLoad
+from compas_fea.structure import PrestressLoad
 from compas_fea.structure import Steel
 from compas_fea.structure import Structure
 from compas_fea.structure import TrussSection

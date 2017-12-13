@@ -1,37 +1,54 @@
 
-<!DOCTYPE html>
 
+
+<!DOCTYPE html>
 <html lang="en">
-<head>
-<title>compas_fea -- FEA package for compas</title>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
-<meta content="" name="author"/>
-<meta content="" name="description"/>
-<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
-<link href="https://compas-dev.github.io/css/github.css" rel="stylesheet" type="text/css"/>
-<link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
-<link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
-<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
-</head>
-<body data-spy="scroll" data-target="#compas-localnav">
-<header class="navbar navbar-expand compas-navbar">
-<a class="navbar-brand" href="https://compas-dev.github.io/">
-<img alt="compas" height="36px" src="/images/compas_icon_blue-01.png" width="36px"/>
-</a>
-<ul class="navbar-nav">
-<li class="nav-item">
-<a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="http://forum.compas-framework.org/c/compas-fea">Forum</a>
-</li>
-</ul>
-</header>
-<div class="container-fluid compas-container">
-<div class="row flex-xl-nowrap">
-<main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
-<!-- 
+    <head>
+        <title>compas_fea -- FEA package for compas</title>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+        <meta name="author" content="" />
+        <meta name="description" content="" />
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/github.css" />
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas-reference.css" />
+
+        
+        
+        
+
+        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    </head>
+    <body data-spy="scroll" data-target="#compas-localnav">
+
+        <header class="navbar navbar-expand compas-navbar">
+            <a class="navbar-brand" href="https://compas-dev.github.io/">
+                <img src="/images/compas_icon_blue-01.png" width="36px" height="36px" alt="compas" />
+            </a>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://forum.compas-framework.org/c/compas-fea">Forum</a>
+                    </li>
+                </ul>
+        </header>
+        
+        <div class="container-fluid compas-container">
+            <div class="row flex-xl-nowrap">
+
+                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+
+                    
+
+                        <!-- 
         <nav class="breadcrumb">
             <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
             <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
@@ -43,11 +60,16 @@
             
         </nav>
  -->
-<h1>Source code for compas_fea.structure.section</h1><div class="highlight"><pre><code class="language-python border rounded">
-<span></span><span class="sd">"""</span>
+
+                        
+
+                        
+
+                        <h1>Source code for compas_fea.structure.section</h1><div class="highlight"><pre><code class="language-python border rounded">
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">compas_fea.structure.section : Section class.</span>
 <span class="sd">Section definitions for 1D, 2D and 3D finite elements.</span>
-<span class="sd">"""</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
@@ -55,27 +77,27 @@
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">pi</span>
 
 
-<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">'Andrew Liew &lt;liew@arch.ethz.ch&gt;'</span><span class="p">]</span>
-<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">'Copyright 2017, BLOCK Research Group - ETH Zurich'</span>
-<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">'MIT License'</span>
-<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">'liew@arch.ethz.ch'</span>
+<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
+<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">&#39;Copyright 2017, BLOCK Research Group - ETH Zurich&#39;</span>
+<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
+<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">'AngleSection'</span><span class="p">,</span>
-    <span class="s1">'BoxSection'</span><span class="p">,</span>
-    <span class="s1">'CircularSection'</span><span class="p">,</span>
-    <span class="s1">'GeneralSection'</span><span class="p">,</span>
-    <span class="s1">'ISection'</span><span class="p">,</span>
-    <span class="s1">'PipeSection'</span><span class="p">,</span>
-    <span class="s1">'RectangularSection'</span><span class="p">,</span>
-    <span class="s1">'ShellSection'</span><span class="p">,</span>
-    <span class="s1">'SolidSection'</span><span class="p">,</span>
-    <span class="s1">'TrapezoidalSection'</span><span class="p">,</span>
-    <span class="s1">'TrussSection'</span><span class="p">,</span>
-    <span class="s1">'StrutSection'</span><span class="p">,</span>
-    <span class="s1">'TieSection'</span><span class="p">,</span>
-    <span class="s1">'SpringSection'</span>
+    <span class="s1">&#39;AngleSection&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;BoxSection&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CircularSection&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;GeneralSection&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ISection&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PipeSection&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;RectangularSection&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ShellSection&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SolidSection&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;TrapezoidalSection&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;TrussSection&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;StrutSection&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;TieSection&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SpringSection&#39;</span>
 <span class="p">]</span>
 
 
@@ -85,7 +107,7 @@
 
 <div class="viewcode-block" id="AngleSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.AngleSection.html#compas_fea.structure.section.AngleSection">[docs]</a><span class="k">class</span> <span class="nc">AngleSection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">""" Equal angle cross-section for beam elements.</span>
+    <span class="sd">&quot;&quot;&quot; Equal angle cross-section for beam elements.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        name (str): Section name.</span>
@@ -95,7 +117,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="n">xc</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">t</span> <span class="o">-</span> <span class="n">t</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="n">h</span> <span class="o">-</span> <span class="n">t</span><span class="p">))</span>
@@ -103,14 +125,15 @@
         <span class="n">A</span> <span class="o">=</span> <span class="n">t</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="n">h</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span>
         <span class="n">Ixx</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">*</span> <span class="n">h</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="n">A</span> <span class="o">*</span> <span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">yc</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
         <span class="n">Iyy</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">b</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="n">A</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">xc</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'AngleSection'</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'b'</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">'t'</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">'Ixx'</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">'Iyy'</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">'Ixy'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="n">J</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">h</span> <span class="o">+</span> <span class="n">b</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="o">**</span><span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;AngleSection&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
 <div class="viewcode-block" id="BoxSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.BoxSection.html#compas_fea.structure.section.BoxSection">[docs]</a><span class="k">class</span> <span class="nc">BoxSection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">""" Hollow rectangular box cross-section for beam elements.</span>
+    <span class="sd">&quot;&quot;&quot; Hollow rectangular box cross-section for beam elements.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        name (str): Section name.</span>
@@ -121,20 +144,23 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">tw</span><span class="p">,</span> <span class="n">tf</span><span class="p">):</span>
         <span class="n">A</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">h</span> <span class="o">-</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">tw</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">tf</span><span class="p">)</span>
         <span class="n">Ixx</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">*</span> <span class="n">h</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mf">12.</span> <span class="o">-</span> <span class="p">((</span><span class="n">b</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">tw</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">tf</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mf">12.</span>
         <span class="n">Iyy</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">b</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mf">12.</span> <span class="o">-</span> <span class="p">((</span><span class="n">h</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">tf</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">tw</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mf">12.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'BoxSection'</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'b'</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">'tw'</span><span class="p">:</span> <span class="n">tw</span><span class="p">,</span> <span class="s1">'tf'</span><span class="p">:</span> <span class="n">tf</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">'Ixx'</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">'Iyy'</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">'Ixy'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="n">Ap</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">tf</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">tw</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">((</span><span class="n">h</span> <span class="o">-</span> <span class="n">tf</span><span class="p">)</span> <span class="o">/</span> <span class="n">tw</span> <span class="o">+</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">tw</span><span class="p">)</span> <span class="o">/</span> <span class="n">tf</span><span class="p">)</span>
+        <span class="n">J</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">Ap</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;BoxSection&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;tw&#39;</span><span class="p">:</span> <span class="n">tw</span><span class="p">,</span> <span class="s1">&#39;tf&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
 <div class="viewcode-block" id="CircularSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.CircularSection.html#compas_fea.structure.section.CircularSection">[docs]</a><span class="k">class</span> <span class="nc">CircularSection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">""" Solid circular cross-section for beam elements.</span>
+    <span class="sd">&quot;&quot;&quot; Solid circular cross-section for beam elements.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        name (str): Section name.</span>
@@ -142,7 +168,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
         <span class="n">D</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">r</span>
@@ -150,14 +176,14 @@
         <span class="n">Ixx</span> <span class="o">=</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="n">D</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">/</span> <span class="mf">64.</span>
         <span class="n">Iyy</span> <span class="o">=</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="n">D</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">/</span> <span class="mf">64.</span>
         <span class="n">J</span> <span class="o">=</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="n">D</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">/</span> <span class="mi">32</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'CircularSection'</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'r'</span><span class="p">:</span> <span class="n">r</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">:</span> <span class="n">D</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">'Ixx'</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">'Iyy'</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">'Ixy'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'J'</span><span class="p">:</span> <span class="n">J</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;CircularSection&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="n">r</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="n">D</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
 <div class="viewcode-block" id="GeneralSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.GeneralSection.html#compas_fea.structure.section.GeneralSection">[docs]</a><span class="k">class</span> <span class="nc">GeneralSection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">""" General cross-section for beam elements.</span>
+    <span class="sd">&quot;&quot;&quot; General cross-section for beam elements.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        name (str): Section name.</span>
@@ -171,17 +197,17 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">Ixx</span><span class="p">,</span> <span class="n">Ixy</span><span class="p">,</span> <span class="n">Iyy</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">g0</span><span class="p">,</span> <span class="n">gw</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'GeneralSection'</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'A'</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">'Ixx'</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">'Ixy'</span><span class="p">:</span> <span class="n">Ixy</span><span class="p">,</span> <span class="s1">'Iyy'</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">'J'</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">'g0'</span><span class="p">:</span> <span class="n">g0</span><span class="p">,</span> <span class="s1">'gw'</span><span class="p">:</span> <span class="n">gw</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;GeneralSection&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="n">Ixy</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;g0&#39;</span><span class="p">:</span> <span class="n">g0</span><span class="p">,</span> <span class="s1">&#39;gw&#39;</span><span class="p">:</span> <span class="n">gw</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
 <div class="viewcode-block" id="ISection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.ISection.html#compas_fea.structure.section.ISection">[docs]</a><span class="k">class</span> <span class="nc">ISection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">""" Equal flanged I-section for beam elements.</span>
+    <span class="sd">&quot;&quot;&quot; Equal flanged I-section for beam elements.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        name (str): Section name.</span>
@@ -192,20 +218,22 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">tw</span><span class="p">,</span> <span class="n">tf</span><span class="p">):</span>
         <span class="n">A</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">b</span> <span class="o">*</span> <span class="n">tf</span> <span class="o">+</span> <span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">tf</span><span class="p">)</span> <span class="o">*</span> <span class="n">tw</span>
         <span class="n">Ixx</span> <span class="o">=</span> <span class="p">(</span><span class="n">tw</span> <span class="o">*</span> <span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">tf</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mf">12.</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">((</span><span class="n">tf</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">b</span> <span class="o">/</span> <span class="mf">12.</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">tf</span> <span class="o">*</span> <span class="p">(</span><span class="n">h</span> <span class="o">/</span> <span class="mf">2.</span> <span class="o">-</span> <span class="n">tf</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">Iyy</span> <span class="o">=</span> <span class="p">((</span><span class="n">h</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">tf</span><span class="p">)</span> <span class="o">*</span> <span class="n">tw</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mf">12.</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">((</span><span class="n">b</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">tf</span> <span class="o">/</span> <span class="mf">12.</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'ISection'</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'b'</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">'tw'</span><span class="p">:</span> <span class="n">tw</span><span class="p">,</span> <span class="s1">'tf'</span><span class="p">:</span> <span class="n">tf</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">:</span> <span class="n">h</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">'Ixx'</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">'Iyy'</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">'Ixy'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="n">J</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">b</span> <span class="o">*</span> <span class="n">tf</span><span class="o">**</span><span class="mi">3</span> <span class="o">+</span> <span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">tf</span><span class="p">)</span> <span class="o">*</span> <span class="n">tw</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;ISection&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;tw&#39;</span><span class="p">:</span> <span class="n">tw</span><span class="p">,</span> <span class="s1">&#39;tf&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="n">h</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
 <div class="viewcode-block" id="PipeSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.PipeSection.html#compas_fea.structure.section.PipeSection">[docs]</a><span class="k">class</span> <span class="nc">PipeSection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">""" Hollow circular cross-section for beam elements.</span>
+    <span class="sd">&quot;&quot;&quot; Hollow circular cross-section for beam elements.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        name (str): Section name.</span>
@@ -214,7 +242,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
         <span class="n">D</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">r</span>
@@ -222,14 +250,14 @@
         <span class="n">Ixx</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span><span class="o">**</span><span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span>
         <span class="n">Iyy</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span><span class="o">**</span><span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span>
         <span class="n">J</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="o">**</span><span class="mi">3</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'PipeSection'</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'r'</span><span class="p">:</span> <span class="n">r</span><span class="p">,</span> <span class="s1">'t'</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">:</span> <span class="n">D</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">'J'</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">'Ixx'</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">'Iyy'</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">'Ixy'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;PipeSection&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="n">r</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="n">D</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
 <div class="viewcode-block" id="RectangularSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.RectangularSection.html#compas_fea.structure.section.RectangularSection">[docs]</a><span class="k">class</span> <span class="nc">RectangularSection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">""" Solid rectangular cross-section for beam elements.</span>
+    <span class="sd">&quot;&quot;&quot; Solid rectangular cross-section for beam elements.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        name (str): Section name.</span>
@@ -238,20 +266,23 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
         <span class="n">A</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">h</span>
         <span class="n">Ixx</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mf">12.</span><span class="p">)</span> <span class="o">*</span> <span class="n">b</span> <span class="o">*</span> <span class="n">h</span><span class="o">**</span><span class="mi">3</span>
         <span class="n">Iyy</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mf">12.</span><span class="p">)</span> <span class="o">*</span> <span class="n">h</span> <span class="o">*</span> <span class="n">b</span><span class="o">**</span><span class="mi">3</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'RectangularSection'</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'b'</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">'Ixx'</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">'Iyy'</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">'Ixy'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="n">l1</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">])</span>
+        <span class="n">l2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">])</span>
+        <span class="n">J</span> <span class="o">=</span> <span class="p">(</span><span class="n">l1</span> <span class="o">*</span> <span class="n">l2</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.33333</span> <span class="o">-</span> <span class="mf">0.21</span> <span class="o">*</span> <span class="p">(</span><span class="n">l2</span> <span class="o">/</span> <span class="n">l1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">l2</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">12</span> <span class="o">*</span> <span class="n">l1</span><span class="o">**</span><span class="mi">4</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;RectangularSection&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
 <div class="viewcode-block" id="TrapezoidalSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.TrapezoidalSection.html#compas_fea.structure.section.TrapezoidalSection">[docs]</a><span class="k">class</span> <span class="nc">TrapezoidalSection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">""" Solid trapezoidal cross-section for beam elements.</span>
+    <span class="sd">&quot;&quot;&quot; Solid trapezoidal cross-section for beam elements.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        name (str): Section name.</span>
@@ -261,21 +292,21 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
         <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">b2</span> <span class="o">+</span> <span class="n">b1</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">*</span> <span class="p">(</span><span class="n">b1</span> <span class="o">+</span> <span class="n">b2</span><span class="p">))</span>
         <span class="n">A</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">b1</span> <span class="o">+</span> <span class="n">b2</span><span class="p">)</span> <span class="o">*</span> <span class="n">h</span>
         <span class="n">Ixx</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mf">12.</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">b2</span> <span class="o">+</span> <span class="n">b1</span><span class="p">)</span> <span class="o">*</span> <span class="n">h</span><span class="o">**</span><span class="mi">3</span>
         <span class="n">Iyy</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mf">48.</span><span class="p">)</span> <span class="o">*</span> <span class="n">h</span> <span class="o">*</span> <span class="p">(</span><span class="n">b1</span> <span class="o">+</span> <span class="n">b2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b2</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">*</span> <span class="n">b1</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'TrapezoidalSection'</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'b1'</span><span class="p">:</span> <span class="n">b1</span><span class="p">,</span> <span class="s1">'b2'</span><span class="p">:</span> <span class="n">b2</span><span class="p">,</span> <span class="s1">'h'</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span> <span class="s1">'Ixx'</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">'Iyy'</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">'Ixy'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;TrapezoidalSection&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b1&#39;</span><span class="p">:</span> <span class="n">b1</span><span class="p">,</span> <span class="s1">&#39;b2&#39;</span><span class="p">:</span> <span class="n">b2</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
 <div class="viewcode-block" id="TrussSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.TrussSection.html#compas_fea.structure.section.TrussSection">[docs]</a><span class="k">class</span> <span class="nc">TrussSection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">""" For use with truss elements.</span>
+    <span class="sd">&quot;&quot;&quot; For use with truss elements.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        name (str): Section name.</span>
@@ -283,17 +314,17 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'TrussSection'</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'A'</span><span class="p">:</span> <span class="n">A</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;TrussSection&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
 <div class="viewcode-block" id="StrutSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.StrutSection.html#compas_fea.structure.section.StrutSection">[docs]</a><span class="k">class</span> <span class="nc">StrutSection</span><span class="p">(</span><span class="n">TrussSection</span><span class="p">):</span>
 
-    <span class="sd">""" For use with strut elements.</span>
+    <span class="sd">&quot;&quot;&quot; For use with strut elements.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        name (str): Section name.</span>
@@ -301,16 +332,16 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
         <span class="n">TrussSection</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="n">A</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'StrutSection'</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;StrutSection&#39;</span></div>
 
 
 <div class="viewcode-block" id="TieSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.TieSection.html#compas_fea.structure.section.TieSection">[docs]</a><span class="k">class</span> <span class="nc">TieSection</span><span class="p">(</span><span class="n">TrussSection</span><span class="p">):</span>
 
-    <span class="sd">""" For use with tie elements.</span>
+    <span class="sd">&quot;&quot;&quot; For use with tie elements.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        name (str): Section name.</span>
@@ -318,16 +349,16 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
         <span class="n">TrussSection</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="n">A</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'TieSection'</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;TieSection&#39;</span></div>
 
 
 <div class="viewcode-block" id="SpringSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.SpringSection.html#compas_fea.structure.section.SpringSection">[docs]</a><span class="k">class</span> <span class="nc">SpringSection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">""" For use with spring elements.</span>
+    <span class="sd">&quot;&quot;&quot; For use with spring elements.</span>
 
 <span class="sd">    Note:</span>
 <span class="sd">        - Force and displacement data should start from negative to positive.</span>
@@ -340,10 +371,10 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="p">[],</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">stiffness</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'SpringSection'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;SpringSection&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">forces</span> <span class="o">=</span> <span class="n">forces</span>
@@ -357,7 +388,7 @@
 
 <div class="viewcode-block" id="ShellSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.ShellSection.html#compas_fea.structure.section.ShellSection">[docs]</a><span class="k">class</span> <span class="nc">ShellSection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">""" Section for shell and membrane elements.</span>
+    <span class="sd">&quot;&quot;&quot; Section for shell and membrane elements.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        name (str): Section name.</span>
@@ -365,11 +396,11 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'ShellSection'</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'t'</span><span class="p">:</span> <span class="n">t</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;ShellSection&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
@@ -379,69 +410,96 @@
 
 <div class="viewcode-block" id="SolidSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.SolidSection.html#compas_fea.structure.section.SolidSection">[docs]</a><span class="k">class</span> <span class="nc">SolidSection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">""" Section for solid elements.</span>
+    <span class="sd">&quot;&quot;&quot; Section for solid elements.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        name (str): Section name.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">'SolidSection'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;SolidSection&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
 </code></pre></div>
-<!-- <nav class="compas-sideways">
+                        
+                        <!-- <nav class="compas-sideways">
                             
 
                             
                         </nav> -->
-</main>
-<div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
-<div class="navbar-light">
-<form action="../../../search.html" class="d-flex compas-searchbox" id="" method="get">
-<input class="form-control" name="q" placeholder="Search docs" type="text"/>
-<input name="check_keywords" type="hidden" value="yes"/>
-<input name="area" type="hidden" value="default"/>
-<button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
-<span class="navbar-toggler-icon"></span>
-</button>
-</form>
-<div class="navbar-expand-md">
-<div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
-<ul class="nav flex-column">
+
+                    
+
+                </main>
+
+                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
+                    <div class="navbar-light">
+
+                        <form id="" class="d-flex compas-searchbox" action="../../../search.html" method="get">
+                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
+                            <input type="hidden" name="check_keywords" value="yes" />
+                            <input type="hidden" name="area" value="default" />
+
+                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                        </form>
+
+                        
+                        
+
+                            <div class="navbar-expand-md">
+                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
+
+                                <ul class="nav flex-column">
 <li class="nav-item"><a class="nav-link reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../tutorial.html">Tutorial</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../examples.html">Examples</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../reference.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../license.html">License</a></li>
 </ul>
-</div>
-</div>
-</div>
-</div>
-<div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
-</div>
-</div>
-</div>
-<footer class="compas-footer">
+
+
+                                </div>
+                            </div>
+
+                        
+
+                    </div>
+                </div>
+                
+                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+
+                    
+
+                    
+
+                </div>
+            </div>
+        </div>
+
+        <footer class="compas-footer">
             
                 
-                    © Copyright 2017, Block Research Group.
+                    &#169; Copyright 2017, Block Research Group.
                 
             
 
             
-                Last updated on Dec 08, 2017.
+                Last updated on Dec 12, 2017.
             
 
             
                 Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
             
         </footer>
-<script type="text/javascript">
+
+        
+
+            <script type="text/javascript">
 var DOCUMENTATION_OPTIONS = {
     URL_ROOT:    '',
     VERSION:     '',
@@ -451,16 +509,21 @@ var DOCUMENTATION_OPTIONS = {
     SOURCELINK_SUFFIX: '.txt'
 };
             </script>
-<script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
-<script src="https://compas-dev.github.io/js/underscore.js"></script>
-<script src="https://compas-dev.github.io/js/doctools.js"></script>
-<!-- <script src="https://compas-dev.github.io/js/searchtools_.js"></script> -->
-<script>
+
+            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+            
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+
+            <script src="https://compas-dev.github.io/js/underscore.js"></script>
+            <script src="https://compas-dev.github.io/js/doctools.js"></script>
+            <!-- <script src="https://compas-dev.github.io/js/searchtools_.js"></script> -->
+
+            <script>
 hljs.initHighlightingOnLoad();
 anchors.add();
 
@@ -503,5 +566,7 @@ copy_code.on('error', function(event) {
     }, 2000);
 });
             </script>
-</body>
+
+        
+    </body>
 </html>

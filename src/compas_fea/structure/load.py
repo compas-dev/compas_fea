@@ -57,16 +57,16 @@ class PrestressLoad(Load):
     Parameters:
         name (str): Name of the PrestressLoad object.
         elements (str, list): ELSET or elements the prestress is applied to.
-        prestress (float): Value of prestress.
+        sxx (float): Value of prestress for stress component sxx.
 
     Returns:
         None
     """
 
-    def __init__(self, name, elements, prestress):
+    def __init__(self, name, elements, sxx=0):
         Load.__init__(self, name=name, elements=elements, axes='local')
         self.__name__ = 'PrestressLoad'
-        self.components = {'prestress': prestress}
+        self.components = {'sxx': sxx}
 
 
 class PointLoad(Load):

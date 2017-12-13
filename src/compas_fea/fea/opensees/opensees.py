@@ -15,10 +15,10 @@ from math import sqrt
 import os
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
@@ -414,6 +414,7 @@ def input_write_patterns(f, structure, steps, loads, sets):
     # f.write('algorithm Newton\n')
     # f.write('##\n')
     # f.write('integrator LoadControl {0}\n'.format(1./increments))
+    # integrator DisplacementControl
     # f.write('##\n')
     f.write('analysis Static\n')
     f.write('##\n')

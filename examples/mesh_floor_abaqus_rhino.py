@@ -11,6 +11,7 @@ from compas_fea.structure import GeneralDisplacement
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import GravityLoad
 from compas_fea.structure import PinnedDisplacement
+from compas_fea.structure import PrestressLoad
 from compas_fea.structure import RollerDisplacementXY
 from compas_fea.structure import ShellSection
 from compas_fea.structure import Steel
@@ -62,12 +63,14 @@ mdl.add_element_properties(eps, name='ep_steel')
 
 # Add loads
 
-mdl.add_load(GravityLoad(name='load_gravity', elements='elset_concrete'))
+mdl.add_loads([
+    GravityLoad(name='load_gravity', elements='elset_concrete'),
+    PrestressLoad(name='load_prestress', elements='elset_ties', sxx=50*10**6)])
 
 # Add tributary loads from mesh
 
 mesh = mesh_from_guid(Mesh(), rs.ObjectsByLayer('load_mesh')[0])
-mdl.add_load(TributaryLoad(mdl, name='load_tributary', mesh=mesh, z=-1000))
+mdl.add_load(TributaryLoad(mdl, name='load_tributary', mesh=mesh, z=-2000))
 
 # Add displacements
 
@@ -97,5 +100,8 @@ rhino.plot_data(mdl, step='step_loads', field='um', radius=0.02, colorbar_size=0
 
 # Plot stress
 
+rhino.plot_data(mdl, step='step_bc', field='sxx', radius=0.02, 
+                iptype='max', nodal='max', colorbar_size=0.5)
+                
 rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.02, 
                 cbar=[0, 3*10**6], nodal='max', colorbar_size=0.5)

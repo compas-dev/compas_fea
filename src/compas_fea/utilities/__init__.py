@@ -30,6 +30,7 @@ functions
     normalise_data
     postprocess
     process_data
+    tets_from_vertices_faces
     voxels
 
 

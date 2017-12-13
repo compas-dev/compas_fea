@@ -26,16 +26,11 @@ from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
 from compas_fea.utilities import network_order
 from compas_fea.utilities import postprocess
+from compas_fea.utilities import tets_from_vertices_faces
 from compas_fea.utilities import voxels
 
 from numpy import array
 from numpy import newaxis
-
-try:
-    from meshpy.tet import build
-    from meshpy.tet import MeshInfo
-except ImportError:
-    pass
 
 import json
 
@@ -228,24 +223,21 @@ def add_tets_from_bmesh(structure, name, bmesh, draw_tets=False, volume=None, la
     vertices = blendermesh.get_vertex_coordinates()
     faces = blendermesh.get_face_vertex_indices()
 
-    info = MeshInfo()
-    info.set_points(vertices)
-    info.set_facets(faces)
-    tets = build(info, max_volume=volume)
+    tets_points, tets_elements = tets_from_vertices_faces(vertices=vertices, faces=faces, volume=volume)
 
-    for point in tets.points:
+    for point in tets_points:
         structure.add_node(point)
     ekeys = []
-    for element in tets.elements:
-        nodes = [structure.check_node_exists(tets.points[i]) for i in element]
+    for element in tets_elements:
+        nodes = [structure.check_node_exists(tets_points[i]) for i in element]
         ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', acoustic=acoustic, thermal=thermal)
         ekeys.append(ekey)
     structure.add_set(name=name, type='element', selection=ekeys, explode=False)
 
     if draw_tets:
         tet_faces = [[0, 1, 2], [1, 3, 2], [1, 3, 0], [0, 2, 3]]
-        for i, points in enumerate(tets.elements):
-            xyz = [tets.points[j] for j in points]
+        for i, points in enumerate(tets_elements):
+            xyz = [tets_points[j] for j in points]
             xdraw_mesh(name=str(i), vertices=xyz, faces=tet_faces, layer=layer)
 
 
