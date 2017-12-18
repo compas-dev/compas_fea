@@ -1,58 +1,39 @@
 
-
-
 <!DOCTYPE html>
+
 <html lang="en">
-    <head>
-        <title>compas_fea -- FEA package for compas</title>
-
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    
-        <meta name="author" content="" />
-        <meta name="description" content="" />
-
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
-        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/github.css" />
-        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas.css" />
-        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas-reference.css" />
-
-        
-            <link rel="next" title="Loads" href="09_loads.html" />
-        
-        
-        
-            <link rel="prev" title="Materials" href="07_material.html" />
-        
-
-        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-
-    </head>
-    <body data-spy="scroll" data-target="#compas-localnav">
-
-        <header class="navbar navbar-expand compas-navbar">
-            <a class="navbar-brand" href="https://compas-dev.github.io/">
-                <img src="/images/compas_icon_blue-01.png" width="36px" height="36px" alt="compas" />
-            </a>
-
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="http://forum.compas-framework.org/c/compas-fea">Forum</a>
-                    </li>
-                </ul>
-        </header>
-        
-        <div class="container-fluid compas-container">
-            <div class="row flex-xl-nowrap">
-
-                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
-
-                    
-
-                        <!-- 
+<head>
+<title>compas_fea -- FEA package for compas</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+<meta content="" name="author"/>
+<meta content="" name="description"/>
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
+<link href="https://compas-dev.github.io/css/github.css" rel="stylesheet" type="text/css"/>
+<link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
+<link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
+<link href="09_loads.html" rel="next" title="Loads"/>
+<link href="07_material.html" rel="prev" title="Materials"/>
+<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+</head>
+<body data-spy="scroll" data-target="#compas-localnav">
+<header class="navbar navbar-expand compas-navbar">
+<a class="navbar-brand" href="https://compas-dev.github.io/">
+<img alt="compas" height="36px" src="/images/compas_icon_blue-01.png" width="36px"/>
+</a>
+<ul class="navbar-nav">
+<li class="nav-item">
+<a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="http://forum.compas-framework.org/c/compas-fea">Forum</a>
+</li>
+</ul>
+</header>
+<div class="container-fluid compas-container">
+<div class="row flex-xl-nowrap">
+<main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+<!-- 
         <nav class="breadcrumb">
             <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
             <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
@@ -64,55 +45,60 @@
             
         </nav>
  -->
+<div class="section">
+<h1><a class="toc-backref" href="#id1">Properties</a></h1>
+<p>This page shows how <strong>ElementProperties</strong> objects are added to the <strong>Structure</strong> object, here given as a <strong>Structure</strong> named <code class="docutils literal">mdl</code>. This object ties together <strong>Element</strong>, <strong>Material</strong> and <strong>Section</strong> objects to fully define structural elements.</p>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul>
+<li><p><a class="reference internal" href="#properties" id="id1">Properties</a></p>
+<ul>
+<li><p><a class="reference internal" href="#adding-properties" id="id2">Adding properties</a></p></li>
+<li><p><a class="reference internal" href="#accessing-properties" id="id3">Accessing properties</a></p></li>
+<li><p><a class="reference internal" href="#reinforcement" id="id4">Reinforcement</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id2">Adding properties</a></h2>
+<p>To associate <strong>Material</strong> and <strong>Section</strong> objects to specific elements, an <strong>ElementProperties</strong> object is used. Without this association between these objects, the materials and sections will still exist as objects in the main <strong>Structure</strong> object, but are unassigned to any of the elements and so not active. The <strong>ElementProperties</strong> class is first imported from  module <strong>compas_fea.structure.element_properties</strong>, and then an object is added to the <code class="docutils literal">.element_properties</code> dictionary of the <strong>Structure</strong> object. This is done using the method <code class="docutils literal">.add_element_properties()</code> with <code class="docutils literal">name</code> as the string key. The arguments <code class="docutils literal">elsets</code> or <code class="docutils literal">elements</code> of the method can be a list of element sets or elements for assigning the properties to many different or similar elements, while <code class="docutils literal">material</code> and <code class="docutils literal">section</code> are the string names of the respective <strong>Material</strong> and <strong>Section</strong> objects to link together.</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElementProperties</span>
 
-                        
-
-                        
-
-                        <div class="section" id="properties">
-<h1>Properties</h1>
-<p>This page shows how <strong>ElementProperties</strong> objects are added to the <strong>Structure</strong> object, here given as a <strong>Structure</strong> named <code class="docutils literal"><span class="pre">mdl</span></code>.</p>
-<div class="section" id="adding-properties">
-<h2>Adding properties</h2>
-<p>To associate <strong>Material</strong> and <strong>Section</strong> objects to specific elements, an <strong>ElementProperties</strong> object is used. Without this association between objects, the materials and sections will still exist as objects in the main <strong>Structure</strong> object, but are unassigned to any elements and so not active. The <strong>ElementProperties</strong> class is first imported from  module <strong>compas_fea.structure.element_properties</strong> and then an object added to the <code class="docutils literal"><span class="pre">.element_properties</span></code> dictionary of the <strong>Structure</strong> object with <code class="docutils literal"><span class="pre">name</span></code> as the string key using the method <code class="docutils literal"><span class="pre">add_element_properties()</span></code>. The arguments <code class="docutils literal"><span class="pre">elsets</span></code> or <code class="docutils literal"><span class="pre">elements</span></code> of the method can be a list of element sets or elements for multiple assignments of the properties, while <code class="docutils literal"><span class="pre">material</span></code> and <code class="docutils literal"><span class="pre">section</span></code> are the string names of the respective <strong>Material</strong> and <strong>Section</strong> objects to link.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElementProperties</span>
-
-<span class="n">ep</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_elastic&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_circ&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_beams&#39;</span><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_circ&#39;</span><span class="p">)</span>
+<span class="n">ep</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_elastic'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_circ'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">'elset_beams'</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'ep_circ'</span><span class="p">)</span>
 </code></pre></div>
-</div>
-<p>Note: A <strong>SpringElement</strong> does not require a material to be defined, and can be handed <code class="docutils literal"><span class="pre">None</span></code>. A spring will define itself through its <strong>SpringSection</strong>.</p>
-</div>
-<div class="section" id="accessing-properties">
-<h2>Accessing properties</h2>
-<p>The input data can be viewed or manipulated as usual through the object’s string key and attributes.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_properties</span><span class="p">[</span><span class="s1">&#39;ep_circ&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">section</span>
-<span class="go">&#39;sec_circ&#39;</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_properties</span><span class="p">[</span><span class="s1">&#39;ep_circ&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">material</span>
-<span class="go">&#39;mat_elastic&#39;</span>
+<p><strong>Note</strong>: A <strong>SpringElement</strong> does not require a material to be defined, and can be handed <code class="docutils literal">None</code>. A spring will define itself through its <strong>SpringSection</strong>.</p>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id3">Accessing properties</a></h2>
+<p>At any time, the input data can be viewed or manipulated as usual through the object’s string key and attributes.</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_properties</span><span class="p">[</span><span class="s1">'ep_circ'</span><span class="p">]</span><span class="o">.</span><span class="n">section</span>
+<span class="go">'sec_circ'</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_properties</span><span class="p">[</span><span class="s1">&#39;ep_circ&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">elsets</span>
-<span class="go">&#39;elset_beams&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_properties</span><span class="p">[</span><span class="s1">'ep_circ'</span><span class="p">]</span><span class="o">.</span><span class="n">material</span>
+<span class="go">'mat_elastic'</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_properties</span><span class="p">[</span><span class="s1">'ep_circ'</span><span class="p">]</span><span class="o">.</span><span class="n">elsets</span>
+<span class="go">'elset_beams'</span>
 </code></pre></div>
-</div>
-</div>
-<div class="section" id="reinforcement">
-<h2>Reinforcement</h2>
-<p>Reinforcement layers can be added to an <strong>ElementProperties</strong> object through dictionary <code class="docutils literal"><span class="pre">reinforcement</span></code>. This dictionary has the key as the name of each reinforcement layer, and the item as a dictionary with the following: <code class="docutils literal"><span class="pre">pos</span></code> the float position of the reinforcement layer above or below the section’s middle, <code class="docutils literal"><span class="pre">spacing</span></code> the float spacing between the reinforcing bars for that layer, <code class="docutils literal"><span class="pre">material</span></code> string name of the <strong>Material</strong> object, <code class="docutils literal"><span class="pre">dia</span></code> the equivalent float diameter of each bar, and <code class="docutils literal"><span class="pre">angle</span></code> the float angle the reinforcement layer makes with the orientation of the section’s local axes. A call to the <strong>ElementProperties</strong> class could then look like:</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rebar</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;layer_2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.045</span><span class="p">,</span> <span class="s1">&#39;spacing&#39;</span><span class="p">:</span> <span class="mf">0.150</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">:</span> <span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="s1">&#39;dia&#39;</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="mi">90</span><span class="p">},</span>
-    <span class="s1">&#39;layer_1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.050</span><span class="p">,</span> <span class="s1">&#39;spacing&#39;</span><span class="p">:</span> <span class="mf">0.150</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">:</span> <span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="s1">&#39;dia&#39;</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}}</span>
 
-<span class="n">ep</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_concrete&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_slab&#39;</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="n">rebar</span><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_reinforced_concrete&#39;</span><span class="p">)</span>
+</div>
+<div class="section">
+<h2><a class="toc-backref" href="#id4">Reinforcement</a></h2>
+<p>Reinforcement layers can be added to an <strong>ElementProperties</strong> object through dictionary <code class="docutils literal">reinforcement</code>. This dictionary has the key as the name of each reinforcement layer, and the item as a dictionary with the following: <code class="docutils literal">pos</code> the float position of the reinforcement layer above or below the section’s middle axis, <code class="docutils literal">spacing</code> the float spacing between the reinforcing bars for that layer, <code class="docutils literal">material</code> string name of the <strong>Material</strong> object, <code class="docutils literal">dia</code> the equivalent float diameter of each bar, and <code class="docutils literal">angle</code> the float angle the reinforcement layer makes with the orientation of the section’s local axes. A call to the <strong>ElementProperties</strong> class could then look like:</p>
+<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">rebar</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'layer_2'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'pos'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.045</span><span class="p">,</span> <span class="s1">'spacing'</span><span class="p">:</span> <span class="mf">0.150</span><span class="p">,</span> <span class="s1">'material'</span><span class="p">:</span> <span class="s1">'mat_steel'</span><span class="p">,</span> <span class="s1">'dia'</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">'angle'</span><span class="p">:</span> <span class="mi">90</span><span class="p">},</span>
+    <span class="s1">'layer_1'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'pos'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.050</span><span class="p">,</span> <span class="s1">'spacing'</span><span class="p">:</span> <span class="mf">0.150</span><span class="p">,</span> <span class="s1">'material'</span><span class="p">:</span> <span class="s1">'mat_steel'</span><span class="p">,</span> <span class="s1">'dia'</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">'angle'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}}</span>
+
+<span class="n">ep</span> <span class="o">=</span> <span class="n">ElementProperties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_concrete'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_concrete'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">'elset_slab'</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="n">rebar</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'ep_reinforced_concrete'</span><span class="p">)</span>
 </code></pre></div>
-</div>
-</div>
-</div>
 
-                        
-                        <!-- <nav class="compas-sideways">
+</div>
+</div>
+<!-- <nav class="compas-sideways">
                             
                                 <a href="07_material.html" class="btn btn-primary compas-prev" role="button">Materials</a>
                             
@@ -121,31 +107,20 @@
                                 <a href="09_loads.html" class="btn btn-primary compas-next" role="button">Loads</a>
                             
                         </nav> -->
-
-                    
-
-                </main>
-
-                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
-                    <div class="navbar-light">
-
-                        <form id="" class="d-flex compas-searchbox" action="../search.html" method="get">
-                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
-                            <input type="hidden" name="check_keywords" value="yes" />
-                            <input type="hidden" name="area" value="default" />
-
-                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                        </form>
-
-                        
-                        
-
-                            <div class="navbar-expand-md">
-                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
-
-                                <ul class="nav flex-column active">
+</main>
+<div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
+<div class="navbar-light">
+<form action="../search.html" class="d-flex compas-searchbox" id="" method="get">
+<input class="form-control" name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+<button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+</form>
+<div class="navbar-expand-md">
+<div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
+<ul class="nav flex-column active">
 <li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="01_setup.html">Setup</a></li>
@@ -167,21 +142,12 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
 </ul>
-
-
-                                </div>
-                            </div>
-
-                        
-
-                    </div>
-                </div>
-                
-                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
-
-                    
-
-                    <ul class="nav flex-column" id="compas-localnav">
+</div>
+</div>
+</div>
+</div>
+<div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+<ul class="nav flex-column" id="compas-localnav">
 <li class="nav-item"><a class="nav-link reference internal" href="#">Properties</a><ul class="nav">
 <li class="nav-item"><a class="nav-link reference internal" href="#adding-properties">Adding properties</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#accessing-properties">Accessing properties</a></li>
@@ -189,31 +155,25 @@
 </ul>
 </li>
 </ul>
-
-
-                </div>
-            </div>
-        </div>
-
-        <footer class="compas-footer">
+</div>
+</div>
+</div>
+<footer class="compas-footer">
             
                 
-                    &#169; Copyright 2017, Block Research Group.
+                    © Copyright 2017, Block Research Group.
                 
             
 
             
-                Last updated on Dec 12, 2017.
+                Last updated on Dec 18, 2017.
             
 
             
                 Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
             
         </footer>
-
-        
-
-            <script type="text/javascript">
+<script type="text/javascript">
 var DOCUMENTATION_OPTIONS = {
     URL_ROOT:    '',
     VERSION:     '',
@@ -223,21 +183,16 @@ var DOCUMENTATION_OPTIONS = {
     SOURCELINK_SUFFIX: '.txt'
 };
             </script>
-
-            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-            
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-            
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
-
-            <script src="https://compas-dev.github.io/js/underscore.js"></script>
-            <script src="https://compas-dev.github.io/js/doctools.js"></script>
-            <!-- <script src="https://compas-dev.github.io/js/searchtools_.js"></script> -->
-
-            <script>
+<script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+<script src="https://compas-dev.github.io/js/underscore.js"></script>
+<script src="https://compas-dev.github.io/js/doctools.js"></script>
+<!-- <script src="https://compas-dev.github.io/js/searchtools_.js"></script> -->
+<script>
 hljs.initHighlightingOnLoad();
 anchors.add();
 
@@ -280,7 +235,5 @@ copy_code.on('error', function(event) {
     }, 2000);
 });
             </script>
-
-        
-    </body>
+</body>
 </html>
