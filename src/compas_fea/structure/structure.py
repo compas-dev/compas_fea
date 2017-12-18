@@ -112,6 +112,7 @@ class Structure(object):
         self.steps = {}
         self.steps_order = []
         self.tol = '3'
+        self.virtual_nodes = {}
 
     def __str__(self):
         n = self.node_count()
@@ -571,6 +572,54 @@ Steps
         nodes = self.elements[element].nodes
         return centroid_points([self.node_xyz(node) for node in nodes])
 
+    def add_nodal_element(self, node, type, virtual_node=False):
+        """ Adds a nodal element to structure.elements with the possibility of
+        adding a coincident "virtual" node. Virtual nodes are added to a node
+        set called 'virtual_nodes'.
+
+        Parameters
+        ----------
+        nodes : list
+            Node the element is connected to.
+        type : str
+            Element type: 'SpringElement', etc.
+        virtual_node : bool
+            Virtual node is made or not.
+
+        Returns
+        -------
+        int
+            Key of the added element.
+
+        Notes
+        -----
+        - Elements are numbered sequentially starting from 0.
+        """
+        func_dic = {
+            'SpringElement': SpringElement,
+        }
+        func = func_dic[type]
+        if virtual_node:
+            xyz = self.node_xyz(node)
+            key = self.virtual_nodes.setdefault(node, self.node_count())
+            self.nodes[key] = {'x': xyz[0], 'y': xyz[1], 'z': xyz[2],
+                               'ex': [1, 0, 0], 'ey': [0, 1, 0], 'ez': [0, 0, 1],
+                               'virtual': True}
+            if 'virtual_nodes' in self.sets:
+                self.sets['virtual_nodes']['selection'].append(key)
+            else:
+                self.sets['virtual_nodes'] = {'type': 'node', 'selection': [key], 'explode': False}
+            nodes = [node, key]
+        else:
+            nodes = [node]
+
+        ekey = self.element_count()
+        element = func()
+        # element.axes = axes
+        element.nodes = nodes
+        element.number = ekey
+        self.elements[ekey] = element
+        return ekey
 
 # ==============================================================================
 # sets
@@ -696,14 +745,15 @@ Steps
 
         Returns
         -------
-        None
-            Nodes and elements are updated in the Structure object.
+        list: Keys of the created elements.
         """
         for key in sorted(list(mesh.vertices()), key=int):
             self.add_node(mesh.vertex_coordinates(key))
+        ekeys = []
         for fkey in list(mesh.faces()):
             face = [self.check_node_exists(mesh.vertex_coordinates(i)) for i in mesh.face[fkey]]
-            self.add_element(nodes=face, type=element_type, acoustic=acoustic, thermal=thermal)
+            ekeys.append(self.add_element(nodes=face, type=element_type, acoustic=acoustic, thermal=thermal))
+        return ekeys
 
     def add_nodes_elements_from_network(self, network, element_type, acoustic=False, thermal=False):
         """ Adds the nodes and edges of a Network to the Structure object.
