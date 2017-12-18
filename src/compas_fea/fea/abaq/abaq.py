@@ -2,8 +2,9 @@
 compas_fea.fea.abaq : Abaqus specific functions.
 """
 
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 from compas_fea.fea.abaq import launch_job
 from compas_fea.fea.abaq import odb_extract
@@ -19,10 +20,10 @@ import json
 import os
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [

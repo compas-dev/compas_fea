@@ -14,6 +14,7 @@ from compas.utilities import geometric_key
 from compas_fea.fea.abaq import abaq
 from compas_fea.fea.ansys import ansys
 from compas_fea.fea.opensees import opensees
+from compas_fea.fea.sofistik import sofistik
 
 from compas_fea.structure import *
 
@@ -1078,6 +1079,9 @@ Steps
 
         elif software == 'opensees':
             opensees.input_generate(self, fields=fields)
+
+        elif software == 'sofistik':
+            sofistik.input_generate(self, fields=fields)
 
     def analyse(self, software, exe=None, cpus=2, license='research', delete=True):
         """ Runs the analysis through the chosen FEA software/library.

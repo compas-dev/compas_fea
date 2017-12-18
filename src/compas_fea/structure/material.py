@@ -219,6 +219,7 @@ class Concrete(object):
 
         self.__name__ = 'Concrete'
         self.name = name
+        self.fck = fck
         self.E = {'E': E}
         self.v = {'v': v}
         self.p = p

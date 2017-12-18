@@ -2,8 +2,9 @@
 compas_fea.fea.opensees : OpenSEES file creator.
 """
 
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 from subprocess import Popen
 from subprocess import PIPE
@@ -165,19 +166,19 @@ def input_write_heading(f):
     Returns:
         None
     """
-    f.write('## -----------------------------------------------------------------------------\n')
-    f.write('## --------------------------------------------------------------------- Heading\n')
-    f.write('##\n')
-    f.write('##                            OpenSees input file                               \n')
-    f.write('##                          SI units: [N, m, kg, s]                             \n')
-    f.write('##            compas_fea package: Dr Andrew Liew - liew@arch.ethz.ch            \n')
-    f.write('##\n')
-    f.write('## -----------------------------------------------------------------------------\n')
+    f.write('# -----------------------------------------------------------------------------\n')
+    f.write('# --------------------------------------------------------------------- Heading\n')
+    f.write('#\n')
+    f.write('#                            OpenSees input file                               \n')
+    f.write('#                          SI units: [N, m, kg, s]                             \n')
+    f.write('#            compas_fea package: Dr Andrew Liew - liew@arch.ethz.ch            \n')
+    f.write('#\n')
+    f.write('# -----------------------------------------------------------------------------\n')
 
-    f.write('##\n')
+    f.write('#\n')
     f.write('wipe\n')
     f.write('model basic -ndm 3 -ndf 6\n')
-    f.write('##\n')
+    f.write('#\n')
 
 
 def input_write_nodes(f, nodes, units):
@@ -193,17 +194,17 @@ def input_write_nodes(f, nodes, units):
     """
     cl = {'m': 1., 'cm': 0.01, 'mm': 0.001}
 
-    f.write('## -----------------------------------------------------------------------------\n')
-    f.write('## ----------------------------------------------------------------------- Nodes\n')
-    f.write('##\n')
-    f.write('## No., x[m], y[m], z[m]\n')
-    f.write('##\n')
+    f.write('# -----------------------------------------------------------------------------\n')
+    f.write('# ----------------------------------------------------------------------- Nodes\n')
+    f.write('#\n')
+    f.write('# No., x[m], y[m], z[m]\n')
+    f.write('#\n')
 
     for key in sorted(nodes, key=int):
         xyz = [str(nodes[key][i] * cl[units]) for i in 'xyz']
         f.write('node ' + ' '.join([str(key + 1)] + xyz) + '\n')
 
-    f.write('##\n')
+    f.write('#\n')
 
 
 def input_write_bcs(f, structure, steps, displacements):
@@ -218,8 +219,8 @@ def input_write_bcs(f, structure, steps, displacements):
     Returns:
         None
     """
-    f.write('## -----------------------------------------------------------------------------\n')
-    f.write('## ------------------------------------------------------------------------- BCs\n')
+    f.write('# -----------------------------------------------------------------------------\n')
+    f.write('# ------------------------------------------------------------------------- BCs\n')
 
     dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 
@@ -227,9 +228,9 @@ def input_write_bcs(f, structure, steps, displacements):
     step = steps[key]
     stype = step.__name__
 
-    f.write('##\n')
-    f.write('## {0}\n'.format(key))
-    f.write('## ' + '-' * len(key) + '\n')
+    f.write('#\n')
+    f.write('# {0}\n'.format(key))
+    f.write('# ' + '-' * len(key) + '\n')
 
     # Mechanical
 
@@ -242,12 +243,12 @@ def input_write_bcs(f, structure, steps, displacements):
             com = displacement.components
             nset = displacement.nodes
 
-            f.write('##\n')
-            f.write('## {0}\n'.format(k))
-            f.write('## ' + '-' * len(k) + '\n')
-            f.write('##\n')
-            f.write('## Node, x, y, z, xx, yy, zz\n')
-            f.write('##\n')
+            f.write('#\n')
+            f.write('# {0}\n'.format(k))
+            f.write('# ' + '-' * len(k) + '\n')
+            f.write('#\n')
+            f.write('# Node, x, y, z, xx, yy, zz\n')
+            f.write('#\n')
 
             for node in structure.sets[nset]['selection']:
                 j = []
@@ -258,7 +259,7 @@ def input_write_bcs(f, structure, steps, displacements):
                         j.append('0')
                 f.write('fix {0} {1}\n'.format(node + 1, ' '.join(j)))
 
-    f.write('##\n')
+    f.write('#\n')
 
 
 def input_write_elements(f, sections, properties, elements, sets, materials):
@@ -283,8 +284,8 @@ def input_write_elements(f, sections, properties, elements, sets, materials):
 
     # Write data
 
-    f.write('## -----------------------------------------------------------------------------\n')
-    f.write('## -------------------------------------------------------------------- Elements\n')
+    f.write('# -----------------------------------------------------------------------------\n')
+    f.write('# -------------------------------------------------------------------- Elements\n')
 
     for key, property in properties.items():
         material = property.material
@@ -293,10 +294,10 @@ def input_write_elements(f, sections, properties, elements, sets, materials):
         stype = section.__name__
         geometry = section.geometry
 
-        f.write('##\n')
-        f.write('## Section: {0}\n'.format(key))
-        f.write('## ---------' + '-' * (len(key)) + '\n')
-        f.write('##\n')
+        f.write('#\n')
+        f.write('# Section: {0}\n'.format(key))
+        f.write('# ---------' + '-' * (len(key)) + '\n')
+        f.write('#\n')
 
         if isinstance(elsets, str):
             elsets = [elsets]
@@ -308,7 +309,7 @@ def input_write_elements(f, sections, properties, elements, sets, materials):
 
             if (stype not in shells) and (stype not in solids):
 
-                f.write('## eType, No., node.start, node.end, A[m2], E[Pa], G[Pa], J[m^4], Iyy[m^4], Ixx[m^4], trans\n')
+                f.write('# eType, No., node.start, node.end, A[m2], E[Pa], G[Pa], J[m^4], Iyy[m^4], Ixx[m^4], trans\n')
                 for select in selection:
                     sp, ep = elements[select].nodes
                     n = select + 1
@@ -322,11 +323,11 @@ def input_write_elements(f, sections, properties, elements, sets, materials):
                     Iyy = geometry['Iyy']
 
                     ex = ' '.join([str(k) for k in elements[select].axes['ex']])
-                    f.write('##\n')
+                    f.write('#\n')
                     f.write('geomTransf Linear {0} {1}\n'.format(select + 1, ex))
                     f.write('element elasticBeamColumn {0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(n, i, j, A, E, G, J, Ixx, Iyy, select + 1))
 
-    f.write('##\n')
+    f.write('#\n')
 
 
 def input_write_patterns(f, structure, steps, loads, sets):
@@ -342,8 +343,8 @@ def input_write_patterns(f, structure, steps, loads, sets):
     Returns:
         None
     """
-    f.write('## -----------------------------------------------------------------------------\n')
-    f.write('## -------------------------------------------------------------------- Analysis\n')
+    f.write('# -----------------------------------------------------------------------------\n')
+    f.write('# -------------------------------------------------------------------- Analysis\n')
 
     dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 
@@ -356,10 +357,10 @@ def input_write_patterns(f, structure, steps, loads, sets):
     # iterations = step.iterations
     increments = step.increments
 
-    f.write('##\n')
-    f.write('## {0}\n'.format(key))
-    f.write('## ' + '-' * len(key) + '\n')
-    f.write('##\n')
+    f.write('#\n')
+    f.write('# {0}\n'.format(key))
+    f.write('# ' + '-' * len(key) + '\n')
+    f.write('#\n')
 
     f.write('timeSeries Constant {0} -factor 1.0\n'.format(index))
     f.write('pattern Plain {0} {0} -fact {1} {2}\n'.format(index, factor, '{'))
@@ -371,7 +372,7 @@ def input_write_patterns(f, structure, steps, loads, sets):
         # Loads
 
         for k in step.loads:
-            f.write('##\n')
+            f.write('#\n')
 
             load = loads[k]
             ltype = load.__name__
@@ -399,27 +400,27 @@ def input_write_patterns(f, structure, steps, loads, sets):
                     elements = ' '.join([str(i + 1) for i in sets[elset]['selection']])
                     f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, com['y'], com['x']))
 
-    f.write('##\n')
+    f.write('#\n')
     f.write('{0}\n'.format('}'))
 
-    f.write('##\n')
+    f.write('#\n')
     f.write('constraints Plain\n')
-    f.write('##\n')
+    f.write('#\n')
     f.write('numberer RCM\n')
-    f.write('##\n')
+    f.write('#\n')
     f.write('system ProfileSPD\n')
-    # f.write('##\n')
+    # f.write('#\n')
     # f.write('test RelativeNormUnbalance {0} {1} 2\n'.format(tolerance, iterations))
-    # f.write('##\n')
+    # f.write('#\n')
     # f.write('algorithm Newton\n')
-    # f.write('##\n')
+    # f.write('#\n')
     # f.write('integrator LoadControl {0}\n'.format(1./increments))
     # integrator DisplacementControl
-    # f.write('##\n')
+    # f.write('#\n')
     f.write('analysis Static\n')
-    f.write('##\n')
+    f.write('#\n')
     f.write('analyze {0}\n'.format(increments))
-    f.write('##\n')
+    f.write('#\n')
 
 
 def input_write_recorders(f, structure):
@@ -432,9 +433,9 @@ def input_write_recorders(f, structure):
     Returns:
         None
     """
-    f.write('## -----------------------------------------------------------------------------\n')
-    f.write('## ------------------------------------------------------------------- Recorders\n')
-    f.write('##\n')
+    f.write('# -----------------------------------------------------------------------------\n')
+    f.write('# ------------------------------------------------------------------- Recorders\n')
+    f.write('#\n')
 
     # Files and folders
 
@@ -465,4 +466,4 @@ def input_write_recorders(f, structure):
     f.write('recorder Element -file {0} -time -eleRange {1} force\n'.format(element_sf, elements))
     # f.write('recorder Element -file {0} -time -eleRange {1} stressStrain'.format(element_sf, elements))
 
-    f.write('##\n')
+    f.write('#\n')
