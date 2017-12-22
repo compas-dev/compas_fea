@@ -574,17 +574,17 @@ Steps
 
     def add_nodal_element(self, node, type, virtual_node=False):
         """ Adds a nodal element to structure.elements with the possibility of
-        adding a coincident "virtual" node. Virtual nodes are added to a node
+        adding a coincident virtual node. Virtual nodes are added to a node
         set called 'virtual_nodes'.
 
         Parameters
         ----------
-        nodes : list
-            Node the element is connected to.
+        node : int
+            Node number the element is connected to.
         type : str
             Element type: 'SpringElement', etc.
         virtual_node : bool
-            Virtual node is made or not.
+            Create a virtual node or not.
 
         Returns
         -------
@@ -595,16 +595,11 @@ Steps
         -----
         - Elements are numbered sequentially starting from 0.
         """
-        func_dic = {
-            'SpringElement': SpringElement,
-        }
-        func = func_dic[type]
         if virtual_node:
             xyz = self.node_xyz(node)
             key = self.virtual_nodes.setdefault(node, self.node_count())
             self.nodes[key] = {'x': xyz[0], 'y': xyz[1], 'z': xyz[2],
-                               'ex': [1, 0, 0], 'ey': [0, 1, 0], 'ez': [0, 0, 1],
-                               'virtual': True}
+                               'ex': [1, 0, 0], 'ey': [0, 1, 0], 'ez': [0, 0, 1], 'virtual': True}
             if 'virtual_nodes' in self.sets:
                 self.sets['virtual_nodes']['selection'].append(key)
             else:
@@ -613,13 +608,18 @@ Steps
         else:
             nodes = [node]
 
+        func_dic = {
+            'SpringElement': SpringElement,
+        }
+        func = func_dic[type]
+
         ekey = self.element_count()
         element = func()
-        # element.axes = axes
         element.nodes = nodes
         element.number = ekey
         self.elements[ekey] = element
         return ekey
+
 
 # ==============================================================================
 # sets
@@ -643,6 +643,9 @@ Steps
         -------
         None
         """
+        if isinstance(selection, int):
+            selection = [selection]
+
         if explode:
             if type in ['node', 'element']:
                 for select in selection:

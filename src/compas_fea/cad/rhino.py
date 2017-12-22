@@ -2,8 +2,9 @@
 compas_fea.cad.rhino : Rhinoceros specific functions.
 """
 
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 from compas.utilities import XFunc
 
@@ -66,19 +67,24 @@ __all__ = [
 def add_element_set(structure, guids, name, explode=False):
     """ Adds element set information from Rhino curve and mesh guids.
 
-    Note:
-        - Meshes representing solids must have 'solid' in their name.
-
     Parameters
     ----------
-        structure (obj): Structure object to update.
-        guids (list): Rhino curve and Rhino mesh guids.
-        name (str): Set name.
-        explode (bool): Explode the set into sets for each member of selection.
+    structure : obj
+        Structure object to update.
+    guids : list
+        Rhino curve and Rhino mesh guids.
+    name : str
+        Set name.
+    explode : bool
+        Explode the set into sets for each member of selection.
 
     Returns
     -------
-        None
+    None
+
+    Notes
+    -----
+        - Meshes representing solids must have 'solid' in their name.
     """
     elements = []
     for guid in guids:
@@ -117,18 +123,27 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
 
     Parameters
     ----------
-        structure (obj): Structure object to update.
-        name (str): Name for the element set of tetrahedrons.
-        mesh (ob): The Rhino mesh representing the outer surface.
-        draw_tets (bool): Draw the generated tetrahedrons.
-        volume (float): Maximum volume for tets.
-        layer (str): Layer to draw tetrahedrons if draw_tets=True.
-        acoustic (bool): Acoustic properties on or off.
-        thermal (bool): Thermal properties on or off.
+    structure : obj
+        Structure object to update.
+    name : str
+        Name for the element set of tetrahedrons.
+    mesh : ob
+        The Rhino mesh representing the outer surface.
+    draw_tets : bool
+        Draw the generated tetrahedrons.
+    volume : float
+        Maximum volume for tets.
+    layer : str
+        Layer to draw tetrahedrons if draw_tets=True.
+    acoustic : bool
+        Acoustic properties on or off.
+    thermal : bool
+        Thermal properties on or off.
 
     Returns
     -------
-        None: Nodes and elements are updated in the Structure object.
+    None
+        Nodes and elements are updated in the Structure object.
     """
     rhinomesh = RhinoMesh(mesh)
     vertices = rhinomesh.get_vertex_coordinates()
@@ -172,14 +187,18 @@ def add_node_set(structure, guids, name, explode=False):
 
     Parameters
     ----------
-        structure (obj): Structure object to update.
-        guids (list): Rhino point guids.
-        name (str): Set name.
-        explode (bool): Explode the set into sets for each member of selection.
+    structure : obj
+        Structure object to update.
+    guids : list
+        Rhino point guids.
+    name : str
+        Set name.
+    explode : bool
+        Explode the set into sets for each member of selection.
 
     Returns
     -------
-        None
+    None
     """
     nodes = []
     for guid in guids:
@@ -292,19 +311,23 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 def add_sets_from_layers(structure, layers, explode=False):
     """ Add node or element sets to the Structure object from Rhino layers.
 
-    Note:
-        - Layers should exclusively contain nodes or elements.
-        - Sets will inherit the layer names as their keys.
-
     Parameters
     ----------
-        structure (obj): Structure object to update.
-        layers (list): List of layer names to take objects from.
-        explode (bool): Explode the set into sets for each member of selection.
+    structure : obj
+        Structure object to update.
+    layers : list
+        List of layer names to take objects from.
+    explode : bool
+        Explode the set into sets for each member of selection.
 
     Returns
     -------
-        None
+    None
+
+    Notes
+    -----
+        - Layers should exclusively contain nodes or elements.
+        - Sets will inherit the layer names as their keys.
     """
     if isinstance(layers, str):
         layers = [layers]
@@ -325,21 +348,27 @@ def add_sets_from_layers(structure, layers, explode=False):
 def mesh_extrude(structure, guid, nz, dz, setname):
     """ Extrudes a Rhino mesh into cells of many layers and adds to Structure.
 
-    Note:
-        - Extrusion is along the vertex normals.
-        - Elements are added automatically to the Structure object.
-
     Parameters
     ----------
-        structure (obj): Structure object to update.
-        guid (guid): Rhino mesh guid.
-        nz (int): Number of layers.
-        dz (float): Layer thickness.
-        setname (str): Name of set for added elements.
+    structure : obj
+        Structure object to update.
+    guid : guid
+        Rhino mesh guid.
+    nz : int
+        Number of layers.
+    dz : float
+        Layer thickness.
+    setname : str
+        Name of set for added elements.
 
     Returns
     -------
-        None
+    None
+
+    Notes
+    -----
+        - Extrusion is along the vertex normals.
+        - Elements are added automatically to the Structure object.
     """
     mesh = mesh_from_guid(Mesh(), guid)
     extrude_mesh(structure=structure, mesh=mesh, nz=nz, dz=dz, setname=setname)
@@ -350,12 +379,15 @@ def network_from_lines(guids=[], layer=None):
 
     Parameters
     ----------
-        guids (list): guids of the Rhino curves to be made into a Network.
-        layer(str): Layer to grab line guids from.
+    guids : list
+        guids of the Rhino curves to be made into a Network.
+    layer : tr
+        Layer to grab line guids from.
 
     Returns
     -------
-        obj: Network datastructure object.
+    obj
+        Network datastructure object.
     """
     if layer:
         guids = rs.ObjectsByLayer(layer)
@@ -366,21 +398,29 @@ def network_from_lines(guids=[], layer=None):
 def ordered_network(structure, network, layer):
     """ Extract node and element orders from a Network for a given start-point.
 
-    Note:
-        - Function is for a Network representing a single structural element.
-
     Parameters
     ----------
-        structure (obj): Structure object.
-        network (obj): Network object.
-        layer (str): Layer to extract start-point (Rhino point).
+    structure : obj
+        Structure object.
+    network : obj
+        Network object.
+    layer : str
+        Layer to extract start-point (Rhino point).
 
     Returns
     -------
-        list: Ordered nodes.
-        list: Ordered elements.
-        list: Cumulative lengths at element mid-points.
-        float: Total length.
+    list
+        Ordered nodes.
+    list
+        Ordered elements.
+    list
+        Cumulative lengths at element mid-points.
+    float
+        Total length.
+
+    Notes
+    -----
+        - Function is for a Network representing a single structural element.
     """
     sp_xyz = rs.PointCoordinates(rs.ObjectsByLayer(layer)[0])
     return network_order(sp_xyz=sp_xyz, structure=structure, network=network)
@@ -391,16 +431,22 @@ def plot_axes(xyz, e11, e22, e33, layer, sc=1):
 
     Parameters
     ----------
-        xyz (list): Origin of the axes.
-        e11 (list): First axis component [x1, y1, z1].
-        e22 (list): Second axis component [x2, y2, z2].
-        e33 (list): Third axis component [x3, y3, z3].
-        layer (str): Layer to plot on.
-        sc (float) : Size of the axis lines.
+    xyz : list
+        Origin of the axes.
+    e11 : list
+        First axis component [x1, y1, z1].
+    e22 : list
+        Second axis component [x2, y2, z2].
+    e33 : list
+        Third axis component [x3, y3, z3].
+    layer : str
+        Layer to plot on.
+    sc : float
+         Size of the axis lines.
 
     Returns
     -------
-        None
+    None
     """
     ex = rs.AddLine(xyz, add_vectors(xyz, scale_vector(e11, sc)))
     ey = rs.AddLine(xyz, add_vectors(xyz, scale_vector(e22, sc)))
@@ -420,15 +466,19 @@ def plot_mode_shapes(structure, step, layer=None, scale=1.0):
 
     Parameters
     ----------
-        structure (obj): Structure object.
-        step (str): Name of the Step.
-        layer (str): Each mode will be placed in a layer with this string as its base.
-        scale (float): Scale displacements for the deformed plot.
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    layer : str
+        Each mode will be placed in a layer with this string as its base.
+    scale : float
+        Scale displacements for the deformed plot.
 
     Returns
     -------
-        None
-        """
+    None
+    """
     freq = structure.results[step]['frequencies']
     for fk in freq:
         layerk = layer + str(fk)
@@ -439,26 +489,38 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
               nodal='mean', mode='', colorbar_size=1):
     """ Plots analysis results on the deformed shape of the Structure.
 
-    Note:
-        - Pipe visualisation of line elements is not based on the element section.
-
     Parameters
     ----------
-        structure (obj): Structure object.
-        step (str): Name of the Step.
-        field (str): Field to plot, e.g. 'um', 'sxx', 'sm1'.
-        layer (str): Layer name for plotting.
-        scale (float): Scale displacements for the deformed plot.
-        radius (float): Radius of the pipe visualisation meshes.
-        cbar (list): Minimum and maximum limits on the colorbar.
-        iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
-        nodal (str): 'mean', 'max' or 'min' for nodal values.
-        mode (int): mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
-        colorbar_size (float): Scale on the size of the colorbar.
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    field : str
+        Field to plot, e.g. 'um', 'sxx', 'sm1'.
+    layer : str
+        Layer name for plotting.
+    scale : float
+        Scale displacements for the deformed plot.
+    radius : float
+        Radius of the pipe visualisation meshes.
+    cbar : list
+        Minimum and maximum limits on the colorbar.
+    iptype : str
+        'mean', 'max' or 'min' of an element's integration point data.
+    nodal : str
+        'mean', 'max' or 'min' for nodal values.
+    mode : int
+        mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
+    colorbar_size : float
+        Scale on the size of the colorbar.
 
     Returns
     -------
-        None
+    None
+
+    Notes
+    -----
+        - Pipe visualisation of line elements is not based on the element section.
     """
 
     path = structure.path
@@ -598,20 +660,30 @@ def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[No
 
     Parameters
     ----------
-        structure (obj): Structure object.
-        step (str): Name of the Step.
-        field (str): Scalar field to plot, e.g. 'smises'.
-        layer (str): Layer name for plotting.
-        scale (float): Scale displacements for the deformed plot.
-        cbar (list): Minimum and maximum limits on the colorbar.
-        iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
-        nodal (str): 'mean', 'max' or 'min' for nodal values.
-        vmin (float): Plot voxel data, and cull values below value voxel (0 1].
-        vdx (float): Voxel spacing.
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    field : str
+        Scalar field to plot, e.g. 'smises'.
+    layer : str
+        Layer name for plotting.
+    scale : float
+        Scale displacements for the deformed plot.
+    cbar : list
+        Minimum and maximum limits on the colorbar.
+    iptype : str
+        'mean', 'max' or 'min' of an element's integration point data.
+    nodal : str
+        'mean', 'max' or 'min' for nodal values.
+    vmin : float
+        Plot voxel data, and cull values below value voxel (0 1].
+    vdx : float
+        Voxel spacing.
 
     Returns
     -------
-        None
+    None
     """
 
     path = structure.path
@@ -670,22 +742,30 @@ def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[No
 def plot_principal_stresses(structure, step, ptype, scale, layer):
     """ Plots the principal stresses of the elements.
 
-    Note:
-        - Currently alpha script and for only four-noded S4 shell elements.
-
     Parameters
     ----------
-        structure (obj): Structure object.
-        path (str): Folder where results files are stored.
-        name (str): Structure name.
-        step (str): Name of the Step.
-        ptype (str): 'max' 'min' for maxPrincipal or minPrincipal stresses.
-        scale (float): Scale on the length of the line markers.
-        layer (str): Layer name for plotting.
+    structure : obj
+        Structure object.
+    path : str
+        Folder where results files are stored.
+    name : str
+        Structure name.
+    step : str
+        Name of the Step.
+    ptype : str
+        'max' 'min' for maxPrincipal or minPrincipal stresses.
+    scale : float
+        Scale on the length of the line markers.
+    layer : str
+        Layer name for plotting.
 
     Returns
     -------
-        None
+    None
+
+    Notes
+    -----
+        - Currently alpha script and for only four-noded S4 shell elements.
     """
     pass  # make this function external
 

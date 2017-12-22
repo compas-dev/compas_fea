@@ -2,8 +2,9 @@
 compas_fea.cad.blender : Blender specific functions.
 """
 
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 from compas_blender.geometry import BlenderMesh
 from compas_blender.helpers import mesh_from_bmesh
@@ -206,18 +207,27 @@ def add_tets_from_bmesh(structure, name, bmesh, draw_tets=False, volume=None, la
 
     Parameters
     ----------
-        structure (obj): Structure object to update.
-        name (str): Name for the element set of tetrahedrons.
-        bmesh (ob): The Blender mesh representing the outer surface.
-        draw_tets (bool): Draw the generated tetrahedrons.
-        volume (float): Maximum volume for tets.
-        layer (int): Layer to draw tetrahedrons if draw_tets=True.
-        acoustic (bool): Acoustic properties on or off.
-        thermal (bool): Thermal properties on or off.
+    structure : obj
+        Structure object to update.
+    name : str
+        Name for the element set of tetrahedrons.
+    bmesh : ob
+        The Blender mesh representing the outer surface.
+    draw_tets : bool
+        Draw the generated tetrahedrons.
+    volume : float
+        Maximum volume for tets.
+    layer : int
+        Layer to draw tetrahedrons if draw_tets=True.
+    acoustic : bool
+        Acoustic properties on or off.
+    thermal : bool
+        Thermal properties on or off.
 
     Returns
     -------
-        None: Nodes and elements are updated in the Structure object.
+    None
+        Nodes and elements are updated in the Structure object.
     """
     blendermesh = BlenderMesh(bmesh)
     vertices = blendermesh.get_vertex_coordinates()
@@ -244,20 +254,26 @@ def add_tets_from_bmesh(structure, name, bmesh, draw_tets=False, volume=None, la
 def add_elset_from_bmeshes(structure, name, bmeshes=None, layer=None, explode=False):
     """ Adds the Blender meshes' edges and faces as an element set.
 
-    Note:
-        - Either bmeshes or layer should be given, not both.
-
     Parameters
     ----------
-        structure (obj): Structure object to update.
-        name (str): Name of the new element set.
-        bmeshes (list): Blender mesh objects to extract edges and faces.
-        layer (int): Layer to get bmeshes from if bmeshes are not given.
-        explode (bool): Explode the set into sets for each member of selection.
+    structure : obj
+        Structure object to update.
+    name : str
+        Name of the new element set.
+    bmeshes : list
+        Blender mesh objects to extract edges and faces.
+    layer : int
+        Layer to get bmeshes from if bmeshes are not given.
+    explode : bool
+        Explode the set into sets for each member of selection.
 
     Returns
     -------
-        None
+    None
+
+    Notes
+    -----
+        - Either bmeshes or layer should be given, not both.
     """
     if layer is not None:
         bmeshes = [object for object in get_objects(layer=layer) if object.type == 'MESH']
@@ -289,20 +305,26 @@ def add_elset_from_bmeshes(structure, name, bmeshes=None, layer=None, explode=Fa
 def add_nset_from_bmeshes(structure, name, bmeshes=None, layer=None, explode=False):
     """ Adds the Blender meshes' vertices as a node set.
 
-    Note:
-        - Either bmeshes or layer should be given, not both.
-
     Parameters
     ----------
-        structure (obj): Structure object to update.
-        name (str): Name of the new node set.
-        bmeshes (list): Blender mesh objects to extract vertices.
-        layer (int): Layer to get bmeshes from if bmeshes are not given.
-        explode (bool): Explode the set into sets for each member of selection.
+    structure : obj
+        Structure object to update.
+    name : str
+        Name of the new node set.
+    bmeshes : list
+        Blender mesh objects to extract vertices.
+    layer : int
+        Layer to get bmeshes from if bmeshes are not given.
+    explode : bool
+        Explode the set into sets for each member of selection.
 
     Returns
     -------
-        None
+    None
+
+    Notes
+    -----
+        - Either bmeshes or layer should be given, not both.
     """
     if layer is not None:
         bmeshes = [object for object in get_objects(layer=layer) if object.type == 'MESH']
@@ -324,20 +346,26 @@ def add_nset_from_bmeshes(structure, name, bmeshes=None, layer=None, explode=Fal
 def add_nset_from_objects(structure, name, objects=None, layer=None, explode=False):
     """ Adds the objects' locations as a node set.
 
-    Note:
-        - Either objects or layer should be given, not both.
-
     Parameters
     ----------
-        structure (obj): Structure object to update.
-        name (str): Name of the new node set.
-        objects (list): Objects to use location values.
-        layer (int): Layer to get objects from if objects are not given.
-        explode (bool): Explode the set into sets for each member of selection.
+    structure : obj
+        Structure object to update.
+    name : str
+        Name of the new node set.
+    objects : list
+        Objects to use location values.
+    layer : int
+        Layer to get objects from if objects are not given.
+    explode : bool
+        Explode the set into sets for each member of selection.
 
     Returns
     -------
-        None
+    None
+
+    Notes
+    -----
+        - Either objects or layer should be given, not both.
     """
     if layer is not None:
         objects = get_objects(layer=layer)
@@ -348,21 +376,27 @@ def add_nset_from_objects(structure, name, objects=None, layer=None, explode=Fal
 def mesh_extrude(structure, bmesh, nz, dz, setname):
     """ Extrudes a Blender mesh into cells of many layers and adds to Structure.
 
-    Note:
-        - Extrusion is along the vertex normals.
-        - Elements are added automatically to the Structure object.
-
     Parameters
     ----------
-        structure (obj): Structure object to update.
-        bmesh (obj): Blender mesh object.
-        nz (int): Number of layers.
-        dz (float): Layer thickness.
-        setname (str): Name of set for added elements.
+    structure : obj
+        Structure object to update.
+    bmesh : obj
+        Blender mesh object.
+    nz : int
+        Number of layers.
+    dz : float
+        Layer thickness.
+    setname : str
+        Name of set for added elements.
 
     Returns
     -------
-        None
+    None
+
+    Notes
+    -----
+        - Extrusion is along the vertex normals.
+        - Elements are added automatically to the Structure object.
     """
     mesh = mesh_from_bmesh(bmesh)
     extrude_mesh(structure=structure, mesh=mesh, nz=nz, dz=dz, setname=setname)
@@ -371,21 +405,29 @@ def mesh_extrude(structure, bmesh, nz, dz, setname):
 def ordered_network(structure, network, layer):
     """ Extract node and element orders from a Network for a given start-point.
 
-    Note:
-        - Function is for a Network representing a single structural element.
-
     Parameters
     ----------
-        structure (obj): Structure object.
-        network (obj): Network object.
-        layer (str): Layer to extract start-point (Blender object).
+    structure : obj
+        Structure object.
+    network : obj
+        Network object.
+    layer : str
+        Layer to extract start-point (Blender object).
 
     Returns
     -------
-        list: Ordered nodes.
-        list: Ordered elements.
-        list: Cumulative lengths at element mid-points.
-        float: Total length.
+    list
+        Ordered nodes.
+    list
+        Ordered elements.
+    list
+        Cumulative lengths at element mid-points.
+    float
+        Total length.
+
+    Notes
+    -----
+        - Function is for a Network representing a single structural element.
     """
     sp_xyz = get_object_location(object=get_objects(layer=layer)[0])
     return network_order(sp_xyz=sp_xyz, structure=structure, network=network)
@@ -399,26 +441,38 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
               nodal='mean', mode='', colorbar_size=1):
     """ Plots analysis results on the deformed shape of the Structure.
 
-    Note:
-        - Pipe visualisation of line elements is not based on the element section.
-
     Parameters
     ----------
-        structure (obj): Structure object.
-        step (str): Name of the Step.
-        field (str): Field to plot, e.g. 'um', 'sxx', 'sm1'.
-        layer (int): Layer number for plotting.
-        scale (float): Scale displacements for the deformed plot.
-        radius (float): Radius of the pipe visualisation meshes.
-        cbar (list): Minimum and maximum limits on the colorbar.
-        iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
-        nodal (str): 'mean', 'max' or 'min' for nodal values.
-        mode (int): mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
-        colorbar_size (float): Scale on the size of the colorbar.
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    field : str
+        Field to plot, e.g. 'um', 'sxx', 'sm1'.
+    layer : int
+        Layer number for plotting.
+    scale : float
+        Scale displacements for the deformed plot.
+    radius : float
+        Radius of the pipe visualisation meshes.
+    cbar : list
+        Minimum and maximum limits on the colorbar.
+    iptype : str
+        'mean', 'max' or 'min' of an element's integration point data.
+    nodal : str
+        'mean', 'max' or 'min' for nodal values.
+    mode : int
+        mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
+    colorbar_size : float
+        Scale on the size of the colorbar.
 
     Returns
     -------
-        None
+    None
+
+    Notes
+    -----
+        - Pipe visualisation of line elements is not based on the element section.
     """
     clear_layer(layer=layer)
 
@@ -517,29 +571,42 @@ def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None,
                 vdx=None, cube_size=[10, 10, 10], mode='', colorbar_size=1):
     """ Applies a base voxel material and texture to a cube for 4D visualisation.
 
-    Note:
-        - Texture ramping should be done manually afterwards.
-        - Voxel display works best with cube dimensions >= 10.
-        - The absolute value is plotted, ranged between [0, 1].
-
      Parameters
     ----------
-        structure (obj): Structure object.
-        step (str): Name of the Step.
-        field (str): Field to plot, e.g. 'smises'.
-        layer (int): Layer to plot voxel cuboid on.
-        scale (float): Scale displacements for the deformed plot.
-        cbar (list): Minimum and maximum limits on the colorbar.
-        iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
-        nodal (str): 'mean', 'max' or 'min' for nodal values.
-        vdx (float): Voxel spacing.
-        cube_size (list): x, y, and z lengths of the cube.
-        mode (int): mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
-        colorbar_size (float): Scale on the size of the colorbar.
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    field : str
+        Field to plot, e.g. 'smises'.
+    layer : int
+        Layer to plot voxel cuboid on.
+    scale : float
+        Scale displacements for the deformed plot.
+    cbar : list
+        Minimum and maximum limits on the colorbar.
+    iptype : str
+        'mean', 'max' or 'min' of an element's integration point data.
+    nodal : str
+        'mean', 'max' or 'min' for nodal values.
+    vdx : float
+        Voxel spacing.
+    cube_size : list
+        x, y, and z lengths of the cube.
+    mode : int
+        mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
+    colorbar_size : float
+        Scale on the size of the colorbar.
 
     Returns
     -------
-        None
+    None
+
+    Notes
+    -----
+        - Texture ramping should be done manually afterwards.
+        - Voxel display works best with cube dimensions >= 10.
+        - The absolute value is plotted, ranged between [0, 1].
     """
 
     # Node and element data
