@@ -28,6 +28,8 @@ __all__ = [
 conversion = {
     'U1': 'ux', 'U2': 'uy', 'U3': 'uz',
     'UR1': 'urx', 'UR2': 'ury', 'UR3': 'urz',
+    'RF1': 'rfx', 'RF2': 'rfy', 'RF3': 'rfz',
+    'RM1': 'rmx', 'RM2': 'rmy', 'RM3': 'rmz',
     'S11': 'sxx', 'S22': 'syy', 'S33': 'szz', 'S12': 'sxy', 'S13': 'sxz', 'S23': 'sxz',
     'E11': 'exx', 'E22': 'eyy', 'E33': 'ezz', 'E12': 'exy', 'E13': 'exz', 'E23': 'exz',
     'LE11': 'exx', 'LE22': 'eyy', 'LE33': 'ezz', 'LE12': 'exy', 'LE13': 'exz', 'LE23': 'exz',

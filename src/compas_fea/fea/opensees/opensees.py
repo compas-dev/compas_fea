@@ -60,27 +60,49 @@ def extract_out_data(structure):
         lines = f.readlines()
     ur_out = [float(i) for i in lines[-1].split(' ')[1:]]
 
+    with open('{0}node_rf.out'.format(temp), 'r') as f:
+        lines = f.readlines()
+    rf_out = [float(i) for i in lines[-1].split(' ')[1:]]
+
+    with open('{0}node_rm.out'.format(temp), 'r') as f:
+        lines = f.readlines()
+    rm_out = [float(i) for i in lines[-1].split(' ')[1:]]
+
     nodal = structure.results[step]['nodal']
     # elemental = structure.results[step]['element']
 
     for dof in 'xyz':
         nodal['u{0}'.format(dof)] = {}
         nodal['ur{0}'.format(dof)] = {}
+        nodal['rf{0}'.format(dof)] = {}
+        nodal['rm{0}'.format(dof)] = {}
     nodal['um'] = {}
     nodal['urm'] = {}
+    nodal['rfm'] = {}
+    nodal['rmm'] = {}
 
     for node in structure.nodes:
         u_sum2 = 0
         ur_sum2 = 0
+        rf_sum2 = 0
+        rm_sum2 = 0
         for c, dof in enumerate('xyz'):
             u_val = u_out[node * 3 + c]
             ur_val = ur_out[node * 3 + c]
+            rf_val = rf_out[node * 3 + c]
+            rm_val = rm_out[node * 3 + c]
             nodal['u{0}'.format(dof)][node] = u_val
             nodal['ur{0}'.format(dof)][node] = ur_val
+            nodal['rf{0}'.format(dof)][node] = rf_val
+            nodal['rm{0}'.format(dof)][node] = rm_val
             u_sum2 += u_val**2
             ur_sum2 += ur_val**2
+            rf_sum2 += rf_val**2
+            rm_sum2 += rm_val**2
         nodal['um'][node] = sqrt(u_sum2)
         nodal['urm'][node] = sqrt(ur_sum2)
+        nodal['rfm'][node] = sqrt(rf_sum2)
+        nodal['rmm'][node] = sqrt(rm_sum2)
 
 
 def opensees_launch_process(structure, exe):
@@ -398,7 +420,7 @@ def input_write_patterns(f, structure, steps, loads, sets):
 
                 elif axes == 'local':
                     elements = ' '.join([str(i + 1) for i in sets[elset]['selection']])
-                    f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, com['y'], com['x']))
+                    f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, -com['y'], -com['x']))
 
     f.write('#\n')
     f.write('{0}\n'.format('}'))
@@ -452,10 +474,14 @@ def input_write_recorders(f, structure):
 
     node_u = '{0}node_u.out'.format(temp)
     node_ur = '{0}node_ur.out'.format(temp)
+    node_rf = '{0}node_rf.out'.format(temp)
+    node_rm = '{0}node_rm.out'.format(temp)
 
     nodes = '1 {0}'.format(structure.node_count())
     f.write('recorder Node -file {0} -time -nodeRange {1} -dof 1 2 3 disp\n'.format(node_u, nodes))
     f.write('recorder Node -file {0} -time -nodeRange {1} -dof 4 5 6 disp\n'.format(node_ur, nodes))
+    f.write('recorder Node -file {0} -time -nodeRange {1} -dof 1 2 3 reaction\n'.format(node_rf, nodes))
+    f.write('recorder Node -file {0} -time -nodeRange {1} -dof 4 5 6 reaction\n'.format(node_rm, nodes))
 
     # Write element
 

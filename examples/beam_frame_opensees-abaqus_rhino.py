@@ -53,9 +53,9 @@ mdl.add_displacement(RollerDisplacementXZ(name='disp_rollers', nodes='corners'))
 # Add loads
 
 mdl.add_loads([
-    PointLoad(name='load_h', nodes='load_h', x=10000),
-    PointLoad(name='load_v', nodes='load_v', z=-30000),
-    LineLoad(name='load_udl', elements='top', y=-10000)])
+    PointLoad(name='load_h', nodes='load_h', x=4000),
+    PointLoad(name='load_v', nodes='load_v', z=-3000),
+    LineLoad(name='load_udl', elements='top', y=2000)])
 
 # Add steps
 
@@ -70,8 +70,19 @@ mdl.summary()
 
 # Run and extract data
 
-mdl.analyse_and_extract(software='opensees', fields=['u'])
+mdl.analyse_and_extract(software='opensees', fields=['u', 'rf', 'rm'])
 
 # Plot
 
-rhino.plot_data(mdl, step='step_loads', field='um', scale=50)
+rhino.plot_data(mdl, step='step_loads', field='um', scale=100)
+
+# Extract data
+
+nodal = mdl.results['step_loads']['nodal']
+for support in mdl.sets['supports']['selection']:
+    print('\nNode {0} RF'.format(support))
+    for i in 'xyz':
+        print(nodal['rf' + i][support])
+    print('\nNode {0} RM'.format(support))
+    for i in 'xyz':
+        print(nodal['rm' + i][support])
