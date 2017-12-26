@@ -3,7 +3,7 @@ Loads
 ********************************************************************************
 
 
-This page shows how **Load** objects are added to the **Structure** object, here given as a **Structure** named ``mdl``.
+This page shows how **Load** objects are added to the **Structure** object, here given as a **Structure** named ``mdl``. **Load** objects can be applied to either nodes or elements, and are activated during steps.
 
 .. contents::
 
@@ -12,104 +12,125 @@ This page shows how **Load** objects are added to the **Structure** object, here
 Adding loads
 ============
 
-Loads can be applied directly to nodes or distributed across elements. To do this, a variety of **Load** classes can be imported from **compas_fea.structure.load** including **PrestressLoad**, **PointLoad**, **LineLoad**, **AreaLoad**, **GravityLoad** and **TributaryLoad**. The objects are instantiated and stored within the ``.loads`` dictionary of the **Structure** object with the ``add_load()`` method using ``name`` as the string key. An example of applying concentrated loads to nodes is shown below with **PointLoad**. The **PointLoad** object requires the nodes to apply the point loads to, taken as the string name of the node set.
+Loads can be applied directly to nodes or distributed (currently uniformly) across elements. To do this, a variety of **Load** classes can be imported from **compas_fea.structure.load** including types such as **PrestressLoad**, **PointLoad**, **LineLoad**, **AreaLoad**, **GravityLoad** and **TributaryLoad**. The objects are instantiated with these classes and stored within the ``.loads`` dictionary of the **Structure** object with the ``.add_load()`` method using ``name`` as the string key. An example of applying concentrated forces in the ``x`` and ``z`` directions directly to nodes, is shown with **PointLoad** example below. The **PointLoad** class requires the nodes to apply the point loads to, taken as the string name of the node set (``'nset_top'`` in this case).
 
 .. code-block:: python
 
-   from compas_fea.structure import PointLoad
+    from compas_fea.structure import PointLoad
 
-   mdl.add_load(PointLoad(name='load_point', nodes='nset_top', x=10000, z=-10000))
+    mdl.add_load(PointLoad(name='load_point', nodes='nset_top', x=10000, z=-10000))
 
 
 ===============
 Accessing loads
 ===============
 
-The **Load** objects can be inspected and edited via their string keys and attributes, showing both the input data given at instantiation and any default zero component values.
+The **Load** objects can be inspected and edited at any time via their string keys and attributes, showing both the input data given at instantiation and any default zero component values. If no non-zero components are given at the time of creating the object, effectively a **Load** object is made that doesn't do anything, as all components are zero. In the example below, are the input components of the load ``x=10000`` and ``z=-10000`` (both forces with units N) with the ``y`` component and concentrated moments (units Nm) ``xx``, ``yy`` and ``zz`` all defaulted to zero.
 
 .. code-block:: python
 
-   >>> mdl.loads['load_point'].components
-   {'x': 10000, 'y': 0, 'z': -10000, 'xx': 0, 'yy': 0, 'zz': 0}
+    >>> mdl.loads['load_point'].components
+    {'x': 10000, 'y': 0, 'z': -10000, 'xx': 0, 'yy': 0, 'zz': 0}
 
-   >>> mdl.loads['load_point'].nodes
-   'nset_top'
+    >>> mdl.loads['load_point'].nodes
+    'nset_top'
 
-In the example above are the input components of the load ``x=10000`` and ``z=-10000`` with the ``y`` component and concentrated moments ``xx``, ``yy`` and ``zz`` all defaulted to zero.
 
 ==============
 Prestress load
 ==============
 
+A **PrestressLoad** is currently used to add an axial pre-stress before all other **Step** objects are activated, i.e. acting as an initial condition. It is created with the string ``name`` of the object, the ``elements`` (as an element set) that it applies to, and the ``sxx`` stress component in Pa, acting along the local `x` for shells and along the length for beams and trusses. It can be added as follows:
+
+.. code-block:: python
+
+    from compas_fea.structure import PrestressLoad
+
+    >>> mdl.add_load(PrestressLoad(name='load_prestress', elements='elset_ties', sxx=50*10**6))
+
+
 ==========
 Point load
 ==========
 
-The **PointLoad** object applies concentrated loads (forces ``x``, ``y``, ``z`` and/or moments ``xx``, ``yy``, ``zz``) directly to ``nodes``. The ``nodes`` to apply the load to is given as either the string name of the node set or a list of nodes. The ``name`` of the **PointLoad** is also required. **PointLoad** objects currently only utilise the global co-ordinate system.
+The **PointLoad** object applies concentrated loads (forces N ``x``, ``y``, ``z`` and/or moments Nm ``xx``, ``yy``, ``zz``) directly to ``nodes`` of the **Structure**. The ``nodes`` to apply the load to is given as either the string name of the node set or a list of nodes. The ``name`` of the **PointLoad** is also required. **PointLoad** objects currently only utilise the global co-ordinate system, they do not yet use the local nodal system (`ex`, `ey`, `ez`).
 
 .. code-block:: python
 
-   from compas_fea.structure import PointLoad
+    from compas_fea.structure import PointLoad
 
-   mdl.add_load(PointLoad(name='load_point', nodes='nset_top', x=10000, z=-10000, yy=1000))
+    mdl.add_load(PointLoad(name='load_point', nodes='nset_top', x=10000, z=-10000, yy=1000))
 
 
 =========
 Line load
 =========
 
-The **LineLoad** object applies distributed loads per unit length (forces / metre ``x``, ``y``, ``z``) along line ``elements``. The ``elements`` to apply the load to is given as either the string name of the element set or a list of elements. The ``name`` of the **LineLoad** is also required. If ``axis='global'``, the ``x``, ``y`` and ``z`` components will be in-line with the global co-ordinate system, while ``axis='local'`` takes ``x`` and ``y`` as the local cross-section axes.
+The **LineLoad** object applies distributed loads per unit length (forces N / metre m ``x``, ``y``, ``z``) uniformly along line elements. The ``elements`` to apply the load to is given as either the string name of the element set or a list of elements. The ``name`` of the **LineLoad** is also required. If ``axis='global'``, the ``x``, ``y`` and ``z`` components will be in-line with the global co-ordinate system, while ``axis='local'`` takes ``x`` and ``y`` as the local cross-section axes `ex` and `ey`, i.e. positive ``y`` would be away from the centroid, not towards it.
 
 .. code-block:: python
 
-   from compas_fea.structure import LineLoad
+    from compas_fea.structure import LineLoad
 
-   mdl.add_load(LineLoad(name='load_line', nodes='elset_beams', y=-10000, axes='local'))
+    mdl.add_load(LineLoad(name='load_line', elements='elset_beams', y=-10000, axes='local'))
 
 
 =========
 Area load
 =========
 
-The **AreaLoad** object applies distributed loads per unit area (pressures ``x``, ``y``, ``z``) on ``elements``. The ``elements`` to apply the load to is given as either the string name of the element set or a list of elements. The ``name`` of the **AreaLoad** is also required. Only ``axis='local'`` is currently supported, whereby ``x`` and ``y`` are local surface shears and ``z`` is the local normal pressure.
+The **AreaLoad** object applies distributed loads per unit area (pressures ``x``, ``y``, ``z`` in units of Pa) on elements. The ``elements`` to apply the load to is given as either the string name of the element set or a list of elements. The ``name`` of the **AreaLoad** is also required. Only ``axis='local'`` is currently supported, whereby ``x`` and ``y`` are local surface shears and ``z`` is the local normal pressure.
 
 .. code-block:: python
 
-   from compas_fea.structure import AreaLoad
+    from compas_fea.structure import AreaLoad
 
-   mdl.add_load(AreaLoad(name='load_pressure', nodes='elset_shells', z=-10000, axes='local'))
+    mdl.add_load(AreaLoad(name='load_pressure', elements='elset_shells', z=-10000, axes='local'))
 
 
 ============
 Gravity load
 ============
 
-Gravitational loading to elements is through the **GravityLoad** class and object. The **GravityLoad** object records the ``elements`` to apply gravitational acceleration to either via the element set name string, or a list of elements. The default gravitational acceleration is ``g=-9.81`` and applied in ``z``, but this can be varied in magnitude and for directions ``x`` and ``y``. The elements for the gravity loading in the example below are those in the element set named ``elset_all``.
+Gravity loading to elements is through the **GravityLoad** class and object. The **GravityLoad** object records the ``elements`` to apply gravitational acceleration to either via the element set name string, or a list of elements. The default gravitational acceleration is ``g=-9.81`` and applied in ``z``, but this can be varied in magnitude and for directions ``x`` and ``y`` (which is useful if a model isn't using ``z`` as the vertical direction). The ``elements`` for the gravity loading in the example below are those in the element set named ``'elset_all'``. Gravity loads are always calculated knowing the material density, element and cross-section geometry, so only the reference to the elements to apply the load to is needed, as all other data will be known.
 
 .. code-block:: python
 
-   from compas_fea.structure import GravityLoad
+    from compas_fea.structure import GravityLoad
 
-   mdl.add_load(GravityLoad(name='load_gravity', elements='elset_all'))
+    mdl.add_load(GravityLoad(name='load_gravity', elements='elset_all'))
 
-   >>> mdl.loads['load_gravity'].components
-   {'x': False, 'y': False, 'z': True}
+    >>> mdl.loads['load_gravity'].components
+    {'x': False, 'y': False, 'z': True}
 
-   >>> mdl.loads['load_gravity'].g
-   -9.81
+    >>> mdl.loads['load_gravity'].g
+    -9.81
 
 
 ==============
 Tributary load
 ==============
 
-The **TributaryLoad** can be used to distribute an area load applied to a mesh, as concentrated loads to the nodes of the **Structure** object. The class first takes the ``structure`` to apply the loads to, then the ``name`` of the tributary load, a **Mesh** datastructure object with ``mesh``, and finally components``x``, ``y`` and ``z``. The **Mesh** datastructure will be taken with the area pressure loads ``x``, ``y`` and ``z`` to calculate the tributary area of each vertex, and multiply this area by the pressure to get a concentrated load in the component direction. The ``.components`` attribute of the **TributaryLoad** object will then be a dictionary of node keys and for a dictionary of concentrated forces. The global co-ordinate directions (``axis='global'`` by default) are used for the components of the pressures and final forces. The class could be used in the following manner:
+The **TributaryLoad** can be used to distribute a uniform area load that is applied to a **Mesh** datastructure, as equivalent point loads to the nodes of the **Structure** object. The class first takes the ``structure`` to apply the point loads to, then the ``name`` of the **TributaryLoad**, then a **Mesh** datastructure object with ``mesh``, and finally component pressures ``x``, ``y`` and ``z``. The class could be used in the following manner:
 
 .. code-block:: python
 
-   from compas_fea.structure import TributaryLoad
+    from compas_fea.structure import TributaryLoad
 
-   mdl.add_load(TributaryLoad(structure=mdl, name='load_tributary', mesh=mesh, z=-2000))
+    mdl.add_load(TributaryLoad(structure=mdl, name='load_tributary', mesh=mesh, z=-2000))
+
+The **Mesh** datastructure will be combined with the pressures ``x``, ``y`` and ``z`` to calculate the tributary area of each vertex and multiply this area by the pressure to get a point load in the component direction. The ``.components`` attribute of the **TributaryLoad** object will be a dictionary of **Structure** node keys and items as a dictionary of point loads in ``x``, ``y`` and ``z`` (see below). The global co-ordinate directions (``axis='global'``) are used for the components of the pressures and final point loads.
+
+.. code-block:: python
+
+    mdl.loads['load_tributary'].components
+
+    {2: {'z':  -66.28091, 'y': 0.0, 'x': 0.0},
+     3: {'z':  -86.36518, 'y': 0.0, 'x': 0.0},
+     4: {'z': -121.55623, 'y': 0.0, 'x': 0.0},
+     ...
+     25: {'z':  -79.5333, 'y': 0.0, 'x': 0.0},
+     26: {'z': -283.3817, 'y': 0.0, 'x': 0.0}}
 
 
 ===================
@@ -120,6 +141,6 @@ The **HarmonicPointLoad** object applies concentrated loads (forces ``x``, ``y``
 
 .. code-block:: python
 
-   from compas_fea.structure import HarmonicPointLoad
+    from compas_fea.structure import HarmonicPointLoad
 
-   mdl.add_load(HarmonicPointLoad(name='load_point-harmonic', nodes='nset_top', z=-10000))
+    mdl.add_load(HarmonicPointLoad(name='load_point-harmonic', nodes='nset_top', z=-10000))

@@ -69,6 +69,8 @@
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'extract_out_data'</span><span class="p">,</span>
+    <span class="s1">'opensees_launch_process'</span><span class="p">,</span>
     <span class="s1">'input_generate'</span><span class="p">,</span>
     <span class="s1">'input_write_heading'</span><span class="p">,</span>
     <span class="s1">'input_write_nodes'</span><span class="p">,</span>
@@ -76,68 +78,80 @@
     <span class="s1">'input_write_elements'</span><span class="p">,</span>
     <span class="s1">'input_write_recorders'</span><span class="p">,</span>
     <span class="s1">'input_write_patterns'</span><span class="p">,</span>
-    <span class="s1">'opensees_launch_process'</span>
 <span class="p">]</span>
+
+
+<span class="n">dofs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">,</span> <span class="s1">'xx'</span><span class="p">,</span> <span class="s1">'yy'</span><span class="p">,</span> <span class="s1">'zz'</span><span class="p">]</span>
 
 
 <span class="k">def</span> <span class="nf">extract_out_data</span><span class="p">(</span><span class="n">structure</span><span class="p">):</span>
     <span class="sd">""" Extract data from the OpenSees .out files.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        structure (obj): Structure object.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    structure : obj</span>
+<span class="sd">        Structure object.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    """</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">path</span>
-    <span class="n">temp</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">/'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
-    <span class="n">step</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps_order</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+    <span class="n">temp</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">/'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="n">step</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps_order</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># expand to other steps later</span>
     <span class="n">structure</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'nodal'</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">'element'</span><span class="p">:</span> <span class="p">{}}</span>
 
     <span class="c1"># Nodal data</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">node_u.out'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">),</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-    <span class="n">u_out</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]]</span>
-
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">node_ur.out'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">),</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-    <span class="n">ur_out</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]]</span>
+    <span class="n">nodal_data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'node_u'</span><span class="p">,</span> <span class="s1">'node_ur'</span><span class="p">,</span> <span class="s1">'node_rf'</span><span class="p">,</span> <span class="s1">'node_rm'</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">.out'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">file</span><span class="p">),</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+            <span class="n">nodal_data</span><span class="p">[</span><span class="n">file</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'***** </span><span class="si">{0}</span><span class="s1">.out data not loaded *****'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
 
     <span class="n">nodal</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="s1">'nodal'</span><span class="p">]</span>
-    <span class="c1"># elemental = structure.results[step]['element']</span>
+    <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'u'</span><span class="p">,</span> <span class="s1">'ur'</span><span class="p">,</span> <span class="s1">'rf'</span><span class="p">,</span> <span class="s1">'rm'</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">dof</span> <span class="ow">in</span> <span class="s1">'xyz'</span><span class="p">:</span>
+            <span class="n">nodal</span><span class="p">[</span><span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">dof</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">nodal</span><span class="p">[</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">m'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">for</span> <span class="n">dof</span> <span class="ow">in</span> <span class="s1">'xyz'</span><span class="p">:</span>
-        <span class="n">nodal</span><span class="p">[</span><span class="s1">'u</span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dof</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">nodal</span><span class="p">[</span><span class="s1">'ur</span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dof</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">nodal</span><span class="p">[</span><span class="s1">'um'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">nodal</span><span class="p">[</span><span class="s1">'urm'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'u'</span><span class="p">,</span> <span class="s1">'ur'</span><span class="p">,</span> <span class="s1">'rf'</span><span class="p">,</span> <span class="s1">'rm'</span><span class="p">]:</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="s1">'node_</span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">structure</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">sum2</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">dof</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="s1">'xyz'</span><span class="p">):</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">nodal_data</span><span class="p">[</span><span class="n">file</span><span class="p">][</span><span class="n">node</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">c</span><span class="p">]</span>
+                    <span class="n">nodal</span><span class="p">[</span><span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">dof</span><span class="p">)][</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+                    <span class="n">sum2</span> <span class="o">+=</span> <span class="n">val</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">nodal</span><span class="p">[</span><span class="s1">'</span><span class="si">{0}</span><span class="s1">m'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">)][</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">sum2</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
 
-    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">structure</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-        <span class="n">u_sum2</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">ur_sum2</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">dof</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="s1">'xyz'</span><span class="p">):</span>
-            <span class="n">u_val</span> <span class="o">=</span> <span class="n">u_out</span><span class="p">[</span><span class="n">node</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">c</span><span class="p">]</span>
-            <span class="n">ur_val</span> <span class="o">=</span> <span class="n">ur_out</span><span class="p">[</span><span class="n">node</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">c</span><span class="p">]</span>
-            <span class="n">nodal</span><span class="p">[</span><span class="s1">'u</span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dof</span><span class="p">)][</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">u_val</span>
-            <span class="n">nodal</span><span class="p">[</span><span class="s1">'ur</span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dof</span><span class="p">)][</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">ur_val</span>
-            <span class="n">u_sum2</span> <span class="o">+=</span> <span class="n">u_val</span><span class="o">**</span><span class="mi">2</span>
-            <span class="n">ur_sum2</span> <span class="o">+=</span> <span class="n">ur_val</span><span class="o">**</span><span class="mi">2</span>
-        <span class="n">nodal</span><span class="p">[</span><span class="s1">'um'</span><span class="p">][</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">u_sum2</span><span class="p">)</span>
-        <span class="n">nodal</span><span class="p">[</span><span class="s1">'urm'</span><span class="p">][</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">ur_sum2</span><span class="p">)</span>
+    <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">***** Data extracted from OpenSees .out file(s) : </span><span class="si">{0}</span><span class="s1"> s *****</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">toc</span><span class="p">))</span>
 
 
 <div class="viewcode-block" id="opensees_launch_process"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.opensees_launch_process.html#compas_fea.fea.opensees.opensees_launch_process">[docs]</a><span class="k">def</span> <span class="nf">opensees_launch_process</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">exe</span><span class="p">):</span>
     <span class="sd">""" Runs the analysis through OpenSees.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        structure (obj): Structure object.</span>
-<span class="sd">        exe (str): Full terminal command to bypass subprocess defaults.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    structure : obj</span>
+<span class="sd">        Structure object.</span>
+<span class="sd">    exe : str</span>
+<span class="sd">        Full terminal command to bypass subprocess defaults.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    """</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">path</span>
@@ -171,14 +185,20 @@
 <div class="viewcode-block" id="input_generate"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_generate.html#compas_fea.fea.opensees.input_generate">[docs]</a><span class="k">def</span> <span class="nf">input_generate</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">'m'</span><span class="p">):</span>
     <span class="sd">""" Creates the OpenSees .tcl file from the Structure object.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        structure (obj): The Structure object to read from.</span>
-<span class="sd">        fields (list): Data field requests.</span>
-<span class="sd">        units (str): Units of the nodal co-ordinates 'm','cm','mm'.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    structure : obj</span>
+<span class="sd">        The Structure object to read from.</span>
+<span class="sd">    fields : list</span>
+<span class="sd">        Data field requests.</span>
+<span class="sd">    units : str</span>
+<span class="sd">        Units of the nodal co-ordinates 'm','cm','mm'.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    """</span>
+
     <span class="n">filename</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">.tcl'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -193,24 +213,35 @@
         <span class="n">sets</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">sets</span>
         <span class="n">steps</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span>
 
-        <span class="n">input_write_heading</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">ndof</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'TrussElement'</span><span class="p">,</span> <span class="s1">'TieElement'</span><span class="p">,</span> <span class="s1">'StrutElement'</span><span class="p">]:</span>
+                <span class="n">ndof</span> <span class="o">=</span> <span class="mi">6</span>
+                <span class="k">break</span>
+
+        <span class="n">input_write_heading</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ndof</span><span class="p">)</span>
         <span class="n">input_write_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">units</span><span class="p">)</span>
-        <span class="n">input_write_bcs</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">displacements</span><span class="p">)</span>
+        <span class="n">input_write_bcs</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">ndof</span><span class="p">)</span>
         <span class="n">input_write_elements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sections</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
-        <span class="n">input_write_recorders</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
-        <span class="n">input_write_patterns</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">sets</span><span class="p">)</span>
+        <span class="n">input_write_recorders</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">ndof</span><span class="p">)</span>
+        <span class="n">input_write_patterns</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">ndof</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">'***** OpenSees input file generated: </span><span class="si">{0}</span><span class="s1"> *****</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="input_write_heading"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_heading.html#compas_fea.fea.opensees.input_write_heading">[docs]</a><span class="k">def</span> <span class="nf">input_write_heading</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<div class="viewcode-block" id="input_write_heading"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_heading.html#compas_fea.fea.opensees.input_write_heading">[docs]</a><span class="k">def</span> <span class="nf">input_write_heading</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ndof</span><span class="p">):</span>
     <span class="sd">""" Creates the OpenSees .tcl file heading.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        f (obj): The open file object for the .tcl file.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    f : obj</span>
+<span class="sd">        The open file object for the .tcl file.</span>
+<span class="sd">    ndof : int</span>
+<span class="sd">        Number of degrees-of-freedom per node.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    """</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# --------------------------------------------------------------------- Heading</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
@@ -223,20 +254,25 @@
 
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'wipe</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'model basic -ndm 3 -ndf 6</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'model basic -ndm 3 -ndf </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ndof</span><span class="p">))</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="input_write_nodes"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_nodes.html#compas_fea.fea.opensees.input_write_nodes">[docs]</a><span class="k">def</span> <span class="nf">input_write_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">units</span><span class="p">):</span>
     <span class="sd">""" Writes the nodal co-ordinates information to the OpenSees .tcl file.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        f (obj): The open file object for the .tcl file.</span>
-<span class="sd">        nodes (dic): Node dictionary from structure.nodes.</span>
-<span class="sd">        units (str): Units of the nodal co-ordinates.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    f : obj</span>
+<span class="sd">        The open file object for the .tcl file.</span>
+<span class="sd">    nodes : dic</span>
+<span class="sd">        Node dictionary from structure.nodes.</span>
+<span class="sd">    units : str</span>
+<span class="sd">        Units of the nodal co-ordinates.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    """</span>
     <span class="n">cl</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'m'</span><span class="p">:</span> <span class="mf">1.</span><span class="p">,</span> <span class="s1">'cm'</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s1">'mm'</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">}</span>
 
@@ -253,22 +289,28 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="input_write_bcs"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_bcs.html#compas_fea.fea.opensees.input_write_bcs">[docs]</a><span class="k">def</span> <span class="nf">input_write_bcs</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">displacements</span><span class="p">):</span>
+<div class="viewcode-block" id="input_write_bcs"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_bcs.html#compas_fea.fea.opensees.input_write_bcs">[docs]</a><span class="k">def</span> <span class="nf">input_write_bcs</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">ndof</span><span class="p">):</span>
     <span class="sd">""" Writes boundary condition information to the OpenSees .tcl file.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        f (obj): The open file object for the .tcl file.</span>
-<span class="sd">        structure (obj): Struture object.</span>
-<span class="sd">        steps (dic): Step objects from structure.steps.</span>
-<span class="sd">        displacements (dic): Displacement objects from structure.displacements.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    f : obj</span>
+<span class="sd">        The open file object for the .tcl file.</span>
+<span class="sd">    structure : obj</span>
+<span class="sd">        Struture object.</span>
+<span class="sd">    steps : dic</span>
+<span class="sd">        Step objects from structure.steps.</span>
+<span class="sd">    displacements : dic</span>
+<span class="sd">        Displacement objects from structure.displacements.</span>
+<span class="sd">    ndof : int</span>
+<span class="sd">        Number of degrees-of-freedom per node.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    """</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# ------------------------------------------------------------------------- BCs</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
-
-    <span class="n">dofs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">,</span> <span class="s1">'xx'</span><span class="p">,</span> <span class="s1">'yy'</span><span class="p">,</span> <span class="s1">'zz'</span><span class="p">]</span>
 
     <span class="n">key</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps_order</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">step</span> <span class="o">=</span> <span class="n">steps</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
@@ -293,16 +335,17 @@
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# '</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# Node, x, y, z, xx, yy, zz</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# Node, </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dofs</span><span class="p">[:</span><span class="n">ndof</span><span class="p">])))</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
 
+            <span class="n">j</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">dof</span> <span class="ow">in</span> <span class="n">dofs</span><span class="p">[:</span><span class="n">ndof</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">j</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'1'</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">j</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'0'</span><span class="p">)</span>
+
             <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">structure</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="n">nset</span><span class="p">][</span><span class="s1">'selection'</span><span class="p">]:</span>
-                <span class="n">j</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">for</span> <span class="n">dof</span> <span class="ow">in</span> <span class="n">dofs</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">j</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'1'</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">j</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'0'</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'fix </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">j</span><span class="p">)))</span>
 
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
@@ -311,16 +354,24 @@
 <div class="viewcode-block" id="input_write_elements"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_elements.html#compas_fea.fea.opensees.input_write_elements">[docs]</a><span class="k">def</span> <span class="nf">input_write_elements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sections</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">materials</span><span class="p">):</span>
     <span class="sd">""" Writes the element and section information to the OpenSees .tcl file.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        f (obj): The open file object for the .tcl file.</span>
-<span class="sd">        sections (dic): Section objects from structure.sections.</span>
-<span class="sd">        properties (dic): ElementProperties objects from structure.element_properties.</span>
-<span class="sd">        elements (dic): Element objects from structure.elements.</span>
-<span class="sd">        sets (dic): Sets from structure.sets.</span>
-<span class="sd">        materials (dic): Material objects from structure.materials.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    f : obj</span>
+<span class="sd">        The open file object for the .tcl file.</span>
+<span class="sd">    sections : dic</span>
+<span class="sd">        Section objects from structure.sections.</span>
+<span class="sd">    properties : dic</span>
+<span class="sd">        ElementProperties objects from structure.element_properties.</span>
+<span class="sd">    elements : dic</span>
+<span class="sd">        Element objects from structure.elements.</span>
+<span class="sd">    sets : dic</span>
+<span class="sd">        Sets from structure.sets.</span>
+<span class="sd">    materials : dic</span>
+<span class="sd">        Material objects from structure.materials.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    """</span>
 
     <span class="c1"># Sections:</span>
@@ -334,9 +385,10 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# -------------------------------------------------------------------- Elements</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="nb">property</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">material</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">material</span>
         <span class="n">elsets</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">elsets</span>
         <span class="n">section</span> <span class="o">=</span> <span class="n">sections</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">section</span><span class="p">]</span>
+        <span class="n">material</span> <span class="o">=</span> <span class="n">materials</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">material</span><span class="p">]</span>
+        <span class="n">material_index</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">stype</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="n">geometry</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">geometry</span>
 
@@ -356,161 +408,203 @@
             <span class="k">if</span> <span class="p">(</span><span class="n">stype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">shells</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">stype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">solids</span><span class="p">):</span>
 
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# eType, No., node.start, node.end, A[m2], E[Pa], G[Pa], J[m^4], Iyy[m^4], Ixx[m^4], trans</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
                     <span class="n">sp</span><span class="p">,</span> <span class="n">ep</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="n">select</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
                     <span class="n">n</span> <span class="o">=</span> <span class="n">select</span> <span class="o">+</span> <span class="mi">1</span>
                     <span class="n">i</span> <span class="o">=</span> <span class="n">sp</span> <span class="o">+</span> <span class="mi">1</span>
                     <span class="n">j</span> <span class="o">=</span> <span class="n">ep</span> <span class="o">+</span> <span class="mi">1</span>
                     <span class="n">A</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">'A'</span><span class="p">]</span>
-                    <span class="n">E</span> <span class="o">=</span> <span class="n">materials</span><span class="p">[</span><span class="n">material</span><span class="p">]</span><span class="o">.</span><span class="n">E</span><span class="p">[</span><span class="s1">'E'</span><span class="p">]</span>
-                    <span class="n">G</span> <span class="o">=</span> <span class="n">materials</span><span class="p">[</span><span class="n">material</span><span class="p">]</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">'G'</span><span class="p">]</span>
+                    <span class="n">E</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">E</span><span class="p">[</span><span class="s1">'E'</span><span class="p">]</span>
+                    <span class="n">G</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="s1">'G'</span><span class="p">]</span>
                     <span class="n">J</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">'J'</span><span class="p">]</span>
                     <span class="n">Ixx</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">'Ixx'</span><span class="p">]</span>
                     <span class="n">Iyy</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">'Iyy'</span><span class="p">]</span>
-
                     <span class="n">ex</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">[</span><span class="n">select</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="s1">'ex'</span><span class="p">]])</span>
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'geomTransf Linear </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">select</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ex</span><span class="p">))</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'element elasticBeamColumn </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="s1"> </span><span class="si">{3}</span><span class="s1"> </span><span class="si">{4}</span><span class="s1"> </span><span class="si">{5}</span><span class="s1"> </span><span class="si">{6}</span><span class="s1"> </span><span class="si">{7}</span><span class="s1"> </span><span class="si">{8}</span><span class="s1"> </span><span class="si">{9}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">Ixx</span><span class="p">,</span> <span class="n">Iyy</span><span class="p">,</span> <span class="n">select</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'element elasticBeamColumn </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="s1"> </span><span class="si">{3}</span><span class="s1"> </span><span class="si">{4}</span><span class="s1"> </span><span class="si">{5}</span><span class="s1"> </span><span class="si">{6}</span><span class="s1"> </span><span class="si">{7}</span><span class="s1"> </span><span class="si">{8}</span><span class="s1"> </span><span class="si">{9}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">Ixx</span><span class="p">,</span> <span class="n">Iyy</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+
+            <span class="c1"># Truss sections</span>
+
+            <span class="k">elif</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">'TrussSection'</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">material</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'ElasticIsotropic'</span><span class="p">:</span>
+                    <span class="n">E</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">E</span><span class="p">[</span><span class="s1">'E'</span><span class="p">]</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# No., E[Pa]</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'uniaxialMaterial Elastic </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">material_index</span><span class="p">,</span> <span class="n">E</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# eType, No., node.start, node.end, A[m2], material</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
+                    <span class="n">sp</span><span class="p">,</span> <span class="n">ep</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="n">select</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
+                    <span class="n">n</span> <span class="o">=</span> <span class="n">select</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">i</span> <span class="o">=</span> <span class="n">sp</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">j</span> <span class="o">=</span> <span class="n">ep</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">A</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">'A'</span><span class="p">]</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'element corotTruss </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="s1"> </span><span class="si">{3}</span><span class="s1"> </span><span class="si">{4}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">material_index</span><span class="p">))</span>
 
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="input_write_patterns"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_patterns.html#compas_fea.fea.opensees.input_write_patterns">[docs]</a><span class="k">def</span> <span class="nf">input_write_patterns</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">sets</span><span class="p">):</span>
+<div class="viewcode-block" id="input_write_patterns"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_patterns.html#compas_fea.fea.opensees.input_write_patterns">[docs]</a><span class="k">def</span> <span class="nf">input_write_patterns</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">ndof</span><span class="p">):</span>
     <span class="sd">""" Writes the load patterns information to the OpenSees .tcl file.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        f (obj): The open file object for the .tcl file.</span>
-<span class="sd">        structure (obj): The Structure object to read from.</span>
-<span class="sd">        steps (dic): Step objects from structure.steps.</span>
-<span class="sd">        loads (dic): Load objects from structure.loads.</span>
-<span class="sd">        sets (dic): Sets from strctures.sets.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    f : obj</span>
+<span class="sd">        The open file object for the .tcl file.</span>
+<span class="sd">    structure : obj</span>
+<span class="sd">        The Structure object to read from.</span>
+<span class="sd">    steps : dic</span>
+<span class="sd">        Step objects from structure.steps.</span>
+<span class="sd">    loads : dic</span>
+<span class="sd">        Load objects from structure.loads.</span>
+<span class="sd">    sets : dic</span>
+<span class="sd">        Sets from strctures.sets.</span>
+<span class="sd">    ndof : int</span>
+<span class="sd">        Number of degrees-of-freedom per node.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    """</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# -------------------------------------------------------------------- Analysis</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
 
-    <span class="n">dofs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">,</span> <span class="s1">'xx'</span><span class="p">,</span> <span class="s1">'yy'</span><span class="p">,</span> <span class="s1">'zz'</span><span class="p">]</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">structure</span><span class="o">.</span><span class="n">steps_order</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>  <span class="c1"># currently only the 2nd step, should be 2nd onwards</span>
 
-    <span class="n">key</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps_order</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">step</span> <span class="o">=</span> <span class="n">steps</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-    <span class="n">stype</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="vm">__name__</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">index</span>
-    <span class="n">factor</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">factor</span>
-    <span class="c1"># tolerance = step.tolerance</span>
-    <span class="c1"># iterations = step.iterations</span>
-    <span class="n">increments</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">increments</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
 
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# '</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">steps</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="n">stype</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">step_index</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">index</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">factor</span>
+        <span class="n">increments</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">increments</span>
+        <span class="n">tolerance</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">tolerance</span>
+        <span class="n">iterations</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">iterations</span>
 
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'timeSeries Constant </span><span class="si">{0}</span><span class="s1"> -factor 1.0</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'pattern Plain </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{0}</span><span class="s1"> -fact </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">factor</span><span class="p">,</span> <span class="s1">'{'</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# '</span> <span class="o">+</span> <span class="s1">'-'</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
 
-    <span class="c1"># Mechanical</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'timeSeries Constant </span><span class="si">{0}</span><span class="s1"> -factor 1.0</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'pattern Plain </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{0}</span><span class="s1"> -fact </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">,</span> <span class="n">factor</span><span class="p">,</span> <span class="s1">'{'</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">stype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'GeneralStep'</span><span class="p">,</span> <span class="s1">'BucklingStep'</span><span class="p">]:</span>
+        <span class="c1"># Mechanical</span>
 
-        <span class="c1"># Loads</span>
+        <span class="k">if</span> <span class="n">stype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'GeneralStep'</span><span class="p">,</span> <span class="s1">'BucklingStep'</span><span class="p">]:</span>
 
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">loads</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="c1"># Loads</span>
 
-            <span class="n">load</span> <span class="o">=</span> <span class="n">loads</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
-            <span class="n">ltype</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="vm">__name__</span>
-            <span class="n">com</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">components</span>
-            <span class="n">axes</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">axes</span>
-            <span class="n">nset</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">nodes</span>
-            <span class="n">elset</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">elements</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">loads</span><span class="p">:</span>
 
-            <span class="c1"># Point load</span>
+                <span class="n">load</span> <span class="o">=</span> <span class="n">loads</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">ltype</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="n">com</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">components</span>
+                <span class="n">axes</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">axes</span>
+                <span class="n">nset</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">nodes</span>
+                <span class="n">elset</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">elements</span>
 
-            <span class="k">if</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">'PointLoad'</span><span class="p">:</span>
+                <span class="c1"># Point load</span>
 
-                <span class="n">coms</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">])</span> <span class="k">for</span> <span class="n">dof</span> <span class="ow">in</span> <span class="n">dofs</span><span class="p">])</span>
-                <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">sets</span><span class="p">[</span><span class="n">nset</span><span class="p">][</span><span class="s1">'selection'</span><span class="p">]:</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'load </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">coms</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">'PointLoad'</span><span class="p">:</span>
 
-            <span class="c1"># Line load</span>
+                    <span class="n">coms</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">])</span> <span class="k">for</span> <span class="n">dof</span> <span class="ow">in</span> <span class="n">dofs</span><span class="p">[:</span><span class="n">ndof</span><span class="p">]])</span>
+                    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">sets</span><span class="p">[</span><span class="n">nset</span><span class="p">][</span><span class="s1">'selection'</span><span class="p">]:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'load </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">coms</span><span class="p">))</span>
 
-            <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">'LineLoad'</span><span class="p">:</span>
+                <span class="c1"># Line load</span>
 
-                <span class="k">if</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">'global'</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+                <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">'LineLoad'</span><span class="p">:</span>
 
-                <span class="k">elif</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">'local'</span><span class="p">:</span>
-                    <span class="n">elements</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sets</span><span class="p">[</span><span class="n">elset</span><span class="p">][</span><span class="s1">'selection'</span><span class="p">]])</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'eleLoad -ele </span><span class="si">{0}</span><span class="s1"> -type -beamUniform </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="s1">'y'</span><span class="p">],</span> <span class="n">com</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]))</span>
+                    <span class="k">if</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">'global'</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">'local'</span><span class="p">:</span>
+                        <span class="n">elements</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sets</span><span class="p">[</span><span class="n">elset</span><span class="p">][</span><span class="s1">'selection'</span><span class="p">]])</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'eleLoad -ele </span><span class="si">{0}</span><span class="s1"> -type -beamUniform </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="o">-</span><span class="n">com</span><span class="p">[</span><span class="s1">'y'</span><span class="p">],</span> <span class="o">-</span><span class="n">com</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]))</span>
+
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">'}'</span><span class="p">))</span>
 
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'constraints Plain</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'numberer RCM</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'system ProfileSPD</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
-    <span class="c1"># f.write('#\n')</span>
-    <span class="c1"># f.write('test RelativeNormUnbalance {0} {1} 2\n'.format(tolerance, iterations))</span>
-    <span class="c1"># f.write('#\n')</span>
-    <span class="c1"># f.write('algorithm Newton\n')</span>
-    <span class="c1"># f.write('#\n')</span>
-    <span class="c1"># f.write('integrator LoadControl {0}\n'.format(1./increments))</span>
-    <span class="c1"># integrator DisplacementControl</span>
-    <span class="c1"># f.write('#\n')</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'test NormUnbalance </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> 5</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tolerance</span><span class="p">,</span> <span class="n">iterations</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'algorithm NewtonLineSearch</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'integrator LoadControl </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">increments</span><span class="p">))</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'analysis Static</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'analyze </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">increments</span><span class="p">))</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="input_write_recorders"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_recorders.html#compas_fea.fea.opensees.input_write_recorders">[docs]</a><span class="k">def</span> <span class="nf">input_write_recorders</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">):</span>
+<div class="viewcode-block" id="input_write_recorders"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_recorders.html#compas_fea.fea.opensees.input_write_recorders">[docs]</a><span class="k">def</span> <span class="nf">input_write_recorders</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">ndof</span><span class="p">):</span>
     <span class="sd">""" Writes the recorders information to the OpenSees .tcl file.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        f (obj): The open file object for the .tcl file.</span>
-<span class="sd">        structure (obj): The Structure object to read from.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    f : obj</span>
+<span class="sd">        The open file object for the .tcl file.</span>
+<span class="sd">    structure : obj</span>
+<span class="sd">        The Structure object to read from.</span>
+<span class="sd">    ndof : int</span>
+<span class="sd">        Number of degrees-of-freedom per node.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    """</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# ------------------------------------------------------------------- Recorders</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
 
-    <span class="c1"># Files and folders</span>
+    <span class="c1"># Temp folder</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">path</span>
-
-    <span class="n">temp</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">/'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}{1}</span><span class="s1">/'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
     <span class="k">except</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
 
-    <span class="c1"># Write nodal</span>
+    <span class="c1"># Nodal files</span>
 
-    <span class="n">node_u</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">node_u.out'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
-    <span class="n">node_ur</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">node_ur.out'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# Node</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# ----</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
 
     <span class="n">nodes</span> <span class="o">=</span> <span class="s1">'1 </span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">node_count</span><span class="p">())</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'recorder Node -file </span><span class="si">{0}</span><span class="s1"> -time -nodeRange </span><span class="si">{1}</span><span class="s1"> -dof 1 2 3 disp</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_u</span><span class="p">,</span> <span class="n">nodes</span><span class="p">))</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'recorder Node -file </span><span class="si">{0}</span><span class="s1"> -time -nodeRange </span><span class="si">{1}</span><span class="s1"> -dof 4 5 6 disp</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_ur</span><span class="p">,</span> <span class="n">nodes</span><span class="p">))</span>
+    <span class="n">nodal</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'node_u.out'</span><span class="p">:</span>  <span class="s1">'1 2 3 disp'</span><span class="p">,</span>
+        <span class="s1">'node_rf.out'</span><span class="p">:</span> <span class="s1">'1 2 3 reaction'</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">ndof</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+        <span class="n">nodal</span><span class="p">[</span><span class="s1">'node_ur.out'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'4 5 6 disp'</span>
+        <span class="n">nodal</span><span class="p">[</span><span class="s1">'node_rm.out'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'4 5 6 reaction'</span>
 
-    <span class="c1"># Write element</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">nodal</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'recorder Node -file </span><span class="si">{0}{1}</span><span class="s1"> -time -nodeRange </span><span class="si">{2}</span><span class="s1"> -dof </span><span class="si">{3}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
 
-    <span class="n">element_sf</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">element_sf.out'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
-    <span class="c1"># element_s_e = '{0}element_s_e.out'.format(temp)</span>
+    <span class="c1"># Element files</span>
+
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# Element</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'# -------</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
 
     <span class="n">elements</span> <span class="o">=</span> <span class="s1">'1 </span><span class="si">{0}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">element_count</span><span class="p">())</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'recorder Element -file </span><span class="si">{0}</span><span class="s1"> -time -eleRange </span><span class="si">{1}</span><span class="s1"> force</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">element_sf</span><span class="p">,</span> <span class="n">elements</span><span class="p">))</span>
-    <span class="c1"># f.write('recorder Element -file {0} -time -eleRange {1} stressStrain'.format(element_sf, elements))</span>
+    <span class="n">elemental</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'element_sf.out'</span><span class="p">:</span> <span class="s1">'force'</span><span class="p">,</span>
+        <span class="c1"># 'element_s-e': 'stressStrain',</span>
+    <span class="p">}</span>
+    <span class="c1"># Truss is 'axialForce,' 'forces,' 'localForce', deformations,'</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">elemental</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'recorder Element -file </span><span class="si">{0}{1}</span><span class="s1"> -time -eleRange </span><span class="si">{2}</span><span class="s1"> </span><span class="si">{3}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
 
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'#</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span></div>
 </code></pre></div>
@@ -555,7 +649,7 @@
             
 
             
-                Last updated on Dec 18, 2017.
+                Last updated on Dec 26, 2017.
             
 
             

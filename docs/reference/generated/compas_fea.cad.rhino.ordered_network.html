@@ -55,30 +55,28 @@
 <dt id="compas_fea.cad.rhino.ordered_network">
 <code class="descclassname">compas_fea.cad.rhino.</code><code class="descname">ordered_network</code><span class="sig-paren">(</span><em>structure</em>, <em>network</em>, <em>layer</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/cad/rhino.html#ordered_network"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Extract node and element orders from a Network for a given start-point.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul>
-<li><p>Function is for a Network representing a single structural element.</p></li>
-</ul>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul>
-<li><p><strong>structure (obj)</strong> (<em>Structure object.</em>)</p></li>
-<li><p><strong>network (obj)</strong> (<em>Network object.</em>)</p></li>
-<li><p><strong>layer (str)</strong> (<em>Layer to extract start-point (Rhino point).</em>)</p></li>
+<li><p><strong>structure</strong> (<em>obj</em>) – Structure object.</p></li>
+<li><p><strong>network</strong> (<em>obj</em>) – Network object.</p></li>
+<li><p><strong>layer</strong> (<em>str</em>) – Layer to extract start-point (Rhino point).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul>
-<li><p><strong>list</strong> (<em>Ordered nodes.</em>)</p></li>
-<li><p><strong>list</strong> (<em>Ordered elements.</em>)</p></li>
-<li><p><strong>list</strong> (<em>Cumulative lengths at element mid-points.</em>)</p></li>
-<li><p><strong>float</strong> (<em>Total length.</em>)</p></li>
+<li><p><em>list</em> – Ordered nodes.</p></li>
+<li><p><em>list</em> – Ordered elements.</p></li>
+<li><p><em>list</em> – Cumulative lengths at element mid-points.</p></li>
+<li><p><em>float</em> – Total length.</p></li>
 </ul>
 </p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul>
+<li><p>Function is for a Network representing a single structural element.</p></li>
+</ul>
 </dd></dl>
 </div>
 <!-- <nav class="compas-sideways">
@@ -138,7 +136,7 @@
             
 
             
-                Last updated on Dec 18, 2017.
+                Last updated on Dec 26, 2017.
             
 
             

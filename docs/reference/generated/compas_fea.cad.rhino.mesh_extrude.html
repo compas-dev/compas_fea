@@ -55,27 +55,25 @@
 <dt id="compas_fea.cad.rhino.mesh_extrude">
 <code class="descclassname">compas_fea.cad.rhino.</code><code class="descname">mesh_extrude</code><span class="sig-paren">(</span><em>structure</em>, <em>guid</em>, <em>nz</em>, <em>dz</em>, <em>setname</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/cad/rhino.html#mesh_extrude"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Extrudes a Rhino mesh into cells of many layers and adds to Structure.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul>
-<li><p>Extrusion is along the vertex normals.</p></li>
-<li><p>Elements are added automatically to the Structure object.</p></li>
-</ul>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul>
-<li><p><strong>structure (obj)</strong> (<em>Structure object to update.</em>)</p></li>
-<li><p><strong>guid (guid)</strong> (<em>Rhino mesh guid.</em>)</p></li>
-<li><p><strong>nz (int)</strong> (<em>Number of layers.</em>)</p></li>
-<li><p><strong>dz (float)</strong> (<em>Layer thickness.</em>)</p></li>
-<li><p><strong>setname (str)</strong> (<em>Name of set for added elements.</em>)</p></li>
+<li><p><strong>structure</strong> (<em>obj</em>) – Structure object to update.</p></li>
+<li><p><strong>guid</strong> (<em>guid</em>) – Rhino mesh guid.</p></li>
+<li><p><strong>nz</strong> (<em>int</em>) – Number of layers.</p></li>
+<li><p><strong>dz</strong> (<em>float</em>) – Layer thickness.</p></li>
+<li><p><strong>setname</strong> (<em>str</em>) – Name of set for added elements.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><em>None</em></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul>
+<li><p>Extrusion is along the vertex normals.</p></li>
+<li><p>Elements are added automatically to the Structure object.</p></li>
+</ul>
 </dd></dl>
 </div>
 <!-- <nav class="compas-sideways">
@@ -135,7 +133,7 @@
             
 
             
-                Last updated on Dec 18, 2017.
+                Last updated on Dec 26, 2017.
             
 
             

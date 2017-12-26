@@ -55,26 +55,24 @@
 <dt id="compas_fea.cad.blender.add_nset_from_objects">
 <code class="descclassname">compas_fea.cad.blender.</code><code class="descname">add_nset_from_objects</code><span class="sig-paren">(</span><em>structure</em>, <em>name</em>, <em>objects=None</em>, <em>layer=None</em>, <em>explode=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/cad/blender.html#add_nset_from_objects"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Adds the objects’ locations as a node set.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul>
-<li><p>Either objects or layer should be given, not both.</p></li>
-</ul>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul>
-<li><p><strong>structure (obj)</strong> (<em>Structure object to update.</em>)</p></li>
-<li><p><strong>name (str)</strong> (<em>Name of the new node set.</em>)</p></li>
-<li><p><strong>objects (list)</strong> (<em>Objects to use location values.</em>)</p></li>
-<li><p><strong>layer (int)</strong> (<em>Layer to get objects from if objects are not given.</em>)</p></li>
-<li><p><strong>explode (bool)</strong> (<em>Explode the set into sets for each member of selection.</em>)</p></li>
+<li><p><strong>structure</strong> (<em>obj</em>) – Structure object to update.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of the new node set.</p></li>
+<li><p><strong>objects</strong> (<em>list</em>) – Objects to use location values.</p></li>
+<li><p><strong>layer</strong> (<em>int</em>) – Layer to get objects from if objects are not given.</p></li>
+<li><p><strong>explode</strong> (<em>bool</em>) – Explode the set into sets for each member of selection.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><em>None</em></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul>
+<li><p>Either objects or layer should be given, not both.</p></li>
+</ul>
 </dd></dl>
 </div>
 <!-- <nav class="compas-sideways">
@@ -134,7 +132,7 @@
             
 
             
-                Last updated on Dec 18, 2017.
+                Last updated on Dec 26, 2017.
             
 
             

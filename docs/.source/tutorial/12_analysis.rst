@@ -50,11 +50,11 @@ When written, a confirmation message like below will appear in the terminal:
 OpenSees
 --------
 
-The input file for generating an OpenSees structural model is the ``.tcl`` input file. A ``basic`` model type will be made in 3D (``-ndm 3``) with all degrees-of-freedom at each node (``-ndf 6``). Nodes and elements will be numbered starting from 1, and then 1 subtracted for the storage of data after the analysis, so that it is consistent with the input **Structure** object.
+The input file for generating an OpenSees structural model is the ``.tcl`` input file. A ``basic`` model type will be made in 3D ``-ndm 3`` with all degrees-of-freedom at each node ``-ndf 6``, unless the model is exclusively made of truss elements and then ``-ndf 3``. Nodes and elements will be numbered starting from 1, and then 1 subtracted for the storage of data after the analysis, so that it is consistent with the input **Structure** object.
 
 An important difference (currently) with OpenSees is that the structural model should have only two steps: the first step representing all of the boundary conditions containing only **Displacement** objects, and the second step representing all applied **Load** objects.
 
-Beam elements must be given an ``ex`` local axis orientation for ``geomTransf Linear``, as OpenSees will not make an assumption for the cross-section orientation. This should be defined either directly when adding the elements with ``axes``, or added to the element name (``{'ex': [0, 1, 0]}`` for example) in a CAD environment.
+Beam elements must be given an ``ex`` local axis orientation for ``geomTransf Linear``, as OpenSees will not make an assumption for the cross-section orientation. This should be defined either directly when adding the elements with ``axes``, or added to the element name (``{'ex': [0, 1, 0]}`` for example) in a CAD environment. This orientation need not be defined for **TrussElement** types.
 
 When written, a confirmation message like below will appear in the terminal:
 
@@ -143,7 +143,7 @@ Followed by a completion message after the analysis:
 
    ***** OpenSees analysis time : 0.9063 s *****
 
-Only simple constant static loads are implemented with ``system ProfileSPD``, ``numberer RCM``, ``constraints Plain`` and ``analysis Static``.
+Only simple constant static loads are implemented with analysis settings: ``constraints Plain``, ``numberer RCM``, ``system ProfileSPD``, ``test NormUnbalance`` based on the ``step.tolerance``, ``algorithm NewtonLineSearch``, ``integrator LoadControl``, ``analysis Static`` and ``analyze`` using the number of increments in ``step.increments``.
 
 
 ===============
@@ -175,7 +175,7 @@ If there was a problem with saving the data the following error will occur:
 OpenSees
 --------
 
-As OpenSees support is still in development, only limited output is currently implemented (``'u'``: displacements and ``'ur'``: rotations). Data will be stored as for all nodes and elements as ``.out`` text files such as ``node_u.out``. These files are organised with OpenSees defaults, which list analysis incremements vertically and data horizontally. Note that plotting functions currently use only the final incremement, i.e. the last line of the file.
+As OpenSees support is still in development, only limited output is currently implemented (``'u'``: displacements and ``'ur'``: rotations, ``rf``: reaction forces and ``rm``: reaction moments). Data will be stored as for all nodes and elements as ``.out`` text files such as ``node_u.out``. These files are organised with OpenSees defaults, which list analysis incremements vertically and data horizontally. Note that plotting functions currently use only the final incremement, i.e. the last line of the file.
 
 
 ===========================

@@ -55,25 +55,23 @@
 <dt id="compas_fea.cad.rhino.add_sets_from_layers">
 <code class="descclassname">compas_fea.cad.rhino.</code><code class="descname">add_sets_from_layers</code><span class="sig-paren">(</span><em>structure</em>, <em>layers</em>, <em>explode=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/cad/rhino.html#add_sets_from_layers"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Add node or element sets to the Structure object from Rhino layers.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul>
-<li><p>Layers should exclusively contain nodes or elements.</p></li>
-<li><p>Sets will inherit the layer names as their keys.</p></li>
-</ul>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul>
-<li><p><strong>structure (obj)</strong> (<em>Structure object to update.</em>)</p></li>
-<li><p><strong>layers (list)</strong> (<em>List of layer names to take objects from.</em>)</p></li>
-<li><p><strong>explode (bool)</strong> (<em>Explode the set into sets for each member of selection.</em>)</p></li>
+<li><p><strong>structure</strong> (<em>obj</em>) – Structure object to update.</p></li>
+<li><p><strong>layers</strong> (<em>list</em>) – List of layer names to take objects from.</p></li>
+<li><p><strong>explode</strong> (<em>bool</em>) – Explode the set into sets for each member of selection.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><em>None</em></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul>
+<li><p>Layers should exclusively contain nodes or elements.</p></li>
+<li><p>Sets will inherit the layer names as their keys.</p></li>
+</ul>
 </dd></dl>
 </div>
 <!-- <nav class="compas-sideways">
@@ -133,7 +131,7 @@
             
 
             
-                Last updated on Dec 18, 2017.
+                Last updated on Dec 26, 2017.
             
 
             

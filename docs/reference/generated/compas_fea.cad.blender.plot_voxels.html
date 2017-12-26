@@ -55,36 +55,58 @@
 <dt id="compas_fea.cad.blender.plot_voxels">
 <code class="descclassname">compas_fea.cad.blender.</code><code class="descname">plot_voxels</code><span class="sig-paren">(</span><em>structure, step, field='smises', layer=0, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean', vdx=None, cube_size=[10, 10, 10], mode='', colorbar_size=1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/cad/blender.html#plot_voxels"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Applies a base voxel material and texture to a cube for 4D visualisation.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
 <blockquote>
-<div><ul>
-<li><p>Texture ramping should be done manually afterwards.</p></li>
-<li><p>Voxel display works best with cube dimensions &gt;= 10.</p></li>
-<li><p>The absolute value is plotted, ranged between [0, 1].</p></li>
-</ul>
+<div><p>Parameters</p>
 </div></blockquote>
-<p>Parameters</p>
-</div>
-<blockquote>
-<div><p>structure (obj): Structure object.
-step (str): Name of the Step.
-field (str): Field to plot, e.g. ‘smises’.
-layer (int): Layer to plot voxel cuboid on.
-scale (float): Scale displacements for the deformed plot.
-cbar (list): Minimum and maximum limits on the colorbar.
-iptype (str): ‘mean’, ‘max’ or ‘min’ of an element’s integration point data.
-nodal (str): ‘mean’, ‘max’ or ‘min’ for nodal values.
-vdx (float): Voxel spacing.
-cube_size (list): x, y, and z lengths of the cube.
-mode (int): mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
-colorbar_size (float): Scale on the size of the colorbar.</p>
-</div></blockquote>
+<dl class="simple">
+<dt>structure<span class="classifier">obj</span></dt>
+<dd><p>Structure object.</p>
+</dd>
+<dt>step<span class="classifier">str</span></dt>
+<dd><p>Name of the Step.</p>
+</dd>
+<dt>field<span class="classifier">str</span></dt>
+<dd><p>Field to plot, e.g. ‘smises’.</p>
+</dd>
+<dt>layer<span class="classifier">int</span></dt>
+<dd><p>Layer to plot voxel cuboid on.</p>
+</dd>
+<dt>scale<span class="classifier">float</span></dt>
+<dd><p>Scale displacements for the deformed plot.</p>
+</dd>
+<dt>cbar<span class="classifier">list</span></dt>
+<dd><p>Minimum and maximum limits on the colorbar.</p>
+</dd>
+<dt>iptype<span class="classifier">str</span></dt>
+<dd><p>‘mean’, ‘max’ or ‘min’ of an element’s integration point data.</p>
+</dd>
+<dt>nodal<span class="classifier">str</span></dt>
+<dd><p>‘mean’, ‘max’ or ‘min’ for nodal values.</p>
+</dd>
+<dt>vdx<span class="classifier">float</span></dt>
+<dd><p>Voxel spacing.</p>
+</dd>
+<dt>cube_size<span class="classifier">list</span></dt>
+<dd><p>x, y, and z lengths of the cube.</p>
+</dd>
+<dt>mode<span class="classifier">int</span></dt>
+<dd><p>mode or frequency number to plot, in case of modal, harmonic or buckling analysis.</p>
+</dd>
+<dt>colorbar_size<span class="classifier">float</span></dt>
+<dd><p>Scale on the size of the colorbar.</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><em>None</em></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul>
+<li><p>Texture ramping should be done manually afterwards.</p></li>
+<li><p>Voxel display works best with cube dimensions &gt;= 10.</p></li>
+<li><p>The absolute value is plotted, ranged between [0, 1].</p></li>
+</ul>
 </dd></dl>
 </div>
 <!-- <nav class="compas-sideways">
@@ -144,7 +166,7 @@ colorbar_size (float): Scale on the size of the colorbar.</p>
             
 
             
-                Last updated on Dec 18, 2017.
+                Last updated on Dec 26, 2017.
             
 
             

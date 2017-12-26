@@ -23,6 +23,8 @@ __email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
+    'extract_out_data',
+    'opensees_launch_process',
     'input_generate',
     'input_write_heading',
     'input_write_nodes',
@@ -30,90 +32,80 @@ __all__ = [
     'input_write_elements',
     'input_write_recorders',
     'input_write_patterns',
-    'opensees_launch_process'
 ]
+
+
+dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 
 
 def extract_out_data(structure):
     """ Extract data from the OpenSees .out files.
 
-    Parameters:
-        structure (obj): Structure object.
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
-    name = structure.name
-    path = structure.path
-    temp = '{0}{1}/'.format(path, name)
 
-    step = structure.steps_order[1]
+    tic = time()
+
+    temp = '{0}{1}/'.format(structure.path, structure.name)
+
+    step = structure.steps_order[1]  # expand to other steps later
     structure.results[step] = {'nodal': {}, 'element': {}}
 
     # Nodal data
 
-    with open('{0}node_u.out'.format(temp), 'r') as f:
-        lines = f.readlines()
-    u_out = [float(i) for i in lines[-1].split(' ')[1:]]
-
-    with open('{0}node_ur.out'.format(temp), 'r') as f:
-        lines = f.readlines()
-    ur_out = [float(i) for i in lines[-1].split(' ')[1:]]
-
-    with open('{0}node_rf.out'.format(temp), 'r') as f:
-        lines = f.readlines()
-    rf_out = [float(i) for i in lines[-1].split(' ')[1:]]
-
-    with open('{0}node_rm.out'.format(temp), 'r') as f:
-        lines = f.readlines()
-    rm_out = [float(i) for i in lines[-1].split(' ')[1:]]
+    nodal_data = {}
+    for file in ['node_u', 'node_ur', 'node_rf', 'node_rm']:
+        try:
+            with open('{0}{1}.out'.format(temp, file), 'r') as f:
+                lines = f.readlines()
+            nodal_data[file] = [float(i) for i in lines[-1].split(' ')[1:]]
+        except:
+            print('***** {0}.out data not loaded *****'.format(file))
 
     nodal = structure.results[step]['nodal']
-    # elemental = structure.results[step]['element']
+    for prefix in ['u', 'ur', 'rf', 'rm']:
+        for dof in 'xyz':
+            nodal['{0}{1}'.format(prefix, dof)] = {}
+        nodal['{0}m'.format(prefix)] = {}
 
-    for dof in 'xyz':
-        nodal['u{0}'.format(dof)] = {}
-        nodal['ur{0}'.format(dof)] = {}
-        nodal['rf{0}'.format(dof)] = {}
-        nodal['rm{0}'.format(dof)] = {}
-    nodal['um'] = {}
-    nodal['urm'] = {}
-    nodal['rfm'] = {}
-    nodal['rmm'] = {}
+    for prefix in ['u', 'ur', 'rf', 'rm']:
+        file = 'node_{0}'.format(prefix)
+        for node in structure.nodes:
+            try:
+                sum2 = 0
+                for c, dof in enumerate('xyz'):
+                    val = nodal_data[file][node * 3 + c]
+                    nodal['{0}{1}'.format(prefix, dof)][node] = val
+                    sum2 += val**2
+                nodal['{0}m'.format(prefix)][node] = sqrt(sum2)
+            except:
+                pass
 
-    for node in structure.nodes:
-        u_sum2 = 0
-        ur_sum2 = 0
-        rf_sum2 = 0
-        rm_sum2 = 0
-        for c, dof in enumerate('xyz'):
-            u_val = u_out[node * 3 + c]
-            ur_val = ur_out[node * 3 + c]
-            rf_val = rf_out[node * 3 + c]
-            rm_val = rm_out[node * 3 + c]
-            nodal['u{0}'.format(dof)][node] = u_val
-            nodal['ur{0}'.format(dof)][node] = ur_val
-            nodal['rf{0}'.format(dof)][node] = rf_val
-            nodal['rm{0}'.format(dof)][node] = rm_val
-            u_sum2 += u_val**2
-            ur_sum2 += ur_val**2
-            rf_sum2 += rf_val**2
-            rm_sum2 += rm_val**2
-        nodal['um'][node] = sqrt(u_sum2)
-        nodal['urm'][node] = sqrt(ur_sum2)
-        nodal['rfm'][node] = sqrt(rf_sum2)
-        nodal['rmm'][node] = sqrt(rm_sum2)
+    toc = time() - tic
+
+    print('\n***** Data extracted from OpenSees .out file(s) : {0} s *****\n'.format(toc))
 
 
 def opensees_launch_process(structure, exe):
     """ Runs the analysis through OpenSees.
 
-    Parameters:
-        structure (obj): Structure object.
-        exe (str): Full terminal command to bypass subprocess defaults.
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    exe : str
+        Full terminal command to bypass subprocess defaults.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     name = structure.name
     path = structure.path
@@ -147,14 +139,20 @@ def opensees_launch_process(structure, exe):
 def input_generate(structure, fields, units='m'):
     """ Creates the OpenSees .tcl file from the Structure object.
 
-    Parameters:
-        structure (obj): The Structure object to read from.
-        fields (list): Data field requests.
-        units (str): Units of the nodal co-ordinates 'm','cm','mm'.
+    Parameters
+    ----------
+    structure : obj
+        The Structure object to read from.
+    fields : list
+        Data field requests.
+    units : str
+        Units of the nodal co-ordinates 'm','cm','mm'.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
+
     filename = '{0}{1}.tcl'.format(structure.path, structure.name)
 
     with open(filename, 'w') as f:
@@ -169,24 +167,35 @@ def input_generate(structure, fields, units='m'):
         sets = structure.sets
         steps = structure.steps
 
-        input_write_heading(f)
+        ndof = 3
+        for element in elements.values():
+            if element.__name__ not in ['TrussElement', 'TieElement', 'StrutElement']:
+                ndof = 6
+                break
+
+        input_write_heading(f, ndof)
         input_write_nodes(f, nodes, units)
-        input_write_bcs(f, structure, steps, displacements)
+        input_write_bcs(f, structure, steps, displacements, ndof)
         input_write_elements(f, sections, properties, elements, sets, materials)
-        input_write_recorders(f, structure)
-        input_write_patterns(f, structure, steps, loads, sets)
+        input_write_recorders(f, structure, ndof)
+        input_write_patterns(f, structure, steps, loads, sets, ndof)
 
     print('***** OpenSees input file generated: {0} *****\n'.format(filename))
 
 
-def input_write_heading(f):
+def input_write_heading(f, ndof):
     """ Creates the OpenSees .tcl file heading.
 
-    Parameters:
-        f (obj): The open file object for the .tcl file.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .tcl file.
+    ndof : int
+        Number of degrees-of-freedom per node.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     f.write('# -----------------------------------------------------------------------------\n')
     f.write('# --------------------------------------------------------------------- Heading\n')
@@ -199,20 +208,25 @@ def input_write_heading(f):
 
     f.write('#\n')
     f.write('wipe\n')
-    f.write('model basic -ndm 3 -ndf 6\n')
+    f.write('model basic -ndm 3 -ndf {0}\n'.format(ndof))
     f.write('#\n')
 
 
 def input_write_nodes(f, nodes, units):
     """ Writes the nodal co-ordinates information to the OpenSees .tcl file.
 
-    Parameters:
-        f (obj): The open file object for the .tcl file.
-        nodes (dic): Node dictionary from structure.nodes.
-        units (str): Units of the nodal co-ordinates.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .tcl file.
+    nodes : dic
+        Node dictionary from structure.nodes.
+    units : str
+        Units of the nodal co-ordinates.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     cl = {'m': 1., 'cm': 0.01, 'mm': 0.001}
 
@@ -229,22 +243,28 @@ def input_write_nodes(f, nodes, units):
     f.write('#\n')
 
 
-def input_write_bcs(f, structure, steps, displacements):
+def input_write_bcs(f, structure, steps, displacements, ndof):
     """ Writes boundary condition information to the OpenSees .tcl file.
 
-    Parameters:
-        f (obj): The open file object for the .tcl file.
-        structure (obj): Struture object.
-        steps (dic): Step objects from structure.steps.
-        displacements (dic): Displacement objects from structure.displacements.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .tcl file.
+    structure : obj
+        Struture object.
+    steps : dic
+        Step objects from structure.steps.
+    displacements : dic
+        Displacement objects from structure.displacements.
+    ndof : int
+        Number of degrees-of-freedom per node.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     f.write('# -----------------------------------------------------------------------------\n')
     f.write('# ------------------------------------------------------------------------- BCs\n')
-
-    dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 
     key = structure.steps_order[0]
     step = steps[key]
@@ -269,16 +289,17 @@ def input_write_bcs(f, structure, steps, displacements):
             f.write('# {0}\n'.format(k))
             f.write('# ' + '-' * len(k) + '\n')
             f.write('#\n')
-            f.write('# Node, x, y, z, xx, yy, zz\n')
+            f.write('# Node, {0}\n'.format(', '.join(dofs[:ndof])))
             f.write('#\n')
 
+            j = []
+            for dof in dofs[:ndof]:
+                if com[dof] is not None:
+                    j.append('1')
+                else:
+                    j.append('0')
+
             for node in structure.sets[nset]['selection']:
-                j = []
-                for dof in dofs:
-                    if com[dof] is not None:
-                        j.append('1')
-                    else:
-                        j.append('0')
                 f.write('fix {0} {1}\n'.format(node + 1, ' '.join(j)))
 
     f.write('#\n')
@@ -287,16 +308,24 @@ def input_write_bcs(f, structure, steps, displacements):
 def input_write_elements(f, sections, properties, elements, sets, materials):
     """ Writes the element and section information to the OpenSees .tcl file.
 
-    Parameters:
-        f (obj): The open file object for the .tcl file.
-        sections (dic): Section objects from structure.sections.
-        properties (dic): ElementProperties objects from structure.element_properties.
-        elements (dic): Element objects from structure.elements.
-        sets (dic): Sets from structure.sets.
-        materials (dic): Material objects from structure.materials.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .tcl file.
+    sections : dic
+        Section objects from structure.sections.
+    properties : dic
+        ElementProperties objects from structure.element_properties.
+    elements : dic
+        Element objects from structure.elements.
+    sets : dic
+        Sets from structure.sets.
+    materials : dic
+        Material objects from structure.materials.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     # Sections:
@@ -310,9 +339,10 @@ def input_write_elements(f, sections, properties, elements, sets, materials):
     f.write('# -------------------------------------------------------------------- Elements\n')
 
     for key, property in properties.items():
-        material = property.material
         elsets = property.elsets
         section = sections[property.section]
+        material = materials[property.material]
+        material_index = material.index + 1
         stype = section.__name__
         geometry = section.geometry
 
@@ -332,164 +362,202 @@ def input_write_elements(f, sections, properties, elements, sets, materials):
             if (stype not in shells) and (stype not in solids):
 
                 f.write('# eType, No., node.start, node.end, A[m2], E[Pa], G[Pa], J[m^4], Iyy[m^4], Ixx[m^4], trans\n')
+                f.write('#\n')
                 for select in selection:
                     sp, ep = elements[select].nodes
                     n = select + 1
                     i = sp + 1
                     j = ep + 1
                     A = geometry['A']
-                    E = materials[material].E['E']
-                    G = materials[material].G['G']
+                    E = material.E['E']
+                    G = material.G['G']
                     J = geometry['J']
                     Ixx = geometry['Ixx']
                     Iyy = geometry['Iyy']
-
                     ex = ' '.join([str(k) for k in elements[select].axes['ex']])
                     f.write('#\n')
                     f.write('geomTransf Linear {0} {1}\n'.format(select + 1, ex))
-                    f.write('element elasticBeamColumn {0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(n, i, j, A, E, G, J, Ixx, Iyy, select + 1))
+                    f.write('element elasticBeamColumn {0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
+                            n, i, j, A, E, G, J, Ixx, Iyy, n))
+
+            # Truss sections
+
+            elif stype == 'TrussSection':
+
+                if material.__name__ == 'ElasticIsotropic':
+                    E = material.E['E']
+                    f.write('# No., E[Pa]\n')
+                    f.write('#\n')
+                    f.write('uniaxialMaterial Elastic {0} {1}\n'.format(material_index, E))
+                    f.write('#\n')
+
+                f.write('# eType, No., node.start, node.end, A[m2], material\n')
+                f.write('#\n')
+                for select in selection:
+                    sp, ep = elements[select].nodes
+                    n = select + 1
+                    i = sp + 1
+                    j = ep + 1
+                    A = geometry['A']
+                    f.write('element corotTruss {0} {1} {2} {3} {4}\n'.format(n, i, j, A, material_index))
 
     f.write('#\n')
 
 
-def input_write_patterns(f, structure, steps, loads, sets):
+def input_write_patterns(f, structure, steps, loads, sets, ndof):
     """ Writes the load patterns information to the OpenSees .tcl file.
 
-    Parameters:
-        f (obj): The open file object for the .tcl file.
-        structure (obj): The Structure object to read from.
-        steps (dic): Step objects from structure.steps.
-        loads (dic): Load objects from structure.loads.
-        sets (dic): Sets from strctures.sets.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .tcl file.
+    structure : obj
+        The Structure object to read from.
+    steps : dic
+        Step objects from structure.steps.
+    loads : dic
+        Load objects from structure.loads.
+    sets : dic
+        Sets from strctures.sets.
+    ndof : int
+        Number of degrees-of-freedom per node.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     f.write('# -----------------------------------------------------------------------------\n')
     f.write('# -------------------------------------------------------------------- Analysis\n')
 
-    dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
+    keys = [structure.steps_order[1]]  # currently only the 2nd step, should be 2nd onwards
 
-    key = structure.steps_order[1]
-    step = steps[key]
-    stype = step.__name__
-    index = step.index
-    factor = step.factor
-    # tolerance = step.tolerance
-    # iterations = step.iterations
-    increments = step.increments
+    for key in keys:
 
-    f.write('#\n')
-    f.write('# {0}\n'.format(key))
-    f.write('# ' + '-' * len(key) + '\n')
-    f.write('#\n')
+        step = steps[key]
+        stype = step.__name__
+        step_index = step.index
+        factor = step.factor
+        increments = step.increments
+        tolerance = step.tolerance
+        iterations = step.iterations
 
-    f.write('timeSeries Constant {0} -factor 1.0\n'.format(index))
-    f.write('pattern Plain {0} {0} -fact {1} {2}\n'.format(index, factor, '{'))
+        f.write('#\n')
+        f.write('# {0}\n'.format(key))
+        f.write('# ' + '-' * len(key) + '\n')
+        f.write('#\n')
 
-    # Mechanical
+        f.write('timeSeries Constant {0} -factor 1.0\n'.format(step_index))
+        f.write('pattern Plain {0} {0} -fact {1} {2}\n'.format(step_index, factor, '{'))
 
-    if stype in ['GeneralStep', 'BucklingStep']:
+        # Mechanical
 
-        # Loads
+        if stype in ['GeneralStep', 'BucklingStep']:
 
-        for k in step.loads:
-            f.write('#\n')
+            # Loads
 
-            load = loads[k]
-            ltype = load.__name__
-            com = load.components
-            axes = load.axes
-            nset = load.nodes
-            elset = load.elements
+            for k in step.loads:
 
-            # Point load
+                load = loads[k]
+                ltype = load.__name__
+                com = load.components
+                axes = load.axes
+                nset = load.nodes
+                elset = load.elements
 
-            if ltype == 'PointLoad':
+                # Point load
 
-                coms = ' '.join([str(com[dof]) for dof in dofs])
-                for node in sets[nset]['selection']:
-                    f.write('load {0} {1}\n'.format(node + 1, coms))
+                if ltype == 'PointLoad':
 
-            # Line load
+                    coms = ' '.join([str(com[dof]) for dof in dofs[:ndof]])
+                    for node in sets[nset]['selection']:
+                        f.write('load {0} {1}\n'.format(node + 1, coms))
 
-            elif ltype == 'LineLoad':
+                # Line load
 
-                if axes == 'global':
-                    raise NotImplementedError
+                elif ltype == 'LineLoad':
 
-                elif axes == 'local':
-                    elements = ' '.join([str(i + 1) for i in sets[elset]['selection']])
-                    f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, -com['y'], -com['x']))
+                    if axes == 'global':
+                        raise NotImplementedError
 
-    f.write('#\n')
+                    elif axes == 'local':
+                        elements = ' '.join([str(i + 1) for i in sets[elset]['selection']])
+                        f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, -com['y'], -com['x']))
+
     f.write('{0}\n'.format('}'))
 
     f.write('#\n')
     f.write('constraints Plain\n')
-    f.write('#\n')
     f.write('numberer RCM\n')
-    f.write('#\n')
     f.write('system ProfileSPD\n')
-    # f.write('#\n')
-    # f.write('test RelativeNormUnbalance {0} {1} 2\n'.format(tolerance, iterations))
-    # f.write('#\n')
-    # f.write('algorithm Newton\n')
-    # f.write('#\n')
-    # f.write('integrator LoadControl {0}\n'.format(1./increments))
-    # integrator DisplacementControl
-    # f.write('#\n')
+    f.write('test NormUnbalance {0} {1} 5\n'.format(tolerance, iterations))
+    f.write('algorithm NewtonLineSearch\n')
+    f.write('integrator LoadControl {0}\n'.format(1./increments))
     f.write('analysis Static\n')
-    f.write('#\n')
     f.write('analyze {0}\n'.format(increments))
     f.write('#\n')
 
 
-def input_write_recorders(f, structure):
+def input_write_recorders(f, structure, ndof):
     """ Writes the recorders information to the OpenSees .tcl file.
 
-    Parameters:
-        f (obj): The open file object for the .tcl file.
-        structure (obj): The Structure object to read from.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .tcl file.
+    structure : obj
+        The Structure object to read from.
+    ndof : int
+        Number of degrees-of-freedom per node.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     f.write('# -----------------------------------------------------------------------------\n')
     f.write('# ------------------------------------------------------------------- Recorders\n')
     f.write('#\n')
 
-    # Files and folders
+    # Temp folder
 
-    name = structure.name
-    path = structure.path
-
-    temp = '{0}{1}/'.format(path, name)
+    temp = '{0}{1}/'.format(structure.path, structure.name)
     try:
         os.stat(temp)
     except:
         os.mkdir(temp)
 
-    # Write nodal
+    # Nodal files
 
-    node_u = '{0}node_u.out'.format(temp)
-    node_ur = '{0}node_ur.out'.format(temp)
-    node_rf = '{0}node_rf.out'.format(temp)
-    node_rm = '{0}node_rm.out'.format(temp)
+    f.write('# Node\n')
+    f.write('# ----\n')
+    f.write('#\n')
 
     nodes = '1 {0}'.format(structure.node_count())
-    f.write('recorder Node -file {0} -time -nodeRange {1} -dof 1 2 3 disp\n'.format(node_u, nodes))
-    f.write('recorder Node -file {0} -time -nodeRange {1} -dof 4 5 6 disp\n'.format(node_ur, nodes))
-    f.write('recorder Node -file {0} -time -nodeRange {1} -dof 1 2 3 reaction\n'.format(node_rf, nodes))
-    f.write('recorder Node -file {0} -time -nodeRange {1} -dof 4 5 6 reaction\n'.format(node_rm, nodes))
+    nodal = {
+        'node_u.out':  '1 2 3 disp',
+        'node_rf.out': '1 2 3 reaction',
+    }
+    if ndof == 6:
+        nodal['node_ur.out'] = '4 5 6 disp'
+        nodal['node_rm.out'] = '4 5 6 reaction'
 
-    # Write element
+    for key, item in nodal.items():
+        f.write('recorder Node -file {0}{1} -time -nodeRange {2} -dof {3}\n'.format(temp, key, nodes, item))
 
-    element_sf = '{0}element_sf.out'.format(temp)
-    # element_s_e = '{0}element_s_e.out'.format(temp)
+    # Element files
+
+    f.write('#\n')
+    f.write('# Element\n')
+    f.write('# -------\n')
+    f.write('#\n')
 
     elements = '1 {0}'.format(structure.element_count())
-    f.write('recorder Element -file {0} -time -eleRange {1} force\n'.format(element_sf, elements))
-    # f.write('recorder Element -file {0} -time -eleRange {1} stressStrain'.format(element_sf, elements))
+    elemental = {
+        'element_sf.out': 'force',
+        # 'element_s-e': 'stressStrain',
+    }
+    # Truss is 'axialForce,' 'forces,' 'localForce', deformations,'
+
+    for key, item in elemental.items():
+        f.write('recorder Element -file {0}{1} -time -eleRange {2} {3}\n'.format(temp, key, elements, item))
 
     f.write('#\n')

@@ -53,7 +53,7 @@
 <h1>input_write_patterns</h1>
 <dl class="function">
 <dt id="compas_fea.fea.opensees.input_write_patterns">
-<code class="descclassname">compas_fea.fea.opensees.</code><code class="descname">input_write_patterns</code><span class="sig-paren">(</span><em>f</em>, <em>structure</em>, <em>steps</em>, <em>loads</em>, <em>sets</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/fea/opensees/opensees.html#input_write_patterns"><span class="viewcode-link">[source]</span></a></dt>
+<code class="descclassname">compas_fea.fea.opensees.</code><code class="descname">input_write_patterns</code><span class="sig-paren">(</span><em>f</em>, <em>structure</em>, <em>steps</em>, <em>loads</em>, <em>sets</em>, <em>ndof</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/fea/opensees/opensees.html#input_write_patterns"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Writes the load patterns information to the OpenSees .tcl file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -63,10 +63,11 @@
 <li><p><strong>steps</strong> (<em>dic</em>) – Step objects from structure.steps.</p></li>
 <li><p><strong>loads</strong> (<em>dic</em>) – Load objects from structure.loads.</p></li>
 <li><p><strong>sets</strong> (<em>dic</em>) – Sets from strctures.sets.</p></li>
+<li><p><strong>ndof</strong> (<em>int</em>) – Number of degrees-of-freedom per node.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
+<dd class="field-even"><p><em>None</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -128,7 +129,7 @@
             
 
             
-                Last updated on Dec 18, 2017.
+                Last updated on Dec 26, 2017.
             
 
             

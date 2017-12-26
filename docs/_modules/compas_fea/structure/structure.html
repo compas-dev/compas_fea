@@ -620,17 +620,17 @@
 
     <span class="k">def</span> <span class="nf">add_nodal_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">virtual_node</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">""" Adds a nodal element to structure.elements with the possibility of</span>
-<span class="sd">        adding a coincident "virtual" node. Virtual nodes are added to a node</span>
+<span class="sd">        adding a coincident virtual node. Virtual nodes are added to a node</span>
 <span class="sd">        set called 'virtual_nodes'.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        nodes : list</span>
-<span class="sd">            Node the element is connected to.</span>
+<span class="sd">        node : int</span>
+<span class="sd">            Node number the element is connected to.</span>
 <span class="sd">        type : str</span>
 <span class="sd">            Element type: 'SpringElement', etc.</span>
 <span class="sd">        virtual_node : bool</span>
-<span class="sd">            Virtual node is made or not.</span>
+<span class="sd">            Create a virtual node or not.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -641,16 +641,11 @@
 <span class="sd">        -----</span>
 <span class="sd">        - Elements are numbered sequentially starting from 0.</span>
 <span class="sd">        """</span>
-        <span class="n">func_dic</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">'SpringElement'</span><span class="p">:</span> <span class="n">SpringElement</span><span class="p">,</span>
-        <span class="p">}</span>
-        <span class="n">func</span> <span class="o">=</span> <span class="n">func_dic</span><span class="p">[</span><span class="nb">type</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">virtual_node</span><span class="p">:</span>
             <span class="n">xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
             <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">virtual_nodes</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_count</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'x'</span><span class="p">:</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">'y'</span><span class="p">:</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">'z'</span><span class="p">:</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                               <span class="s1">'ex'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">'ey'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">'ez'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-                               <span class="s1">'virtual'</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+                               <span class="s1">'ex'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">'ey'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">'ez'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">'virtual'</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
             <span class="k">if</span> <span class="s1">'virtual_nodes'</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">'virtual_nodes'</span><span class="p">][</span><span class="s1">'selection'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -659,13 +654,18 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="p">]</span>
 
+        <span class="n">func_dic</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">'SpringElement'</span><span class="p">:</span> <span class="n">SpringElement</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">func_dic</span><span class="p">[</span><span class="nb">type</span><span class="p">]</span>
+
         <span class="n">ekey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_count</span><span class="p">()</span>
         <span class="n">element</span> <span class="o">=</span> <span class="n">func</span><span class="p">()</span>
-        <span class="c1"># element.axes = axes</span>
         <span class="n">element</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes</span>
         <span class="n">element</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">ekey</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">ekey</span><span class="p">]</span> <span class="o">=</span> <span class="n">element</span>
         <span class="k">return</span> <span class="n">ekey</span>
+
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># sets</span>
@@ -689,6 +689,9 @@
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
 <span class="sd">        """</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">selection</span> <span class="o">=</span> <span class="p">[</span><span class="n">selection</span><span class="p">]</span>
+
         <span class="k">if</span> <span class="n">explode</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'node'</span><span class="p">,</span> <span class="s1">'element'</span><span class="p">]:</span>
                 <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
@@ -1455,7 +1458,7 @@
             
 
             
-                Last updated on Dec 18, 2017.
+                Last updated on Dec 26, 2017.
             
 
             

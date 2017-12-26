@@ -48,8 +48,9 @@
 <span class="sd">compas_fea.cad.blender : Blender specific functions.</span>
 <span class="sd">"""</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 
 <span class="kn">from</span> <span class="nn">compas_blender.geometry</span> <span class="k">import</span> <span class="n">BlenderMesh</span>
 <span class="kn">from</span> <span class="nn">compas_blender.helpers</span> <span class="k">import</span> <span class="n">mesh_from_bmesh</span>
@@ -252,18 +253,27 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        structure (obj): Structure object to update.</span>
-<span class="sd">        name (str): Name for the element set of tetrahedrons.</span>
-<span class="sd">        bmesh (ob): The Blender mesh representing the outer surface.</span>
-<span class="sd">        draw_tets (bool): Draw the generated tetrahedrons.</span>
-<span class="sd">        volume (float): Maximum volume for tets.</span>
-<span class="sd">        layer (int): Layer to draw tetrahedrons if draw_tets=True.</span>
-<span class="sd">        acoustic (bool): Acoustic properties on or off.</span>
-<span class="sd">        thermal (bool): Thermal properties on or off.</span>
+<span class="sd">    structure : obj</span>
+<span class="sd">        Structure object to update.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name for the element set of tetrahedrons.</span>
+<span class="sd">    bmesh : ob</span>
+<span class="sd">        The Blender mesh representing the outer surface.</span>
+<span class="sd">    draw_tets : bool</span>
+<span class="sd">        Draw the generated tetrahedrons.</span>
+<span class="sd">    volume : float</span>
+<span class="sd">        Maximum volume for tets.</span>
+<span class="sd">    layer : int</span>
+<span class="sd">        Layer to draw tetrahedrons if draw_tets=True.</span>
+<span class="sd">    acoustic : bool</span>
+<span class="sd">        Acoustic properties on or off.</span>
+<span class="sd">    thermal : bool</span>
+<span class="sd">        Thermal properties on or off.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        None: Nodes and elements are updated in the Structure object.</span>
+<span class="sd">    None</span>
+<span class="sd">        Nodes and elements are updated in the Structure object.</span>
 <span class="sd">    """</span>
     <span class="n">blendermesh</span> <span class="o">=</span> <span class="n">BlenderMesh</span><span class="p">(</span><span class="n">bmesh</span><span class="p">)</span>
     <span class="n">vertices</span> <span class="o">=</span> <span class="n">blendermesh</span><span class="o">.</span><span class="n">get_vertex_coordinates</span><span class="p">()</span>
@@ -290,20 +300,26 @@
 <div class="viewcode-block" id="add_elset_from_bmeshes"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.add_elset_from_bmeshes.html#compas_fea.cad.blender.add_elset_from_bmeshes">[docs]</a><span class="k">def</span> <span class="nf">add_elset_from_bmeshes</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bmeshes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">""" Adds the Blender meshes' edges and faces as an element set.</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        - Either bmeshes or layer should be given, not both.</span>
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        structure (obj): Structure object to update.</span>
-<span class="sd">        name (str): Name of the new element set.</span>
-<span class="sd">        bmeshes (list): Blender mesh objects to extract edges and faces.</span>
-<span class="sd">        layer (int): Layer to get bmeshes from if bmeshes are not given.</span>
-<span class="sd">        explode (bool): Explode the set into sets for each member of selection.</span>
+<span class="sd">    structure : obj</span>
+<span class="sd">        Structure object to update.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the new element set.</span>
+<span class="sd">    bmeshes : list</span>
+<span class="sd">        Blender mesh objects to extract edges and faces.</span>
+<span class="sd">    layer : int</span>
+<span class="sd">        Layer to get bmeshes from if bmeshes are not given.</span>
+<span class="sd">    explode : bool</span>
+<span class="sd">        Explode the set into sets for each member of selection.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        None</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">        - Either bmeshes or layer should be given, not both.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">bmeshes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">object</span> <span class="k">for</span> <span class="nb">object</span> <span class="ow">in</span> <span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span> <span class="k">if</span> <span class="nb">object</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">'MESH'</span><span class="p">]</span>
@@ -335,20 +351,26 @@
 <div class="viewcode-block" id="add_nset_from_bmeshes"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.add_nset_from_bmeshes.html#compas_fea.cad.blender.add_nset_from_bmeshes">[docs]</a><span class="k">def</span> <span class="nf">add_nset_from_bmeshes</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bmeshes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">""" Adds the Blender meshes' vertices as a node set.</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        - Either bmeshes or layer should be given, not both.</span>
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        structure (obj): Structure object to update.</span>
-<span class="sd">        name (str): Name of the new node set.</span>
-<span class="sd">        bmeshes (list): Blender mesh objects to extract vertices.</span>
-<span class="sd">        layer (int): Layer to get bmeshes from if bmeshes are not given.</span>
-<span class="sd">        explode (bool): Explode the set into sets for each member of selection.</span>
+<span class="sd">    structure : obj</span>
+<span class="sd">        Structure object to update.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the new node set.</span>
+<span class="sd">    bmeshes : list</span>
+<span class="sd">        Blender mesh objects to extract vertices.</span>
+<span class="sd">    layer : int</span>
+<span class="sd">        Layer to get bmeshes from if bmeshes are not given.</span>
+<span class="sd">    explode : bool</span>
+<span class="sd">        Explode the set into sets for each member of selection.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        None</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">        - Either bmeshes or layer should be given, not both.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">bmeshes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">object</span> <span class="k">for</span> <span class="nb">object</span> <span class="ow">in</span> <span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span> <span class="k">if</span> <span class="nb">object</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">'MESH'</span><span class="p">]</span>
@@ -370,20 +392,26 @@
 <div class="viewcode-block" id="add_nset_from_objects"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.add_nset_from_objects.html#compas_fea.cad.blender.add_nset_from_objects">[docs]</a><span class="k">def</span> <span class="nf">add_nset_from_objects</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">""" Adds the objects' locations as a node set.</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        - Either objects or layer should be given, not both.</span>
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        structure (obj): Structure object to update.</span>
-<span class="sd">        name (str): Name of the new node set.</span>
-<span class="sd">        objects (list): Objects to use location values.</span>
-<span class="sd">        layer (int): Layer to get objects from if objects are not given.</span>
-<span class="sd">        explode (bool): Explode the set into sets for each member of selection.</span>
+<span class="sd">    structure : obj</span>
+<span class="sd">        Structure object to update.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the new node set.</span>
+<span class="sd">    objects : list</span>
+<span class="sd">        Objects to use location values.</span>
+<span class="sd">    layer : int</span>
+<span class="sd">        Layer to get objects from if objects are not given.</span>
+<span class="sd">    explode : bool</span>
+<span class="sd">        Explode the set into sets for each member of selection.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        None</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">        - Either objects or layer should be given, not both.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">objects</span> <span class="o">=</span> <span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
@@ -394,21 +422,27 @@
 <div class="viewcode-block" id="mesh_extrude"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.mesh_extrude.html#compas_fea.cad.blender.mesh_extrude">[docs]</a><span class="k">def</span> <span class="nf">mesh_extrude</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">bmesh</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dz</span><span class="p">,</span> <span class="n">setname</span><span class="p">):</span>
     <span class="sd">""" Extrudes a Blender mesh into cells of many layers and adds to Structure.</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        - Extrusion is along the vertex normals.</span>
-<span class="sd">        - Elements are added automatically to the Structure object.</span>
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        structure (obj): Structure object to update.</span>
-<span class="sd">        bmesh (obj): Blender mesh object.</span>
-<span class="sd">        nz (int): Number of layers.</span>
-<span class="sd">        dz (float): Layer thickness.</span>
-<span class="sd">        setname (str): Name of set for added elements.</span>
+<span class="sd">    structure : obj</span>
+<span class="sd">        Structure object to update.</span>
+<span class="sd">    bmesh : obj</span>
+<span class="sd">        Blender mesh object.</span>
+<span class="sd">    nz : int</span>
+<span class="sd">        Number of layers.</span>
+<span class="sd">    dz : float</span>
+<span class="sd">        Layer thickness.</span>
+<span class="sd">    setname : str</span>
+<span class="sd">        Name of set for added elements.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        None</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">        - Extrusion is along the vertex normals.</span>
+<span class="sd">        - Elements are added automatically to the Structure object.</span>
 <span class="sd">    """</span>
     <span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_from_bmesh</span><span class="p">(</span><span class="n">bmesh</span><span class="p">)</span>
     <span class="n">extrude_mesh</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">nz</span><span class="o">=</span><span class="n">nz</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">dz</span><span class="p">,</span> <span class="n">setname</span><span class="o">=</span><span class="n">setname</span><span class="p">)</span></div>
@@ -417,21 +451,29 @@
 <div class="viewcode-block" id="ordered_network"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.ordered_network.html#compas_fea.cad.blender.ordered_network">[docs]</a><span class="k">def</span> <span class="nf">ordered_network</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">network</span><span class="p">,</span> <span class="n">layer</span><span class="p">):</span>
     <span class="sd">""" Extract node and element orders from a Network for a given start-point.</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        - Function is for a Network representing a single structural element.</span>
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        structure (obj): Structure object.</span>
-<span class="sd">        network (obj): Network object.</span>
-<span class="sd">        layer (str): Layer to extract start-point (Blender object).</span>
+<span class="sd">    structure : obj</span>
+<span class="sd">        Structure object.</span>
+<span class="sd">    network : obj</span>
+<span class="sd">        Network object.</span>
+<span class="sd">    layer : str</span>
+<span class="sd">        Layer to extract start-point (Blender object).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        list: Ordered nodes.</span>
-<span class="sd">        list: Ordered elements.</span>
-<span class="sd">        list: Cumulative lengths at element mid-points.</span>
-<span class="sd">        float: Total length.</span>
+<span class="sd">    list</span>
+<span class="sd">        Ordered nodes.</span>
+<span class="sd">    list</span>
+<span class="sd">        Ordered elements.</span>
+<span class="sd">    list</span>
+<span class="sd">        Cumulative lengths at element mid-points.</span>
+<span class="sd">    float</span>
+<span class="sd">        Total length.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">        - Function is for a Network representing a single structural element.</span>
 <span class="sd">    """</span>
     <span class="n">sp_xyz</span> <span class="o">=</span> <span class="n">get_object_location</span><span class="p">(</span><span class="nb">object</span><span class="o">=</span><span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">network_order</span><span class="p">(</span><span class="n">sp_xyz</span><span class="o">=</span><span class="n">sp_xyz</span><span class="p">,</span> <span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="p">)</span></div>
@@ -445,26 +487,38 @@
               <span class="n">nodal</span><span class="o">=</span><span class="s1">'mean'</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">""" Plots analysis results on the deformed shape of the Structure.</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        - Pipe visualisation of line elements is not based on the element section.</span>
-
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        structure (obj): Structure object.</span>
-<span class="sd">        step (str): Name of the Step.</span>
-<span class="sd">        field (str): Field to plot, e.g. 'um', 'sxx', 'sm1'.</span>
-<span class="sd">        layer (int): Layer number for plotting.</span>
-<span class="sd">        scale (float): Scale displacements for the deformed plot.</span>
-<span class="sd">        radius (float): Radius of the pipe visualisation meshes.</span>
-<span class="sd">        cbar (list): Minimum and maximum limits on the colorbar.</span>
-<span class="sd">        iptype (str): 'mean', 'max' or 'min' of an element's integration point data.</span>
-<span class="sd">        nodal (str): 'mean', 'max' or 'min' for nodal values.</span>
-<span class="sd">        mode (int): mode or frequency number to plot, in case of modal, harmonic or buckling analysis.</span>
-<span class="sd">        colorbar_size (float): Scale on the size of the colorbar.</span>
+<span class="sd">    structure : obj</span>
+<span class="sd">        Structure object.</span>
+<span class="sd">    step : str</span>
+<span class="sd">        Name of the Step.</span>
+<span class="sd">    field : str</span>
+<span class="sd">        Field to plot, e.g. 'um', 'sxx', 'sm1'.</span>
+<span class="sd">    layer : int</span>
+<span class="sd">        Layer number for plotting.</span>
+<span class="sd">    scale : float</span>
+<span class="sd">        Scale displacements for the deformed plot.</span>
+<span class="sd">    radius : float</span>
+<span class="sd">        Radius of the pipe visualisation meshes.</span>
+<span class="sd">    cbar : list</span>
+<span class="sd">        Minimum and maximum limits on the colorbar.</span>
+<span class="sd">    iptype : str</span>
+<span class="sd">        'mean', 'max' or 'min' of an element's integration point data.</span>
+<span class="sd">    nodal : str</span>
+<span class="sd">        'mean', 'max' or 'min' for nodal values.</span>
+<span class="sd">    mode : int</span>
+<span class="sd">        mode or frequency number to plot, in case of modal, harmonic or buckling analysis.</span>
+<span class="sd">    colorbar_size : float</span>
+<span class="sd">        Scale on the size of the colorbar.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        None</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">        - Pipe visualisation of line elements is not based on the element section.</span>
 <span class="sd">    """</span>
     <span class="n">clear_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
 
@@ -563,29 +617,42 @@
                 <span class="n">vdx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cube_size</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">mode</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">""" Applies a base voxel material and texture to a cube for 4D visualisation.</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        - Texture ramping should be done manually afterwards.</span>
-<span class="sd">        - Voxel display works best with cube dimensions &gt;= 10.</span>
-<span class="sd">        - The absolute value is plotted, ranged between [0, 1].</span>
-
 <span class="sd">     Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        structure (obj): Structure object.</span>
-<span class="sd">        step (str): Name of the Step.</span>
-<span class="sd">        field (str): Field to plot, e.g. 'smises'.</span>
-<span class="sd">        layer (int): Layer to plot voxel cuboid on.</span>
-<span class="sd">        scale (float): Scale displacements for the deformed plot.</span>
-<span class="sd">        cbar (list): Minimum and maximum limits on the colorbar.</span>
-<span class="sd">        iptype (str): 'mean', 'max' or 'min' of an element's integration point data.</span>
-<span class="sd">        nodal (str): 'mean', 'max' or 'min' for nodal values.</span>
-<span class="sd">        vdx (float): Voxel spacing.</span>
-<span class="sd">        cube_size (list): x, y, and z lengths of the cube.</span>
-<span class="sd">        mode (int): mode or frequency number to plot, in case of modal, harmonic or buckling analysis.</span>
-<span class="sd">        colorbar_size (float): Scale on the size of the colorbar.</span>
+<span class="sd">    structure : obj</span>
+<span class="sd">        Structure object.</span>
+<span class="sd">    step : str</span>
+<span class="sd">        Name of the Step.</span>
+<span class="sd">    field : str</span>
+<span class="sd">        Field to plot, e.g. 'smises'.</span>
+<span class="sd">    layer : int</span>
+<span class="sd">        Layer to plot voxel cuboid on.</span>
+<span class="sd">    scale : float</span>
+<span class="sd">        Scale displacements for the deformed plot.</span>
+<span class="sd">    cbar : list</span>
+<span class="sd">        Minimum and maximum limits on the colorbar.</span>
+<span class="sd">    iptype : str</span>
+<span class="sd">        'mean', 'max' or 'min' of an element's integration point data.</span>
+<span class="sd">    nodal : str</span>
+<span class="sd">        'mean', 'max' or 'min' for nodal values.</span>
+<span class="sd">    vdx : float</span>
+<span class="sd">        Voxel spacing.</span>
+<span class="sd">    cube_size : list</span>
+<span class="sd">        x, y, and z lengths of the cube.</span>
+<span class="sd">    mode : int</span>
+<span class="sd">        mode or frequency number to plot, in case of modal, harmonic or buckling analysis.</span>
+<span class="sd">    colorbar_size : float</span>
+<span class="sd">        Scale on the size of the colorbar.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">        None</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">        - Texture ramping should be done manually afterwards.</span>
+<span class="sd">        - Voxel display works best with cube dimensions &gt;= 10.</span>
+<span class="sd">        - The absolute value is plotted, ranged between [0, 1].</span>
 <span class="sd">    """</span>
 
     <span class="c1"># Node and element data</span>
@@ -703,7 +770,7 @@
             
 
             
-                Last updated on Dec 18, 2017.
+                Last updated on Dec 26, 2017.
             
 
             

@@ -70,7 +70,7 @@ mdl.summary()
 
 # Run and extract data
 
-mdl.analyse_and_extract(software='opensees', fields=['u', 'rf', 'rm'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 'rm'])
 
 # Plot
 
