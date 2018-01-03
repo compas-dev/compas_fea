@@ -70,7 +70,7 @@ mdl.summary()
 
 # Run and extract data
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 'rm'])
+mdl.analyse_and_extract(software='opensees', fields=['u', 'rf', 'rm'])
 
 # Plot
 
@@ -78,11 +78,5 @@ rhino.plot_data(mdl, step='step_loads', field='um', scale=100)
 
 # Extract data
 
-nodal = mdl.results['step_loads']['nodal']
-for support in mdl.sets['supports']['selection']:
-    print('\nNode {0} RF'.format(support))
-    for i in 'xyz':
-        print(nodal['rf' + i][support])
-    print('\nNode {0} RM'.format(support))
-    for i in 'xyz':
-        print(nodal['rm' + i][support])
+print(mdl.get_nodal_results(step='step_loads', field='rfx', nodes='supports'))
+print(mdl.get_nodal_results(step='step_loads', field='rfz', nodes='supports'))

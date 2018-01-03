@@ -557,15 +557,12 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         dtype = 'element'
 
     basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc(basedir=basedir, tmpdir=path, mode=1)
+    xfunc = XFunc('post-process', basedir=basedir, tmpdir=path)
     xfunc.funcname = 'functions.postprocess'
     result = xfunc(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)
 
-    if result['error']:
-        print(result['error'])
-        print('\n***** Error during post-processing *****')
-    else:
-        toc, U, cnodes, fabs = result['data']
+    try:
+        toc, U, cnodes, fabs, fscaled, celements = result
         print('\n***** Data processed : {0} s *****'.format(toc))
 
         # Plot meshes
@@ -574,7 +571,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         beam_faces = [[0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]]
         block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
 
-        for nodes in elements:
+        for element, nodes in enumerate(elements):
             n = len(nodes)
 
             if n == 2:
@@ -593,8 +590,8 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
                        add_vectors(ep, xa_pr), add_vectors(ep, ya_pr),
                        add_vectors(ep, xa_mr), add_vectors(ep, ya_mr)]
                 guid = rs.AddMesh(pts, beam_faces)
-                col1 = cnodes[u]
-                col2 = cnodes[v]
+                col1 = celements[element]
+                col2 = celements[element]
                 rs.MeshVertexColors(guid, [col1] * 4 + [col2] * 4)
 
             elif n == 3:
@@ -652,6 +649,9 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         rs.CurrentLayer(rs.AddLayer('Default'))
         rs.LayerVisible(layer, False)
         rs.EnableRedraw(True)
+
+    except:
+        print('\n***** Error encountered *****')
 
 
 def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',

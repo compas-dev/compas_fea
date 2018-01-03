@@ -416,7 +416,7 @@ def normalise_data(data, cmin, cmax):
     return fscaled, fabs
 
 
-def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, iptype, nodal, scaled=None):
+def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, iptype, nodal):
     """ Post-process data from analysis results for given step and field.
 
     Parameters:
@@ -432,7 +432,6 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
         ctype (int): RGB color type, 1 or 255.
         iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
         nodal (str): 'mean', 'max' or 'min' for nodal values.
-        scaled (bool): Return scaled data values or not.
 
     Returns:
         float: Time taken to process data.
@@ -446,21 +445,27 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
     dU = hstack([array(ux)[:, newaxis], array(uy)[:, newaxis], array(uz)[:, newaxis]])
     U = [list(i) for i in list(array(nodes) + scale * dU)]
 
-    values = process_data(data=data, dtype=dtype, iptype=iptype, nodal=nodal, elements=elements, n=len(nodes))
+    values, values_ = process_data(data=data, dtype=dtype, iptype=iptype, nodal=nodal, elements=elements, n=len(nodes))
     fscaled, fabs = normalise_data(data=values, cmin=cbar[0], cmax=cbar[1])
+    if values_ is not None:
+        escaled, eabs = normalise_data(data=values_, cmin=cbar[0], cmax=cbar[1])
+    else:
+        escaled = None
 
     cnodes = colorbar(fsc=fscaled, input='array', type=ctype)
     cnodes_ = [list(i) for i in list(cnodes)]
+    if escaled is not None:
+        celements = colorbar(fsc=escaled, input='array', type=ctype)
+        celements_ = [list(i) for i in list(celements)]
+    else:
+        celements_ = []
 
     fscaled_ = [float(i) for i in list(fscaled)]
     fabs = float(fabs)
 
     toc = time() - tic
 
-    if scaled:
-        return toc, U, cnodes_, fabs, fscaled_
-    else:
-        return toc, U, cnodes_, fabs
+    return toc, U, cnodes_, fabs, fscaled_, celements_
     # print('debug')
     # return 0, 0, 0, 0
 
@@ -478,9 +483,11 @@ def process_data(data, dtype, iptype, nodal, elements, n):
 
     Returns:
         array: Data values at each node.
+        array: Data values at each element.
     """
     if dtype == 'nodal':
         values = array(data)[:, newaxis]
+        values_ = None
 
     elif dtype == 'element':
         m = len(list(data.keys()))
@@ -525,7 +532,7 @@ def process_data(data, dtype, iptype, nodal, elements, n):
                 elif nodal == 'min':
                     values[i] = min(dic[i])
 
-    return values
+    return values, values_
 
 
 def voxels(values, vmin, U, vdx, plot=None, indexing=None):

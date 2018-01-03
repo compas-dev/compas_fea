@@ -38,13 +38,15 @@ __all__ = [
 dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 
 
-def extract_out_data(structure):
+def extract_out_data(structure, fields):
     """ Extract data from the OpenSees .out files.
 
     Parameters
     ----------
     structure : obj
         Structure object.
+    fields : list
+        Requested fields output.
 
     Returns
     -------
@@ -58,35 +60,62 @@ def extract_out_data(structure):
     step = structure.steps_order[1]  # expand to other steps later
     structure.results[step] = {'nodal': {}, 'element': {}}
 
-    # Nodal data
+    # Data
 
     nodal_data = {}
-    for file in ['node_u', 'node_ur', 'node_rf', 'node_rm']:
-        try:
-            with open('{0}{1}.out'.format(temp, file), 'r') as f:
-                lines = f.readlines()
-            nodal_data[file] = [float(i) for i in lines[-1].split(' ')[1:]]
-        except:
-            print('***** {0}.out data not loaded *****'.format(file))
-
     nodal = structure.results[step]['nodal']
-    for prefix in ['u', 'ur', 'rf', 'rm']:
-        for dof in 'xyz':
-            nodal['{0}{1}'.format(prefix, dof)] = {}
-        nodal['{0}m'.format(prefix)] = {}
+    element_data = {}
+    element = structure.results[step]['element']
+    # ! element data only working for trusses
 
-    for prefix in ['u', 'ur', 'rf', 'rm']:
-        file = 'node_{0}'.format(prefix)
-        for node in structure.nodes:
+    for field in fields:
+
+        if field in ['u', 'ur', 'rf', 'rm']:
+
+            file = 'node_' + field
             try:
-                sum2 = 0
-                for c, dof in enumerate('xyz'):
-                    val = nodal_data[file][node * 3 + c]
-                    nodal['{0}{1}'.format(prefix, dof)][node] = val
-                    sum2 += val**2
-                nodal['{0}m'.format(prefix)][node] = sqrt(sum2)
+                with open('{0}{1}.out'.format(temp, file), 'r') as f:
+                    lines = f.readlines()
+                nodal_data[file] = [float(i) for i in lines[-1].split(' ')[1:]]
             except:
-                pass
+                print('***** {0}.out data not loaded *****'.format(file))
+
+            for dof in 'xyz':
+                nodal['{0}{1}'.format(field, dof)] = {}
+            nodal['{0}m'.format(field)] = {}
+
+            for node in structure.nodes:
+                try:
+                    sum2 = 0
+                    for c, dof in enumerate('xyz'):
+                        val = nodal_data[file][node * 3 + c]
+                        nodal['{0}{1}'.format(field, dof)][node] = val
+                        sum2 += val**2
+                    nodal['{0}m'.format(field)][node] = sqrt(sum2)
+                except:
+                    pass
+
+        elif field in ['sf']:
+
+            file = 'element_' + field
+            try:
+                with open('{0}{1}.out'.format(temp, file), 'r') as f:
+                    lines = f.readlines()
+                element_data[file] = [float(i) for i in lines[-1].split(' ')[1:]]
+            except:
+                print('***** {0}.out data not loaded *****'.format(file))
+
+            for dof in ['x']:  # needs updating for more than axial force
+                element['{0}{1}'.format(field, dof)] = {}
+
+            for i in structure.elements:
+                try:
+                    for c, dof in enumerate('x'):
+                        val = element_data[file][i + c]
+                        element['{0}{1}'.format(field, dof)][i] = {}
+                        element['{0}{1}'.format(field, dof)][i]['ip'] = val
+                except:
+                    pass
 
     toc = time() - tic
 
@@ -177,7 +206,7 @@ def input_generate(structure, fields, units='m'):
         input_write_nodes(f, nodes, units)
         input_write_bcs(f, structure, steps, displacements, ndof)
         input_write_elements(f, sections, properties, elements, sets, materials)
-        input_write_recorders(f, structure, ndof)
+        input_write_recorders(f, structure, ndof, fields)
         input_write_patterns(f, structure, steps, loads, sets, ndof)
 
     print('***** OpenSees input file generated: {0} *****\n'.format(filename))
@@ -376,7 +405,7 @@ def input_write_elements(f, sections, properties, elements, sets, materials):
                     Iyy = geometry['Iyy']
                     ex = ' '.join([str(k) for k in elements[select].axes['ex']])
                     f.write('#\n')
-                    f.write('geomTransf Linear {0} {1}\n'.format(select + 1, ex))
+                    f.write('geomTransf PDelta {0} {1}\n'.format(select + 1, ex))
                     f.write('element elasticBeamColumn {0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
                             n, i, j, A, E, G, J, Ixx, Iyy, n))
 
@@ -497,7 +526,7 @@ def input_write_patterns(f, structure, steps, loads, sets, ndof):
     f.write('#\n')
 
 
-def input_write_recorders(f, structure, ndof):
+def input_write_recorders(f, structure, ndof, fields):
     """ Writes the recorders information to the OpenSees .tcl file.
 
     Parameters
@@ -508,6 +537,8 @@ def input_write_recorders(f, structure, ndof):
         The Structure object to read from.
     ndof : int
         Number of degrees-of-freedom per node.
+    fields : list
+        Requested fields output.
 
     Returns
     -------
@@ -532,13 +563,18 @@ def input_write_recorders(f, structure, ndof):
     f.write('#\n')
 
     nodes = '1 {0}'.format(structure.node_count())
-    nodal = {
-        'node_u.out':  '1 2 3 disp',
-        'node_rf.out': '1 2 3 reaction',
-    }
+    nodal = {}
+
+    if 'u' in fields:
+        nodal['node_u.out'] = '1 2 3 disp'
+    if 'rf' in fields:
+        nodal['node_rf.out'] = '1 2 3 reaction'
+
     if ndof == 6:
-        nodal['node_ur.out'] = '4 5 6 disp'
-        nodal['node_rm.out'] = '4 5 6 reaction'
+        if 'ur' in fields:
+            nodal['node_ur.out'] = '4 5 6 disp'
+        if 'rm' in fields:
+            nodal['node_rm.out'] = '4 5 6 reaction'
 
     for key, item in nodal.items():
         f.write('recorder Node -file {0}{1} -time -nodeRange {2} -dof {3}\n'.format(temp, key, nodes, item))
@@ -551,10 +587,11 @@ def input_write_recorders(f, structure, ndof):
     f.write('#\n')
 
     elements = '1 {0}'.format(structure.element_count())
-    elemental = {
-        'element_sf.out': 'force',
+    elemental = {}
+
+    if 'sf' in fields:
+        elemental['element_sf.out'] = 'basicForces'
         # 'element_s-e': 'stressStrain',
-    }
     # Truss is 'axialForce,' 'forces,' 'localForce', deformations,'
 
     for key, item in elemental.items():

@@ -12,7 +12,7 @@ from compas_fea.structure import TrussSection
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__ = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
 __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
@@ -62,15 +62,15 @@ mdl.summary()
 
 # Run and extract data
 
-mdl.analyse_and_extract(software='opensees', fields=['u', 'rf', 's'])
+mdl.analyse_and_extract(software='opensees', fields=['u', 'rf', 'sf'])
 
 # Plot displacements
 
 rhino.plot_data(mdl, step='step_load', field='um')
 
-# Plot stress
+# Plot force
 
-#rhino.plot_data(mdl, step='step_load', field='smises', iptype='max', nodal='max')
+rhino.plot_data(mdl, step='step_load', field='sfx')
 
 print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))
-#print(mdl.get_element_results(step='step_load', field='smises', elements=[10]))
+print(mdl.get_element_results(step='step_load', field='sfx', elements=[10]))

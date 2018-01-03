@@ -1188,7 +1188,7 @@ Steps
             ansys.extract_rst_data(self, fields=fields, steps=steps)
 
         elif software == 'opensees':
-            opensees.extract_out_data(self)
+            opensees.extract_out_data(self, fields=fields)
 
     def analyse_and_extract(self, software, fields='u', exe=None, cpus=2, license='research'):
         """ Runs the analysis through the chosen FEA software/library and extracts data.
