@@ -590,8 +590,12 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
                        add_vectors(ep, xa_pr), add_vectors(ep, ya_pr),
                        add_vectors(ep, xa_mr), add_vectors(ep, ya_mr)]
                 guid = rs.AddMesh(pts, beam_faces)
-                col1 = celements[element]
-                col2 = celements[element]
+                if dtype == 'element':
+                    col1 = celements[element]
+                    col2 = celements[element]
+                elif dtype == 'nodal':
+                    col1 = cnodes[u]
+                    col2 = cnodes[v]
                 rs.MeshVertexColors(guid, [col1] * 4 + [col2] * 4)
 
             elif n == 3:

@@ -56,21 +56,27 @@ mdl.add_step(GeneralStep(name='step_bc', displacements=['disp_pinned']))
 mdl.add_step(GeneralStep(name='step_load', loads=['load_top']))
 mdl.steps_order = ['step_bc', 'step_load']
 
-# Structure summary`
+# Structure summary
 
 mdl.summary()
 
-# Run and extract data
+# Run and extract data (OpenSees)
 
 mdl.analyse_and_extract(software='opensees', fields=['u', 'rf', 'sf'])
 
-# Plot displacements
-
 rhino.plot_data(mdl, step='step_load', field='um')
-
-# Plot force
+print(mdl.get_nodal_results(step='step_load', field='um', nodes='nset_top'))
 
 rhino.plot_data(mdl, step='step_load', field='sfx')
-
-print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))
 print(mdl.get_element_results(step='step_load', field='sfx', elements=[10]))
+
+# Run and extract data (Abaqus)
+
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 's'])
+# Note: Abaqus returns stress data 's' for truss elements, not section forces 'sf'
+
+rhino.plot_data(mdl, step='step_load', field='sxx')
+print(mdl.get_element_results(step='step_load', field='sxx', elements=[10]))
+
+rhino.plot_data(mdl, step='step_load', field='rfm')
+print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))

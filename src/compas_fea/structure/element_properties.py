@@ -31,6 +31,9 @@ class ElementProperties(object):
 
     Returns:
         None
+
+    Notes:
+        - elements or elsets should be given, not both.
     """
 
     def __init__(self, material, section, elsets=None, elements=None, reinforcement={}):

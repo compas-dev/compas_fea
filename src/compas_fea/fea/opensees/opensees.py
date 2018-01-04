@@ -205,7 +205,7 @@ def input_generate(structure, fields, units='m'):
         input_write_heading(f, ndof)
         input_write_nodes(f, nodes, units)
         input_write_bcs(f, structure, steps, displacements, ndof)
-        input_write_elements(f, sections, properties, elements, sets, materials)
+        input_write_elements(f, sections, properties, elements, structure, materials)
         input_write_recorders(f, structure, ndof, fields)
         input_write_patterns(f, structure, steps, loads, sets, ndof)
 
@@ -334,7 +334,7 @@ def input_write_bcs(f, structure, steps, displacements, ndof):
     f.write('#\n')
 
 
-def input_write_elements(f, sections, properties, elements, sets, materials):
+def input_write_elements(f, sections, properties, elements, structure, materials):
     """ Writes the element and section information to the OpenSees .tcl file.
 
     Parameters
@@ -347,8 +347,8 @@ def input_write_elements(f, sections, properties, elements, sets, materials):
         ElementProperties objects from structure.element_properties.
     elements : dic
         Element objects from structure.elements.
-    sets : dic
-        Sets from structure.sets.
+    structure : obj
+        The Structure object.
     materials : dic
         Material objects from structure.materials.
 
@@ -368,9 +368,19 @@ def input_write_elements(f, sections, properties, elements, sets, materials):
     f.write('# -------------------------------------------------------------------- Elements\n')
 
     for key, property in properties.items():
-        elsets = property.elsets
+
         section = sections[property.section]
         material = materials[property.material]
+
+        if property.elements:
+            elset_name = 'elset_{0}'.format(key)
+            structure.add_set(name=elset_name, type='element', selection=property.elements)
+            elsets = [elset_name]
+        else:
+            elsets = property.elsets
+
+        sets = structure.sets
+
         material_index = material.index + 1
         stype = section.__name__
         geometry = section.geometry

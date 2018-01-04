@@ -378,7 +378,7 @@ def input_generate(structure, fields, units='m'):
         input_write_sets(f, sets)
         input_write_materials(f, materials)
         input_write_misc(f, misc)
-        input_write_properties(f, sections, properties, elements, sets)
+        input_write_properties(f, sections, properties, elements, structure)
         input_write_constraints(f, constraints)
         input_write_steps(f, structure, steps, loads, displacements, interactions, misc, fields)
 
@@ -632,7 +632,7 @@ def input_write_nodes(f, nodes, units):
     f.write('**\n')
 
 
-def input_write_properties(f, sections, properties, elements, sets):
+def input_write_properties(f, sections, properties, elements, structure):
     """ Writes the section information to the Abaqus .inp file.
 
     Parameters:
@@ -640,7 +640,7 @@ def input_write_properties(f, sections, properties, elements, sets):
         sections (dic): Section objects from structure.sections.
         properties (dic): ElementProperties objects from structure.element_properties.
         elements (dic): Element objects from structure.elements.
-        sets (dic): Sets from structure.sets.
+        structure (obj): The Structure object.
 
     Returns:
         None
@@ -673,8 +673,32 @@ def input_write_properties(f, sections, properties, elements, sets):
     for key, property in properties.items():
 
         material = property.material
-        elsets = property.elsets
         reinforcement = property.reinforcement
+
+        if property.elements:
+            elset_name = 'elset_{0}'.format(key)
+            structure.add_set(name=elset_name, type='element', selection=property.elements)
+            f.write('**\n')
+            f.write('*ELSET, ELSET={0}\n'.format(elset_name))
+            selection = [i + 1 for i in property.elements]
+            cnt = 0
+            cm = 9
+            for j in selection:
+                f.write(str(j))
+                if (cnt < cm) and (j != selection[-1]):
+                    f.write(',')
+                    cnt += 1
+                elif cnt >= cm:
+                    f.write('\n')
+                    cnt = 0
+                else:
+                    f.write('\n')
+            elsets = [elset_name]
+        else:
+            elsets = property.elsets
+
+        sets = structure.sets
+
         section = sections[property.section]
         stype = section.__name__
         geometry = section.geometry
