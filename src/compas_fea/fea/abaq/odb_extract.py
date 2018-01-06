@@ -2,8 +2,9 @@
 Abaqus .odb data extraction file and function.
 """
 
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 try:
     from job import *
@@ -15,7 +16,7 @@ import sys
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__ = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
 __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
@@ -49,14 +50,20 @@ element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'spf', 'rbfor']
 def extract_odb_data(temp, name, fields, steps='all'):
     """ Extracts data from the .odb file for requested steps.
 
-    Parameters:
-        temp (str): Folder containing the analysis .odb file.
-        name (str): Name of the Structure object and analysis files.
-        fields (list): Data field requests.
-        steps (list, str): Steps to extract data for, 'all' for all steps.
+    Parameters
+    ----------
+    temp : str
+        Folder containing the analysis .odb file.
+    name : str
+        Name of the Structure object and analysis files.
+    fields : list
+        Data field requests.
+    steps : list
+        tr): Steps to extract data for, 'all' for all steps.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     odb = openOdb(path='{0}{1}.odb'.format(temp, name))
 

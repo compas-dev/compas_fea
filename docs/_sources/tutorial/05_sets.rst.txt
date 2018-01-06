@@ -20,7 +20,7 @@ A set is a group of nodes, elements or surfaces that are given a string name. By
 
     mdl.add_set(name='elset_shell', type='element', selection=[7, 8], explode=False)
 
-Sets may be viewed and edited at any time through their string name keys, and then by changing the dictionary as needed.
+If the ``selection`` is not given as a list, but instead as a single integer (to represent one node for example), it will be converted into a list with one item. Sets may be viewed and edited at any time through their string name keys, and then by changing the dictionary as needed.
 
 .. code-block:: python
 

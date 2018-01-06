@@ -47,6 +47,21 @@ In Blender, the function with the same name is used slightly differently, as the
 
   blender.add_nodes_elements_from_layers(structure=mdl, line_type='TrussElement', mesh_type='ShellElement', layers=0)
 
+Adding nodes and elements from layers with the ``add_nodes_elements_from_layers()`` function will return two lists, the lists of node keys and element keys that were added.
+
+.. code-block:: python
+
+  from compas_fea.cad import rhino
+
+  nodes, elements = rhino.add_nodes_elements_from_layers(structure=mdl, line_type='TrussElement', layers=['elset_struts'])
+
+  >>> print(nodes)
+  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+
+  >>> print(elements)
+  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ... 49, 50, 51, 52, 53, 54, 55, 56, 57, 58]
+
+
 ----------
 Local axes
 ----------

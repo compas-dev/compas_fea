@@ -92,6 +92,10 @@ Giving a dictionary for the argument ``axes`` when adding the element will store
 
 .. code-block:: python
 
+    mdl.add_element(nodes=[1, 3], type='BeamElement', axes={'ex': [0, -1, 0]})
+
+.. code-block:: python
+
     mdl.add_element(nodes=[0, 1, 4], type='ShellElement', axes={'ex': [1, 1, 0], 'ey': [-1, 1, 0], 'ez': [0, 0, 1]})
 
 
@@ -124,4 +128,44 @@ Two dimensional elements such as membrane and shell elements are currently first
 Three dimensional solid elements are also currently first order (linear), they are defined by four nodes (**TetrahedronElement** with four sides **S1** to **S4**), six nodes (**PentahedronElement** with five sides **S1** to **S5**) or eight nodes (**HexahedronElement** with six sides **S1** to **S6**). The nodes are the corners of flat-faced elements and should be added in the order shown below. Intermediate edge nodes are currently not supported for second order (parabolic) elements. For a curved edge/face, use many straight segments/faces for modelling. There is one internal integration point for a **TetrahedronElement** (**ip1**). two for a **PentahedronElement** (**ip1** and **ip2**) and eight for a **HexahedronElement** (**ip1** to **ip8**).
 
 .. image:: /_images/solid-element.png
+   :scale: 50 %
+
+
+=======
+Meshing
+=======
+
+-----------
+2D elements
+-----------
+
+-----------
+3D elements
+-----------
+
+When discretising a solid volume into finite elements, the first step is usually to create a mesh that represents the outer-surface of the solid. This mesh is best represented as a triangulated mesh with somewhat equally sized triangles, as there are many algorithms for creating tetrahedron elements from this surface by adding them across the internal volume. The **compas_fea** package supports the use of `TetGen <http://wias-berlin.de/software/index.jsp?id=TetGen&lang=1>`_ via the Python wrapper `MeshPy <https://mathema.tician.de/software/meshpy/>`_, and is independent of any CAD environment. **MeshPy** can easily be installed via ``pip`` on Linux systems, while a ``.whl`` file is recommended for Windows from the excellent resource page `here <https://www.lfd.uci.edu/~gohlke/pythonlibs/#meshpy>`_ .
+
+A function has been set-up to facilitate converting a collection of triangles and vertex data representing the outer-surface, into tetrahedron elements. This is the function ``tets_from_vertices_faces()``, found in **compas_fea.utilities.functions**, where the ``vertices`` co-ordinates, the triangle ``faces``, and a ``volume`` constraint (optional) are given. The outputs of using the function are the points and indices of the tetrahedron corners. If you are in a CAD environment, you can use a previously constructed triangulated outer-surface mesh to create and automatically add tetrahedron elements to your **Structure** object. In Rhino, use **compas_fea.cad.rhino.add_tets_from_mesh()**, and in Blender, use **compas_fea.cad.blender.add_tets_from_mesh()**. These functions effectively wrap around ``tets_from_vertices_faces()`` and add the elements to the **Structure** object. These function calls could look like:
+
+.. code-block:: python
+
+    from compas_fea.cad import rhino
+
+    import rhinoscriptsyntax as rs
+
+    mesh = rs.ObjectsByLayer('mesh')[0]
+
+    rhino.add_tets_from_mesh(structure=mdl, name='elset_tets', mesh=mesh, draw_tets=True, layer='tets', volume=0.1)
+
+.. code-block:: python
+
+    from compas_fea.cad import blender
+
+    from compas_blender.utilities import get_objects
+
+    blender.add_tets_from_bmesh(structure=mdl, name='elset_tets', bmesh=get_objects(layer=0)[0], draw_tets=False, volume=0.002)
+
+For both cases: 1) the **Structure** object must be given via ``structure``, 2) the ``name`` of the element set to make after adding the tetrahedrons, and 3) whether to draw mesh representations of the tetrahedrons with the boolean ``draw_tets`` (they will be drawn on layer ``layer``). For the Rhino case, a mesh was gathered from layer ``'mesh'``, and for Blender the layer number 0. The tetrahedrons will have been added to ``structure.elements``, and the created element set stored under ``structure.sets``. **Note**: take care when plotting a dense collection of tetrahedrons with ``draw_tets=True``, as it can easily consume system memory. An example of some generated and plotted tetrahedrons is shown below.
+
+.. image:: /_images/tets.png
    :scale: 50 %

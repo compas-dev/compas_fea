@@ -1,39 +1,58 @@
 
-<!DOCTYPE html>
 
+
+<!DOCTYPE html>
 <html lang="en">
-<head>
-<title>compas_fea -- FEA package for compas</title>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
-<meta content="" name="author"/>
-<meta content="" name="description"/>
-<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" rel="stylesheet"/>
-<link href="https://compas-dev.github.io/css/github.css" rel="stylesheet" type="text/css"/>
-<link href="https://compas-dev.github.io/css/compas.css" rel="stylesheet" type="text/css"/>
-<link href="https://compas-dev.github.io/css/compas-reference.css" rel="stylesheet" type="text/css"/>
-<link href="truss_tower_blender.html" rel="next" title="truss_tower Blender"/>
-<link href="script_introduction_abaqus.html" rel="prev" title="script_introduction"/>
-<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
-</head>
-<body data-spy="scroll" data-target="#compas-localnav">
-<header class="navbar navbar-expand compas-navbar">
-<a class="navbar-brand" href="https://compas-dev.github.io/">
-<img alt="compas" height="36px" src="/images/compas_icon_blue-01.png" width="36px"/>
-</a>
-<ul class="navbar-nav">
-<li class="nav-item">
-<a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="http://forum.compas-framework.org/c/compas-fea">Forum</a>
-</li>
-</ul>
-</header>
-<div class="container-fluid compas-container">
-<div class="row flex-xl-nowrap">
-<main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
-<!-- 
+    <head>
+        <title>compas_fea -- FEA package for compas</title>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+        <meta name="author" content="" />
+        <meta name="description" content="" />
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/github.css" />
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas-reference.css" />
+
+        
+            <link rel="next" title="truss_tower Blender" href="truss_tower_blender.html" />
+        
+        
+        
+            <link rel="prev" title="script_introduction" href="script_introduction_abaqus.html" />
+        
+
+        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    </head>
+    <body data-spy="scroll" data-target="#compas-localnav">
+
+        <header class="navbar navbar-expand compas-navbar">
+            <a class="navbar-brand" href="https://compas-dev.github.io/">
+                <img src="/images/compas_icon_blue-01.png" width="36px" height="36px" alt="compas" />
+            </a>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://forum.compas-framework.org/c/compas-fea">Forum</a>
+                    </li>
+                </ul>
+        </header>
+        
+        <div class="container-fluid compas-container">
+            <div class="row flex-xl-nowrap">
+
+                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+
+                    
+
+                        <!-- 
         <nav class="breadcrumb">
             <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
             <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
@@ -45,13 +64,18 @@
             
         </nav>
  -->
-<div class="section">
+
+                        
+
+                        
+
+                        <div class="section" id="truss-frame-rhino">
 <span id="id1"></span><h1>truss_frame Rhino</h1>
 <p>This example works for: Abaqus.</p>
-<figure class="figure">
-<img alt="../images/truss_frame_rhino.png" class="figure-img img-fluid" src="../images/truss_frame_rhino.png"/>
-</figure>
-<div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="sd">"""An example compas_fea package use for truss elements."""</span>
+<div class="figure">
+<img alt="../_images/truss_frame_rhino.png" class="figure-img img-fluid" src="../_images/truss_frame_rhino.png" />
+</div>
+<div class="highlight-default"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="sd">&quot;&quot;&quot;An example compas_fea package use for truss elements.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">rhino</span>
 
@@ -66,63 +90,63 @@
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">TrussSection</span>
 
 
-<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">'Andrew Liew &lt;liew@arch.ethz.ch&gt;'</span><span class="p">]</span>
-<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">'Copyright 2017, BLOCK Research Group - ETH Zurich'</span>
-<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">'MIT License'</span>
-<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">'liew@arch.ethz.ch'</span>
+<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
+<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">&#39;Copyright 2017, BLOCK Research Group - ETH Zurich&#39;</span>
+<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
+<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
 
 
 <span class="c1"># Create empty Structure object</span>
 
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'truss_frame'</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">'C:/Temp/'</span><span class="p">)</span>
+<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;truss_frame&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;C:/Temp/&#39;</span><span class="p">)</span>
 
 <span class="c1"># Add truss elements</span>
 
-<span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'elset_main'</span><span class="p">,</span> <span class="s1">'elset_diag'</span><span class="p">,</span> <span class="s1">'elset_stays'</span><span class="p">]</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">line_type</span><span class="o">=</span><span class="s1">'TrussElement'</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="n">layers</span><span class="p">)</span>
+<span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;elset_main&#39;</span><span class="p">,</span> <span class="s1">&#39;elset_diag&#39;</span><span class="p">,</span> <span class="s1">&#39;elset_stays&#39;</span><span class="p">]</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">line_type</span><span class="o">=</span><span class="s1">&#39;TrussElement&#39;</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="n">layers</span><span class="p">)</span>
 
 <span class="c1"># Add node and element sets</span>
 
-<span class="n">layers</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'nset_pins'</span><span class="p">,</span> <span class="s1">'nset_load_v'</span><span class="p">,</span> <span class="s1">'nset_load_h'</span><span class="p">])</span>
+<span class="n">layers</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_load_v&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_load_h&#39;</span><span class="p">])</span>
 <span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="n">layers</span><span class="p">)</span>
 
 <span class="c1"># Add materials</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">Steel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'mat_steel'</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">Steel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">))</span>
 
 <span class="c1"># Add sections</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_sections</span><span class="p">([</span>
-    <span class="n">TrussSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_main'</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="mf">0.0200</span><span class="p">),</span>
-    <span class="n">TrussSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_diag'</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="mf">0.0050</span><span class="p">),</span>
-    <span class="n">TrussSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'sec_stays'</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="mf">0.0010</span><span class="p">)])</span>
+    <span class="n">TrussSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_main&#39;</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="mf">0.0200</span><span class="p">),</span>
+    <span class="n">TrussSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_diag&#39;</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="mf">0.0050</span><span class="p">),</span>
+    <span class="n">TrussSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_stays&#39;</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="mf">0.0010</span><span class="p">)])</span>
 
 <span class="c1"># Add element properties</span>
 
-<span class="n">ep1</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_steel'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_main'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">'elset_main'</span><span class="p">)</span>
-<span class="n">ep2</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_steel'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_diag'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">'elset_diag'</span><span class="p">)</span>
-<span class="n">ep3</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">'mat_steel'</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'sec_stays'</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">'elset_stays'</span><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'ep_main'</span><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'ep_diag'</span><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'ep_stays'</span><span class="p">)</span>
+<span class="n">ep1</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_main&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_main&#39;</span><span class="p">)</span>
+<span class="n">ep2</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_diag&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_diag&#39;</span><span class="p">)</span>
+<span class="n">ep3</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_stays&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_stays&#39;</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_main&#39;</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_diag&#39;</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_stays&#39;</span><span class="p">)</span>
 
 <span class="c1"># Add loads</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span>
-    <span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'load_pl_v'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">'nset_load_v'</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mi">250000</span><span class="p">),</span>
-    <span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'load_pl_h'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">'nset_load_h'</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">500000</span><span class="p">),</span>
-    <span class="n">GravityLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'load_gravity'</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">'elset_all'</span><span class="p">)])</span>
+    <span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_pl_v&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_load_v&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mi">250000</span><span class="p">),</span>
+    <span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_pl_h&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_load_h&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">500000</span><span class="p">),</span>
+    <span class="n">GravityLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;elset_all&#39;</span><span class="p">)])</span>
 
 <span class="c1"># Add displacements</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'disp_pinned'</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">'nset_pins'</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">))</span>
 
 <span class="c1"># Add steps</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_steps</span><span class="p">([</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'step_bc'</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">'disp_pinned'</span><span class="p">]),</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'step_loads'</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">'load_pl_v'</span><span class="p">,</span> <span class="s1">'load_pl_h'</span><span class="p">,</span> <span class="s1">'load_gravity'</span><span class="p">],</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)])</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'step_bc'</span><span class="p">,</span> <span class="s1">'step_loads'</span><span class="p">]</span>
+    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">]),</span>
+    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_pl_v&#39;</span><span class="p">,</span> <span class="s1">&#39;load_pl_h&#39;</span><span class="p">,</span> <span class="s1">&#39;load_gravity&#39;</span><span class="p">],</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)])</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="s1">&#39;step_loads&#39;</span><span class="p">]</span>
 
 <span class="c1"># Structure summary</span>
 
@@ -130,21 +154,23 @@
 
 <span class="c1"># Run and extract data</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">'abaqus'</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">'u'</span><span class="p">,</span> <span class="s1">'s'</span><span class="p">])</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">])</span>
 
 <span class="c1"># Plot displacements</span>
 
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_loads'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'um'</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_loads'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'ux'</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_loads'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'uz'</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;um&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;ux&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;uz&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
 <span class="c1"># Plot stress</span>
 
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">'step_loads'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">'smises'</span><span class="p">,</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">'max'</span><span class="p">,</span> <span class="n">nodal</span><span class="o">=</span><span class="s1">'max'</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;smises&#39;</span><span class="p">,</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="n">nodal</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </code></pre></div>
-
 </div>
-<!-- <nav class="compas-sideways">
+</div>
+
+                        
+                        <!-- <nav class="compas-sideways">
                             
                                 <a href="script_introduction_abaqus.html" class="btn btn-primary compas-prev" role="button">script_introduction</a>
                             
@@ -153,20 +179,31 @@
                                 <a href="truss_tower_blender.html" class="btn btn-primary compas-next" role="button">truss_tower Blender</a>
                             
                         </nav> -->
-</main>
-<div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation">
-<div class="navbar-light">
-<form action="../search.html" class="d-flex compas-searchbox" id="" method="get">
-<input class="form-control" name="q" placeholder="Search docs" type="text"/>
-<input name="check_keywords" type="hidden" value="yes"/>
-<input name="area" type="hidden" value="default"/>
-<button aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler d-md-none compas-navigation-toggler" data-target="#compas-navigation" data-toggle="collapse" type="button">
-<span class="navbar-toggler-icon"></span>
-</button>
-</form>
-<div class="navbar-expand-md">
-<div class="collapse navbar-collapse compas-navigation" id="compas-navigation">
-<ul class="nav flex-column active">
+
+                    
+
+                </main>
+
+                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
+                    <div class="navbar-light">
+
+                        <form id="" class="d-flex compas-searchbox" action="../search.html" method="get">
+                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
+                            <input type="hidden" name="check_keywords" value="yes" />
+                            <input type="hidden" name="area" value="default" />
+
+                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                        </form>
+
+                        
+                        
+
+                            <div class="navbar-expand-md">
+                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
+
+                                <ul class="nav flex-column active">
 <li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../examples.html">Examples</a><ul class="nav active">
@@ -195,33 +232,48 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
 </ul>
-</div>
-</div>
-</div>
-</div>
-<div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
-<ul class="nav flex-column" id="compas-localnav">
+
+
+                                </div>
+                            </div>
+
+                        
+
+                    </div>
+                </div>
+                
+                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+
+                    
+
+                    <ul class="nav flex-column" id="compas-localnav">
 <li class="nav-item"><a class="nav-link reference internal" href="#">truss_frame Rhino</a></li>
 </ul>
-</div>
-</div>
-</div>
-<footer class="compas-footer">
+
+
+                </div>
+            </div>
+        </div>
+
+        <footer class="compas-footer">
             
                 
-                    © Copyright 2017, Block Research Group.
+                    &#169; Copyright 2017, Block Research Group.
                 
             
 
             
-                Last updated on Dec 26, 2017.
+                Last updated on Jan 06, 2018.
             
 
             
                 Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
             
         </footer>
-<script type="text/javascript">
+
+        
+
+            <script type="text/javascript">
 var DOCUMENTATION_OPTIONS = {
     URL_ROOT:    '',
     VERSION:     '',
@@ -231,16 +283,21 @@ var DOCUMENTATION_OPTIONS = {
     SOURCELINK_SUFFIX: '.txt'
 };
             </script>
-<script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
-<script src="https://compas-dev.github.io/js/underscore.js"></script>
-<script src="https://compas-dev.github.io/js/doctools.js"></script>
-<!-- <script src="https://compas-dev.github.io/js/searchtools_.js"></script> -->
-<script>
+
+            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+            
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+
+            <script src="https://compas-dev.github.io/js/underscore.js"></script>
+            <script src="https://compas-dev.github.io/js/doctools.js"></script>
+            <!-- <script src="https://compas-dev.github.io/js/searchtools_.js"></script> -->
+
+            <script>
 hljs.initHighlightingOnLoad();
 anchors.add();
 
@@ -283,5 +340,7 @@ copy_code.on('error', function(event) {
     }, 2000);
 });
             </script>
-</body>
+
+        
+    </body>
 </html>

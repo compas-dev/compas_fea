@@ -8,7 +8,7 @@ from __future__ import print_function
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__ = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
 __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
@@ -24,13 +24,18 @@ __all__ = [
 def input_generate(structure, fields, units='m'):
     """ Creates the Sofistik .dat file from the Structure object.
 
-    Parameters:
-        structure (obj): The Structure object to read from.
-        fields (list): Data field requests.
-        units (str): Units of the nodal co-ordinates 'm','cm','mm'.
+    Parameters
+    ----------
+    structure : obj
+        The Structure object to read from.
+    fields : list
+        Data field requests.
+    units : str
+        Units of the nodal co-ordinates 'm','cm','mm'.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     filename = '{0}{1}.dat'.format(structure.path, structure.name)
 
@@ -56,11 +61,14 @@ def input_generate(structure, fields, units='m'):
 def input_write_heading(f):
     """ Creates the Sofistik .dat file heading.
 
-    Parameters:
-        f (obj): The open file object for the .dat file.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .dat file.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     f.write('$ -----------------------------------------------------------------------------\n')
     f.write('$ --------------------------------------------------------------------- Heading\n')
@@ -79,12 +87,16 @@ def input_write_heading(f):
 def input_write_materials(f, materials):
     """ Writes materials to the Sofistik .dat file.
 
-    Parameters:
-        f (obj): The open file object for the .dat file.
-        materials (dic): Material objects from structure.materials.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .dat file.
+    materials : dic
+        Material objects from structure.materials.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     f.write('$ -----------------------------------------------------------------------------\n')
     f.write('$ ------------------------------------------------------------------- Materials\n')
@@ -120,18 +132,28 @@ def input_write_materials(f, materials):
 def input_write_nodes_elements(f, nodes, elements, sections, properties, materials, sets, units):
     """ Writes the nodal co-ordinates and element information to the Sofistik .dat file.
 
-    Parameters:
-        f (obj): The open file object for the .dat file.
-        nodes (dic): Node dictionary from structure.nodes.
-        elements (dic): Element dictionary from structure.elements.
-        sections (dic): Section objects from structure.sections.
-        properties (dic): ElementProperties objects from structure.element_properties.
-        materials (dic): Material objects from structure.materials.
-        sets (dic): Sets dictionary from structure.sets.
-        units (str): Units of the nodal co-ordinates.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .dat file.
+    nodes : dic
+        Node dictionary from structure.nodes.
+    elements : dic
+        Element dictionary from structure.elements.
+    sections : dic
+        Section objects from structure.sections.
+    properties : dic
+        ElementProperties objects from structure.element_properties.
+    materials : dic
+        Material objects from structure.materials.
+    sets : dic
+        Sets dictionary from structure.sets.
+    units : str
+        Units of the nodal co-ordinates.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     cl = {'m': 1., 'cm': 0.01, 'mm': 0.001}
 
@@ -222,4 +244,3 @@ def input_write_nodes_elements(f, nodes, elements, sections, properties, materia
 
 #     GRP 1 BASE 10000
 # ABOV  POSX        0.060000        0.080000
-

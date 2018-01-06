@@ -21,7 +21,7 @@ import os
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__ = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
 __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
@@ -49,13 +49,18 @@ element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
 def abaqus_launch_process(structure, exe, cpus):
     """ Runs the analysis through Abaqus.
 
-    Parameters:
-        structure (obj): Structure object.
-        exe (str): Full terminal command to bypass subprocess defaults.
-        cpus (int): Number of CPU cores to use.
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    exe : str
+        Full terminal command to bypass subprocess defaults.
+    cpus : int
+        Number of CPU cores to use.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     name = structure.name
@@ -136,13 +141,18 @@ def abaqus_launch_process(structure, exe, cpus):
 def extract_odb_data(structure, fields, exe):
     """ Extract data from the Abaqus .odb file.
 
-    Parameters:
-        structure (obj): Structure object.
-        fields (list): Data field requests.
-        exe (str): Full terminal command to bypass subprocess defaults.
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    fields : list
+        Data field requests.
+    exe : str
+        Full terminal command to bypass subprocess defaults.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     name = structure.name
@@ -206,12 +216,16 @@ def extract_odb_data(structure, fields, exe):
 def input_write_constraints(f, constraints):
     """ Writes the constraints information to the Abaqus .inp file.
 
-    Parameters:
-        f (obj): The open file object for the .inp file.
-        constraints (dic): Constraint dictionary from structure.constraints.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .inp file.
+    constraints : dic
+        Constraint dictionary from structure.constraints.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** ----------------------------------------------------------------- Constraints\n')
@@ -242,27 +256,32 @@ def input_write_constraints(f, constraints):
 def input_write_elements(f, elements):
     """ Writes the element information to the Abaqus .inp file.
 
-    Note:
-        - T3D2    truss     2 nodes elset_T3D2.
-        - CONN3D2 connector 2 nodes elset_CONN3D2
-        - B31     beam      2 nodes elset_B31.
-        - S3      shell     3 nodes elset_S3.
-        - S4      shell     4 nodes elset_S4.
-        - M3D3    membrane  3 nodes elset_M3D3.
-        - M3D4    membrane  4 nodes elset_M3D4.
-        - C3D4    solid     4 nodes elset_C3D4.
-        - C3D6    solid     6 nodes elset_C3D6.
-        - C3D8    solid     8 nodes elset_C3D8.
-        - DC3D4   solid     4 nodes elset_DC3D4 thermal.
-        - DC3D6   solid     6 nodes elset_DC3D6 thermal.
-        - DC3D8   solid     8 nodes elset_DC3D8 thermal.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .inp file.
+    elements : dic
+        Elements from structure.elements.
 
-    Parameters:
-        f (obj): The open file object for the .inp file.
-        elements (dic): Elements from structure.elements.
+    Returns
+    -------
+    None
 
-    Returns:
-        None
+    Notes
+    -----
+    - T3D2    truss     2 nodes elset_T3D2.
+    - CONN3D2 connector 2 nodes elset_CONN3D2
+    - B31     beam      2 nodes elset_B31.
+    - S3      shell     3 nodes elset_S3.
+    - S4      shell     4 nodes elset_S4.
+    - M3D3    membrane  3 nodes elset_M3D3.
+    - M3D4    membrane  4 nodes elset_M3D4.
+    - C3D4    solid     4 nodes elset_C3D4.
+    - C3D6    solid     6 nodes elset_C3D6.
+    - C3D8    solid     8 nodes elset_C3D8.
+    - DC3D4   solid     4 nodes elset_DC3D4 thermal.
+    - DC3D6   solid     6 nodes elset_DC3D6 thermal.
+    - DC3D8   solid     8 nodes elset_DC3D8 thermal.
     """
 
     # Sort elements
@@ -344,13 +363,18 @@ def input_write_elements(f, elements):
 def input_generate(structure, fields, units='m'):
     """ Creates the Abaqus .inp file from the Structure object.
 
-    Parameters:
-        structure (obj): The Structure object to read from.
-        fields (list): Data field requests.
-        units (str): Units of the nodal co-ordinates 'm','cm','mm'.
+    Parameters
+    ----------
+    structure : obj
+        The Structure object to read from.
+    fields : list
+        Data field requests.
+    units : str
+        Units of the nodal co-ordinates 'm','cm','mm'.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     filename = '{0}{1}.inp'.format(structure.path, structure.name)
 
@@ -388,11 +412,14 @@ def input_generate(structure, fields, units='m'):
 def input_write_heading(f):
     """ Creates the Abaqus .inp file heading.
 
-    Parameters:
-        f (obj): The open file object for the .inp file.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .inp file.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** --------------------------------------------------------------------- Heading\n')
@@ -415,12 +442,16 @@ def input_write_heading(f):
 def input_write_materials(f, materials):
     """ Writes materials to the Abaqus .inp file.
 
-    Parameters:
-        f (obj): The open file object for the .inp file.
-        materials (dic): Material objects from structure.materials.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .inp file.
+    materials : dic
+        Material objects from structure.materials.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** ------------------------------------------------------------------- Materials\n')
@@ -568,12 +599,16 @@ def input_write_materials(f, materials):
 def input_write_misc(f, misc):
     """ Writes misc class info to the Abaqus .inp file.
 
-    Parameters:
-        f (obj): The open file object for the .inp file.
-        misc (dic): Misc objects from structure.misc.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .inp file.
+    misc : dic
+        Misc objects from structure.misc.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** ------------------------------------------------------------------------ Misc\n')
@@ -604,16 +639,22 @@ def input_write_misc(f, misc):
 def input_write_nodes(f, nodes, units):
     """ Writes the nodal co-ordinates information to the Abaqus .inp file.
 
-    Note:
-        - Node set 'nset_all' is automatically created containing all nodes.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .inp file.
+    nodes : dic
+        Node dictionary from structure.nodes.
+    units : str
+        Units of the nodal co-ordinates.
 
-    Parameters:
-        f (obj): The open file object for the .inp file.
-        nodes (dic): Node dictionary from structure.nodes.
-        units (str): Units of the nodal co-ordinates.
+    Returns
+    -------
+    None
 
-    Returns:
-        None
+    Notes
+    -----
+    - Node set 'nset_all' is automatically created containing all nodes.
     """
     cl = {'m': 1., 'cm': 0.01, 'mm': 0.001}
 
@@ -635,15 +676,22 @@ def input_write_nodes(f, nodes, units):
 def input_write_properties(f, sections, properties, elements, structure):
     """ Writes the section information to the Abaqus .inp file.
 
-    Parameters:
-        f (obj): The open file object for the .inp file.
-        sections (dic): Section objects from structure.sections.
-        properties (dic): ElementProperties objects from structure.element_properties.
-        elements (dic): Element objects from structure.elements.
-        structure (obj): The Structure object.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .inp file.
+    sections : dic
+        Section objects from structure.sections.
+    properties : dic
+        ElementProperties objects from structure.element_properties.
+    elements : dic
+        Element objects from structure.elements.
+    structure : obj
+        The Structure object.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     # Sections
@@ -838,15 +886,20 @@ def input_write_properties(f, sections, properties, elements, structure):
 def input_write_sets(f, sets):
     """ Creates the Abaqus .inp file node sets NSETs and element sets ELSETs.
 
-    Note:
-        - Restriction in Abaqus to 10 entries written per line in the .inp file.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .inp file.
+    sets : dic
+        Sets dictionary from structure.sets.
 
-    Parameters:
-        f (obj): The open file object for the .inp file.
-        sets (dic): Sets dictionary from structure.sets.
+    Returns
+    -------
+    None
 
-    Returns:
-        None
+    Notes
+    -----
+    - Restriction in Abaqus to 10 entries written per line in the .inp file.
     """
     cm = 9
     for key, set in sets.items():
@@ -900,21 +953,32 @@ def input_write_sets(f, sets):
 def input_write_steps(f, structure, steps, loads, displacements, interactions, misc, fields):
     """ Writes step information to the Abaqus .inp file.
 
-    Note:
-        - Steps are analysed in the order given by structure.steps_order.
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .inp file.
+    structure : obj
+        Struture object.
+    steps : dic
+        Step objects from structure.steps.
+    loads : dic
+        Load objects from structure.loads.
+    displacements : dic
+        Displacement objects from structure.displacements.
+    interactions : dic
+        Interaction objects from structure.interactions.
+    misc : dic
+        Misc objects from structure.misc.
+    fields : list
+        Data field requests.
 
-    Parameters:
-        f (obj): The open file object for the .inp file.
-        structure (obj): Struture object.
-        steps (dic): Step objects from structure.steps.
-        loads (dic): Load objects from structure.loads.
-        displacements (dic): Displacement objects from structure.displacements.
-        interactions (dic): Interaction objects from structure.interactions.
-        misc (dic): Misc objects from structure.misc.
-        fields (list): Data field requests.
+    Returns
+    -------
+    None
 
-    Returns:
-        None
+    Notes
+    -----
+    - Steps are analysed in the order given by structure.steps_order.
     """
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** ----------------------------------------------------------------------- Steps\n')

@@ -21,6 +21,20 @@ To associate **Material** and **Section** objects to specific elements, an **Ele
     ep = ElementProperties(material='mat_elastic', section='sec_circ', elsets='elset_beams')
     mdl.add_element_properties(ep, name='ep_circ')
 
+Giving the list ``elements`` will make an intermediate element set (effectively translating it to an ``elset``) during the file writing with name ``'elset_{element_property name}'``. This is then used as an element set for writing out the elements selection in the file writing process for OpenSees and Abaqus.
+
+.. code-block:: python
+
+    from compas_fea.structure import ElementProperties
+
+    ep = Properties(material='mat_elastic', section='sec_truss', elements=[0, 1, 2])
+    mdl.add_element_properties(ep, name='ep_strut')
+
+    mdl.write_input_file(software='abaqus')
+
+    >>> print(mdl.sets['elset_ep_strut'])
+    {'selection': [0, 1, 2], 'type': 'element', 'explode': False}
+
 **Note**: A **SpringElement** does not require a material to be defined, and can be handed ``None``. A spring will define itself through its **SpringSection**.
 
 
