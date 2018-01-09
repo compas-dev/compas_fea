@@ -954,25 +954,20 @@
             <span class="n">displacement</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">displacements</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="n">displacement</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">displacement</span>
 
-    <span class="k">def</span> <span class="nf">add_element_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_properties</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">add_element_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_properties</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Adds an ElementProperties object to structure.element_properties.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        element_properties : obj</span>
 <span class="sd">            The ElementProperties object.</span>
-<span class="sd">        name : str</span>
-<span class="sd">            Name for index.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
-            <span class="n">index</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">element_properties</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">element_properties</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">element_properties</span>
+        <span class="n">element_properties</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">element_properties</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">element_properties</span><span class="p">[</span><span class="n">element_properties</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">element_properties</span>
 
     <span class="k">def</span> <span class="nf">add_interaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interaction</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Adds an Interaction object to structure.interactions.</span>
@@ -1504,7 +1499,7 @@
             
 
             
-                Last updated on Jan 06, 2018.
+                Last updated on Jan 09, 2018.
             
 
             

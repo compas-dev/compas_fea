@@ -3,14 +3,15 @@ compas_fea.structure.load : Load class.
 Apply point loads and distributed loads to nodes and elements.
 """
 
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
@@ -31,15 +32,22 @@ class Load(object):
 
     """ Initialises base Load object for use in finite element analysis.
 
-    Parameters:
-        name (str): Name of the Load object.
-        axes (str): Load applied via 'local' or 'global' axes.
-        components (dic): Load components.
-        nodes (str, list): Node set or nodes the load is applied to.
-        elements (str, list): Element set or elements the load is applied to.
+    Parameters
+    ----------
+    name : str
+        Name of the Load object.
+    axes : str
+        Load applied via 'local' or 'global' axes.
+    components : dic
+        Load components.
+    nodes : str, list
+        Node set or nodes the load is applied to.
+    elements : str, list
+        Element set or elements the load is applied to.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, axes='global', components={}, nodes=[], elements=[]):
@@ -54,13 +62,18 @@ class PrestressLoad(Load):
 
     """ Pre-stress [units: N/m2] applied to element(s).
 
-    Parameters:
-        name (str): Name of the PrestressLoad object.
-        elements (str, list): ELSET or elements the prestress is applied to.
-        sxx (float): Value of prestress for stress component sxx.
+    Parameters
+    ----------
+    name : str
+        Name of the PrestressLoad object.
+    elements : str, list
+        ELSET or elements the prestress is applied to.
+    sxx : float
+        Value of prestress for stress component sxx.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, elements, sxx=0):
@@ -73,18 +86,28 @@ class PointLoad(Load):
 
     """ Concentrated forces and moments [units:N, Nm] applied to node(s).
 
-    Parameters:
-        name (str): Name of the PointLoad object.
-        nodes (str, list): NSET or nodes the load is applied to.
-        x (float): x component of force.
-        y (float): y component of force.
-        z (float): z component of force.
-        xx (float): xx component of moment.
-        yy (float): yy component of moment.
-        zz (float): zz component of moment.
+    Parameters
+    ----------
+    name : str
+        Name of the PointLoad object.
+    nodes : str, list
+        NSET or nodes the load is applied to.
+    x : float
+        x component of force.
+    y : float
+        y component of force.
+    z : float
+        z component of force.
+    xx : float
+        xx component of moment.
+    yy : float
+        yy component of moment.
+    zz : float
+        zz component of moment.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, nodes, x=0, y=0, z=0, xx=0, yy=0, zz=0):
@@ -97,18 +120,28 @@ class LineLoad(Load):
 
     """ Distributed line forces and moments [units:N/m or Nm/m] applied to element(s).
 
-    Parameters:
-        name (str): Name of the LineLoad object.
-        elements (str, list): ELSET or elements the load is applied to.
-        x (float): x component of force / length.
-        y (float): y component of force / length.
-        z (float): z component of force / length.
-        xx (float): xx component of moment / length.
-        yy (float): yy component of moment / length.
-        zz (float): zz component of moment / length.
+    Parameters
+    ----------
+    name : str
+        Name of the LineLoad object.
+    elements : str
+        ist): ELSET or elements the load is applied to.
+    x : float
+        x component of force / length.
+    y : float
+        y component of force / length.
+    z : float
+        z component of force / length.
+    xx : float
+        xx component of moment / length.
+    yy : float
+        yy component of moment / length.
+    zz : float
+        zz component of moment / length.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, elements, x=0, y=0, z=0, xx=0, yy=0, zz=0, axes='local'):
@@ -121,15 +154,22 @@ class AreaLoad(Load):
 
     """ Distributed area force [units:N/m2] applied to element(s).
 
-    Parameters:
-        name (str): Name of the AreaLoad object.
-        elements (str, list): ELSET or elements the load is applied to.
-        x (float): x component of pressure.
-        y (float): y component of pressure.
-        z (float): z component of pressure.
+    Parameters
+    ----------
+    name : str
+        Name of the AreaLoad object.
+    elements : str, list
+        ELSET or elements the load is applied to.
+    x : float
+        x component of pressure.
+    y : float
+        y component of pressure.
+    z : float
+        z component of pressure.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, elements, x=0, y=0, z=0):
@@ -142,15 +182,22 @@ class BodyLoad(Load):
 
     """ Distributed body force [units:N/m3] applied to element(s).
 
-    Parameters:
-        name (str): Name of the BodyLoad object.
-        elements (str, list): ELSET or elements the load is applied to.
-        x (float): x component of body load.
-        y (float): y component of body load.
-        z (float): z component of body load.
+    Parameters
+    ----------
+    name : str
+        Name of the BodyLoad object.
+    elements : str, list
+        ELSET or elements the load is applied to.
+    x : float
+        x component of body load.
+    y : float
+        y component of body load.
+    z : float
+        z component of body load.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, elements, x=0, y=0, z=0):
@@ -163,16 +210,24 @@ class GravityLoad(Load):
 
     """ Gravity load [units:N/m3] applied to element(s).
 
-    Parameters:
-        name (str): Name of the GravityLoad object.
-        elements (str, list): ELSET or elements the load is applied to.
-        g (float): Value of gravitational acceleration.
-        x (bool): Apply to x direction.
-        y (bool): Apply to y direction.
-        z (bool): Apply to z direction.
+    Parameters
+    ----------
+    name : str
+        Name of the GravityLoad object.
+    elements : str, list
+        ELSET or elements the load is applied to.
+    g : float
+        Value of gravitational acceleration.
+    x : bool
+        Apply to x direction.
+    y : bool
+        Apply to y direction.
+    z : bool
+        Apply to z direction.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, elements, g=-9.81, x=False, y=False, z=True):
@@ -186,16 +241,22 @@ class AcousticLoad(Load):
 
     """ Acoustic load.
 
-    Note:
-        - Placeholder for an acoustic load.
+    Parameters
+    ----------
+    name : str
+        Name of the AcousticLoad object.
+    elements : str, list
+        ELSET or elements the load is applied to.
+    axes : str
+        AcousticLoad applied via 'local' or 'global' axes.
 
-    Parameters:
-        name (str): Name of the AcousticLoad object.
-        elements (str, list): ELSET or elements the load is applied to.
-        axes (str): AcousticLoad applied via 'local' or 'global' axes.
+    Returns
+    -------
+    None
 
-    Returns:
-        None
+    Notes
+    -----
+    - Placeholder for an acoustic load.
     """
 
     def __init__(self, name, elements, axes='global'):
@@ -210,20 +271,30 @@ class TributaryLoad(Load):
 
     """ Tributary area pressure loads applied to nodes.
 
-    Note:
-        - The load components are loads per unit area [N/m2].
+    Parameters
+    ----------
+    structure : obj
+        Structure class.
+    name : str
+        Name of the TributaryLoad object.
+    mesh : str
+        Tributary Mesh datastructure.
+    x : float
+        x component of pressure.
+    y : float
+        y component of pressure.
+    z : float
+        z component of pressure.
+    axes : str
+        TributaryLoad applied via 'local' or 'global' axes.
 
-    Parameters:
-        structure (obj): Structure class.
-        name (str): Name of the TributaryLoad object.
-        mesh (str): Tributary Mesh datastructure.
-        x (float): x component of pressure.
-        y (float): y component of pressure.
-        z (float): z component of pressure.
-        axes (str): TributaryLoad applied via 'local' or 'global' axes.
+    Returns
+    -------
+    None
 
-    Returns:
-        None
+    Notes
+    -----
+    - The load components are loads per unit area [N/m2].
     """
 
     def __init__(self, structure, name, mesh, x=0, y=0, z=0, axes='global'):
@@ -242,18 +313,28 @@ class HarmonicPointLoad(Load):
 
     """ Harmonic concentrated forces and moments [units:N, Nm] applied to node(s).
 
-    Parameters:
-        name (str): Name of the HarmonicPointLoad object.
-        nodes (str, list): NSET or nodes the load is applied to.
-        x (float): x component of force.
-        y (float): y component of force.
-        z (float): z component of force.
-        xx (float): xx component of moment.
-        yy (float): yy component of moment.
-        zz (float): zz component of moment.
+    Parameters
+    ----------
+    name : str
+        Name of the HarmonicPointLoad object.
+    nodes : str, list
+        NSET or nodes the load is applied to.
+    x : float
+        x component of force.
+    y : float
+        y component of force.
+    z : float
+        z component of force.
+    xx : float
+        xx component of moment.
+    yy : float
+        yy component of moment.
+    zz : float
+        zz component of moment.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, nodes, x=0, y=0, z=0, xx=0, yy=0, zz=0):

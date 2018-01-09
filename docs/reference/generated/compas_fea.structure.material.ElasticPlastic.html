@@ -80,27 +80,25 @@
 <em class="property">class </em><code class="descclassname">compas_fea.structure.material.</code><code class="descname">ElasticPlastic</code><span class="sig-paren">(</span><em>name</em>, <em>E</em>, <em>v</em>, <em>p</em>, <em>f</em>, <em>e</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/material.html#ElasticPlastic"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Elastic and plastic, isotropic and homogeneous material.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul>
-<li><p>Plastic stress–strain pairs applies to both compression and tension.</p></li>
-</ul>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul>
 <li><p><strong>name</strong> (<em>str</em>) – Material name.</p></li>
-<li><p><strong>E</strong> (<em>float, list</em>) – Young’s modulus E.</p></li>
-<li><p><strong>v</strong> (<em>float, list</em>) – Poisson’s ratio v.</p></li>
-<li><p><strong>p</strong> (<em>float, list</em>) – Density.</p></li>
-<li><p><strong>f</strong> (<em>list</em>) – Plastic stress data (positive tension values).</p></li>
-<li><p><strong>e</strong> (<em>list</em>) – Plastic strain data (positive tension values).</p></li>
+<li><p><strong>E</strong> (<em>float, list</em>) – Young’s modulus E [Pa].</p></li>
+<li><p><strong>v</strong> (<em>float, list</em>) – Poisson’s ratio v [-].</p></li>
+<li><p><strong>p</strong> (<em>float, list</em>) – Density [kg/m3].</p></li>
+<li><p><strong>f</strong> (<em>list</em>) – Plastic stress data (positive tension values) [Pa].</p></li>
+<li><p><strong>e</strong> (<em>list</em>) – Plastic strain data (positive tension values) [-].</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
+<dd class="field-even"><p><em>None</em></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul>
+<li><p>Plastic stress–strain pairs applies to both compression and tension.</p></li>
+</ul>
 <p class="rubric">Methods</p>
 <table class="longtable docutils">
 <colgroup>
@@ -198,7 +196,7 @@
             
 
             
-                Last updated on Jan 06, 2018.
+                Last updated on Jan 09, 2018.
             
 
             

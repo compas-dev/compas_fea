@@ -18,11 +18,7 @@
         <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas-reference.css" />
 
         
-            <link rel="next" title="beam_frame Rhino" href="beam_frame_rhino.html" />
         
-        
-        
-            <link rel="prev" title="beam_simple Rhino" href="beam_simple_rhino.html" />
         
 
         <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -58,10 +54,6 @@
             <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
             <a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
             
-                
-                    <a class="breadcrumb-item" href="../examples.html" accesskey="U">examples</a>
-                
-            
         </nav>
  -->
 
@@ -75,113 +67,12 @@
 <div class="figure">
 <img alt="../_images/beam_tree_rhino.png" class="figure-img img-fluid" src="../_images/beam_tree_rhino.png" />
 </div>
-<div class="highlight-default"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="sd">&quot;&quot;&quot;An example compas_fea package use for beams in a tree structure.&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">rhino</span>
-
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElasticIsotropic</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElasticPlastic</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralStep</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GravityLoad</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PinnedDisplacement</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">RectangularSection</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">RollerDisplacementZ</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">TrapezoidalSection</span>
-
-
-<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
-<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">&#39;Copyright 2017, BLOCK Research Group - ETH Zurich&#39;</span>
-<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
-<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
-
-
-<span class="c1"># Create empty Structure object</span>
-
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;beam_tree&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;C:/Temp/&#39;</span><span class="p">)</span>
-
-<span class="c1"># Add beam elements</span>
-
-<span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;struts_mushroom&#39;</span><span class="p">,</span> <span class="s1">&#39;struts_bamboo&#39;</span><span class="p">,</span> <span class="s1">&#39;joints_mushroom&#39;</span><span class="p">,</span> <span class="s1">&#39;joints_bamboo&#39;</span><span class="p">,</span> <span class="s1">&#39;joints_grid&#39;</span><span class="p">]</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">line_type</span><span class="o">=</span><span class="s1">&#39;BeamElement&#39;</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="n">layers</span><span class="p">)</span>
-
-<span class="c1"># Add node and element sets</span>
-
-<span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;supports_bot&#39;</span><span class="p">,</span> <span class="s1">&#39;supports_top&#39;</span><span class="p">])</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="n">layers</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="c1"># Add sections</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_sections</span><span class="p">([</span>
-    <span class="n">TrapezoidalSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_mushroom&#39;</span><span class="p">,</span> <span class="n">b1</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">b2</span><span class="o">=</span><span class="mf">0.150</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.225</span><span class="p">),</span>
-    <span class="n">RectangularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_bamboo&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.020</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.100</span><span class="p">),</span>
-    <span class="n">RectangularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_joints&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.020</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.075</span><span class="p">)])</span>
-
-<span class="c1"># Add materials</span>
-
-<span class="n">fm</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">10000</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">]]</span>
-<span class="n">em</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.09</span><span class="p">]</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_materials</span><span class="p">([</span>
-    <span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_bamboo&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">20</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1100</span><span class="p">),</span>
-    <span class="n">ElasticPlastic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_mushroom&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">5</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.30</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">350</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">fm</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="n">em</span><span class="p">)])</span>
-
-<span class="c1"># Add element properties</span>
-
-<span class="n">s1</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;struts_mushroom&#39;</span><span class="p">,</span> <span class="s1">&#39;joints_mushroom&#39;</span><span class="p">]</span>
-<span class="n">s2</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;struts_bamboo&#39;</span><span class="p">,</span> <span class="s1">&#39;joints_bamboo&#39;</span><span class="p">]</span>
-<span class="n">s3</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;joints_grid&#39;</span><span class="p">]</span>
-<span class="n">ep1</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_mushroom&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_mushroom&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="n">s1</span><span class="p">)</span>
-<span class="n">ep2</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_bamboo&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_bamboo&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="n">s2</span><span class="p">)</span>
-<span class="n">ep3</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_bamboo&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_joints&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="n">s3</span><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_mushroom&#39;</span><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_bamboo&#39;</span><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_joints&#39;</span><span class="p">)</span>
-
-<span class="c1"># Add loads</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">GravityLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;elset_all&#39;</span><span class="p">))</span>
-
-<span class="c1"># Add displacements</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacements</span><span class="p">([</span>
-    <span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_bot&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;supports_bot&#39;</span><span class="p">),</span>
-    <span class="n">RollerDisplacementZ</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_top&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;supports_top&#39;</span><span class="p">)])</span>
-
-<span class="c1"># Add steps</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_steps</span><span class="p">([</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_bot&#39;</span><span class="p">,</span> <span class="s1">&#39;disp_top&#39;</span><span class="p">]),</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">])])</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="s1">&#39;step_loads&#39;</span><span class="p">]</span>
-
-<span class="c1"># Structure summary</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-
-<span class="c1"># Run and extract data</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;sf&#39;</span><span class="p">])</span>
-
-<span class="c1"># Plot displacements</span>
-
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;um&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-
-<span class="c1"># Plot section axial forces</span>
-
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;sfnx&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-</code></pre></div>
-</div>
 </div>
 
                         
                         <!-- <nav class="compas-sideways">
                             
-                                <a href="beam_simple_rhino.html" class="btn btn-primary compas-prev" role="button">beam_simple Rhino</a>
-                            
 
-                            
-                                <a href="beam_frame_rhino.html" class="btn btn-primary compas-next" role="button">beam_frame Rhino</a>
                             
                         </nav> -->
 
@@ -208,32 +99,10 @@
                             <div class="navbar-expand-md">
                                 <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
 
-                                <ul class="nav flex-column active">
+                                <ul class="nav flex-column">
 <li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a></li>
-<li class="nav-item active"><a class="nav-link reference internal" href="../examples.html">Examples</a><ul class="nav active">
-<li class="nav-item"><a class="nav-link reference internal" href="beam_gridshell_rhino.html">beam_gridshell Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_rhino.html">beam_simple Rhino</a></li>
-<li class="nav-item active"><a class="nav-link active current reference internal" href="#">beam_tree Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="beam_frame_rhino.html">beam_frame Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="spring_simple_rhino.html">spring_simple Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_rhino.html">block_deepbeam Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_blender.html">block_deepbeam Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="block_tets_blender.html">block_tets Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_rhino.html">mesh_floor Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_blender.html">mesh_floor Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_bridge_rhino.html">mesh_bridge Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_rhino.html">mesh_mould Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_strip_rhino.html">mesh_strip Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_tris_blender.html">mesh_tris Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="script_introduction_abaqus.html">script_introduction</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_blender.html">truss_tower Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower Rhino</a></li>
-</ul>
-</li>
+<li class="nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
 </ul>
@@ -268,7 +137,7 @@
             
 
             
-                Last updated on Jan 06, 2018.
+                Last updated on Jan 09, 2018.
             
 
             

@@ -755,7 +755,10 @@ def input_write_properties(f, sections, properties, elements, structure):
 
         f.write('**\n')
         f.write('** Section: {0}\n'.format(key))
-        f.write('** ---------' + '-' * (len(key)) + '\n')
+        if isinstance(key, str):
+            f.write('** ---------' + '-' * (len(key)) + '\n')
+        else:
+            f.write('** ---------\n')
         f.write('**\n')
 
         if isinstance(elsets, str):

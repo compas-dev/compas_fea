@@ -18,11 +18,7 @@
         <link rel="stylesheet" type="text/css" href="https://compas-dev.github.io/css/compas-reference.css" />
 
         
-            <link rel="next" title="script_introduction" href="script_introduction_abaqus.html" />
         
-        
-        
-            <link rel="prev" title="mesh_strip Rhino" href="mesh_strip_rhino.html" />
         
 
         <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -58,10 +54,6 @@
             <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">packages</a>
             <a class="breadcrumb-item" href="https://compas-dev.github.io/compas_fea">compas_fea</a>
             
-                
-                    <a class="breadcrumb-item" href="../examples.html" accesskey="U">examples</a>
-                
-            
         </nav>
  -->
 
@@ -74,59 +66,12 @@
 <div class="figure">
 <img alt="../_images/mesh_triangle_blender.png" class="figure-img img-fluid" src="../_images/mesh_triangle_blender.png" />
 </div>
-<div class="highlight-default"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="sd">&quot;&quot;&quot;An example compas_fea package use for meshing.&quot;&quot;&quot;</span>
-
-<span class="c1"># Note: testing for meshing functions.</span>
-
-<span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">blender</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
-
-<span class="kn">from</span> <span class="nn">compas_blender.geometry</span> <span class="k">import</span> <span class="n">BlenderMesh</span>
-<span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="k">import</span> <span class="n">xdraw_mesh</span>
-<span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="k">import</span> <span class="n">get_objects</span>
-<span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="k">import</span> <span class="n">clear_layer</span>
-
-<span class="kn">from</span> <span class="nn">compas_fea.utilities</span> <span class="k">import</span> <span class="n">discretise_faces</span>
-
-
-<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
-<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">&#39;Copyright 2017, BLOCK Research Group - ETH Zurich&#39;</span>
-<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
-<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
-
-
-<span class="n">clear_layer</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="c1"># Create empty Structure object</span>
-
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mesh_triangle&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;/home/al/Temp/&#39;</span><span class="p">)</span>
-
-<span class="c1"># Discretise mesh</span>
-
-<span class="n">blendermesh</span> <span class="o">=</span> <span class="n">BlenderMesh</span><span class="p">(</span><span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">pts</span> <span class="o">=</span> <span class="n">blendermesh</span><span class="o">.</span><span class="n">get_vertex_coordinates</span><span class="p">()</span>
-<span class="n">fcs</span> <span class="o">=</span> <span class="n">blendermesh</span><span class="o">.</span><span class="n">get_face_vertex_indices</span><span class="p">()</span>
-
-<span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span> <span class="o">=</span> <span class="n">discretise_faces</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">pts</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">fcs</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">min_angle</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">points</span><span class="p">,</span> <span class="n">face</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">):</span>
-    <span class="n">bmesh</span> <span class="o">=</span> <span class="n">xdraw_mesh</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;face&#39;</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="n">points</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">face</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">wire</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">blender</span><span class="o">.</span><span class="n">add_nodes_elements_from_bmesh</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">bmesh</span><span class="o">=</span><span class="n">bmesh</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">)</span>
-
-<span class="c1"># Structure summary</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-</code></pre></div>
-</div>
 </div>
 
                         
                         <!-- <nav class="compas-sideways">
                             
-                                <a href="mesh_strip_rhino.html" class="btn btn-primary compas-prev" role="button">mesh_strip Rhino</a>
-                            
 
-                            
-                                <a href="script_introduction_abaqus.html" class="btn btn-primary compas-next" role="button">script_introduction</a>
                             
                         </nav> -->
 
@@ -153,32 +98,10 @@
                             <div class="navbar-expand-md">
                                 <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
 
-                                <ul class="nav flex-column active">
+                                <ul class="nav flex-column">
 <li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a></li>
-<li class="nav-item active"><a class="nav-link reference internal" href="../examples.html">Examples</a><ul class="nav active">
-<li class="nav-item"><a class="nav-link reference internal" href="beam_gridshell_rhino.html">beam_gridshell Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_rhino.html">beam_simple Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="beam_tree_rhino.html">beam_tree Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="beam_frame_rhino.html">beam_frame Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="spring_simple_rhino.html">spring_simple Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_rhino.html">block_deepbeam Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_blender.html">block_deepbeam Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="block_tets_blender.html">block_tets Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_rhino.html">mesh_floor Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_blender.html">mesh_floor Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_bridge_rhino.html">mesh_bridge Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_rhino.html">mesh_mould Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="mesh_strip_rhino.html">mesh_strip Rhino</a></li>
-<li class="nav-item active"><a class="nav-link active current reference internal" href="#">mesh_tris Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="script_introduction_abaqus.html">script_introduction</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame Rhino</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_blender.html">truss_tower Blender</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower Rhino</a></li>
-</ul>
-</li>
+<li class="nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
 </ul>
@@ -213,7 +136,7 @@
             
 
             
-                Last updated on Jan 06, 2018.
+                Last updated on Jan 09, 2018.
             
 
             

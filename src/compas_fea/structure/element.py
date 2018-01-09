@@ -3,14 +3,15 @@ compas_fea.structure.element : Element class.
 Library of 1D, 2D and 3D element classes for FE analysis.
 """
 
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
@@ -37,15 +38,22 @@ class Element(object):
 
     """ Initialises base Element object.
 
-    Parameters:
-        axes (list): The local element axes.
-        nodes (list): Nodes the element connects to.
-        number (int): Number of the element.
-        acoustic (bool): Acoustic properties on or off.
-        thermal (bool): Thermal properties on or off.
+    Parameters
+    ----------
+    axes : list
+        The local element axes.
+    nodes : list
+        Nodes the element connects to.
+    number : int
+        Number of the element.
+    acoustic : bool
+        Acoustic properties on or off.
+    thermal : bool
+        Thermal properties on or off.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, axes={}, nodes=None, number=None, acoustic=None, thermal=None):
@@ -64,11 +72,13 @@ class BeamElement(Element):
 
     """ A 1D element that takes axial, shear, bending and torsion.
 
-    Parameters:
-        None
+    Parameters
+    ----------
+    None
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self):
@@ -80,11 +90,13 @@ class SpringElement(Element):
 
     """ A 1D spring element.
 
-    Parameters:
-        None
+    Parameters
+    ----------
+    None
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self):
@@ -96,11 +108,13 @@ class TrussElement(BeamElement):
 
     """ A 1D element that takes axial loads.
 
-    Parameters:
-        None
+    Parameters
+    ----------
+    None
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self):
@@ -112,11 +126,13 @@ class StrutElement(TrussElement):
 
     """ A truss element that takes axial compressive loads.
 
-    Parameters:
-        None
+    Parameters
+    ----------
+    None
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self):
@@ -128,11 +144,13 @@ class TieElement(TrussElement):
 
     """ A truss element that takes axial tensile loads.
 
-    Parameters:
-        None
+    Parameters
+    ----------
+    None
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self):
@@ -148,11 +166,13 @@ class ShellElement(Element):
 
     """ A 2D element that takes axial, shear, bending and torsion.
 
-    Parameters:
-        None
+    Parameters
+    ----------
+    None
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self):
@@ -164,11 +184,13 @@ class MembraneElement(ShellElement):
 
     """ A shell element that takes only axial loads.
 
-    Parameters:
-        None
+    Parameters
+    ----------
+    None
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self):
@@ -184,11 +206,13 @@ class SolidElement(Element):
 
     """ A 3D element that takes axial, shear, bending and torsion.
 
-    Parameters:
-        None
+    Parameters
+    ----------
+    None
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self):
@@ -200,11 +224,13 @@ class PentahedronElement(SolidElement):
 
     """ A Solid element with 5 faces (extruded triangle).
 
-    Parameters:
-        None
+    Parameters
+    ----------
+    None
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self):
@@ -216,11 +242,13 @@ class TetrahedronElement(SolidElement):
 
     """ A Solid element with 4 faces.
 
-    Parameters:
-        None
+    Parameters
+    ----------
+    None
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self):
@@ -232,11 +260,13 @@ class HexahedronElement(SolidElement):
 
     """ A Solid cuboid element with 6 faces (extruded rectangle).
 
-    Parameters:
-        None
+    Parameters
+    ----------
+    None
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self):

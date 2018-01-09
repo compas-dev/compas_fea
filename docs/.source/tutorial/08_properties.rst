@@ -12,14 +12,14 @@ This page shows how **ElementProperties** objects are added to the **Structure**
 Adding properties
 =================
 
-To associate **Material** and **Section** objects to specific elements, an **ElementProperties** object is used. Without this association between these objects, the materials and sections will still exist as objects in the main **Structure** object, but are unassigned to any of the elements and so not active. The **ElementProperties** class is first imported from  module **compas_fea.structure.element_properties**, and then an object is added to the ``.element_properties`` dictionary of the **Structure** object. This is done using the method ``.add_element_properties()`` with ``name`` as the string key. The arguments ``elsets`` or ``elements`` of the method can be a list of element sets or elements for assigning the properties to many different or similar elements, while ``material`` and ``section`` are the string names of the respective **Material** and **Section** objects to link together.
+To associate **Material** and **Section** objects to specific elements, an **ElementProperties** object is used. Without this association between these objects, the materials and sections will still exist as objects in the main **Structure** object, but are unassigned to any of the elements and so not active. The **ElementProperties** class is first imported from  module **compas_fea.structure.element_properties**, and then an object is added to the ``.element_properties`` dictionary of the **Structure** object. This is done using the method ``.add_element_properties()``. The arguments ``elsets`` or ``elements`` of the method can be a list of element sets or elements for assigning the properties to many different or similar elements, while ``material`` and ``section`` are the string names of the respective **Material** and **Section** objects to link together. The ``name`` is the key used to store the object.
 
 .. code-block:: python
 
     from compas_fea.structure import ElementProperties
 
-    ep = ElementProperties(material='mat_elastic', section='sec_circ', elsets='elset_beams')
-    mdl.add_element_properties(ep, name='ep_circ')
+    ep = ElementProperties(name='ep_circ', material='mat_elastic', section='sec_circ', elsets='elset_beams')
+    mdl.add_element_properties(ep)
 
 Giving the list ``elements`` will make an intermediate element set (effectively translating it to an ``elset``) during the file writing with name ``'elset_{element_property name}'``. This is then used as an element set for writing out the elements selection in the file writing process for OpenSees and Abaqus.
 
@@ -27,8 +27,8 @@ Giving the list ``elements`` will make an intermediate element set (effectively 
 
     from compas_fea.structure import ElementProperties
 
-    ep = Properties(material='mat_elastic', section='sec_truss', elements=[0, 1, 2])
-    mdl.add_element_properties(ep, name='ep_strut')
+    ep = Properties(name='ep_strut', material='mat_elastic', section='sec_truss', elements=[0, 1, 2])
+    mdl.add_element_properties(ep)
 
     mdl.write_input_file(software='abaqus')
 
@@ -68,6 +68,6 @@ Reinforcement layers can be added to an **ElementProperties** object through dic
         'layer_2': {'pos': -0.045, 'spacing': 0.150, 'material': 'mat_steel', 'dia': 0.010, 'angle': 90},
         'layer_1': {'pos': -0.050, 'spacing': 0.150, 'material': 'mat_steel', 'dia': 0.010, 'angle': 0}}
 
-    ep = ElementProperties(material='mat_concrete', section='sec_concrete', elsets='elset_slab', reinforcement=rebar)
-    mdl.add_element_properties(ep, name='ep_reinforced_concrete')
+    ep = ElementProperties(name='ep_rc', material='mat_concrete', section='sec_concrete', elsets='elset_slab', reinforcement=rebar)
+    mdl.add_element_properties(ep)
 

@@ -10,4 +10,4 @@ This example works for: Abaqus.
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/mesh_strip_abaqus_rhino.py
+.. literalinclude:: /../../examples/mesh_strip_rhino.py

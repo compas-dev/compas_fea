@@ -73,7 +73,7 @@ except ImportError:
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
-__copyright__ = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
 __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
@@ -97,13 +97,19 @@ __all__ = [
 def colorbar(fsc, input='array', type=255):
     """ Creates RGB color information from -1 to 1 scaled values.
 
-    Parameters:
-        fsc (array, float): (n x 1) array of normalised data, or a single float value.
-        input (str): Input given as an 'array' of numbers or a 'float'.
-        type (int): RGB as 255 or 1 scaled.
+    Parameters
+    ----------
+    fsc : array, float
+        (n x 1) array of normalised data, or a single float value.
+    input : str
+        Input given as an 'array' of numbers or a 'float'.
+    type : int
+        RGB as 255 or 1 scaled.
 
-    Returns:
-        array, list: (n x 3) array of RGB values or single RGB list.
+    Returns
+    -------
+    array, list
+        (n x 3) array of RGB values or single RGB list.
     """
     r = abs(fsc + 0.25) * 2 - 0.5
     g = -abs(fsc - 0.25) * 2 + 1.5
@@ -127,12 +133,17 @@ def combine_all_sets(sets_a, sets_b):
     ammount of set combinations. Used to determine the necesary element
     property sets, given sets of materials and sections.
 
-    Parameters:
-        sets_a (list): First nested list containing lists of element or node keys.
-        sets_b (list): Second nested list containing lists of element or node keys.
+    Parameters
+    ----------
+    sets_a : list
+        First nested list containing lists of element or node keys.
+    sets_b : list
+        Second nested list containing lists of element or node keys.
 
-    Returns:
-        dic: A dictionary containing the minimum number of set combinations.
+    Returns
+    -------
+    dic
+        A dictionary containing the minimum number of set combinations.
     """
     comb = {}
     for i in sets_a:
@@ -146,17 +157,27 @@ def combine_all_sets(sets_a, sets_b):
 def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations=100):
     """ Make an FE mesh from an input coarse mesh data.
 
-    Parameters:
-        vertices (list): Co-ordinates of coarse mesh vertices.
-        faces (list): Vertex numbers of each face of the coarse mesh.
-        target (float): Target length of each triangle.
-        min_angle (float): Minimum internal angle of triangles.
-        factor (float): Factor on the maximum area of each triangle.
-        iterations (int): Number of iterations per face.
+    Parameters
+    ----------
+    vertices : list
+        Co-ordinates of coarse mesh vertices.
+    faces : list
+        Vertex numbers of each face of the coarse mesh.
+    target : float
+        Target length of each triangle.
+    min_angle : float
+        Minimum internal angle of triangles.
+    factor : float
+        Factor on the maximum area of each triangle.
+    iterations : int
+        Number of iterations per face.
 
-    Returns:
-        list: Vertices of discretised faces.
-        list: Triangles of discretised faces.
+    Returns
+    -------
+    list
+        Vertices of discretised faces.
+    list
+        Triangles of discretised faces.
     """
 
     points_all = []
@@ -259,19 +280,27 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
 def extrude_mesh(structure, mesh, nz, dz, setname):
     """ Extrudes a Mesh into cells of many layers and adds to Structure.
 
-    Note:
-        - Extrusion is along the Mesh vertex normals.
-        - Elements are added automatically to the Structure object.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    mesh : obj
+        Mesh datastructure to extrude.
+    nz : int
+        Number of layers.
+    dz : float
+        Layer thickness.
+    setname : str
+        Name of set for added elements.
 
-    Parameters:
-        structure (obj): Structure object to update.
-        mesh (obj): Mesh datastructure to extrude.
-        nz (int): Number of layers.
-        dz (float): Layer thickness.
-        setname (str): Name of set for added elements.
+    Returns
+    -------
+    None
 
-    Returns:
-        None
+    Notes
+    -----
+    - Extrusion is along the Mesh vertex normals.
+    - Elements are added automatically to the Structure object.
     """
     ki = {}
     elements = []
@@ -303,13 +332,19 @@ def extrude_mesh(structure, mesh, nz, dz, setname):
 def group_keys_by_attribute(adict, name, tol='3f'):
     """ Make group keys by shared attribute values.
 
-    Parameters:
-        adict (dic): Attribute dictionary.
-        name (str): Attribute of interest.
-        tol (float): Float tolerance.
+    Parameters
+    ----------
+    adict : dic
+        Attribute dictionary.
+    name : str
+        Attribute of interest.
+    tol : float
+        Float tolerance.
 
-    Returns:
-        dic: Group dictionary.
+    Returns
+    -------
+    dic
+        Group dictionary.
     """
     groups = {}
     for key, item in adict.items():
@@ -324,13 +359,19 @@ def group_keys_by_attribute(adict, name, tol='3f'):
 def group_keys_by_attributes(adict, names, tol='3f'):
     """ Make group keys by shared values of attributes.
 
-    Parameters:
-        adict (dic): Attribute dictionary.
-        name (str): Attributes of interest.
-        tol (float): Float tolerance.
+    Parameters
+    ----------
+    adict : dic
+        Attribute dictionary.
+    name : str
+        Attributes of interest.
+    tol : float
+        Float tolerance.
 
-    Returns:
-        dic: Group dictionary.
+    Returns
+    -------
+    dic
+        Group dictionary.
     """
     groups = {}
     for key, item in adict.items():
@@ -353,16 +394,25 @@ def group_keys_by_attributes(adict, names, tol='3f'):
 def network_order(sp_xyz, structure, network):
     """ Extract node and element orders from a Network for a given start-point.
 
-    Parameters:
-        sp_xyz (list): Start point co-ordinates.
-        structure (obj): Structure object.
-        network (obj): Network object.
+    Parameters
+    ----------
+    sp_xyz : list
+        Start point co-ordinates.
+    structure : obj
+        Structure object.
+    network : obj
+        Network object.
 
-    Returns:
-        list: Ordered nodes.
-        list: Ordered elements.
-        list: Cumulative lengths at element mid-points.
-        float: Total length.
+    Returns
+    -------
+    list
+        Ordered nodes.
+    list
+        Ordered elements.
+    list
+        Cumulative lengths at element mid-points.
+    float
+        Total length.
     """
     gkey_key = network.gkey_key()
     start = gkey_key[geometric_key(sp_xyz, '{0}f'.format(structure.tol))]
@@ -394,14 +444,21 @@ def network_order(sp_xyz, structure, network):
 def normalise_data(data, cmin, cmax):
     """ Normalise a vector of data to between -1 and 1.
 
-    Parameters:
-        data (array): Unscaled (n x 1) data.
-        cmin (float): Cap data values >= cmin.
-        cmax (float): Cap data values <= cmax.
+    Parameters
+    ----------
+    data : array
+        Unscaled (n x 1) data.
+    cmin : float
+        Cap data values >= cmin.
+    cmax : float
+        Cap data values <= cmax.
 
-    Returns:
-        array: -1 to 1 scaled data.
-        float: The maximum absolute unscaled value.
+    Returns
+    -------
+    array
+        -1 to 1 scaled data.
+    float
+        The maximum absolute unscaled value.
     """
     f = asarray(data)
 
@@ -419,26 +476,45 @@ def normalise_data(data, cmin, cmax):
 def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, iptype, nodal):
     """ Post-process data from analysis results for given step and field.
 
-    Parameters:
-        nodes (list): [[x, y, z], ..] co-ordinates of each node.
-        elements (list): Node numbers that each element connects.
-        ux (list): List of nodal x displacements.
-        uy (list): List of nodal y displacements.
-        uz (list): List of nodal z displacements.
-        data (dic): Unprocessed data.
-        dtype (str): 'nodal' or 'elemental'.
-        scale (float): Scale displacements for the deformed plot.
-        cbar (list): Minimum and maximum limits on the colorbar.
-        ctype (int): RGB color type, 1 or 255.
-        iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
-        nodal (str): 'mean', 'max' or 'min' for nodal values.
+    Parameters
+    ----------
+    nodes : list
+        [[x, y, z], ..] co-ordinates of each node.
+    elements : list
+        Node numbers that each element connects.
+    ux : list
+        List of nodal x displacements.
+    uy : list
+        List of nodal y displacements.
+    uz : list
+        List of nodal z displacements.
+    data : dic
+        Unprocessed data.
+    dtype : str
+        'nodal' or 'elemental'.
+    scale : float
+        Scale displacements for the deformed plot.
+    cbar : list
+        Minimum and maximum limits on the colorbar.
+    ctype : int
+        RGB color type, 1 or 255.
+    iptype : str
+        'mean', 'max' or 'min' of an element's integration point data.
+    nodal : str
+        'mean', 'max' or 'min' for nodal values.
 
-    Returns:
-        float: Time taken to process data.
-        list: Scaled deformed nodal co-ordinates.
-        list: Nodal colors.
-        float: Absolute maximum data value.
-        list: Normalised data values.
+    Returns
+    -------
+    float
+        Time taken to process data.
+    list
+        Scaled deformed nodal co-ordinates.
+    list
+        Nodal colors.
+    float
+        Absolute maximum data value.
+    list
+        Normalised data values.
     """
     tic = time()
 
@@ -473,17 +549,27 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
 def process_data(data, dtype, iptype, nodal, elements, n):
     """ Processes the raw data.
 
-    Parameters:
-        data (dic): Unprocessed data.
-        dtype (str): 'nodal' or 'elemental'.
-        iptype (str): 'mean', 'max' or 'min' of an element's integration point data.
-        nodal (str): 'mean', 'max' or 'min' for nodal values.
-        elements (list): Node numbers that each element connects.
-        n (int): Number of nodes.
+    Parameters
+    ----------
+    data : dic
+        Unprocessed data.
+    dtype : str
+        'nodal' or 'elemental'.
+    iptype : str
+        'mean', 'max' or 'min' of an element's integration point data.
+    nodal : str
+        'mean', 'max' or 'min' for nodal values.
+    elements : list
+        Node numbers that each element connects.
+    n : int
+        Number of nodes.
 
-    Returns:
-        array: Data values at each node.
-        array: Data values at each element.
+    Returns
+    -------
+    array
+        Data values at each node.
+    array
+        Data values at each element.
     """
     if dtype == 'nodal':
         values = array(data)[:, newaxis]
@@ -538,16 +624,24 @@ def process_data(data, dtype, iptype, nodal, elements, n):
 def voxels(values, vmin, U, vdx, plot=None, indexing=None):
     """ Plot normalised [0 1] values as voxel data.
 
-    Parameters:
-        values (array): Normalised data at nodes.
-        vmin (float): Cull values below vmin.
-        U (array, list): Nodal co-ordinates.
-        vdx (float): Spacing of voxel grid.
-        plot (str): 'mayavi'.
-        indexing (str): Meshgrid indexing type.
+    Parameters
+    ----------
+    values : array
+        Normalised data at nodes.
+    vmin : float
+        Cull values below vmin.
+    U : array
+        ist): Nodal co-ordinates.
+    vdx : float
+        Spacing of voxel grid.
+    plot : str
+        'mayavi'.
+    indexing : str
+        Meshgrid indexing type.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
     x = U[:, 0]
     y = U[:, 1]
@@ -576,14 +670,21 @@ def voxels(values, vmin, U, vdx, plot=None, indexing=None):
 def tets_from_vertices_faces(vertices, faces, volume=None):
     """ Generate tetrahedron points and elements with MeshPy (TetGen).
 
-    Parameters:
-        vertices (list): List of lists of vertex co-ordinates of input surface mesh.
-        faces (list): List of lists of face indices of input surface mesh.
-        volume (float): Volume constraint for each tetrahedron element.
+    Parameters
+    ----------
+    vertices : list
+        List of lists of vertex co-ordinates of input surface mesh.
+    faces : list
+        List of lists of face indices of input surface mesh.
+    volume : float
+        Volume constraint for each tetrahedron element.
 
-    Returns:
-        list: Points of the tetrahedrons.
-        list: Indices of points for each tetrahedron element.
+    Returns
+    -------
+    list
+        Points of the tetrahedrons.
+    list
+        Indices of points for each tetrahedron element.
     """
     info = MeshInfo()
     info.set_points(vertices)

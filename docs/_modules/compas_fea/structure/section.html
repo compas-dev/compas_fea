@@ -71,16 +71,17 @@
 <span class="sd">Section definitions for 1D, 2D and 3D finite elements.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">pi</span>
 
 
-<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
-<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">&#39;Copyright 2017, BLOCK Research Group - ETH Zurich&#39;</span>
-<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
-<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
+<span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright 2018, BLOCK Research Group - ETH Zurich&#39;</span>
+<span class="n">__license__</span>   <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
+<span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
@@ -109,14 +110,20 @@
 
     <span class="sd">&quot;&quot;&quot; Equal angle cross-section for beam elements.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Section name.</span>
-<span class="sd">        b (float): Width.</span>
-<span class="sd">        h (float): Height.</span>
-<span class="sd">        t (float): Thickness.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Section name.</span>
+<span class="sd">    b : float</span>
+<span class="sd">        Width.</span>
+<span class="sd">    h : float</span>
+<span class="sd">        Height.</span>
+<span class="sd">    t : float</span>
+<span class="sd">        Thickness.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
@@ -135,15 +142,22 @@
 
     <span class="sd">&quot;&quot;&quot; Hollow rectangular box cross-section for beam elements.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Section name.</span>
-<span class="sd">        b (float): Width.</span>
-<span class="sd">        h (float): Height.</span>
-<span class="sd">        tw (float): Web thickness.</span>
-<span class="sd">        tf (float): Flange thickness.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Section name.</span>
+<span class="sd">    b : float</span>
+<span class="sd">        Width.</span>
+<span class="sd">    h : float</span>
+<span class="sd">        Height.</span>
+<span class="sd">    tw : float</span>
+<span class="sd">        Web thickness.</span>
+<span class="sd">    tf : float</span>
+<span class="sd">        Flange thickness.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">tw</span><span class="p">,</span> <span class="n">tf</span><span class="p">):</span>
@@ -162,12 +176,16 @@
 
     <span class="sd">&quot;&quot;&quot; Solid circular cross-section for beam elements.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Section name.</span>
-<span class="sd">        r (float): Radius.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Section name.</span>
+<span class="sd">    r : float</span>
+<span class="sd">        Radius.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
@@ -185,18 +203,28 @@
 
     <span class="sd">&quot;&quot;&quot; General cross-section for beam elements.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Section name.</span>
-<span class="sd">        A (float): Area.</span>
-<span class="sd">        Ixx (float): Second moment of area about axis 1-1.</span>
-<span class="sd">        Ixy (float): Cross moment of area.</span>
-<span class="sd">        Iyy (float): Second moment of area about axis 2-2.</span>
-<span class="sd">        J (float): Torsional rigidity.</span>
-<span class="sd">        g0 (float): Sectorial moment.</span>
-<span class="sd">        gw (float): Warping constant.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Section name.</span>
+<span class="sd">    A : float</span>
+<span class="sd">        Area.</span>
+<span class="sd">    Ixx : float</span>
+<span class="sd">        Second moment of area about axis 1-1.</span>
+<span class="sd">    Ixy : float</span>
+<span class="sd">        Cross moment of area.</span>
+<span class="sd">    Iyy : float</span>
+<span class="sd">        Second moment of area about axis 2-2.</span>
+<span class="sd">    J : float</span>
+<span class="sd">        Torsional rigidity.</span>
+<span class="sd">    g0 : float</span>
+<span class="sd">        Sectorial moment.</span>
+<span class="sd">    gw : float</span>
+<span class="sd">        Warping constant.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">Ixx</span><span class="p">,</span> <span class="n">Ixy</span><span class="p">,</span> <span class="n">Iyy</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">g0</span><span class="p">,</span> <span class="n">gw</span><span class="p">):</span>
@@ -209,15 +237,22 @@
 
     <span class="sd">&quot;&quot;&quot; Equal flanged I-section for beam elements.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Section name.</span>
-<span class="sd">        b (float): Width.</span>
-<span class="sd">        h (float): Height.</span>
-<span class="sd">        tw (float): Web thickness.</span>
-<span class="sd">        tf (float): Flange thickness.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Section name.</span>
+<span class="sd">    b : float</span>
+<span class="sd">        Width.</span>
+<span class="sd">    h : float</span>
+<span class="sd">        Height.</span>
+<span class="sd">    tw : float</span>
+<span class="sd">        Web thickness.</span>
+<span class="sd">    tf : float</span>
+<span class="sd">        Flange thickness.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">tw</span><span class="p">,</span> <span class="n">tf</span><span class="p">):</span>
@@ -235,13 +270,18 @@
 
     <span class="sd">&quot;&quot;&quot; Hollow circular cross-section for beam elements.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Section name.</span>
-<span class="sd">        r (float): Outer radius.</span>
-<span class="sd">        t (float): Wall thickness.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Section name.</span>
+<span class="sd">    r : float</span>
+<span class="sd">        Outer radius.</span>
+<span class="sd">    t : float</span>
+<span class="sd">        Wall thickness.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
@@ -259,13 +299,18 @@
 
     <span class="sd">&quot;&quot;&quot; Solid rectangular cross-section for beam elements.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Section name.</span>
-<span class="sd">        b (float): Width.</span>
-<span class="sd">        h (float): Height.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Section name.</span>
+<span class="sd">    b : float</span>
+<span class="sd">        Width.</span>
+<span class="sd">    h : float</span>
+<span class="sd">        Height.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
@@ -284,14 +329,20 @@
 
     <span class="sd">&quot;&quot;&quot; Solid trapezoidal cross-section for beam elements.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Section name.</span>
-<span class="sd">        b1 (float): Width at bottom.</span>
-<span class="sd">        b2 (float): Width at top.</span>
-<span class="sd">        h (float): Height.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Section name.</span>
+<span class="sd">    b1 : float</span>
+<span class="sd">        Width at bottom.</span>
+<span class="sd">    b2 : float</span>
+<span class="sd">        Width at top.</span>
+<span class="sd">    h : float</span>
+<span class="sd">        Height.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
@@ -308,12 +359,16 @@
 
     <span class="sd">&quot;&quot;&quot; For use with truss elements.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Section name.</span>
-<span class="sd">        A (float): Area.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Section name.</span>
+<span class="sd">    A : float</span>
+<span class="sd">        Area.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
@@ -326,12 +381,16 @@
 
     <span class="sd">&quot;&quot;&quot; For use with strut elements.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Section name.</span>
-<span class="sd">        A (float): Area.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Section name.</span>
+<span class="sd">    A : float</span>
+<span class="sd">        Area.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
@@ -343,12 +402,16 @@
 
     <span class="sd">&quot;&quot;&quot; For use with tie elements.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Section name.</span>
-<span class="sd">        A (float): Area.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Section name.</span>
+<span class="sd">    A : float</span>
+<span class="sd">        Area.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
@@ -360,17 +423,24 @@
 
     <span class="sd">&quot;&quot;&quot; For use with spring elements.</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        - Force and displacement data should start from negative to positive.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Section name.</span>
+<span class="sd">    forces : list</span>
+<span class="sd">        Forces data for non-linear springs.</span>
+<span class="sd">    displacements : list</span>
+<span class="sd">        Displacements data for non-linear springs.</span>
+<span class="sd">    stiffness : float</span>
+<span class="sd">        Elastic stiffness for linear springs.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Section name.</span>
-<span class="sd">        forces (list): Forces data for non-linear springs.</span>
-<span class="sd">        displacements (list): Displacements data for non-linear springs.</span>
-<span class="sd">        stiffness (float): Elastic stiffness for linear springs.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - Force and displacement data should start from negative to positive.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="p">[],</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">stiffness</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -390,12 +460,16 @@
 
     <span class="sd">&quot;&quot;&quot; Section for shell and membrane elements.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Section name.</span>
-<span class="sd">        t (float): Thickness.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Section name.</span>
+<span class="sd">    t : float</span>
+<span class="sd">        Thickness.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
@@ -412,11 +486,15 @@
 
     <span class="sd">&quot;&quot;&quot; Section for solid elements.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Section name.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Section name.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -489,7 +567,7 @@
             
 
             
-                Last updated on Jan 06, 2018.
+                Last updated on Jan 09, 2018.
             
 
             

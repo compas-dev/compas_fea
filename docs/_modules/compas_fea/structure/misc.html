@@ -71,14 +71,15 @@
 <span class="sd">Miscellaneous objects.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 
 
-<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
-<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">&#39;Copyright 2017, BLOCK Research Group - ETH Zurich&#39;</span>
-<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
-<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
+<span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright 2018, BLOCK Research Group - ETH Zurich&#39;</span>
+<span class="n">__license__</span>   <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
+<span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
@@ -91,12 +92,16 @@
 
     <span class="sd">&quot;&quot;&quot; Initialises Amplitude object to act as discretised function f(x).</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Amplitude object name.</span>
-<span class="sd">        values (list): Amplitude function value pairs [[x0, y0], [x1, y1], ..].</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Amplitude object name.</span>
+<span class="sd">    values : list</span>
+<span class="sd">        Amplitude function value pairs [[x0, y0], [x1, y1], ..].</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]]):</span>
@@ -109,13 +114,18 @@
 
     <span class="sd">&quot;&quot;&quot; Define nodal temperatures from a time dependent data file.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        name (str): Temperature object name.</span>
-<span class="sd">        file (str): Location of nodal temperatures file.</span>
-<span class="sd">        tend (int): End time in seconds.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Temperature object name.</span>
+<span class="sd">    file : str</span>
+<span class="sd">        Location of nodal temperatures file.</span>
+<span class="sd">    tend : int</span>
+<span class="sd">        End time in seconds.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">tend</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -189,7 +199,7 @@
             
 
             
-                Last updated on Jan 06, 2018.
+                Last updated on Jan 09, 2018.
             
 
             

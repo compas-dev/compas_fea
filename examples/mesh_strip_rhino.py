@@ -13,10 +13,10 @@ from compas_fea.structure import ShellSection
 from compas_fea.structure import Structure
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 # Create empty Structure object
@@ -29,12 +29,11 @@ rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers='else
 
 # Add node and element sets
 
-layers = ['nset_left', 'nset_right', 'nset_middle', 'elset_mesh']
-rhino.add_sets_from_layers(mdl, layers=layers)
+rhino.add_sets_from_layers(mdl, layers=['nset_left', 'nset_right', 'nset_middle', 'elset_mesh'])
 
 # Add materials
 
-mdl.add_material(ElasticIsotropic(name='mat_alu_linear', E=75*10**9, v=0.3, p=2700))
+mdl.add_material(ElasticIsotropic(name='mat_alu', E=75*10**9, v=0.3, p=2700))
 
 # Add sections
 
@@ -42,8 +41,8 @@ mdl.add_section(ShellSection(name='sec_plate', t=0.001))
 
 # Add element properties
 
-ep = Properties(material='mat_alu_linear', section='sec_plate', elsets='elset_mesh')
-mdl.add_element_properties(ep, name='ep_plate')
+ep = Properties(name='ep_plate', material='mat_alu', section='sec_plate', elsets='elset_mesh')
+mdl.add_element_properties(ep)
 
 # Add loads
 

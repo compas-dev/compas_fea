@@ -4,15 +4,16 @@ For creating and/or selecting linear and non-linear material model classes.
 """
 
 from __future__ import absolute_import
+from __future__ import division
 from __future__ import print_function
 
 from math import log
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
@@ -35,16 +36,24 @@ class ElasticIsotropic(object):
 
     """ Elastic, isotropic and homogeneous material.
 
-    Parameters:
-        name (str): Material name.
-        E (float, list): Young's modulus E.
-        v (float, list): Poisson's ratio v.
-        p (float, list): Density.
-        tension (bool): Can take tension.
-        compression (bool): Can take compression.
+    Parameters
+    ----------
+    name : str
+        Material name.
+    E : float, list
+        Young's modulus E [Pa].
+    v : float
+        Poisson's ratio v [-].
+    p : float
+        Density [kg/m3].
+    tension : bool
+        Can take tension.
+    compression : bool
+        Can take compression.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, E, v, p, tension=True, compression=True):
@@ -62,26 +71,42 @@ class ElasticOrthotropic(object):
 
     """ Elastic, orthotropic and homogeneous material.
 
-    Note:
-        - Class can be created but is currently not implemented.
+    Parameters
+    ----------
+    name : str
+        Material name.
+    Ex : float, list
+        Young's modulus Ex in x direction [Pa].
+    Ey : float, list
+        Young's modulus Ey in y direction [Pa].
+    Ez : float, list
+        Young's modulus Ez in z direction [Pa].
+    vxy : float, list
+        Poisson's ratio vxy in x-y directions [-].
+    vyz : float, list
+        Poisson's ratio vyz in y-z directions [-].
+    vzx : float, list
+        Poisson's ratio vzx in z-x directions [-].
+    Gxy : float, list
+        Shear modulus Gxy in x-y directions [Pa].
+    Gyz : float, list
+        Shear modulus Gyz in y-z directions [Pa].
+    Gzx : float, list
+        Shear modulus Gzx in z-x directions [Pa].
+    p : float, list
+        Density [kg/m3].
+    tension : bool
+        Can take tension.
+    compression : bool
+        Can take compression.
 
-    Parameters:
-        name (str): Material name.
-        Ex (float, list): Young's modulus Ex in x direction.
-        Ey (float, list): Young's modulus Ey in y direction.
-        Ez (float, list): Young's modulus Ez in z direction.
-        vxy (float, list): Poisson's ratio vxy in x-y directions.
-        vyz (float, list): Poisson's ratio vyz in y-z directions.
-        vzx (float, list): Poisson's ratio vzx in z-x directions.
-        Gxy (float, list): Shear modulus Gxy in x-y directions.
-        Gyz (float, list): Shear modulus Gyz in y-z directions.
-        Gzx (float, list): Shear modulus Gzx in z-x directions.
-        p (float, list): Density.
-        tension (bool): Can take tension.
-        compression (bool): Can take compression.
+    Returns
+    -------
+    None
 
-    Returns:
-        None
+    Notes
+    -----
+    - Class can be created but is currently not implemented.
     """
 
     def __init__(self, name, Ex, Ey, Ez, vxy, vyz, vzx, Gxy, Gyz, Gzx, p, tension=True, compression=True):
@@ -103,19 +128,28 @@ class ElasticPlastic(object):
 
     """ Elastic and plastic, isotropic and homogeneous material.
 
-    Note:
-        - Plastic stress--strain pairs applies to both compression and tension.
+    Parameters
+    ----------
+    name : str
+        Material name.
+    E : float, list
+        Young's modulus E [Pa].
+    v : float, list
+        Poisson's ratio v [-].
+    p : float, list
+        Density [kg/m3].
+    f : list
+        Plastic stress data (positive tension values) [Pa].
+    e : list
+        Plastic strain data (positive tension values) [-].
 
-    Parameters:
-        name (str): Material name.
-        E (float, list): Young's modulus E.
-        v (float, list): Poisson's ratio v.
-        p (float, list): Density.
-        f (list): Plastic stress data (positive tension values).
-        e (list): Plastic strain data (positive tension values).
+    Returns
+    -------
+    None
 
-    Returns:
-        None
+    Notes
+    -----
+    - Plastic stress--strain pairs applies to both compression and tension.
     """
 
     def __init__(self, name, E, v, p, f, e):
@@ -139,32 +173,60 @@ class Steel(object):
 
     """ Construction steel with given yield stress.
 
-    Parameters:
-        name (str): Material name.
-        fy (float): Yield stress [MPa].
-        E (float): Young's modulus E.
-        v (float): Poisson's ratio v.
-        p (float): Density.
-        type (str): 'elastic-plastic.
+    Parameters
+    ----------
+    name : str
+        Material name.
+    fy : float
+        Yield stress [MPa].
+    fu : float
+        Ultimate stress [MPa].
+    eu : float
+        Ultimate strain [%].
+    E : float
+        Young's modulus E [GPa].
+    v : float
+        Poisson's ratio v [-].
+    p : float
+        Density [kg/m3].
+    type : str
+        'elastic-plastic.
+    id : str
+        's' structural steel, 'r' reinforcement steel.
+    sf : float
+        Material safety factor.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
-    def __init__(self, name, fy=355, E=210*10**9, v=0.3, p=7850, type='elastic-plastic'):
+    def __init__(self, name, fy=355, fu=None, eu=20, E=210, v=0.3, p=7850, type='elastic-plastic', id='s', sf=1.0):
+        E *= 10.**9
         self.__name__ = 'Steel'
         self.name = name
         self.E = {'E': E}
         self.v = {'v': v}
         self.G = {'G': 0.5 * E / (1 + v)}
         self.p = p
+        ep = 0.01 * eu - fy * 10**6 / E
         if type == 'elastic-plastic':
-            f = [fy * 10**6]
-            e = [0]
+            f = [i * 10**6 for i in [fy, fy]]
+            e = [0, ep]
+        if type == 'elastic-linear':
+            if not fu:
+                fu = fy
+            f = [i * 10**6 for i in [fy, fu]]
+            e = [0, ep]
         fc = [-i for i in f]
         ec = [-i for i in e]
         self.compression = {'f': fc, 'e': ec}
         self.tension = {'f': f, 'e': e}
+        self.id = id
+        self.fy = fy
+        self.fu = fu
+        self.eu = eu
+        self.sf = sf
 
 
 # ==============================================================================
@@ -185,18 +247,26 @@ class Concrete(object):
 
     """ Elastic and plastic-cracking concrete material.
 
-    Note:
-        - The concrete model is based on Eurocode 2 up to fck=90 MPa.
+    Parameters
+    ----------
+    name : str
+        Material name.
+    fck : float
+        Characteristic (5%) 28 day cylinder strength [MPa].
+    v : float, list
+        Poisson's ratio v [-].
+    p : float, list
+        Density [kg/m3].
+    fr : list
+        Failure ratios.
 
-    Parameters:
-        name (str): Material name.
-        fck (float): Characteristic (5%) 28 day cylinder strength MPa.
-        v (float, list): Poisson's ratio v.
-        p (float, list): Density.
-        fr (list): Failure ratios.
+    Returns
+    -------
+    None
 
-    Returns:
-        None
+    Notes
+    -----
+    - The concrete model is based on Eurocode 2 up to fck=90 MPa.
     """
 
     def __init__(self, name, fck, v=0.2, p=2400, fr=None):
@@ -232,19 +302,30 @@ class ConcreteSmearedCrack(object):
 
     """ Elastic and plastic, cracking concrete material.
 
-    Parameters:
-        name (str): Material name.
-        E (float, list): Young's modulus E.
-        v (float, list): Poisson's ratio v.
-        p (float, list): Density.
-        fc (list): Plastic stress data in compression.
-        ec (list): Plastic strain data in compression.
-        ft (list): Plastic stress data in tension.
-        et (list): Plastic strain data in tension.
-        fr (list): Failure ratios.
+    Parameters
+    ----------
+    name : str
+        Material name.
+    E : float, list
+        Young's modulus E [Pa].
+    v : float, list
+        Poisson's ratio v [-].
+    p : float, list
+        Density [kg/m3].
+    fc : list
+        Plastic stress data in compression [Pa].
+    ec : list
+        Plastic strain data in compression [-].
+    ft : list
+        Plastic stress data in tension [Pa].
+    et : list
+        Plastic strain data in tension [-].
+    fr : list
+        Failure ratios.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, E, v, p, fc, ec, ft, et, fr=[1.16, 0.0836]):
@@ -262,17 +343,26 @@ class ConcreteDamagedPlasticity(object):
 
     """ Damaged plasticity isotropic and homogeneous material.
 
-    Parameters:
-        name (str): Material name.
-        E (float, list): Young's modulus E.
-        v (float, list): Poisson's ratio v.
-        p (float, list): Density.
-        damage (list): Damage parameters.
-        hardening (list): Compression hardening parameters.
-        stiffening (list): Tension stiffening parameters.
+    Parameters
+    ----------
+    name : str
+        Material name.
+    E : float, list
+        Young's modulus E [Pa].
+    v : float, list
+        Poisson's ratio v [-].
+    p : float, list
+        Density [kg/m3].
+    damage : list
+        Damage parameters.
+    hardening : list
+        Compression hardening parameters.
+    stiffening : list
+        Tension stiffening parameters.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, E, v, p, damage, hardening, stiffening):
@@ -294,14 +384,20 @@ class ThermalMaterial(object):
 
     """ Class for thermal material properties.
 
-    Parameters:
-        name (str): Material name.
-        conductivity (list): Pairs of conductivity and temperature values.
-        p (list): Pairs of density and temperature values.
-        sheat (list): Pairs of specific heat and temperature values.
+    Parameters
+    ----------
+    name : str
+        Material name.
+    conductivity : list
+        Pairs of conductivity and temperature values.
+    p : list
+        Pairs of density and temperature values.
+    sheat : list
+        Pairs of specific heat and temperature values.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, conductivity, p, sheat):

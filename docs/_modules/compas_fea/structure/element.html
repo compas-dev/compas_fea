@@ -71,14 +71,15 @@
 <span class="sd">Library of 1D, 2D and 3D element classes for FE analysis.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 
 
-<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
-<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">&#39;Copyright 2017, BLOCK Research Group - ETH Zurich&#39;</span>
-<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
-<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
+<span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright 2018, BLOCK Research Group - ETH Zurich&#39;</span>
+<span class="n">__license__</span>   <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
+<span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
@@ -105,15 +106,22 @@
 
     <span class="sd">&quot;&quot;&quot; Initialises base Element object.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        axes (list): The local element axes.</span>
-<span class="sd">        nodes (list): Nodes the element connects to.</span>
-<span class="sd">        number (int): Number of the element.</span>
-<span class="sd">        acoustic (bool): Acoustic properties on or off.</span>
-<span class="sd">        thermal (bool): Thermal properties on or off.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    axes : list</span>
+<span class="sd">        The local element axes.</span>
+<span class="sd">    nodes : list</span>
+<span class="sd">        Nodes the element connects to.</span>
+<span class="sd">    number : int</span>
+<span class="sd">        Number of the element.</span>
+<span class="sd">    acoustic : bool</span>
+<span class="sd">        Acoustic properties on or off.</span>
+<span class="sd">    thermal : bool</span>
+<span class="sd">        Thermal properties on or off.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">{},</span> <span class="n">nodes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -132,11 +140,13 @@
 
     <span class="sd">&quot;&quot;&quot; A 1D element that takes axial, shear, bending and torsion.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        None</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -148,11 +158,13 @@
 
     <span class="sd">&quot;&quot;&quot; A 1D spring element.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        None</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -164,11 +176,13 @@
 
     <span class="sd">&quot;&quot;&quot; A 1D element that takes axial loads.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        None</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -180,11 +194,13 @@
 
     <span class="sd">&quot;&quot;&quot; A truss element that takes axial compressive loads.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        None</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -196,11 +212,13 @@
 
     <span class="sd">&quot;&quot;&quot; A truss element that takes axial tensile loads.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        None</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -216,11 +234,13 @@
 
     <span class="sd">&quot;&quot;&quot; A 2D element that takes axial, shear, bending and torsion.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        None</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -232,11 +252,13 @@
 
     <span class="sd">&quot;&quot;&quot; A shell element that takes only axial loads.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        None</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -252,11 +274,13 @@
 
     <span class="sd">&quot;&quot;&quot; A 3D element that takes axial, shear, bending and torsion.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        None</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -268,11 +292,13 @@
 
     <span class="sd">&quot;&quot;&quot; A Solid element with 5 faces (extruded triangle).</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        None</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -284,11 +310,13 @@
 
     <span class="sd">&quot;&quot;&quot; A Solid element with 4 faces.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        None</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -300,11 +328,13 @@
 
     <span class="sd">&quot;&quot;&quot; A Solid cuboid element with 6 faces (extruded rectangle).</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        None</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -376,7 +406,7 @@
             
 
             
-                Last updated on Jan 06, 2018.
+                Last updated on Jan 09, 2018.
             
 
             

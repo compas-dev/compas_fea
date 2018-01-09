@@ -3,14 +3,15 @@ compas_fea.structure.displacement : Displacement class.
 For setting nodal degrees-of-freedom to finite values.
 """
 
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
@@ -33,19 +34,30 @@ class GeneralDisplacement(object):
 
     """ Initialises base GeneralDisplacement object.
 
-    Parameters:
-        name (str): Name of the GeneralDisplacement object.
-        nodes (str, list): Node set or nodes the displacement is applied to.
-        x (float): Value of x displacement.
-        y (float): Value of y displacement.
-        z (float): Value of z displacement.
-        xx (float): Value of xx displacement.
-        yy (float): Value of yy displacement.
-        zz (float): Value of zz displacement.
-        axes (str): 'local' or 'global' co-ordinate axes.
+    Parameters
+    ----------
+    name : str
+        Name of the GeneralDisplacement object.
+    nodes : str, list
+        Node set or nodes the displacement is applied to.
+    x : float
+        Value of x displacement.
+    y : float
+        Value of y displacement.
+    z : float
+        Value of z displacement.
+    xx : float
+        Value of xx displacement.
+    yy : float
+        Value of yy displacement.
+    zz : float
+        Value of zz displacement.
+    axes : str
+        'local' or 'global' co-ordinate axes.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, nodes, x=None, y=None, z=None, xx=None, yy=None, zz=None, axes='global'):
@@ -60,13 +72,18 @@ class FixedDisplacement(GeneralDisplacement):
 
     """ A fixed nodal displacement condition.
 
-    Parameters:
-        name (str): Name of the FixedDisplacement object.
-        nodes (str, list): Node set or nodes the displacement is applied to.
-        axes (str): 'local' or 'global' co-ordinate axes.
+    Parameters
+    ----------
+        name : str
+            Name of the FixedDisplacement object.
+        nodes : str, list
+            Node set or nodes the displacement is applied to.
+        axes : str
+            'local' or 'global' co-ordinate axes.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -79,13 +96,18 @@ class PinnedDisplacement(GeneralDisplacement):
 
     """ A pinned nodal displacement condition.
 
-    Parameters:
-        name (str): Name of the PinnedDisplacement object.
-        nodes (str, list): Node set or nodes the displacement is applied to.
-        axes (str): 'local' or 'global' co-ordinate axes.
+    Parameters
+    ----------
+    name : str
+        Name of the PinnedDisplacement object.
+    nodes : str, list
+        Node set or nodes the displacement is applied to.
+    axes : str
+        'local' or 'global' co-ordinate axes.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -97,13 +119,18 @@ class FixedDisplacementXX(PinnedDisplacement):
 
     """ A pinned nodal displacement condition clamped in XX.
 
-    Parameters:
-        name (str): Name of the FixedDisplacementXX object.
-        nodes (str, list): Node set or nodes the displacement is applied to.
-        axes (str): 'local' or 'global' co-ordinate axes.
+    Parameters
+    ----------
+    name : str
+        Name of the FixedDisplacementXX object.
+    nodes : str, list
+        Node set or nodes the displacement is applied to.
+    axes : str
+        'local' or 'global' co-ordinate axes.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -116,13 +143,18 @@ class FixedDisplacementYY(PinnedDisplacement):
 
     """ A pinned nodal displacement condition clamped in YY.
 
-    Parameters:
-        name (str): Name of the FixedDisplacementYY object.
-        nodes (str, list): Node set or nodes the displacement is applied to.
-        axes (str): 'local' or 'global' co-ordinate axes.
+    Parameters
+    ----------
+    name : str
+        Name of the FixedDisplacementYY object.
+    nodes : str, list
+        Node set or nodes the displacement is applied to.
+    axes : str
+        'local' or 'global' co-ordinate axes.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -135,13 +167,18 @@ class FixedDisplacementZZ(PinnedDisplacement):
 
     """ A pinned nodal displacement condition clamped in ZZ.
 
-    Parameters:
-        name (str): Name of the FixedDisplacementZZ object.
-        nodes (str, list): Node set or nodes the displacement is applied to.
-        axes (str): 'local' or 'global' co-ordinate axes.
+    Parameters
+    ----------
+    name : str
+        Name of the FixedDisplacementZZ object.
+    nodes : str, list
+        Node set or nodes the displacement is applied to.
+    axes : str
+        'local' or 'global' co-ordinate axes.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -154,13 +191,18 @@ class RollerDisplacementX(PinnedDisplacement):
 
     """ A pinned nodal displacement condition released in X.
 
-    Parameters:
-        name (str): Name of the RollerDisplacementX object.
-        nodes (str, list): Node set or nodes the displacement is applied to.
-        axes (str): 'local' or 'global' co-ordinate axes.
+    Parameters
+    ----------
+    name : str
+        Name of the RollerDisplacementX object.
+    nodes : str, list
+        Node set or nodes the displacement is applied to.
+    axes : str
+        'local' or 'global' co-ordinate axes.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -173,13 +215,18 @@ class RollerDisplacementY(PinnedDisplacement):
 
     """ A pinned nodal displacement condition released in Y.
 
-    Parameters:
-        name (str): Name of the RollerDisplacementY object.
-        nodes (str, list): Node set or nodes the displacement is applied to.
-        axes (str): 'local' or 'global' co-ordinate axes.
+    Parameters
+    ----------
+    name : str
+        Name of the RollerDisplacementY object.
+    nodes : str, list
+        Node set or nodes the displacement is applied to.
+    axes : str
+        'local' or 'global' co-ordinate axes.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -192,13 +239,18 @@ class RollerDisplacementZ(PinnedDisplacement):
 
     """ A pinned nodal displacement condition released in Z.
 
-    Parameters:
-        name (str): Name of the RollerDisplacementZ object.
-        nodes (str, list): Node set or nodes the displacement is applied to.
-        axes (str): 'local' or 'global' co-ordinate axes.
+    Parameters
+    ----------
+    name : str
+        Name of the RollerDisplacementZ object.
+    nodes : str
+        Node set or nodes the displacement is applied to.
+    axes : str
+        'local' or 'global' co-ordinate axes.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -211,13 +263,18 @@ class RollerDisplacementXY(PinnedDisplacement):
 
     """ A pinned nodal displacement condition released in X and Y.
 
-    Parameters:
-        name (str): Name of the RollerDisplacementXY object.
-        nodes (str, list): Node set or nodes the displacement is applied to.
-        axes (str): 'local' or 'global' co-ordinate axes.
+    Parameters
+    ----------
+    name : str
+        Name of the RollerDisplacementXY object.
+    nodes : str, list
+        Node set or nodes the displacement is applied to.
+    axes : str
+        'local' or 'global' co-ordinate axes.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -231,13 +288,18 @@ class RollerDisplacementYZ(PinnedDisplacement):
 
     """ A pinned nodal displacement condition released in Y and Z.
 
-    Parameters:
-        name (str): Name of the RollerDisplacementYZ object.
-        nodes (str, list): Node set or nodes the displacement is applied to.
-        axes (str): 'local' or 'global' co-ordinate axes.
+    Parameters
+    ----------
+    name : str
+        Name of the RollerDisplacementYZ object.
+    nodes : str, list
+        Node set or nodes the displacement is applied to.
+    axes : str
+        'local' or 'global' co-ordinate axes.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -251,13 +313,18 @@ class RollerDisplacementXZ(PinnedDisplacement):
 
     """ A pinned nodal displacement condition released in X and Z.
 
-    Parameters:
-        name (str): Name of the RollerDisplacementXZ object.
-        nodes (str, list): Node set or nodes the displacement is applied to.
-        axes (str): 'local' or 'global' co-ordinate axes.
+    Parameters
+    ----------
+    name : str
+        Name of the RollerDisplacementXZ object.
+    nodes : str, list
+        Node set or nodes the displacement is applied to.
+    axes : str
+        'local' or 'global' co-ordinate axes.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, nodes, axes='global'):

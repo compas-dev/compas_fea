@@ -67,87 +67,6 @@
 <div class="figure">
 <img alt="../_images/mesh_yieldline_rhino.png" class="figure-img img-fluid" src="../_images/mesh_yieldline_rhino.png" />
 </div>
-<div class="highlight-default"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="sd">&quot;&quot;&quot;An example compas_fea package use for meshes.&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">rhino</span>
-
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Concrete</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralStep</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralDisplacement</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GravityLoad</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ShellSection</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Steel</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
-
-
-<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
-<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">&#39;Copyright 2017, BLOCK Research Group - ETH Zurich&#39;</span>
-<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
-<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
-
-
-<span class="c1"># Create empty Structure object</span>
-
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mesh_yieldline&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;C:/Temp/&#39;</span><span class="p">)</span>
-
-<span class="c1"># Add shell elements</span>
-
-<span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">)</span>
-
-<span class="c1"># Add node and element sets</span>
-
-<span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_roller_x&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_roller_y&#39;</span><span class="p">])</span>
-
-<span class="c1"># Add materials</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_materials</span><span class="p">([</span>
-    <span class="n">Concrete</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">fck</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span>
-    <span class="n">Steel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">500</span><span class="p">)])</span>
-
-<span class="c1"># Add sections</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_concrete&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.100</span><span class="p">))</span>
-
-<span class="c1"># Add element properties</span>
-
-<span class="n">rebar</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;l2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.035</span><span class="p">,</span> <span class="s1">&#39;spacing&#39;</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">:</span> <span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="s1">&#39;dia&#39;</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="mi">90</span><span class="p">},</span>
-    <span class="s1">&#39;l1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.040</span><span class="p">,</span> <span class="s1">&#39;spacing&#39;</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">:</span> <span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="s1">&#39;dia&#39;</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}}</span>
-
-<span class="n">ep</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_concrete&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="n">rebar</span><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_concrete&#39;</span><span class="p">)</span>
-
-<span class="c1"># Add loads</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">GravityLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">))</span>
-
-<span class="c1"># Add displacements</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacements</span><span class="p">([</span>
-    <span class="n">GeneralDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_x&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_roller_x&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-    <span class="n">GeneralDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_y&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_roller_y&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">)])</span>
-
-<span class="c1"># Add steps</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_steps</span><span class="p">([</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;STATIC&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_x&#39;</span><span class="p">,</span> <span class="s1">&#39;disp_y&#39;</span><span class="p">]),</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;STATIC,RIKS&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">])])</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="s1">&#39;step_loads&#39;</span><span class="p">]</span>
-
-<span class="c1"># Structure summary</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-
-<span class="c1"># Run and extract data</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;pe&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;rbfor&#39;</span><span class="p">])</span>
-
-<span class="c1"># Plot strain</span>
-
-<span class="c1">#rhino.plot_data(mdl, step=&#39;step_loads&#39;, field=&#39;emaxp&#39;, cbar=[None, 0.0001], scale=0)</span>
-</code></pre></div>
-</div>
 </div>
 
                         
@@ -218,7 +137,7 @@
             
 
             
-                Last updated on Jan 06, 2018.
+                Last updated on Jan 09, 2018.
             
 
             

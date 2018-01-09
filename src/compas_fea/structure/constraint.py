@@ -3,14 +3,15 @@ compas_fea.structure.constraint : Constraint class.
 For restraining degrees-of-freedom between master and slave nodes/elements/surfaces.
 """
 
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
@@ -22,14 +23,20 @@ class TieConstraint(object):
 
     """ Tie constraint between two sets of nodes, elements or surfaces.
 
-    Parameters:
-        name (str): TieConstraint name.
-        master (str): Master set name.
-        slave (str): Slave set name.
-        tol (float): Constraint tolerance, distance limit between master and slave.
+    Parameters
+    ----------
+    name : str
+        TieConstraint name.
+    master : str
+        Master set name.
+    slave : str
+        Slave set name.
+    tol : float
+        Constraint tolerance, distance limit between master and slave.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, master, slave, tol):

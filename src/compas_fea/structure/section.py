@@ -3,16 +3,17 @@ compas_fea.structure.section : Section class.
 Section definitions for 1D, 2D and 3D finite elements.
 """
 
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 from math import pi
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
@@ -41,14 +42,20 @@ class AngleSection(object):
 
     """ Equal angle cross-section for beam elements.
 
-    Parameters:
-        name (str): Section name.
-        b (float): Width.
-        h (float): Height.
-        t (float): Thickness.
+    Parameters
+    ----------
+    name : str
+        Section name.
+    b : float
+        Width.
+    h : float
+        Height.
+    t : float
+        Thickness.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, b, h, t):
@@ -67,15 +74,22 @@ class BoxSection(object):
 
     """ Hollow rectangular box cross-section for beam elements.
 
-    Parameters:
-        name (str): Section name.
-        b (float): Width.
-        h (float): Height.
-        tw (float): Web thickness.
-        tf (float): Flange thickness.
+    Parameters
+    ----------
+    name : str
+        Section name.
+    b : float
+        Width.
+    h : float
+        Height.
+    tw : float
+        Web thickness.
+    tf : float
+        Flange thickness.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, b, h, tw, tf):
@@ -94,12 +108,16 @@ class CircularSection(object):
 
     """ Solid circular cross-section for beam elements.
 
-    Parameters:
-        name (str): Section name.
-        r (float): Radius.
+    Parameters
+    ----------
+    name : str
+        Section name.
+    r : float
+        Radius.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, r):
@@ -117,18 +135,28 @@ class GeneralSection(object):
 
     """ General cross-section for beam elements.
 
-    Parameters:
-        name (str): Section name.
-        A (float): Area.
-        Ixx (float): Second moment of area about axis 1-1.
-        Ixy (float): Cross moment of area.
-        Iyy (float): Second moment of area about axis 2-2.
-        J (float): Torsional rigidity.
-        g0 (float): Sectorial moment.
-        gw (float): Warping constant.
+    Parameters
+    ----------
+    name : str
+        Section name.
+    A : float
+        Area.
+    Ixx : float
+        Second moment of area about axis 1-1.
+    Ixy : float
+        Cross moment of area.
+    Iyy : float
+        Second moment of area about axis 2-2.
+    J : float
+        Torsional rigidity.
+    g0 : float
+        Sectorial moment.
+    gw : float
+        Warping constant.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, A, Ixx, Ixy, Iyy, J, g0, gw):
@@ -141,15 +169,22 @@ class ISection(object):
 
     """ Equal flanged I-section for beam elements.
 
-    Parameters:
-        name (str): Section name.
-        b (float): Width.
-        h (float): Height.
-        tw (float): Web thickness.
-        tf (float): Flange thickness.
+    Parameters
+    ----------
+    name : str
+        Section name.
+    b : float
+        Width.
+    h : float
+        Height.
+    tw : float
+        Web thickness.
+    tf : float
+        Flange thickness.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, b, h, tw, tf):
@@ -167,13 +202,18 @@ class PipeSection(object):
 
     """ Hollow circular cross-section for beam elements.
 
-    Parameters:
-        name (str): Section name.
-        r (float): Outer radius.
-        t (float): Wall thickness.
+    Parameters
+    ----------
+    name : str
+        Section name.
+    r : float
+        Outer radius.
+    t : float
+        Wall thickness.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, r, t):
@@ -191,13 +231,18 @@ class RectangularSection(object):
 
     """ Solid rectangular cross-section for beam elements.
 
-    Parameters:
-        name (str): Section name.
-        b (float): Width.
-        h (float): Height.
+    Parameters
+    ----------
+    name : str
+        Section name.
+    b : float
+        Width.
+    h : float
+        Height.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, b, h):
@@ -216,14 +261,20 @@ class TrapezoidalSection(object):
 
     """ Solid trapezoidal cross-section for beam elements.
 
-    Parameters:
-        name (str): Section name.
-        b1 (float): Width at bottom.
-        b2 (float): Width at top.
-        h (float): Height.
+    Parameters
+    ----------
+    name : str
+        Section name.
+    b1 : float
+        Width at bottom.
+    b2 : float
+        Width at top.
+    h : float
+        Height.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, b1, b2, h):
@@ -240,12 +291,16 @@ class TrussSection(object):
 
     """ For use with truss elements.
 
-    Parameters:
-        name (str): Section name.
-        A (float): Area.
+    Parameters
+    ----------
+    name : str
+        Section name.
+    A : float
+        Area.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, A):
@@ -258,12 +313,16 @@ class StrutSection(TrussSection):
 
     """ For use with strut elements.
 
-    Parameters:
-        name (str): Section name.
-        A (float): Area.
+    Parameters
+    ----------
+    name : str
+        Section name.
+    A : float
+        Area.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, A):
@@ -275,12 +334,16 @@ class TieSection(TrussSection):
 
     """ For use with tie elements.
 
-    Parameters:
-        name (str): Section name.
-        A (float): Area.
+    Parameters
+    ----------
+    name : str
+        Section name.
+    A : float
+        Area.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, A):
@@ -292,17 +355,24 @@ class SpringSection(object):
 
     """ For use with spring elements.
 
-    Note:
-        - Force and displacement data should start from negative to positive.
+    Parameters
+    ----------
+    name : str
+        Section name.
+    forces : list
+        Forces data for non-linear springs.
+    displacements : list
+        Displacements data for non-linear springs.
+    stiffness : float
+        Elastic stiffness for linear springs.
 
-    Parameters:
-        name (str): Section name.
-        forces (list): Forces data for non-linear springs.
-        displacements (list): Displacements data for non-linear springs.
-        stiffness (float): Elastic stiffness for linear springs.
+    Returns
+    -------
+    None
 
-    Returns:
-        None
+    Notes
+    -----
+    - Force and displacement data should start from negative to positive.
     """
 
     def __init__(self, name, forces=[], displacements=[], stiffness=0):
@@ -322,12 +392,16 @@ class ShellSection(object):
 
     """ Section for shell and membrane elements.
 
-    Parameters:
-        name (str): Section name.
-        t (float): Thickness.
+    Parameters
+    ----------
+    name : str
+        Section name.
+    t : float
+        Thickness.
 
-    Returns:
-        None
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name, t):
@@ -344,11 +418,15 @@ class SolidSection(object):
 
     """ Section for solid elements.
 
-    Parameters:
-        name (str): Section name.
+    Parameters
+    ----------
+    name : str
+        Section name.
 
-    Returns:
-        None
+
+    Returns
+    -------
+    None
     """
 
     def __init__(self, name):

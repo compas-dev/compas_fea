@@ -80,26 +80,24 @@
 <em class="property">class </em><code class="descclassname">compas_fea.structure.material.</code><code class="descname">Concrete</code><span class="sig-paren">(</span><em>name</em>, <em>fck</em>, <em>v=0.2</em>, <em>p=2400</em>, <em>fr=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/material.html#Concrete"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Elastic and plastic-cracking concrete material.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul>
-<li><p>The concrete model is based on Eurocode 2 up to fck=90 MPa.</p></li>
-</ul>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul>
 <li><p><strong>name</strong> (<em>str</em>) – Material name.</p></li>
-<li><p><strong>fck</strong> (<em>float</em>) – Characteristic (5%) 28 day cylinder strength MPa.</p></li>
-<li><p><strong>v</strong> (<em>float, list</em>) – Poisson’s ratio v.</p></li>
-<li><p><strong>p</strong> (<em>float, list</em>) – Density.</p></li>
+<li><p><strong>fck</strong> (<em>float</em>) – Characteristic (5%) 28 day cylinder strength [MPa].</p></li>
+<li><p><strong>v</strong> (<em>float, list</em>) – Poisson’s ratio v [-].</p></li>
+<li><p><strong>p</strong> (<em>float, list</em>) – Density [kg/m3].</p></li>
 <li><p><strong>fr</strong> (<em>list</em>) – Failure ratios.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
+<dd class="field-even"><p><em>None</em></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul>
+<li><p>The concrete model is based on Eurocode 2 up to fck=90 MPa.</p></li>
+</ul>
 <p class="rubric">Methods</p>
 <table class="longtable docutils">
 <colgroup>
@@ -197,7 +195,7 @@
             
 
             
-                Last updated on Jan 06, 2018.
+                Last updated on Jan 09, 2018.
             
 
             

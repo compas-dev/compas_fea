@@ -80,34 +80,32 @@
 <em class="property">class </em><code class="descclassname">compas_fea.structure.material.</code><code class="descname">ElasticOrthotropic</code><span class="sig-paren">(</span><em>name</em>, <em>Ex</em>, <em>Ey</em>, <em>Ez</em>, <em>vxy</em>, <em>vyz</em>, <em>vzx</em>, <em>Gxy</em>, <em>Gyz</em>, <em>Gzx</em>, <em>p</em>, <em>tension=True</em>, <em>compression=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/material.html#ElasticOrthotropic"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Elastic, orthotropic and homogeneous material.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul>
-<li><p>Class can be created but is currently not implemented.</p></li>
-</ul>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul>
 <li><p><strong>name</strong> (<em>str</em>) – Material name.</p></li>
-<li><p><strong>Ex</strong> (<em>float, list</em>) – Young’s modulus Ex in x direction.</p></li>
-<li><p><strong>Ey</strong> (<em>float, list</em>) – Young’s modulus Ey in y direction.</p></li>
-<li><p><strong>Ez</strong> (<em>float, list</em>) – Young’s modulus Ez in z direction.</p></li>
-<li><p><strong>vxy</strong> (<em>float, list</em>) – Poisson’s ratio vxy in x-y directions.</p></li>
-<li><p><strong>vyz</strong> (<em>float, list</em>) – Poisson’s ratio vyz in y-z directions.</p></li>
-<li><p><strong>vzx</strong> (<em>float, list</em>) – Poisson’s ratio vzx in z-x directions.</p></li>
-<li><p><strong>Gxy</strong> (<em>float, list</em>) – Shear modulus Gxy in x-y directions.</p></li>
-<li><p><strong>Gyz</strong> (<em>float, list</em>) – Shear modulus Gyz in y-z directions.</p></li>
-<li><p><strong>Gzx</strong> (<em>float, list</em>) – Shear modulus Gzx in z-x directions.</p></li>
-<li><p><strong>p</strong> (<em>float, list</em>) – Density.</p></li>
+<li><p><strong>Ex</strong> (<em>float, list</em>) – Young’s modulus Ex in x direction [Pa].</p></li>
+<li><p><strong>Ey</strong> (<em>float, list</em>) – Young’s modulus Ey in y direction [Pa].</p></li>
+<li><p><strong>Ez</strong> (<em>float, list</em>) – Young’s modulus Ez in z direction [Pa].</p></li>
+<li><p><strong>vxy</strong> (<em>float, list</em>) – Poisson’s ratio vxy in x-y directions [-].</p></li>
+<li><p><strong>vyz</strong> (<em>float, list</em>) – Poisson’s ratio vyz in y-z directions [-].</p></li>
+<li><p><strong>vzx</strong> (<em>float, list</em>) – Poisson’s ratio vzx in z-x directions [-].</p></li>
+<li><p><strong>Gxy</strong> (<em>float, list</em>) – Shear modulus Gxy in x-y directions [Pa].</p></li>
+<li><p><strong>Gyz</strong> (<em>float, list</em>) – Shear modulus Gyz in y-z directions [Pa].</p></li>
+<li><p><strong>Gzx</strong> (<em>float, list</em>) – Shear modulus Gzx in z-x directions [Pa].</p></li>
+<li><p><strong>p</strong> (<em>float, list</em>) – Density [kg/m3].</p></li>
 <li><p><strong>tension</strong> (<em>bool</em>) – Can take tension.</p></li>
 <li><p><strong>compression</strong> (<em>bool</em>) – Can take compression.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
+<dd class="field-even"><p><em>None</em></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul>
+<li><p>Class can be created but is currently not implemented.</p></li>
+</ul>
 <p class="rubric">Methods</p>
 <table class="longtable docutils">
 <colgroup>
@@ -205,7 +203,7 @@
             
 
             
-                Last updated on Jan 06, 2018.
+                Last updated on Jan 09, 2018.
             
 
             

@@ -886,25 +886,20 @@ Steps
             displacement.index = len(self.displacements)
             self.displacements[displacement.name] = displacement
 
-    def add_element_properties(self, element_properties, name=None):
+    def add_element_properties(self, element_properties):
         """ Adds an ElementProperties object to structure.element_properties.
 
         Parameters
         ----------
         element_properties : obj
             The ElementProperties object.
-        name : str
-            Name for index.
 
         Returns
         -------
         None
         """
-        if name:
-            index = name
-        else:
-            index = len(self.element_properties)
-        self.element_properties[index] = element_properties
+        element_properties.index = len(self.element_properties)
+        self.element_properties[element_properties.name] = element_properties
 
     def add_interaction(self, interaction):
         """ Adds an Interaction object to structure.interactions.

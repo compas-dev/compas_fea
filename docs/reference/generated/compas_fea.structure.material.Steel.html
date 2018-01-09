@@ -77,7 +77,7 @@
 <h1>Steel</h1>
 <dl class="class">
 <dt id="compas_fea.structure.material.Steel">
-<em class="property">class </em><code class="descclassname">compas_fea.structure.material.</code><code class="descname">Steel</code><span class="sig-paren">(</span><em>name</em>, <em>fy=355</em>, <em>E=210000000000</em>, <em>v=0.3</em>, <em>p=7850</em>, <em>type='elastic-plastic'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/material.html#Steel"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="descclassname">compas_fea.structure.material.</code><code class="descname">Steel</code><span class="sig-paren">(</span><em>name</em>, <em>fy=355</em>, <em>fu=None</em>, <em>eu=20</em>, <em>E=210</em>, <em>v=0.3</em>, <em>p=7850</em>, <em>type='elastic-plastic'</em>, <em>id='s'</em>, <em>sf=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/material.html#Steel"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Construction steel with given yield stress.</p>
 <dl class="field-list simple">
@@ -85,14 +85,18 @@
 <dd class="field-odd"><ul>
 <li><p><strong>name</strong> (<em>str</em>) – Material name.</p></li>
 <li><p><strong>fy</strong> (<em>float</em>) – Yield stress [MPa].</p></li>
-<li><p><strong>E</strong> (<em>float</em>) – Young’s modulus E.</p></li>
-<li><p><strong>v</strong> (<em>float</em>) – Poisson’s ratio v.</p></li>
-<li><p><strong>p</strong> (<em>float</em>) – Density.</p></li>
+<li><p><strong>fu</strong> (<em>float</em>) – Ultimate stress [MPa].</p></li>
+<li><p><strong>eu</strong> (<em>float</em>) – Ultimate strain [%].</p></li>
+<li><p><strong>E</strong> (<em>float</em>) – Young’s modulus E [GPa].</p></li>
+<li><p><strong>v</strong> (<em>float</em>) – Poisson’s ratio v [-].</p></li>
+<li><p><strong>p</strong> (<em>float</em>) – Density [kg/m3].</p></li>
 <li><p><strong>type</strong> (<em>str</em>) – ‘elastic-plastic.</p></li>
+<li><p><strong>id</strong> (<em>str</em>) – ‘s’ structural steel, ‘r’ reinforcement steel.</p></li>
+<li><p><strong>sf</strong> (<em>float</em>) – Material safety factor.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
+<dd class="field-even"><p><em>None</em></p>
 </dd>
 </dl>
 <p class="rubric">Methods</p>
@@ -102,7 +106,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code>(name[, fy, E, v, p, type])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code>(name[, fy, fu, eu, E, v, p, type, …])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -192,7 +196,7 @@
             
 
             
-                Last updated on Jan 06, 2018.
+                Last updated on Jan 09, 2018.
             
 
             
