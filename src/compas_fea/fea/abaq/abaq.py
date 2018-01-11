@@ -1112,9 +1112,9 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
                 elif ltype == 'GravityLoad':
 
                     g = load.g
-                    gx = 1 if com['x'] else 0
-                    gy = 1 if com['y'] else 0
-                    gz = 1 if com['z'] else 0
+                    gx = com['x'] if com['x'] else 0
+                    gy = com['y'] if com['y'] else 0
+                    gz = com['z'] if com['z'] else 0
                     f.write('{0}, GRAV, {1}, {2}, {3}, {4}\n'.format(elset, lf * g, gx, gy, gz))
 
                 # Tributary load

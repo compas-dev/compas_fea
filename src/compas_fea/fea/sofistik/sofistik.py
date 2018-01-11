@@ -53,6 +53,7 @@ def input_generate(structure, fields, units='m'):
 
         displacements = structure.displacements
         elements = structure.elements
+        loads = structure.loads
         materials = structure.materials
         nodes = structure.nodes
         properties = structure.element_properties
@@ -60,11 +61,14 @@ def input_generate(structure, fields, units='m'):
         sets = structure.sets
         steps = structure.steps
 
+        urs = 0
+
         input_write_heading(f)
-        input_write_materials(f, materials)
-        input_write_nodes_elements(f, structure, nodes, elements, sections, properties, materials, sets, steps,
-                                   displacements, units)
-        input_write_rebar(f, properties, sections, sets)
+        urs = input_write_materials(f, materials, urs)
+        urs = input_write_nodes_elements(f, structure, nodes, elements, sections, properties, materials, sets, steps,
+                                         displacements, units, urs)
+        urs = input_write_rebar(f, properties, sections, sets, urs)
+        urs = input_write_steps(f, structure, steps, loads, displacements, urs)
 
     print('***** Sofistik input file generated: {0} *****\n'.format(filename))
 
@@ -95,7 +99,7 @@ def input_write_heading(f):
     f.write('$ UNITS ARE IN kN FOR FORCE!!\n')
 
 
-def input_write_materials(f, materials):
+def input_write_materials(f, materials, urs):
     """ Writes materials to the Sofistik .dat file.
 
     Parameters
@@ -109,10 +113,12 @@ def input_write_materials(f, materials):
     -------
     None
     """
+    urs += 1
+
     f.write('$ -----------------------------------------------------------------------------\n')
     f.write('$ ------------------------------------------------------------------- Materials\n')
     f.write('\n')
-    f.write('+PROG AQUA urs:1\n')
+    f.write('+PROG AQUA urs:{0}\n'.format(urs))
     f.write('\n')
     f.write('HEAD AQUA\n')
     f.write('NORM DC SIA NDC 262\n')
@@ -156,9 +162,11 @@ def input_write_materials(f, materials):
     f.write('\n')
     f.write('\n')
 
+    return urs
+
 
 def input_write_nodes_elements(f, structure, nodes, elements, sections, properties, materials, sets, steps,
-                               displacements, units):
+                               displacements, units, urs):
     """ Writes the nodal co-ordinates and element information to the Sofistik .dat file.
 
     Parameters
@@ -190,16 +198,19 @@ def input_write_nodes_elements(f, structure, nodes, elements, sections, properti
     -------
     None
     """
+    urs += 1
+
     cl = {'m': 1., 'cm': 0.01, 'mm': 0.001}
 
     f.write('$ -----------------------------------------------------------------------------\n')
     f.write('$ ---------------------------------------------------------- Nodes and elements\n')
     f.write('\n')
-    f.write('+PROG SOFIMSHA urs:2\n')
+    f.write('+PROG SOFIMSHA urs:{0}\n'.format(urs))
     f.write('\n')
     f.write('HEAD SOFIMSHA\n')
     f.write('UNIT 0\n')
     f.write('SYST 3D GDIR POSX,POSY,NEGZ\n')
+    f.write('CTRL OPT OPTI 10\n')
     f.write('\n')
 
     # Nodes
@@ -313,7 +324,7 @@ def input_write_nodes_elements(f, structure, nodes, elements, sections, properti
                 if com[dof] == 0:
                     j += fixity
 
-            for node in sets[nset]['selection']:
+            for node in sorted(sets[nset]['selection'], key=int):
                 f.write('{0} {1}\n'.format(node + 1, j))
 
     f.write('\n')
@@ -321,8 +332,10 @@ def input_write_nodes_elements(f, structure, nodes, elements, sections, properti
     f.write('\n')
     f.write('\n')
 
+    return urs
 
-def input_write_rebar(f, properties, sections, sets):
+
+def input_write_rebar(f, properties, sections, sets, urs):
     """ Writes any reinforcement properties.
 
     Parameters
@@ -340,11 +353,12 @@ def input_write_rebar(f, properties, sections, sets):
     -------
     None
     """
+    urs += 1
 
     f.write('$ -----------------------------------------------------------------------------\n')
     f.write('$ --------------------------------------------------------------- Reinforcement\n')
     f.write('\n')
-    f.write('+PROG BEMESS urs:3\n')
+    f.write('+PROG BEMESS urs:{0}\n'.format(urs))
     f.write('\n')
     f.write('HEAD BEMESS\n')
     f.write('\n')
@@ -404,6 +418,7 @@ def input_write_rebar(f, properties, sections, sets):
                 pass
 
             f.write(geom + '\n')
+            f.write('\n')
 
             if isinstance(property.elsets, str):
                 elsets = [property.elsets]
@@ -412,6 +427,7 @@ def input_write_rebar(f, properties, sections, sets):
                 for select in sets[elset]['selection']:
                     noel = select + 1
                     # f.write('PARA WKU 0.1[mm] WKL 0.1[mm]\n')
+                    f.write('PARA NOG -\n')
                     f.write('PARA NOEL {0} DU {1}[mm] ASU {2}[cm2/m] BSU {3}[cm2/m] DL {4}[mm] ASL {5}[cm2/m] BSL {6}[cm2/m] \n'.format(noel, DU, ASU, BSU, DL, ASL, BSL))
 
     f.write('\n')
@@ -419,8 +435,90 @@ def input_write_rebar(f, properties, sections, sets):
     f.write('\n')
     f.write('\n')
 
+    # DHA = (0.5 * t - min(pos_pos)) * 1000
+    # DHB =  (0.5 * t + max(pos_neg)) * 1000
 
-#             # DHA = (0.5 * t - min(pos_pos)) * 1000
-#             # DHB =  (0.5 * t + max(pos_neg)) * 1000
+    return urs
 
-#                     f.write('DU2 1[mm] ASU2 0.95[cm2/m] BSU2 0.95[cm2/m]  DL2 1[mm] ASL 0[cm2/m] ASL2 0[cm2/m] BSL 0[cm2/m] BSL2 0[cm2/m]\n'.format(noel))
+
+def input_write_steps(f, structure, steps, loads, displacements, urs):
+    """ Writes step information to the Sofistik .dat file.
+
+    Parameters
+    ----------
+    f : obj
+        The open file object for the .dat file.
+    structure : obj
+        Struture object.
+    steps : dic
+        Step objects from structure.steps.
+    loads : dic
+        Load objects from structure.loads.
+    displacements : dic
+        Displacement objects from structure.displacements.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    - Steps are analysed in the order given by structure.steps_order.
+    """
+    f.write('$ -----------------------------------------------------------------------------\n')
+    f.write('$ ----------------------------------------------------------------------- Steps\n')
+
+    for key in structure.steps_order[1:]:  # assuming first step used already in BC
+
+        urs += 1
+
+        step = steps[key]
+        lf = step.factor
+        # stype = step.__name__
+
+        f.write('\n')
+        f.write('$ {0}\n'.format(key))
+        f.write('$ ' + '-' * len(key) + '\n')
+        f.write('\n')
+
+        f.write('+PROG ASE urs:{0}\n'.format(urs))
+        f.write('HEAD ASE\n')
+        f.write('\n')
+
+        f.write('CTRL SOLV 1\n')
+
+        for key, load in loads.items():
+
+            load_index = load.index + 1
+            ltype = load.__name__
+            com = load.components
+
+            f.write('\n')
+            f.write('$ {0}\n'.format(key))
+            f.write('$ ' + '-' * len(key) + '\n')
+            f.write('\n')
+
+            if ltype == 'GravityLoad':
+
+                components = ''
+                if com['x']:
+                    components += ' DLX {0}'.format(com['x'] * lf)
+                if com['y']:
+                    components += ' DLY {0}'.format(com['y'] * lf)
+                if com['z']:
+                    components += ' DLZ {0}'.format(com['z'] * lf)
+                f.write("LC {0} TITL '{1}'{2}\n".format(load_index, key, components))
+
+
+        f.write('\n')
+        f.write('END\n')
+        f.write('\n')
+        f.write('\n')
+
+    return urs
+
+# QUAD GRP 1 TYPE PZZ 0.535  $ in kN/m2
+# CTRL ITER V4 10
+# CTRL CONC V4
+# SYST PROB TH3 ITER 200 TOL 0.010 FMAX 1.1 NMAT YES
+# REIQ LCR 4
