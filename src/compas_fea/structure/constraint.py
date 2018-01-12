@@ -1,7 +1,3 @@
-"""
-compas_fea.structure.constraint : Constraint class.
-For restraining degrees-of-freedom between master and slave nodes/elements/surfaces.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -37,6 +33,7 @@ class TieConstraint(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, master, slave, tol):

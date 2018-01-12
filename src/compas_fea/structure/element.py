@@ -1,7 +1,3 @@
-"""
-compas_fea.structure.element : Element class.
-Library of 1D, 2D and 3D element classes for FE analysis.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -54,6 +50,7 @@ class Element(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, axes={}, nodes=None, number=None, acoustic=None, thermal=None):
@@ -79,6 +76,7 @@ class BeamElement(Element):
     Returns
     -------
     None
+
     """
 
     def __init__(self):
@@ -97,6 +95,7 @@ class SpringElement(Element):
     Returns
     -------
     None
+
     """
 
     def __init__(self):
@@ -115,6 +114,7 @@ class TrussElement(BeamElement):
     Returns
     -------
     None
+
     """
 
     def __init__(self):
@@ -133,6 +133,7 @@ class StrutElement(TrussElement):
     Returns
     -------
     None
+
     """
 
     def __init__(self):
@@ -151,6 +152,7 @@ class TieElement(TrussElement):
     Returns
     -------
     None
+
     """
 
     def __init__(self):
@@ -173,6 +175,7 @@ class ShellElement(Element):
     Returns
     -------
     None
+
     """
 
     def __init__(self):
@@ -191,6 +194,7 @@ class MembraneElement(ShellElement):
     Returns
     -------
     None
+
     """
 
     def __init__(self):
@@ -213,6 +217,7 @@ class SolidElement(Element):
     Returns
     -------
     None
+
     """
 
     def __init__(self):
@@ -231,6 +236,7 @@ class PentahedronElement(SolidElement):
     Returns
     -------
     None
+
     """
 
     def __init__(self):
@@ -249,6 +255,7 @@ class TetrahedronElement(SolidElement):
     Returns
     -------
     None
+
     """
 
     def __init__(self):
@@ -267,6 +274,7 @@ class HexahedronElement(SolidElement):
     Returns
     -------
     None
+
     """
 
     def __init__(self):

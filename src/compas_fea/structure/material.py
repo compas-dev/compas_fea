@@ -1,7 +1,3 @@
-"""
-compas_fea.structure.material : Material classes.
-For creating and/or selecting linear and non-linear material model classes.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -54,6 +50,7 @@ class ElasticIsotropic(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, E, v, p, tension=True, compression=True):
@@ -107,6 +104,7 @@ class ElasticOrthotropic(object):
     Notes
     -----
     - Class can be created but is currently not implemented.
+
     """
 
     def __init__(self, name, Ex, Ey, Ez, vxy, vyz, vzx, Gxy, Gyz, Gzx, p, tension=True, compression=True):
@@ -150,6 +148,7 @@ class ElasticPlastic(object):
     Notes
     -----
     - Plastic stress--strain pairs applies to both compression and tension.
+
     """
 
     def __init__(self, name, E, v, p, f, e):
@@ -199,6 +198,7 @@ class Steel(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, fy=355, fu=None, eu=20, E=210, v=0.3, p=7850, type='elastic-plastic', id='s', sf=1.0):
@@ -267,6 +267,7 @@ class Concrete(object):
     Notes
     -----
     - The concrete model is based on Eurocode 2 up to fck=90 MPa.
+
     """
 
     def __init__(self, name, fck, v=0.2, p=2400, fr=None):
@@ -326,6 +327,7 @@ class ConcreteSmearedCrack(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, E, v, p, fc, ec, ft, et, fr=[1.16, 0.0836]):
@@ -363,6 +365,7 @@ class ConcreteDamagedPlasticity(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, E, v, p, damage, hardening, stiffening):
@@ -398,6 +401,7 @@ class ThermalMaterial(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, conductivity, p, sheat):

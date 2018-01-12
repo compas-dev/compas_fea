@@ -1,7 +1,3 @@
-"""
-compas_fea.structure.displacement : Displacement class.
-For setting nodal degrees-of-freedom to finite values.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -58,6 +54,7 @@ class GeneralDisplacement(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, nodes, x=None, y=None, z=None, xx=None, yy=None, zz=None, axes='global'):
@@ -84,6 +81,7 @@ class FixedDisplacement(GeneralDisplacement):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -108,6 +106,7 @@ class PinnedDisplacement(GeneralDisplacement):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -131,6 +130,7 @@ class FixedDisplacementXX(PinnedDisplacement):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -155,6 +155,7 @@ class FixedDisplacementYY(PinnedDisplacement):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -179,6 +180,7 @@ class FixedDisplacementZZ(PinnedDisplacement):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -203,6 +205,7 @@ class RollerDisplacementX(PinnedDisplacement):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -227,6 +230,7 @@ class RollerDisplacementY(PinnedDisplacement):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -251,6 +255,7 @@ class RollerDisplacementZ(PinnedDisplacement):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -275,6 +280,7 @@ class RollerDisplacementXY(PinnedDisplacement):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -300,6 +306,7 @@ class RollerDisplacementYZ(PinnedDisplacement):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -325,6 +332,7 @@ class RollerDisplacementXZ(PinnedDisplacement):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, nodes, axes='global'):

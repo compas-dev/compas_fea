@@ -1,7 +1,3 @@
-"""
-compas_fea.structure.step : Step class.
-Analysis types to apply as Steps for the model.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -55,6 +51,7 @@ class GeneralStep(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, increments=100, iterations=10, factor=1.0, nlgeom=True, displacements=[], loads=[],
@@ -97,6 +94,7 @@ class HeatStep(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, interaction, increments=100, temp0=20, dTmax=1, type='HEAT TRANSFER', duration=1):
@@ -130,6 +128,7 @@ class ModalStep(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, modes=10, increments=100, displacements=[], type='modal'):
@@ -167,6 +166,7 @@ class HarmonicStep(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, freq_range, freq_steps, displacements=[], loads=[], factor=1.0, damping=None,
@@ -206,6 +206,7 @@ class BucklingStep(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, modes=10, increments=100, factor=1.0, displacements=[], loads=[], type='buckle'):

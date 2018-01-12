@@ -6,6 +6,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from compas_fea.fea import write_input_heading
+
 from math import pi
 
 
@@ -17,7 +19,6 @@ __email__     = 'liew@arch.ethz.ch'
 
 __all__ = [
     'input_generate',
-    'input_write_heading',
     'input_write_materials',
     'input_write_nodes_elements',
     'input_write_rebar',
@@ -63,7 +64,7 @@ def input_generate(structure, fields, units='m'):
 
         urs = 0
 
-        input_write_heading(f)
+        write_input_heading(f, software='sofistik')
         urs = input_write_materials(f, materials, urs)
         urs = input_write_nodes_elements(f, structure, nodes, elements, sections, properties, materials, sets, steps,
                                          displacements, units, urs)
@@ -71,32 +72,6 @@ def input_generate(structure, fields, units='m'):
         urs = input_write_steps(f, structure, steps, loads, displacements, urs)
 
     print('***** Sofistik input file generated: {0} *****\n'.format(filename))
-
-
-def input_write_heading(f):
-    """ Creates the Sofistik .dat file heading.
-
-    Parameters
-    ----------
-    f : obj
-        The open file object for the .dat file.
-
-    Returns
-    -------
-    None
-    """
-    f.write('$ -----------------------------------------------------------------------------\n')
-    f.write('$ --------------------------------------------------------------------- Heading\n')
-    f.write('$\n')
-    f.write('$                           Sofistik input file                                \n')
-    f.write('$                          SI units: [kN, m, kg, s]                             \n')
-    f.write('$            compas_fea package: Dr Andrew Liew - liew@arch.ethz.ch            \n')
-    f.write('$\n')
-    f.write('$ -----------------------------------------------------------------------------\n')
-    f.write('\n')
-    f.write('\n')
-
-    f.write('$ UNITS ARE IN kN FOR FORCE!!\n')
 
 
 def input_write_materials(f, materials, urs):
@@ -197,6 +172,7 @@ def input_write_nodes_elements(f, structure, nodes, elements, sections, properti
     Returns
     -------
     None
+
     """
     urs += 1
 
@@ -225,73 +201,6 @@ def input_write_nodes_elements(f, structure, nodes, elements, sections, properti
         xyz = [str(nodes[key][i] * cl[units]) for i in 'xyz']
         f.write(' '.join([str(key + 1)] + xyz) + '\n')
 
-    # Properties
-    # ----------
-
-    for key, property in properties.items():
-
-        if isinstance(property.elsets, str):
-            elsets = [property.elsets]
-
-        material_index = materials[property.material].index + 1
-        geometry = sections[property.section].geometry
-        reinforcement = property.reinforcement
-        rebar_index = materials[reinforcement.values()[0]['material']].index + 1
-        # assumes all layers have same material
-
-        for elset in elsets:
-            for select in sets[elset]['selection']:
-                elements[select].material_index = material_index
-                elements[select].geometry = geometry
-
-    # Elements
-    # --------
-
-    etypes = ['QUAD']
-    edic = {i: [] for i in etypes}
-
-    for ekey in sorted(elements, key=int):
-
-        element = elements[ekey]
-        nodes = [node + 1 for node in element.nodes]
-        data = [element.number + 1] + nodes + [element.material_index]
-        geometry = element.geometry
-        etype = element.__name__
-
-        if etype == 'ShellElement':
-            if len(nodes) == 4:
-                estr = 'QUAD'
-                data.extend([geometry['t']] * 4)
-            if reinforcement:
-                data.append(rebar_index)
-
-        edic[estr].append(data)
-
-    for key, edata in edic.items():
-
-        if edata:
-            f.write('\n')
-            f.write('$ {0}\n'.format(key))
-            f.write('$ ' + '-' * len(key) + '\n')
-            f.write('\n')
-
-            if key == 'QUAD':
-                # f.write('POSI KR\n')
-                f.write('QUAD NO N1 N2 N3 N4 MNO T1 T2 T3 T4')
-                if reinforcement:
-                    f.write(' MRF')
-                f.write('\n')
-                f.write('$ No. node.1 node.2 node.3 node.4 material.index t.1[m] t.2[m] t.3[m] t.4[m]')
-                if reinforcement:
-                    f.write(' rebar.index')
-                f.write('\n\n')
-
-            for j in edata:
-                f.write('{0}\n'.format(' '.join([str(i) for i in j])))
-
-    # Boundary conditions
-    # -------------------
-
     key = structure.steps_order[0]
     step = steps[key]
     stype = step.__name__
@@ -300,11 +209,7 @@ def input_write_nodes_elements(f, structure, nodes, elements, sections, properti
     f.write('$ {0}\n'.format(key))
     f.write('$ ' + '-' * len(key) + '\n')
 
-    # Mechanical
-
     if stype in ['GeneralStep']:
-
-        # Displacements
 
         for k in step.displacements:
             displacement = displacements[k]
@@ -326,6 +231,67 @@ def input_write_nodes_elements(f, structure, nodes, elements, sections, properti
 
             for node in sorted(sets[nset]['selection'], key=int):
                 f.write('{0} {1}\n'.format(node + 1, j))
+
+    # Elements
+    # --------
+
+    shells = ['ShellSection']
+
+    for key, property in properties.items():
+
+        material_index = materials[property.material].index + 1
+        reinforcement = property.reinforcement
+        section = sections[property.section]
+        geometry = section.geometry
+        elsets = property.elsets
+        stype = section.__name__
+        rebar_index = materials[reinforcement.values()[0]['material']].index + 1
+        # assumes all layers have the same material
+
+        f.write('\n')
+        f.write('$ Section: {0}\n'.format(key))
+        f.write('$ ---------' + '-' * (len(key)) + '\n')
+        f.write('\n')
+
+        if isinstance(elsets, str):
+            elsets = [elsets]
+
+        for elset in elsets:
+            selection = sets[elset]['selection']
+            set_index = sets[elset]['index'] + 1
+
+            f.write('GRP {0}\n'.format(set_index))
+            f.write('\n')
+
+            # Shell sections
+
+            if stype in shells:
+
+                tris = []
+                quads = []
+                for select in selection:
+                    element = elements[select]
+                    nodes = [node + 1 for node in element.nodes]
+                    t = geometry['t']
+                    data = [select + 1] + nodes + [material_index] + [t] * len(nodes)
+                    if reinforcement:
+                        data.append(rebar_index)
+                    quads.append(data)
+
+                if tris:
+                    pass
+
+                if quads:
+                    f.write('QUAD NO N1 N2 N3 N4 MNO T1 T2 T3 T4')
+                    if reinforcement:
+                        f.write(' MRF')
+                    f.write('\n')
+                    f.write('$ No. node.1 node.2 node.3 node.4 material.index t.1[m] t.2[m] t.3[m] t.4[m]')
+                    if reinforcement:
+                        f.write(' rebar.index')
+                    f.write('\n\n')
+                    for quad in quads:
+                        f.write('{0}\n'.format(' '.join([str(i) for i in quad])))
 
     f.write('\n')
     f.write('END\n')
@@ -380,7 +346,6 @@ def input_write_rebar(f, properties, sections, sets, urs):
             f.write('\n')
 
             t = sections[property.section].geometry['t']
-            geom = 'GEOM'
             posu, posl = [], []
             du, dl = [], []
             Au, Al = [], []
@@ -389,7 +354,6 @@ def input_write_rebar(f, properties, sections, sets, urs):
                 pos = rebar['pos']
                 dia = rebar['dia']
                 spacing = rebar['spacing']
-                # angle = rebar['angle']
                 Ac = 0.25 * pi * (dia * 100)**2
                 Apm = Ac / spacing
                 if pos > 0:
@@ -401,21 +365,40 @@ def input_write_rebar(f, properties, sections, sets, urs):
                     dl.append(dia)
                     Al.append(Apm)
 
+            geom = 'GEOM -'
+            data = ''
+
             if len(posu) == 1:
                 geom += ' HA {0}[mm]'.format((0.5 * t - posu[0]) * 1000)
-                DU = du[0] * 1000
-                ASU = Au[0]
-                BSU = Au[0]
+                data += ' DU {0}[mm] ASU {1}[cm2/m] BSU {2}[cm2/m]'.format(du[0] * 1000, Au[0], Au[0])
+
             elif len(posu) == 2:
-                pass
+                if posu[0] > posu[1]:
+                    no1 = 0
+                    no2 = 1
+                else:
+                    no1 = 1
+                    no2 = 0
+                DHA = abs(posu[0] - posu[1]) * 1000
+                geom += ' HA {0}[mm] DHA {1}[mm]'.format((0.5 * t - posu[no1]) * 1000, DHA)
+                data += ' DU {0}[mm] ASU {1}[cm2/m] BSU {2}[cm2/m]'.format(du[no1] * 1000, Au[no1], Au[no1])
+                data += ' DU2 {0}[mm] ASU2 {1}[cm2/m] BSU2 {2}[cm2/m]'.format(du[no2] * 1000, Au[no2], Au[no2])
 
             if len(posl) == 1:
                 geom += ' HB {0}[mm]'.format((0.5 * t + posl[0]) * 1000)
-                DL = dl[0] * 1000
-                ASL = Al[0]
-                BSL = Al[0]
-            elif len(posu) == 2:
-                pass
+                data += ' DL {0}[mm] ASL {1}[cm2/m] BSL {2}[cm2/m]'.format(dl[0] * 1000, Al[0], Al[0])
+
+            elif len(posl) == 2:
+                if posl[0] < posl[1]:
+                    no1 = 0
+                    no2 = 1
+                else:
+                    no1 = 1
+                    no2 = 0
+                DHB = abs(posl[0] - posl[1]) * 1000
+                geom += ' HB {0}[mm] DHB {1}[mm]'.format((0.5 * t + posl[no1]) * 1000, DHB)
+                data += ' DL {0}[mm] ASL {1}[cm2/m] BSL {2}[cm2/m]'.format(dl[no1] * 1000, Al[no1], Al[no1])
+                data += ' DL2 {0}[mm] ASL2 {1}[cm2/m] BSL2 {2}[cm2/m]'.format(dl[no2] * 1000, Al[no2], Al[no2])
 
             f.write(geom + '\n')
             f.write('\n')
@@ -423,20 +406,16 @@ def input_write_rebar(f, properties, sections, sets, urs):
             if isinstance(property.elsets, str):
                 elsets = [property.elsets]
 
+            # f.write('PARA NOG - WKU 0.1[mm] WKL 0.1[mm]\n')
+            f.write('PARA NOG -\n')
             for elset in elsets:
-                for select in sets[elset]['selection']:
-                    noel = select + 1
-                    # f.write('PARA WKU 0.1[mm] WKL 0.1[mm]\n')
-                    f.write('PARA NOG -\n')
-                    f.write('PARA NOEL {0} DU {1}[mm] ASU {2}[cm2/m] BSU {3}[cm2/m] DL {4}[mm] ASL {5}[cm2/m] BSL {6}[cm2/m] \n'.format(noel, DU, ASU, BSU, DL, ASL, BSL))
+                set_index = sets[elset]['index'] + 1
+                f.write('PARA NOG {0}{1}\n'.format(set_index, data))
 
     f.write('\n')
     f.write('END\n')
     f.write('\n')
     f.write('\n')
-
-    # DHA = (0.5 * t - min(pos_pos)) * 1000
-    # DHB =  (0.5 * t + max(pos_neg)) * 1000
 
     return urs
 
@@ -468,13 +447,13 @@ def input_write_steps(f, structure, steps, loads, displacements, urs):
     f.write('$ -----------------------------------------------------------------------------\n')
     f.write('$ ----------------------------------------------------------------------- Steps\n')
 
-    for key in structure.steps_order[1:]:  # assuming first step used already in BC
+    for key in structure.steps_order[1:]:
 
         urs += 1
 
         step = steps[key]
         lf = step.factor
-        # stype = step.__name__
+        stype = step.__name__
 
         f.write('\n')
         f.write('$ {0}\n'.format(key))
@@ -508,6 +487,8 @@ def input_write_steps(f, structure, steps, loads, displacements, urs):
                 if com['z']:
                     components += ' DLZ {0}'.format(com['z'] * lf)
                 f.write("LC {0} TITL '{1}'{2}\n".format(load_index, key, components))
+# LC 102 TITL 'Dead load' DLZ 0.0
+    # QUAD GRP 1 TYPE PZZ 0.535  $ in kN/m2
 
 
         f.write('\n')
@@ -517,8 +498,31 @@ def input_write_steps(f, structure, steps, loads, displacements, urs):
 
     return urs
 
-# QUAD GRP 1 TYPE PZZ 0.535  $ in kN/m2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # CTRL ITER V4 10
 # CTRL CONC V4
 # SYST PROB TH3 ITER 200 TOL 0.010 FMAX 1.1 NMAT YES
 # REIQ LCR 4
+
+# $ conventional steel reinforcement
+# $ --------------------------------
+
+# SREC 1 B 50[mm] H 149[mm] HO 1[mm] BO 50[mm] MNO 1 MRF 2 ASO 0.4[cm2] ASU 0.4[cm2]
+# STEE 5 B 500A
+
+# angle = rebar['angle'] 2nd layer is assumed 90 deg by default.

@@ -43,6 +43,7 @@ rhino
     :toctree: generated/
 
     add_element_set
+    add_tets_from_mesh
     add_node_set
     add_nodes_elements_from_layers
     add_sets_from_layers
@@ -50,8 +51,8 @@ rhino
     network_from_lines
     ordered_network
     plot_axes
-    plot_data
     plot_mode_shapes
+    plot_data
     plot_voxels
     plot_principal_stresses
 

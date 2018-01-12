@@ -1,7 +1,3 @@
-"""
-compas_fea.structure.element_properties : ElementProperties class.
-Object that matches elements with their material and section.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -45,6 +41,7 @@ class ElementProperties(object):
     Notes
     -----
     - elements or elsets should be given, not both.
+
     """
 
     def __init__(self, name, material, section, elsets=None, elements=None, reinforcement={}):

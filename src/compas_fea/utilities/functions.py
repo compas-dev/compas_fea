@@ -1,7 +1,3 @@
-"""
-compas_fea.utilities.functions
-Support functions for the compas_fea package.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -27,7 +23,7 @@ from time import time
 
 try:
     from numpy import abs
-    # from numpy import arccos
+    from numpy import arccos
     from numpy import arctan2
     from numpy import array
     from numpy import asarray
@@ -44,7 +40,7 @@ try:
     from numpy import sin
     from numpy import squeeze
     from numpy import sum
-    # from numpy import vdot
+    from numpy import vdot
     from numpy import vstack
     from numpy import zeros
     from numpy.linalg import inv
@@ -95,6 +91,7 @@ __all__ = [
 
 
 def colorbar(fsc, input='array', type=255):
+
     """ Creates RGB color information from -1 to 1 scaled values.
 
     Parameters
@@ -110,7 +107,9 @@ def colorbar(fsc, input='array', type=255):
     -------
     array, list
         (n x 3) array of RGB values or single RGB list.
+
     """
+
     r = abs(fsc + 0.25) * 2 - 0.5
     g = -abs(fsc - 0.25) * 2 + 1.5
     b = -(fsc - 0.25) * 2
@@ -129,6 +128,7 @@ def colorbar(fsc, input='array', type=255):
 
 
 def combine_all_sets(sets_a, sets_b):
+
     """ Combines two nested lists of node or element sets into the minimum
     ammount of set combinations. Used to determine the necesary element
     property sets, given sets of materials and sections.
@@ -144,7 +144,9 @@ def combine_all_sets(sets_a, sets_b):
     -------
     dic
         A dictionary containing the minimum number of set combinations.
+
     """
+
     comb = {}
     for i in sets_a:
         for j in sets_b:
@@ -155,6 +157,7 @@ def combine_all_sets(sets_a, sets_b):
 
 
 def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations=100):
+
     """ Make an FE mesh from an input coarse mesh data.
 
     Parameters
@@ -178,6 +181,7 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
         Vertices of discretised faces.
     list
         Triangles of discretised faces.
+
     """
 
     points_all = []
@@ -278,6 +282,7 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
 
 
 def extrude_mesh(structure, mesh, nz, dz, setname):
+
     """ Extrudes a Mesh into cells of many layers and adds to Structure.
 
     Parameters
@@ -301,7 +306,9 @@ def extrude_mesh(structure, mesh, nz, dz, setname):
     -----
     - Extrusion is along the Mesh vertex normals.
     - Elements are added automatically to the Structure object.
+
     """
+
     ki = {}
     elements = []
 
@@ -330,6 +337,7 @@ def extrude_mesh(structure, mesh, nz, dz, setname):
 
 
 def group_keys_by_attribute(adict, name, tol='3f'):
+
     """ Make group keys by shared attribute values.
 
     Parameters
@@ -345,7 +353,9 @@ def group_keys_by_attribute(adict, name, tol='3f'):
     -------
     dic
         Group dictionary.
+
     """
+
     groups = {}
     for key, item in adict.items():
         if name in item:
@@ -357,6 +367,7 @@ def group_keys_by_attribute(adict, name, tol='3f'):
 
 
 def group_keys_by_attributes(adict, names, tol='3f'):
+
     """ Make group keys by shared values of attributes.
 
     Parameters
@@ -372,7 +383,9 @@ def group_keys_by_attributes(adict, names, tol='3f'):
     -------
     dic
         Group dictionary.
+
     """
+
     groups = {}
     for key, item in adict.items():
         values = []
@@ -392,6 +405,7 @@ def group_keys_by_attributes(adict, names, tol='3f'):
 
 
 def network_order(sp_xyz, structure, network):
+
     """ Extract node and element orders from a Network for a given start-point.
 
     Parameters
@@ -413,7 +427,9 @@ def network_order(sp_xyz, structure, network):
         Cumulative lengths at element mid-points.
     float
         Total length.
+
     """
+
     gkey_key = network.gkey_key()
     start = gkey_key[geometric_key(sp_xyz, '{0}f'.format(structure.tol))]
     leaves = network.leaves()
@@ -424,7 +440,6 @@ def network_order(sp_xyz, structure, network):
     weight = {(u, v): network.edge_length(u, v) for u, v in network.edges()}
     weight.update({(v, u): weight[(u, v)] for u, v in network.edges()})
     path = dijkstra_path(adjacency, weight, start, end)
-
     nodes = [structure.check_node_exists(network.vertex_coordinates(i)) for i in path]
     elements, arclengths, length = [], [], 0
 
@@ -442,6 +457,7 @@ def network_order(sp_xyz, structure, network):
 
 
 def normalise_data(data, cmin, cmax):
+
     """ Normalise a vector of data to between -1 and 1.
 
     Parameters
@@ -459,9 +475,10 @@ def normalise_data(data, cmin, cmax):
         -1 to 1 scaled data.
     float
         The maximum absolute unscaled value.
-    """
-    f = asarray(data)
 
+    """
+
+    f = asarray(data)
     fmax = cmax if cmax is not None else max(abs(f))
     fmin = cmin if cmin is not None else min(abs(f))
     fabs = max([abs(fmin), abs(fmax)])
@@ -474,6 +491,7 @@ def normalise_data(data, cmin, cmax):
 
 
 def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, iptype, nodal):
+
     """ Post-process data from analysis results for given step and field.
 
     Parameters
@@ -515,7 +533,9 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
         Absolute maximum data value.
     list
         Normalised data values.
+
     """
+
     tic = time()
 
     dU = hstack([array(ux)[:, newaxis], array(uy)[:, newaxis], array(uz)[:, newaxis]])
@@ -527,6 +547,8 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
         escaled, eabs = normalise_data(data=values_, cmin=cbar[0], cmax=cbar[1])
     else:
         escaled = None
+    fscaled_ = [float(i) for i in list(fscaled)]
+    fabs = float(fabs)
 
     cnodes = colorbar(fsc=fscaled, input='array', type=ctype)
     cnodes_ = [list(i) for i in list(cnodes)]
@@ -536,17 +558,13 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
     else:
         celements_ = []
 
-    fscaled_ = [float(i) for i in list(fscaled)]
-    fabs = float(fabs)
-
     toc = time() - tic
 
     return toc, U, cnodes_, fabs, fscaled_, celements_
-    # print('debug')
-    # return 0, 0, 0, 0
 
 
 def process_data(data, dtype, iptype, nodal, elements, n):
+
     """ Processes the raw data.
 
     Parameters
@@ -570,7 +588,9 @@ def process_data(data, dtype, iptype, nodal, elements, n):
         Data values at each node.
     array
         Data values at each element.
+
     """
+
     if dtype == 'nodal':
         values = array(data)[:, newaxis]
         values_ = None
@@ -581,12 +601,10 @@ def process_data(data, dtype, iptype, nodal, elements, n):
         values = zeros((n, 1))
 
         for dkey, item in data.items():
-
             fdata = list(item.values())
             for i, c in enumerate(fdata):
                 if c is None:
                     fdata[i] = 0
-
             if iptype == 'max':
                 value = max(fdata)
             elif iptype == 'min':
@@ -611,7 +629,6 @@ def process_data(data, dtype, iptype, nodal, elements, n):
             dic = {i: [] for i in range(n)}
             for row, col in zip(rows, cols):
                 dic[row].append(values_[col, 0])
-
             for i in range(n):
                 if nodal == 'max':
                     values[i] = max(dic[i])
@@ -622,6 +639,7 @@ def process_data(data, dtype, iptype, nodal, elements, n):
 
 
 def voxels(values, vmin, U, vdx, plot=None, indexing=None):
+
     """ Plot normalised [0 1] values as voxel data.
 
     Parameters
@@ -642,7 +660,9 @@ def voxels(values, vmin, U, vdx, plot=None, indexing=None):
     Returns
     -------
     None
+
     """
+
     x = U[:, 0]
     y = U[:, 1]
     z = U[:, 2]
@@ -668,6 +688,7 @@ def voxels(values, vmin, U, vdx, plot=None, indexing=None):
 
 
 def tets_from_vertices_faces(vertices, faces, volume=None):
+
     """ Generate tetrahedron points and elements with MeshPy (TetGen).
 
     Parameters
@@ -685,7 +706,9 @@ def tets_from_vertices_faces(vertices, faces, volume=None):
         Points of the tetrahedrons.
     list
         Indices of points for each tetrahedron element.
+
     """
+
     info = MeshInfo()
     info.set_points(vertices)
     info.set_facets(faces)

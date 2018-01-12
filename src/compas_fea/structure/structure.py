@@ -1,7 +1,3 @@
-"""
-compas_fea.structure.structure : The main compas_fea Structure class.
-The main datastructure for all structural model information and methods.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -37,6 +33,7 @@ __all__ = [
 
 
 class Structure(object):
+
     """ Initialises empty Structure object for use in finite element analysis.
 
     Parameters
@@ -90,6 +87,7 @@ class Structure(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name='compas_fea-Structure', path=None):
@@ -194,6 +192,7 @@ Steps
 # ==============================================================================
 
     def add_node(self, xyz, ex=[1, 0, 0], ey=[0, 1, 0], ez=[0, 0, 1]):
+
         """ Adds a node to structure.nodes at co-ordinates xyz with local frame [ex, ey, ez].
 
         Parameters
@@ -215,7 +214,9 @@ Steps
         Notes
         -----
         - Nodes are numbered sequentially starting from 0.
+
         """
+
         xyz = [float(i) for i in xyz]
         key = self.check_node_exists(xyz)
         if key is None:
@@ -225,6 +226,7 @@ Steps
         return key
 
     def add_nodes(self, nodes, ex=[1, 0, 0], ey=[0, 1, 0], ez=[0, 0, 1]):
+
         """ Adds a list of nodes to structure.nodes at given co-ordinates all with local frame [ex, ey, ez].
 
         Parameters
@@ -246,10 +248,13 @@ Steps
         Notes
         -----
         - Nodes are numbered sequentially starting from 0.
+
         """
+
         return [self.add_node(xyz=node, ex=ex, ey=ey, ez=ez) for node in nodes]
 
     def add_node_to_node_index(self, key, xyz):
+
         """ Adds the node to the node_index dictionary.
 
         Parameters
@@ -262,11 +267,14 @@ Steps
         Returns
         -------
         None
+
         """
+
         gkey = geometric_key(xyz, '{0}f'.format(self.tol))
         self.node_index[gkey] = key
 
     def check_node_exists(self, xyz):
+
         """ Check if a node already exists at given x, y, z co-ordinates.
 
         Parameters
@@ -282,11 +290,14 @@ Steps
         Notes
         -----
         - Geometric key check is made according to self.tol [m] tolerance.
+
         """
+
         gkey = geometric_key(xyz, '{0}f'.format(self.tol))
         return self.node_index.get(gkey, None)
 
     def edit_node(self, key, attr_dic):
+
         """ Edit a node's data.
 
         Parameters
@@ -299,7 +310,9 @@ Steps
         Returns
         -------
         None
+
         """
+
         gkey = geometric_key(self.node_xyz(key), '{0}f'.format(self.tol))
         del self.node_index[gkey]
         for attr, item in attr_dic.items():
@@ -307,6 +320,7 @@ Steps
         self.add_node_to_node_index(key, self.node_xyz(key))
 
     def make_node_index_dic(self):
+
         """ Makes a node_index dictionary from existing structure.nodes.
 
         Parameters
@@ -316,12 +330,15 @@ Steps
         Returns
         -------
         None
+
         """
+
         for key in self.nodes:
             gkey = geometric_key(self.node_xyz(key), '{0}f'.format(self.tol))
             self.node_index[gkey] = key
 
     def node_bounds(self):
+
         """ Return the bounds formed by the Structure's nodal co-ordinates.
 
         Parameters
@@ -336,7 +353,9 @@ Steps
             [ymin, ymax].
         list
             [zmin, zmax].
+
         """
+
         n = self.node_count()
         x = [0] * n
         y = [0] * n
@@ -351,6 +370,7 @@ Steps
         return [xmin, xmax], [ymin, ymax], [zmin, zmax]
 
     def node_count(self):
+
         """ Return the number of nodes in structure.nodes.
 
         Parameters
@@ -361,10 +381,13 @@ Steps
         -------
         int
             Number of nodes stored in the Structure object.
+
         """
+
         return len(self.nodes)
 
     def node_xyz(self, node):
+
         """ Return the xyz co-ordinates of a node.
 
         Parameters
@@ -376,10 +399,13 @@ Steps
         -------
         list
             [x, y, z] co-ordinates.
+
         """
+
         return [self.nodes[node][i] for i in 'xyz']
 
     def nodes_xyz(self, nodes=[]):
+
         """ Return the xyz co-ordinates of given or all nodes.
 
         Parameters
@@ -391,7 +417,9 @@ Steps
         -------
         list
             [[x, y, z] ...] co-ordinates.
+
         """
+
         if not nodes:
             nodes = self.nodes
         return [self.node_xyz(node=node) for node in nodes]
@@ -402,6 +430,7 @@ Steps
 # ==============================================================================
 
     def add_element(self, nodes, type, acoustic=False, thermal=False, axes={}):
+
         """ Adds an element to structure.elements with centroid geometric key.
 
         Parameters
@@ -425,7 +454,9 @@ Steps
         Notes
         -----
         - Elements are numbered sequentially starting from 0.
+
         """
+
         func_dic = {
             'BeamElement': BeamElement,
             'SpringElement': SpringElement,
@@ -455,6 +486,7 @@ Steps
         return ekey
 
     def add_elements(self, elements, type, acoustic=False, thermal=False, axes={}):
+
         """ Adds multiple elements of the same type to structure.elements.
 
         Parameters
@@ -478,11 +510,14 @@ Steps
         Notes
         -----
         - Elements are numbered sequentially starting from 0.
+
         """
+
         return [self.add_element(nodes=nodes, type=type, acoustic=acoustic, thermal=thermal, axes=axes)
                 for nodes in elements]
 
     def add_element_to_element_index(self, key, nodes):
+
         """ Adds the element to the element_index dictionary.
 
         Parameters
@@ -495,12 +530,15 @@ Steps
         Returns
         -------
         None
+
         """
+
         centroid = centroid_points([self.node_xyz(node) for node in nodes])
         gkey = geometric_key(centroid, '{0}f'.format(self.tol))
         self.element_index[gkey] = key
 
     def check_element_exists(self, nodes, xyz=None):
+
         """ Check if an element already exists based on the nodes it connects to or its centroid.
 
         Parameters
@@ -518,7 +556,9 @@ Steps
         Notes
         -----
         - Geometric key check is made according to self.tol [m] tolerance.
+
         """
+
         if not xyz:
             xyz = centroid_points([self.node_xyz(node) for node in nodes])
         gkey = geometric_key(xyz, '{0}f'.format(self.tol))
@@ -529,6 +569,7 @@ Steps
         raise NotImplementedError
 
     def element_count(self):
+
         """ Return the number of elements in structure.elements.
 
         Parameters
@@ -539,10 +580,13 @@ Steps
         -------
         int
             Number of elements stored in the Structure object.
+
         """
+
         return len(self.elements)
 
     def make_element_index_dic(self):
+
         """ Makes an element_index dictionary from existing structure.elements.
 
         Parameters
@@ -552,11 +596,14 @@ Steps
         Returns
         -------
         None
+
         """
+
         for key, element in self.elements.items():
             self.add_element_to_element_index(key=key, nodes=element.nodes)
 
     def element_centroid(self, element):
+
         """ Return the centroid of an element.
 
         Parameters
@@ -568,11 +615,14 @@ Steps
         -------
         list
             Co-ordinates of the element centroid.
+
         """
+
         nodes = self.elements[element].nodes
         return centroid_points([self.node_xyz(node) for node in nodes])
 
     def add_nodal_element(self, node, type, virtual_node=False):
+
         """ Adds a nodal element to structure.elements with the possibility of
         adding a coincident virtual node. Virtual nodes are added to a node
         set called 'virtual_nodes'.
@@ -594,7 +644,9 @@ Steps
         Notes
         -----
         - Elements are numbered sequentially starting from 0.
+
         """
+
         if virtual_node:
             xyz = self.node_xyz(node)
             key = self.virtual_nodes.setdefault(node, self.node_count())
@@ -626,6 +678,7 @@ Steps
 # ==============================================================================
 
     def add_set(self, name, type, selection, explode=False):
+
         """ Adds a node, element or surface set to structure.sets.
 
         Parameters
@@ -642,7 +695,9 @@ Steps
         Returns
         -------
         None
+
         """
+
         if isinstance(selection, int):
             selection = [selection]
 
@@ -650,7 +705,7 @@ Steps
             if type in ['node', 'element']:
                 for select in selection:
                     self.sets['{0}_{1}'.format(type, select)] = {'type': type, 'selection': [select], 'explode': False}
-        self.sets[name] = {'type': type, 'selection': selection, 'explode': explode}
+        self.sets[name] = {'type': type, 'selection': selection, 'explode': explode, 'index': len(self.sets)}
 
 
 # ==============================================================================
@@ -659,6 +714,7 @@ Steps
 
     @classmethod
     def from_mesh(cls, mesh):
+
         """ Creates a Structure object based on data contained in a compas Mesh
         datastructure. The Mesh object must contain displacements, materials, sections
         and loads.
@@ -672,6 +728,7 @@ Steps
         -------
         obj
             The resulting Structure object.
+
         """
 
         structure = cls()
@@ -733,6 +790,7 @@ Steps
         pass
 
     def add_nodes_elements_from_mesh(self, mesh, element_type, acoustic=False, thermal=False):
+
         """ Adds the nodes and faces of a Mesh to the Structure object.
 
         Parameters
@@ -749,7 +807,9 @@ Steps
         Returns
         -------
         list: Keys of the created elements.
+
         """
+
         for key in sorted(list(mesh.vertices()), key=int):
             self.add_node(mesh.vertex_coordinates(key))
         ekeys = []
@@ -759,6 +819,7 @@ Steps
         return ekeys
 
     def add_nodes_elements_from_network(self, network, element_type, acoustic=False, thermal=False):
+
         """ Adds the nodes and edges of a Network to the Structure object.
 
         Parameters
@@ -776,7 +837,9 @@ Steps
         -------
         None
             Nodes and elements are updated in the Structure object.
+
         """
+
         for key in sorted(list(network.vertices()), key=int):
             self.add_node(network.vertex_coordinates(key))
         for u, v in list(network.edges()):
@@ -790,6 +853,7 @@ Steps
 # ==============================================================================
 
     def scale_displacements(self, displacements, factor):
+
         """ Scales displacements by a given factor.
 
         Parameters
@@ -803,7 +867,9 @@ Steps
         -------
         dic
             The scaled displacements dictionary.
+
         """
+
         disp_dic = {}
         for key, disp in displacements.items():
             for dkey, dcomp in disp.components.items():
@@ -813,6 +879,7 @@ Steps
         return disp_dic
 
     def scale_loads(self, loads, factor):
+
         """ Scales loads by a given factor.
 
         Parameters
@@ -826,7 +893,9 @@ Steps
         -------
         dic
             The scaled loads dictionary.
+
         """
+
         loads_dic = {}
         for key, load in loads.items():
             for lkey, lcomp in load.components.items():
@@ -841,6 +910,7 @@ Steps
 # ==============================================================================
 
     def add_constraint(self, constraint):
+
         """ Adds a Constraint object to structure.constraints.
 
         Parameters
@@ -851,11 +921,14 @@ Steps
         Returns
         -------
         None
+
         """
+
         constraint.index = len(self.constraints)
         self.constraints[constraint.name] = constraint
 
     def add_displacement(self, displacement):
+
         """ Adds a Displacement object to structure.displacements.
 
         Parameters
@@ -866,11 +939,14 @@ Steps
         Returns
         -------
         None
+
         """
+
         displacement.index = len(self.displacements)
         self.displacements[displacement.name] = displacement
 
     def add_displacements(self, displacements):
+
         """ Adds Displacement objects to structure.displacements.
 
         Parameters
@@ -881,12 +957,15 @@ Steps
         Returns
         -------
         None
+
         """
+
         for displacement in displacements:
             displacement.index = len(self.displacements)
             self.displacements[displacement.name] = displacement
 
     def add_element_properties(self, element_properties):
+
         """ Adds an ElementProperties object to structure.element_properties.
 
         Parameters
@@ -897,11 +976,14 @@ Steps
         Returns
         -------
         None
+
         """
+
         element_properties.index = len(self.element_properties)
         self.element_properties[element_properties.name] = element_properties
 
     def add_interaction(self, interaction):
+
         """ Adds an Interaction object to structure.interactions.
 
         Parameters
@@ -912,11 +994,14 @@ Steps
         Returns
         -------
         None
+
         """
+
         interaction.index = len(self.interactions)
         self.interactions[interaction.name] = interaction
 
     def add_load(self, load):
+
         """ Adds a Load object to structure.loads.
 
         Parameters
@@ -927,11 +1012,14 @@ Steps
         Returns
         -------
         None
+
         """
+
         load.index = len(self.loads)
         self.loads[load.name] = load
 
     def add_loads(self, loads):
+
         """ Adds Load objects to structure.loads.
 
         Parameters
@@ -942,12 +1030,15 @@ Steps
         Returns
         -------
         None
+
         """
+
         for load in loads:
             load.index = len(self.loads)
             self.loads[load.name] = load
 
     def add_material(self, material):
+
         """ Adds a Material object to structure.materials.
 
         Parameters
@@ -958,11 +1049,14 @@ Steps
         Returns
         -------
         None
+
         """
+
         material.index = len(self.materials)
         self.materials[material.name] = material
 
     def add_materials(self, materials):
+
         """ Adds Material objects to structure.materials.
 
         Parameters
@@ -973,12 +1067,15 @@ Steps
         Returns
         -------
         None
+
         """
+
         for material in materials:
             material.index = len(self.materials)
             self.materials[material.name] = material
 
     def add_misc(self, misc):
+
         """ Adds a Misc object to structure.misc.
 
         Parameters
@@ -989,11 +1086,14 @@ Steps
         Returns
         -------
         None
+
         """
+
         misc.index = len(self.misc)
         self.misc[misc.name] = misc
 
     def add_section(self, section):
+
         """ Adds a Section object to structure.sections.
 
         Parameters
@@ -1004,11 +1104,14 @@ Steps
         Returns
         -------
         None
+
         """
+
         section.index = len(self.sections)
         self.sections[section.name] = section
 
     def add_sections(self, sections):
+
         """ Adds Section objects to structure.sections.
 
         Parameters
@@ -1019,12 +1122,15 @@ Steps
         Returns
         -------
         None
+
         """
+
         for section in sections:
             section.index = len(self.sections)
             self.sections[section.name] = section
 
     def add_step(self, step):
+
         """ Adds a Step object to structure.steps.
 
         Parameters
@@ -1035,11 +1141,14 @@ Steps
         Returns
         -------
         None
+
         """
+
         step.index = len(self.steps)
         self.steps[step.name] = step
 
     def add_steps(self, steps):
+
         """ Adds Step objects to structure.steps.
 
         Parameters
@@ -1050,7 +1159,9 @@ Steps
         Returns
         -------
         None
+
         """
+
         for step in steps:
             step.index = len(self.steps)
             self.steps[step.name] = step
@@ -1061,6 +1172,7 @@ Steps
 # ==============================================================================
 
     def set_steps_order(self, order):
+
         """ Sets the order the Steps will be analysed.
 
         Parameters
@@ -1071,7 +1183,9 @@ Steps
         Returns
         -------
         None
+
         """
+
         self.steps_order = order
 
 
@@ -1080,6 +1194,7 @@ Steps
 # ==============================================================================
 
     def fields_dic_from_list(self, fields_list):
+
         """ Creates a fields dictionary from a fields list.
 
         Parameters
@@ -1091,7 +1206,9 @@ Steps
         -------
         dic
             Conversion to a fields dictionary.
+
         """
+
         node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
         element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'spf']
 
@@ -1104,6 +1221,7 @@ Steps
         return fields_dic
 
     def write_input_file(self, software, fields='u'):
+
         """ Writes the FE software's input file.
 
         Parameters
@@ -1116,7 +1234,9 @@ Steps
         Returns
         -------
         None
+
         """
+
         self.save_to_obj()
 
         if software == 'abaqus':
@@ -1132,6 +1252,7 @@ Steps
             sofistik.input_generate(self, fields=fields)
 
     def analyse(self, software, exe=None, cpus=2, license='research', delete=True):
+
         """ Runs the analysis through the chosen FEA software/library.
 
         Parameters
@@ -1148,7 +1269,9 @@ Steps
         Returns
         -------
         None
+
         """
+
         if software == 'abaqus':
             abaq.abaqus_launch_process(self, exe, cpus)
 
@@ -1159,6 +1282,7 @@ Steps
             opensees.opensees_launch_process(self, exe)
 
     def extract_data(self, software, fields='u', steps='last', exe=None):
+
         """ Extracts data from the FE software's output.
 
         Parameters
@@ -1175,7 +1299,9 @@ Steps
         Returns
         -------
         None
+
         """
+
         if software == 'abaqus':
             abaq.extract_odb_data(self, fields=fields, exe=exe)
 
@@ -1186,6 +1312,7 @@ Steps
             opensees.extract_out_data(self, fields=fields)
 
     def analyse_and_extract(self, software, fields='u', exe=None, cpus=2, license='research'):
+
         """ Runs the analysis through the chosen FEA software/library and extracts data.
 
         Parameters
@@ -1204,7 +1331,9 @@ Steps
         Returns
         -------
         None
+
         """
+
         self.write_input_file(software=software, fields=fields)
         self.analyse(software=software, exe=exe, cpus=cpus, license=license)
         self.extract_data(software=software, fields=fields, exe=exe)
@@ -1215,6 +1344,7 @@ Steps
 # ==============================================================================
 
     def get_nodal_results(self, step, field, nodes='all'):
+
         """ Extract nodal results from self.results.
 
         Parameters
@@ -1230,7 +1360,9 @@ Steps
         -------
         dic
             The nodal results for the requested field.
+
         """
+
         data = {}
         rdict = self.results[step]['nodal']
 
@@ -1246,6 +1378,7 @@ Steps
         return data
 
     def get_element_results(self, step, field, elements='all'):
+
         """ Extract element results from self.results.
 
         Parameters
@@ -1261,7 +1394,9 @@ Steps
         -------
         dic
             The element results for the requested field.
+
         """
+
         data = {}
         rdict = self.results[step]['element']
 
@@ -1282,6 +1417,7 @@ Steps
 # ==============================================================================
 
     def summary(self):
+
         """ Prints a summary of the Structure object contents.
 
         Parameters
@@ -1291,7 +1427,9 @@ Steps
         Returns
         -------
         None
+
         """
+
         print(self)
 
 
@@ -1300,10 +1438,8 @@ Steps
 # ==============================================================================
 
     def view(self):
-        """ Starts the QT app for visualisation.
 
-        Note:
-            - In development.
+        """ Starts the QT app for visualisation.
 
         Parameters
         ----------
@@ -1312,7 +1448,13 @@ Steps
         Returns
         -------
         None
+
+        Notes
+        -----
+        - In development.
+
         """
+
         try:
             from compas_fea.viewers.app import App
 
@@ -1327,6 +1469,7 @@ Steps
 # ==============================================================================
 
     def save_to_obj(self):
+
         """ Exports the Structure object to an .obj file through Pickle.
 
         Parameters
@@ -1336,7 +1479,9 @@ Steps
         Returns
         -------
         None
+
         """
+
         filename = '{0}{1}.obj'.format(self.path, self.name)
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
@@ -1349,6 +1494,7 @@ Steps
 
     @staticmethod
     def load_from_obj(filename):
+
         """ Imports a Structure object from an .obj file through Pickle.
 
         Parameters
@@ -1360,7 +1506,9 @@ Steps
         -------
         obj
             Imported Structure object.
+
         """
+
         with open(filename, 'rb') as f:
             structure = pickle.load(f)
             print('***** Structure loaded from: {0} *****'.format(filename))

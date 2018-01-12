@@ -1,15 +1,11 @@
-"""
-compas_fea.cad.rhino : Rhinoceros specific functions.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from compas.utilities import XFunc
-
 from compas.datastructures.mesh import Mesh
 from compas.datastructures import Network
+from compas.utilities import XFunc
 
 from compas_rhino.helpers.mesh import mesh_from_guid
 from compas_rhino.utilities import clear_layer
@@ -41,10 +37,10 @@ except ImportError:
 import json
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
@@ -65,6 +61,7 @@ __all__ = [
 
 
 def add_element_set(structure, guids, name, explode=False):
+
     """ Adds element set information from Rhino curve and mesh guids.
 
     Parameters
@@ -85,18 +82,23 @@ def add_element_set(structure, guids, name, explode=False):
     Notes
     -----
         - Meshes representing solids must have 'solid' in their name.
+
     """
+
     elements = []
+
     for guid in guids:
 
         if rs.IsCurve(guid):
+
             sp = structure.check_node_exists(rs.CurveStartPoint(guid))
             ep = structure.check_node_exists(rs.CurveEndPoint(guid))
             element = structure.check_element_exists([sp, ep])
             if element is not None:
-                        elements.append(element)
+                elements.append(element)
 
         if rs.IsMesh(guid):
+
             vertices = rs.MeshVertices(guid)
             faces = rs.MeshFaceVertices(guid)
 
@@ -119,6 +121,7 @@ def add_element_set(structure, guids, name, explode=False):
 
 
 def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, layer='Default', acoustic=False, thermal=False):
+
     """ Adds tetrahedron elements from a Rhino mesh to the Structure object.
 
     Parameters
@@ -144,13 +147,14 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
     -------
     None
         Nodes and elements are updated in the Structure object.
+
     """
+
     rhinomesh = RhinoMesh(mesh)
     vertices = rhinomesh.get_vertex_coordinates()
     faces = [face[:3] for face in rhinomesh.get_face_vertices()]
 
     path = structure.path
-
     basedir = utilities.__file__.split('__init__.py')[0]
     xfunc = XFunc(basedir=basedir, tmpdir=path, mode=1)
     xfunc.funcname = 'functions.tets_from_vertices_faces'
@@ -164,6 +168,7 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
 
     for point in tets_points:
         structure.add_node(point)
+
     ekeys = []
     for element in tets_elements:
         nodes = [structure.check_node_exists(tets_points[i]) for i in element]
@@ -183,6 +188,7 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
 
 
 def add_node_set(structure, guids, name, explode=False):
+
     """ Adds node set information from Rhino point guids.
 
     Parameters
@@ -199,19 +205,19 @@ def add_node_set(structure, guids, name, explode=False):
     Returns
     -------
     None
+
     """
+
     nodes = []
     for guid in guids:
-
         node = structure.check_node_exists(rs.PointCoordinates(guid))
-
         if node is not None:
             nodes.append(node)
-
     structure.add_set(name=name, type='node', selection=nodes, explode=explode)
 
 
 def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, acoustic=False, thermal=False):
+
     """ Adds node and element data from Rhino layers to Structure object.
 
     Parameters
@@ -235,7 +241,9 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
         Node keys that were added to the Structure.
     list
         Element keys that were added to the Structure.
+
     """
+
     solids = ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']
 
     if isinstance(layers, str):
@@ -248,15 +256,14 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
         for guid in rs.ObjectsByLayer(layer):
 
             if line_type and rs.IsCurve(guid):
-
                 sp_xyz = rs.CurveStartPoint(guid)
                 ep_xyz = rs.CurveEndPoint(guid)
                 sp = structure.add_node(sp_xyz)
                 ep = structure.add_node(ep_xyz)
                 created_nodes.add(sp)
                 created_nodes.add(ep)
-
                 ez = subtract_vectors(ep_xyz, sp_xyz)
+
                 try:
                     dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
                     ex = dic.get('ex', None)
@@ -266,14 +273,13 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                 except:
                     ex = None
                     ey = None
-                axes = {'ex': ex, 'ey': ey, 'ez': ez}
 
+                axes = {'ex': ex, 'ey': ey, 'ez': ez}
                 sp_ep = [sp, ep]
                 e = structure.add_element(nodes=sp_ep, type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
                 created_elements.add(e)
 
             elif mesh_type and rs.IsMesh(guid):
-
                 vertices = rs.MeshVertices(guid)
                 nodes = [structure.add_node(vertex) for vertex in vertices]
                 created_nodes.update(nodes)
@@ -309,6 +315,7 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 
 
 def add_sets_from_layers(structure, layers, explode=False):
+
     """ Add node or element sets to the Structure object from Rhino layers.
 
     Parameters
@@ -326,26 +333,27 @@ def add_sets_from_layers(structure, layers, explode=False):
 
     Notes
     -----
-        - Layers should exclusively contain nodes or elements.
-        - Sets will inherit the layer names as their keys.
+    - Layers should exclusively contain nodes or elements.
+    - Sets will inherit the layer names as their keys.
+
     """
+
     if isinstance(layers, str):
         layers = [layers]
 
     for layer in layers:
         guids = rs.ObjectsByLayer(layer)
         if guids:
-            check_points = [rs.IsPoint(guid) for guid in guids]
             name = layer.split('::')[-1] if '::' in layer else layer
-
+            check_points = [rs.IsPoint(guid) for guid in guids]
             if all(check_points):
                 add_node_set(structure=structure, guids=guids, name=name, explode=explode)
-
             elif not all(check_points):
                 add_element_set(structure=structure, guids=guids, name=name, explode=explode)
 
 
 def mesh_extrude(structure, guid, nz, dz, setname):
+
     """ Extrudes a Rhino mesh into cells of many layers and adds to Structure.
 
     Parameters
@@ -367,14 +375,17 @@ def mesh_extrude(structure, guid, nz, dz, setname):
 
     Notes
     -----
-        - Extrusion is along the vertex normals.
-        - Elements are added automatically to the Structure object.
+    - Extrusion is along the vertex normals.
+    - Elements are added automatically to the Structure object.
+
     """
+
     mesh = mesh_from_guid(Mesh(), guid)
     extrude_mesh(structure=structure, mesh=mesh, nz=nz, dz=dz, setname=setname)
 
 
 def network_from_lines(guids=[], layer=None):
+
     """ Creates a Network datastructure object from a list of curve guids.
 
     Parameters
@@ -388,7 +399,9 @@ def network_from_lines(guids=[], layer=None):
     -------
     obj
         Network datastructure object.
+
     """
+
     if layer:
         guids = rs.ObjectsByLayer(layer)
     lines = [[rs.CurveStartPoint(guid), rs.CurveEndPoint(guid)] for guid in guids]
@@ -396,6 +409,7 @@ def network_from_lines(guids=[], layer=None):
 
 
 def ordered_network(structure, network, layer):
+
     """ Extract node and element orders from a Network for a given start-point.
 
     Parameters
@@ -420,13 +434,16 @@ def ordered_network(structure, network, layer):
 
     Notes
     -----
-        - Function is for a Network representing a single structural element.
+    - Function is for a Network representing a single structural element.
+
     """
+
     sp_xyz = rs.PointCoordinates(rs.ObjectsByLayer(layer)[0])
     return network_order(sp_xyz=sp_xyz, structure=structure, network=network)
 
 
 def plot_axes(xyz, e11, e22, e33, layer, sc=1):
+
     """ Plots a set of axes.
 
     Parameters
@@ -447,7 +464,9 @@ def plot_axes(xyz, e11, e22, e33, layer, sc=1):
     Returns
     -------
     None
+
     """
+
     ex = rs.AddLine(xyz, add_vectors(xyz, scale_vector(e11, sc)))
     ey = rs.AddLine(xyz, add_vectors(xyz, scale_vector(e22, sc)))
     ez = rs.AddLine(xyz, add_vectors(xyz, scale_vector(e33, sc)))
@@ -455,13 +474,13 @@ def plot_axes(xyz, e11, e22, e33, layer, sc=1):
     rs.ObjectColor(ex, [255, 0, 0])
     rs.ObjectColor(ey, [0, 255, 0])
     rs.ObjectColor(ez, [0, 0, 255])
-
     rs.ObjectLayer(ex, layer)
     rs.ObjectLayer(ey, layer)
     rs.ObjectLayer(ez, layer)
 
 
 def plot_mode_shapes(structure, step, layer=None, scale=1.0):
+
     """Plots modal shapes from structure.results
 
     Parameters
@@ -478,7 +497,9 @@ def plot_mode_shapes(structure, step, layer=None, scale=1.0):
     Returns
     -------
     None
+
     """
+
     freq = structure.results[step]['frequencies']
     for fk in freq:
         layerk = layer + str(fk)
@@ -487,6 +508,7 @@ def plot_mode_shapes(structure, step, layer=None, scale=1.0):
 
 def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
               nodal='mean', mode='', colorbar_size=1):
+
     """ Plots analysis results on the deformed shape of the Structure.
 
     Parameters
@@ -520,10 +542,9 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
     Notes
     -----
-        - Pipe visualisation of line elements is not based on the element section.
-    """
+    - Pipe visualisation of line elements is not based on the element section.
 
-    path = structure.path
+    """
 
     # Create and clear Rhino layer
 
@@ -536,9 +557,8 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     # Node and element data
 
     nkeys = sorted(structure.nodes, key=int)
-    nodes = [structure.node_xyz(nkey) for nkey in nkeys]
-
     ekeys = sorted(structure.elements, key=int)
+    nodes = [structure.node_xyz(nkey) for nkey in nkeys]
     elements = [structure.elements[ekey].nodes for ekey in ekeys]
 
     nodal_data = structure.results[step]['nodal']
@@ -555,7 +575,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         elemental_data = structure.results[step]['element']
         data = elemental_data[field]
         dtype = 'element'
-
+    path = structure.path
     basedir = utilities.__file__.split('__init__.py')[0]
     xfunc = XFunc('post-process', basedir=basedir, tmpdir=path)
     xfunc.funcname = 'functions.postprocess'
@@ -621,7 +641,6 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         s = yran * 0.1 * colorbar_size
         xmin = xr[1] + 3 * s
         ymin = yr[0]
-
         xl = [xmin, xmin + s]
         yl = [ymin + i * s for i in range(11)]
         vertices = [[xi, yi, 0] for xi in xl for yi in yl]
@@ -660,6 +679,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
 def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',
                 vmin=0, vdx=None):
+
     """ Plots voxels results for 4D data with mayavi.
 
     Parameters
@@ -688,9 +708,8 @@ def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[No
     Returns
     -------
     None
-    """
 
-    path = structure.path
+    """
 
     # Create and clear Rhino layer
 
@@ -703,9 +722,8 @@ def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[No
     # Node and element data
 
     nkeys = sorted(structure.nodes, key=int)
-    nodes = [structure.node_xyz(nkey) for nkey in nkeys]
-
     ekeys = sorted(structure.elements, key=int)
+    nodes = [structure.node_xyz(nkey) for nkey in nkeys]
     elements = [structure.elements[ekey].nodes for ekey in ekeys]
 
     nodal_data = structure.results[step]['nodal']
@@ -722,7 +740,7 @@ def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[No
     except:
         data = elemental_data[field]
         dtype = 'elemental'
-
+    path = structure.path
     basedir = utilities.__file__.split('__init__.py')[0]
     xfunc = XFunc(basedir=basedir, tmpdir=path, mode=1)
     xfunc.funcname = 'functions.postprocess'
@@ -744,6 +762,7 @@ def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[No
 
 
 def plot_principal_stresses(structure, step, ptype, scale, layer):
+
     """ Plots the principal stresses of the elements.
 
     Parameters
@@ -769,8 +788,10 @@ def plot_principal_stresses(structure, step, ptype, scale, layer):
 
     Notes
     -----
-        - Currently alpha script and for only four-noded S4 shell elements.
+    - Currently alpha script and for only four-noded S4 shell elements.
+
     """
+
     pass  # make this function external
 
 #     name = structure.name

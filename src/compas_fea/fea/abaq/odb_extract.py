@@ -1,6 +1,3 @@
-"""
-Abaqus .odb data extraction file and function.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -48,6 +45,7 @@ element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'spf', 'rbfor']
 
 
 def extract_odb_data(temp, name, fields, steps='all'):
+
     """ Extracts data from the .odb file for requested steps.
 
     Parameters
@@ -64,7 +62,9 @@ def extract_odb_data(temp, name, fields, steps='all'):
     Returns
     -------
     None
+
     """
+
     odb = openOdb(path='{0}{1}.odb'.format(temp, name))
 
     results = {}

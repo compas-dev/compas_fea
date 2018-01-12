@@ -1,7 +1,3 @@
-"""
-compas_fea.structure.section : Section class.
-Section definitions for 1D, 2D and 3D finite elements.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -56,6 +52,7 @@ class AngleSection(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, b, h, t):
@@ -90,6 +87,7 @@ class BoxSection(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, b, h, tw, tf):
@@ -118,6 +116,7 @@ class CircularSection(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, r):
@@ -157,6 +156,7 @@ class GeneralSection(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, A, Ixx, Ixy, Iyy, J, g0, gw):
@@ -185,6 +185,7 @@ class ISection(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, b, h, tw, tf):
@@ -214,6 +215,7 @@ class PipeSection(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, r, t):
@@ -243,6 +245,7 @@ class RectangularSection(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, b, h):
@@ -275,6 +278,7 @@ class TrapezoidalSection(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, b1, b2, h):
@@ -301,6 +305,7 @@ class TrussSection(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, A):
@@ -323,6 +328,7 @@ class StrutSection(TrussSection):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, A):
@@ -344,6 +350,7 @@ class TieSection(TrussSection):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, A):
@@ -373,6 +380,7 @@ class SpringSection(object):
     Notes
     -----
     - Force and displacement data should start from negative to positive.
+
     """
 
     def __init__(self, name, forces=[], displacements=[], stiffness=0):
@@ -402,6 +410,7 @@ class ShellSection(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, t):
@@ -427,6 +436,7 @@ class SolidSection(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name):

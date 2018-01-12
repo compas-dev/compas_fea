@@ -1,7 +1,3 @@
-"""
-compas_fea.structure.interaction : Interaction class.
-Objects for interactions between elements and/or processes across an interface.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -43,6 +39,7 @@ class HeatTransfer(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, amplitude, interface, sink_temp, film_coef, ambient_temp, emissivity):

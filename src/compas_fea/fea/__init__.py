@@ -10,6 +10,19 @@ fea
 The compas_fea package supports ABAQUS, ANSYS and OpenSEES as analysis backends.
 
 
+write_heading
+=============
+
+.. currentmodule:: compas_fea.fea.write_heading
+
+:mod:`compas_fea.fea.write_heading`
+
+.. autosummary::
+    :toctree: generated/
+
+    write_input_heading
+
+
 abaq
 ====
 
@@ -74,8 +87,8 @@ opensees
     input_write_recorders
     input_write_patterns
     opensees_launch_process
-    
-    
+
+
 sofistik
 ========
 
@@ -87,3 +100,5 @@ sofistik
     :toctree: generated/
 
 """
+
+from .write_heading import *

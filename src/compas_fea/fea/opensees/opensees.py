@@ -1,6 +1,3 @@
-"""
-compas_fea.fea.opensees : OpenSEES file creator.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -39,6 +36,7 @@ dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 
 
 def extract_out_data(structure, fields):
+
     """ Extract data from the OpenSees .out files.
 
     Parameters
@@ -51,6 +49,7 @@ def extract_out_data(structure, fields):
     Returns
     -------
     None
+
     """
 
     tic = time()
@@ -123,6 +122,7 @@ def extract_out_data(structure, fields):
 
 
 def opensees_launch_process(structure, exe):
+
     """ Runs the analysis through OpenSees.
 
     Parameters
@@ -135,7 +135,9 @@ def opensees_launch_process(structure, exe):
     Returns
     -------
     None
+
     """
+
     name = structure.name
     path = structure.path
     temp = '{0}{1}/'.format(path, name)
@@ -166,6 +168,7 @@ def opensees_launch_process(structure, exe):
 
 
 def input_generate(structure, fields, units='m'):
+
     """ Creates the OpenSees .tcl file from the Structure object.
 
     Parameters
@@ -180,6 +183,7 @@ def input_generate(structure, fields, units='m'):
     Returns
     -------
     None
+
     """
 
     filename = '{0}{1}.tcl'.format(structure.path, structure.name)
@@ -213,6 +217,7 @@ def input_generate(structure, fields, units='m'):
 
 
 def input_write_heading(f, ndof):
+
     """ Creates the OpenSees .tcl file heading.
 
     Parameters
@@ -225,7 +230,9 @@ def input_write_heading(f, ndof):
     Returns
     -------
     None
+
     """
+
     f.write('# -----------------------------------------------------------------------------\n')
     f.write('# --------------------------------------------------------------------- Heading\n')
     f.write('#\n')
@@ -242,6 +249,7 @@ def input_write_heading(f, ndof):
 
 
 def input_write_nodes(f, nodes, units):
+
     """ Writes the nodal co-ordinates information to the OpenSees .tcl file.
 
     Parameters
@@ -256,7 +264,9 @@ def input_write_nodes(f, nodes, units):
     Returns
     -------
     None
+
     """
+
     cl = {'m': 1., 'cm': 0.01, 'mm': 0.001}
 
     f.write('# -----------------------------------------------------------------------------\n')
@@ -273,6 +283,7 @@ def input_write_nodes(f, nodes, units):
 
 
 def input_write_bcs(f, structure, steps, displacements, ndof):
+
     """ Writes boundary condition information to the OpenSees .tcl file.
 
     Parameters
@@ -291,7 +302,9 @@ def input_write_bcs(f, structure, steps, displacements, ndof):
     Returns
     -------
     None
+
     """
+
     f.write('# -----------------------------------------------------------------------------\n')
     f.write('# ------------------------------------------------------------------------- BCs\n')
 
@@ -335,6 +348,7 @@ def input_write_bcs(f, structure, steps, displacements, ndof):
 
 
 def input_write_elements(f, sections, properties, elements, structure, materials):
+
     """ Writes the element and section information to the OpenSees .tcl file.
 
     Parameters
@@ -355,6 +369,7 @@ def input_write_elements(f, sections, properties, elements, structure, materials
     Returns
     -------
     None
+
     """
 
     # Sections:
@@ -444,6 +459,7 @@ def input_write_elements(f, sections, properties, elements, structure, materials
 
 
 def input_write_patterns(f, structure, steps, loads, sets, ndof):
+
     """ Writes the load patterns information to the OpenSees .tcl file.
 
     Parameters
@@ -464,7 +480,9 @@ def input_write_patterns(f, structure, steps, loads, sets, ndof):
     Returns
     -------
     None
+
     """
+
     f.write('# -----------------------------------------------------------------------------\n')
     f.write('# -------------------------------------------------------------------- Analysis\n')
 
@@ -537,6 +555,7 @@ def input_write_patterns(f, structure, steps, loads, sets, ndof):
 
 
 def input_write_recorders(f, structure, ndof, fields):
+
     """ Writes the recorders information to the OpenSees .tcl file.
 
     Parameters
@@ -553,7 +572,9 @@ def input_write_recorders(f, structure, ndof, fields):
     Returns
     -------
     None
+
     """
+
     f.write('# -----------------------------------------------------------------------------\n')
     f.write('# ------------------------------------------------------------------- Recorders\n')
     f.write('#\n')

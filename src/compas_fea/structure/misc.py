@@ -1,7 +1,3 @@
-"""
-compas_fea.structure.misc : Misc classes.
-Miscellaneous objects.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -34,6 +30,7 @@ class Amplitude(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, values=[[0., 0.], [1., 1.]]):
@@ -58,6 +55,7 @@ class Temperature(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, file, tend=None):

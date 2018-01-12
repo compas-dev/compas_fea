@@ -1,7 +1,3 @@
-"""
-compas_fea.structure.load : Load class.
-Apply point loads and distributed loads to nodes and elements.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -48,6 +44,7 @@ class Load(object):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, axes='global', components={}, nodes=[], elements=[]):
@@ -74,6 +71,7 @@ class PrestressLoad(Load):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, elements, sxx=0):
@@ -108,6 +106,7 @@ class PointLoad(Load):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, nodes, x=0, y=0, z=0, xx=0, yy=0, zz=0):
@@ -142,6 +141,7 @@ class LineLoad(Load):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, elements, x=0, y=0, z=0, xx=0, yy=0, zz=0, axes='local'):
@@ -170,6 +170,7 @@ class AreaLoad(Load):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, elements, x=0, y=0, z=0):
@@ -198,6 +199,7 @@ class BodyLoad(Load):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, elements, x=0, y=0, z=0):
@@ -228,9 +230,10 @@ class GravityLoad(Load):
     Returns
     -------
     None
+
     """
 
-    def __init__(self, name, elements, g=-9.81, x=False, y=False, z=True):
+    def __init__(self, name, elements, g=-9.81, x=0, y=0, z=1):
         Load.__init__(self, name=name, elements=elements, axes='global')
         self.__name__ = 'GravityLoad'
         self.g = g
@@ -257,6 +260,7 @@ class AcousticLoad(Load):
     Notes
     -----
     - Placeholder for an acoustic load.
+
     """
 
     def __init__(self, name, elements, axes='global'):
@@ -295,6 +299,7 @@ class TributaryLoad(Load):
     Notes
     -----
     - The load components are loads per unit area [N/m2].
+
     """
 
     def __init__(self, structure, name, mesh, x=0, y=0, z=0, axes='global'):
@@ -335,6 +340,7 @@ class HarmonicPointLoad(Load):
     Returns
     -------
     None
+
     """
 
     def __init__(self, name, nodes, x=0, y=0, z=0, xx=0, yy=0, zz=0):

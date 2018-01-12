@@ -1,6 +1,3 @@
-"""
-Launch an Abaqus job.
-"""
 
 try:
     from abaqus import *
@@ -12,7 +9,7 @@ import sys
 
 
 __author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
+__copyright__  = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
 __license__    = 'MIT License'
 __email__      = 'liew@arch.ethz.ch'
 

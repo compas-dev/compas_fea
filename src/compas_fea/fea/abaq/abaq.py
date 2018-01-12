@@ -6,6 +6,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from compas_fea.fea import write_input_heading
 from compas_fea.fea.abaq import launch_job
 from compas_fea.fea.abaq import odb_extract
 
@@ -32,7 +33,6 @@ __all__ = [
     'input_write_constraints',
     'input_write_elements',
     'input_generate',
-    'input_write_heading',
     'input_write_materials',
     'input_write_misc',
     'input_write_nodes',
@@ -47,6 +47,7 @@ element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
 
 
 def abaqus_launch_process(structure, exe, cpus):
+
     """ Runs the analysis through Abaqus.
 
     Parameters
@@ -61,6 +62,7 @@ def abaqus_launch_process(structure, exe, cpus):
     Returns
     -------
     None
+
     """
 
     name = structure.name
@@ -139,6 +141,7 @@ def abaqus_launch_process(structure, exe, cpus):
 
 
 def extract_odb_data(structure, fields, exe):
+
     """ Extract data from the Abaqus .odb file.
 
     Parameters
@@ -153,12 +156,12 @@ def extract_odb_data(structure, fields, exe):
     Returns
     -------
     None
+
     """
 
     name = structure.name
     path = structure.path
     temp = '{0}{1}/'.format(path, name)
-
     loc = odb_extract.__file__
     subprocess = 'noGUI={0}'.format(loc.replace('\\', '/'))
 
@@ -214,6 +217,7 @@ def extract_odb_data(structure, fields, exe):
 
 
 def input_write_constraints(f, constraints):
+
     """ Writes the constraints information to the Abaqus .inp file.
 
     Parameters
@@ -226,7 +230,9 @@ def input_write_constraints(f, constraints):
     Returns
     -------
     None
+
     """
+
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** ----------------------------------------------------------------- Constraints\n')
     f.write('**\n')
@@ -254,6 +260,7 @@ def input_write_constraints(f, constraints):
 
 
 def input_write_elements(f, elements):
+
     """ Writes the element information to the Abaqus .inp file.
 
     Parameters
@@ -282,6 +289,7 @@ def input_write_elements(f, elements):
     - DC3D4   solid     4 nodes elset_DC3D4 thermal.
     - DC3D6   solid     6 nodes elset_DC3D6 thermal.
     - DC3D8   solid     8 nodes elset_DC3D8 thermal.
+
     """
 
     # Sort elements
@@ -361,6 +369,7 @@ def input_write_elements(f, elements):
 
 
 def input_generate(structure, fields, units='m'):
+
     """ Creates the Abaqus .inp file from the Structure object.
 
     Parameters
@@ -375,7 +384,9 @@ def input_generate(structure, fields, units='m'):
     Returns
     -------
     None
+
     """
+
     filename = '{0}{1}.inp'.format(structure.path, structure.name)
 
     if isinstance(fields, str):
@@ -396,7 +407,7 @@ def input_generate(structure, fields, units='m'):
         sets = structure.sets
         steps = structure.steps
 
-        input_write_heading(f)
+        write_input_heading(f, software='abaqus')
         input_write_nodes(f, nodes, units)
         input_write_elements(f, elements)
         input_write_sets(f, sets)
@@ -409,37 +420,8 @@ def input_generate(structure, fields, units='m'):
     print('***** Abaqus input file generated: {0} *****\n'.format(filename))
 
 
-def input_write_heading(f):
-    """ Creates the Abaqus .inp file heading.
-
-    Parameters
-    ----------
-    f : obj
-        The open file object for the .inp file.
-
-    Returns
-    -------
-    None
-    """
-    f.write('** -----------------------------------------------------------------------------\n')
-    f.write('** --------------------------------------------------------------------- Heading\n')
-    f.write('**\n')
-    f.write('*HEADING\n')
-    f.write('                               Abaqus input file                                \n')
-    f.write('                            SI units: [N, m, kg, s]                             \n')
-    f.write('              compas_fea package: Dr Andrew Liew - liew@arch.ethz.ch            \n')
-    f.write('**\n')
-    f.write('** -----------------------------------------------------------------------------\n')
-    f.write('**\n')
-    f.write('**\n')
-    f.write('** -----------------------------------------------------------------------------\n')
-    f.write('** ---------------------------------------------------------- Physical constants\n')
-    f.write('**\n')
-    f.write('*PHYSICAL CONSTANTS, ABSOLUTE ZERO=-273.15, STEFAN BOLTZMANN=5.67e-8\n')
-    f.write('**\n')
-
-
 def input_write_materials(f, materials):
+
     """ Writes materials to the Abaqus .inp file.
 
     Parameters
@@ -452,7 +434,9 @@ def input_write_materials(f, materials):
     Returns
     -------
     None
+
     """
+
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** ------------------------------------------------------------------- Materials\n')
 
@@ -597,6 +581,7 @@ def input_write_materials(f, materials):
 
 
 def input_write_misc(f, misc):
+
     """ Writes misc class info to the Abaqus .inp file.
 
     Parameters
@@ -609,7 +594,9 @@ def input_write_misc(f, misc):
     Returns
     -------
     None
+
     """
+
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** ------------------------------------------------------------------------ Misc\n')
     f.write('**\n')
@@ -637,6 +624,7 @@ def input_write_misc(f, misc):
 
 
 def input_write_nodes(f, nodes, units):
+
     """ Writes the nodal co-ordinates information to the Abaqus .inp file.
 
     Parameters
@@ -655,7 +643,9 @@ def input_write_nodes(f, nodes, units):
     Notes
     -----
     - Node set 'nset_all' is automatically created containing all nodes.
+
     """
+
     cl = {'m': 1., 'cm': 0.01, 'mm': 0.001}
 
     f.write('** -----------------------------------------------------------------------------\n')
@@ -692,6 +682,7 @@ def input_write_properties(f, sections, properties, elements, structure):
     Returns
     -------
     None
+
     """
 
     # Sections
@@ -887,6 +878,7 @@ def input_write_properties(f, sections, properties, elements, structure):
 
 
 def input_write_sets(f, sets):
+
     """ Creates the Abaqus .inp file node sets NSETs and element sets ELSETs.
 
     Parameters
@@ -903,7 +895,9 @@ def input_write_sets(f, sets):
     Notes
     -----
     - Restriction in Abaqus to 10 entries written per line in the .inp file.
+
     """
+
     cm = 9
     for key, set in sets.items():
 
@@ -954,6 +948,7 @@ def input_write_sets(f, sets):
 
 
 def input_write_steps(f, structure, steps, loads, displacements, interactions, misc, fields):
+
     """ Writes step information to the Abaqus .inp file.
 
     Parameters
@@ -982,7 +977,9 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
     Notes
     -----
     - Steps are analysed in the order given by structure.steps_order.
+
     """
+
     f.write('** -----------------------------------------------------------------------------\n')
     f.write('** ----------------------------------------------------------------------- Steps\n')
 
