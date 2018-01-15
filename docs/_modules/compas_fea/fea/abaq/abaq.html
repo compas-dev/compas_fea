@@ -74,6 +74,7 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 
+<span class="kn">from</span> <span class="nn">compas_fea.fea</span> <span class="k">import</span> <span class="n">write_input_heading</span>
 <span class="kn">from</span> <span class="nn">compas_fea.fea.abaq</span> <span class="k">import</span> <span class="n">launch_job</span>
 <span class="kn">from</span> <span class="nn">compas_fea.fea.abaq</span> <span class="k">import</span> <span class="n">odb_extract</span>
 
@@ -100,7 +101,6 @@
     <span class="s1">&#39;input_write_constraints&#39;</span><span class="p">,</span>
     <span class="s1">&#39;input_write_elements&#39;</span><span class="p">,</span>
     <span class="s1">&#39;input_generate&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;input_write_heading&#39;</span><span class="p">,</span>
     <span class="s1">&#39;input_write_materials&#39;</span><span class="p">,</span>
     <span class="s1">&#39;input_write_misc&#39;</span><span class="p">,</span>
     <span class="s1">&#39;input_write_nodes&#39;</span><span class="p">,</span>
@@ -115,6 +115,7 @@
 
 
 <div class="viewcode-block" id="abaqus_launch_process"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.abaqus_launch_process.html#compas_fea.fea.abaq.abaqus_launch_process">[docs]</a><span class="k">def</span> <span class="nf">abaqus_launch_process</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">exe</span><span class="p">,</span> <span class="n">cpus</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Runs the analysis through Abaqus.</span>
 
 <span class="sd">    Parameters</span>
@@ -129,6 +130,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span>
@@ -207,6 +209,7 @@
 
 
 <div class="viewcode-block" id="extract_odb_data"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.extract_odb_data.html#compas_fea.fea.abaq.extract_odb_data">[docs]</a><span class="k">def</span> <span class="nf">extract_odb_data</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">exe</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Extract data from the Abaqus .odb file.</span>
 
 <span class="sd">    Parameters</span>
@@ -221,12 +224,12 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">path</span>
     <span class="n">temp</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-
     <span class="n">loc</span> <span class="o">=</span> <span class="n">odb_extract</span><span class="o">.</span><span class="vm">__file__</span>
     <span class="n">subprocess</span> <span class="o">=</span> <span class="s1">&#39;noGUI=</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">loc</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">))</span>
 
@@ -282,6 +285,7 @@
 
 
 <div class="viewcode-block" id="input_write_constraints"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.input_write_constraints.html#compas_fea.fea.abaq.input_write_constraints">[docs]</a><span class="k">def</span> <span class="nf">input_write_constraints</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">constraints</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Writes the constraints information to the Abaqus .inp file.</span>
 
 <span class="sd">    Parameters</span>
@@ -294,7 +298,9 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** ----------------------------------------------------------------- Constraints</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -322,6 +328,7 @@
 
 
 <div class="viewcode-block" id="input_write_elements"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.input_write_elements.html#compas_fea.fea.abaq.input_write_elements">[docs]</a><span class="k">def</span> <span class="nf">input_write_elements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Writes the element information to the Abaqus .inp file.</span>
 
 <span class="sd">    Parameters</span>
@@ -350,6 +357,7 @@
 <span class="sd">    - DC3D4   solid     4 nodes elset_DC3D4 thermal.</span>
 <span class="sd">    - DC3D6   solid     6 nodes elset_DC3D6 thermal.</span>
 <span class="sd">    - DC3D8   solid     8 nodes elset_DC3D8 thermal.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Sort elements</span>
@@ -429,6 +437,7 @@
 
 
 <div class="viewcode-block" id="input_generate"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.input_generate.html#compas_fea.fea.abaq.input_generate">[docs]</a><span class="k">def</span> <span class="nf">input_generate</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Creates the Abaqus .inp file from the Structure object.</span>
 
 <span class="sd">    Parameters</span>
@@ -443,7 +452,9 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">.inp&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -464,7 +475,7 @@
         <span class="n">sets</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">sets</span>
         <span class="n">steps</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span>
 
-        <span class="n">input_write_heading</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">write_input_heading</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">)</span>
         <span class="n">input_write_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">units</span><span class="p">)</span>
         <span class="n">input_write_elements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">elements</span><span class="p">)</span>
         <span class="n">input_write_sets</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sets</span><span class="p">)</span>
@@ -477,37 +488,8 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Abaqus input file generated: </span><span class="si">{0}</span><span class="s1"> *****</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="input_write_heading"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.input_write_heading.html#compas_fea.fea.abaq.input_write_heading">[docs]</a><span class="k">def</span> <span class="nf">input_write_heading</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Creates the Abaqus .inp file heading.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    f : obj</span>
-<span class="sd">        The open file object for the .inp file.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** --------------------------------------------------------------------- Heading</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*HEADING</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;                               Abaqus input file                                </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;                            SI units: [N, m, kg, s]                             </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;              compas_fea package: Dr Andrew Liew - liew@arch.ethz.ch            </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** ---------------------------------------------------------- Physical constants</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*PHYSICAL CONSTANTS, ABSOLUTE ZERO=-273.15, STEFAN BOLTZMANN=5.67e-8</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="input_write_materials"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.input_write_materials.html#compas_fea.fea.abaq.input_write_materials">[docs]</a><span class="k">def</span> <span class="nf">input_write_materials</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">materials</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Writes materials to the Abaqus .inp file.</span>
 
 <span class="sd">    Parameters</span>
@@ -520,7 +502,9 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** ------------------------------------------------------------------- Materials</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -665,6 +649,7 @@
 
 
 <div class="viewcode-block" id="input_write_misc"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.input_write_misc.html#compas_fea.fea.abaq.input_write_misc">[docs]</a><span class="k">def</span> <span class="nf">input_write_misc</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">misc</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Writes misc class info to the Abaqus .inp file.</span>
 
 <span class="sd">    Parameters</span>
@@ -677,7 +662,9 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** ------------------------------------------------------------------------ Misc</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -705,6 +692,7 @@
 
 
 <div class="viewcode-block" id="input_write_nodes"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.input_write_nodes.html#compas_fea.fea.abaq.input_write_nodes">[docs]</a><span class="k">def</span> <span class="nf">input_write_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">units</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Writes the nodal co-ordinates information to the Abaqus .inp file.</span>
 
 <span class="sd">    Parameters</span>
@@ -723,7 +711,9 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    - Node set &#39;nset_all&#39; is automatically created containing all nodes.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">cl</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;m&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">,</span> <span class="s1">&#39;cm&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s1">&#39;mm&#39;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">}</span>
 
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -760,6 +750,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Sections</span>
@@ -955,6 +946,7 @@
 
 
 <div class="viewcode-block" id="input_write_sets"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.input_write_sets.html#compas_fea.fea.abaq.input_write_sets">[docs]</a><span class="k">def</span> <span class="nf">input_write_sets</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sets</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Creates the Abaqus .inp file node sets NSETs and element sets ELSETs.</span>
 
 <span class="sd">    Parameters</span>
@@ -971,7 +963,9 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    - Restriction in Abaqus to 10 entries written per line in the .inp file.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">cm</span> <span class="o">=</span> <span class="mi">9</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="nb">set</span> <span class="ow">in</span> <span class="n">sets</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
@@ -1022,6 +1016,7 @@
 
 
 <div class="viewcode-block" id="input_write_steps"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.input_write_steps.html#compas_fea.fea.abaq.input_write_steps">[docs]</a><span class="k">def</span> <span class="nf">input_write_steps</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">interactions</span><span class="p">,</span> <span class="n">misc</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Writes step information to the Abaqus .inp file.</span>
 
 <span class="sd">    Parameters</span>
@@ -1050,7 +1045,9 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    - Steps are analysed in the order given by structure.steps_order.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** ----------------------------------------------------------------------- Steps</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -1180,9 +1177,9 @@
                 <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;GravityLoad&#39;</span><span class="p">:</span>
 
                     <span class="n">g</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">g</span>
-                    <span class="n">gx</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
-                    <span class="n">gy</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
-                    <span class="n">gz</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+                    <span class="n">gx</span> <span class="o">=</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+                    <span class="n">gy</span> <span class="o">=</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+                    <span class="n">gz</span> <span class="o">=</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, GRAV, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">, </span><span class="si">{3}</span><span class="s1">, </span><span class="si">{4}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elset</span><span class="p">,</span> <span class="n">lf</span> <span class="o">*</span> <span class="n">g</span><span class="p">,</span> <span class="n">gx</span><span class="p">,</span> <span class="n">gy</span><span class="p">,</span> <span class="n">gz</span><span class="p">))</span>
 
                 <span class="c1"># Tributary load</span>
@@ -1376,7 +1373,7 @@
             
 
             
-                Last updated on Jan 09, 2018.
+                Last updated on Jan 15, 2018.
             
 
             

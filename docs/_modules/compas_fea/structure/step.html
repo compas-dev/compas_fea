@@ -66,11 +66,7 @@
                         
 
                         <h1>Source code for compas_fea.structure.step</h1><div class="highlight"><pre><code class="language-python border rounded">
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">compas_fea.structure.step : Step class.</span>
-<span class="sd">Analysis types to apply as Steps for the model.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
+<span></span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
@@ -123,6 +119,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">nlgeom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span>
@@ -165,6 +162,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">temp0</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">dTmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;HEAT TRANSFER&#39;</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
@@ -198,6 +196,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;modal&#39;</span><span class="p">):</span>
@@ -235,6 +234,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">freq_range</span><span class="p">,</span> <span class="n">freq_steps</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -274,6 +274,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;buckle&#39;</span><span class="p">):</span>
@@ -351,7 +352,7 @@
             
 
             
-                Last updated on Jan 09, 2018.
+                Last updated on Jan 15, 2018.
             
 
             

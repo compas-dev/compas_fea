@@ -66,11 +66,7 @@
                         
 
                         <h1>Source code for compas_fea.structure.section</h1><div class="highlight"><pre><code class="language-python border rounded">
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">compas_fea.structure.section : Section class.</span>
-<span class="sd">Section definitions for 1D, 2D and 3D finite elements.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
+<span></span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
@@ -124,6 +120,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
@@ -158,6 +155,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">tw</span><span class="p">,</span> <span class="n">tf</span><span class="p">):</span>
@@ -186,6 +184,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
@@ -225,6 +224,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">Ixx</span><span class="p">,</span> <span class="n">Ixy</span><span class="p">,</span> <span class="n">Iyy</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">g0</span><span class="p">,</span> <span class="n">gw</span><span class="p">):</span>
@@ -253,6 +253,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">tw</span><span class="p">,</span> <span class="n">tf</span><span class="p">):</span>
@@ -282,6 +283,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
@@ -311,6 +313,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
@@ -319,9 +322,11 @@
         <span class="n">Iyy</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mf">12.</span><span class="p">)</span> <span class="o">*</span> <span class="n">h</span> <span class="o">*</span> <span class="n">b</span><span class="o">**</span><span class="mi">3</span>
         <span class="n">l1</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">])</span>
         <span class="n">l2</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">b</span><span class="p">,</span> <span class="n">h</span><span class="p">])</span>
+        <span class="n">Avy</span> <span class="o">=</span> <span class="mf">0.833</span> <span class="o">*</span> <span class="n">A</span>
+        <span class="n">Avx</span> <span class="o">=</span> <span class="mf">0.833</span> <span class="o">*</span> <span class="n">A</span>
         <span class="n">J</span> <span class="o">=</span> <span class="p">(</span><span class="n">l1</span> <span class="o">*</span> <span class="n">l2</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.33333</span> <span class="o">-</span> <span class="mf">0.21</span> <span class="o">*</span> <span class="p">(</span><span class="n">l2</span> <span class="o">/</span> <span class="n">l1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">l2</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">12</span> <span class="o">*</span> <span class="n">l1</span><span class="o">**</span><span class="mi">4</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;RectangularSection&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Avx&#39;</span><span class="p">:</span> <span class="n">Avx</span><span class="p">,</span> <span class="s1">&#39;Avy&#39;</span><span class="p">:</span> <span class="n">Avy</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
@@ -343,6 +348,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
@@ -369,6 +375,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
@@ -391,6 +398,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
@@ -412,6 +420,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
@@ -441,6 +450,7 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    - Force and displacement data should start from negative to positive.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="p">[],</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">stiffness</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -470,6 +480,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
@@ -495,6 +506,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -567,7 +579,7 @@
             
 
             
-                Last updated on Jan 09, 2018.
+                Last updated on Jan 15, 2018.
             
 
             

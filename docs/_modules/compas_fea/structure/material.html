@@ -66,11 +66,7 @@
                         
 
                         <h1>Source code for compas_fea.structure.material</h1><div class="highlight"><pre><code class="language-python border rounded">
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">compas_fea.structure.material : Material classes.</span>
-<span class="sd">For creating and/or selecting linear and non-linear material model classes.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
+<span></span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
@@ -122,6 +118,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">tension</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -175,6 +172,7 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    - Class can be created but is currently not implemented.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">Ex</span><span class="p">,</span> <span class="n">Ey</span><span class="p">,</span> <span class="n">Ez</span><span class="p">,</span> <span class="n">vxy</span><span class="p">,</span> <span class="n">vyz</span><span class="p">,</span> <span class="n">vzx</span><span class="p">,</span> <span class="n">Gxy</span><span class="p">,</span> <span class="n">Gyz</span><span class="p">,</span> <span class="n">Gzx</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">tension</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -218,6 +216,7 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    - Plastic stress--strain pairs applies to both compression and tension.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
@@ -267,6 +266,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">,</span> <span class="n">fu</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eu</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">210</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">7850</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;elastic-plastic&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">sf</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
@@ -335,6 +335,7 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    - The concrete model is based on Eurocode 2 up to fck=90 MPa.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fck</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2400</span><span class="p">,</span> <span class="n">fr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -394,6 +395,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">ec</span><span class="p">,</span> <span class="n">ft</span><span class="p">,</span> <span class="n">et</span><span class="p">,</span> <span class="n">fr</span><span class="o">=</span><span class="p">[</span><span class="mf">1.16</span><span class="p">,</span> <span class="mf">0.0836</span><span class="p">]):</span>
@@ -431,6 +433,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">damage</span><span class="p">,</span> <span class="n">hardening</span><span class="p">,</span> <span class="n">stiffening</span><span class="p">):</span>
@@ -466,6 +469,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">conductivity</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">sheat</span><span class="p">):</span>
@@ -540,7 +544,7 @@
             
 
             
-                Last updated on Jan 09, 2018.
+                Last updated on Jan 15, 2018.
             
 
             

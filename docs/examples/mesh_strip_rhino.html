@@ -22,7 +22,7 @@
         
         
         
-            <link rel="prev" title="Examples" href="../examples.html" />
+            <link rel="prev" title="beam_bathe Rhino" href="beam_bathe_rhino.html" />
         
 
         <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -71,7 +71,7 @@
 
                         <div class="section" id="mesh-strip-rhino">
 <span id="id1"></span><h1>mesh_strip Rhino</h1>
-<p>This example works for: Abaqus.</p>
+<p>This example works for: <strong>Abaqus</strong>.</p>
 <div class="figure">
 <img alt="../_images/mesh_strip_rhino.png" class="figure-img img-fluid" src="../_images/mesh_strip_rhino.png" />
 </div>
@@ -90,10 +90,10 @@
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
 
 
-<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
-<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">&#39;Copyright 2017, BLOCK Research Group - ETH Zurich&#39;</span>
-<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
-<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
+<span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright 2018, BLOCK Research Group - ETH Zurich&#39;</span>
+<span class="n">__license__</span>   <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
+<span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
 
 
 <span class="c1"># Create empty Structure object</span>
@@ -106,12 +106,11 @@
 
 <span class="c1"># Add node and element sets</span>
 
-<span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nset_left&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_right&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_middle&#39;</span><span class="p">,</span> <span class="s1">&#39;elset_mesh&#39;</span><span class="p">]</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="n">layers</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;nset_left&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_right&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_middle&#39;</span><span class="p">,</span> <span class="s1">&#39;elset_mesh&#39;</span><span class="p">])</span>
 
 <span class="c1"># Add materials</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_alu_linear&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">75</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2700</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_alu&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">75</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2700</span><span class="p">))</span>
 
 <span class="c1"># Add sections</span>
 
@@ -119,8 +118,8 @@
 
 <span class="c1"># Add element properties</span>
 
-<span class="n">ep</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_alu_linear&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_plate&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_plate&#39;</span><span class="p">)</span>
+<span class="n">ep</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_plate&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_alu&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_plate&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span>
 
 <span class="c1"># Add loads</span>
 
@@ -163,7 +162,7 @@
                         
                         <!-- <nav class="compas-sideways">
                             
-                                <a href="../examples.html" class="btn btn-primary compas-prev" role="button">Examples</a>
+                                <a href="beam_bathe_rhino.html" class="btn btn-primary compas-prev" role="button">beam_bathe Rhino</a>
                             
 
                             
@@ -198,6 +197,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../examples.html">Examples</a><ul class="nav active">
+<li class="nav-item"><a class="nav-link reference internal" href="beam_bathe_rhino.html">beam_bathe Rhino</a></li>
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">mesh_strip Rhino</a></li>
 </ul>
 </li>
@@ -235,7 +235,7 @@
             
 
             
-                Last updated on Jan 09, 2018.
+                Last updated on Jan 15, 2018.
             
 
             

@@ -66,10 +66,7 @@
                         
 
                         <h1>Source code for compas_fea.fea.opensees.opensees</h1><div class="highlight"><pre><code class="language-python border rounded">
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">compas_fea.fea.opensees : OpenSEES file creator.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
+<span></span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
@@ -107,6 +104,7 @@
 
 
 <span class="k">def</span> <span class="nf">extract_out_data</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Extract data from the OpenSees .out files.</span>
 
 <span class="sd">    Parameters</span>
@@ -119,6 +117,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
@@ -191,6 +190,7 @@
 
 
 <div class="viewcode-block" id="opensees_launch_process"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.opensees_launch_process.html#compas_fea.fea.opensees.opensees_launch_process">[docs]</a><span class="k">def</span> <span class="nf">opensees_launch_process</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">exe</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Runs the analysis through OpenSees.</span>
 
 <span class="sd">    Parameters</span>
@@ -203,7 +203,9 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">name</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">path</span>
     <span class="n">temp</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
@@ -234,6 +236,7 @@
 
 
 <div class="viewcode-block" id="input_generate"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_generate.html#compas_fea.fea.opensees.input_generate">[docs]</a><span class="k">def</span> <span class="nf">input_generate</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Creates the OpenSees .tcl file from the Structure object.</span>
 
 <span class="sd">    Parameters</span>
@@ -248,6 +251,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">.tcl&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -281,6 +285,7 @@
 
 
 <div class="viewcode-block" id="input_write_heading"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_heading.html#compas_fea.fea.opensees.input_write_heading">[docs]</a><span class="k">def</span> <span class="nf">input_write_heading</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ndof</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Creates the OpenSees .tcl file heading.</span>
 
 <span class="sd">    Parameters</span>
@@ -293,7 +298,9 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# --------------------------------------------------------------------- Heading</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -310,6 +317,7 @@
 
 
 <div class="viewcode-block" id="input_write_nodes"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_nodes.html#compas_fea.fea.opensees.input_write_nodes">[docs]</a><span class="k">def</span> <span class="nf">input_write_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">units</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Writes the nodal co-ordinates information to the OpenSees .tcl file.</span>
 
 <span class="sd">    Parameters</span>
@@ -324,7 +332,9 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">cl</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;m&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">,</span> <span class="s1">&#39;cm&#39;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s1">&#39;mm&#39;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">}</span>
 
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -341,6 +351,7 @@
 
 
 <div class="viewcode-block" id="input_write_bcs"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_bcs.html#compas_fea.fea.opensees.input_write_bcs">[docs]</a><span class="k">def</span> <span class="nf">input_write_bcs</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">ndof</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Writes boundary condition information to the OpenSees .tcl file.</span>
 
 <span class="sd">    Parameters</span>
@@ -359,7 +370,9 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# ------------------------------------------------------------------------- BCs</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -403,6 +416,7 @@
 
 
 <div class="viewcode-block" id="input_write_elements"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_elements.html#compas_fea.fea.opensees.input_write_elements">[docs]</a><span class="k">def</span> <span class="nf">input_write_elements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sections</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">materials</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Writes the element and section information to the OpenSees .tcl file.</span>
 
 <span class="sd">    Parameters</span>
@@ -423,6 +437,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Sections:</span>
@@ -468,7 +483,8 @@
 
             <span class="k">if</span> <span class="p">(</span><span class="n">stype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">shells</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">stype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">solids</span><span class="p">):</span>
 
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# eType, No., node.start, node.end, A[m2], E[Pa], G[Pa], J[m^4], Iyy[m^4], Ixx[m^4], trans</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# eType No. node.start node.end E[Pa] G[Pa] A[m2] J[m^4] Ixx[m^4] Iyy[m^4] Avy[m2] Avx[m2] trans</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="c1"># f.write(&#39;# eType, No., node.start, node.end, A[m2], E[Pa], G[Pa], J[m^4], Iyy[m^4], Ixx[m^4], trans\n&#39;)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
                     <span class="n">sp</span><span class="p">,</span> <span class="n">ep</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="n">select</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
@@ -481,9 +497,13 @@
                     <span class="n">J</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;J&#39;</span><span class="p">]</span>
                     <span class="n">Ixx</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;Ixx&#39;</span><span class="p">]</span>
                     <span class="n">Iyy</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;Iyy&#39;</span><span class="p">]</span>
+                    <span class="n">Avy</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;Avy&#39;</span><span class="p">]</span>
+                    <span class="n">Avx</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;Avx&#39;</span><span class="p">]</span>
                     <span class="n">ex</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">[</span><span class="n">select</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="s1">&#39;ex&#39;</span><span class="p">]])</span>
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;geomTransf PDelta </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">select</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ex</span><span class="p">))</span>
+                    <span class="c1"># f.write(&#39;geomTransf PDelta {0} {1}\n&#39;.format(n, ex))</span>
+                    <span class="c1"># f.write(&#39;element ElasticTimoshenkoBeam {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11}\n&#39;.format(n, i, j, E, G, A, J, Ixx, Iyy, Avy, Avx, n))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;geomTransf Corotational </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">select</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ex</span><span class="p">))</span>
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;element elasticBeamColumn </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="s1"> </span><span class="si">{3}</span><span class="s1"> </span><span class="si">{4}</span><span class="s1"> </span><span class="si">{5}</span><span class="s1"> </span><span class="si">{6}</span><span class="s1"> </span><span class="si">{7}</span><span class="s1"> </span><span class="si">{8}</span><span class="s1"> </span><span class="si">{9}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                             <span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">Ixx</span><span class="p">,</span> <span class="n">Iyy</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
 
@@ -512,6 +532,7 @@
 
 
 <div class="viewcode-block" id="input_write_patterns"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_patterns.html#compas_fea.fea.opensees.input_write_patterns">[docs]</a><span class="k">def</span> <span class="nf">input_write_patterns</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">ndof</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Writes the load patterns information to the OpenSees .tcl file.</span>
 
 <span class="sd">    Parameters</span>
@@ -532,7 +553,9 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# -------------------------------------------------------------------- Analysis</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -605,6 +628,7 @@
 
 
 <div class="viewcode-block" id="input_write_recorders"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_write_recorders.html#compas_fea.fea.opensees.input_write_recorders">[docs]</a><span class="k">def</span> <span class="nf">input_write_recorders</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">ndof</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Writes the recorders information to the OpenSees .tcl file.</span>
 
 <span class="sd">    Parameters</span>
@@ -621,7 +645,9 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;# ------------------------------------------------------------------- Recorders</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -742,7 +768,7 @@
             
 
             
-                Last updated on Jan 09, 2018.
+                Last updated on Jan 15, 2018.
             
 
             

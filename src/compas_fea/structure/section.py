@@ -254,9 +254,11 @@ class RectangularSection(object):
         Iyy = (1 / 12.) * h * b**3
         l1 = max([b, h])
         l2 = min([b, h])
+        Avy = 0.833 * A
+        Avx = 0.833 * A
         J = (l1 * l2**3) * (0.33333 - 0.21 * (l2 / l1) * (1 - (l2**4) / (12 * l1**4)))
         self.__name__ = 'RectangularSection'
-        self.geometry = {'b': b, 'h': h, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
+        self.geometry = {'b': b, 'h': h, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0, 'Avx': Avx, 'Avy': Avy}
         self.name = name
 
 

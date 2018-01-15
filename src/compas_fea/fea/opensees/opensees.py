@@ -415,6 +415,7 @@ def input_write_elements(f, sections, properties, elements, structure, materials
 
             if (stype not in shells) and (stype not in solids):
 
+                # f.write('# eType No. node.start node.end E[Pa] G[Pa] A[m2] J[m^4] Ixx[m^4] Iyy[m^4] Avy[m2] Avx[m2] trans\n')
                 f.write('# eType, No., node.start, node.end, A[m2], E[Pa], G[Pa], J[m^4], Iyy[m^4], Ixx[m^4], trans\n')
                 f.write('#\n')
                 for select in selection:
@@ -428,9 +429,13 @@ def input_write_elements(f, sections, properties, elements, structure, materials
                     J = geometry['J']
                     Ixx = geometry['Ixx']
                     Iyy = geometry['Iyy']
+                    Avy = geometry['Avy']
+                    Avx = geometry['Avx']
                     ex = ' '.join([str(k) for k in elements[select].axes['ex']])
                     f.write('#\n')
-                    f.write('geomTransf PDelta {0} {1}\n'.format(select + 1, ex))
+                    # f.write('geomTransf PDelta {0} {1}\n'.format(n, ex))
+                    # f.write('element ElasticTimoshenkoBeam {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11}\n'.format(n, i, j, E, G, A, J, Ixx, Iyy, Avy, Avx, n))
+                    f.write('geomTransf Corotational {0} {1}\n'.format(select + 1, ex))
                     f.write('element elasticBeamColumn {0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
                             n, i, j, A, E, G, J, Ixx, Iyy, n))
 
