@@ -11,12 +11,46 @@ __email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
+    'DesignStep',
     'GeneralStep',
     'HeatStep',
     'ModalStep',
     'HarmonicStep',
     'BucklingStep'
 ]
+
+
+class DesignStep(object):
+
+    """ Initialises an SLS or ULS DesignStep object for use in design code checks.
+
+    Parameters
+    ----------
+    name : str
+        Name of the DesignStep.
+    type : str
+        Type of design check: 'rebar'.
+    state : str
+        Limit state: 'sls' or 'uls'.
+    step : str
+        Name of the Step to check.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    - Incomplete testing class for Sofistik design checks.
+
+    """
+
+    def __init__(self, name, type, state, step):
+        self.__name__ = 'DesignStep'
+        self.name = name
+        self.type = type
+        self.state = state
+        self.step = step
 
 
 class GeneralStep(object):

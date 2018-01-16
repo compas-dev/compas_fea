@@ -7,6 +7,7 @@ from __future__ import division
 from __future__ import print_function
 
 from compas_fea.fea import write_input_heading
+from compas_fea.fea import write_input_nodes
 from compas_fea.fea.abaq import launch_job
 from compas_fea.fea.abaq import odb_extract
 
@@ -35,7 +36,6 @@ __all__ = [
     'input_generate',
     'input_write_materials',
     'input_write_misc',
-    'input_write_nodes',
     'input_write_properties',
     'input_write_sets',
     'input_write_steps'
@@ -394,21 +394,22 @@ def input_generate(structure, fields, units='m'):
 
     with open(filename, 'w') as f:
 
-        constraints = structure.constraints
+        constraints   = structure.constraints
         displacements = structure.displacements
-        elements = structure.elements
-        interactions = structure.interactions
-        loads = structure.loads
-        materials = structure.materials
-        misc = structure.misc
-        nodes = structure.nodes
-        properties = structure.element_properties
-        sections = structure.sections
-        sets = structure.sets
-        steps = structure.steps
+        elements      = structure.elements
+        interactions  = structure.interactions
+        loads         = structure.loads
+        materials     = structure.materials
+        misc          = structure.misc
+        nodes         = structure.nodes
+        properties    = structure.element_properties
+        sections      = structure.sections
+        sets          = structure.sets
+        steps         = structure.steps
 
         write_input_heading(f, software='abaqus')
-        input_write_nodes(f, nodes, units)
+        write_input_nodes(f, software='abaqus', nodes=nodes)
+
         input_write_elements(f, elements)
         input_write_sets(f, sets)
         input_write_materials(f, materials)
@@ -621,46 +622,6 @@ def input_write_misc(f, misc):
                 f.write('{0}, {1}\n'.format(i, j))
 
         f.write('**\n')
-
-
-def input_write_nodes(f, nodes, units):
-
-    """ Writes the nodal co-ordinates information to the Abaqus .inp file.
-
-    Parameters
-    ----------
-    f : obj
-        The open file object for the .inp file.
-    nodes : dic
-        Node dictionary from structure.nodes.
-    units : str
-        Units of the nodal co-ordinates.
-
-    Returns
-    -------
-    None
-
-    Notes
-    -----
-    - Node set 'nset_all' is automatically created containing all nodes.
-
-    """
-
-    cl = {'m': 1., 'cm': 0.01, 'mm': 0.001}
-
-    f.write('** -----------------------------------------------------------------------------\n')
-    f.write('** ----------------------------------------------------------------------- Nodes\n')
-    f.write('**\n')
-    f.write('*NODE, NSET=nset_all\n')
-    f.write('** No., x[m], y[m], z[m]\n')
-    f.write('**\n')
-
-    for key in sorted(nodes, key=int):
-
-        xyz = [str(nodes[key][i] * cl[units]) for i in 'xyz']
-        f.write(', '.join([str(key + 1)] + xyz) + '\n')
-
-    f.write('**\n')
 
 
 def input_write_properties(f, sections, properties, elements, structure):
@@ -1004,238 +965,241 @@ def input_write_steps(f, structure, steps, loads, displacements, interactions, m
 
         step = steps[key]
         stype = step.__name__
-        increments = step.increments
-        method = step.type
 
-        f.write('**\n')
-        f.write('** {0}\n'.format(key))
-        f.write('** ' + '-' * len(key) + '\n')
-        f.write('**\n')
+        if stype != 'DesignStep':
 
-        # Mechanical
+            increments = step.increments
+            method = step.type
 
-        if stype in ['GeneralStep', 'BucklingStep']:
-
-            # Header
-
-            if stype == 'BucklingStep':
-                nlgeom = 'NO'
-            else:
-                nlgeom = 'YES' if step.nlgeom else 'NO'
-            perturbation = ', PERTURBATION' if stype == 'BucklingStep' else ''
-            lf = step.factor
-            f.write('*STEP, NLGEOM={0}, NAME={1}{2}, INC={3}\n'.format(nlgeom, key, perturbation, increments))
-            f.write('*{0}\n'.format(method.upper()))
+            f.write('**\n')
+            f.write('** {0}\n'.format(key))
+            f.write('** ' + '-' * len(key) + '\n')
             f.write('**\n')
 
-            # Modes
+            # Mechanical
 
-            if stype == 'BucklingStep':
+            if stype in ['GeneralStep', 'BucklingStep']:
 
-                modes = step.modes
-                f.write('{0}, {1}, {2}, {3}\n'.format(modes, modes, 2 * modes, increments))
+                # Header
 
-            # Loads
-
-            for k in step.loads:
-
-                load = loads[k]
-                ltype = load.__name__
-                com = load.components
-                axes = load.axes
-                nset = load.nodes
-                elset = load.elements
-
-                f.write('**\n')
-                f.write('** {0}\n'.format(k))
-                f.write('** ' + '-' * len(k) + '\n')
+                if stype == 'BucklingStep':
+                    nlgeom = 'NO'
+                else:
+                    nlgeom = 'YES' if step.nlgeom else 'NO'
+                perturbation = ', PERTURBATION' if stype == 'BucklingStep' else ''
+                lf = step.factor
+                f.write('*STEP, NLGEOM={0}, NAME={1}{2}, INC={3}\n'.format(nlgeom, key, perturbation, increments))
+                f.write('*{0}\n'.format(method.upper()))
                 f.write('**\n')
 
-                # Type
+                # Modes
 
-                if ltype in ['PointLoad', 'TributaryLoad']:
-                    f.write('*CLOAD\n')
-                    f.write('** NSET, dof, CLOAD\n')
+                if stype == 'BucklingStep':
 
-                if ltype in ['LineLoad', 'AreaLoad', 'GravityLoad', 'BodyLoad']:
-                    f.write('*DLOAD\n')
-                    f.write('** ELSET, component, DLOAD\n')
+                    modes = step.modes
+                    f.write('{0}, {1}, {2}, {3}\n'.format(modes, modes, 2 * modes, increments))
 
-                f.write('**\n')
+                # Loads
 
-                # Point load
+                for k in step.loads:
 
-                if ltype == 'PointLoad':
+                    load = loads[k]
+                    ltype = load.__name__
+                    com = load.components
+                    axes = load.axes
+                    nset = load.nodes
+                    elset = load.elements
 
-                    for c, dof in enumerate(dofs, 1):
-                        if com[dof]:
-                            f.write('{0}, {1}, {2}'.format(nset, c, lf * com[dof]) + '\n')
+                    f.write('**\n')
+                    f.write('** {0}\n'.format(k))
+                    f.write('** ' + '-' * len(k) + '\n')
+                    f.write('**\n')
 
-                # Line load
+                    # Type
 
-                elif ltype == 'LineLoad':
+                    if ltype in ['PointLoad', 'TributaryLoad']:
+                        f.write('*CLOAD\n')
+                        f.write('** NSET, dof, CLOAD\n')
 
-                    if axes == 'global':
-                        for dof in dofs[:3]:
+                    if ltype in ['LineLoad', 'AreaLoad', 'GravityLoad', 'BodyLoad']:
+                        f.write('*DLOAD\n')
+                        f.write('** ELSET, component, DLOAD\n')
+
+                    f.write('**\n')
+
+                    # Point load
+
+                    if ltype == 'PointLoad':
+
+                        for c, dof in enumerate(dofs, 1):
                             if com[dof]:
-                                f.write('{0}, P{1}, {2}'.format(elset, dof.upper(), lf * com[dof]) + '\n')
+                                f.write('{0}, {1}, {2}'.format(nset, c, lf * com[dof]) + '\n')
 
-                    elif axes == 'local':
-                        if com['x']:
-                            f.write('{0}, P1, {1}'.format(elset, lf * com['x']) + '\n')
-                        if com['y']:
-                            f.write('{0}, P2, {1}'.format(elset, lf * com['y']) + '\n')
+                    # Line load
 
-                # Area load
+                    elif ltype == 'LineLoad':
 
-                elif ltype == 'AreaLoad':
+                        if axes == 'global':
+                            for dof in dofs[:3]:
+                                if com[dof]:
+                                    f.write('{0}, P{1}, {2}'.format(elset, dof.upper(), lf * com[dof]) + '\n')
 
-                    if axes == 'global':
+                        elif axes == 'local':
+                            if com['x']:
+                                f.write('{0}, P1, {1}'.format(elset, lf * com['x']) + '\n')
+                            if com['y']:
+                                f.write('{0}, P2, {1}'.format(elset, lf * com['y']) + '\n')
+
+                    # Area load
+
+                    elif ltype == 'AreaLoad':
+
+                        if axes == 'global':
+                            raise NotImplementedError
+
+                        elif axes == 'local':
+                            # x COMPONENT
+                            # y COMPONENT
+                            if com['z']:
+                                f.write('{0}, P, {1}'.format(elset, lf * com['z']) + '\n')
+
+                    # Body load
+
+                    elif ltype == 'BodyLoad':
                         raise NotImplementedError
 
-                    elif axes == 'local':
-                        # x COMPONENT
-                        # y COMPONENT
-                        if com['z']:
-                            f.write('{0}, P, {1}'.format(elset, lf * com['z']) + '\n')
+                    # Gravity load
 
-                # Body load
+                    elif ltype == 'GravityLoad':
 
-                elif ltype == 'BodyLoad':
-                    raise NotImplementedError
+                        g = load.g
+                        gx = com['x'] if com['x'] else 0
+                        gy = com['y'] if com['y'] else 0
+                        gz = com['z'] if com['z'] else 0
+                        f.write('{0}, GRAV, {1}, {2}, {3}, {4}\n'.format(elset, lf * g, gx, gy, gz))
 
-                # Gravity load
+                    # Tributary load
 
-                elif ltype == 'GravityLoad':
+                    elif ltype == 'TributaryLoad':
 
-                    g = load.g
-                    gx = com['x'] if com['x'] else 0
-                    gy = com['y'] if com['y'] else 0
-                    gz = com['z'] if com['z'] else 0
-                    f.write('{0}, GRAV, {1}, {2}, {3}, {4}\n'.format(elset, lf * g, gx, gy, gz))
+                        for node in sorted(com, key=int):
+                            for c, dof in enumerate(dofs[:3], 1):
+                                if com[node][dof]:
+                                    ni = node + 1
+                                    dl = com[node][dof] * lf
+                                    f.write('{0}, {1}, {2}\n'.format(ni, c, dl))
 
-                # Tributary load
+                # Displacements
 
-                elif ltype == 'TributaryLoad':
+                for k in step.displacements:
 
-                    for node in sorted(com, key=int):
-                        for c, dof in enumerate(dofs[:3], 1):
-                            if com[node][dof]:
-                                ni = node + 1
-                                dl = com[node][dof] * lf
-                                f.write('{0}, {1}, {2}\n'.format(ni, c, dl))
+                    displacement = displacements[k]
+                    com = displacement.components
+                    nset = displacement.nodes
 
-            # Displacements
+                    f.write('**\n')
+                    f.write('** {0}\n'.format(k))
+                    f.write('** ' + '-' * len(k) + '\n')
+                    f.write('**\n')
+                    f.write('*BOUNDARY\n')
+                    f.write('** NSET, dof.start, dof.end, displacement\n')
+                    f.write('**\n')
 
-            for k in step.displacements:
+                    for c, dof in enumerate(dofs, 1):
+                        if com[dof] is not None:
+                            f.write('{0}, {1}, {1}, {2}\n'.format(nset, c, com[dof] * lf))
 
-                displacement = displacements[k]
-                com = displacement.components
-                nset = displacement.nodes
+                # Temperatures
+
+                # try:
+                #     duration = step.duration
+                # except:
+                #     duration = 1
+                #     temperatures = steps[key].temperatures
+                #     if temperatures:
+                #         file = misc[temperatures].file
+                #         einc = str(misc[temperatures].einc)
+                #         f.write('**\n')
+                #         f.write('*TEMPERATURE, FILE={0}, BSTEP=1, BINC=1, ESTEP=1, EINC={1}, INTERPOLATE\n'.format(file, einc))
+
+                # fieldOutputs
 
                 f.write('**\n')
-                f.write('** {0}\n'.format(k))
-                f.write('** ' + '-' * len(k) + '\n')
+                f.write('** Output\n')
+                f.write('** ------\n')
                 f.write('**\n')
-                f.write('*BOUNDARY\n')
-                f.write('** NSET, dof.start, dof.end, displacement\n')
+                f.write('*OUTPUT, FIELD\n')
                 f.write('**\n')
 
-                for c, dof in enumerate(dofs, 1):
-                    if com[dof] is not None:
-                        f.write('{0}, {1}, {1}, {2}\n'.format(nset, c, com[dof] * lf))
+                if isinstance(fields, list):
+                    fields = structure.fields_dic_from_list(fields)
+                if 'spf' in fields:
+                    fields['ctf'] = 'all'
+                    del fields['spf']
 
-            # Temperatures
+                f.write('*NODE OUTPUT\n')
+                if fields == 'all':
+                    f.write(', '.join([i.upper() for i in node_fields]) + '\n')
+                else:
+                    f.write(', '.join([i.upper() for i in node_fields if i in fields]) + '\n')
+                f.write('**\n')
 
-            # try:
+                f.write('*ELEMENT OUTPUT\n')
+                if fields == 'all':
+                    f.write(', '.join([i.upper() for i in element_fields]) + '\n')
+                else:
+                    f.write(', '.join([i.upper() for i in element_fields if (i in fields and i != 'rbfor')]) + '\n')
+                f.write('**\n')
+
+                if (fields == 'all') or ('rbfor' in fields):
+                    f.write('*ELEMENT OUTPUT, REBAR\n')
+                    f.write('RBFOR\n')
+                f.write('**\n')
+
+                f.write('*END STEP\n')
+
+            # Thermal
+
+            # elif stype == 'HeatStep':
+            #     temp0 = step.temp0
             #     duration = step.duration
-            # except:
-            #     duration = 1
-            #     temperatures = steps[key].temperatures
-            #     if temperatures:
-            #         file = misc[temperatures].file
-            #         einc = str(misc[temperatures].einc)
-            #         f.write('**\n')
-            #         f.write('*TEMPERATURE, FILE={0}, BSTEP=1, BINC=1, ESTEP=1, EINC={1}, INTERPOLATE\n'.format(file, einc))
+            #     deltmx = steps[key].deltmx
+            #     interaction = interactions[step.interaction]
+            #     amplitude = interaction.amplitude
+            #     interface = interaction.interface
+            #     sink_t = interaction.sink_t
+            #     film_c = interaction.film_c
+            #     ambient_t = interaction.ambient_t
+            #     emissivity = interaction.emissivity
 
-            # fieldOutputs
+            #     # Initial T
 
-            f.write('**\n')
-            f.write('** Output\n')
-            f.write('** ------\n')
-            f.write('**\n')
-            f.write('*OUTPUT, FIELD\n')
-            f.write('**\n')
+            #     f.write('*INITIAL CONDITIONS, TYPE=TEMPERATURE\n')
+            #     f.write('NSET_ALL, {0}\n'.format(temp0))
+            #     f.write('**\n')
 
-            if isinstance(fields, list):
-                fields = structure.fields_dic_from_list(fields)
-            if 'spf' in fields:
-                fields['ctf'] = 'all'
-                del fields['spf']
+            #     # Interface
 
-            f.write('*NODE OUTPUT\n')
-            if fields == 'all':
-                f.write(', '.join([i.upper() for i in node_fields]) + '\n')
-            else:
-                f.write(', '.join([i.upper() for i in node_fields if i in fields]) + '\n')
-            f.write('**\n')
+            #     f.write('*STEP, NAME={0}, INC={1}\n'.format(sname, increments))
+            #     f.write('*{0}, END=PERIOD, DELTMX={1}\n'.format(method, deltmx))
+            #     f.write('1, {0}, 5.4e-05, {0}\n'.format(duration))
+            #     f.write('**\n')
+            #     f.write('*SFILM, AMPLITUDE={0}\n'.format(amplitude))
+            #     f.write('{0}, F, {1}, {2}\n'.format(interface, sink_t, film_c))
+            #     f.write('**\n')
+            #     f.write('*SRADIATE, AMPLITUDE={0}\n'.format(amplitude))
+            #     f.write('{0}, R, {1}, {2}\n'.format(interface, ambient_t, emissivity))
 
-            f.write('*ELEMENT OUTPUT\n')
-            if fields == 'all':
-                f.write(', '.join([i.upper() for i in element_fields]) + '\n')
-            else:
-                f.write(', '.join([i.upper() for i in element_fields if (i in fields and i != 'rbfor')]) + '\n')
-            f.write('**\n')
+            #     # fieldOutputs
 
-            if (fields == 'all') or ('rbfor' in fields):
-                f.write('*ELEMENT OUTPUT, REBAR\n')
-                f.write('RBFOR\n')
-            f.write('**\n')
-
-            f.write('*END STEP\n')
-
-        # Thermal
-
-        # elif stype == 'HeatStep':
-        #     temp0 = step.temp0
-        #     duration = step.duration
-        #     deltmx = steps[key].deltmx
-        #     interaction = interactions[step.interaction]
-        #     amplitude = interaction.amplitude
-        #     interface = interaction.interface
-        #     sink_t = interaction.sink_t
-        #     film_c = interaction.film_c
-        #     ambient_t = interaction.ambient_t
-        #     emissivity = interaction.emissivity
-
-        #     # Initial T
-
-        #     f.write('*INITIAL CONDITIONS, TYPE=TEMPERATURE\n')
-        #     f.write('NSET_ALL, {0}\n'.format(temp0))
-        #     f.write('**\n')
-
-        #     # Interface
-
-        #     f.write('*STEP, NAME={0}, INC={1}\n'.format(sname, increments))
-        #     f.write('*{0}, END=PERIOD, DELTMX={1}\n'.format(method, deltmx))
-        #     f.write('1, {0}, 5.4e-05, {0}\n'.format(duration))
-        #     f.write('**\n')
-        #     f.write('*SFILM, AMPLITUDE={0}\n'.format(amplitude))
-        #     f.write('{0}, F, {1}, {2}\n'.format(interface, sink_t, film_c))
-        #     f.write('**\n')
-        #     f.write('*SRADIATE, AMPLITUDE={0}\n'.format(amplitude))
-        #     f.write('{0}, R, {1}, {2}\n'.format(interface, ambient_t, emissivity))
-
-        #     # fieldOutputs
-
-        #     f.write('**\n')
-        #     f.write('** OUTPUT\n')
-        #     f.write('** ------\n')
-        #     f.write('*OUTPUT, FIELD\n')
-        #     f.write('**\n')
-        #     f.write('*NODE OUTPUT\n')
-        #     f.write('NT\n')
-        #     f.write('**\n')
-        #     f.write('*END STEP\n')
+            #     f.write('**\n')
+            #     f.write('** OUTPUT\n')
+            #     f.write('** ------\n')
+            #     f.write('*OUTPUT, FIELD\n')
+            #     f.write('**\n')
+            #     f.write('*NODE OUTPUT\n')
+            #     f.write('NT\n')
+            #     f.write('**\n')
+            #     f.write('*END STEP\n')
 
         f.write('**\n')

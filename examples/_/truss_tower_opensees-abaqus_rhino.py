@@ -39,8 +39,8 @@ mdl.add_section(TrussSection(name='sec_truss', A=0.0050))
 
 # Add element properties
 
-ep = Properties(material='mat_elastic', section='sec_truss', elsets='elset_struts')
-mdl.add_element_properties(ep, name='ep_strut')
+ep = Properties(name='ep_strut', material='mat_elastic', section='sec_truss', elsets='elset_struts')
+mdl.add_element_properties(ep)
 
 # Add loads
 

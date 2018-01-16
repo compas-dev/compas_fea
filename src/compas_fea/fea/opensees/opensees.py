@@ -3,6 +3,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from compas_fea.fea import write_input_bcs
+from compas_fea.fea import write_input_heading
+from compas_fea.fea import write_input_nodes
+
 from subprocess import Popen
 from subprocess import PIPE
 
@@ -23,9 +27,6 @@ __all__ = [
     'extract_out_data',
     'opensees_launch_process',
     'input_generate',
-    'input_write_heading',
-    'input_write_nodes',
-    'input_write_bcs',
     'input_write_elements',
     'input_write_recorders',
     'input_write_patterns',
@@ -190,15 +191,18 @@ def input_generate(structure, fields, units='m'):
 
     with open(filename, 'w') as f:
 
+        constraints   = structure.constraints
         displacements = structure.displacements
-        elements = structure.elements
-        loads = structure.loads
-        materials = structure.materials
-        nodes = structure.nodes
-        properties = structure.element_properties
-        sections = structure.sections
-        sets = structure.sets
-        steps = structure.steps
+        elements      = structure.elements
+        interactions  = structure.interactions
+        loads         = structure.loads
+        materials     = structure.materials
+        misc          = structure.misc
+        nodes         = structure.nodes
+        properties    = structure.element_properties
+        sections      = structure.sections
+        sets          = structure.sets
+        steps         = structure.steps
 
         ndof = 3
         for element in elements.values():
@@ -206,145 +210,15 @@ def input_generate(structure, fields, units='m'):
                 ndof = 6
                 break
 
-        input_write_heading(f, ndof)
-        input_write_nodes(f, nodes, units)
-        input_write_bcs(f, structure, steps, displacements, ndof)
+        write_input_heading(f, 'opensees', ndof)
+        write_input_nodes(f, 'opensees', nodes)
+        write_input_bcs(f, 'opensees', structure, steps, displacements, ndof)
+
         input_write_elements(f, sections, properties, elements, structure, materials)
         input_write_recorders(f, structure, ndof, fields)
         input_write_patterns(f, structure, steps, loads, sets, ndof)
 
     print('***** OpenSees input file generated: {0} *****\n'.format(filename))
-
-
-def input_write_heading(f, ndof):
-
-    """ Creates the OpenSees .tcl file heading.
-
-    Parameters
-    ----------
-    f : obj
-        The open file object for the .tcl file.
-    ndof : int
-        Number of degrees-of-freedom per node.
-
-    Returns
-    -------
-    None
-
-    """
-
-    f.write('# -----------------------------------------------------------------------------\n')
-    f.write('# --------------------------------------------------------------------- Heading\n')
-    f.write('#\n')
-    f.write('#                            OpenSees input file                               \n')
-    f.write('#                          SI units: [N, m, kg, s]                             \n')
-    f.write('#            compas_fea package: Dr Andrew Liew - liew@arch.ethz.ch            \n')
-    f.write('#\n')
-    f.write('# -----------------------------------------------------------------------------\n')
-
-    f.write('#\n')
-    f.write('wipe\n')
-    f.write('model basic -ndm 3 -ndf {0}\n'.format(ndof))
-    f.write('#\n')
-
-
-def input_write_nodes(f, nodes, units):
-
-    """ Writes the nodal co-ordinates information to the OpenSees .tcl file.
-
-    Parameters
-    ----------
-    f : obj
-        The open file object for the .tcl file.
-    nodes : dic
-        Node dictionary from structure.nodes.
-    units : str
-        Units of the nodal co-ordinates.
-
-    Returns
-    -------
-    None
-
-    """
-
-    cl = {'m': 1., 'cm': 0.01, 'mm': 0.001}
-
-    f.write('# -----------------------------------------------------------------------------\n')
-    f.write('# ----------------------------------------------------------------------- Nodes\n')
-    f.write('#\n')
-    f.write('# No., x[m], y[m], z[m]\n')
-    f.write('#\n')
-
-    for key in sorted(nodes, key=int):
-        xyz = [str(nodes[key][i] * cl[units]) for i in 'xyz']
-        f.write('node ' + ' '.join([str(key + 1)] + xyz) + '\n')
-
-    f.write('#\n')
-
-
-def input_write_bcs(f, structure, steps, displacements, ndof):
-
-    """ Writes boundary condition information to the OpenSees .tcl file.
-
-    Parameters
-    ----------
-    f : obj
-        The open file object for the .tcl file.
-    structure : obj
-        Struture object.
-    steps : dic
-        Step objects from structure.steps.
-    displacements : dic
-        Displacement objects from structure.displacements.
-    ndof : int
-        Number of degrees-of-freedom per node.
-
-    Returns
-    -------
-    None
-
-    """
-
-    f.write('# -----------------------------------------------------------------------------\n')
-    f.write('# ------------------------------------------------------------------------- BCs\n')
-
-    key = structure.steps_order[0]
-    step = steps[key]
-    stype = step.__name__
-
-    f.write('#\n')
-    f.write('# {0}\n'.format(key))
-    f.write('# ' + '-' * len(key) + '\n')
-
-    # Mechanical
-
-    if stype in ['GeneralStep', 'BucklingStep']:
-
-        # Displacements
-
-        for k in step.displacements:
-            displacement = displacements[k]
-            com = displacement.components
-            nset = displacement.nodes
-
-            f.write('#\n')
-            f.write('# {0}\n'.format(k))
-            f.write('# ' + '-' * len(k) + '\n')
-            f.write('#\n')
-            f.write('# Node, {0}\n'.format(', '.join(dofs[:ndof])))
-            f.write('#\n')
-
-            j = []
-            for dof in dofs[:ndof]:
-                if com[dof] is not None:
-                    j.append('1')
-                else:
-                    j.append('0')
-
-            for node in structure.sets[nset]['selection']:
-                f.write('fix {0} {1}\n'.format(node + 1, ' '.join(j)))
-
-    f.write('#\n')
 
 
 def input_write_elements(f, sections, properties, elements, structure, materials):

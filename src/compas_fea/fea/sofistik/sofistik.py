@@ -6,7 +6,9 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from compas_fea.fea import write_input_bcs
 from compas_fea.fea import write_input_heading
+from compas_fea.fea import write_input_nodes
 
 from math import pi
 
@@ -26,7 +28,6 @@ __all__ = [
 
 
 dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
-fixitys = ['PX', 'PY', 'PZ', 'MX', 'MY' 'MZ']
 
 
 def input_generate(structure, fields, units='m'):
@@ -52,24 +53,32 @@ def input_generate(structure, fields, units='m'):
 
     with open(filename, 'w') as f:
 
+        constraints   = structure.constraints
         displacements = structure.displacements
-        elements = structure.elements
-        loads = structure.loads
-        materials = structure.materials
-        nodes = structure.nodes
-        properties = structure.element_properties
-        sections = structure.sections
-        sets = structure.sets
-        steps = structure.steps
-
-        urs = 0
+        elements      = structure.elements
+        interactions  = structure.interactions
+        loads         = structure.loads
+        materials     = structure.materials
+        misc          = structure.misc
+        nodes         = structure.nodes
+        properties    = structure.element_properties
+        sections      = structure.sections
+        sets          = structure.sets
+        steps         = structure.steps
 
         write_input_heading(f, software='sofistik')
-        urs = input_write_materials(f, materials, urs)
-        urs = input_write_nodes_elements(f, structure, nodes, elements, sections, properties, materials, sets, steps,
-                                         displacements, units, urs)
-        urs = input_write_rebar(f, properties, sections, sets, urs)
-        urs = input_write_steps(f, structure, steps, loads, displacements, sets, urs)
+
+        urs = 1
+        f.write('+PROG SOFIMSHA urs:{0}\n'.format(urs))
+        write_input_nodes(f, 'sofistik', nodes)
+        write_input_bcs(f, 'sofistik', structure, steps, displacements)
+        f.write('END\n$\n')
+
+        # urs = input_write_materials(f, materials, urs)
+        # urs = input_write_nodes_elements(f, structure, nodes, elements, sections, properties, materials, sets, steps,
+        #                                  displacements, units, urs)
+        # urs = input_write_rebar(f, properties, sections, sets, urs)
+        # urs = input_write_steps(f, structure, steps, loads, displacements, sets, urs)
 
     print('***** Sofistik input file generated: {0} *****\n'.format(filename))
 
@@ -176,61 +185,16 @@ def input_write_nodes_elements(f, structure, nodes, elements, sections, properti
     """
     urs += 1
 
-    cl = {'m': 1., 'cm': 0.01, 'mm': 0.001}
-
     f.write('$ -----------------------------------------------------------------------------\n')
-    f.write('$ ---------------------------------------------------------- Nodes and elements\n')
+    f.write('$ -------------------------------------------------------------------- Elements\n')
     f.write('\n')
     f.write('+PROG SOFIMSHA urs:{0}\n'.format(urs))
     f.write('\n')
     f.write('HEAD SOFIMSHA\n')
-    f.write('UNIT 0\n')
-    f.write('SYST 3D GDIR POSX,POSY,NEGZ\n')
-    f.write('CTRL OPT OPTI 10\n')
-    f.write('\n')
-
-    # Nodes
-    # -----
-
-    f.write('NODE NO X Y Z\n')
-    f.write('$ No., x[m], y[m], z[m]\n')
-    f.write('\n')
-
-    for key in sorted(nodes, key=int):
-
-        xyz = [str(nodes[key][i] * cl[units]) for i in 'xyz']
-        f.write(' '.join([str(key + 1)] + xyz) + '\n')
-
-    key = structure.steps_order[0]
-    step = steps[key]
-    stype = step.__name__
 
     f.write('\n')
-    f.write('$ {0}\n'.format(key))
-    f.write('$ ' + '-' * len(key) + '\n')
 
-    if stype in ['GeneralStep']:
 
-        for k in step.displacements:
-            displacement = displacements[k]
-            com = displacement.components
-            nset = displacement.nodes
-
-            f.write('\n')
-            f.write('$ {0}\n'.format(k))
-            f.write('$ ' + '-' * len(k) + '\n')
-            f.write('\n')
-            f.write('NODE NO FIX\n')
-            f.write('$ node fixity\n')
-            f.write('\n')
-
-            j = ''
-            for dof, fixity in zip(dofs, fixitys):
-                if com[dof] == 0:
-                    j += fixity
-
-            for node in sorted(sets[nset]['selection'], key=int):
-                f.write('{0} {1}\n'.format(node + 1, j))
 
     # Elements
     # --------
@@ -330,6 +294,7 @@ def input_write_rebar(f, properties, sections, sets, urs):
     f.write('\n')
     f.write('CTRL WARN 7\n')  # Upper cover (<10mm or >0.70d)
     f.write('CTRL WARN 9\n')  # Bottom cover (<10mm or >0.70d)
+    f.write('CTRL WARN 471\n')  # Element thickness too thin and not allowed for design.
     f.write('\n')
 
     # Properties
@@ -452,68 +417,101 @@ def input_write_steps(f, structure, steps, loads, displacements, sets, urs):
 
     for key in structure.steps_order[1:]:
 
-        urs += 1
+        step = steps[key]
+        stype = step.__name__
 
-        f.write('\n')
-        f.write('+PROG ASE urs:{0}\n'.format(urs))
-        f.write('HEAD ASE\n')
-        f.write('\n')
+        if stype != 'DesignStep':
 
-        f.write('\n')
-        f.write('$ {0}\n'.format(key))
-        f.write('$ ' + '-' * len(key) + '\n')
-        f.write('\n')
+            urs += 1
+
+            step_index = step.index
+            factor = step.factor
+
+            f.write('\n')
+            f.write('+PROG ASE urs:{0}\n'.format(urs))
+            f.write('HEAD ASE\n')
+
+            f.write('\n')
+            f.write('$ {0}\n'.format(key))
+            f.write('$ ' + '-' * len(key) + '\n')
+            f.write('\n')
+
+            DLX, DLY, DLZ = 0, 0, 0
+
+            f.write('CTRL SOLV 1\n')
+            f.write('\n')
+            f.write("LC {0} TITL '{1}' FACT {2}".format(step_index, key, factor))
+
+            for lkey in step.loads:
+
+                load = loads[lkey]
+                ltype = load.__name__
+                com = load.components
+                if ltype == 'GravityLoad':
+                    if com['x']:
+                        DLX += com['x'] * factor
+                    if com['y']:
+                        DLY += com['y'] * factor
+                    if com['z']:
+                        DLZ += com['z'] * factor
+
+            f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX, DLY, DLZ))
+
+            for key in step.loads:
+
+                pass
+                # load = loads[key]
+                # ltype = load.__name__
+                # com = load.components
+                # elset = load.elements
+                # set_index = sets[elset]['index'] + 1
+
+                # elif ltype == 'AreaLoad':
+
+                    # f.write('\n')
+                #     components = ''
+                #     if com['x']:
+                #         pass
+                #     if com['y']:
+                #         pass
+                #     if com['z']:
+                #         components += ' PZZ {0}'.format(0.001 * com['z'] * lf)
+                #     f.write('    QUAD GRP {0}{1}\n'.format(set_index, components))
+
+            f.write('\n')
+            f.write('END\n')
+            f.write('\n')
+
+    f.write('$ -----------------------------------------------------------------------------\n')
+    f.write('$ ---------------------------------------------------------------------- Design\n')
+
+    for key in structure.steps_order[1:]:
 
         step = steps[key]
-        step_index = step.index
-        factor = step.factor
         stype = step.__name__
-        DLX, DLY, DLZ = 0, 0, 0
 
-        f.write('CTRL SOLV 1\n')
-        f.write('\n')
-        f.write("LC {0} TITL '{1}' FACT {2}".format(step_index, key, factor))
+        if stype == 'DesignStep':
 
-        for lkey in step.loads:
+            urs += 1
 
-            load = loads[lkey]
-            ltype = load.__name__
-            com = load.components
-            if ltype == 'GravityLoad':
-                if com['x']:
-                    DLX += com['x'] * factor
-                if com['y']:
-                    DLY += com['y'] * factor
-                if com['z']:
-                    DLZ += com['z'] * factor
+            dtype = step.type
+            state = step.state
+            lc_step = steps[step.step].index
 
-        f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX, DLY, DLZ))
+            if dtype == 'rebar':
 
-        for key in step.loads:
+                f.write('\n')
+                f.write('+PROG BEMESS urs:{0}\n'.format(urs))
+                f.write('HEAD {0} {1}\n'.format(dtype, state))
+                # CTRL PFAI 2
+                # CTRL SERV GALF 1.45
+                # CTRL LCR 2
+                f.write('LC {0}\n'.format(lc_step))
 
-            pass
-            # load = loads[key]
-            # ltype = load.__name__
-            # com = load.components
-            # elset = load.elements
-            # set_index = sets[elset]['index'] + 1
+            f.write('\n')
+            f.write('END\n')
+            f.write('\n')
 
-            # elif ltype == 'AreaLoad':
-
-                # f.write('\n')
-            #     components = ''
-            #     if com['x']:
-            #         pass
-            #     if com['y']:
-            #         pass
-            #     if com['z']:
-            #         components += ' PZZ {0}'.format(0.001 * com['z'] * lf)
-            #     f.write('    QUAD GRP {0}{1}\n'.format(set_index, components))
-
-        f.write('\n')
-        f.write('END\n')
-        f.write('\n')
-        f.write('\n')
 
     return urs
 

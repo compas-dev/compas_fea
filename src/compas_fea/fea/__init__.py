@@ -23,6 +23,32 @@ write_heading
     write_input_heading
 
 
+write_nodes
+=============
+
+.. currentmodule:: compas_fea.fea.write_nodes
+
+:mod:`compas_fea.fea.write_nodes`
+
+.. autosummary::
+    :toctree: generated/
+
+    write_input_nodes
+
+
+write_bcs
+=========
+
+.. currentmodule:: compas_fea.fea.write_bcs
+
+:mod:`compas_fea.fea.write_bcs`
+
+.. autosummary::
+    :toctree: generated/
+
+    write_input_bcs
+
+
 abaq
 ====
 
@@ -102,3 +128,5 @@ sofistik
 """
 
 from .write_heading import *
+from .write_nodes import *
+from .write_bcs import *
