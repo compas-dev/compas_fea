@@ -69,7 +69,7 @@ def input_generate(structure, fields, units='m'):
         urs = input_write_nodes_elements(f, structure, nodes, elements, sections, properties, materials, sets, steps,
                                          displacements, units, urs)
         urs = input_write_rebar(f, properties, sections, sets, urs)
-        urs = input_write_steps(f, structure, steps, loads, displacements, urs)
+        urs = input_write_steps(f, structure, steps, loads, displacements, sets, urs)
 
     print('***** Sofistik input file generated: {0} *****\n'.format(filename))
 
@@ -420,7 +420,7 @@ def input_write_rebar(f, properties, sections, sets, urs):
     return urs
 
 
-def input_write_steps(f, structure, steps, loads, displacements, urs):
+def input_write_steps(f, structure, steps, loads, displacements, sets, urs):
     """ Writes step information to the Sofistik .dat file.
 
     Parameters
@@ -435,6 +435,8 @@ def input_write_steps(f, structure, steps, loads, displacements, urs):
         Load objects from structure.loads.
     displacements : dic
         Displacement objects from structure.displacements.
+    sets : dic
+        Sets dictionary from structure.sets.
 
     Returns
     -------
@@ -444,6 +446,7 @@ def input_write_steps(f, structure, steps, loads, displacements, urs):
     -----
     - Steps are analysed in the order given by structure.steps_order.
     """
+
     f.write('$ -----------------------------------------------------------------------------\n')
     f.write('$ ----------------------------------------------------------------------- Steps\n')
 
@@ -451,45 +454,61 @@ def input_write_steps(f, structure, steps, loads, displacements, urs):
 
         urs += 1
 
-        step = steps[key]
-        lf = step.factor
-        stype = step.__name__
+        f.write('\n')
+        f.write('+PROG ASE urs:{0}\n'.format(urs))
+        f.write('HEAD ASE\n')
+        f.write('\n')
 
         f.write('\n')
         f.write('$ {0}\n'.format(key))
         f.write('$ ' + '-' * len(key) + '\n')
         f.write('\n')
 
-        f.write('+PROG ASE urs:{0}\n'.format(urs))
-        f.write('HEAD ASE\n')
-        f.write('\n')
+        step = steps[key]
+        step_index = step.index
+        factor = step.factor
+        stype = step.__name__
+        DLX, DLY, DLZ = 0, 0, 0
 
         f.write('CTRL SOLV 1\n')
+        f.write('\n')
+        f.write("LC {0} TITL '{1}' FACT {2}".format(step_index, key, factor))
 
-        for key, load in loads.items():
+        for lkey in step.loads:
 
-            load_index = load.index + 1
+            load = loads[lkey]
             ltype = load.__name__
             com = load.components
-
-            f.write('\n')
-            f.write('$ {0}\n'.format(key))
-            f.write('$ ' + '-' * len(key) + '\n')
-            f.write('\n')
-
             if ltype == 'GravityLoad':
-
-                components = ''
                 if com['x']:
-                    components += ' DLX {0}'.format(com['x'] * lf)
+                    DLX += com['x'] * factor
                 if com['y']:
-                    components += ' DLY {0}'.format(com['y'] * lf)
+                    DLY += com['y'] * factor
                 if com['z']:
-                    components += ' DLZ {0}'.format(com['z'] * lf)
-                f.write("LC {0} TITL '{1}'{2}\n".format(load_index, key, components))
-# LC 102 TITL 'Dead load' DLZ 0.0
-    # QUAD GRP 1 TYPE PZZ 0.535  $ in kN/m2
+                    DLZ += com['z'] * factor
 
+        f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX, DLY, DLZ))
+
+        for key in step.loads:
+
+            pass
+            # load = loads[key]
+            # ltype = load.__name__
+            # com = load.components
+            # elset = load.elements
+            # set_index = sets[elset]['index'] + 1
+
+            # elif ltype == 'AreaLoad':
+
+                # f.write('\n')
+            #     components = ''
+            #     if com['x']:
+            #         pass
+            #     if com['y']:
+            #         pass
+            #     if com['z']:
+            #         components += ' PZZ {0}'.format(0.001 * com['z'] * lf)
+            #     f.write('    QUAD GRP {0}{1}\n'.format(set_index, components))
 
         f.write('\n')
         f.write('END\n')
@@ -497,17 +516,6 @@ def input_write_steps(f, structure, steps, loads, displacements, urs):
         f.write('\n')
 
     return urs
-
-
-
-
-
-
-
-
-
-
-
 
 
 
