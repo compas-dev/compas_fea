@@ -44,7 +44,7 @@ rhino.add_nodes_elements_from_layers(mdl, line_type='BeamElement', layers='elset
 # Add sets
 
 rhino.add_sets_from_layers(mdl, layers=['nset_support', 'nset_load'])
-rhino.add_sets_from_layers(mdl, layers='elset_lines', explode=True)
+rhino.add_sets_from_layers(mdl, layers='elset_lines')
 
 # Add materials
 
@@ -80,8 +80,8 @@ mdl.summary()
 
 # Run and extract data
 
-#mdl.analyse_and_extract(software='abaqus', fields=['u'])
-mdl.analyse_and_extract(software='opensees', fields=['u'])
+mdl.analyse_and_extract(software='abaqus', fields=['u'])
+#mdl.analyse_and_extract(software='opensees', fields=['u'])
 
 # Plot
 

@@ -62,14 +62,16 @@ def write_input_nodes(f, software, nodes):
         f.write('CTRL OPT OPTI 10\n')
         f.write('NODE NO X Y Z\n')
         f.write('{0}\n'.format(c))
+        seperator = ' '
 
     elif software == 'abaqus':
         f.write('*NODE, NSET=nset_all\n')
         f.write('{0}\n'.format(c))
+        seperator = ', '
 
     for key in sorted(nodes, key=int):
         xyz = [str(nodes[key][i]) for i in 'xyz']
-        data = ' '.join([str(key + 1)] + xyz)
+        data = seperator.join([str(key + 1)] + xyz)
         f.write('{0}{1}\n'.format(leader[software], data))
 
     f.write('{0}\n'.format(c))

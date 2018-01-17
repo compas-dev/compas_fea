@@ -16,9 +16,9 @@ A set is a group of nodes, elements or surfaces that are given a string name. By
 
 .. code-block:: python
 
-    mdl.add_set(name='nset_top', type='node', selection=[4], explode=False)
+    mdl.add_set(name='nset_top', type='node', selection=[4])
 
-    mdl.add_set(name='elset_shell', type='element', selection=[7, 8], explode=False)
+    mdl.add_set(name='elset_shell', type='element', selection=[7, 8])
 
 If the ``selection`` is not given as a list, but instead as a single integer (to represent one node for example), it will be converted into a list with one item. Sets may be viewed and edited at any time through their string name keys, and then by changing the dictionary as needed.
 
@@ -27,10 +27,10 @@ If the ``selection`` is not given as a list, but instead as a single integer (to
     >>> mdl.sets['nset_top']['selection'] = 5
 
     >>> mdl.sets['nset_top']
-    {'type': 'node', 'selection': [5], 'explode': False}
+    {'type': 'node', 'selection': [5]}
 
     >>> mdl.sets['elset_shell']
-    {'type': 'element', 'selection': [7, 8], 'explode': False}
+    {'type': 'element', 'selection': [7, 8]}
 
 From the node and element geometry of the **Structure** object, a surface can be defined by one of two surface set types. The first is by using ``type='surface_node'`` when creating a set with the ``.add_set()`` method. This will describe a surface by the nodes given in the ``selection`` list. This surface type can be created like:
 
@@ -44,35 +44,33 @@ The second way to define a surface set is with ``type='surface_element'``, where
 
     mdl.add_set(name='surf_set', type='surface_element', selection={4: ['S1', 'S2'], 7: ['SPOS']})
 
-For both surface definition types, the ``explode`` argument (described below) can be kept as ``False``, as it currently has no meaning in a surface set definition. The surface sides for the different solid elements are shown in the Elements topic.
 
+.. =========
+.. Exploding
+.. =========
 
-=========
-Exploding
-=========
+.. The argument ``explode`` is a boolean that if ``True`` (default ``False``) will take all elements of that set, and make an individual set for each element in the selection. For example the following set definition will additionally make two new element sets named ``'element_4'`` and ``'element_6'`` with ``selection=[4]`` and ``selection=[6]`` respectively.
 
-The argument ``explode`` is a boolean that if ``True`` (default ``False``) will take all elements of that set, and make an individual set for each element in the selection. For example the following set definition will additionally make two new element sets named ``'element_4'`` and ``'element_6'`` with ``selection=[4]`` and ``selection=[6]`` respectively.
+.. .. code-block:: python
 
-.. code-block:: python
+..     mdl.add_set(name='elset_exploded', type='element', selection=[4, 6], explode=True)
 
-    mdl.add_set(name='elset_exploded', type='element', selection=[4, 6], explode=True)
+..     >>> mdl.sets['element_4']
+..     {'type': 'element', 'selection': [4], 'explode': False}
 
-    >>> mdl.sets['element_4']
-    {'type': 'element', 'selection': [4], 'explode': False}
+..     >>> mdl.sets['element_6']
+..     {'type': 'element', 'selection': [6], 'explode': False}
 
-    >>> mdl.sets['element_6']
-    {'type': 'element', 'selection': [6], 'explode': False}
+.. The same exploding method works for node sets:
 
-The same exploding method works for node sets:
+.. .. code-block:: python
 
-.. code-block:: python
+..     >>> mdl.add_set(name='nset_exploded', type='node', selection=[1, 2], explode=True)
 
-    >>> mdl.add_set(name='nset_exploded', type='node', selection=[1, 2], explode=True)
+..     >>> mdl.sets['node_1']
+..     {'type': 'node', 'selection': [1], 'explode': False}
 
-    >>> mdl.sets['node_1']
-    {'type': 'node', 'selection': [1], 'explode': False}
+..     >>> mdl.sets['node_2']
+..     {'type': 'node', 'selection': [2], 'explode': False}
 
-    >>> mdl.sets['node_2']
-    {'type': 'node', 'selection': [2], 'explode': False}
-
-The utility of this is, that the user can automatically break up a larger set knowing that individual nodes or elements can be referenced to. This is useful for individually assigning a thickness, material, section or orientation to specific elements by way of their number. **Note**: ``explode`` must be set to ``True`` if you want to individually assign different sections for elements within a set, such as the element orientation or differences in section geometry.
+.. The utility of this is, that the user can automatically break up a larger set knowing that individual nodes or elements can be referenced to. This is useful for individually assigning a thickness, material, section or orientation to specific elements by way of their number. **Note**: ``explode`` must be set to ``True`` if you want to individually assign different sections for elements within a set, such as the element orientation or differences in section geometry.

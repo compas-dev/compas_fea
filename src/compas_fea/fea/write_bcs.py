@@ -51,7 +51,7 @@ def write_input_bcs(f, software, structure, steps, displacements, ndof=6):
     """
 
     headers = {
-        'abaqus':   '**',
+        'abaqus':   'nset dof.start dof.end displacement',
         'opensees': 'node {0}'.format(' '.join(dofs[:ndof])),
         'sofistik': 'node fixity',
         'ansys':    '!',
@@ -105,6 +105,14 @@ def write_input_bcs(f, software, structure, steps, displacements, ndof=6):
 
             for node in sorted(structure.sets[nset]['selection'], key=int):
                 f.write('{0} {1}\n'.format(node + 1, j))
+
+        elif software == 'abaqus':
+
+            f.write('*BOUNDARY\n')
+            f.write('{0}\n'.format(c))
+            for ci, dof in enumerate(dofs, 1):
+                if com[dof] is not None:
+                    f.write('{0}, {1}, {1}, {2}\n'.format(nset, ci, com[dof]))
 
     f.write('{0}\n'.format(c))
     f.write('{0}\n'.format(c))

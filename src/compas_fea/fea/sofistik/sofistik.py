@@ -7,7 +7,9 @@ from __future__ import division
 from __future__ import print_function
 
 from compas_fea.fea import write_input_bcs
+from compas_fea.fea import write_input_elements
 from compas_fea.fea import write_input_heading
+from compas_fea.fea import write_input_materials
 from compas_fea.fea import write_input_nodes
 
 from math import pi
@@ -22,7 +24,6 @@ __email__     = 'liew@arch.ethz.ch'
 __all__ = [
     'input_generate',
     'input_write_materials',
-    'input_write_nodes_elements',
     'input_write_rebar',
 ]
 
@@ -69,200 +70,21 @@ def input_generate(structure, fields, units='m'):
         write_input_heading(f, software='sofistik')
 
         urs = 1
+        f.write('+PROG AQUA urs:{0}\n'.format(urs))
+        write_input_materials(f, 'sofistik', materials)
+        f.write('END\n$\n')
+
+        urs += 1
         f.write('+PROG SOFIMSHA urs:{0}\n'.format(urs))
         write_input_nodes(f, 'sofistik', nodes)
         write_input_bcs(f, 'sofistik', structure, steps, displacements)
+        write_input_elements(f, 'sofistik', sections, properties, elements, structure, materials)
         f.write('END\n$\n')
 
-        # urs = input_write_materials(f, materials, urs)
-        # urs = input_write_nodes_elements(f, structure, nodes, elements, sections, properties, materials, sets, steps,
-        #                                  displacements, units, urs)
         # urs = input_write_rebar(f, properties, sections, sets, urs)
         # urs = input_write_steps(f, structure, steps, loads, displacements, sets, urs)
 
     print('***** Sofistik input file generated: {0} *****\n'.format(filename))
-
-
-def input_write_materials(f, materials, urs):
-    """ Writes materials to the Sofistik .dat file.
-
-    Parameters
-    ----------
-    f : obj
-        The open file object for the .dat file.
-    materials : dic
-        Material objects from structure.materials.
-
-    Returns
-    -------
-    None
-    """
-    urs += 1
-
-    f.write('$ -----------------------------------------------------------------------------\n')
-    f.write('$ ------------------------------------------------------------------- Materials\n')
-    f.write('\n')
-    f.write('+PROG AQUA urs:{0}\n'.format(urs))
-    f.write('\n')
-    f.write('HEAD AQUA\n')
-    f.write('NORM DC SIA NDC 262\n')
-
-    for key, material in materials.items():
-
-        mtype = material.__name__
-        material_index = material.index + 1
-
-        f.write('\n')
-        f.write('$ {0}\n'.format(key))
-        f.write('$ ' + '-' * len(key) + '\n')
-        f.write('\n')
-
-        if mtype == 'Concrete':
-
-            fck = material.fck
-            v = material.v['v']
-            yc = material.p / 100
-            f.write('CONC {0} TYPE C FCN {1} MUE {2} GAM {3} TYPR C\n'.format(material_index, fck, v, yc))
-
-        if mtype == 'Steel':
-
-            if material.id == 's':
-                id = 'S'
-            elif material.id == 'r':
-                id = 'B'
-            fy = material.fy
-            fu = material.fu
-            sf = material.sf
-            E = material.E['E'] / 10**6
-            v = material.v['v']
-            ys = material.p / 100
-            eyp = 1000 * fy / E
-            eup = 10 * material.eu
-            f.write('STEE {0} {1} ES {2} GAM {3} FY {4} FT {5} FP {4} SCM {6} EPSY {7} EPST {8} MUE {9}\n'.format(
-                material_index, id, E, ys, fy, fu, sf, eyp, eup, v))
-
-    f.write('\n')
-    f.write('END\n')
-    f.write('\n')
-    f.write('\n')
-
-    return urs
-
-
-def input_write_nodes_elements(f, structure, nodes, elements, sections, properties, materials, sets, steps,
-                               displacements, units, urs):
-    """ Writes the nodal co-ordinates and element information to the Sofistik .dat file.
-
-    Parameters
-    ----------
-    f : obj
-        The open file object for the .dat file.
-    structure : obj
-        The Structure object.
-    nodes : dic
-        Node dictionary from structure.nodes.
-    elements : dic
-        Element dictionary from structure.elements.
-    sections : dic
-        Section objects from structure.sections.
-    properties : dic
-        ElementProperties objects from structure.element_properties.
-    materials : dic
-        Material objects from structure.materials.
-    sets : dic
-        Sets dictionary from structure.sets.
-    steps : dic
-        Step objects from structure.steps.
-    displacements : dic
-        Displacement objects from structure.displacements.
-    units : str
-        Units of the nodal co-ordinates.
-
-    Returns
-    -------
-    None
-
-    """
-    urs += 1
-
-    f.write('$ -----------------------------------------------------------------------------\n')
-    f.write('$ -------------------------------------------------------------------- Elements\n')
-    f.write('\n')
-    f.write('+PROG SOFIMSHA urs:{0}\n'.format(urs))
-    f.write('\n')
-    f.write('HEAD SOFIMSHA\n')
-
-    f.write('\n')
-
-
-
-    # Elements
-    # --------
-
-    shells = ['ShellSection']
-
-    for key, property in properties.items():
-
-        material_index = materials[property.material].index + 1
-        reinforcement = property.reinforcement
-        section = sections[property.section]
-        geometry = section.geometry
-        elsets = property.elsets
-        stype = section.__name__
-        rebar_index = materials[reinforcement.values()[0]['material']].index + 1
-        # assumes all layers have the same material
-
-        f.write('\n')
-        f.write('$ Section: {0}\n'.format(key))
-        f.write('$ ---------' + '-' * (len(key)) + '\n')
-        f.write('\n')
-
-        if isinstance(elsets, str):
-            elsets = [elsets]
-
-        for elset in elsets:
-            selection = sets[elset]['selection']
-            set_index = sets[elset]['index'] + 1
-
-            f.write('GRP {0}\n'.format(set_index))
-            f.write('\n')
-
-            # Shell sections
-
-            if stype in shells:
-
-                tris = []
-                quads = []
-                for select in selection:
-                    element = elements[select]
-                    nodes = [node + 1 for node in element.nodes]
-                    t = geometry['t']
-                    data = [select + 1] + nodes + [material_index] + [t] * len(nodes)
-                    if reinforcement:
-                        data.append(rebar_index)
-                    quads.append(data)
-
-                if tris:
-                    pass
-
-                if quads:
-                    f.write('QUAD NO N1 N2 N3 N4 MNO T1 T2 T3 T4')
-                    if reinforcement:
-                        f.write(' MRF')
-                    f.write('\n')
-                    f.write('$ No. node.1 node.2 node.3 node.4 material.index t.1[m] t.2[m] t.3[m] t.4[m]')
-                    if reinforcement:
-                        f.write(' rebar.index')
-                    f.write('\n\n')
-                    for quad in quads:
-                        f.write('{0}\n'.format(' '.join([str(i) for i in quad])))
-
-    f.write('\n')
-    f.write('END\n')
-    f.write('\n')
-    f.write('\n')
-
-    return urs
 
 
 def input_write_rebar(f, properties, sections, sets, urs):
