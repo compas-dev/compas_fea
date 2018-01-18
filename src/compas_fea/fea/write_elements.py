@@ -3,6 +3,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from math import pi
+
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
 __copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
@@ -93,7 +95,8 @@ def write_input_elements(f, software, sections, properties, elements, structure,
         section = sections[property.section]
         material = materials[property.material]
         reinforcement = property.reinforcement
-        rebar_index = materials[reinforcement.values()[0]['material']].index + 1
+        if reinforcement:
+            rebar_index = materials[reinforcement.values()[0]['material']].index + 1
         material_index = material.index + 1
         material_name = material.name
         geometry = section.geometry
@@ -244,20 +247,19 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                             f.write('{0}{1}, MATERIAL={2}\n'.format(pre, e1, material_name))
 
                         f.write(str(t) + '\n')
-                        f.write('**\n')
 
-                        # if reinforcement:
-                        #     f.write('**\n')
-                        #     for name, rebar in reinforcement.items():
-                        #         pos = rebar['pos']
-                        #         spacing = rebar['spacing']
-                        #         rmaterial = rebar['material']
-                        #         angle = rebar['angle']
-                        #         dia = rebar['dia']
-                        #         A = 0.25 * pi * dia**2
-                        #         f.write('*REBAR LAYER\n')
-                        #         f.write('{0}, {1}, {2}, {3}, {4}, {5}\n'.format(name, A, spacing, pos, rmaterial, angle))
-                        #         f.write('**\n')
+                        if reinforcement:
+                            f.write('*REBAR LAYER\n')
+                            for name, rebar in reinforcement.items():  # this can be moved outside the select loop
+                                pos = rebar['pos']
+                                spacing = rebar['spacing']
+                                rmat = rebar['material']
+                                angle = rebar['angle']
+                                dia = rebar['dia']
+                                A = 0.25 * pi * dia**2
+                                f.write('{0}, {1}, {2}, {3}, {4}, {5}\n'.format(name, A, spacing, pos, rmat, angle))
+
+                        f.write('**\n')
 
                     elif software == 'opensees':
                         pass

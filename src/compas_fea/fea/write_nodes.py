@@ -68,7 +68,10 @@ def write_input_nodes(f, software, nodes):
         f.write('*NODE, NSET=nset_all\n')
         f.write('{0}\n'.format(c))
         seperator = ', '
-
+        
+    elif software == 'opensees':
+        seperator = ' '
+        
     for key in sorted(nodes, key=int):
         xyz = [str(nodes[key][i]) for i in 'xyz']
         data = seperator.join([str(key + 1)] + xyz)

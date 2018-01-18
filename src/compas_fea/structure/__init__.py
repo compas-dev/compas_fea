@@ -200,7 +200,6 @@ step
 .. autosummary::
     :toctree: generated/
 
-    DesignStep
     GeneralStep
     HeatStep
     ModalStep

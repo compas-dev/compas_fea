@@ -25,7 +25,7 @@ comments = {
 headers = {
     'abaqus':   '',
     'opensees': '',
-    'sofistik': 'HEAD AQUA\nNORM DC SIA NDC 262\n',
+    'sofistik': '$\nNORM DC SIA NDC 262\n',
     'ansys':    '',
 }
 
@@ -53,7 +53,6 @@ def write_input_materials(f, software, materials):
 
     f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
     f.write('{0} ------------------------------------------------------------------- Materials\n'.format(c))
-    f.write('{0}\n'.format(c))
 
     if headers[software]:
         f.write('{0}'.format(headers[software]))

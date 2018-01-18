@@ -11,6 +11,8 @@ from compas_fea.fea import write_input_elements
 from compas_fea.fea import write_input_heading
 from compas_fea.fea import write_input_materials
 from compas_fea.fea import write_input_nodes
+from compas_fea.fea import write_input_postprocess
+from compas_fea.fea import write_input_steps
 
 from math import pi
 
@@ -71,18 +73,28 @@ def input_generate(structure, fields, units='m'):
 
         urs = 1
         f.write('+PROG AQUA urs:{0}\n'.format(urs))
+        f.write('HEAD AQUA\n')
         write_input_materials(f, 'sofistik', materials)
-        f.write('END\n$\n')
+        f.write('END\n$\n$\n')
 
         urs += 1
         f.write('+PROG SOFIMSHA urs:{0}\n'.format(urs))
         write_input_nodes(f, 'sofistik', nodes)
         write_input_bcs(f, 'sofistik', structure, steps, displacements)
         write_input_elements(f, 'sofistik', sections, properties, elements, structure, materials)
-        f.write('END\n$\n')
+        f.write('END\n$\n$\n')
 
-        # urs = input_write_rebar(f, properties, sections, sets, urs)
-        # urs = input_write_steps(f, structure, steps, loads, displacements, sets, urs)
+        urs = input_write_rebar(f, properties, sections, sets, urs)  # need to get into write functions
+
+        urs += 1
+        f.write('+PROG ASE urs:{0}\n'.format(urs))
+        write_input_steps(f, 'sofistik', structure, steps, loads, displacements, sets, fields)
+        f.write('END\n$\n$\n')
+
+        urs += 1
+        f.write('+PROG BEMESS urs:{0}\n'.format(urs))
+        write_input_postprocess(f, 'sofistik', structure)
+        f.write('END\n$\n$\n')
 
     print('***** Sofistik input file generated: {0} *****\n'.format(filename))
 
@@ -105,19 +117,10 @@ def input_write_rebar(f, properties, sections, sets, urs):
     -------
     None
     """
-    urs += 1
 
     f.write('$ -----------------------------------------------------------------------------\n')
     f.write('$ --------------------------------------------------------------- Reinforcement\n')
-    f.write('\n')
-    f.write('+PROG BEMESS urs:{0}\n'.format(urs))
-    f.write('\n')
-    f.write('HEAD BEMESS\n')
-    f.write('\n')
-    f.write('CTRL WARN 7\n')  # Upper cover (<10mm or >0.70d)
-    f.write('CTRL WARN 9\n')  # Bottom cover (<10mm or >0.70d)
-    f.write('CTRL WARN 471\n')  # Element thickness too thin and not allowed for design.
-    f.write('\n')
+    f.write('$\n')
 
     # Properties
     # ----------
@@ -125,12 +128,22 @@ def input_write_rebar(f, properties, sections, sets, urs):
     for key, property in properties.items():
 
         reinforcement = property.reinforcement
+        property_index = property.index + 1
+
+        urs += 1
+
+        f.write('+PROG BEMESS urs:{0}\n'.format(urs))
+        f.write('$\n')
+        f.write('CTRL WARN 7\n')  # Upper cover (<10mm or >0.70d)
+        f.write('CTRL WARN 9\n')  # Bottom cover (<10mm or >0.70d)
+        f.write('CTRL WARN 471\n')  # Element thickness too thin and not allowed for design.
+        f.write('$\n')
 
         if reinforcement:
 
             f.write('$ Reinforcement: {0}\n'.format(key))
             f.write('$ ---------------' + '-' * (len(key)) + '\n')
-            f.write('\n')
+            f.write('$\n')
 
             t = sections[property.section].geometry['t']
             posu, posl = [], []
@@ -188,169 +201,19 @@ def input_write_rebar(f, properties, sections, sets, urs):
                 data += ' DL2 {0}[mm] ASL2 {1}[cm2/m] BSL2 {2}[cm2/m]'.format(dl[no2] * 1000, Al[no2], Al[no2])
 
             f.write(geom + '\n')
-            f.write('\n')
+            f.write('$\n')
 
             if isinstance(property.elsets, str):
                 elsets = [property.elsets]
 
-            # f.write('PARA NOG - WKU 0.1[mm] WKL 0.1[mm]\n')
-            f.write('PARA NOG -\n')
+            f.write('PARA NOG - WKU 0.1[mm] WKL 0.1[mm]\n')
             for elset in elsets:
                 set_index = sets[elset]['index'] + 1
                 f.write('PARA NOG {0}{1}\n'.format(set_index, data))
 
-    f.write('\n')
-    f.write('END\n')
-    f.write('\n')
-    f.write('\n')
+            f.write('$\n')
+            f.write('$\n')
+
+        f.write('END\n$\n$\n')
 
     return urs
-
-
-def input_write_steps(f, structure, steps, loads, displacements, sets, urs):
-    """ Writes step information to the Sofistik .dat file.
-
-    Parameters
-    ----------
-    f : obj
-        The open file object for the .dat file.
-    structure : obj
-        Struture object.
-    steps : dic
-        Step objects from structure.steps.
-    loads : dic
-        Load objects from structure.loads.
-    displacements : dic
-        Displacement objects from structure.displacements.
-    sets : dic
-        Sets dictionary from structure.sets.
-
-    Returns
-    -------
-    None
-
-    Notes
-    -----
-    - Steps are analysed in the order given by structure.steps_order.
-    """
-
-    f.write('$ -----------------------------------------------------------------------------\n')
-    f.write('$ ----------------------------------------------------------------------- Steps\n')
-
-    for key in structure.steps_order[1:]:
-
-        step = steps[key]
-        stype = step.__name__
-
-        if stype != 'DesignStep':
-
-            urs += 1
-
-            step_index = step.index
-            factor = step.factor
-
-            f.write('\n')
-            f.write('+PROG ASE urs:{0}\n'.format(urs))
-            f.write('HEAD ASE\n')
-
-            f.write('\n')
-            f.write('$ {0}\n'.format(key))
-            f.write('$ ' + '-' * len(key) + '\n')
-            f.write('\n')
-
-            DLX, DLY, DLZ = 0, 0, 0
-
-            f.write('CTRL SOLV 1\n')
-            f.write('\n')
-            f.write("LC {0} TITL '{1}' FACT {2}".format(step_index, key, factor))
-
-            for lkey in step.loads:
-
-                load = loads[lkey]
-                ltype = load.__name__
-                com = load.components
-                if ltype == 'GravityLoad':
-                    if com['x']:
-                        DLX += com['x'] * factor
-                    if com['y']:
-                        DLY += com['y'] * factor
-                    if com['z']:
-                        DLZ += com['z'] * factor
-
-            f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX, DLY, DLZ))
-
-            for key in step.loads:
-
-                pass
-                # load = loads[key]
-                # ltype = load.__name__
-                # com = load.components
-                # elset = load.elements
-                # set_index = sets[elset]['index'] + 1
-
-                # elif ltype == 'AreaLoad':
-
-                    # f.write('\n')
-                #     components = ''
-                #     if com['x']:
-                #         pass
-                #     if com['y']:
-                #         pass
-                #     if com['z']:
-                #         components += ' PZZ {0}'.format(0.001 * com['z'] * lf)
-                #     f.write('    QUAD GRP {0}{1}\n'.format(set_index, components))
-
-            f.write('\n')
-            f.write('END\n')
-            f.write('\n')
-
-    f.write('$ -----------------------------------------------------------------------------\n')
-    f.write('$ ---------------------------------------------------------------------- Design\n')
-
-    for key in structure.steps_order[1:]:
-
-        step = steps[key]
-        stype = step.__name__
-
-        if stype == 'DesignStep':
-
-            urs += 1
-
-            dtype = step.type
-            state = step.state
-            lc_step = steps[step.step].index
-
-            if dtype == 'rebar':
-
-                f.write('\n')
-                f.write('+PROG BEMESS urs:{0}\n'.format(urs))
-                f.write('HEAD {0} {1}\n'.format(dtype, state))
-                # CTRL PFAI 2
-                # CTRL SERV GALF 1.45
-                # CTRL LCR 2
-                f.write('LC {0}\n'.format(lc_step))
-
-            f.write('\n')
-            f.write('END\n')
-            f.write('\n')
-
-
-    return urs
-
-
-
-
-
-
-# CTRL ITER V4 10
-# CTRL CONC V4
-# SYST PROB TH3 ITER 200 TOL 0.010 FMAX 1.1 NMAT YES
-# REIQ LCR 4
-
-# $ conventional steel reinforcement
-# $ --------------------------------
-
-# SREC 1 B 50[mm] H 149[mm] HO 1[mm] BO 50[mm] MNO 1 MRF 2 ASO 0.4[cm2] ASU 0.4[cm2]
-# STEE 5 B 500A
-
-# angle = rebar['angle'] 2nd layer is assumed 90 deg by default.

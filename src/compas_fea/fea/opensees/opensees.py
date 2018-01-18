@@ -63,7 +63,7 @@ def extract_out_data(structure, fields):
 
         if field in ['u', 'ur', 'rf', 'rm']:
 
-            file = 'node_' + field
+            file = step + '_node_' + field
             try:
                 with open('{0}{1}.out'.format(temp, file), 'r') as f:
                     lines = f.readlines()
@@ -88,7 +88,7 @@ def extract_out_data(structure, fields):
 
         elif field in ['sf']:
 
-            file = 'element_' + field
+            file = step + '_element_' + field
             try:
                 with open('{0}{1}.out'.format(temp, file), 'r') as f:
                     lines = f.readlines()

@@ -25,10 +25,10 @@ comments = {
 }
 
 middle = {
-    'abaqus':   '**\n',
+    'abaqus':   '',
     'opensees': '}\n',
-    'sofistik': '$',
-    'ansys':    '!',
+    'sofistik': '',
+    'ansys':    '',
 }
 
 dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
@@ -82,36 +82,56 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
     for key in keys:
 
-        step = steps[key]
-        stype = step.__name__
+        step       = steps[key]
+        stype      = step.__name__
         step_index = step.index
-        factor = step.factor
-        increments = step.increments
-        tolerance = step.tolerance
-        iterations = step.iterations
-        method = step.type
-        nlgeom = 'YES' if step.nlgeom else 'NO'
+        factor     = getattr(step, 'factor', None)
+        increments = getattr(step, 'increments', None)
+        tolerance  = getattr(step, 'tolerance', None)
+        iterations = getattr(step, 'iterations', None)
+        method     = getattr(step, 'type', None)
+        nlgeom     = 'YES' if getattr(step, 'nlgeom', None) else 'NO'
         perturbation = ', PERTURBATION' if stype == 'BucklingStep' else ''
-
-        headers = {
-            'abaqus':   '*STEP, NLGEOM={0}, NAME={1}{2}, INC={3}\n'.format(nlgeom, key, perturbation, increments) +
-                        '*{0}\n'.format(method.upper()),
-            'opensees': 'timeSeries Constant {0} -factor 1.0\n'.format(step_index) +
-                        'pattern Plain {0} {0} -fact {1} {2}\n'.format(step_index, factor, '{'),
-            'sofistik': '$',
-            'ansys':    '!',
-        }
-
-        f.write('{0}\n'.format(c))
-        f.write('{0} {1}\n'.format(c, key))
-        f.write('{0} '.format(c) + '-' * len(key) + '\n')
-        f.write('{0}\n'.format(c))
-        f.write(headers[software])
-        f.write('{0}\n'.format(c))
 
         # Mechanical
 
-        if stype in ['GeneralStep', 'BucklingStep']:
+        if (stype in ['GeneralStep', 'BucklingStep']) and (stype != 'DesignStep'):
+
+            f.write('{0}\n'.format(c))
+            f.write('{0} {1}\n'.format(c, key))
+            f.write('{0} '.format(c) + '-' * len(key) + '\n')
+            f.write('{0}\n'.format(c))
+
+            if software == 'abaqus':
+
+                f.write('*STEP, NLGEOM={0}, NAME={1}{2}, INC={3}\n'.format(nlgeom, key, perturbation, increments))
+                f.write('*{0}\n'.format(method.upper()))
+
+            elif software == 'opensees':
+
+                f.write('timeSeries Constant {0} -factor 1.0\n'.format(step_index))
+                f.write('pattern Plain {0} {0} -fact {1} {2}\n'.format(step_index, factor, '{'))
+
+            elif software == 'sofistik':
+
+                f.write('CTRL SOLV 1\n')
+                f.write('CTRL CONC\n')
+                f.write("$\nLC {0} TITL '{1}' FACT {2}".format(step_index, key, factor))
+
+                DLX, DLY, DLZ = 0, 0, 0
+                for key, load in loads.items():
+                    if load.__name__ in ['GravityLoad']:
+                        com = load.components
+                        gx = com['x'] if com['x'] else 0
+                        gy = com['y'] if com['y'] else 0
+                        gz = com['z'] if com['z'] else 0
+                        DLX += gx
+                        DLY += gy
+                        DLZ += gz
+                f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * factor, DLY * factor, DLZ * factor))
+
+                if nlgeom == 'YES':
+                    f.write('SYST PROB TH2 ITER {0} TOL {1} NMAT YES\n'.format(increments, tolerance))
 
             # Loads
 
@@ -130,15 +150,17 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     if ltype == 'PointLoad':
 
                         if software == 'opensees':
+                            f.write('#\n')
                             coms = ' '.join([str(com[dof]) for dof in dofs[:ndof]])
                             for node in sets[nset]['selection']:
                                 f.write('load {0} {1}\n'.format(node + 1, coms))
 
                         elif software == 'abaqus':
-                            f.write('*CLOAD\n')
+                            f.write('**\n*CLOAD\n')
                             for ci, dof in enumerate(dofs, 1):
                                 if com[dof]:
                                     f.write('{0}, {1}, {2}'.format(nset, ci, factor * com[dof]) + '\n')
+                            f.write('**\n')
 
                         elif software == 'sofistik':
                             pass
@@ -154,6 +176,26 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                         # elif axes == 'local':
                         #     elements = ' '.join([str(i + 1) for i in sets[elset]['selection']])
                         #     f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, -com['y'], -com['x']))
+
+                    elif ltype == 'AreaLoad':
+
+                        if software == 'opensees':
+                            pass
+
+                        elif software == 'sofistik':
+                            pass
+                            # f.write('\n')
+                            # components = ''
+                            # if com['x']:
+                            #     pass
+                            # if com['y']:
+                            #     pass
+                            # if com['z']:
+                            #     components += ' PZZ {0}'.format(0.001 * com['z'] * lf)
+                            # f.write('    QUAD GRP {0}{1}\n'.format(set_index, components))
+
+                        elif software == 'abaqus':
+                            pass
 
                     # Gravity load
 
@@ -171,7 +213,9 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                             pass
 
                         elif software == 'abaqus':
+                            f.write('**\n*DLOAD\n')
                             f.write('{0}, GRAV, {1}, {2}, {3}, {4}\n'.format(elset, factor * g, gx, gy, gz))
+                            f.write('**\n')
 
             except:
                 pass
@@ -206,65 +250,66 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
             except:
                 pass
 
-        f.write(middle[software])
-        f.write('{0}\n'.format(c))
+            if middle[software]:
+                f.write(middle[software])
 
-        if software == 'opensees':
+            if software == 'opensees':
 
-            nodal = {}
-            elemental = {}
-            nodes = '1 {0}'.format(structure.node_count())
-            elements = '1 {0}'.format(structure.element_count())
+                nodal = {}
+                elemental = {}
+                nodes = '1 {0}'.format(structure.node_count())
+                elements = '1 {0}'.format(structure.element_count())
 
-            if 'u' in fields:
-                nodal['node_u.out'] = '1 2 3 disp'
-            if 'rf' in fields:
-                nodal['node_rf.out'] = '1 2 3 reaction'
-            if ndof == 6:
-                if 'ur' in fields:
-                    nodal['node_ur.out'] = '4 5 6 disp'
-                if 'rm' in fields:
-                    nodal['node_rm.out'] = '4 5 6 reaction'
-            if 'sf' in fields:
-                elemental['element_sf.out'] = 'basicForces'
+                if 'u' in fields:
+                    nodal['node_u.out'] = '1 2 3 disp'
+                if 'rf' in fields:
+                    nodal['node_rf.out'] = '1 2 3 reaction'
+                if ndof == 6:
+                    if 'ur' in fields:
+                        nodal['node_ur.out'] = '4 5 6 disp'
+                    if 'rm' in fields:
+                        nodal['node_rm.out'] = '4 5 6 reaction'
+                if 'sf' in fields:
+                    elemental['element_sf.out'] = 'basicForces'
 
-            for k, j in nodal.items():
-                f.write('recorder Node -file {0}{1}_{2} -time -nodeRange {3} -dof {4}\n'.format(temp, k, key, nodes, j))
-            for k, j in elemental.items():
-                f.write('recorder Element -file {0}{1}_{2} -time -eleRange {3} {4}\n'.format(temp, k, key, elements, j))
+                for k, j in nodal.items():
+                    f.write('recorder Node -file {0}{1}_{2} -time -nodeRange {3} -dof {4}\n'.format(temp, key, k, nodes, j))
+                for k, j in elemental.items():
+                    f.write('recorder Element -file {0}{1}_{2} -time -eleRange {3} {4}\n'.format(temp, key, k, elements, j))
 
-            f.write('#\n')
-            f.write('constraints Plain\n')
-            f.write('numberer RCM\n')
-            f.write('system ProfileSPD\n')
-            f.write('test NormUnbalance {0} {1} 5\n'.format(tolerance, iterations))
-            f.write('algorithm NewtonLineSearch\n')
-            f.write('integrator LoadControl {0}\n'.format(1./increments))
-            f.write('analysis Static\n')
-            f.write('analyze {0}\n'.format(increments))
+                f.write('#\n')
+                f.write('constraints Plain\n')
+                f.write('numberer RCM\n')
+                f.write('system ProfileSPD\n')
+                f.write('test NormUnbalance {0} {1} 5\n'.format(tolerance, iterations))
+                f.write('algorithm NewtonLineSearch\n')
+                f.write('integrator LoadControl {0}\n'.format(1./increments))
+                f.write('analysis Static\n')
+                f.write('analyze {0}\n'.format(increments))
 
-        elif software == 'abaqus':
+            elif software == 'abaqus':
 
-            if isinstance(fields, list):
-                fields = structure.fields_dic_from_list(fields)
-            # if 'spf' in fields:
-                # fields['ctf'] = 'all'
-                # del fields['spf']
+                if isinstance(fields, list):
+                    fields = structure.fields_dic_from_list(fields)
+                # if 'spf' in fields:
+                    # fields['ctf'] = 'all'
+                    # del fields['spf']
 
-            f.write('**\n')
-            f.write('*OUTPUT, FIELD\n')
-            f.write('*NODE OUTPUT\n')
-            f.write(', '.join([i.upper() for i in node_fields if i in fields]) + '\n')
-            f.write('*ELEMENT OUTPUT\n')
-            f.write(', '.join([i.upper() for i in element_fields if (i in fields and i != 'rbfor')]) + '\n')
-            if 'rbfor' in fields:
-                f.write('*ELEMENT OUTPUT, REBAR\n')
-                f.write('RBFOR\n')
-            f.write('**\n')
-            f.write('*END STEP\n')
+                f.write('**\n')
+                f.write('*OUTPUT, FIELD\n')
+                f.write('**\n')
+                f.write('*NODE OUTPUT\n')
+                f.write(', '.join([i.upper() for i in node_fields if i in fields]) + '\n')
+                f.write('*ELEMENT OUTPUT\n')
+                f.write(', '.join([i.upper() for i in element_fields if (i in fields and i != 'rbfor')]) + '\n')
+                if 'rbfor' in fields:
+                    f.write('*ELEMENT OUTPUT, REBAR\n')
+                    f.write('RBFOR\n')
+                f.write('**\n')
+                f.write('*END STEP\n')
 
-        elif software == 'sofistik':
-            pass
+            elif software == 'sofistik':
+                pass
 
     f.write('{0}\n'.format(c))
     f.write('{0}\n'.format(c))
@@ -417,3 +462,18 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 #             #     f.write('*END STEP\n')
 
 #         f.write('**\n')
+
+
+
+# CTRL ITER V4 10
+# CTRL CONC V4
+# SYST PROB TH3 ITER 200 TOL 0.010 FMAX 1.1 NMAT YES
+# REIQ LCR 4
+
+# $ conventional steel reinforcement
+# $ --------------------------------
+
+# SREC 1 B 50[mm] H 149[mm] HO 1[mm] BO 50[mm] MNO 1 MRF 2 ASO 0.4[cm2] ASU 0.4[cm2]
+# STEE 5 B 500A
+
+# angle = rebar['angle'] 2nd layer is assumed 90 deg by default.
