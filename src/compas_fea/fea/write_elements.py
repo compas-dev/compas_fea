@@ -24,14 +24,6 @@ comments = {
     'ansys':    '!',
 }
 
-beam_headers = {
-    'abaqus':   '**\n',
-    'opensees': '# eType No i j A[m2] E[Pa] G[Pa] J[m^4] Iyy[m^4] Ixx[m^4] trans\n#\n',
-    # f.write('# eType No. i j E[Pa] G[Pa] A[m2] J[m^4] Ixx[m^4] Iyy[m^4] Avy[m2] Avx[m2] trans\n')
-    'sofistik': '$',
-    'ansys':    '!',
-}
-
 headers = {
     'abaqus':   '',
     'opensees': '',
@@ -93,6 +85,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
     for key, property in properties.items():
 
         section = sections[property.section]
+        section_index = section.index + 1
         material = materials[property.material]
         reinforcement = property.reinforcement
         if reinforcement:
@@ -118,14 +111,16 @@ def write_input_elements(f, software, sections, properties, elements, structure,
         f.write('{0}\n'.format(c))
 
         for elset in elsets:
-            selection = sets[elset]['selection']
-            set_index = sets[elset]['index'] + 1
+
+            if isinstance(elset, str) and (elset[:8] == 'element_'):
+                selection = [int(elset[8:])]
+            else:
+                selection = sets[elset]['selection']
+                set_index = sets[elset]['index'] + 1
 
             # Beam sections
 
             if stype not in shells + solids + trusses:
-
-                f.write('{0}'.format(beam_headers[software]))
 
                 for select in selection:
 
@@ -142,7 +137,6 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                     Iyy = geometry['Iyy']
                     # Avy = geometry['Avy']
                     # Avx = geometry['Avx']
-                    ex = ' '.join([str(k) for k in element.axes['ex']])
 
                     if software == 'abaqus':
 
@@ -162,19 +156,24 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                         ex = element.axes.get('ex', None)
                         if ex:
                             f.write(', '.join([str(v) for v in ex]) + '\n')
-                            f.write('**\n')
+
+                        f.write('**\n')
 
                     elif software == 'opensees':
 
+                        ex = ' '.join([str(k) for k in element.axes['ex']])
                         et = 'element elasticBeamColumn'
                         f.write('geomTransf Corotational {0} {1}\n'.format(select + 1, ex))
                         f.write('{} {} {} {} {} {} {} {} {} {} {}\n'.format(et, n, i, j, A, E, G, J, Ixx, Iyy, n))
-                        f.write('{0}\n'.format(c))
+                        f.write('#\n')
                         # f.write('geomTransf PDelta {0} {1}\n'.format(n, ex))
                         # f.write('element ElasticTimoshenkoBeam {} {} {} {} {} {} {} {} {} {} {} {}\n'.format(n, i, j, E, G, A, J, Ixx, Iyy, Avy, Avx, n))
 
                     elif software == 'sofistik':
-                        pass
+
+                        f.write('BEAM NO NA NE NCS\n')
+                        f.write('{0} {1} {2} {3}\n'.format(n, i, j, section_index))
+                        f.write('$\n')
 
             # Truss sections
 

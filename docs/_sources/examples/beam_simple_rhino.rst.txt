@@ -10,4 +10,4 @@ This example works for: Abaqus.
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/beam_simple_abaqus_rhino.py
+.. literalinclude:: /../../examples/beam_simple_rhino.py

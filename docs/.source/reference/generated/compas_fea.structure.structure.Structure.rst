@@ -25,6 +25,7 @@ Structure
       ~Structure.add_material
       ~Structure.add_materials
       ~Structure.add_misc
+      ~Structure.add_nodal_element
       ~Structure.add_node
       ~Structure.add_node_to_node_index
       ~Structure.add_nodes
@@ -39,6 +40,7 @@ Structure
       ~Structure.analyse_and_extract
       ~Structure.check_element_exists
       ~Structure.check_node_exists
+      ~Structure.edit_element
       ~Structure.edit_node
       ~Structure.element_centroid
       ~Structure.element_count
@@ -46,6 +48,8 @@ Structure
       ~Structure.fields_dic_from_list
       ~Structure.from_mesh
       ~Structure.from_network
+      ~Structure.get_element_results
+      ~Structure.get_nodal_results
       ~Structure.load_from_obj
       ~Structure.make_element_index_dic
       ~Structure.make_node_index_dic

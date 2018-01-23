@@ -20,6 +20,8 @@ Adding elements
 
     mdl.add_element(nodes=[0, 1, 4], type='ShellElement')
 
+For Abaqus, adding elements will also create a set for each individual element. So for example when element 4 is written to the input file, an element set named **element_4** will also be created. The utility of this is that individual elements can be referenced to, which is useful for individually assigning a thickness, material, section or orientation to specific elements by way of their number.
+
 
 ================
 Viewing elements

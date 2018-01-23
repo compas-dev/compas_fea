@@ -20,5 +20,5 @@ for name in modules:
     # with open('/Users/mtomas/Documents/compas/packages/compas_fea/docs/.source/reference/{0}.rst'.format(name), 'w+') as fp:
     #     fp.write(obj.__doc__)
 
-    with open('/home/al/Dropbox/compas_fea/docs/.source/reference/{0}.rst'.format(name), 'w+') as fp:
+    with open('/al/compas_fea/docs/.source/reference/{0}.rst'.format(name), 'w+') as fp:
         fp.write(obj.__doc__)

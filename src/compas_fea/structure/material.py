@@ -201,7 +201,7 @@ class Steel(object):
 
     """
 
-    def __init__(self, name, fy=355, fu=None, eu=20, E=210, v=0.3, p=7850, type='elastic-plastic', id='s', sf=1.0):
+    def __init__(self, name, fy=355, fu=None, eu=20, E=210, v=0.3, p=7850, type='elastic-plastic', id='s', sf=1.15):
         E *= 10.**9
         self.__name__ = 'Steel'
         self.name = name
@@ -210,12 +210,12 @@ class Steel(object):
         self.G = {'G': 0.5 * E / (1 + v)}
         self.p = p
         ep = 0.01 * eu - fy * 10**6 / E
+        if not fu:
+            fu = fy
         if type == 'elastic-plastic':
             f = [i * 10**6 for i in [fy, fy]]
             e = [0, ep]
         if type == 'elastic-linear':
-            if not fu:
-                fu = fy
             f = [i * 10**6 for i in [fy, fu]]
             e = [0, ep]
         fc = [-i for i in f]

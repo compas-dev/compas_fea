@@ -43,34 +43,3 @@ The second way to define a surface set is with ``type='surface_element'``, where
 .. code-block:: python
 
     mdl.add_set(name='surf_set', type='surface_element', selection={4: ['S1', 'S2'], 7: ['SPOS']})
-
-
-.. =========
-.. Exploding
-.. =========
-
-.. The argument ``explode`` is a boolean that if ``True`` (default ``False``) will take all elements of that set, and make an individual set for each element in the selection. For example the following set definition will additionally make two new element sets named ``'element_4'`` and ``'element_6'`` with ``selection=[4]`` and ``selection=[6]`` respectively.
-
-.. .. code-block:: python
-
-..     mdl.add_set(name='elset_exploded', type='element', selection=[4, 6], explode=True)
-
-..     >>> mdl.sets['element_4']
-..     {'type': 'element', 'selection': [4], 'explode': False}
-
-..     >>> mdl.sets['element_6']
-..     {'type': 'element', 'selection': [6], 'explode': False}
-
-.. The same exploding method works for node sets:
-
-.. .. code-block:: python
-
-..     >>> mdl.add_set(name='nset_exploded', type='node', selection=[1, 2], explode=True)
-
-..     >>> mdl.sets['node_1']
-..     {'type': 'node', 'selection': [1], 'explode': False}
-
-..     >>> mdl.sets['node_2']
-..     {'type': 'node', 'selection': [2], 'explode': False}
-
-.. The utility of this is, that the user can automatically break up a larger set knowing that individual nodes or elements can be referenced to. This is useful for individually assigning a thickness, material, section or orientation to specific elements by way of their number. **Note**: ``explode`` must be set to ``True`` if you want to individually assign different sections for elements within a set, such as the element orientation or differences in section geometry.

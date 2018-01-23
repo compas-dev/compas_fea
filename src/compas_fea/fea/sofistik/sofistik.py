@@ -74,7 +74,7 @@ def input_generate(structure, fields, units='m'):
         urs = 1
         f.write('+PROG AQUA urs:{0}\n'.format(urs))
         f.write('HEAD AQUA\n')
-        write_input_materials(f, 'sofistik', materials)
+        write_input_materials(f, 'sofistik', materials, sections, properties)
         f.write('END\n$\n$\n')
 
         urs += 1
@@ -130,16 +130,16 @@ def input_write_rebar(f, properties, sections, sets, urs):
         reinforcement = property.reinforcement
         property_index = property.index + 1
 
-        urs += 1
-
-        f.write('+PROG BEMESS urs:{0}\n'.format(urs))
-        f.write('$\n')
-        f.write('CTRL WARN 7\n')  # Upper cover (<10mm or >0.70d)
-        f.write('CTRL WARN 9\n')  # Bottom cover (<10mm or >0.70d)
-        f.write('CTRL WARN 471\n')  # Element thickness too thin and not allowed for design.
-        f.write('$\n')
-
         if reinforcement:
+
+            urs += 1
+
+            f.write('+PROG BEMESS urs:{0}\n'.format(urs))
+            f.write('$\n')
+            f.write('CTRL WARN 7\n')  # Upper cover (<10mm or >0.70d)
+            f.write('CTRL WARN 9\n')  # Bottom cover (<10mm or >0.70d)
+            f.write('CTRL WARN 471\n')  # Element thickness too thin and not allowed for design.
+            f.write('$\n')
 
             f.write('$ Reinforcement: {0}\n'.format(key))
             f.write('$ ---------------' + '-' * (len(key)) + '\n')
@@ -214,6 +214,6 @@ def input_write_rebar(f, properties, sections, sets, urs):
             f.write('$\n')
             f.write('$\n')
 
-        f.write('END\n$\n$\n')
+            f.write('END\n$\n$\n')
 
     return urs

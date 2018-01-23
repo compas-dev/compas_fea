@@ -10,6 +10,97 @@ fea
 The compas_fea package supports ABAQUS, ANSYS and OpenSEES as analysis backends.
 
 
+write_heading
+=============
+
+.. currentmodule:: compas_fea.fea.write_heading
+
+:mod:`compas_fea.fea.write_heading`
+
+.. autosummary::
+    :toctree: generated/
+
+    write_input_heading
+
+
+write_steps
+===========
+
+.. currentmodule:: compas_fea.fea.write_steps
+
+:mod:`compas_fea.fea.write_steps`
+
+.. autosummary::
+    :toctree: generated/
+
+    write_input_steps
+
+
+write_postprocess
+=================
+
+.. currentmodule:: compas_fea.fea.write_postprocess
+
+:mod:`compas_fea.fea.write_postprocess`
+
+.. autosummary::
+    :toctree: generated/
+
+    write_input_postprocess
+
+
+write_elements
+==============
+
+.. currentmodule:: compas_fea.fea.write_elements
+
+:mod:`compas_fea.fea.write_elements`
+
+.. autosummary::
+    :toctree: generated/
+
+    write_input_elements
+
+
+write_nodes
+=============
+
+.. currentmodule:: compas_fea.fea.write_nodes
+
+:mod:`compas_fea.fea.write_nodes`
+
+.. autosummary::
+    :toctree: generated/
+
+    write_input_nodes
+
+
+write_bcs
+=========
+
+.. currentmodule:: compas_fea.fea.write_bcs
+
+:mod:`compas_fea.fea.write_bcs`
+
+.. autosummary::
+    :toctree: generated/
+
+    write_input_bcs
+
+
+write_materials
+===============
+
+.. currentmodule:: compas_fea.fea.write_materials
+
+:mod:`compas_fea.fea.write_materials`
+
+.. autosummary::
+    :toctree: generated/
+
+    write_input_materials
+
+
 abaq
 ====
 
@@ -22,16 +113,7 @@ abaq
 
     abaqus_launch_process
     extract_odb_data
-    input_write_constraints
-    input_write_elements
     input_generate
-    input_write_heading
-    input_write_materials
-    input_write_misc
-    input_write_nodes
-    input_write_properties
-    input_write_sets
-    input_write_steps
 
 
 ansys
@@ -55,6 +137,7 @@ ansys
     write_results_from_rst
     load_to_results
 
+
 opensees
 ========
 
@@ -66,11 +149,16 @@ opensees
     :toctree: generated/
 
     input_generate
-    input_write_heading
-    input_write_nodes
-    input_write_bcs
-    input_write_elements
-    input_write_recorders
-    input_write_patterns
     opensees_launch_process
+
+
+sofistik
+========
+
+.. currentmodule:: compas_fea.fea.sofistik
+
+:mod:`compas_fea.fea.sofistik`
+
+.. autosummary::
+    :toctree: generated/
 
