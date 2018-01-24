@@ -70,27 +70,14 @@ def input_generate(structure, fields, units='m'):
         steps         = structure.steps
 
         write_input_heading(f, software='sofistik')
-
-        urs = 1
-        f.write('+PROG AQUA urs:{0}\n'.format(urs))
-        f.write('HEAD AQUA\n')
         write_input_materials(f, 'sofistik', materials, sections, properties)
         f.write('END\n$\n$\n')
-
-        urs += 1
-        f.write('+PROG SOFIMSHA urs:{0}\n'.format(urs))
         write_input_nodes(f, 'sofistik', nodes)
         write_input_bcs(f, 'sofistik', structure, steps, displacements)
         write_input_elements(f, 'sofistik', sections, properties, elements, structure, materials)
         f.write('END\n$\n$\n')
-
-        urs = input_write_rebar(f, properties, sections, sets, urs)  # need to get into write functions
-
-        urs += 1
-        f.write('+PROG ASE urs:{0}\n'.format(urs))
+        urs = input_write_rebar(f, properties, sections, sets, 0)  # need to get into write functions
         write_input_steps(f, 'sofistik', structure, steps, loads, displacements, sets, fields)
-        f.write('END\n$\n$\n')
-
         urs += 1
         f.write('+PROG BEMESS urs:{0}\n'.format(urs))
         write_input_postprocess(f, 'sofistik', structure)

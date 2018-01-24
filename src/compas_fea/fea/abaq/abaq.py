@@ -421,12 +421,15 @@ def input_write_sets(f, sets):
 
             if stype == 'node':
                 f.write('*NSET, NSET={0}\n'.format(key))
+                f.write('**\n')
 
             elif stype == 'element':
                 f.write('*ELSET, ELSET={0}\n'.format(key))
+                f.write('**\n')
 
             elif stype == 'surface_node':
                 f.write('*SURFACE, TYPE=NODE, NAME={0}\n'.format(key))
+                f.write('**\n')
 
             selection = [i + 1 for i in set['selection']]
             cnt = 0

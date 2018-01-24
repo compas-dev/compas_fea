@@ -14,6 +14,7 @@ __all__ = [
     'write_input_heading',
 ]
 
+
 comments = {
     'abaqus':   '**',
     'opensees': '#',
@@ -63,12 +64,11 @@ def write_input_heading(f, software, ndof=6):
     """
 
     c = comments[software]
-    name = names[software]
 
     f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
     f.write('{0} --------------------------------------------------------------------- Heading\n'.format(c))
     f.write('{0}\n'.format(c))
-    f.write('{0} {1} input file\n'.format(c, name))
+    f.write('{0} {1} input file\n'.format(c, names[software]))
     f.write('{0} Units: {1}\n'.format(c, units[software]))
     f.write('{0} compas_fea package: {1}\n'.format(c, authors[software]))
     f.write('{0}\n'.format(c))
@@ -78,13 +78,12 @@ def write_input_heading(f, software, ndof=6):
 
         f.write('**\n')
         f.write('*PHYSICAL CONSTANTS, ABSOLUTE ZERO=-273.15, STEFAN BOLTZMANN=5.67e-8\n')
-        f.write('**\n')
 
     elif software == 'opensees':
 
         f.write('#\n')
         f.write('wipe\n')
         f.write('model basic -ndm 3 -ndf {0}\n'.format(ndof))
-        f.write('#\n')
 
+    f.write('{0}\n'.format(c))
     f.write('{0}\n'.format(c))

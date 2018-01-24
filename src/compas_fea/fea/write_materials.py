@@ -25,7 +25,7 @@ comments = {
 headers = {
     'abaqus':   '',
     'opensees': '',
-    'sofistik': '$\nNORM DC SIA NDC 262\n',
+    'sofistik': '+PROG AQUA\nHEAD AQUA\n$\nNORM DC SIA NDC 262\n',
     'ansys':    '',
 }
 
@@ -57,6 +57,7 @@ def write_input_materials(f, software, materials, sections=None, properties=None
 
     f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
     f.write('{0} ------------------------------------------------------------------- Materials\n'.format(c))
+    f.write('{0}\n'.format(c))
 
     if headers[software]:
         f.write('{0}'.format(headers[software]))
@@ -302,7 +303,7 @@ def write_input_materials(f, software, materials, sections=None, properties=None
             geometry = section.geometry
             stype = section.__name__
 
-            if stype in ['PipeSection']:
+            if stype in ['PipeSection', 'CircularSection']:
 
                 f.write('{0}\n'.format(c))
                 f.write('{0} {1}\n'.format(c, section.name))
@@ -314,6 +315,11 @@ def write_input_materials(f, software, materials, sections=None, properties=None
                     D = geometry['r'] * 2 * 1000
                     t = geometry['t'] * 1000
                     f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, t, material_index))
+
+                elif stype == 'CircularSection':
+
+                    D = geometry['r'] * 2 * 1000
+                    f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, 0, material_index))
 
         f.write('{0}\n'.format(c))
         f.write('{0}\n'.format(c))

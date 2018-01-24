@@ -12,6 +12,7 @@ Rhino
     :maxdepth: 1
 
     examples/beam_bathe_rhino
+    examples/beam_frame_rhino
     examples/beam_simple_rhino
     examples/mesh_strip_rhino
 

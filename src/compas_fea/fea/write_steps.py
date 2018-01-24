@@ -31,6 +31,20 @@ middle = {
     'ansys':    '',
 }
 
+headers = {
+    'abaqus':   '',
+    'opensees': '',
+    'sofistik': '+PROG ASE\n',
+    'ansys':    '',
+}
+
+footers = {
+    'abaqus':   '',
+    'opensees': '',
+    'sofistik': 'END\n',
+    'ansys':    '',
+}
+
 dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
@@ -69,8 +83,58 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
     c = comments[software]
 
+    if software == 'sofistik':
+
+        f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
+        f.write('{0} ----------------------------------------------------------------------- Loads\n'.format(c))
+        f.write('+PROG SOFILOAD\n')
+
+        for k in loads:
+
+            load = loads[k]
+            load_index = load.index + 1
+            ltype = load.__name__
+            com = load.components
+
+            if ltype != 'GravityLoad':
+
+                f.write('$\n')
+                f.write('$ {0}\n'.format(k))
+                f.write('$ ' + '-' * len(k) + '\n')
+                f.write('$\n')
+                f.write("LC {0} TITL '{1}'\n".format(load_index, k))
+                f.write('$\n')
+
+                if ltype == 'TributaryLoad':
+
+                    for node in sorted(com, key=int):
+                        ni = node + 1
+                        f.write('    NODE NO {0} TYPE '.format(ni))
+                        for ci, dof in enumerate(dofs[:3], 1):
+                            if com[node][dof]:
+                                dl = com[node][dof] / 1000.
+                                f.write('P{0}{0} {1}\n'.format(dof.upper(), dl))
+
+                # f.write('\n')
+                # components = ''
+                # if com['x']:
+                #     pass
+                # if com['y']:
+                #     pass
+                # if com['z']:
+                #     components += ' PZZ {0}'.format(0.001 * com['z'] * lf)
+                # f.write('    QUAD GRP {0}{1}\n'.format(set_index, components))
+
+        f.write('$\n')
+        f.write('END\n')
+        f.write('$\n')
+        f.write('$\n')
+
     f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
     f.write('{0} ----------------------------------------------------------------------- Steps\n'.format(c))
+
+    if headers[software]:
+        f.write(headers[software])
 
     keys = list(structure.steps_order[1:])
 
@@ -116,7 +180,10 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
                 f.write('CTRL SOLV 1\n')
                 f.write('CTRL CONC\n')
-                f.write("$\nLC {0} TITL '{1}' FACT {2}".format(step_index, key, factor))
+                if nlgeom == 'YES':
+                    f.write('SYST PROB TH2 ITER {0} TOL {1} NMAT YES\n'.format(increments, tolerance))
+                f.write('$\n')
+                f.write("LC 10{0} TITL '{1}' FACT {2}".format(step_index, key, factor))
 
                 DLX, DLY, DLZ = 0, 0, 0
                 for key, load in loads.items():
@@ -130,20 +197,27 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                         DLZ += gz
                 f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * factor, DLY * factor, DLZ * factor))
 
-                if nlgeom == 'YES':
-                    f.write('SYST PROB TH2 ITER {0} TOL {1} NMAT YES\n'.format(increments, tolerance))
-
             # Loads
 
             try:
                 for k in step.loads:
 
                     load = loads[k]
+                    load_index = load.index + 1
                     ltype = load.__name__
                     com = load.components
                     # axes = load.axes
                     nset = load.nodes
                     elset = load.elements
+
+                    if software != 'sofistik':
+                        f.write('{0}\n'.format(c))
+                        f.write('{0} {1}\n'.format(c, k))
+                        f.write('{0} '.format(c) + '-' * len(k) + '\n')
+                        f.write('{0}\n'.format(c))
+                    else:
+                        if ltype != 'GravityLoad':
+                            f.write('    LCC {0}\n'.format(load_index))
 
                     # Point load
 
@@ -156,14 +230,12 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                                 f.write('load {0} {1}\n'.format(node + 1, coms))
 
                         elif software == 'abaqus':
-                            f.write('**\n*CLOAD\n')
+                            f.write('*CLOAD\n')
+                            f.write('**\n')
                             for ci, dof in enumerate(dofs, 1):
                                 if com[dof]:
                                     f.write('{0}, {1}, {2}'.format(nset, ci, factor * com[dof]) + '\n')
                             f.write('**\n')
-
-                        elif software == 'sofistik':
-                            pass
 
                     # Line load
 
@@ -180,21 +252,11 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     elif ltype == 'AreaLoad':
 
                         if software == 'opensees':
-                            pass
 
-                        elif software == 'sofistik':
                             pass
-                            # f.write('\n')
-                            # components = ''
-                            # if com['x']:
-                            #     pass
-                            # if com['y']:
-                            #     pass
-                            # if com['z']:
-                            #     components += ' PZZ {0}'.format(0.001 * com['z'] * lf)
-                            # f.write('    QUAD GRP {0}{1}\n'.format(set_index, components))
 
                         elif software == 'abaqus':
+
                             pass
 
                     # Gravity load
@@ -209,13 +271,30 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                         if software == 'opensees':
                             pass
 
-                        elif software == 'sofistik':
+                        elif software == 'abaqus':
+                            f.write('*DLOAD\n')
+                            f.write('**\n')
+                            f.write('{0}, GRAV, {1}, {2}, {3}, {4}\n'.format(elset, factor * g, gx, gy, gz))
+                            f.write('**\n')
+
+                    # Tributary load
+
+                    elif ltype == 'TributaryLoad':
+
+                        if software == 'opensees':
+
                             pass
 
                         elif software == 'abaqus':
-                            f.write('**\n*DLOAD\n')
-                            f.write('{0}, GRAV, {1}, {2}, {3}, {4}\n'.format(elset, factor * g, gx, gy, gz))
+
+                            f.write('*CLOAD\n')
                             f.write('**\n')
+                            for node in sorted(com, key=int):
+                                for ci, dof in enumerate(dofs[:3], 1):
+                                    if com[node][dof]:
+                                        ni = node + 1
+                                        dl = com[node][dof] * factor
+                                        f.write('{0}, {1}, {2}\n'.format(ni, ci, dl))
 
             except:
                 pass
@@ -299,8 +378,11 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 f.write('*OUTPUT, FIELD\n')
                 f.write('**\n')
                 f.write('*NODE OUTPUT\n')
+                f.write('**\n')
                 f.write(', '.join([i.upper() for i in node_fields if i in fields]) + '\n')
+                f.write('**\n')
                 f.write('*ELEMENT OUTPUT\n')
+                f.write('**\n')
                 f.write(', '.join([i.upper() for i in element_fields if (i in fields and i != 'rbfor')]) + '\n')
                 if 'rbfor' in fields:
                     f.write('*ELEMENT OUTPUT, REBAR\n')
@@ -310,6 +392,9 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
             elif software == 'sofistik':
                 pass
+
+    if footers[software]:
+        f.write(footers[software])
 
     f.write('{0}\n'.format(c))
     f.write('{0}\n'.format(c))
@@ -389,16 +474,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
 
 
-#                     # Tributary load
 
-#                     elif ltype == 'TributaryLoad':
-
-#                         for node in sorted(com, key=int):
-#                             for c, dof in enumerate(dofs[:3], 1):
-#                                 if com[node][dof]:
-#                                     ni = node + 1
-#                                     dl = com[node][dof] * lf
-#                                     f.write('{0}, {1}, {2}\n'.format(ni, c, dl))
 
 
 

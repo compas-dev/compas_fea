@@ -43,16 +43,18 @@ def write_input_postprocess(f, software, structure):
     """
 
     c = comments[software]
-    step = structure.steps[structure.steps_order[-1]].index  # temp assumption want the last step
+    step = structure.steps[structure.steps_order[-1]].index  # assumption you want the last step
 
     f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
     f.write('{0} ------------------------------------------------------------- Post-processing\n'.format(c))
     f.write('{0}\n'.format(c))
 
     if software == 'abaqus':
+
         pass
 
     elif software == 'opensees':
+
         pass
 
     elif software == 'sofistik':
@@ -63,7 +65,11 @@ def write_input_postprocess(f, software, structure):
         f.write('$\n')
         # CTRL PFAI 2
         f.write('CRAC WK PARA\n')
-        f.write('LC {0}\n'.format(step))
+        f.write('LC 10{0}\n'.format(step))
+
+    elif software == 'ansys':
+
+        pass
 
     f.write('{0}\n'.format(c))
     f.write('{0}\n'.format(c))

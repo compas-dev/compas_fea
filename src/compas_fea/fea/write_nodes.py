@@ -14,6 +14,7 @@ __all__ = [
     'write_input_nodes',
 ]
 
+
 comments = {
     'abaqus':   '**',
     'opensees': '#',
@@ -26,6 +27,13 @@ leader = {
     'opensees': 'node ',
     'sofistik': '',
     'ansys':    '',
+}
+
+seperators = {
+    'abaqus':   ', ',
+    'opensees': ' ',
+    'sofistik': ' ',
+    'ansys':    ' ',
 }
 
 
@@ -53,28 +61,35 @@ def write_input_nodes(f, software, nodes):
     f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
     f.write('{0} ----------------------------------------------------------------------- Nodes\n'.format(c))
     f.write('{0}\n'.format(c))
-    f.write('{0} No. x[m] y[m] z[m]\n'.format(c))
-    f.write('{0}\n'.format(c))
 
     if software == 'sofistik':
+
+        f.write('+PROG SOFIMSHA\n')
+        f.write('$\n')
         f.write('UNIT 0\n')
         f.write('SYST 3D GDIR POSX,POSY,NEGZ\n')
         f.write('CTRL OPT OPTI 10\n')
         f.write('NODE NO X Y Z\n')
-        f.write('{0}\n'.format(c))
-        seperator = ' '
 
     elif software == 'abaqus':
+
         f.write('*NODE, NSET=nset_all\n')
-        f.write('{0}\n'.format(c))
-        seperator = ', '
-        
+
     elif software == 'opensees':
-        seperator = ' '
-        
+
+        pass
+
+    elif software == 'ansys':
+
+        pass
+
+    f.write('{0}\n'.format(c))
+    f.write('{0} No. x[m] y[m] z[m]\n'.format(c))
+    f.write('{0}\n'.format(c))
+
     for key in sorted(nodes, key=int):
         xyz = [str(nodes[key][i]) for i in 'xyz']
-        data = seperator.join([str(key + 1)] + xyz)
+        data = seperators[software].join([str(key + 1)] + xyz)
         f.write('{0}{1}\n'.format(leader[software], data))
 
     f.write('{0}\n'.format(c))
