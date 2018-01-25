@@ -47,6 +47,8 @@ class GeneralStep(object):
         Duration of step.
     tolerance : float
         A tolerance for analysis solvers.
+    state : str
+        Limit state 'sls' or 'uls'.
 
     Returns
     -------
@@ -55,7 +57,7 @@ class GeneralStep(object):
     """
 
     def __init__(self, name, increments=100, iterations=10, factor=1.0, nlgeom=True, displacements=[], loads=[],
-                 type='static', temperatures=None, duration=1, tolerance=0.01):
+                 type='static', temperatures=None, duration=1, tolerance=0.01, state=None):
         self.__name__ = 'GeneralStep'
         self.name = name
         self.increments = increments
@@ -68,6 +70,7 @@ class GeneralStep(object):
         self.temperatures = temperatures
         self.duration = duration
         self.tolerance = tolerance
+        self.state = state
 
 
 class HeatStep(object):

@@ -79,8 +79,9 @@ def input_generate(structure, fields, units='m'):
         urs = input_write_rebar(f, properties, sections, sets, 0)  # need to get into write functions
         write_input_steps(f, 'sofistik', structure, steps, loads, displacements, sets, fields)
         urs += 1
+
         f.write('+PROG BEMESS urs:{0}\n'.format(urs))
-        write_input_postprocess(f, 'sofistik', structure)
+        write_input_postprocess(f, 'sofistik', structure, steps)
         f.write('END\n$\n$\n')
 
     print('***** Sofistik input file generated: {0} *****\n'.format(filename))

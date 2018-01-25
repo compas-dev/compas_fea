@@ -13,6 +13,7 @@ Rhino
 
     examples/beam_bathe_rhino
     examples/beam_frame_rhino
+    examples/beam_grid_rhino
     examples/beam_simple_rhino
     examples/mesh_strip_rhino
 

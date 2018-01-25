@@ -180,8 +180,14 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
                 f.write('CTRL SOLV 1\n')
                 f.write('CTRL CONC\n')
+                f.write('CREP NCRE 20\n')
+                if step.state == 'sls':
+                    f.write('NSTR KSV SLD\n')
+                elif step.state == 'uls':
+                    f.write('NSTR KSV ULD\n')
                 if nlgeom == 'YES':
-                    f.write('SYST PROB TH2 ITER {0} TOL {1} NMAT YES\n'.format(increments, tolerance))
+                    f.write('$\n')
+                    f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT YES\n'.format(increments, tolerance))
                 f.write('$\n')
                 f.write("LC 10{0} TITL '{1}' FACT {2}".format(step_index, key, factor))
 
