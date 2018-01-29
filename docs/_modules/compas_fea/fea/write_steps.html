@@ -248,8 +248,14 @@
 
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL SOLV 1</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL CONC</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CREP NCRE 20</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">step</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s1">&#39;sls&#39;</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;NSTR KSV SLD</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">step</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s1">&#39;uls&#39;</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;NSTR KSV ULD</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">nlgeom</span> <span class="o">==</span> <span class="s1">&#39;YES&#39;</span><span class="p">:</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;SYST PROB TH2 ITER </span><span class="si">{0}</span><span class="s1"> TOL </span><span class="si">{1}</span><span class="s1"> NMAT YES</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">increments</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;SYST PROB TH3 ITER </span><span class="si">{0}</span><span class="s1"> TOL </span><span class="si">{1}</span><span class="s1"> NMAT YES</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">increments</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">))</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;LC 10</span><span class="si">{0}</span><span class="s2"> TITL &#39;</span><span class="si">{1}</span><span class="s2">&#39; FACT </span><span class="si">{2}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">factor</span><span class="p">))</span>
 
@@ -687,7 +693,7 @@
             
 
             
-                Last updated on Jan 25, 2018.
+                Last updated on Jan 29, 2018.
             
 
             

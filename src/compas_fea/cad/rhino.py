@@ -156,35 +156,34 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
 
     path = structure.path
     basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc(basedir=basedir, tmpdir=path, mode=1)
+    xfunc = XFunc('post-process', basedir=basedir, tmpdir=path)
     xfunc.funcname = 'functions.tets_from_vertices_faces'
-    result = xfunc(vertices=vertices, faces=faces, volume=volume)
 
-    if result['error']:
-        print(result['error'])
-        print('\n***** Error using MeshPy *****')
-    else:
-        tets_points, tets_elements = result['data']
+    try:
+        tets_points, tets_elements = xfunc(vertices=vertices, faces=faces, volume=volume)
 
-    for point in tets_points:
-        structure.add_node(point)
+        for point in tets_points:
+            structure.add_node(point)
 
-    ekeys = []
-    for element in tets_elements:
-        nodes = [structure.check_node_exists(tets_points[i]) for i in element]
-        ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', acoustic=acoustic, thermal=thermal)
-        ekeys.append(ekey)
-    structure.add_set(name=name, type='element', selection=ekeys, explode=False)
+        ekeys = []
+        for element in tets_elements:
+            nodes = [structure.check_node_exists(tets_points[i]) for i in element]
+            ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', acoustic=acoustic, thermal=thermal)
+            ekeys.append(ekey)
+        structure.add_set(name=name, type='element', selection=ekeys, explode=False)
 
-    rs.EnableRedraw(False)
-    rs.DeleteObjects(rs.ObjectsByLayer(layer))
-    rs.CurrentLayer(layer)
-    if draw_tets:
-        tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
-        for i, points in enumerate(tets_elements):
-            xyz = [tets_points[j] for j in points]
-            rs.AddMesh(vertices=xyz, face_vertices=tet_faces)
-    rs.EnableRedraw(True)
+        rs.EnableRedraw(False)
+        rs.DeleteObjects(rs.ObjectsByLayer(layer))
+        rs.CurrentLayer(layer)
+        if draw_tets:
+            tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
+            for i, points in enumerate(tets_elements):
+                xyz = [tets_points[j] for j in points]
+                rs.AddMesh(vertices=xyz, face_vertices=tet_faces)
+        rs.EnableRedraw(True)
+
+    except:
+        print('***** Error using MeshPy and/or generating Tets *****')
 
 
 def add_node_set(structure, guids, name, explode=False):
@@ -590,6 +589,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         mesh_faces = []
         beam_faces = [[0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]]
         block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
+        tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
 
         for element, nodes in enumerate(elements):
             n = len(nodes)
@@ -622,7 +622,11 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
                 mesh_faces.append(nodes + [nodes[-1]])
 
             elif n == 4:
-                mesh_faces.append(nodes)
+                if structure.elements[element].__name__ in ['ShellElement', 'MembraneElement']:
+                    mesh_faces.append(nodes)
+                else:
+                    for face in tet_faces:
+                        mesh_faces.append([nodes[i] for i in face])
 
             elif n == 8:
                 for block in block_faces:
@@ -677,7 +681,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         print('\n***** Error encountered *****')
 
 
-def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',
+def plot_voxels(structure, step, field='smises', scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',
                 vmin=0, vdx=None):
 
     """ Plots voxels results for 4D data with mayavi.
@@ -690,8 +694,6 @@ def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[No
         Name of the Step.
     field : str
         Scalar field to plot, e.g. 'smises'.
-    layer : str
-        Layer name for plotting.
     scale : float
         Scale displacements for the deformed plot.
     cbar : list
@@ -711,14 +713,6 @@ def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[No
 
     """
 
-    # Create and clear Rhino layer
-
-    if not layer:
-        layer = '{0}-{1}'.format(step, field)
-    rs.CurrentLayer(rs.AddLayer(layer))
-    clear_layer(layer)
-    rs.EnableRedraw(False)
-
     # Node and element data
 
     nkeys = sorted(structure.nodes, key=int)
@@ -726,39 +720,41 @@ def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[No
     nodes = [structure.node_xyz(nkey) for nkey in nkeys]
     elements = [structure.elements[ekey].nodes for ekey in ekeys]
 
+    mode = ''
     nodal_data = structure.results[step]['nodal']
-    elemental_data = structure.results[step]['element']
-    ux = [nodal_data['ux'][str(key)] for key in nkeys]
-    uy = [nodal_data['uy'][str(key)] for key in nkeys]
-    uz = [nodal_data['uz'][str(key)] for key in nkeys]
+    ux = [nodal_data['ux{0}'.format(str(mode))][key] for key in nkeys]
+    uy = [nodal_data['uy{0}'.format(str(mode))][key] for key in nkeys]
+    uz = [nodal_data['uz{0}'.format(str(mode))][key] for key in nkeys]
 
     # Postprocess
 
     try:
-        data = [nodal_data[field][str(key)] for key in nkeys]
+        data = [nodal_data[field + str(mode)][key] for key in nkeys]
         dtype = 'nodal'
-    except:
+    except(Exception):
+        elemental_data = structure.results[step]['element']
         data = elemental_data[field]
-        dtype = 'elemental'
+        dtype = 'element'
     path = structure.path
     basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc(basedir=basedir, tmpdir=path, mode=1)
+    xfunc = XFunc('post-process', basedir=basedir, tmpdir=path)
     xfunc.funcname = 'functions.postprocess'
-    toc, U, cnodes, fabs, fscaled = xfunc(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)['data']
+    result = xfunc(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)
 
-    print('\n***** Data processed : {0} s *****'.format(toc))
+    try:
+        toc, U, cnodes, fabs, fscaled, celements = result
+        print('\n***** Data processed : {0} s *****'.format(toc))
 
-    # Plot voxels
+    except:
+        print('\n***** Error post-processing *****')
 
-    xfunc.funcname = 'functions.voxels'
-    xfunc(fscaled, vmin, U, vdx, None, None)['data']
+    try:
+        xfunc = XFunc('voxels', basedir=basedir, tmpdir=path)
+        xfunc.funcname = 'functions.voxels'
+        xfunc(values=fscaled, vmin=vmin, U=U, vdx=vdx, plot='mayavi')
 
-    # Return to Default layer
-
-    rs.CurrentLayer(rs.AddLayer('Default'))
-    rs.LayerVisible('colorbar', False)
-    rs.LayerVisible(layer, False)
-    rs.EnableRedraw(True)
+    except:
+        print('\n***** Error plotting voxels *****')
 
 
 def plot_principal_stresses(structure, step, ptype, scale, layer):

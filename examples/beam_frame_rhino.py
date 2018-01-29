@@ -71,8 +71,8 @@ mdl.summary()
 
 # Run and extract data
 
-#mdl.analyse_and_extract(software='abaqus', fields=['u', 'ur', 'rf'])
-mdl.analyse_and_extract(software='opensees', fields=['u', 'ur', 'rf'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'ur', 'rf'])
+#mdl.analyse_and_extract(software='opensees', fields=['u', 'ur', 'rf'])
 
 # Plot deformations
 

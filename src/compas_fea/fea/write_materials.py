@@ -61,6 +61,7 @@ def write_input_materials(f, software, materials, sections=None, properties=None
 
     if headers[software]:
         f.write('{0}'.format(headers[software]))
+        f.write('{0}\n'.format(c))
 
     for key, material in materials.items():
 
@@ -80,7 +81,6 @@ def write_input_materials(f, software, materials, sections=None, properties=None
         density = material.p
         yc = density / 100
 
-        f.write('{0}\n'.format(c))
         f.write('{0} {1}\n'.format(c, key))
         f.write('{0} '.format(c) + '-' * len(key) + '\n')
         f.write('{0}\n'.format(c))

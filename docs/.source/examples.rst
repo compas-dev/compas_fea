@@ -16,6 +16,7 @@ Rhino
     examples/beam_grid_rhino
     examples/beam_simple_rhino
     examples/mesh_strip_rhino
+    examples/block_tets_rhino
 
 -------
 Blender

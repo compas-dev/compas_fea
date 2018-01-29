@@ -68,6 +68,6 @@ mdl.summary()
 
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
-# Plot displacements
+# Plot stresses
 
 rhino.plot_voxels(mdl, step='step', field='smises', cbar=[0, 2], vmin=0.3, vdx=1./nz)

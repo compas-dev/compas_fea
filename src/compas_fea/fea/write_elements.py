@@ -279,6 +279,39 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                         f.write('{0}\n'.format(' '.join([str(i) for i in data])))
                         f.write('$\n')
 
+            # Solid sections
+
+            elif stype in solids:
+
+                for select in selection:
+
+                    n = select + 1
+                    element = elements[select]
+                    nodes = element.nodes
+
+                    if software == 'sofistik':
+
+                        pass
+
+                    elif software == 'opensees':
+
+                        pass
+
+                    elif software == 'ansys':
+
+                        pass
+
+                    elif software == 'abaqus':
+
+                        if len(nodes) == 4:
+                            etype = 'C3D4'
+
+                        f.write('*ELEMENT, TYPE={0}, ELSET=element_{1}\n'.format(etype, select))
+                        f.write('{0}, {1}\n'.format(n, ','.join([str(i + 1) for i in nodes])))
+                        f.write('*SOLID SECTION, ELSET=element_{0}, MATERIAL={1}\n'.format(select, material_name))
+                        f.write('\n')
+                        f.write('**\n')
+
     f.write('{0}\n'.format(c))
     f.write('{0}\n'.format(c))
 
@@ -354,13 +387,9 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 
 
 
-#             # Solid sections
 
-#             elif stype in solids:
-
-#                 f.write('*SOLID SECTION, ELSET={0}, MATERIAL={1}\n'.format(elset, material))
-#                 if stype == 'TrussSection':
-#                     f.write('{0}\n'.format(geometry['A']))
 
 #         f.write('**\n')
 
+    #                 if stype == 'TrussSection':
+    #                     f.write('{0}\n'.format(geometry['A']))

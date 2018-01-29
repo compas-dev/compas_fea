@@ -110,7 +110,6 @@
 <span class="k">for</span> <span class="n">beam</span> <span class="ow">in</span> <span class="n">beams</span><span class="p">:</span>
     <span class="n">network</span> <span class="o">=</span> <span class="n">rhino</span><span class="o">.</span><span class="n">network_from_lines</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">ObjectsByLayer</span><span class="p">(</span><span class="n">beam</span><span class="p">))</span>
     <span class="n">mdl</span><span class="o">.</span><span class="n">add_nodes_elements_from_network</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="p">,</span> <span class="n">element_type</span><span class="o">=</span><span class="s1">&#39;BeamElement&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">leaves</span><span class="p">())</span>
     <span class="n">sp</span><span class="p">,</span> <span class="n">ep</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">leaves</span><span class="p">()</span>
     <span class="n">sp_xyz</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
     <span class="n">ep_xyz</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span>
@@ -221,6 +220,7 @@
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">beam_grid Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_simple_rhino.html">beam_simple Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_strip_rhino.html">mesh_strip Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_tets_rhino.html">block_tets Rhino</a></li>
 </ul>
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
@@ -257,7 +257,7 @@
             
 
             
-                Last updated on Jan 25, 2018.
+                Last updated on Jan 29, 2018.
             
 
             

@@ -662,7 +662,7 @@ def voxels(values, vmin, U, vdx, plot=None, indexing=None):
     None
 
     """
-
+    U = array(U)
     x = U[:, 0]
     y = U[:, 1]
     z = U[:, 2]

@@ -157,7 +157,7 @@ def opensees_launch_process(structure, exe):
     print('\n***** OpenSees analysis time : {0} s *****'.format(toc))
 
 
-def input_generate(structure, fields, units='m'):
+def input_generate(structure, fields):
 
     """ Creates the OpenSees .tcl file from the Structure object.
 
@@ -167,8 +167,6 @@ def input_generate(structure, fields, units='m'):
         The Structure object to read from.
     fields : list
         Data field requests.
-    units : str
-        Units of the nodal co-ordinates 'm','cm','mm'.
 
     Returns
     -------

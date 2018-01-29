@@ -347,6 +347,39 @@
                         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])))</span>
                         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
+            <span class="c1"># Solid sections</span>
+
+            <span class="k">elif</span> <span class="n">stype</span> <span class="ow">in</span> <span class="n">solids</span><span class="p">:</span>
+
+                <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
+
+                    <span class="n">n</span> <span class="o">=</span> <span class="n">select</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">element</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="n">select</span><span class="p">]</span>
+                    <span class="n">nodes</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">nodes</span>
+
+                    <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+                        <span class="k">pass</span>
+
+                    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+
+                        <span class="k">pass</span>
+
+                    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>
+
+                        <span class="k">pass</span>
+
+                    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                            <span class="n">etype</span> <span class="o">=</span> <span class="s1">&#39;C3D4&#39;</span>
+
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*ELEMENT, TYPE=</span><span class="si">{0}</span><span class="s1">, ELSET=element_</span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span> <span class="n">select</span><span class="p">))</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])))</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*SOLID SECTION, ELSET=element_</span><span class="si">{0}</span><span class="s1">, MATERIAL=</span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">select</span><span class="p">,</span> <span class="n">material_name</span><span class="p">))</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span></div>
 
@@ -422,16 +455,12 @@
 
 
 
-<span class="c1">#             # Solid sections</span>
 
-<span class="c1">#             elif stype in solids:</span>
-
-<span class="c1">#                 f.write(&#39;*SOLID SECTION, ELSET={0}, MATERIAL={1}\n&#39;.format(elset, material))</span>
-<span class="c1">#                 if stype == &#39;TrussSection&#39;:</span>
-<span class="c1">#                     f.write(&#39;{0}\n&#39;.format(geometry[&#39;A&#39;]))</span>
 
 <span class="c1">#         f.write(&#39;**\n&#39;)</span>
 
+    <span class="c1">#                 if stype == &#39;TrussSection&#39;:</span>
+    <span class="c1">#                     f.write(&#39;{0}\n&#39;.format(geometry[&#39;A&#39;]))</span>
 </code></pre></div>
                         
                         <!-- <nav class="compas-sideways">
@@ -498,7 +527,7 @@
             
 
             
-                Last updated on Jan 25, 2018.
+                Last updated on Jan 29, 2018.
             
 
             
