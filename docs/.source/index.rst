@@ -1,5 +1,3 @@
-.. _compas_fea-home:
-
 ****************************
 Documentation for compas_fea
 ****************************

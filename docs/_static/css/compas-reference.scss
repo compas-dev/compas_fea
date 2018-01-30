@@ -1,0 +1,241 @@
+@import "bootstrap-scss/functions";
+@import "bootstrap-scss/variables";
+@import "bootstrap-scss/mixins";
+
+// .rubric {
+// 	padding: $alert-padding-y $alert-padding-x;
+// 	border: $alert-border-width solid transparent;
+// 	@include border-radius($alert-border-radius);
+// 	@include alert-variant(
+// 		theme-color-level(light, -10),
+// 		theme-color-level(light, -9),
+// 		theme-color-level(light, 6)
+// 	);
+// 	font-weight: 600;
+// 	margin-top: 3rem;
+// 	margin-bottom: 2rem;
+// 	width: 100%;
+// }
+
+.rubric {
+	font-weight: normal;
+	font-size: 1.5rem;
+	margin-top: 3rem;
+	margin-bottom: 1rem;
+	border-bottom: 4px solid #eee;
+	color: #222;
+	padding-bottom: 0rem;
+}
+
+/* ----------------------------------------------------------------- */
+
+.badge-public {
+	@include badge-variant($green);
+	margin-left: 0rem;
+}
+
+.badge-private {
+	@include badge-variant($red);
+	margin-left: 0rem;
+}
+
+.badge-shared {
+	@include badge-variant($yellow);
+	margin-left: 0rem;
+}
+
+/* ----------------------------------------------------------------- */
+
+.admonition {
+	padding: $alert-padding-y $alert-padding-x;
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+	border: $alert-border-width solid transparent;
+	@include border-radius($alert-border-radius);
+}
+
+.admonition p {
+	margin-bottom: 1rem;
+}
+
+.admonition-title {
+	font-weight: 600;
+	color: inherit;
+}
+
+.admonition.note,
+.admonition.notes {
+	@include alert-variant(
+		theme-color-level(secondary, -10),
+		theme-color-level(secondary, -9),
+		theme-color-level(secondary, 6)
+	);
+}
+
+.admonition.important {
+	@include alert-variant(
+		theme-color-level(danger, -10),
+		theme-color-level(danger, -9),
+		theme-color-level(danger, 6)
+	);
+}
+
+.admonition.warning {
+	@include alert-variant(
+		theme-color-level(danger, -10),
+		theme-color-level(danger, -9),
+		theme-color-level(danger, 6)
+	);
+}
+
+.admonition.seealso {
+	@include alert-variant(
+		theme-color-level(secondary, -10),
+		theme-color-level(secondary, -9),
+		theme-color-level(secondary, 6)
+	);
+}
+
+/* ----------------------------------------------------------------- */
+
+table {
+	font-size: 0.875rem
+}
+
+.longtable {
+	border: none;
+	width: 100%;
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+	vertical-align: middle;
+}
+
+.longtable td {
+	padding: 0.5rem;
+	border: 1px solid #eee;
+}
+
+.longtable .row-odd {}
+
+.longtable .row-even {}
+
+@media (min-width: 768px) {
+	.longtable tbody tr td:first-child {
+		white-space: nowrap;
+	}
+}
+
+.longtable code {
+	background: transparent;
+	padding: 0;
+}
+
+.longtable a {
+	text-decoration: none;
+}
+
+.docutils p,
+.longtable p {
+	margin: 0;
+}
+
+.function {}
+
+.class {}
+
+.method {}
+
+.staticmethod > dt,
+.classmethod > dt,
+.method > dt,
+.function > dt,
+.class > dt {
+	padding: 0.5rem 0;
+	margin-bottom: 0.5rem;
+	border-bottom: 4px solid #eee;
+}
+
+.staticmethod > dt em,
+.classmethod > dt em,
+.method > dt em,
+.function > dt em,
+.class > dt em {
+}
+
+.class .property {}
+
+.descclassname {
+	border-radius: 0;
+	padding-right: 0;
+}
+
+.descname {
+	padding-left: 0;
+	border-radius: 0;
+}
+
+.staticmethod > dd > p,
+.classmethod > dd > p,
+.method > dd > p,
+.function > dt,
+.class > dd > p {
+}
+
+.compas-content .section {
+	position: relative;
+}
+
+.staticmethod > dt > .reference.internal,
+.classmethod > dt > .reference.internal,
+.method > dt > .reference.internal,
+.function > dt > .reference.internal,
+.class > dt > .reference.internal {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.field-list {
+	margin-top: 1rem;
+	margin-bottom: 3rem;
+}
+
+.field-list dt {
+	margin-top: 2rem;
+	margin-bottom: 1rem;
+}
+
+.field-list dd {
+	padding: 0 2rem;
+}
+
+.field-list dd ul {
+	padding-left: 0;
+}
+
+.footnote dt,
+.citation dt {
+	font-weight: normal;
+	margin-top: 1rem;
+	margin-bottom: 0.5rem;
+}
+
+dt .brackets::before {
+	content: '[';
+}
+
+dt .brackets::after {
+	content: ']';
+}
+
+.footnote dd, 
+.citation dd {
+	padding: 0 2rem;
+}
+
+
+/* ----------------------------------------------------------------- */
+
+.search-results {
+
+}

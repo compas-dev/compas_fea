@@ -127,7 +127,7 @@ OpenSees
 
 The input file will be sent for analysis via OpenSees in a Python subprocess that launches the executable, given by the ``exe`` string, or assuming ``C:/OpenSees.exe`` for Windows. No graphical user interface is launched, feedback will be presented in the terminal while the ``.tcl`` file is being run:
 
-.. code-block:: python
+.. code-block:: none
 
              OpenSees -- Open System For Earthquake Engineering Simulation
                   Pacific Earthquake Engineering Research Center
