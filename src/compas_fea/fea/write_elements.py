@@ -188,32 +188,39 @@ def write_input_elements(f, software, sections, properties, elements, structure,
             # Truss sections
 
             elif stype in trusses:
+                
+                if (software == 'opensees') and (material.__name__ == 'ElasticIsotropic'):
+                    
+                    E = material.E['E']
+                    f.write('uniaxialMaterial Elastic {0} {1}\n'.format(material_index, E))
+                    f.write('#\n')
+                
+                for select in selection:
+                    
+                    element = elements[select]
+                    sp, ep = element.nodes
+                    n = select + 1
+                    i = sp + 1
+                    j = ep + 1
+                    A = geometry['A']
 
-                if software == 'abaqus':
-                    pass
-
-                elif software == 'opensees':
-                    pass
-
-                elif software == 'sofistik':
-                    pass
-
-#                 if material.__name__ == 'ElasticIsotropic':
-#                     E = material.E['E']
-#                     f.write('# No., E[Pa]\n')
-#                     f.write('#\n')
-#                     f.write('uniaxialMaterial Elastic {0} {1}\n'.format(material_index, E))
-#                     f.write('#\n')
-
-#                 f.write('# eType, No., node.start, node.end, A[m2], material\n')
-#                 f.write('#\n')
-#                 for select in selection:
-#                     sp, ep = elements[select].nodes
-#                     n = select + 1
-#                     i = sp + 1
-#                     j = ep + 1
-#                     A = geometry['A']
-#                     f.write('element corotTruss {0} {1} {2} {3} {4}\n'.format(n, i, j, A, material_index))
+                    if software == 'abaqus':
+    
+                        if software == 'abaqus':
+    
+                            f.write('*ELEMENT, TYPE=T3D2, ELSET=element_{0}\n'.format(select))
+                            f.write('{0}, {1},{2}\n'.format(n, i, j))
+                            f.write('*SOLID SECTION, ELSET=element_{0}, MATERIAL={1}\n'.format(select, material_name))
+                            f.write('{0}\n'.format(A))
+                            f.write('**\n')
+    
+                    elif software == 'sofistik':
+                        pass
+    
+                    elif software == 'opensees':
+                        
+                        f.write('element corotTruss {0} {1} {2} {3} {4}\n'.format(n, i, j, A, material_index))
+                        f.write('#\n')
 
             # Shell sections
 
@@ -502,4 +509,3 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 #                                     f.write('{0}, {1}\n'.format(i, j))
 #                             written_springs.append(behaviour)
 #                 else:
-#                     pass

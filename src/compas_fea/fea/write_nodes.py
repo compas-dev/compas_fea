@@ -70,10 +70,12 @@ def write_input_nodes(f, software, nodes):
         f.write('SYST 3D GDIR POSX,POSY,NEGZ\n')
         f.write('CTRL OPT OPTI 10\n')
         f.write('NODE NO X Y Z\n')
+        f.write('{0}\n'.format(c))
 
     elif software == 'abaqus':
 
         f.write('*NODE, NSET=nset_all\n')
+        f.write('{0}\n'.format(c))
 
     elif software == 'opensees':
 
@@ -83,7 +85,6 @@ def write_input_nodes(f, software, nodes):
 
         pass
 
-    f.write('{0}\n'.format(c))
     f.write('{0} No. x[m] y[m] z[m]\n'.format(c))
     f.write('{0}\n'.format(c))
 
