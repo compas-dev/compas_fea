@@ -4,9 +4,6 @@ Sections
 
 This page shows how **Section** objects are added to the **Structure** object, here given as ``mdl``. A variety of **Section** objects exist for 1D, 2D and 3D elements.
 
-.. contents::
-
-
 ===============
 Adding sections
 ===============

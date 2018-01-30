@@ -2,11 +2,7 @@
 Properties
 ********************************************************************************
 
-
 This page shows how **ElementProperties** objects are added to the **Structure** object, here given as a **Structure** named ``mdl``. This object ties together **Element**, **Material** and **Section** objects to fully define structural elements.
-
-.. contents::
-
 
 =================
 Adding properties

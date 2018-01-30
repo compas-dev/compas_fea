@@ -49,37 +49,10 @@
     </nav>
  -->
 <div class="section">
-<h1><a class="toc-backref" href="#id6">Elements</a></h1>
+<h1>Elements</h1>
 <p>This page shows how different types of <strong>Element</strong> objects are added and edited with the <strong>Structure</strong> object, here the example <strong>Structure</strong> object is given as <code class="docutils literal">mdl</code>. The <strong>Element</strong> objects represent linear, surface and solid finite elements connecting different nodes of the structure.</p>
-<div class="contents topic" id="contents">
-<p class="topic-title first">Contents</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#elements" id="id6">Elements</a></p>
-<ul>
-<li><p><a class="reference internal" href="#adding-elements" id="id7">Adding elements</a></p></li>
-<li><p><a class="reference internal" href="#viewing-elements" id="id8">Viewing elements</a></p></li>
-<li><p><a class="reference internal" href="#element-index" id="id9">Element index</a></p></li>
-<li><p><a class="reference internal" href="#methods" id="id10">Methods</a></p></li>
-<li><p><a class="reference internal" href="#axes" id="id11">Axes</a></p></li>
-<li><p><a class="reference internal" href="#id1" id="id12">Elements</a></p>
-<ul>
-<li><p><a class="reference internal" href="#d-elements" id="id13">1D elements</a></p></li>
-<li><p><a class="reference internal" href="#id2" id="id14">2D elements</a></p></li>
-<li><p><a class="reference internal" href="#id3" id="id15">3D elements</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#meshing" id="id16">Meshing</a></p>
-<ul>
-<li><p><a class="reference internal" href="#id4" id="id17">2D elements</a></p></li>
-<li><p><a class="reference internal" href="#id5" id="id18">3D elements</a></p></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
 <div class="section">
-<h2><a class="toc-backref" href="#id7">Adding elements</a></h2>
+<h2>Adding elements</h2>
 <p><strong>Element</strong> objects are added to the <strong>Structure</strong> object with the <code class="docutils literal">.add_element()</code> and <code class="docutils literal">.add_elements()</code> methods, by giving the list(s) of nodes that the element(s) connect to, as well as the element type as a string. The <strong>Element</strong> objects are added to the <code class="docutils literal">.elements</code> dictionary, from the classes found in module <strong>compas_fea.structure.elements</strong>, where the class names match the string entered for the element type <code class="docutils literal">type</code>. The element types include, amongst others, 1D elements: <strong>SpringElement</strong>, <strong>BeamElement</strong>, <strong>TrussElement</strong>, 2D elements: <strong>ShellElement</strong>, <strong>MembraneElement</strong>, and 3D elements: <strong>PentahedronElement</strong>, <strong>TetrahedronElement</strong>, <strong>HexahedronElement</strong>. As with nodes, the elements will be added with integer keys numbered sequentially starting from 0. <strong>Note</strong>: currently no more than one element can exist for the same nodes, i.e. no overlapping elements are allowed. If you use <code class="docutils literal">.add_element()</code> and an element already exists there, nothing else will be added.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_elements</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'BeamElement'</span><span class="p">)</span>
 
@@ -89,7 +62,7 @@
 <p>For Abaqus, adding elements will also create a set for each individual element. So for example when element 4 is written to the input file, an element set named <strong>element_4</strong> will also be created. The utility of this is that individual elements can be referenced to, which is useful for individually assigning a thickness, material, section or orientation to specific elements by way of their number.</p>
 </div>
 <div class="section">
-<h2><a class="toc-backref" href="#id8">Viewing elements</a></h2>
+<h2>Viewing elements</h2>
 <p>The <strong>Element</strong> objects can be viewed through their integer key to get their attributes (<code class="docutils literal">.__name__</code>, <code class="docutils literal">.axes</code>, <code class="docutils literal">.nodes</code>, <code class="docutils literal">.number</code>, <code class="docutils literal">.acoustic</code>, <code class="docutils literal">.thermal</code>).</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span> <span class="o">&gt;&gt;&gt;</span> <span class="n">mdl</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
  <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
@@ -103,7 +76,7 @@
 
 </div>
 <div class="section">
-<h2><a class="toc-backref" href="#id9">Element index</a></h2>
+<h2>Element index</h2>
 <p>A geometric key to integer key index dictionary is accessed through <code class="docutils literal">.element_index</code>, where the geometric key is taken as the element centroid and the key is the number of the element. The <code class="docutils literal">.element_index</code> dictionary is similar in function to the <code class="docutils literal">.node_index</code> dictionary, and is useful for checking if an element exists (see methods below).</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_index</span>
 <span class="go">{'-2.500,-2.500,2.500': 0, '2.500,-2.500,2.500': 1, '2.500,2.500,2.500': 2, '-2.500,2.500,2.500':  3}</span>
@@ -111,7 +84,7 @@
 
 </div>
 <div class="section">
-<h2><a class="toc-backref" href="#id10">Methods</a></h2>
+<h2>Methods</h2>
 <p>It can be checked if an element is already present in the <strong>Structure</strong> object (via <code class="docutils literal">.element_index</code>), by a query with the method <code class="docutils literal">.check_element_exists()</code> and giving either the list of <code class="docutils literal">nodes</code> the element would be connected to, or the location <code class="docutils literal">xyz</code> of where its centroid would be. As the check is based on the centroid of the element, it does not matter the order that the nodes are given in the list <code class="docutils literal">nodes</code>. If an element exists, the method will return the integer key, if not, <code class="docutils literal">None</code> will be returned.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
 <span class="go">1</span>
@@ -135,7 +108,7 @@
 
 </div>
 <div class="section">
-<h2><a class="toc-backref" href="#id11">Axes</a></h2>
+<h2>Axes</h2>
 <p>Giving a dictionary for the argument <code class="docutils literal">axes</code> when adding the element will store <code class="docutils literal">{'ex': [], 'ey': [], 'ez': []}</code> in the <strong>Element</strong> object’s <code class="docutils literal">.axes</code> attribute. The <code class="docutils literal">'ex'</code>, <code class="docutils literal">'ey'</code> and <code class="docutils literal">'ez'</code> lists are the element’s local <cite>x</cite>, <cite>y</cite> and <cite>z</cite> axes, and are used for example, when orientating cross-sections, using anisotropic materials, or for aligning rebar in concrete shells. If no <code class="docutils literal">axes</code> data are given, it is left up to the finite element solver to determine default local axes values. This default alignment, if supported by the software, is often based on the global axes of the model, thus it is important to understand if these defaults are suitable, especially for an element geometry that does not align well with the global <cite>x</cite>, <cite>y</cite>, <cite>z</cite> directions. To add the local axes for a line element such as a beam, the <code class="docutils literal">'ex'</code> axis represents the cross-section’s major axis, <code class="docutils literal">'ey'</code> the cross-section’s minor axis, and <code class="docutils literal">'ez'</code> the axis along the element. For surface elements, the <code class="docutils literal">'ex'</code> and <code class="docutils literal">'ey'</code> axes represent the in-plane local axes, with <code class="docutils literal">'ez'</code> then representing the positive normal vector. The CAD functions (described in the CAD topic) that add elements to the <strong>Structure</strong> from geometry in the workspace, will automate some of these axis definitions.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">'BeamElement'</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">{</span><span class="s1">'ex'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]})</span>
 </code></pre></div>
@@ -145,30 +118,30 @@
 
 </div>
 <div class="section">
-<h2><a class="toc-backref" href="#id12">Elements</a></h2>
+<h2>Elements</h2>
 <div class="section">
-<h3><a class="toc-backref" href="#id13">1D elements</a></h3>
+<h3>1D elements</h3>
 <p>One dimensional elements such as truss and beam elements are currently first order (linear) defined by two nodes, which are the start (<strong>n1</strong>) and end (<strong>n2</strong>) points of a straight line. An internal node is currently not supported for second order (parabolic) elements. For the modelling of a curved shaped beam, use many straight segments. The single integration point (<strong>ip1</strong>) is at the midpoint of the line element.</p>
 <a class="reference internal image-reference" href="../_images/truss-element.png"><img alt="../_images/truss-element.png" src="../_images/truss-element.png" style="width: 180.5px; height: 81.0px;"/></a>
 </div>
 <div class="section">
-<h3><a class="toc-backref" href="#id14">2D elements</a></h3>
+<h3>2D elements</h3>
 <p>Two dimensional elements such as membrane and shell elements are currently first order (linear) defined by either three (<strong>n1</strong>, <strong>n2</strong>, <strong>n3</strong>) or four (<strong>n1</strong>, <strong>n2</strong>, <strong>n3</strong>, <strong>n4</strong>) nodes. These nodes are the corners of straight-sided elements, intermediate edge nodes are currently not supported for second order (parabolic) elements. For modelling a curved edge, use many straight segments. There are three or four internal integration points (<strong>ip1</strong> through to <strong>ip3</strong> or <strong>ip4</strong>).</p>
 <a class="reference internal image-reference" href="../_images/shell-element.png"><img alt="../_images/shell-element.png" src="../_images/shell-element.png" style="width: 385.5px; height: 128.5px;"/></a>
 </div>
 <div class="section">
-<h3><a class="toc-backref" href="#id15">3D elements</a></h3>
+<h3>3D elements</h3>
 <p>Three dimensional solid elements are also currently first order (linear), they are defined by four nodes (<strong>TetrahedronElement</strong> with four sides <strong>S1</strong> to <strong>S4</strong>), six nodes (<strong>PentahedronElement</strong> with five sides <strong>S1</strong> to <strong>S5</strong>) or eight nodes (<strong>HexahedronElement</strong> with six sides <strong>S1</strong> to <strong>S6</strong>). The nodes are the corners of flat-faced elements and should be added in the order shown below. Intermediate edge nodes are currently not supported for second order (parabolic) elements. For a curved edge/face, use many straight segments/faces for modelling. There is one internal integration point for a <strong>TetrahedronElement</strong> (<strong>ip1</strong>). two for a <strong>PentahedronElement</strong> (<strong>ip1</strong> and <strong>ip2</strong>) and eight for a <strong>HexahedronElement</strong> (<strong>ip1</strong> to <strong>ip8</strong>).</p>
 <a class="reference internal image-reference" href="../_images/solid-element.png"><img alt="../_images/solid-element.png" src="../_images/solid-element.png" style="width: 670.0px; height: 362.5px;"/></a>
 </div>
 </div>
 <div class="section">
-<h2><a class="toc-backref" href="#id16">Meshing</a></h2>
+<h2>Meshing</h2>
 <div class="section">
-<h3><a class="toc-backref" href="#id17">2D elements</a></h3>
+<h3>2D elements</h3>
 </div>
 <div class="section">
-<h3><a class="toc-backref" href="#id18">3D elements</a></h3>
+<h3>3D elements</h3>
 <p>When discretising a solid volume into finite elements, the first step is usually to create a mesh that represents the outer-surface of the solid. This mesh is best represented as a triangulated mesh with somewhat equally sized triangles, as there are many algorithms for creating tetrahedron elements from this surface by adding them across the internal volume. The <strong>compas_fea</strong> package supports the use of <a class="reference external" href="http://wias-berlin.de/software/index.jsp?id=TetGen&amp;lang=1">TetGen</a> via the Python wrapper <a class="reference external" href="https://mathema.tician.de/software/meshpy/">MeshPy</a>, and is independent of any CAD environment. <strong>MeshPy</strong> can easily be installed via <code class="docutils literal">pip</code> on Linux systems, while a <code class="docutils literal">.whl</code> file is recommended for Windows from the excellent resource page <a class="reference external" href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#meshpy">here</a> .</p>
 <p>A function has been set-up to facilitate converting a collection of triangles and vertex data representing the outer-surface, into tetrahedron elements. This is the function <code class="docutils literal">tets_from_vertices_faces()</code>, found in <strong>compas_fea.utilities.functions</strong>, where the <code class="docutils literal">vertices</code> co-ordinates, the triangle <code class="docutils literal">faces</code>, and a <code class="docutils literal">volume</code> constraint (optional) are given. The outputs of using the function are the points and indices of the tetrahedron corners. If you are in a CAD environment, you can use a previously constructed triangulated outer-surface mesh to create and automatically add tetrahedron elements to your <strong>Structure</strong> object. In Rhino, use <strong>compas_fea.cad.rhino.add_tets_from_mesh()</strong>, and in Blender, use <strong>compas_fea.cad.blender.add_tets_from_mesh()</strong>. These functions effectively wrap around <code class="docutils literal">tets_from_vertices_faces()</code> and add the elements to the <strong>Structure</strong> object. These function calls could look like:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">rhino</span>

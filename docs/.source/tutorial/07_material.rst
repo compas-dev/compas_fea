@@ -4,9 +4,6 @@ Materials
 
 This page shows how **Material** objects are added to the **Structure** object, here given as ``mdl``. A variety of linear and non-linear material models exist, either as simple to use templates or detailed models taking many parameters.
 
-.. contents::
-
-
 ================
 Adding materials
 ================

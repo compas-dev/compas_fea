@@ -2,11 +2,7 @@
 Nodes
 ********************************************************************************
 
-
 This page shows how nodes are added, viewed and edited within the **Structure** object, here given as object with handle ``mdl``. Unique node data is fundamental to the structure, and is stored in the ``.nodes`` attribute as a dictionary of data.
-
-.. contents::
-
 
 ============
 Adding nodes

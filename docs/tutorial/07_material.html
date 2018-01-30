@@ -49,30 +49,10 @@
     </nav>
  -->
 <div class="section">
-<h1><a class="toc-backref" href="#id2">Materials</a></h1>
+<h1>Materials</h1>
 <p>This page shows how <strong>Material</strong> objects are added to the <strong>Structure</strong> object, here given as <code class="docutils literal">mdl</code>. A variety of linear and non-linear material models exist, either as simple to use templates or detailed models taking many parameters.</p>
-<div class="contents topic" id="contents">
-<p class="topic-title first">Contents</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#materials" id="id2">Materials</a></p>
-<ul>
-<li><p><a class="reference internal" href="#adding-materials" id="id3">Adding materials</a></p></li>
-<li><p><a class="reference internal" href="#accessing-editing-materials" id="id4">Accessing/editing materials</a></p></li>
-<li><p><a class="reference internal" href="#id1" id="id5">Materials</a></p>
-<ul>
-<li><p><a class="reference internal" href="#elastic" id="id6">Elastic</a></p></li>
-<li><p><a class="reference internal" href="#elastic-plastic" id="id7">Elastic–plastic</a></p></li>
-<li><p><a class="reference internal" href="#steel" id="id8">Steel</a></p></li>
-<li><p><a class="reference internal" href="#concrete" id="id9">Concrete</a></p></li>
-<li><p><a class="reference internal" href="#timber" id="id10">Timber</a></p></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
 <div class="section">
-<h2><a class="toc-backref" href="#id3">Adding materials</a></h2>
+<h2>Adding materials</h2>
 <p><strong>Material</strong> classes are first imported from module <strong>compas_fea.structure.material</strong> and then added as objects to the dictionary <code class="docutils literal">.materials</code> of the <strong>Structure</strong> object, with <code class="docutils literal">name</code> as its string key and by using the method <code class="docutils literal">.add_material()</code>. Here, a simple elastic and isotropic material is added as an example, requiring the Young’s modulus <code class="docutils literal">E</code> [Pa], Poisson’s ratio <code class="docutils literal">v</code> and density <code class="docutils literal">p</code>.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElasticIsotropic</span>
 
@@ -81,7 +61,7 @@
 
 </div>
 <div class="section">
-<h2><a class="toc-backref" href="#id4">Accessing/editing materials</a></h2>
+<h2>Accessing/editing materials</h2>
 <p>Data are stored and accessed through the attributes of the <strong>Material</strong> object and its string key. Data on any <strong>Material</strong> object can be changed as needed.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="s1">'mat_elastic'</span><span class="p">]</span><span class="o">.</span><span class="n">E</span>
 <span class="go">{'E': 10000000000}</span>
@@ -95,10 +75,10 @@
 
 </div>
 <div class="section">
-<h2><a class="toc-backref" href="#id5">Materials</a></h2>
+<h2>Materials</h2>
 <p>Classes exist for commonly used materials such as concrete, steel and timber. Simple templates exist to quickly add frequently used material models for engineering, and will first assume typical design values for the material parameters, but still allow them to be changed by the user. Other classes require all material data to be provided explicitly and are used for creating detailed material models. The following section details the available material model objects.</p>
 <div class="section">
-<h3><a class="toc-backref" href="#id6">Elastic</a></h3>
+<h3>Elastic</h3>
 <p>The simplest material model is the elastic, isotropic and homogeneous material called <strong>ElasticIsotropic</strong>. This takes the Young’s modulus <code class="docutils literal">E</code> [Pa], Poisson’s ratio <code class="docutils literal">v</code> and density <code class="docutils literal">p</code>. Additionally, it can be stated if the material should allow <code class="docutils literal">tension</code> or <code class="docutils literal">compression</code>, given as boolean arguments.</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElasticIsotropic</span>
 
@@ -113,7 +93,7 @@
 <a class="reference internal image-reference" href="../_images/material-elastic-no-compression.png"><img alt="../_images/material-elastic-no-compression.png" src="../_images/material-elastic-no-compression.png" style="width: 408.0px; height: 340.4px;"/></a>
 </div>
 <div class="section">
-<h3><a class="toc-backref" href="#id7">Elastic–plastic</a></h3>
+<h3>Elastic–plastic</h3>
 <p>The <strong>ElasticPlastic</strong> class can be used to make a general isotropic and homogeneous non-linear material object, with the same shape of stress–strain curve in both compression and tension. The elastic input data is the same as with the <strong>ElasticIsotropic</strong> class, given by Young’s modulus <code class="docutils literal">E</code> [Pa], Poisson’s ratio <code class="docutils literal">v</code> and density <code class="docutils literal">p</code>. For the plastic description of the material, use lists of plastic stresses <code class="docutils literal">f</code> [Pa] and plastic strains <code class="docutils literal">e</code> (total strain minus yield strain). The first value of <code class="docutils literal">f</code> should be the stress at the end of the elastic region, i.e. the yield stress, and the first value of <code class="docutils literal">e</code> should be zero, i.e. the beginning of plastic straining. Continue to give pairs of plastic stress and plastic strain to define the complete behaviour. To add the general elastic–plastic stress–strain data curve below as data to the <strong>ElasticIsotropic</strong> class, the input (with variables representing numbers) would look like:</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElasticPlastic</span>
 
@@ -126,7 +106,7 @@
 <a class="reference internal image-reference" href="../_images/material-elastic-plastic.png"><img alt="../_images/material-elastic-plastic.png" src="../_images/material-elastic-plastic.png" style="width: 393.6px; height: 337.6px;"/></a>
 </div>
 <div class="section">
-<h3><a class="toc-backref" href="#id8">Steel</a></h3>
+<h3>Steel</h3>
 <p>The following use of the <strong>Steel</strong> class will create an object and add it to the <strong>Structure</strong> named <strong>mdl</strong>. The string <code class="docutils literal">name</code> for the material must be given, while the yield stress <code class="docutils literal">fy</code> [MPa], Young’s modulus <code class="docutils literal">E</code> [GPa], Poisson’s ratio <code class="docutils literal">v</code> and density <code class="docutils literal">p</code> will default to common values used in design if no user specific values are given. The <code class="docutils literal">type</code> represents what the material behaviour is like after first yield, where <code class="docutils literal">'elastic-plastic'</code> defines a perfectly flat plastic plateau after the initial linear elastic range, while <code class="docutils literal">'elastic-linear'</code> will create a linear strain-hardening slope up until the fracture stress and strain <code class="docutils literal">fu</code> [Pa] and <code class="docutils literal">eu</code> [%]. <strong>Note</strong>: that the yield stress is given in units of [MPa] and Young’s modulus in [Pa], but then stored, as with all materials, as [Pa].</p>
 <div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Steel</span>
 
@@ -142,7 +122,7 @@
 <a class="reference internal image-reference" href="../_images/material-steel-linear.png"><img alt="../_images/material-steel-linear.png" src="../_images/material-steel-linear.png" style="width: 396.4px; height: 322.4px;"/></a>
 </div>
 <div class="section">
-<h3><a class="toc-backref" href="#id9">Concrete</a></h3>
+<h3>Concrete</h3>
 <p>There are currently three material models for concrete, a Eurocode 2 model <strong>Concrete</strong>, a smeared crack model <strong>ConcreteSmearedCrack</strong>, and a damaged plasticity model <strong>ConcreteDamagedPlasticity</strong>. The key features of these three models are described below:</p>
 <ul class="simple">
 <li><p>The easiest concrete material object to create is with the <strong>Concrete</strong> class, which requires the characteristic (5%) 28 day cylinder strength [MPa], up to 90 MPa. Default values of the Poisson’s ratio <code class="docutils literal">v=0.2</code> and density <code class="docutils literal">p=2400</code> are taken unless specified otherwise. As per Eurocode 2 Part 1-1 (particularly Table 3.1), key material data is derived from knowing the characteristic cylinder strength <code class="docutils literal">fck</code>. The <strong>Concrete</strong> model includes: 1) the compressive stress–strain model of Eurocode 2 Part 1-1 Clause 3.1.5, 2) the mean Young’s modulus, tensile and compressive stresses from Eurocode 2 Part 1-1 Table 3.1, and 3) will assume a linear elastic response until the tensile cracking stress, followed by a drop to zero tensile stress at 0.1 % strain.</p></li>
@@ -173,7 +153,7 @@
 </ul>
 </div>
 <div class="section">
-<h3><a class="toc-backref" href="#id10">Timber</a></h3>
+<h3>Timber</h3>
 <p>Timber models are to be developed.</p>
 </div>
 </div>

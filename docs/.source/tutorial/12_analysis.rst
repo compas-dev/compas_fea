@@ -4,8 +4,6 @@ Analysis
 
 This page describes how to analyse a completed **Structure** object and interpret the resulting data.
 
-.. contents::
-
 
 There are three steps in analysing a **Structure** object for a specific finite element software package or library:
 

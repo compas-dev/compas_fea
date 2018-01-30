@@ -2,11 +2,7 @@
 Elements
 ********************************************************************************
 
-
 This page shows how different types of **Element** objects are added and edited with the **Structure** object, here the example **Structure** object is given as ``mdl``. The **Element** objects represent linear, surface and solid finite elements connecting different nodes of the structure.
-
-.. contents::
-
 
 ===============
 Adding elements
