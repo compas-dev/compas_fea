@@ -82,18 +82,19 @@
 <li><p><a class="reference internal" href="#abaqus" id="id7">Abaqus</a></p></li>
 <li><p><a class="reference internal" href="#ansys" id="id8">ANSYS</a></p></li>
 <li><p><a class="reference internal" href="#opensees" id="id9">OpenSees</a></p></li>
+<li><p><a class="reference internal" href="#sofistik" id="id10">Sofistik</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#python" id="id10">Python</a></p>
+<li><p><a class="reference internal" href="#python" id="id11">Python</a></p>
 <ul>
-<li><p><a class="reference internal" href="#required" id="id11">Required</a></p></li>
-<li><p><a class="reference internal" href="#optional" id="id12">Optional</a></p></li>
+<li><p><a class="reference internal" href="#required" id="id12">Required</a></p></li>
+<li><p><a class="reference internal" href="#optional" id="id13">Optional</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#cad-software" id="id13">CAD software</a></p>
+<li><p><a class="reference internal" href="#cad-software" id="id14">CAD software</a></p>
 <ul>
-<li><p><a class="reference internal" href="#rhinoceros" id="id14">Rhinoceros</a></p></li>
-<li><p><a class="reference internal" href="#blender" id="id15">Blender</a></p></li>
+<li><p><a class="reference internal" href="#rhinoceros" id="id15">Rhinoceros</a></p></li>
+<li><p><a class="reference internal" href="#blender" id="id16">Blender</a></p></li>
 </ul>
 </li>
 </ul>
@@ -105,13 +106,13 @@
 <div class="section" id="abaqus">
 <h3><a class="toc-backref" href="#id7">Abaqus</a></h3>
 <p>Most support with the <strong>compas_fea</strong> package is for the finite element software <a class="reference external" href="https://www.3ds.com/products-services/simulia/products/abaqus/">Abaqus</a> by <a class="reference external" href="https://www.3ds.com/products-services/simulia/">SIMULIA</a> of <a class="reference external" href="https://www.3ds.com/en-uk/">Dassault Systemes</a>. Development of the <strong>compas_fea</strong> package has been for version 6.14 (2014) and has not been verified to work for the newer 201x releases. As this software is generally used by academia, licensing is usually through a university network academic license. Licenses that require the computer to be connected to the same network as the license server, will require the host to be connected through a Virtual Private Network (VPN) if they are off-site, through a client such as <a class="reference external" href="https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-client/index.html">Cisco AnyConnect</a>. Abaqus should be installed as per the installation instructions for your version and licensing scheme. The Abaqus documentation does not need to be installed for the <strong>compas_fea</strong> package to run, but is a useful reference. On installation, Abaqus requires a temporary directory to be nominated for saving many different files during analysis, including the most important <strong>.odb</strong> file and various useful log files. Generally this folder will be <strong>C:/Temp/</strong> on Windows or <strong>~/Temp</strong> on Linux, but a different folder location may be defined at the start of any <strong>compas_fea</strong> script or through the <strong>structure.path</strong> attribute of the <strong>Structure</strong> object.</p>
-<p>During installation, Abaqus will register its core executables to the <strong>PATH</strong> for Windows systems, which can be confirmed by opening the program with graphical interface by typing <code class="docutils literal"><span class="pre">abaqus</span> <span class="pre">cae</span></code> in a <code class="docutils literal"><span class="pre">cmd</span></code> terminal. Linux users may wish to define similar aliases manually with the following in their home <strong>.bashrc</strong> or <strong>.profile</strong> file.</p>
+<p>During installation, Abaqus will register its core executables to the <strong>PATH</strong> for Windows systems, which can be confirmed by opening the program with its graphical interface by typing <code class="docutils literal"><span class="pre">abaqus</span> <span class="pre">cae</span></code> in a <code class="docutils literal"><span class="pre">cmd</span></code> terminal. Linux users may wish to define similar aliases manually with the following in their home <strong>.bashrc</strong> or <strong>.profile</strong> file.</p>
 <div class="highlight-bash"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="nb">alias</span> <span class="nv">abaqus_cae</span><span class="o">=</span><span class="s2">&quot;XLIB_SKIP_ARGB_VISUALS=1 /path/to/abaqus/Commands/abaqus cae -mesa&quot;</span>
 <span class="nb">alias</span> <span class="nv">abaqus</span><span class="o">=</span><span class="s2">&quot;/path/to/abaqus/Commands/abaqus&quot;</span>
 </code></pre></div>
 </div>
-<p>Having these aliases set will make the use of the package easier as the Abaqus executable can be loaded conveniently, although the Abaqus executable path can also be manually given at analysis. When called for an analysis, Abaqus is run in the background as a subprocess to analyse a model.</p>
-<p>There is no official support for Abaqus with Mac OS, and so Mac users will need to use a Virtual Machine such as <a class="reference external" href="http://www.parallels.com/">Parallels</a>, <a class="reference external" href="https://www.virtualbox.org/">VirtualBox</a> or <a class="reference external" href="https://www.vmware.com/products/workstation.html">VMWare Workstation</a>, and use a Windows or Linux Abaqus operating system installation (see also the Opensource section below).</p>
+<p>Having these aliases set will make the use of the package easier as the Abaqus executable can be loaded conveniently, although the Abaqus executable path can also be manually given at the time of analysis. When called for an analysis, Abaqus is run in the background as a subprocess to analyse a model, with feedback presented to the user in the active terminal.</p>
+<p>There is no official support for Abaqus with MacOS, and so Mac users will need to use a Virtual Machine such as <a class="reference external" href="http://www.parallels.com/">Parallels</a>, <a class="reference external" href="https://www.virtualbox.org/">VirtualBox</a> or <a class="reference external" href="https://www.vmware.com/products/workstation.html">VMWare Workstation</a>, and use a Windows or Linux operating system (see also the Opensource section below).</p>
 </div>
 <div class="section" id="ansys">
 <h3><a class="toc-backref" href="#id8">ANSYS</a></h3>
@@ -119,29 +120,33 @@
 </div>
 <div class="section" id="opensees">
 <h3><a class="toc-backref" href="#id9">OpenSees</a></h3>
-<p>The Opensource finite element library <a class="reference external" href="http://opensees.berkeley.edu/wiki/index.php/OpenSees_User">OpenSees</a> by the Pacific Earthquake Engineering (PEER) Center, has cross-platform support and is in active development. The functionality and <strong>compas_fea</strong> implementation is current behind that of Abaqus. OpenSees is much leaner than Abaqus in terms of its file size and resources usage, which leads to a much faster analysis and results extraction.</p>
-<p>For Windows, the needed executable files can be found on the <a class="reference external" href="http://opensees.berkeley.edu/OpenSees/user/download.php">Download</a> page for registered users (registration is free), for which the current tested version is 2.5.0. Once <strong>Tcl</strong> has been installed, the <code class="docutils literal"><span class="pre">OpenSees.exe</span></code> should ideally be saved to <code class="docutils literal"><span class="pre">C:/OpenSees.exe</span></code> for the <strong>compas_fea</strong> package to pick-up its location easily. It can be stored in a different location if preferred, but this location will need to be given as a string for each analysis.</p>
+<p>The opensource finite element library <a class="reference external" href="http://opensees.berkeley.edu/wiki/index.php/OpenSees_User">OpenSees</a> by the Pacific Earthquake Engineering (PEER) Center, has cross-platform support and is in active development. The functionality is current behind that of Abaqus but growing. OpenSees is much leaner than Abaqus in terms of its file size and resources usage, which leads to a much faster analysis and results extraction time.</p>
+<p>For Windows, the needed executable files can be found on the official <a class="reference external" href="http://opensees.berkeley.edu/OpenSees/user/download.php">Download</a> page for registered users (registration is free), for which the current tested version is 2.5.0. Once <strong>Tcl</strong> has been installed, the <code class="docutils literal"><span class="pre">OpenSees.exe</span></code> should ideally be saved to <code class="docutils literal"><span class="pre">C:/OpenSees.exe</span></code> for the <strong>compas_fea</strong> package to pick-up its location easily. It can be stored in a different location if preferred, but this location will need to be given as a string for each analysis.</p>
 <p>For Linux, make sure the <strong>Tcl</strong> scripting language is installed on the system. The OpenSees source code may be downloaded via <a class="reference external" href="http://opensees.berkeley.edu/OpenSees/developer/svn.php">SVN</a> with build instruction at the <a class="reference external" href="http://opensees.berkeley.edu/OpenSees/developer/builds.php">builds</a> page. The download includes a variety of template <code class="docutils literal"><span class="pre">Makefile.def</span></code> files, which should be read carefully to set-up OpenSees for your specific system. Alternatively, OpenSees packages may already be available for your Linux distribution, such as with <a class="reference external" href="https://aur.archlinux.org/packages/opensees/">archlinux</a>. The location of where the OpenSees program has been built to, will need to be given as a string for each analysis.</p>
 <p>An OpenSees executable for Apple Machines with Intel processors running OS 10.4 or above is also available.</p>
 </div>
+<div class="section" id="sofistik">
+<h3><a class="toc-backref" href="#id10">Sofistik</a></h3>
+<p>Support for Sofistik is in active development (see the <strong>develop</strong> branch of the respository). Currently a variety of models can be made and an input file generated, but results are not extracted and so require the standard built-in results viewer.</p>
+</div>
 </div>
 <div class="section" id="python">
-<h2><a class="toc-backref" href="#id10">Python</a></h2>
+<h2><a class="toc-backref" href="#id11">Python</a></h2>
 <p>As the <strong>compas_fea</strong> package uses the core <strong>compas</strong> framework for a variety of datastructure, visualisation and geometric tasks, the core <strong>compas</strong> library (<code class="docutils literal"><span class="pre">src</span></code> folder) in addition to the <strong>compas_fea</strong> package (<code class="docutils literal"><span class="pre">src</span></code> folder) must be on the <strong>PYTHONPATH</strong>. This can be set in Windows under <strong>Environment Variables</strong> in <strong>Advanced System Settings</strong>, and on Linux with the following addition to the <strong>.bashrc</strong> or <strong>.profile</strong> files:</p>
 <div class="highlight-bash"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s1">&#39;${PYTHONPATH}:/path/to/compas_framework/src/:/path/to/compas_fea/src/&#39;</span>
 </code></pre></div>
 </div>
-<p>The <strong>compas_fea</strong> package is compatible with Python versions 2.7 and 3.5 onwards. Although any utilised finite element software may choose one version over the other for their API, the input files that are needed to run the model through this software are generated independently with the user’s own independent Python version of choice.</p>
-<p>A number of Python dependencies exists in order to use the <strong>compas_fea</strong> package, either as an optional or a required module or package, these are listed below. A Python distribution such as <a class="reference external" href="http://www.anaconda.com/download/">Anaconda</a> 2 or 3 for Python 2.7 and 3.x respectively, will cover all of the required module and packages and most of the optional ones. For a standalone <a class="reference external" href="https://www.python.org/downloads/">CPython</a> installation, additional modules and packages are recommended to be installed individually via <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span></code>.</p>
+<p>The <strong>compas_fea</strong> package is compatible with Python versions 2.7 and 3.6. Although any utilised finite element software may choose one version over the other for their API, the input files that are needed to run the model through this software are generated independently with the user’s own independent choice of Python version.</p>
+<p>A number of Python dependencies exists in order to use the <strong>compas_fea</strong> package, either as an optional or a required module or package, these are listed below. A Python distribution such as <a class="reference external" href="http://www.anaconda.com/download/">Anaconda</a> 2 or 3 for Python 2.7 and 3.6 respectively, will cover all of the required module and packages and most of the optional ones. For a standalone <a class="reference external" href="https://www.python.org/downloads/">CPython</a> installation, additional modules and packages are recommended to be installed individually via <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span></code>.</p>
 <div class="section" id="required">
-<h3><a class="toc-backref" href="#id11">Required</a></h3>
+<h3><a class="toc-backref" href="#id12">Required</a></h3>
 <ul>
 <li><p><strong>NumPy</strong>: needed for efficient post-processing of output data in array format.</p></li>
 <li><p><strong>SciPy</strong>: used for various spatial and visualisation functions and post-processing with sparse arrays.</p></li>
 </ul>
 </div>
 <div class="section" id="optional">
-<h3><a class="toc-backref" href="#id12">Optional</a></h3>
+<h3><a class="toc-backref" href="#id13">Optional</a></h3>
 <ul>
 <li><p><strong>mayavi</strong>: utilised for standalone voxel plotting of solid elements.</p></li>
 <li><p><strong>MeshPy</strong>: for the meshing of triangular shells (Triangle) and tetrahedron solids (TetGen).</p></li>
@@ -151,15 +156,15 @@
 </div>
 </div>
 <div class="section" id="cad-software">
-<h2><a class="toc-backref" href="#id13">CAD software</a></h2>
-<p>The <strong>compas_fea</strong> package does not need CAD software to be installed to function, but it is very useful for generating and inserting geometry into the <strong>Structure</strong> object and for efficiently visualising results, either for a single analysis of a structural model, or as part of a parametric analysis with many models and analyses. In general, the only difference in using a specific type of CAD software, is the manner in which geometric information is taken from the CAD environment (e.g. through layers or objects) and the way that output data is then re-plotted on native geometry types. There is no difference in how objects such as loads, materials and boundary conditions are applied, as this is based on adding objects to the <strong>Structure</strong> through scripting, making it CAD independent.</p>
+<h2><a class="toc-backref" href="#id14">CAD software</a></h2>
+<p>The <strong>compas_fea</strong> package does not need CAD software to be installed to function, but it is very valuable for generating and inserting geometry into the <strong>Structure</strong> object and for efficiently visualising results, either for a single analysis of a structural model, or as part of a parametric analysis with many models and analyses. In general, the only difference in using a specific type of CAD software, is the manner in which geometric information is taken from the CAD environment (e.g. through layers or objects) and the way that output data is then re-plotted on native geometry types. There is no difference in how objects such as loads, materials and boundary conditions are applied, as this is based on adding objects to the <strong>Structure</strong> through core Python scripting, making it CAD independent.</p>
 <div class="section" id="rhinoceros">
-<h3><a class="toc-backref" href="#id14">Rhinoceros</a></h3>
-<p>Support for <a class="reference external" href="http://www.rhino3d.com">Rhinoceros</a> from Robert McNeel &amp; Associates is based on version 5.0, for which the <a class="reference external" href="http://www.ironpython.net/">IronPython</a> distribution is standard. Please see the installation and set-up instructions for using Rhinoceros with the core <strong>compas</strong> library, such as installing IronPython 2.7.5 and adding the <code class="docutils literal"><span class="pre">Lib</span></code> directory. The only addition for <strong>compas_fea</strong> compatibility is to include the <strong>compas_fea</strong> package <code class="docutils literal"><span class="pre">src</span></code> folder in the Rhinoceros equivalent <strong>PYTHONPATH</strong>. As for the required NumPy and SciPy packages, these will be called in subprocesses, and so the CPython distribution that has these packages, should be on the system’s <strong>PATH</strong>.</p>
+<h3><a class="toc-backref" href="#id15">Rhinoceros</a></h3>
+<p>Support for <a class="reference external" href="http://www.rhino3d.com">Rhinoceros</a> from Robert McNeel &amp; Associates is based on version 5.0, for which the <a class="reference external" href="http://www.ironpython.net/">IronPython</a> distribution is standard. Please see the installation and set-up instructions for using Rhinoceros with the core <strong>compas</strong> library, such as installing IronPython 2.7.5 and adding the <code class="docutils literal"><span class="pre">Lib</span></code> directory. The only addition for <strong>compas_fea</strong> compatibility is to include the <strong>compas_fea</strong> package <code class="docutils literal"><span class="pre">src</span></code> folder in the Rhinoceros equivalent <strong>PYTHONPATH</strong>. As for the required NumPy and SciPy packages, these will be called in subprocesses, and so the CPython distribution that has these packages should be on the system’s <strong>PATH</strong>.</p>
 </div>
 <div class="section" id="blender">
-<h3><a class="toc-backref" href="#id15">Blender</a></h3>
-<p>Support for the Opensource graphics software <a class="reference external" href="https://www.blender.org/">Blender</a> by the Blender Foundation is based on version 2.79, for which Python 3.5 (CPython) is standard. Blender uses its own Python paths as well as the global system or user Python paths, so the easiest step is to place the <strong>compas_fea</strong> package <code class="docutils literal"><span class="pre">src</span></code> folder on the <strong>PYTHONPATH</strong>, along with access to the NumPy and SciPy packages. As Blender uses CPython, subprocesses are not needed, which allows for a faster execution time for processes that would require the serialisation of large <code class="docutils literal"><span class="pre">.json</span></code> files, as is the case for data extraction after an analysis.</p>
+<h3><a class="toc-backref" href="#id16">Blender</a></h3>
+<p>Support for the opensource graphics software <a class="reference external" href="https://www.blender.org/">Blender</a> by the Blender Foundation is based on version 2.79, for which Python 3.5 (CPython) is standard. Blender uses its own Python paths as well as the global system or user Python paths, so the easiest step is to place the <strong>compas_fea</strong> package <code class="docutils literal"><span class="pre">src</span></code> folder on the <strong>PYTHONPATH</strong>, along with access to the NumPy and SciPy packages. As Blender uses CPython, subprocesses are not needed, which allows for a faster execution time for processes that would require the serialisation of large <code class="docutils literal"><span class="pre">.json</span></code> files, as is the case for data extraction after an analysis.</p>
 </div>
 </div>
 </div>
@@ -240,6 +245,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="#abaqus">Abaqus</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#ansys">ANSYS</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#opensees">OpenSees</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#sofistik">Sofistik</a></li>
 </ul>
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="#python">Python</a><ul class="nav">

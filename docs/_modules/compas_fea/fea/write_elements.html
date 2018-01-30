@@ -256,32 +256,39 @@
             <span class="c1"># Truss sections</span>
 
             <span class="k">elif</span> <span class="n">stype</span> <span class="ow">in</span> <span class="n">trusses</span><span class="p">:</span>
+                
+                <span class="k">if</span> <span class="p">(</span><span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">material</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;ElasticIsotropic&#39;</span><span class="p">):</span>
+                    
+                    <span class="n">E</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">E</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">]</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;uniaxialMaterial Elastic </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">material_index</span><span class="p">,</span> <span class="n">E</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                
+                <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
+                    
+                    <span class="n">element</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="n">select</span><span class="p">]</span>
+                    <span class="n">sp</span><span class="p">,</span> <span class="n">ep</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">nodes</span>
+                    <span class="n">n</span> <span class="o">=</span> <span class="n">select</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">i</span> <span class="o">=</span> <span class="n">sp</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">j</span> <span class="o">=</span> <span class="n">ep</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">A</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">]</span>
 
-                <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
-                    <span class="k">pass</span>
-
-                <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
-                    <span class="k">pass</span>
-
-                <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
-                    <span class="k">pass</span>
-
-<span class="c1">#                 if material.__name__ == &#39;ElasticIsotropic&#39;:</span>
-<span class="c1">#                     E = material.E[&#39;E&#39;]</span>
-<span class="c1">#                     f.write(&#39;# No., E[Pa]\n&#39;)</span>
-<span class="c1">#                     f.write(&#39;#\n&#39;)</span>
-<span class="c1">#                     f.write(&#39;uniaxialMaterial Elastic {0} {1}\n&#39;.format(material_index, E))</span>
-<span class="c1">#                     f.write(&#39;#\n&#39;)</span>
-
-<span class="c1">#                 f.write(&#39;# eType, No., node.start, node.end, A[m2], material\n&#39;)</span>
-<span class="c1">#                 f.write(&#39;#\n&#39;)</span>
-<span class="c1">#                 for select in selection:</span>
-<span class="c1">#                     sp, ep = elements[select].nodes</span>
-<span class="c1">#                     n = select + 1</span>
-<span class="c1">#                     i = sp + 1</span>
-<span class="c1">#                     j = ep + 1</span>
-<span class="c1">#                     A = geometry[&#39;A&#39;]</span>
-<span class="c1">#                     f.write(&#39;element corotTruss {0} {1} {2} {3} {4}\n&#39;.format(n, i, j, A, material_index))</span>
+                    <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+    
+                        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+    
+                            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*ELEMENT, TYPE=T3D2, ELSET=element_</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">select</span><span class="p">))</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">,</span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*SOLID SECTION, ELSET=element_</span><span class="si">{0}</span><span class="s1">, MATERIAL=</span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">select</span><span class="p">,</span> <span class="n">material_name</span><span class="p">))</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">A</span><span class="p">))</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+                    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+                        <span class="k">pass</span>
+    
+                    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+                        
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;element corotTruss </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="s1"> </span><span class="si">{3}</span><span class="s1"> </span><span class="si">{4}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">material_index</span><span class="p">))</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
             <span class="c1"># Shell sections</span>
 
@@ -570,7 +577,6 @@
 <span class="c1">#                                     f.write(&#39;{0}, {1}\n&#39;.format(i, j))</span>
 <span class="c1">#                             written_springs.append(behaviour)</span>
 <span class="c1">#                 else:</span>
-<span class="c1">#                     pass</span>
 </code></pre></div>
                         
                         <!-- <nav class="compas-sideways">
