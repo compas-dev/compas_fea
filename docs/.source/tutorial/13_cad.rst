@@ -12,8 +12,6 @@ This page shows how to benefit from using computer aided design and graphics sof
 
    from compas_fea.cad import blender
 
-.. contents::
-
 
 ========
 Geometry

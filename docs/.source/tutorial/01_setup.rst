@@ -4,9 +4,6 @@ Setup
 
 The following instructions describe the setup prerequisites for using the **compas_fea** package. Information is provided for setting-up the supported finite element software/libraries, settings required for Python, and the use of supported CAD software.
 
-.. contents::
-
-
 =====================
 FE software
 =====================

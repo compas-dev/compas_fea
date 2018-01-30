@@ -4,8 +4,6 @@ Analysis
 
 This page describes how to analyse a completed **Structure** object and interpret the resulting data.
 
-.. contents::
-
 
 There are three steps in analysing a **Structure** object for a specific finite element software package or library:
 
@@ -127,7 +125,7 @@ OpenSees
 
 The input file will be sent for analysis via OpenSees in a Python subprocess that launches the executable, given by the ``exe`` string, or assuming ``C:/OpenSees.exe`` for Windows. No graphical user interface is launched, feedback will be presented in the terminal while the ``.tcl`` file is being run:
 
-.. code-block:: python
+.. code-block:: none
 
              OpenSees -- Open System For Earthquake Engineering Simulation
                   Pacific Earthquake Engineering Research Center

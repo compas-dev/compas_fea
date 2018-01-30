@@ -4,9 +4,6 @@ Structure
 
 The following page shows some of the fundamentals of importing **compas_fea** classes and usage of the main **Structure** object, including some of the **Structure** object's most useful methods and important attributes.
 
-.. contents::
-
-
 =============================
 Importing modules and classes
 =============================

@@ -2,11 +2,7 @@
 Loads
 ********************************************************************************
 
-
 This page shows how **Load** objects are added to the **Structure** object, here given as a **Structure** named ``mdl``. **Load** objects can be applied to either nodes or elements, and are activated during steps.
-
-.. contents::
-
 
 ============
 Adding loads

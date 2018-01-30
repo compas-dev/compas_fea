@@ -2,11 +2,7 @@
 Displacements
 ********************************************************************************
 
-
 This page shows how **Displacement** objects are added to the **Structure** object, here given as a **Structure** named ``mdl``.
-
-.. contents::
-
 
 ====================
 Adding displacements

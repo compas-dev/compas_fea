@@ -2,11 +2,7 @@
 Steps
 ********************************************************************************
 
-
 This page shows how **Step** objects are added to the **Structure** object, here given as a **Structure** named ``mdl``.
-
-.. contents::
-
 
 ============
 Adding steps

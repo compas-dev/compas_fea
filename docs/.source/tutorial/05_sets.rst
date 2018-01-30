@@ -2,11 +2,7 @@
 Sets
 ********************************************************************************
 
-
 This page shows how sets can be used to gather groups of nodes, elements and surfaces with the **Structure** object, here given as ``mdl``. Sets are a group of components that can be conveniently referred to by a string name, for use with other classes and methods, as well as accessing specific data of a model after an analysis.
-
-.. contents::
-
 
 ===========
 Adding sets

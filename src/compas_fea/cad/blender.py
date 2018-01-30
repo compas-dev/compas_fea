@@ -586,9 +586,9 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
 def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',
                 vdx=None, cube_size=[10, 10, 10], mode='', colorbar_size=1):
 
-    """ Applies a base voxel material and texture to a cube for 4D visualisation.
+    """Applies a base voxel material and texture to a cube for 4D visualisation.
 
-     Parameters
+    Parameters
     ----------
     structure : obj
         Structure object.
