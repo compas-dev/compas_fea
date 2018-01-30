@@ -351,7 +351,7 @@ def add_sets_from_layers(structure, layers, explode=False):
                 add_element_set(structure=structure, guids=guids, name=name, explode=explode)
 
 
-def mesh_extrude(structure, guid, nz, dz, setname):
+def mesh_extrude(structure, guid, nz, dz, setname, cap=None):
 
     """ Extrudes a Rhino mesh into cells of many layers and adds to Structure.
 
@@ -367,6 +367,8 @@ def mesh_extrude(structure, guid, nz, dz, setname):
         Layer thickness.
     setname : str
         Name of set for added elements.
+    cap : str
+        Name for a capping mesh on final surface.
 
     Returns
     -------
@@ -380,7 +382,7 @@ def mesh_extrude(structure, guid, nz, dz, setname):
     """
 
     mesh = mesh_from_guid(Mesh(), guid)
-    extrude_mesh(structure=structure, mesh=mesh, nz=nz, dz=dz, setname=setname)
+    extrude_mesh(structure=structure, mesh=mesh, nz=nz, dz=dz, setname=setname, cap=cap)
 
 
 def network_from_lines(guids=[], layer=None):

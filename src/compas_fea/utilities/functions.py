@@ -281,7 +281,7 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
     return points_all, faces_all
 
 
-def extrude_mesh(structure, mesh, nz, dz, setname):
+def extrude_mesh(structure, mesh, nz, dz, setname, cap=None):
 
     """ Extrudes a Mesh into cells of many layers and adds to Structure.
 
@@ -297,6 +297,8 @@ def extrude_mesh(structure, mesh, nz, dz, setname):
         Layer thickness.
     setname : str
         Name of set for added elements.
+    cap : str
+        Name for a capping mesh on final surface.
 
     Returns
     -------
@@ -320,6 +322,7 @@ def extrude_mesh(structure, mesh, nz, dz, setname):
             xyzi = add_vectors(xyz, scale_vector(normal, (i + 1) * dz))
             ki['{0}_{1}'.format(key, i + 1)] = structure.add_node(xyzi)
 
+    cap_faces = []
     for face in mesh.faces():
         vs = mesh.face_vertices(face)
         if len(vs) == 3:
@@ -332,8 +335,14 @@ def extrude_mesh(structure, mesh, nz, dz, setname):
             nodes = [ki[j] for j in bot + top]
             ekey = structure.add_element(nodes=nodes, type=type, acoustic=False, thermal=False)
             elements.append(ekey)
+            if (i == nz - 1) and cap:
+                nodes = [ki[j] for j in top]
+                ekey = structure.add_element(nodes=nodes, type='ShellElement', acoustic=False, thermal=False)
+                cap_faces.append(ekey)
 
     structure.add_set(name=setname, type='element', selection=elements)
+    if cap:
+        structure.add_set(name=cap, type='element', selection=cap_faces)
 
 
 def group_keys_by_attribute(adict, name, tol='3f'):
