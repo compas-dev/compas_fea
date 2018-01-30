@@ -29,6 +29,13 @@ headers = {
     'ansys':    '',
 }
 
+footers = {
+    'abaqus':   '',
+    'opensees': '',
+    'sofistik': 'END\n$\n$\n',
+    'ansys':    '',
+}
+
 
 def write_input_materials(f, software, materials, sections=None, properties=None):
 
@@ -129,10 +136,15 @@ def write_input_materials(f, software, materials, sections=None, properties=None
                     f.write('{0}\n'.format(density))
 
             elif software == 'opensees':
+
                 pass
 
             elif software == 'sofistik':
-                pass
+
+                E /= 10**6
+                G = material.G['G'] / 10**6
+                f.write('MATE {0} E {1} MUE {2} G {3} GAM {4}\n'.format(material_index, E, v, G, yc))
+                f.write('$\n')
 
         # Concrete
 
@@ -177,6 +189,7 @@ def write_input_materials(f, software, materials, sections=None, properties=None
 
                 fck = material.fck
                 f.write('CONC {0} TYPE C FCN {1} MUE {2} GAM {3} TYPR C\n'.format(material_index, fck, v, yc))
+                f.write('$\n')
 
         # Concrete damaged plasticity
 
@@ -255,6 +268,7 @@ def write_input_materials(f, software, materials, sections=None, properties=None
                 eup = 10 * material.eu
                 f.write('STEE {0} {1} ES {2} GAM {3} FY {4} FT {5} FP {4} SCM {6} EPSY {7} EPST {8} MUE {9}\n'.format(
                     material_index, id, E, yc, fy, fu, sf, eyp, eup, v))
+                f.write('$\n')
 
         # Thermal
 
@@ -287,12 +301,11 @@ def write_input_materials(f, software, materials, sections=None, properties=None
                 pass
 
     f.write('{0}\n'.format(c))
-    f.write('{0}\n'.format(c))
 
     if software == 'sofistik':
 
-        f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
-        f.write('{0} -------------------------------------------------------------------- Sections\n'.format(c))
+        f.write('$ -----------------------------------------------------------------------------\n')
+        f.write('$ -------------------------------------------------------------------- Sections\n')
 
         for key, property in properties.items():
 
@@ -303,23 +316,26 @@ def write_input_materials(f, software, materials, sections=None, properties=None
             geometry = section.geometry
             stype = section.__name__
 
-            if stype in ['PipeSection', 'CircularSection']:
+            if stype != 'SolidSection':
 
-                f.write('{0}\n'.format(c))
-                f.write('{0} {1}\n'.format(c, section.name))
-                f.write('{0} '.format(c) + '-' * len(section.name) + '\n')
-                f.write('{0}\n'.format(c))
+                if stype in ['PipeSection', 'CircularSection']:
 
-                if stype == 'PipeSection':
+                    f.write('{0} {1}\n'.format(c, section.name))
+                    f.write('{0} '.format(c) + '-' * len(section.name) + '\n')
+                    f.write('{0}\n'.format(c))
 
-                    D = geometry['r'] * 2 * 1000
-                    t = geometry['t'] * 1000
-                    f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, t, material_index))
+                    if stype == 'PipeSection':
 
-                elif stype == 'CircularSection':
+                        D = geometry['r'] * 2 * 1000
+                        t = geometry['t'] * 1000
+                        f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, t, material_index))
 
-                    D = geometry['r'] * 2 * 1000
-                    f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, 0, material_index))
+                    elif stype == 'CircularSection':
 
-        f.write('{0}\n'.format(c))
-        f.write('{0}\n'.format(c))
+                        D = geometry['r'] * 2 * 1000
+                        f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, 0, material_index))
+
+                f.write('$\n')
+
+    if footers[software]:
+        f.write('{0}'.format(footers[software]))

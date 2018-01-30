@@ -131,6 +131,7 @@
 
     <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
 
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;+PROG BEMESS</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL WARN 471</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>  <span class="c1"># Element thickness too thin and not allowed for design.</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL SLS</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -139,6 +140,8 @@
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CRAC WK PARA</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;LC 10</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;END</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>
 
@@ -212,7 +215,7 @@
             
 
             
-                Last updated on Jan 29, 2018.
+                Last updated on Jan 30, 2018.
             
 
             

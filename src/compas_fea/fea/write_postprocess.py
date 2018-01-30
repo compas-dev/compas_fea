@@ -63,6 +63,7 @@ def write_input_postprocess(f, software, structure, steps):
 
     elif software == 'sofistik':
 
+        f.write('+PROG BEMESS\n')
         f.write('$\n')
         f.write('CTRL WARN 471\n')  # Element thickness too thin and not allowed for design.
         f.write('CTRL SLS\n')
@@ -71,6 +72,8 @@ def write_input_postprocess(f, software, structure, steps):
         f.write('CRAC WK PARA\n')
         f.write('$\n')
         f.write('LC 10{0}\n'.format(step_index))
+        f.write('$\n')
+        f.write('END\n')
 
     elif software == 'ansys':
 

@@ -293,6 +293,7 @@ class Concrete(object):
         self.fck = fck
         self.E = {'E': E}
         self.v = {'v': v}
+        self.G = None
         self.p = p
         self.compression = {'f': f[1:], 'e': ec}
         self.tension = {'f': ft, 'e': et}

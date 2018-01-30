@@ -87,6 +87,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
         f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
         f.write('{0} ----------------------------------------------------------------------- Loads\n'.format(c))
+        f.write('$\n')
         f.write('+PROG SOFILOAD\n')
 
         for k in loads:
@@ -132,6 +133,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
     f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
     f.write('{0} ----------------------------------------------------------------------- Steps\n'.format(c))
+    f.write('{0}\n'.format(c))
 
     if headers[software]:
         f.write(headers[software])
@@ -181,10 +183,10 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 f.write('CTRL SOLV 1\n')
                 f.write('CTRL CONC\n')
                 f.write('CREP NCRE 20\n')
-                if step.state == 'sls':
-                    f.write('NSTR KSV SLD\n')
-                elif step.state == 'uls':
-                    f.write('NSTR KSV ULD\n')
+                # if step.state == 'sls':
+                #     f.write('NSTR KMOD S1 KSV SLD\n')
+                # elif step.state == 'uls':
+                #     f.write('NSTR KMOD S1 KSV ULD\n')
                 if nlgeom == 'YES':
                     f.write('$\n')
                     f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT YES\n'.format(increments, tolerance))
@@ -198,9 +200,9 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                         gx = com['x'] if com['x'] else 0
                         gy = com['y'] if com['y'] else 0
                         gz = com['z'] if com['z'] else 0
-                        DLX += gx
-                        DLY += gy
-                        DLZ += gz
+                        DLX = gx
+                        DLY = gy
+                        DLZ = gz
                 f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * factor, DLY * factor, DLZ * factor))
 
             # Loads

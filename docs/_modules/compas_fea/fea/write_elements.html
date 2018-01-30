@@ -95,10 +95,16 @@
 <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>   <span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="s1">&#39;opensees&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span> <span class="s1">&#39;HEAD SOFIMSHA</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>    <span class="s1">&#39;&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 
+<span class="n">footers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>   <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;opensees&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span> <span class="s1">&#39;END</span><span class="se">\n</span><span class="s1">$</span><span class="se">\n</span><span class="s1">$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>    <span class="s1">&#39;&#39;</span><span class="p">,</span>
+<span class="p">}</span>
 
 <span class="n">sdata</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;AngleSection&#39;</span><span class="p">:</span>       <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;L&#39;</span><span class="p">,</span>           <span class="s1">&#39;geometry&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">]},</span>
@@ -149,6 +155,7 @@
 
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> -------------------------------------------------------------------- Elements</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="nb">property</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
@@ -173,7 +180,6 @@
                 <span class="n">elsets</span> <span class="o">=</span> <span class="p">[</span><span class="n">elsets</span><span class="p">]</span>
         <span class="n">sets</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">sets</span>
 
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> Property: </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> ----------&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
@@ -189,6 +195,10 @@
             <span class="c1"># Beam sections</span>
 
             <span class="k">if</span> <span class="n">stype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">shells</span> <span class="o">+</span> <span class="n">solids</span> <span class="o">+</span> <span class="n">trusses</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;GRP </span><span class="si">{0}</span><span class="s1"> BASE </span><span class="si">{0}</span><span class="s1">0000</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">set_index</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
                 <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
 
@@ -278,7 +288,7 @@
             <span class="k">elif</span> <span class="n">stype</span> <span class="ow">in</span> <span class="n">shells</span><span class="p">:</span>
 
                 <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>  <span class="c1"># co-ordinate this with abaqus nsets</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;GRP </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">set_index</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;GRP </span><span class="si">{0}</span><span class="s1"> BASE </span><span class="si">{0}</span><span class="s1">0000</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">set_index</span><span class="p">))</span>
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
                 <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
@@ -351,6 +361,10 @@
 
             <span class="k">elif</span> <span class="n">stype</span> <span class="ow">in</span> <span class="n">solids</span><span class="p">:</span>
 
+                <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;GRP </span><span class="si">{0}</span><span class="s1"> BASE </span><span class="si">{0}</span><span class="s1">0000</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">set_index</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
                 <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
 
                     <span class="n">n</span> <span class="o">=</span> <span class="n">select</span> <span class="o">+</span> <span class="mi">1</span>
@@ -359,7 +373,13 @@
 
                     <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
 
-                        <span class="k">pass</span>
+                        <span class="n">ns</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])</span>
+
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;BRIC NO N1 N2 N3 N4 N5 N6 N7 N8 MNO</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">ns</span><span class="p">,</span> <span class="n">material_index</span><span class="p">))</span>
+
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
                     <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
 
@@ -373,6 +393,8 @@
 
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
                             <span class="n">etype</span> <span class="o">=</span> <span class="s1">&#39;C3D4&#39;</span>
+                        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+                            <span class="n">etype</span> <span class="o">=</span> <span class="s1">&#39;C3D8&#39;</span>
 
                         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*ELEMENT, TYPE=</span><span class="si">{0}</span><span class="s1">, ELSET=element_</span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span> <span class="n">select</span><span class="p">))</span>
                         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])))</span>
@@ -381,7 +403,104 @@
                         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span></div>
+
+    <span class="k">if</span> <span class="n">footers</span><span class="p">[</span><span class="n">software</span><span class="p">]:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">footers</span><span class="p">[</span><span class="n">software</span><span class="p">]))</span>
+
+    <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$ -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$ --------------------------------------------------------------- Reinforcement</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="nb">property</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+            <span class="n">reinforcement</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">reinforcement</span>
+
+            <span class="k">if</span> <span class="n">reinforcement</span><span class="p">:</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;+PROG BEMESS</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL WARN 7</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>  <span class="c1"># Upper cover (&lt;10mm or &gt;0.70d)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL WARN 9</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>  <span class="c1"># Bottom cover (&lt;10mm or &gt;0.70d)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL WARN 471</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>  <span class="c1"># Element thickness too thin and not allowed for design.</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$ Reinforcement: </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$ ---------------&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="n">t</span> <span class="o">=</span> <span class="n">sections</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">section</span><span class="p">]</span><span class="o">.</span><span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span>
+                <span class="n">posu</span><span class="p">,</span> <span class="n">posl</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+                <span class="n">du</span><span class="p">,</span> <span class="n">dl</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+                <span class="n">Au</span><span class="p">,</span> <span class="n">Al</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">rebar</span> <span class="ow">in</span> <span class="n">reinforcement</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">pos</span> <span class="o">=</span> <span class="n">rebar</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">]</span>
+                    <span class="n">dia</span> <span class="o">=</span> <span class="n">rebar</span><span class="p">[</span><span class="s1">&#39;dia&#39;</span><span class="p">]</span>
+                    <span class="n">spacing</span> <span class="o">=</span> <span class="n">rebar</span><span class="p">[</span><span class="s1">&#39;spacing&#39;</span><span class="p">]</span>
+                    <span class="n">Ac</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">dia</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+                    <span class="n">Apm</span> <span class="o">=</span> <span class="n">Ac</span> <span class="o">/</span> <span class="n">spacing</span>
+                    <span class="k">if</span> <span class="n">pos</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">posu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+                        <span class="n">du</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dia</span><span class="p">)</span>
+                        <span class="n">Au</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Apm</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">posl</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+                        <span class="n">dl</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dia</span><span class="p">)</span>
+                        <span class="n">Al</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Apm</span><span class="p">)</span>
+
+                <span class="n">geom</span> <span class="o">=</span> <span class="s1">&#39;GEOM -&#39;</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">posu</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">geom</span> <span class="o">+=</span> <span class="s1">&#39; HA </span><span class="si">{0}</span><span class="s1">[mm]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">t</span> <span class="o">-</span> <span class="n">posu</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+                    <span class="n">data</span> <span class="o">+=</span> <span class="s1">&#39; DU </span><span class="si">{0}</span><span class="s1">[mm] ASU </span><span class="si">{1}</span><span class="s1">[cm2/m] BSU </span><span class="si">{2}</span><span class="s1">[cm2/m]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">du</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">Au</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Au</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">posu</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">posu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">posu</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="n">no1</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">no2</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">no1</span> <span class="o">=</span> <span class="mi">1</span>
+                        <span class="n">no2</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">DHA</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">posu</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">posu</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mi">1000</span>
+                    <span class="n">geom</span> <span class="o">+=</span> <span class="s1">&#39; HA </span><span class="si">{0}</span><span class="s1">[mm] DHA </span><span class="si">{1}</span><span class="s1">[mm]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">t</span> <span class="o">-</span> <span class="n">posu</span><span class="p">[</span><span class="n">no1</span><span class="p">])</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">DHA</span><span class="p">)</span>
+                    <span class="n">data</span> <span class="o">+=</span> <span class="s1">&#39; DU </span><span class="si">{0}</span><span class="s1">[mm] ASU </span><span class="si">{1}</span><span class="s1">[cm2/m] BSU </span><span class="si">{2}</span><span class="s1">[cm2/m]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">du</span><span class="p">[</span><span class="n">no1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">Au</span><span class="p">[</span><span class="n">no1</span><span class="p">],</span> <span class="n">Au</span><span class="p">[</span><span class="n">no1</span><span class="p">])</span>
+                    <span class="n">data</span> <span class="o">+=</span> <span class="s1">&#39; DU2 </span><span class="si">{0}</span><span class="s1">[mm] ASU2 </span><span class="si">{1}</span><span class="s1">[cm2/m] BSU2 </span><span class="si">{2}</span><span class="s1">[cm2/m]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">du</span><span class="p">[</span><span class="n">no2</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">Au</span><span class="p">[</span><span class="n">no2</span><span class="p">],</span> <span class="n">Au</span><span class="p">[</span><span class="n">no2</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">posl</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">geom</span> <span class="o">+=</span> <span class="s1">&#39; HB </span><span class="si">{0}</span><span class="s1">[mm]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="n">posl</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+                    <span class="n">data</span> <span class="o">+=</span> <span class="s1">&#39; DL </span><span class="si">{0}</span><span class="s1">[mm] ASL </span><span class="si">{1}</span><span class="s1">[cm2/m] BSL </span><span class="si">{2}</span><span class="s1">[cm2/m]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">Al</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Al</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">posl</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">posl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">posl</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="n">no1</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">no2</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">no1</span> <span class="o">=</span> <span class="mi">1</span>
+                        <span class="n">no2</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">DHB</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">posl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">posl</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mi">1000</span>
+                    <span class="n">geom</span> <span class="o">+=</span> <span class="s1">&#39; HB </span><span class="si">{0}</span><span class="s1">[mm] DHB </span><span class="si">{1}</span><span class="s1">[mm]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="n">posl</span><span class="p">[</span><span class="n">no1</span><span class="p">])</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">DHB</span><span class="p">)</span>
+                    <span class="n">data</span> <span class="o">+=</span> <span class="s1">&#39; DL </span><span class="si">{0}</span><span class="s1">[mm] ASL </span><span class="si">{1}</span><span class="s1">[cm2/m] BSL </span><span class="si">{2}</span><span class="s1">[cm2/m]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dl</span><span class="p">[</span><span class="n">no1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">Al</span><span class="p">[</span><span class="n">no1</span><span class="p">],</span> <span class="n">Al</span><span class="p">[</span><span class="n">no1</span><span class="p">])</span>
+                    <span class="n">data</span> <span class="o">+=</span> <span class="s1">&#39; DL2 </span><span class="si">{0}</span><span class="s1">[mm] ASL2 </span><span class="si">{1}</span><span class="s1">[cm2/m] BSL2 </span><span class="si">{2}</span><span class="s1">[cm2/m]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dl</span><span class="p">[</span><span class="n">no2</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">Al</span><span class="p">[</span><span class="n">no2</span><span class="p">],</span> <span class="n">Al</span><span class="p">[</span><span class="n">no2</span><span class="p">])</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">geom</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">property</span><span class="o">.</span><span class="n">elsets</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="n">elsets</span> <span class="o">=</span> <span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">elsets</span><span class="p">]</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;PARA NOG - WKU 0.1[mm] WKL 0.1[mm]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">elset</span> <span class="ow">in</span> <span class="n">elsets</span><span class="p">:</span>
+                    <span class="n">set_index</span> <span class="o">=</span> <span class="n">sets</span><span class="p">[</span><span class="n">elset</span><span class="p">][</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;PARA NOG </span><span class="si">{0}{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">set_index</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;END</span><span class="se">\n</span><span class="s1">$</span><span class="se">\n</span><span class="s1">$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
 
 
 
@@ -452,15 +571,6 @@
 <span class="c1">#                             written_springs.append(behaviour)</span>
 <span class="c1">#                 else:</span>
 <span class="c1">#                     pass</span>
-
-
-
-
-
-<span class="c1">#         f.write(&#39;**\n&#39;)</span>
-
-    <span class="c1">#                 if stype == &#39;TrussSection&#39;:</span>
-    <span class="c1">#                     f.write(&#39;{0}\n&#39;.format(geometry[&#39;A&#39;]))</span>
 </code></pre></div>
                         
                         <!-- <nav class="compas-sideways">
@@ -527,7 +637,7 @@
             
 
             
-                Last updated on Jan 29, 2018.
+                Last updated on Jan 30, 2018.
             
 
             
