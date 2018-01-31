@@ -22,7 +22,7 @@ import pickle
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
-__copyright__ = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
 __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
@@ -1457,7 +1457,6 @@ Steps
 
         try:
             from compas_fea.viewers.app import App
-
             app = App(self)
             app.start()
         except:

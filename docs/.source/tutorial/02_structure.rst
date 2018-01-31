@@ -2,13 +2,13 @@
 Structure
 ********************************************************************************
 
-The following page shows some of the fundamentals of importing **compas_fea** classes and usage of the main **Structure** object, including some of the **Structure** object's most useful methods and important attributes.
+The following page shows some of the fundamentals of importing **compas_fea** classes and usage of the main **Structure** object, including some of the **Structure** object's most important methods and attributes.
 
 =============================
 Importing modules and classes
 =============================
 
-A Python **.py** file is generally created for every **compas_fea** model and analysis, which is where an empty **Structure** object is first instantiated and then populated with the components needed for the model. To import these components and use other helper functions from the core **compas** or **compas_fea** package, ``import`` statements are needed in the first few lines of the file. For example, if the user wishes to use a CAD environment for extracting geometry or visualising analysis results, either of the following lines below could be written to use Rhinoceros or Blender. These imports will make a variety of functions available from the **compas_fea.cad.blender** and **compas_fea.cad.rhino** modules.
+A Python **.py** file is created for every **compas_fea** model and analysis, which is where an empty **Structure** object is first instantiated and then populated with the components needed for the model. To import these components and use other helper functions from the core **compas** or **compas_fea** packages, ``import`` statements are needed in the first few lines of the Python file. For example, if the user wishes to use a CAD environment for extracting geometry or visualising analysis results, either of the following lines below could be written to use Rhinoceros or Blender. These imports will make a variety of functions available from the **compas_fea.cad.blender** and **compas_fea.cad.rhino** modules.
 
 .. code-block:: python
 
@@ -22,8 +22,6 @@ It is useful to use packages, modules and functions from the core **compas** lib
 
 .. code-block:: python
 
-    from compas_rhino.helpers import mesh_from_guid
-
     from compas.datastructures import Mesh
 
     from compas.geometry import distance_point_point
@@ -35,7 +33,7 @@ There are also many functions from the core **compas** CAD packages that can be 
     from compas_blender.utilities import clear_layers
     from compas_blender.utilities import delete_objects
 
-The most important imports will be for retrieving classes from **compas_fea.structure**, including the main **Structure** class itself. Imports, like with the main **compas** library, are from the second level, with embedded modules pulled up to this level. This is particularly useful for all of the classes found in **compas_fea.structure**. These special classes make important objects for the model and will be described in more detail throughout the various tutorial topics.
+The most important imports will be for retrieving classes from **compas_fea.structure**, including the main **Structure** class itself. Imports, like with the main **compas** library, are always available from the second level, with embedded modules pulled up to enable this. This is particularly useful for all of the classes found in **compas_fea.structure**. These special classes make important objects for the model and will be described in more detail throughout the various tutorial topics.
 
 .. code-block:: python
 
@@ -48,13 +46,10 @@ The top of the **.py** file might look something like:
 .. code-block:: python
 
     from compas.datastructures import Mesh
-
     from compas.geometry import distance_point_point
-
     from compas_rhino.helpers import mesh_from_guid
 
     from compas_fea.cad import rhino
-
     from compas_fea.structure import BucklingStep
     from compas_fea.structure import Concrete
     from compas_fea.structure import ElementProperties as Properties
@@ -73,7 +68,7 @@ The top of the **.py** file might look something like:
 Structure object
 ================
 
-The container for all model and analysis data is the **Structure** object, created from the **Structure** class. All of the attributes and methods of this class can be found at **compas_fea.structure.structure**, with the most important methods demonstrated here and through the other topics of the tutorial. See the various topics on the left-hand-side to understand how to add all the various data and objects to the **Structure** object. The following code creates an empty **Structure** object named ``mdl`` (used in the tutorial and examples as a short-cut).
+The container for all model and analysis data is the **Structure** object, created from the **Structure** class. All of the attributes and methods of this class can be found at **compas_fea.structure.structure**, with the most important methods demonstrated here and throughout the other topics of the tutorial, so see the various topics on the left-hand-side to understand how to add all the various data and objects to the **Structure** object. The following code creates an empty **Structure** object named ``mdl`` (used in the tutorial and examples as a short-cut handle).
 
 .. code-block:: python
 
@@ -81,7 +76,7 @@ The container for all model and analysis data is the **Structure** object, creat
 
     mdl = Structure(name='simple-truss', path='/home/al/Temp/')
 
-The files that are generated when using the **compas_fea** package, will all be saved in a folder named ``path``, with many temporary files stored within this location under another folder called ``path/name``. These can be passed when instantiating the **Structure** object like above, or by changing the attributes directly at a later time.
+The files that are generated when using the **compas_fea** package, will all be saved in a folder named ``path``, with many temporary files stored within this location under another folder called ``path/name``. These arguments can be passed when instantiating the **Structure** object like above, or by changing the attributes directly at a later time.
 
 .. code-block:: python
 
