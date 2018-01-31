@@ -71,6 +71,6 @@ def input_generate(structure, fields, units='m'):
         write_input_bcs(f, 'sofistik', structure, steps, displacements)
         write_input_elements(f, 'sofistik', sections, properties, elements, structure, materials)
         write_input_steps(f, 'sofistik', structure, steps, loads, displacements, sets, fields)
-        write_input_postprocess(f, 'sofistik', structure, steps)
+        write_input_postprocess(f, 'sofistik', structure, steps, properties, sections)
 
     print('***** Sofistik input file generated: {0} *****\n'.format(filename))

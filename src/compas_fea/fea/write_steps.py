@@ -182,11 +182,11 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
                 f.write('CTRL SOLV 1\n')
                 f.write('CTRL CONC\n')
-                f.write('CREP NCRE 20\n')
-                # if step.state == 'sls':
-                #     f.write('NSTR KMOD S1 KSV SLD\n')
-                # elif step.state == 'uls':
-                #     f.write('NSTR KMOD S1 KSV ULD\n')
+                f.write('$CREP NCRE 20\n')
+                if step.state == 'sls':
+                    f.write('NSTR KMOD S1 KSV SLD\n')
+                elif step.state == 'uls':
+                    f.write('NSTR KMOD S1 KSV ULD\n')
                 if nlgeom == 'YES':
                     f.write('$\n')
                     f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT YES\n'.format(increments, tolerance))
