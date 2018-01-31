@@ -135,6 +135,8 @@ def write_input_materials(f, software, materials, sections=None, properties=None
                     f.write('**\n')
                     f.write('{0}\n'.format(density))
 
+                f.write('**\n')
+
             elif software == 'opensees':
 
                 pass
@@ -181,6 +183,7 @@ def write_input_materials(f, software, materials, sections=None, properties=None
                 f.write('** p[kg/m3]\n')
                 f.write('**\n')
                 f.write('{0}\n'.format(density))
+                f.write('**\n')
 
             elif software == 'opensees':
                 pass
@@ -250,6 +253,7 @@ def write_input_materials(f, software, materials, sections=None, properties=None
                 f.write('** p[kg/m3]\n')
                 f.write('**\n')
                 f.write('{0}\n'.format(density))
+                f.write('**\n')
 
             elif software == 'opensees':
 

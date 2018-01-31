@@ -188,15 +188,15 @@ def write_input_elements(f, software, sections, properties, elements, structure,
             # Truss sections
 
             elif stype in trusses:
-                
+
                 if (software == 'opensees') and (material.__name__ == 'ElasticIsotropic'):
-                    
+
                     E = material.E['E']
                     f.write('uniaxialMaterial Elastic {0} {1}\n'.format(material_index, E))
                     f.write('#\n')
-                
+
                 for select in selection:
-                    
+
                     element = elements[select]
                     sp, ep = element.nodes
                     n = select + 1
@@ -205,20 +205,20 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                     A = geometry['A']
 
                     if software == 'abaqus':
-    
+
                         if software == 'abaqus':
-    
+
                             f.write('*ELEMENT, TYPE=T3D2, ELSET=element_{0}\n'.format(select))
                             f.write('{0}, {1},{2}\n'.format(n, i, j))
                             f.write('*SOLID SECTION, ELSET=element_{0}, MATERIAL={1}\n'.format(select, material_name))
                             f.write('{0}\n'.format(A))
                             f.write('**\n')
-    
+
                     elif software == 'sofistik':
                         pass
-    
+
                     elif software == 'opensees':
-                        
+
                         f.write('element corotTruss {0} {1} {2} {3} {4}\n'.format(n, i, j, A, material_index))
                         f.write('#\n')
 
@@ -346,99 +346,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
     if footers[software]:
         f.write('{0}\n'.format(footers[software]))
 
-    if software == 'sofistik':
 
-        f.write('$ -----------------------------------------------------------------------------\n')
-        f.write('$ --------------------------------------------------------------- Reinforcement\n')
-        f.write('$\n')
-
-        for key, property in properties.items():
-
-            reinforcement = property.reinforcement
-
-            if reinforcement:
-
-                f.write('+PROG BEMESS\n')
-                f.write('$\n')
-                f.write('CTRL WARN 7\n')  # Upper cover (<10mm or >0.70d)
-                f.write('CTRL WARN 9\n')  # Bottom cover (<10mm or >0.70d)
-                f.write('CTRL WARN 471\n')  # Element thickness too thin and not allowed for design.
-                f.write('$\n')
-
-                f.write('$ Reinforcement: {0}\n'.format(key))
-                f.write('$ ---------------' + '-' * (len(key)) + '\n')
-                f.write('$\n')
-
-                t = sections[property.section].geometry['t']
-                posu, posl = [], []
-                du, dl = [], []
-                Au, Al = [], []
-
-                for name, rebar in reinforcement.items():
-                    pos = rebar['pos']
-                    dia = rebar['dia']
-                    spacing = rebar['spacing']
-                    Ac = 0.25 * pi * (dia * 100)**2
-                    Apm = Ac / spacing
-                    if pos > 0:
-                        posu.append(pos)
-                        du.append(dia)
-                        Au.append(Apm)
-                    elif pos < 0:
-                        posl.append(pos)
-                        dl.append(dia)
-                        Al.append(Apm)
-
-                geom = 'GEOM -'
-                data = ''
-
-                if len(posu) == 1:
-                    geom += ' HA {0}[mm]'.format((0.5 * t - posu[0]) * 1000)
-                    data += ' DU {0}[mm] ASU {1}[cm2/m] BSU {2}[cm2/m]'.format(du[0] * 1000, Au[0], Au[0])
-
-                elif len(posu) == 2:
-                    if posu[0] > posu[1]:
-                        no1 = 0
-                        no2 = 1
-                    else:
-                        no1 = 1
-                        no2 = 0
-                    DHA = abs(posu[0] - posu[1]) * 1000
-                    geom += ' HA {0}[mm] DHA {1}[mm]'.format((0.5 * t - posu[no1]) * 1000, DHA)
-                    data += ' DU {0}[mm] ASU {1}[cm2/m] BSU {2}[cm2/m]'.format(du[no1] * 1000, Au[no1], Au[no1])
-                    data += ' DU2 {0}[mm] ASU2 {1}[cm2/m] BSU2 {2}[cm2/m]'.format(du[no2] * 1000, Au[no2], Au[no2])
-
-                if len(posl) == 1:
-                    geom += ' HB {0}[mm]'.format((0.5 * t + posl[0]) * 1000)
-                    data += ' DL {0}[mm] ASL {1}[cm2/m] BSL {2}[cm2/m]'.format(dl[0] * 1000, Al[0], Al[0])
-
-                elif len(posl) == 2:
-                    if posl[0] < posl[1]:
-                        no1 = 0
-                        no2 = 1
-                    else:
-                        no1 = 1
-                        no2 = 0
-                    DHB = abs(posl[0] - posl[1]) * 1000
-                    geom += ' HB {0}[mm] DHB {1}[mm]'.format((0.5 * t + posl[no1]) * 1000, DHB)
-                    data += ' DL {0}[mm] ASL {1}[cm2/m] BSL {2}[cm2/m]'.format(dl[no1] * 1000, Al[no1], Al[no1])
-                    data += ' DL2 {0}[mm] ASL2 {1}[cm2/m] BSL2 {2}[cm2/m]'.format(dl[no2] * 1000, Al[no2], Al[no2])
-
-                f.write(geom + '\n')
-                f.write('$\n')
-
-                if isinstance(property.elsets, str):
-                    elsets = [property.elsets]
-
-                f.write('PARA NOG - WKU 0.1[mm] WKL 0.1[mm]\n')
-                for elset in elsets:
-                    set_index = sets[elset]['index'] + 1
-                    f.write('PARA NOG {0}{1}\n'.format(set_index, data))
-
-                f.write('$\n')
-                f.write('$\n')
-
-                f.write('END\n$\n$\n')
 
 
 
