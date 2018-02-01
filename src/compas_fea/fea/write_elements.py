@@ -215,7 +215,10 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                             f.write('**\n')
 
                     elif software == 'sofistik':
-                        pass
+
+                        f.write('TRUS NO NA NE NCS\n')
+                        f.write('{0} {1} {2} {3}\n'.format(n, i, j, section_index))
+                        f.write('$\n')
 
                     elif software == 'opensees':
 
@@ -344,7 +347,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
     f.write('{0}\n'.format(c))
 
     if footers[software]:
-        f.write('{0}\n'.format(footers[software]))
+        f.write('{0}'.format(footers[software]))
 
 
 

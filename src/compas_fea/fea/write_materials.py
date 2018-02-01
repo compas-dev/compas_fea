@@ -3,6 +3,9 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from math import pi
+from math import sqrt
+
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
 __copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
@@ -310,6 +313,7 @@ def write_input_materials(f, software, materials, sections=None, properties=None
 
         f.write('$ -----------------------------------------------------------------------------\n')
         f.write('$ -------------------------------------------------------------------- Sections\n')
+        f.write('$\n')
 
         for key, property in properties.items():
 
@@ -320,13 +324,13 @@ def write_input_materials(f, software, materials, sections=None, properties=None
             geometry = section.geometry
             stype = section.__name__
 
-            if stype != 'SolidSection':
+            if stype not in ['SolidSection', 'ShellSection']:
+
+                f.write('{0} {1}\n'.format(c, section.name))
+                f.write('{0} '.format(c) + '-' * len(section.name) + '\n')
+                f.write('{0}\n'.format(c))
 
                 if stype in ['PipeSection', 'CircularSection']:
-
-                    f.write('{0} {1}\n'.format(c, section.name))
-                    f.write('{0} '.format(c) + '-' * len(section.name) + '\n')
-                    f.write('{0}\n'.format(c))
 
                     if stype == 'PipeSection':
 
@@ -338,6 +342,11 @@ def write_input_materials(f, software, materials, sections=None, properties=None
 
                         D = geometry['r'] * 2 * 1000
                         f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, 0, material_index))
+
+                elif stype in ['TrussSection']:
+
+                    D = sqrt(geometry['A'] * 4 / pi) * 1000
+                    f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, 0, material_index))
 
                 f.write('$\n')
 
