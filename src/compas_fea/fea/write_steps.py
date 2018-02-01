@@ -315,8 +315,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     displacement = displacements[k]
                     com = displacement.components
                     nset = displacement.nodes
+                    nnodes = sorted(structure.sets[nset]['selection'], key=int)
 
-                    f.write('{0}\n'.format(c))
                     f.write('{0} {1}\n'.format(c, k))
                     f.write('{0} '.format(c) + '-' * len(k) + '\n')
                     f.write('{0}\n'.format(c))
@@ -330,9 +330,15 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                                 f.write('{0}, {1}, {1}, {2}\n'.format(nset, ci, com[dof] * factor))
 
                     elif software == 'opensees':
+
+                        # for ci, dof in enumerate(dofs[:ndof], 1):
+                        #     if com[dof] is not None:
+                        #         for node in nnodes:
+                        #             f.write('sp {0} {1} {2}\n'.format(node + 1, ci, com[dof]))
                         pass
 
                     elif software == 'sofistik':
+
                         pass
             except:
                 pass

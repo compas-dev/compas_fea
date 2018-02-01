@@ -73,10 +73,10 @@
 
                         <div class="section" id="nodes">
 <h1>Nodes</h1>
-<p>This page shows how nodes are added, viewed and edited within the <strong>Structure</strong> object, here given as object with handle <code class="docutils literal"><span class="pre">mdl</span></code>. Unique node data is fundamental to the structure, and is stored in the <code class="docutils literal"><span class="pre">.nodes</span></code> attribute as a dictionary of data.</p>
+<p>This page shows how nodes are added, viewed and edited within the <strong>Structure</strong> object, here given as object with handle <code class="docutils literal"><span class="pre">mdl</span></code>. Node data is fundamental to the structure, and is stored in the <code class="docutils literal"><span class="pre">.nodes</span></code> attribute as a dictionary of data.</p>
 <div class="section" id="adding-nodes">
 <h2>Adding nodes</h2>
-<p>Nodes can be added manually at prescribed spatial co-ordinates with the <code class="docutils literal"><span class="pre">.add_node()</span></code> and <code class="docutils literal"><span class="pre">.add_nodes()</span></code> methods, where <code class="docutils literal"><span class="pre">xyz</span></code> is a list of co-ordinates for a single node in the former, and <code class="docutils literal"><span class="pre">nodes</span></code> a list of lists for multiple node co-ordinates for the latter. If integer values for co-ordinates are given, they are converted to floats before adding to the <strong>Structure</strong>.</p>
+<p>Nodes can be added manually at prescribed spatial co-ordinates with the <code class="docutils literal"><span class="pre">.add_node()</span></code> and <code class="docutils literal"><span class="pre">.add_nodes()</span></code> methods, where <code class="docutils literal"><span class="pre">xyz</span></code> is a list of co-ordinates for a single node in the former method, and <code class="docutils literal"><span class="pre">nodes</span></code> a list of lists for multiple node co-ordinates for the latter method. If integer values for co-ordinates are given, they are converted to floats before adding to the <strong>Structure</strong> object.</p>
 <div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">xyz</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_nodes</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>
@@ -94,21 +94,25 @@
 <div class="section" id="editing-nodes">
 <h2>Editing nodes</h2>
 <p>To edit the data of a node use the <code class="docutils literal"><span class="pre">.edit_node()</span></code> method, which will change both the data of the node and update the <code class="docutils literal"><span class="pre">.node_index</span></code> dictionary if the co-ordinates were changed during editing.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
 <span class="go">{&#39;x&#39;: 5.0, &#39;y&#39;: -5.0, &#39;z&#39;: 0.0, &#39;ex&#39;: [1, 0, 0], &#39;ey&#39;: [0, 1, 0], &#39;ez&#39;: [0, 0, 1]}</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">edit_node</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">attr_dic</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="mf">4.0</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">edit_node</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">attr_dic</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="mf">4.0</span><span class="p">})</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="go">{&#39;x&#39;: 0, &#39;y&#39;: -5.0, &#39;z&#39;: 4.0, &#39;ex&#39;: [1, 0, 0], &#39;ey&#39;: [0, 1, 0], &#39;ez&#39;: [0, 0, 1]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="go">{&#39;x&#39;: 0.0, &#39;y&#39;: -5.0, &#39;z&#39;: 4.0, &#39;ex&#39;: [1, 0, 0], &#39;ey&#39;: [0, 1, 0], &#39;ez&#39;: [0, 0, 1]}</span>
 </code></pre></div>
 </div>
 </div>
 <div class="section" id="methods">
 <h2>Methods</h2>
-<p>The co-ordinates of a given node and the total number of nodes in the <strong>Structure</strong> may be evaluated with the <code class="docutils literal"><span class="pre">.node_xyz()</span></code> and <code class="docutils literal"><span class="pre">.node_count()</span></code> methods:</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<p>The co-ordinates of a given node, many nodes, and the total number of nodes in the <strong>Structure</strong>, may be evaluated with the <code class="docutils literal"><span class="pre">.node_xyz()</span></code>, <code class="docutils literal"><span class="pre">.nodes_xyz()</span></code> and <code class="docutils literal"><span class="pre">.node_count()</span></code> methods:</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="go">[-5.0, 5.0, 0.0]</span>
+</code></pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes_xyz</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="go">[[-5.0, 5.0, 0.0], [5.0, 0.0, 2.0]]</span>
 </code></pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">node_count</span><span class="p">()</span>
@@ -120,7 +124,7 @@
 <span class="go">([-5.0, 5.0], [-5.0, 5.0], [0.0, 5.0])</span>
 </code></pre></div>
 </div>
-<p>It can be checked if a node is present in the <strong>Structure</strong> object by a query with the method <code class="docutils literal"><span class="pre">.check_node_exists()</span></code> and with the list of node co-ordinates. If a node exists, the method will return the integer key, if not, <code class="docutils literal"><span class="pre">None</span></code> will be returned.</p>
+<p>It can be checked if a node is present in the <strong>Structure</strong> object by a query with the method <code class="docutils literal"><span class="pre">.check_node_exists()</span></code> and with the list of node co-ordinates. If a node exists, the method will return the integer key, if not, <code class="docutils literal"><span class="pre">None</span></code> will be returned. Integer values for co-ordinates will be converted to floats during this check.</p>
 <div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="go">2</span>
 
@@ -234,7 +238,7 @@
             
 
             
-                Last updated on Jan 30, 2018.
+                Last updated on Feb 01, 2018.
             
 
             

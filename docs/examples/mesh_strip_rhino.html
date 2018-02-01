@@ -24,7 +24,7 @@
         
         
         
-            <link rel="prev" title="block_tets Rhino" href="block_tets_rhino.html" />
+            <link rel="prev" title="mesh_plate Rhino" href="mesh_plate_rhino.html" />
         
 
         <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -85,7 +85,6 @@
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralDisplacement</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralStep</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GravityLoad</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PinnedDisplacement</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">RollerDisplacementX</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ShellSection</span>
@@ -123,10 +122,6 @@
 <span class="n">ep</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_plate&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_alu&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_plate&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">)</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span>
 
-<span class="c1"># Add loads</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">GravityLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">))</span>
-
 <span class="c1"># Add displacements</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_displacements</span><span class="p">([</span>
@@ -138,9 +133,8 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_steps</span><span class="p">([</span>
     <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_left&#39;</span><span class="p">,</span> <span class="s1">&#39;disp_right&#39;</span><span class="p">]),</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">]),</span>
     <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_lift&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_middle&#39;</span><span class="p">])])</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="s1">&#39;step_lift&#39;</span><span class="p">]</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="s1">&#39;step_lift&#39;</span><span class="p">]</span>
 
 <span class="c1"># Structure summary</span>
 
@@ -164,7 +158,7 @@
                         
                         <!-- <nav class="compas-sideways">
                             
-                                <a href="block_tets_rhino.html" class="btn btn-primary compas-prev" role="button">block_tets Rhino</a>
+                                <a href="mesh_plate_rhino.html" class="btn btn-primary compas-prev" role="button">mesh_plate Rhino</a>
                             
 
                             
@@ -204,6 +198,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="beam_grid_rhino.html">beam_grid Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_simple_rhino.html">beam_simple Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="block_tets_rhino.html">block_tets Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_plate_rhino.html">mesh_plate Rhino</a></li>
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">mesh_strip Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame Rhino</a></li>
@@ -243,7 +238,7 @@
             
 
             
-                Last updated on Jan 30, 2018.
+                Last updated on Feb 01, 2018.
             
 
             

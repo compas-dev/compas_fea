@@ -14,6 +14,7 @@ Rhino
     examples/beam_grid_rhino
     examples/beam_simple_rhino
     examples/block_tets_rhino
+    examples/mesh_plate_rhino
     examples/mesh_strip_rhino
     examples/truss_tower_rhino
     examples/truss_frame_rhino

@@ -56,7 +56,7 @@ class GeneralStep(object):
 
     """
 
-    def __init__(self, name, increments=100, iterations=10, factor=1.0, nlgeom=True, displacements=[], loads=[],
+    def __init__(self, name, increments=100, iterations=100, factor=1.0, nlgeom=True, displacements=[], loads=[],
                  type='static', temperatures=None, duration=1, tolerance=0.01, state=None):
         self.__name__ = 'GeneralStep'
         self.name = name

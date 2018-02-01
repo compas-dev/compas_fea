@@ -139,14 +139,6 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                     n = select + 1
                     i = sp + 1
                     j = ep + 1
-                    E = material.E['E']
-                    G = material.G['G']
-                    A = geometry['A']
-                    J = getattr(geometry, 'J', None)
-                    Ixx = geometry['Ixx']
-                    Iyy = geometry['Iyy']
-                    # Avy = geometry['Avy']
-                    # Avx = geometry['Avx']
 
                     if software == 'abaqus':
 
@@ -170,6 +162,15 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                         f.write('**\n')
 
                     elif software == 'opensees':
+
+                        E = material.E['E']
+                        G = material.G['G']
+                        A = geometry['A']
+                        J = geometry['J']
+                        Ixx = geometry['Ixx']
+                        Iyy = geometry['Iyy']
+                        # Avy = geometry['Avy']
+                        # Avx = geometry['Avx']
 
                         ex = ' '.join([str(k) for k in element.axes['ex']])
                         et = 'element elasticBeamColumn'
@@ -281,7 +282,16 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                         f.write('**\n')
 
                     elif software == 'opensees':
-                        pass
+
+                        E = material.E['E']
+                        v = material.v['v']
+                        p = material.p
+                        ns = ' '.join([str(i + 1) for i in nodes])
+
+                        if len(nodes) == 4:
+                            f.write('section ElasticMembranePlateSection {0} {1} {2} {3} {4}\n'.format(n, E, v, t, p))
+                            f.write('element ShellNLDKGQ {0} {1} {0}\n'.format(n, ns))
+                            f.write('#\n')
 
                     elif software == 'sofistik':
 
