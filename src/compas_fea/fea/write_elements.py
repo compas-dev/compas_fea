@@ -142,7 +142,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                     E = material.E['E']
                     G = material.G['G']
                     A = geometry['A']
-                    J = geometry['J']
+                    J = getattr(geometry, 'J', None)
                     Ixx = geometry['Ixx']
                     Iyy = geometry['Iyy']
                     # Avy = geometry['Avy']

@@ -2,13 +2,13 @@
 Nodes
 ********************************************************************************
 
-This page shows how nodes are added, viewed and edited within the **Structure** object, here given as object with handle ``mdl``. Unique node data is fundamental to the structure, and is stored in the ``.nodes`` attribute as a dictionary of data.
+This page shows how nodes are added, viewed and edited within the **Structure** object, here given as object with handle ``mdl``. Node data is fundamental to the structure, and is stored in the ``.nodes`` attribute as a dictionary of data.
 
 ============
 Adding nodes
 ============
 
-Nodes can be added manually at prescribed spatial co-ordinates with the ``.add_node()`` and ``.add_nodes()`` methods, where ``xyz`` is a list of co-ordinates for a single node in the former, and ``nodes`` a list of lists for multiple node co-ordinates for the latter. If integer values for co-ordinates are given, they are converted to floats before adding to the **Structure**.
+Nodes can be added manually at prescribed spatial co-ordinates with the ``.add_node()`` and ``.add_nodes()`` methods, where ``xyz`` is a list of co-ordinates for a single node in the former method, and ``nodes`` a list of lists for multiple node co-ordinates for the latter method. If integer values for co-ordinates are given, they are converted to floats before adding to the **Structure** object.
 
 .. code-block:: python
 
@@ -37,25 +37,30 @@ To edit the data of a node use the ``.edit_node()`` method, which will change bo
 
 .. code-block:: python
 
-   >>> mdl.nodes[1]
+   >>> mdl.nodes[3]
    {'x': 5.0, 'y': -5.0, 'z': 0.0, 'ex': [1, 0, 0], 'ey': [0, 1, 0], 'ez': [0, 0, 1]}
 
-   >>> mdl.edit_node(key=1, attr_dic={'x': 0, 'z': 4.0})
+   >>> mdl.edit_node(key=3, attr_dic={'x': 0.0, 'z': 4.0})
 
-   >>> mdl.nodes[1]
-   {'x': 0, 'y': -5.0, 'z': 4.0, 'ex': [1, 0, 0], 'ey': [0, 1, 0], 'ez': [0, 0, 1]}
+   >>> mdl.nodes[3]
+   {'x': 0.0, 'y': -5.0, 'z': 4.0, 'ex': [1, 0, 0], 'ey': [0, 1, 0], 'ez': [0, 0, 1]}
 
 
 =======
 Methods
 =======
 
-The co-ordinates of a given node and the total number of nodes in the **Structure** may be evaluated with the ``.node_xyz()`` and ``.node_count()`` methods:
+The co-ordinates of a given node, many nodes, and the total number of nodes in the **Structure**, may be evaluated with the ``.node_xyz()``, ``.nodes_xyz()`` and ``.node_count()`` methods:
 
 .. code-block:: python
 
-   >>> mdl.node_xyz(3)
+   >>> mdl.node_xyz(node=3)
    [-5.0, 5.0, 0.0]
+
+.. code-block:: python
+
+   >>> mdl.nodes_xyz(nodes=[3, 4])
+   [[-5.0, 5.0, 0.0], [5.0, 0.0, 2.0]]
 
 .. code-block:: python
 
@@ -69,7 +74,7 @@ The simple bounding box made by the **Structure** can be found by calling the ``
     >>> mdl.node_bounds()
     ([-5.0, 5.0], [-5.0, 5.0], [0.0, 5.0])
 
-It can be checked if a node is present in the **Structure** object by a query with the method ``.check_node_exists()`` and with the list of node co-ordinates. If a node exists, the method will return the integer key, if not, ``None`` will be returned.
+It can be checked if a node is present in the **Structure** object by a query with the method ``.check_node_exists()`` and with the list of node co-ordinates. If a node exists, the method will return the integer key, if not, ``None`` will be returned. Integer values for co-ordinates will be converted to floats during this check.
 
 .. code-block:: python
 
