@@ -362,7 +362,8 @@ class TieSection(TrussSection):
 
 class SpringSection(object):
 
-    """ For use with spring elements.
+    """ For use with spring elements. Requires either a stiffness dictonary for
+    linear springs, or forces and displacement lists for non-linear springs.
 
     Parameters
     ----------
@@ -372,8 +373,9 @@ class SpringSection(object):
         Forces data for non-linear springs.
     displacements : list
         Displacements data for non-linear springs.
-    stiffness : float
-        Elastic stiffness for linear springs.
+    stiffness : Dict
+        Elastic stiffness for linear springs. The dictionary keys show the spring
+        axis and the values represent the stifness.
 
     Returns
     -------
@@ -385,7 +387,7 @@ class SpringSection(object):
 
     """
 
-    def __init__(self, name, forces=[], displacements=[], stiffness=0):
+    def __init__(self, name, forces=None, displacements=None, stiffness=None):
         self.__name__ = 'SpringSection'
         self.name = name
         self.geometry = None

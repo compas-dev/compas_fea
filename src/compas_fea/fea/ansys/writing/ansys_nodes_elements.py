@@ -486,7 +486,7 @@ def write_request_mesh_areas(structure, output_path, filename, size=None, smart_
 
 
 def write_spring_elements_nodal(structure, out_path, filename, ekeys, section):
-    axis_dict = {'x': 1, 'y': 2, 'z': 3}
+    axis_dict = {'x': 1, 'y': 2, 'z': 3, 'xx': 4, 'yy': 5, 'zz': 6}
     kdict = section.stiffness
     fh = open(out_path + "/" + filename, 'a')
     for axis in kdict:
@@ -494,7 +494,7 @@ def write_spring_elements_nodal(structure, out_path, filename, ekeys, section):
         fh.write('ET, {0}, COMBIN14 \n'.format(etkey))
         fh.write('KEYOPT, {0}, 1, 0 \n'.format(etkey))
         fh.write('KEYOPT, {0}, 2, {1} \n'.format(etkey, axis_dict[axis]))
-        fh.write('KEYOPT, {0}, 3, 0 \n'.format(etkey))
+        # fh.write('KEYOPT, {0}, 3, 1 \n'.format(etkey))
         fh.write('R, {0}, {1} \n'.format(etkey, kdict[axis]))
         fh.write('TYPE, {0} \n'.format(etkey))
         fh.write('REAL, {0} \n'.format(etkey))
