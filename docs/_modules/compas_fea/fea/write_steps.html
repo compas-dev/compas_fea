@@ -315,17 +315,44 @@
                                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span> <span class="n">ci</span><span class="p">,</span> <span class="n">factor</span> <span class="o">*</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
+                    <span class="c1"># Pre-stress</span>
+
+                    <span class="k">elif</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;PrestressLoad&#39;</span><span class="p">]:</span>
+
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*INITIAL CONDITIONS, TYPE=STRESS</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elset</span><span class="p">))</span>
+                        <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;sxx&#39;</span><span class="p">]:</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">com</span><span class="p">[</span><span class="s1">&#39;sxx&#39;</span><span class="p">]))</span>
+
                     <span class="c1"># Line load</span>
 
                     <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;LineLoad&#39;</span><span class="p">:</span>
-                        <span class="k">pass</span>
 
-                        <span class="c1"># if axes == &#39;global&#39;:</span>
-                        <span class="c1">#     raise NotImplementedError</span>
+                        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
 
-                        <span class="c1"># elif axes == &#39;local&#39;:</span>
-                        <span class="c1">#     elements = &#39; &#39;.join([str(i + 1) for i in sets[elset][&#39;selection&#39;]])</span>
-                        <span class="c1">#     f.write(&#39;eleLoad -ele {0} -type -beamUniform {1} {2}\n&#39;.format(elements, -com[&#39;y&#39;], -com[&#39;x&#39;]))</span>
+                            <span class="k">pass</span>
+
+                            <span class="c1"># if axes == &#39;global&#39;:</span>
+                            <span class="c1">#     raise NotImplementedError</span>
+
+                            <span class="c1"># elif axes == &#39;local&#39;:</span>
+                            <span class="c1">#     elements = &#39; &#39;.join([str(i + 1) for i in sets[elset][&#39;selection&#39;]])</span>
+                            <span class="c1">#     f.write(&#39;eleLoad -ele {0} -type -beamUniform {1} {2}\n&#39;.format(elements, -com[&#39;y&#39;], -com[&#39;x&#39;]))</span>
+
+                        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+
+                            <span class="k">pass</span>
+
+    <span class="c1">#                         if axes == &#39;global&#39;:</span>
+    <span class="c1">#                             for dof in dofs[:3]:</span>
+    <span class="c1">#                                 if com[dof]:</span>
+    <span class="c1">#                                     f.write(&#39;{0}, P{1}, {2}&#39;.format(elset, dof.upper(), lf * com[dof]) + &#39;\n&#39;)</span>
+
+    <span class="c1">#                         elif axes == &#39;local&#39;:</span>
+    <span class="c1">#                             if com[&#39;x&#39;]:</span>
+    <span class="c1">#                                 f.write(&#39;{0}, P1, {1}&#39;.format(elset, lf * com[&#39;x&#39;]) + &#39;\n&#39;)</span>
+    <span class="c1">#                             if com[&#39;y&#39;]:</span>
+    <span class="c1">#                                 f.write(&#39;{0}, P2, {1}&#39;.format(elset, lf * com[&#39;y&#39;]) + &#39;\n&#39;)</span>
 
                     <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;AreaLoad&#39;</span><span class="p">:</span>
 
@@ -336,6 +363,12 @@
                         <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
 
                             <span class="k">pass</span>
+
+                    <span class="c1"># Body load</span>
+
+                    <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;BodyLoad&#39;</span><span class="p">:</span>
+
+                        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
                     <span class="c1"># Gravity load</span>
 
@@ -485,31 +518,13 @@
 
 
 
-
 <span class="c1">#     for key, load in loads.items():</span>
-
-<span class="c1">#         if load.__name__ in [&#39;PrestressLoad&#39;]:</span>
-
-<span class="c1">#             f.write(&#39;**\n&#39;)</span>
-<span class="c1">#             f.write(&#39;** {0}\n&#39;.format(key))</span>
-<span class="c1">#             f.write(&#39;** &#39; + &#39;-&#39; * len(key) + &#39;\n&#39;)</span>
-<span class="c1">#             f.write(&#39;**\n&#39;)</span>
-
-<span class="c1">#             com = load.components</span>
-<span class="c1">#             f.write(&#39;*INITIAL CONDITIONS, TYPE=STRESS\n&#39;)</span>
-<span class="c1">#             f.write(&#39;{0}, &#39;.format(load.elements))</span>
-<span class="c1">#             if com[&#39;sxx&#39;]:</span>
-<span class="c1">#                 f.write(&#39;{0}\n&#39;.format(com[&#39;sxx&#39;]))</span>
-
-
 
 
 <span class="c1">#                 if stype == &#39;BucklingStep&#39;:</span>
 
 <span class="c1">#                     modes = step.modes</span>
 <span class="c1">#                     f.write(&#39;{0}, {1}, {2}, {3}\n&#39;.format(modes, modes, 2 * modes, increments))</span>
-
-
 
 <span class="c1">#                     # Type</span>
 
@@ -525,18 +540,6 @@
 
 <span class="c1">#                     # Line load</span>
 
-<span class="c1">#                     elif ltype == &#39;LineLoad&#39;:</span>
-
-<span class="c1">#                         if axes == &#39;global&#39;:</span>
-<span class="c1">#                             for dof in dofs[:3]:</span>
-<span class="c1">#                                 if com[dof]:</span>
-<span class="c1">#                                     f.write(&#39;{0}, P{1}, {2}&#39;.format(elset, dof.upper(), lf * com[dof]) + &#39;\n&#39;)</span>
-
-<span class="c1">#                         elif axes == &#39;local&#39;:</span>
-<span class="c1">#                             if com[&#39;x&#39;]:</span>
-<span class="c1">#                                 f.write(&#39;{0}, P1, {1}&#39;.format(elset, lf * com[&#39;x&#39;]) + &#39;\n&#39;)</span>
-<span class="c1">#                             if com[&#39;y&#39;]:</span>
-<span class="c1">#                                 f.write(&#39;{0}, P2, {1}&#39;.format(elset, lf * com[&#39;y&#39;]) + &#39;\n&#39;)</span>
 
 <span class="c1">#                     # Area load</span>
 
@@ -550,15 +553,6 @@
 <span class="c1">#                             # y COMPONENT</span>
 <span class="c1">#                             if com[&#39;z&#39;]:</span>
 <span class="c1">#                                 f.write(&#39;{0}, P, {1}&#39;.format(elset, lf * com[&#39;z&#39;]) + &#39;\n&#39;)</span>
-
-<span class="c1">#                     # Body load</span>
-
-<span class="c1">#                     elif ltype == &#39;BodyLoad&#39;:</span>
-<span class="c1">#                         raise NotImplementedError</span>
-
-
-
-
 
 
 
@@ -622,21 +616,6 @@
 <span class="c1">#             #     f.write(&#39;*END STEP\n&#39;)</span>
 
 <span class="c1">#         f.write(&#39;**\n&#39;)</span>
-
-
-
-<span class="c1"># CTRL ITER V4 10</span>
-<span class="c1"># CTRL CONC V4</span>
-<span class="c1"># SYST PROB TH3 ITER 200 TOL 0.010 FMAX 1.1 NMAT YES</span>
-<span class="c1"># REIQ LCR 4</span>
-
-<span class="c1"># $ conventional steel reinforcement</span>
-<span class="c1"># $ --------------------------------</span>
-
-<span class="c1"># SREC 1 B 50[mm] H 149[mm] HO 1[mm] BO 50[mm] MNO 1 MRF 2 ASO 0.4[cm2] ASU 0.4[cm2]</span>
-<span class="c1"># STEE 5 B 500A</span>
-
-<span class="c1"># angle = rebar[&#39;angle&#39;] 2nd layer is assumed 90 deg by default.</span>
 </code></pre></div>
                         
                         <!-- <nav class="compas-sideways">
@@ -703,7 +682,7 @@
             
 
             
-                Last updated on Feb 01, 2018.
+                Last updated on Feb 06, 2018.
             
 
             

@@ -458,24 +458,23 @@ Steps
         """
 
         func_dic = {
-            'BeamElement': BeamElement,
-            'SpringElement': SpringElement,
-            'TrussElement': TrussElement,
-            'StrutElement': StrutElement,
-            'TieElement': TieElement,
-            'ShellElement': ShellElement,
-            'MembraneElement': MembraneElement,
-            'SolidElement': SolidElement,
+            'BeamElement':        BeamElement,
+            'SpringElement':      SpringElement,
+            'TrussElement':       TrussElement,
+            'StrutElement':       StrutElement,
+            'TieElement':         TieElement,
+            'ShellElement':       ShellElement,
+            'MembraneElement':    MembraneElement,
+            'SolidElement':       SolidElement,
             'TetrahedronElement': TetrahedronElement,
             'PentahedronElement': PentahedronElement,
-            'HexahedronElement': HexahedronElement,
+            'HexahedronElement':  HexahedronElement,
         }
-        func = func_dic[type]
 
         ekey = self.check_element_exists(nodes)
         if ekey is None:
             ekey = self.element_count()
-            element = func()
+            element = func_dic[type]()
             element.axes = axes
             element.nodes = nodes
             element.number = ekey
@@ -562,8 +561,7 @@ Steps
         if not xyz:
             xyz = centroid_points([self.node_xyz(node) for node in nodes])
         gkey = geometric_key(xyz, '{0}f'.format(self.tol))
-        ekey = self.element_index.get(gkey, None)
-        return ekey
+        return self.element_index.get(gkey, None)
 
     def edit_element(self):
         raise NotImplementedError
@@ -632,7 +630,7 @@ Steps
         node : int
             Node number the element is connected to.
         type : str
-            Element type: 'SpringElement', etc.
+            Element type: 'SpringElement'.
         virtual_node : bool
             Create a virtual node or not.
 
@@ -663,10 +661,9 @@ Steps
         func_dic = {
             'SpringElement': SpringElement,
         }
-        func = func_dic[type]
 
         ekey = self.element_count()
-        element = func()
+        element = func_dic[type]()
         element.nodes = nodes
         element.number = ekey
         self.elements[ekey] = element

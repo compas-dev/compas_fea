@@ -8,7 +8,9 @@ This page shows how different types of **Element** objects are added and edited 
 Adding elements
 ===============
 
-**Element** objects are added to the **Structure** object with the ``.add_element()`` and ``.add_elements()`` methods, by giving the list(s) of nodes that the element(s) connect to, as well as the element type as a string. The **Element** objects are added to the ``.elements`` dictionary, from the classes found in module **compas_fea.structure.elements**, where the class names match the string entered for the element type ``type``. The element types include, amongst others, 1D elements: **SpringElement**, **BeamElement**, **TrussElement**, 2D elements: **ShellElement**, **MembraneElement**, and 3D elements: **PentahedronElement**, **TetrahedronElement**, **HexahedronElement**. As with nodes, the elements will be added with integer keys numbered sequentially starting from 0. **Note**: currently no more than one element can exist for the same nodes, i.e. no overlapping elements are allowed. If you use ``.add_element()`` and an element already exists there, nothing else will be added.
+**Element** objects are added to the **Structure** object with the ``.add_element()`` and ``.add_elements()`` methods, by giving the list(s) of nodes that the element(s) connect to, as well as the element type as a string. The **Element** objects are added to the ``.elements`` dictionary, from the classes found in module **compas_fea.structure.element**, where the class names match the string entered for the element type ``type``. The element types include, amongst others, 1D elements: **SpringElement**, **BeamElement**, **TrussElement**, 2D elements: **ShellElement**, **MembraneElement**, and 3D elements: **PentahedronElement**, **TetrahedronElement**, **HexahedronElement**.
+
+As with nodes, the elements will be added with integer keys numbered sequentially starting from 0. **Note**: currently no more than one element can exist for the same collection of nodes, i.e. no overlapping elements are allowed. If you use ``.add_element()`` and an element already exists, nothing else will be added.
 
 .. code-block:: python
 
@@ -23,7 +25,7 @@ For Abaqus, adding elements will also create a set for each individual element. 
 Viewing elements
 ================
 
-The **Element** objects can be viewed through their integer key to get their attributes (``.__name__``, ``.axes``, ``.nodes``, ``.number``, ``.acoustic``, ``.thermal``).
+The **Element** objects can be viewed through their integer key and their attributes ``.__name__``, ``.axes``, ``.nodes``, ``.number``, ``.acoustic``, ``.thermal``.
 
 .. code-block:: python
 
@@ -86,7 +88,9 @@ An element centroid can be determined by the method ``.element_centroid()``.
 Axes
 ====
 
-Giving a dictionary for the argument ``axes`` when adding the element will store ``{'ex': [], 'ey': [], 'ez': []}`` in the **Element** object's ``.axes`` attribute. The ``'ex'``, ``'ey'`` and ``'ez'`` lists are the element's local `x`, `y` and `z` axes, and are used for example, when orientating cross-sections, using anisotropic materials, or for aligning rebar in concrete shells. If no ``axes`` data are given, it is left up to the finite element solver to determine default local axes values. This default alignment, if supported by the software, is often based on the global axes of the model, thus it is important to understand if these defaults are suitable, especially for an element geometry that does not align well with the global `x`, `y`, `z` directions. To add the local axes for a line element such as a beam, the ``'ex'`` axis represents the cross-section's major axis, ``'ey'`` the cross-section's minor axis, and ``'ez'`` the axis along the element. For surface elements, the ``'ex'`` and ``'ey'`` axes represent the in-plane local axes, with ``'ez'`` then representing the positive normal vector. The CAD functions (described in the CAD topic) that add elements to the **Structure** from geometry in the workspace, will automate some of these axis definitions.
+Giving a dictionary for the argument ``axes`` when adding the element will store ``{'ex': [], 'ey': [], 'ez': []}`` in the **Element** object's ``.axes`` attribute. The ``'ex'``, ``'ey'`` and ``'ez'`` lists are the element's local `x`, `y` and `z` axes, and are used for example, when orientating cross-sections, using anisotropic materials, or for aligning rebar in concrete shells. If no ``axes`` data are given, it is left up to the finite element solver to determine default local axes values. This default alignment, if supported by the software, is often based on the global axes of the model, thus it is important to understand if these defaults are suitable, especially for an element geometry that does not align well with the global `x`, `y`, `z` directions. If for example you create a **BeamElement** for Abaqus that is perfectly vertical, you will get an error from Abaqus that it was not able to work out a local orientation, OpenSees demands explicitly a local orientation for beams, so this cannot be skipped.
+
+To add the local axes for a line element such as a beam, the ``'ex'`` axis represents the cross-section's major axis, ``'ey'`` the cross-section's minor axis, and ``'ez'`` the axis along the element. For surface elements, the ``'ex'`` and ``'ey'`` axes represent the in-plane local axes, with ``'ez'`` then representing the positive normal vector. The CAD functions (described in the CAD topic) that add elements to the **Structure** from geometry in the workspace, will automate some of these axis definitions/tasks.
 
 .. code-block:: python
 
@@ -110,6 +114,7 @@ One dimensional elements such as truss and beam elements are currently first ord
 .. image:: /_images/truss-element.png
    :scale: 50 %
 
+
 -----------
 2D elements
 -----------
@@ -118,6 +123,7 @@ Two dimensional elements such as membrane and shell elements are currently first
 
 .. image:: /_images/shell-element.png
    :scale: 50 %
+
 
 -----------
 3D elements
@@ -141,9 +147,9 @@ Meshing
 3D elements
 -----------
 
-When discretising a solid volume into finite elements, the first step is usually to create a mesh that represents the outer-surface of the solid. This mesh is best represented as a triangulated mesh with somewhat equally sized triangles, as there are many algorithms for creating tetrahedron elements from this surface by adding them across the internal volume. The **compas_fea** package supports the use of `TetGen <http://wias-berlin.de/software/index.jsp?id=TetGen&lang=1>`_ via the Python wrapper `MeshPy <https://mathema.tician.de/software/meshpy/>`_, and is independent of any CAD environment. **MeshPy** can easily be installed via ``pip`` on Linux systems, while a ``.whl`` file is recommended for Windows from the excellent resource page `here <https://www.lfd.uci.edu/~gohlke/pythonlibs/#meshpy>`_ .
+When discretising a solid volume into finite elements, the first step is usually to create a mesh that represents the outer-surface of the solid. This mesh can be represented as a triangulated mesh with somewhat equally sized triangles, as there are many algorithms for creating tetrahedron elements from this surface and adding them across the internal volume. The **compas_fea** package supports the use of `TetGen <http://wias-berlin.de/software/index.jsp?id=TetGen&lang=1>`_ via the Python wrapper `MeshPy <https://mathema.tician.de/software/meshpy/>`_, and is independent of any CAD environment. **MeshPy** can easily be installed via ``pip`` on Linux systems, while a ``.whl`` file is recommended for Windows from the excellent resource page `here <https://www.lfd.uci.edu/~gohlke/pythonlibs/#meshpy>`_ .
 
-A function has been set-up to facilitate converting a collection of triangles and vertex data representing the outer-surface, into tetrahedron elements. This is the function ``tets_from_vertices_faces()``, found in **compas_fea.utilities.functions**, where the ``vertices`` co-ordinates, the triangle ``faces``, and a ``volume`` constraint (optional) are given. The outputs of using the function are the points and indices of the tetrahedron corners. If you are in a CAD environment, you can use a previously constructed triangulated outer-surface mesh to create and automatically add tetrahedron elements to your **Structure** object. In Rhino, use **compas_fea.cad.rhino.add_tets_from_mesh()**, and in Blender, use **compas_fea.cad.blender.add_tets_from_mesh()**. These functions effectively wrap around ``tets_from_vertices_faces()`` and add the elements to the **Structure** object. These function calls could look like:
+A function has been set-up to facilitate converting a collection of triangles and vertices data representing the outer-surface, into tetrahedron elements. This is the function ``tets_from_vertices_faces()``, found in **compas_fea.utilities.functions**, where the ``vertices`` co-ordinates, the triangle ``faces``, and a ``volume`` constraint (optional) are given. The outputs of using the function are the points and indices of the tetrahedron corners. If you are in a CAD environment, you can use a previously constructed triangulated outer-surface mesh to create and automatically add tetrahedron elements to your **Structure** object. In Rhino, use **compas_fea.cad.rhino.add_tets_from_mesh()**, and in Blender, use **compas_fea.cad.blender.add_tets_from_mesh()**. These functions effectively wrap around ``tets_from_vertices_faces()`` and add the elements to the **Structure** object. These function calls could look like:
 
 .. code-block:: python
 
@@ -163,7 +169,7 @@ A function has been set-up to facilitate converting a collection of triangles an
 
     blender.add_tets_from_bmesh(structure=mdl, name='elset_tets', bmesh=get_objects(layer=0)[0], draw_tets=False, volume=0.002)
 
-For both cases: 1) the **Structure** object must be given via ``structure``, 2) the ``name`` of the element set to make after adding the tetrahedrons, and 3) whether to draw mesh representations of the tetrahedrons with the boolean ``draw_tets`` (they will be drawn on layer ``layer``). For the Rhino case, a mesh was gathered from layer ``'mesh'``, and for Blender the layer number 0. The tetrahedrons will have been added to ``structure.elements``, and the created element set stored under ``structure.sets``. **Note**: take care when plotting a dense collection of tetrahedrons with ``draw_tets=True``, as it can easily consume system memory. An example of some generated and plotted tetrahedrons is shown below.
+For both cases the following must be given: 1) the **Structure** object via ``structure``, 2) the ``name`` of the element set to make after adding the tetrahedrons, and 3) whether to draw mesh representations of the tetrahedrons with the boolean ``draw_tets`` (they will be drawn on layer ``layer``). For the Rhino case above, a mesh was gathered from layer ``'mesh'``, and for Blender the layer number 0. The tetrahedrons will have been added to ``structure.elements``, and the created element set stored under ``structure.sets``. **Note**: take care when plotting a dense collection of tetrahedrons with ``draw_tets=True``, as it can easily consume system memory. An example of some generated and plotted tetrahedrons is shown below.
 
 .. image:: /_images/tets.png
    :scale: 50 %

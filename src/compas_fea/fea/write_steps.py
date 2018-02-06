@@ -245,17 +245,44 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                                     f.write('{0}, {1}, {2}'.format(nset, ci, factor * com[dof]) + '\n')
                             f.write('**\n')
 
+                    # Pre-stress
+
+                    elif ltype in ['PrestressLoad']:
+
+                        f.write('*INITIAL CONDITIONS, TYPE=STRESS\n')
+                        f.write('{0}, '.format(elset))
+                        if com['sxx']:
+                            f.write('{0}\n'.format(com['sxx']))
+
                     # Line load
 
                     elif ltype == 'LineLoad':
-                        pass
 
-                        # if axes == 'global':
-                        #     raise NotImplementedError
+                        if software == 'opensees':
 
-                        # elif axes == 'local':
-                        #     elements = ' '.join([str(i + 1) for i in sets[elset]['selection']])
-                        #     f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, -com['y'], -com['x']))
+                            pass
+
+                            # if axes == 'global':
+                            #     raise NotImplementedError
+
+                            # elif axes == 'local':
+                            #     elements = ' '.join([str(i + 1) for i in sets[elset]['selection']])
+                            #     f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, -com['y'], -com['x']))
+
+                        elif software == 'abaqus':
+
+                            pass
+
+    #                         if axes == 'global':
+    #                             for dof in dofs[:3]:
+    #                                 if com[dof]:
+    #                                     f.write('{0}, P{1}, {2}'.format(elset, dof.upper(), lf * com[dof]) + '\n')
+
+    #                         elif axes == 'local':
+    #                             if com['x']:
+    #                                 f.write('{0}, P1, {1}'.format(elset, lf * com['x']) + '\n')
+    #                             if com['y']:
+    #                                 f.write('{0}, P2, {1}'.format(elset, lf * com['y']) + '\n')
 
                     elif ltype == 'AreaLoad':
 
@@ -266,6 +293,12 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                         elif software == 'abaqus':
 
                             pass
+
+                    # Body load
+
+                    elif ltype == 'BodyLoad':
+
+                        raise NotImplementedError
 
                     # Gravity load
 
@@ -415,31 +448,13 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
 
 
-
 #     for key, load in loads.items():
-
-#         if load.__name__ in ['PrestressLoad']:
-
-#             f.write('**\n')
-#             f.write('** {0}\n'.format(key))
-#             f.write('** ' + '-' * len(key) + '\n')
-#             f.write('**\n')
-
-#             com = load.components
-#             f.write('*INITIAL CONDITIONS, TYPE=STRESS\n')
-#             f.write('{0}, '.format(load.elements))
-#             if com['sxx']:
-#                 f.write('{0}\n'.format(com['sxx']))
-
-
 
 
 #                 if stype == 'BucklingStep':
 
 #                     modes = step.modes
 #                     f.write('{0}, {1}, {2}, {3}\n'.format(modes, modes, 2 * modes, increments))
-
-
 
 #                     # Type
 
@@ -455,18 +470,6 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
 #                     # Line load
 
-#                     elif ltype == 'LineLoad':
-
-#                         if axes == 'global':
-#                             for dof in dofs[:3]:
-#                                 if com[dof]:
-#                                     f.write('{0}, P{1}, {2}'.format(elset, dof.upper(), lf * com[dof]) + '\n')
-
-#                         elif axes == 'local':
-#                             if com['x']:
-#                                 f.write('{0}, P1, {1}'.format(elset, lf * com['x']) + '\n')
-#                             if com['y']:
-#                                 f.write('{0}, P2, {1}'.format(elset, lf * com['y']) + '\n')
 
 #                     # Area load
 
@@ -480,15 +483,6 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 #                             # y COMPONENT
 #                             if com['z']:
 #                                 f.write('{0}, P, {1}'.format(elset, lf * com['z']) + '\n')
-
-#                     # Body load
-
-#                     elif ltype == 'BodyLoad':
-#                         raise NotImplementedError
-
-
-
-
 
 
 
@@ -552,18 +546,3 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 #             #     f.write('*END STEP\n')
 
 #         f.write('**\n')
-
-
-
-# CTRL ITER V4 10
-# CTRL CONC V4
-# SYST PROB TH3 ITER 200 TOL 0.010 FMAX 1.1 NMAT YES
-# REIQ LCR 4
-
-# $ conventional steel reinforcement
-# $ --------------------------------
-
-# SREC 1 B 50[mm] H 149[mm] HO 1[mm] BO 50[mm] MNO 1 MRF 2 ASO 0.4[cm2] ASU 0.4[cm2]
-# STEE 5 B 500A
-
-# angle = rebar['angle'] 2nd layer is assumed 90 deg by default.

@@ -22,7 +22,7 @@ __all__ = [
     'SolidElement',
     'PentahedronElement',
     'TetrahedronElement',
-    'HexahedronElement'
+    'HexahedronElement',
 ]
 
 

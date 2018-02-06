@@ -528,24 +528,23 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">func_dic</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;BeamElement&#39;</span><span class="p">:</span> <span class="n">BeamElement</span><span class="p">,</span>
-            <span class="s1">&#39;SpringElement&#39;</span><span class="p">:</span> <span class="n">SpringElement</span><span class="p">,</span>
-            <span class="s1">&#39;TrussElement&#39;</span><span class="p">:</span> <span class="n">TrussElement</span><span class="p">,</span>
-            <span class="s1">&#39;StrutElement&#39;</span><span class="p">:</span> <span class="n">StrutElement</span><span class="p">,</span>
-            <span class="s1">&#39;TieElement&#39;</span><span class="p">:</span> <span class="n">TieElement</span><span class="p">,</span>
-            <span class="s1">&#39;ShellElement&#39;</span><span class="p">:</span> <span class="n">ShellElement</span><span class="p">,</span>
-            <span class="s1">&#39;MembraneElement&#39;</span><span class="p">:</span> <span class="n">MembraneElement</span><span class="p">,</span>
-            <span class="s1">&#39;SolidElement&#39;</span><span class="p">:</span> <span class="n">SolidElement</span><span class="p">,</span>
+            <span class="s1">&#39;BeamElement&#39;</span><span class="p">:</span>        <span class="n">BeamElement</span><span class="p">,</span>
+            <span class="s1">&#39;SpringElement&#39;</span><span class="p">:</span>      <span class="n">SpringElement</span><span class="p">,</span>
+            <span class="s1">&#39;TrussElement&#39;</span><span class="p">:</span>       <span class="n">TrussElement</span><span class="p">,</span>
+            <span class="s1">&#39;StrutElement&#39;</span><span class="p">:</span>       <span class="n">StrutElement</span><span class="p">,</span>
+            <span class="s1">&#39;TieElement&#39;</span><span class="p">:</span>         <span class="n">TieElement</span><span class="p">,</span>
+            <span class="s1">&#39;ShellElement&#39;</span><span class="p">:</span>       <span class="n">ShellElement</span><span class="p">,</span>
+            <span class="s1">&#39;MembraneElement&#39;</span><span class="p">:</span>    <span class="n">MembraneElement</span><span class="p">,</span>
+            <span class="s1">&#39;SolidElement&#39;</span><span class="p">:</span>       <span class="n">SolidElement</span><span class="p">,</span>
             <span class="s1">&#39;TetrahedronElement&#39;</span><span class="p">:</span> <span class="n">TetrahedronElement</span><span class="p">,</span>
             <span class="s1">&#39;PentahedronElement&#39;</span><span class="p">:</span> <span class="n">PentahedronElement</span><span class="p">,</span>
-            <span class="s1">&#39;HexahedronElement&#39;</span><span class="p">:</span> <span class="n">HexahedronElement</span><span class="p">,</span>
+            <span class="s1">&#39;HexahedronElement&#39;</span><span class="p">:</span>  <span class="n">HexahedronElement</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="n">func</span> <span class="o">=</span> <span class="n">func_dic</span><span class="p">[</span><span class="nb">type</span><span class="p">]</span>
 
         <span class="n">ekey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ekey</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">ekey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_count</span><span class="p">()</span>
-            <span class="n">element</span> <span class="o">=</span> <span class="n">func</span><span class="p">()</span>
+            <span class="n">element</span> <span class="o">=</span> <span class="n">func_dic</span><span class="p">[</span><span class="nb">type</span><span class="p">]()</span>
             <span class="n">element</span><span class="o">.</span><span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span>
             <span class="n">element</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes</span>
             <span class="n">element</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">ekey</span>
@@ -632,8 +631,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">xyz</span><span class="p">:</span>
             <span class="n">xyz</span> <span class="o">=</span> <span class="n">centroid_points</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">])</span>
         <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">f&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">))</span>
-        <span class="n">ekey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">gkey</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ekey</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">gkey</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">edit_element</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
@@ -702,7 +700,7 @@
 <span class="sd">        node : int</span>
 <span class="sd">            Node number the element is connected to.</span>
 <span class="sd">        type : str</span>
-<span class="sd">            Element type: &#39;SpringElement&#39;, etc.</span>
+<span class="sd">            Element type: &#39;SpringElement&#39;.</span>
 <span class="sd">        virtual_node : bool</span>
 <span class="sd">            Create a virtual node or not.</span>
 
@@ -733,10 +731,9 @@
         <span class="n">func_dic</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;SpringElement&#39;</span><span class="p">:</span> <span class="n">SpringElement</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="n">func</span> <span class="o">=</span> <span class="n">func_dic</span><span class="p">[</span><span class="nb">type</span><span class="p">]</span>
 
         <span class="n">ekey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_count</span><span class="p">()</span>
-        <span class="n">element</span> <span class="o">=</span> <span class="n">func</span><span class="p">()</span>
+        <span class="n">element</span> <span class="o">=</span> <span class="n">func_dic</span><span class="p">[</span><span class="nb">type</span><span class="p">]()</span>
         <span class="n">element</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes</span>
         <span class="n">element</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">ekey</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">ekey</span><span class="p">]</span> <span class="o">=</span> <span class="n">element</span>
@@ -1321,7 +1318,7 @@
         <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
             <span class="n">sofistik</span><span class="o">.</span><span class="n">input_generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">analyse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s1">&#39;research&#39;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">analyse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s1">&#39;research&#39;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot; Runs the analysis through the chosen FEA software/library.</span>
 
@@ -1381,7 +1378,7 @@
         <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
             <span class="n">opensees</span><span class="o">.</span><span class="n">extract_out_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">analyse_and_extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s1">&#39;research&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">analyse_and_extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s1">&#39;research&#39;</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot; Runs the analysis through the chosen FEA software/library and extracts data.</span>
 
@@ -1648,7 +1645,7 @@
             
 
             
-                Last updated on Feb 01, 2018.
+                Last updated on Feb 06, 2018.
             
 
             

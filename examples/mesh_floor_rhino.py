@@ -22,10 +22,10 @@ from compas_fea.structure import TrussSection
 import rhinoscriptsyntax as rs
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 # Create empty Structure object
@@ -56,10 +56,10 @@ mdl.add_sections([
 
 # Add element properties
 
-epc = Properties(material='mat_concrete', section='sec_concrete', elsets='elset_concrete')
-eps = Properties(material='mat_steel', section='sec_ties', elsets='elset_ties')
-mdl.add_element_properties(epc, name='ep_concrete')
-mdl.add_element_properties(eps, name='ep_steel')
+epc = Properties(name='ep_concrete', material='mat_concrete', section='sec_concrete', elsets='elset_concrete')
+eps = Properties(name='ep_steel', material='mat_steel', section='sec_ties', elsets='elset_ties')
+mdl.add_element_properties(epc)
+mdl.add_element_properties(eps)
 
 # Add loads
 
@@ -83,8 +83,9 @@ mdl.add_displacements([
 
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements=['disp_roller', 'disp_pinned', 'disp_xdof']),
+    GeneralStep(name='step_prestress', loads=['load_prestress']),
     GeneralStep(name='step_loads', loads=['load_gravity', 'load_tributary'], factor=1.1)])
-mdl.steps_order = ['step_bc', 'step_loads']
+mdl.steps_order = ['step_bc', 'step_prestress', 'step_loads']
 
 # Structure summary
 
@@ -96,12 +97,10 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
 # Plot displacements
 
-rhino.plot_data(mdl, step='step_loads', field='um', radius=0.02, colorbar_size=0.5)
+rhino.plot_data(mdl, step='step_prestress', field='uz', radius=0.02, colorbar_size=0.5)
+rhino.plot_data(mdl, step='step_loads', field='uz', radius=0.02, colorbar_size=0.5)
 
 # Plot stress
-
-rhino.plot_data(mdl, step='step_bc', field='sxx', radius=0.02, 
-                iptype='max', nodal='max', colorbar_size=0.5)
                 
 rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.02, 
                 cbar=[0, 3*10**6], nodal='max', colorbar_size=0.5)
