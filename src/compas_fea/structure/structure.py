@@ -1133,7 +1133,7 @@ Steps
         elif software == 'sofistik':
             sofistik.input_generate(self, fields=fields)
 
-    def analyse(self, software, exe=None, cpus=2, license='research', delete=True):
+    def analyse(self, software, exe=None, cpus=1, license='research', delete=True):
         """ Runs the analysis through the chosen FEA software/library.
 
         Parameters
@@ -1187,7 +1187,7 @@ Steps
         elif software == 'opensees':
             opensees.extract_out_data(self)
 
-    def analyse_and_extract(self, software, fields='u', exe=None, cpus=2, license='research'):
+    def analyse_and_extract(self, software, fields='u', exe=None, cpus=1, license='research'):
         """ Runs the analysis through the chosen FEA software/library and extracts data.
 
         Parameters
