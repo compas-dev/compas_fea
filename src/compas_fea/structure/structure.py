@@ -674,7 +674,7 @@ Steps
 # sets
 # ==============================================================================
 
-    def add_set(self, name, type, selection, explode=False):
+    def add_set(self, name, type, selection):
 
         """ Adds a node, element or surface set to structure.sets.
 
@@ -686,8 +686,6 @@ Steps
             'node', 'element', 'surface_node', surface_element'.
         selection : list, dic
             The integer keys of the nodes, elements or the element numbers and sides.
-        explode : bool
-            Explode the set into sets for each member of selection.
 
         Returns
         -------
@@ -697,12 +695,7 @@ Steps
 
         if isinstance(selection, int):
             selection = [selection]
-
-        if explode:
-            if type in ['node', 'element']:
-                for select in selection:
-                    self.sets['{0}_{1}'.format(type, select)] = {'type': type, 'selection': [select], 'explode': False}
-        self.sets[name] = {'type': type, 'selection': selection, 'explode': explode, 'index': len(self.sets)}
+        self.sets[name] = {'type': type, 'selection': selection, 'index': len(self.sets)}
 
 
 # ==============================================================================

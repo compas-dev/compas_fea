@@ -2,13 +2,13 @@
 Sets
 ********************************************************************************
 
-This page shows how sets can be used to gather groups of nodes, elements and surfaces with the **Structure** object, here given as ``mdl``. Sets are a group of components that can be conveniently referred to by a string name, for use with other classes and methods, as well as accessing specific data of a model after an analysis.
+This page shows how sets can be used to gather groups of nodes, elements and surfaces within the **Structure** object, here given as ``mdl``. Sets are a group of components that can be conveniently referred to by a string name, for use with other classes and methods, and accessing specific data of a model after an analysis.
 
 ===========
 Adding sets
 ===========
 
-A set is a group of nodes, elements or surfaces that are given a string name. By assigning a name to such a group, it is easier and more meaningful to refer to them in other classes, instead of giving (and keeping track of) a long list of node or element numbers. Sets are stored in a dictionary at ``.sets`` through the method ``.add_set()``, where the string key is the ``name`` of the set, the ``type`` of the set is the string ``'node'``, ``'element'``, ``'surface_node'`` or ``'surface_element'``, and the ``selection`` stores the nodes, elements and surfaces of interest. To add node or element sets, use ``.add_set()`` like the following:
+A set is a group of nodes, elements or surfaces that are given a string name. By assigning a name to such a group, it is easier and more meaningful to refer to them in other classes, instead of giving (and keeping track of) a long list of node or element numbers. Sets are stored in the dictionary ``.sets`` through the method ``.add_set()``, where the string key is the ``name`` of the set, the ``type`` of the set is the string ``'node'``, ``'element'``, ``'surface_node'`` or ``'surface_element'``, and the ``selection`` stores the nodes, elements and surfaces of interest. To add node or element sets, use ``.add_set()`` as follows:
 
 .. code-block:: python
 
@@ -39,3 +39,5 @@ The second way to define a surface set is with ``type='surface_element'``, where
 .. code-block:: python
 
     mdl.add_set(name='surf_set', type='surface_element', selection={4: ['S1', 'S2'], 7: ['SPOS']})
+
+You can find which surface sides correspond to which in the "Elements" topic.
