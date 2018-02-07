@@ -60,7 +60,7 @@ __all__ = [
 ]
 
 
-def add_element_set(structure, guids, name, explode=False):
+def add_element_set(structure, guids, name):
 
     """ Adds element set information from Rhino curve and mesh guids.
 
@@ -72,8 +72,6 @@ def add_element_set(structure, guids, name, explode=False):
         Rhino curve and Rhino mesh guids.
     name : str
         Set name.
-    explode : bool
-        Explode the set into sets for each member of selection.
 
     Returns
     -------
@@ -117,7 +115,7 @@ def add_element_set(structure, guids, name, explode=False):
                     if element is not None:
                         elements.append(element)
 
-    structure.add_set(name=name, type='element', selection=elements, explode=explode)
+    structure.add_set(name=name, type='element', selection=elements)
 
 
 def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, layer='Default', acoustic=False, thermal=False):
@@ -186,7 +184,7 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
         print('***** Error using MeshPy and/or generating Tets *****')
 
 
-def add_node_set(structure, guids, name, explode=False):
+def add_node_set(structure, guids, name):
 
     """ Adds node set information from Rhino point guids.
 
@@ -198,8 +196,6 @@ def add_node_set(structure, guids, name, explode=False):
         Rhino point guids.
     name : str
         Set name.
-    explode : bool
-        Explode the set into sets for each member of selection.
 
     Returns
     -------
@@ -212,7 +208,7 @@ def add_node_set(structure, guids, name, explode=False):
         node = structure.check_node_exists(rs.PointCoordinates(guid))
         if node is not None:
             nodes.append(node)
-    structure.add_set(name=name, type='node', selection=nodes, explode=explode)
+    structure.add_set(name=name, type='node', selection=nodes)
 
 
 def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, acoustic=False, thermal=False):
@@ -313,7 +309,7 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
     return list(created_nodes), list(created_elements)
 
 
-def add_sets_from_layers(structure, layers, explode=False):
+def add_sets_from_layers(structure, layers):
 
     """ Add node or element sets to the Structure object from Rhino layers.
 
@@ -323,8 +319,6 @@ def add_sets_from_layers(structure, layers, explode=False):
         Structure object to update.
     layers : list
         List of layer names to take objects from.
-    explode : bool
-        Explode the set into sets for each member of selection.
 
     Returns
     -------
@@ -346,9 +340,9 @@ def add_sets_from_layers(structure, layers, explode=False):
             name = layer.split('::')[-1] if '::' in layer else layer
             check_points = [rs.IsPoint(guid) for guid in guids]
             if all(check_points):
-                add_node_set(structure=structure, guids=guids, name=name, explode=explode)
+                add_node_set(structure=structure, guids=guids, name=name)
             elif not all(check_points):
-                add_element_set(structure=structure, guids=guids, name=name, explode=explode)
+                add_element_set(structure=structure, guids=guids, name=name)
 
 
 def mesh_extrude(structure, guid, nz, dz, setname, cap=None):

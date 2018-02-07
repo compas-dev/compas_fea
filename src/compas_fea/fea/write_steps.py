@@ -3,6 +3,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from math import pi
+
 import os
 
 
@@ -34,14 +36,14 @@ middle = {
 headers = {
     'abaqus':   '',
     'opensees': '',
-    'sofistik': '+PROG ASE\n',
+    'sofistik': '+PROG ASE\n$\n',
     'ansys':    '',
 }
 
 footers = {
     'abaqus':   '',
     'opensees': '',
-    'sofistik': 'END\n',
+    'sofistik': 'END\n$\n$\n',
     'ansys':    '',
 }
 
@@ -50,7 +52,8 @@ node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
 
 
-def write_input_steps(f, software, structure, steps, loads, displacements, sets, fields, ndof=6):
+def write_input_steps(f, software, structure, steps, loads, displacements, sets, fields, ndof=6, properties=None,
+                      sections=None):
 
     """ Writes the Steps information to the input file.
 
@@ -74,6 +77,10 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         Requested fields output.
     ndof : int
         Number of degrees-of-freedom per node.
+    properties : dic
+        ElementProperties objects from structure.element_properties
+    sections : dic
+        Section objects from structure.sections.
 
     Returns
     -------
@@ -135,9 +142,6 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
     f.write('{0} ----------------------------------------------------------------------- Steps\n'.format(c))
     f.write('{0}\n'.format(c))
 
-    if headers[software]:
-        f.write(headers[software])
-
     keys = list(structure.steps_order[1:])
 
     temp = '{0}{1}/'.format(structure.path, structure.name)
@@ -150,6 +154,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
         step       = steps[key]
         stype      = step.__name__
+        state      = step.state
         step_index = step.index
         factor     = getattr(step, 'factor', None)
         increments = getattr(step, 'increments', None)
@@ -163,7 +168,9 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
         if (stype in ['GeneralStep', 'BucklingStep']) and (stype != 'DesignStep'):
 
-            f.write('{0}\n'.format(c))
+            if headers[software]:
+                f.write(headers[software])
+
             f.write('{0} {1}\n'.format(c, key))
             f.write('{0} '.format(c) + '-' * len(key) + '\n')
             f.write('{0}\n'.format(c))
@@ -180,30 +187,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
             elif software == 'sofistik':
 
-                f.write('CTRL SOLV 1\n')
-                f.write('CTRL CONC\n')
-                f.write('$CREP NCRE 20\n')
-                if step.state == 'sls':
-                    f.write('NSTR KMOD S1 KSV SLD\n')
-                elif step.state == 'uls':
-                    f.write('NSTR KMOD S1 KSV ULD\n')
-                if nlgeom == 'YES':
-                    f.write('$\n')
-                    f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT YES\n'.format(increments, tolerance))
-                f.write('$\n')
-                f.write("LC 10{0} TITL '{1}' FACT {2}".format(step_index, key, factor))
-
-                DLX, DLY, DLZ = 0, 0, 0
-                for key, load in loads.items():
-                    if load.__name__ in ['GravityLoad']:
-                        com = load.components
-                        gx = com['x'] if com['x'] else 0
-                        gy = com['y'] if com['y'] else 0
-                        gz = com['z'] if com['z'] else 0
-                        DLX = gx
-                        DLY = gy
-                        DLZ = gz
-                f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * factor, DLY * factor, DLZ * factor))
+                f.write("LC 10{0} TITL '{1}' FACT {2} DLZ 0.0\n".format(step_index, key, factor))
 
             # Loads
 
@@ -440,11 +424,80 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
             elif software == 'sofistik':
                 pass
 
-    if footers[software]:
-        f.write(footers[software])
+        f.write('{0}\n'.format(c))
+        f.write('{0}\n'.format(c))
 
-    f.write('{0}\n'.format(c))
-    f.write('{0}\n'.format(c))
+        if footers[software]:
+            f.write(footers[software])
+
+        if software == 'sofistik':
+
+            f.write('+PROG BEMESS\n')
+            f.write('HEAD {0}\n'.format(state.upper()))
+            f.write('$\n')
+            f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
+            f.write('CTRL WARN 496 $ Possible non-constant longitudinal reinforcement.\n')
+            f.write('CTRL WARN 254 $ Vertical shear reinforcement not allowed for slab thickness smaller 20 cm.\n')
+            f.write('CTRL PFAI 2\n')
+            if state == 'sls':
+                f.write('CTRL SLS\n')
+                f.write('CRAC WK PARA\n')
+            else:
+                f.write('CTRL ULTI\n')
+            f.write('CTRL LCR {0}\n'.format(step_index))
+            f.write('LC 10{0}\n'.format(step_index))
+
+            f.write('$\n')
+            f.write('$\n')
+            f.write('END\n')
+            f.write('$\n')
+            f.write('$\n')
+
+            f.write('+PROG ASE\n')
+            f.write('$\n')
+            f.write('CTRL SOLV 1\n')
+            f.write('CTRL CONC\n')
+            f.write('$CREP NCRE 20\n')
+
+            if state == 'sls':
+                f.write('NSTR KMOD S1 KSV SLD\n')
+            elif state == 'uls':
+                f.write('NSTR KMOD S1 KSV ULD\n')
+            if nlgeom == 'YES':
+                f.write('$\n')
+                f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT YES\n'.format(increments, tolerance))
+
+            f.write('REIQ LCR {0}\n'.format(step_index))
+            f.write('$\n')
+
+            f.write("LC 20{0} TITL '{1}'".format(step_index, key))
+            DLX, DLY, DLZ = 0, 0, 0
+            for key, load in loads.items():
+                if load.__name__ in ['GravityLoad']:
+                    com = load.components
+                    gx = com['x'] if com['x'] else 0
+                    gy = com['y'] if com['y'] else 0
+                    gz = com['z'] if com['z'] else 0
+                    DLX = gx
+                    DLY = gy
+                    DLZ = gz
+            f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * factor, DLY * factor, DLZ * factor))
+            f.write('    LCC 10{0}\n'.format(step_index))
+
+            f.write('$\n')
+            f.write('$\n')
+            f.write('END\n')
+            f.write('$\n')
+            f.write('$\n')
+
+
+
+
+
+
+
+
+
 
 
 

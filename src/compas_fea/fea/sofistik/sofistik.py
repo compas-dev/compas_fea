@@ -8,7 +8,6 @@ from compas_fea.fea import write_input_elements
 from compas_fea.fea import write_input_heading
 from compas_fea.fea import write_input_materials
 from compas_fea.fea import write_input_nodes
-from compas_fea.fea import write_input_postprocess
 from compas_fea.fea import write_input_steps
 
 
@@ -70,7 +69,7 @@ def input_generate(structure, fields, units='m'):
         write_input_nodes(f, 'sofistik', nodes)
         write_input_bcs(f, 'sofistik', structure, steps, displacements)
         write_input_elements(f, 'sofistik', sections, properties, elements, structure, materials)
-        write_input_steps(f, 'sofistik', structure, steps, loads, displacements, sets, fields)
-        write_input_postprocess(f, 'sofistik', structure, steps, properties, sections)
+        write_input_steps(f, 'sofistik', structure, steps, loads, displacements, sets, fields,
+                          properties=properties, sections=sections)
 
     print('***** Sofistik input file generated: {0} *****\n'.format(filename))

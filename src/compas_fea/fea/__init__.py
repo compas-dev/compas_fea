@@ -170,4 +170,3 @@ from .write_bcs import *
 from .write_materials import *
 from .write_elements import *
 from .write_steps import *
-from .write_postprocess import *
