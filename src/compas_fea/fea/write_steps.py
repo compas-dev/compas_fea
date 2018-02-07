@@ -3,8 +3,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from math import pi
-
 import os
 
 
@@ -164,6 +162,10 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         nlgeom     = 'YES' if getattr(step, 'nlgeom', None) else 'NO'
         perturbation = ', PERTURBATION' if stype == 'BucklingStep' else ''
 
+        # if stype == 'BucklingStep':
+            # modes = step.modes
+            # f.write('{0}, {1}, {2}, {3}\n'.format(modes, modes, 2 * modes, increments))
+
         # Mechanical
 
         if (stype in ['GeneralStep', 'BucklingStep']) and (stype != 'DesignStep'):
@@ -189,176 +191,181 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
                 f.write("LC 10{0} TITL '{1}' FACT {2} DLZ 0.0\n".format(step_index, key, factor))
 
+            f.write('{0}\n'.format(c))
+
             # Loads
 
-            try:
-                for k in step.loads:
+            for k in step.loads:
 
-                    load = loads[k]
-                    load_index = load.index + 1
-                    ltype = load.__name__
-                    com = load.components
-                    # axes = load.axes
-                    nset = load.nodes
-                    elset = load.elements
+                load = loads[k]
+                load_index = load.index + 1
+                ltype = load.__name__
+                com = load.components
+                # axes = load.axes
+                nset = load.nodes
+                elset = load.elements
 
-                    if software != 'sofistik':
-                        f.write('{0}\n'.format(c))
-                        f.write('{0} {1}\n'.format(c, k))
-                        f.write('{0} '.format(c) + '-' * len(k) + '\n')
-                        f.write('{0}\n'.format(c))
-                    else:
-                        if ltype != 'GravityLoad':
-                            f.write('    LCC {0}\n'.format(load_index))
-
-                    # Point load
-
-                    if ltype == 'PointLoad':
-
-                        if software == 'opensees':
-                            f.write('#\n')
-                            coms = ' '.join([str(com[dof]) for dof in dofs[:ndof]])
-                            for node in sets[nset]['selection']:
-                                f.write('load {0} {1}\n'.format(node + 1, coms))
-
-                        elif software == 'abaqus':
-                            f.write('*CLOAD\n')
-                            f.write('**\n')
-                            for ci, dof in enumerate(dofs, 1):
-                                if com[dof]:
-                                    f.write('{0}, {1}, {2}'.format(nset, ci, factor * com[dof]) + '\n')
-                            f.write('**\n')
-
-                    # Pre-stress
-
-                    elif ltype in ['PrestressLoad']:
-
-                        f.write('*INITIAL CONDITIONS, TYPE=STRESS\n')
-                        f.write('{0}, '.format(elset))
-                        if com['sxx']:
-                            f.write('{0}\n'.format(com['sxx']))
-
-                    # Line load
-
-                    elif ltype == 'LineLoad':
-
-                        if software == 'opensees':
-
-                            pass
-
-                            # if axes == 'global':
-                            #     raise NotImplementedError
-
-                            # elif axes == 'local':
-                            #     elements = ' '.join([str(i + 1) for i in sets[elset]['selection']])
-                            #     f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, -com['y'], -com['x']))
-
-                        elif software == 'abaqus':
-
-                            pass
-
-    #                         if axes == 'global':
-    #                             for dof in dofs[:3]:
-    #                                 if com[dof]:
-    #                                     f.write('{0}, P{1}, {2}'.format(elset, dof.upper(), lf * com[dof]) + '\n')
-
-    #                         elif axes == 'local':
-    #                             if com['x']:
-    #                                 f.write('{0}, P1, {1}'.format(elset, lf * com['x']) + '\n')
-    #                             if com['y']:
-    #                                 f.write('{0}, P2, {1}'.format(elset, lf * com['y']) + '\n')
-
-                    elif ltype == 'AreaLoad':
-
-                        if software == 'opensees':
-
-                            pass
-
-                        elif software == 'abaqus':
-
-                            pass
-
-                    # Body load
-
-                    elif ltype == 'BodyLoad':
-
-                        raise NotImplementedError
-
-                    # Gravity load
-
-                    elif ltype == 'GravityLoad':
-
-                        g = load.g
-                        gx = com['x'] if com['x'] else 0
-                        gy = com['y'] if com['y'] else 0
-                        gz = com['z'] if com['z'] else 0
-
-                        if software == 'opensees':
-                            pass
-
-                        elif software == 'abaqus':
-                            f.write('*DLOAD\n')
-                            f.write('**\n')
-                            f.write('{0}, GRAV, {1}, {2}, {3}, {4}\n'.format(elset, factor * g, gx, gy, gz))
-                            f.write('**\n')
-
-                    # Tributary load
-
-                    elif ltype == 'TributaryLoad':
-
-                        if software == 'opensees':
-
-                            pass
-
-                        elif software == 'abaqus':
-
-                            f.write('*CLOAD\n')
-                            f.write('**\n')
-                            for node in sorted(com, key=int):
-                                for ci, dof in enumerate(dofs[:3], 1):
-                                    if com[node][dof]:
-                                        ni = node + 1
-                                        dl = com[node][dof] * factor
-                                        f.write('{0}, {1}, {2}\n'.format(ni, ci, dl))
-
-            except:
-                pass
-
-            # Displacements
-
-            try:
-                for k in step.displacements:
-
-                    displacement = displacements[k]
-                    com = displacement.components
-                    nset = displacement.nodes
-                    nnodes = sorted(structure.sets[nset]['selection'], key=int)
-
+                if software != 'sofistik':
                     f.write('{0} {1}\n'.format(c, k))
                     f.write('{0} '.format(c) + '-' * len(k) + '\n')
                     f.write('{0}\n'.format(c))
+                else:
+                    if ltype != 'GravityLoad':
+                        f.write('    LCC {0}\n'.format(load_index))
 
-                    if software == 'abaqus':
+                # Point load
 
-                        f.write('*BOUNDARY\n')
+                if ltype == 'PointLoad':
+
+                    if software == 'opensees':
+                        coms = ' '.join([str(com[dof]) for dof in dofs[:ndof]])
+                        for node in sets[nset]['selection']:
+                            f.write('load {0} {1}\n'.format(node + 1, coms))
+                            f.write('#\n')
+
+                    elif software == 'abaqus':
+                        f.write('*CLOAD\n')
                         f.write('**\n')
                         for ci, dof in enumerate(dofs, 1):
-                            if com[dof] is not None:
-                                f.write('{0}, {1}, {1}, {2}\n'.format(nset, ci, com[dof] * factor))
+                            if com[dof]:
+                                f.write('{0}, {1}, {2}'.format(nset, ci, factor * com[dof]) + '\n')
+                        f.write('**\n')
 
-                    elif software == 'opensees':
+                # Pre-stress
 
-                        # for ci, dof in enumerate(dofs[:ndof], 1):
-                        #     if com[dof] is not None:
-                        #         for node in nnodes:
-                        #             f.write('sp {0} {1} {2}\n'.format(node + 1, ci, com[dof]))
+                elif ltype in ['PrestressLoad']:
+
+                    f.write('*INITIAL CONDITIONS, TYPE=STRESS\n')
+                    f.write('{0}, '.format(elset))
+                    if com['sxx']:
+                        f.write('{0}\n'.format(com['sxx']))
+
+                # Line load
+
+                elif ltype == 'LineLoad':
+
+                    if software == 'opensees':
+
                         pass
 
-                    elif software == 'sofistik':
+                        # if axes == 'global':
+                        #     raise NotImplementedError
+
+                        # elif axes == 'local':
+                        #     elements = ' '.join([str(i + 1) for i in sets[elset]['selection']])
+                        #     f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, -com['y'], -com['x']))
+
+                    elif software == 'abaqus':
 
                         pass
-            except:
-                pass
+
+#                         if axes == 'global':
+#                             for dof in dofs[:3]:
+#                                 if com[dof]:
+#                                     f.write('{0}, P{1}, {2}'.format(elset, dof.upper(), lf * com[dof]) + '\n')
+
+#                         elif axes == 'local':
+#                             if com['x']:
+#                                 f.write('{0}, P1, {1}'.format(elset, lf * com['x']) + '\n')
+#                             if com['y']:
+#                                 f.write('{0}, P2, {1}'.format(elset, lf * com['y']) + '\n')
+
+                # Area load
+
+                elif ltype == 'AreaLoad':
+
+                    if software == 'opensees':
+
+                        pass
+
+                    elif software == 'abaqus':
+
+                        pass
+
+                        # if axes == 'global':
+                        #     raise NotImplementedError
+
+                        # elif axes == 'local':
+                        #     # x COMPONENT
+                        #     # y COMPONENT
+                        #     if com['z']:
+                        #         f.write('{0}, P, {1}'.format(elset, lf * com['z']) + '\n')
+
+                # Body load
+
+                elif ltype == 'BodyLoad':
+
+                    raise NotImplementedError
+
+                # Gravity load
+
+                elif ltype == 'GravityLoad':
+
+                    g = load.g
+                    gx = com['x'] if com['x'] else 0
+                    gy = com['y'] if com['y'] else 0
+                    gz = com['z'] if com['z'] else 0
+
+                    if software == 'opensees':
+                        pass
+
+                    elif software == 'abaqus':
+                        f.write('*DLOAD\n')
+                        f.write('**\n')
+                        f.write('{0}, GRAV, {1}, {2}, {3}, {4}\n'.format(elset, factor * g, gx, gy, gz))
+                        f.write('**\n')
+
+                # Tributary load
+
+                elif ltype == 'TributaryLoad':
+
+                    if software == 'opensees':
+
+                        pass
+
+                    elif software == 'abaqus':
+
+                        f.write('*CLOAD\n')
+                        f.write('**\n')
+                        for node in sorted(com, key=int):
+                            for ci, dof in enumerate(dofs[:3], 1):
+                                if com[node][dof]:
+                                    ni = node + 1
+                                    dl = com[node][dof] * factor
+                                    f.write('{0}, {1}, {2}\n'.format(ni, ci, dl))
+
+            # Displacements
+
+            for k in step.displacements:
+
+                displacement = displacements[k]
+                com = displacement.components
+                nset = displacement.nodes
+                nnodes = sorted(structure.sets[nset]['selection'], key=int)
+
+                f.write('{0} {1}\n'.format(c, k))
+                f.write('{0} '.format(c) + '-' * len(k) + '\n')
+                f.write('{0}\n'.format(c))
+
+                if software == 'abaqus':
+
+                    f.write('*BOUNDARY\n')
+                    f.write('**\n')
+                    for ci, dof in enumerate(dofs, 1):
+                        if com[dof] is not None:
+                            f.write('{0}, {1}, {1}, {2}\n'.format(nset, ci, com[dof] * factor))
+
+                elif software == 'opensees':
+
+                    # for ci, dof in enumerate(dofs[:ndof], 1):
+                    #     if com[dof] is not None:
+                    #         for node in nnodes:
+                    #             f.write('sp {0} {1} {2}\n'.format(node + 1, ci, com[dof]))
+                    pass
+
+                elif software == 'sofistik':
+
+                    pass
 
             if middle[software]:
                 f.write(middle[software])
@@ -491,111 +498,58 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
             f.write('$\n')
 
 
+# Thermal
 
-
-
-
-
-
-
-
-
-
-#     for key, load in loads.items():
-
-
-#                 if stype == 'BucklingStep':
-
-#                     modes = step.modes
-#                     f.write('{0}, {1}, {2}, {3}\n'.format(modes, modes, 2 * modes, increments))
-
-#                     # Type
-
-#                     if ltype in ['PointLoad', 'TributaryLoad']:
-#                         f.write('*CLOAD\n')
-#                         f.write('** NSET, dof, CLOAD\n')
-
-#                     if ltype in ['LineLoad', 'AreaLoad', 'GravityLoad', 'BodyLoad']:
-#                         f.write('*DLOAD\n')
-#                         f.write('** ELSET, component, DLOAD\n')
-
-#                     f.write('**\n')
-
-#                     # Line load
-
-
-#                     # Area load
-
-#                     elif ltype == 'AreaLoad':
-
-#                         if axes == 'global':
-#                             raise NotImplementedError
-
-#                         elif axes == 'local':
-#                             # x COMPONENT
-#                             # y COMPONENT
-#                             if com['z']:
-#                                 f.write('{0}, P, {1}'.format(elset, lf * com['z']) + '\n')
-
-
-
-#                 # Temperatures
-
-#                 # try:
-#                 #     duration = step.duration
-#                 # except:
-#                 #     duration = 1
-#                 #     temperatures = steps[key].temperatures
-#                 #     if temperatures:
-#                 #         file = misc[temperatures].file
-#                 #         einc = str(misc[temperatures].einc)
-#                 #         f.write('**\n')
-#                 #         f.write('*TEMPERATURE, FILE={0}, BSTEP=1, BINC=1, ESTEP=1, EINC={1}, INTERPOLATE\n'.format(file, einc))
-
-
-
-#             # Thermal
-
-#             # elif stype == 'HeatStep':
-#             #     temp0 = step.temp0
-#             #     duration = step.duration
-#             #     deltmx = steps[key].deltmx
-#             #     interaction = interactions[step.interaction]
-#             #     amplitude = interaction.amplitude
-#             #     interface = interaction.interface
-#             #     sink_t = interaction.sink_t
-#             #     film_c = interaction.film_c
-#             #     ambient_t = interaction.ambient_t
-#             #     emissivity = interaction.emissivity
-
-#             #     # Initial T
-
-#             #     f.write('*INITIAL CONDITIONS, TYPE=TEMPERATURE\n')
-#             #     f.write('NSET_ALL, {0}\n'.format(temp0))
-#             #     f.write('**\n')
-
-#             #     # Interface
-
-#             #     f.write('*STEP, NAME={0}, INC={1}\n'.format(sname, increments))
-#             #     f.write('*{0}, END=PERIOD, DELTMX={1}\n'.format(method, deltmx))
-#             #     f.write('1, {0}, 5.4e-05, {0}\n'.format(duration))
-#             #     f.write('**\n')
-#             #     f.write('*SFILM, AMPLITUDE={0}\n'.format(amplitude))
-#             #     f.write('{0}, F, {1}, {2}\n'.format(interface, sink_t, film_c))
-#             #     f.write('**\n')
-#             #     f.write('*SRADIATE, AMPLITUDE={0}\n'.format(amplitude))
-#             #     f.write('{0}, R, {1}, {2}\n'.format(interface, ambient_t, emissivity))
-
-#             #     # fieldOutputs
-
-#             #     f.write('**\n')
-#             #     f.write('** OUTPUT\n')
-#             #     f.write('** ------\n')
-#             #     f.write('*OUTPUT, FIELD\n')
-#             #     f.write('**\n')
-#             #     f.write('*NODE OUTPUT\n')
-#             #     f.write('NT\n')
-#             #     f.write('**\n')
-#             #     f.write('*END STEP\n')
-
+# try:
+#     duration = step.duration
+# except:
+#     duration = 1
+#     temperatures = steps[key].temperatures
+#     if temperatures:
+#         file = misc[temperatures].file
+#         einc = str(misc[temperatures].einc)
 #         f.write('**\n')
+#         f.write('*TEMPERATURE, FILE={0}, BSTEP=1, BINC=1, ESTEP=1, EINC={1}, INTERPOLATE\n'.format(file, einc))
+
+# elif stype == 'HeatStep':
+
+#     temp0 = step.temp0
+#     duration = step.duration
+#     deltmx = steps[key].deltmx
+#     interaction = interactions[step.interaction]
+#     amplitude = interaction.amplitude
+#     interface = interaction.interface
+#     sink_t = interaction.sink_t
+#     film_c = interaction.film_c
+#     ambient_t = interaction.ambient_t
+#     emissivity = interaction.emissivity
+
+#     # Initial T
+
+#     f.write('*INITIAL CONDITIONS, TYPE=TEMPERATURE\n')
+#     f.write('NSET_ALL, {0}\n'.format(temp0))
+#     f.write('**\n')
+
+#     # Interface
+
+#     f.write('*STEP, NAME={0}, INC={1}\n'.format(sname, increments))
+#     f.write('*{0}, END=PERIOD, DELTMX={1}\n'.format(method, deltmx))
+#     f.write('1, {0}, 5.4e-05, {0}\n'.format(duration))
+#     f.write('**\n')
+#     f.write('*SFILM, AMPLITUDE={0}\n'.format(amplitude))
+#     f.write('{0}, F, {1}, {2}\n'.format(interface, sink_t, film_c))
+#     f.write('**\n')
+#     f.write('*SRADIATE, AMPLITUDE={0}\n'.format(amplitude))
+#     f.write('{0}, R, {1}, {2}\n'.format(interface, ambient_t, emissivity))
+
+#     # fieldOutputs
+
+#     f.write('**\n')
+#     f.write('** OUTPUT\n')
+#     f.write('** ------\n')
+#     f.write('*OUTPUT, FIELD\n')
+#     f.write('**\n')
+#     f.write('*NODE OUTPUT\n')
+#     f.write('NT\n')
+#     f.write('**\n')
+#     f.write('*END STEP\n')

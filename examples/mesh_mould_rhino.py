@@ -1,5 +1,7 @@
 """ Example Meshmould analysed with shell elements and rebar."""
 
+# Note: this model takes a long time to analyse.
+
 from compas_fea.cad import rhino
 
 from compas_fea.structure import Concrete
@@ -16,7 +18,7 @@ import rhinoscriptsyntax as rs
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__ = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
 __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
@@ -59,15 +61,19 @@ reb_wall = {
     'w_l2': {'pos': -0.035, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010, 'angle': 90},
     'w_l1': {'pos': -0.045, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010, 'angle': 0}}
 
-epp = Properties(material='mat_concrete', section='sec_plinth', elsets='elset_plinth', reinforcement=reb_plinth)
-epw = Properties(material='mat_concrete', section='sec_wall', elsets='elset_wall', reinforcement=reb_wall)
-mdl.add_element_properties(epp, name='ep_plinth')
-mdl.add_element_properties(epw, name='ep_wall')
+epp = Properties(name='ep_plinth', material='mat_concrete', section='sec_plinth', 
+                 elsets='elset_plinth', reinforcement=reb_plinth)
+epw = Properties(name='ep_wall', material='mat_concrete', section='sec_wall', 
+                 elsets='elset_wall', reinforcement=reb_wall)
+mdl.add_element_properties(epp)
+mdl.add_element_properties(epw)
 
 # Add loads
 
-mdl.add_load(GravityLoad(name='load_gravity', elements='elset_all'))
-loads = ['load_gravity']
+mdl.add_load(GravityLoad(name='load_gravity_plinth', elements='elset_plinth'))
+mdl.add_load(GravityLoad(name='load_gravity_wall', elements='elset_wall'))
+loads = ['load_gravity_plinth', 'load_gravity_wall']
+
 for guid in rs.ObjectsByLayer('nset_loads'):
     px, py, pz = rs.ObjectName(guid).split(' ')
     node = mdl.check_node_exists(rs.PointCoordinates(guid))
@@ -91,7 +97,7 @@ mdl.summary()
 
 # Run and extract data
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'rbfor'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'rbfor']) 
 
 # Plot displacements
 

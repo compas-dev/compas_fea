@@ -20,8 +20,6 @@
         <link rel="stylesheet" type="text/css" href="/_static/css/compas-reference.css" />
 
         
-            <link rel="next" title="write_input_postprocess" href="compas_fea.fea.write_postprocess.write_input_postprocess.html" />
-        
         
         
             <link rel="prev" title="write_input_heading" href="compas_fea.fea.write_heading.write_input_heading.html" />
@@ -79,7 +77,7 @@
 <h1>write_input_steps</h1>
 <dl class="function">
 <dt id="compas_fea.fea.write_steps.write_input_steps">
-<code class="descclassname">compas_fea.fea.write_steps.</code><code class="descname">write_input_steps</code><span class="sig-paren">(</span><em>f</em>, <em>software</em>, <em>structure</em>, <em>steps</em>, <em>loads</em>, <em>displacements</em>, <em>sets</em>, <em>fields</em>, <em>ndof=6</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/fea/write_steps.html#write_input_steps"><span class="viewcode-link">[source]</span></a></dt>
+<code class="descclassname">compas_fea.fea.write_steps.</code><code class="descname">write_input_steps</code><span class="sig-paren">(</span><em>f</em>, <em>software</em>, <em>structure</em>, <em>steps</em>, <em>loads</em>, <em>displacements</em>, <em>sets</em>, <em>fields</em>, <em>ndof=6</em>, <em>properties=None</em>, <em>sections=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/fea/write_steps.html#write_input_steps"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Writes the Steps information to the input file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -93,6 +91,8 @@
 <li><p><strong>sets</strong> (<em>dic</em>) – Sets from strctures.sets.</p></li>
 <li><p><strong>fields</strong> (<em>list</em>) – Requested fields output.</p></li>
 <li><p><strong>ndof</strong> (<em>int</em>) – Number of degrees-of-freedom per node.</p></li>
+<li><p><strong>properties</strong> (<em>dic</em>) – ElementProperties objects from structure.element_properties</p></li>
+<li><p><strong>sections</strong> (<em>dic</em>) – Section objects from structure.sections.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -109,8 +109,6 @@
                                 <a href="compas_fea.fea.write_heading.write_input_heading.html" class="btn btn-primary compas-prev" role="button">write_input_heading</a>
                             
 
-                            
-                                <a href="compas_fea.fea.write_postprocess.write_input_postprocess.html" class="btn btn-primary compas-next" role="button">write_input_postprocess</a>
                             
                         </nav> -->
 
@@ -178,7 +176,7 @@
             
 
             
-                Last updated on Feb 06, 2018.
+                Last updated on Feb 07, 2018.
             
 
             

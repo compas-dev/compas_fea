@@ -24,13 +24,6 @@ comments = {
     'ansys':    '!',
 }
 
-headers = {
-    'abaqus':   '',
-    'opensees': '',
-    'sofistik': '',
-    'ansys':    '',
-}
-
 footers = {
     'abaqus':   '',
     'opensees': '',

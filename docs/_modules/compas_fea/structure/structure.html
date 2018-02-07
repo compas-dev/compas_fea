@@ -744,7 +744,7 @@
 <span class="c1"># sets</span>
 <span class="c1"># ==============================================================================</span>
 
-    <span class="k">def</span> <span class="nf">add_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">add_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">selection</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot; Adds a node, element or surface set to structure.sets.</span>
 
@@ -756,8 +756,6 @@
 <span class="sd">            &#39;node&#39;, &#39;element&#39;, &#39;surface_node&#39;, surface_element&#39;.</span>
 <span class="sd">        selection : list, dic</span>
 <span class="sd">            The integer keys of the nodes, elements or the element numbers and sides.</span>
-<span class="sd">        explode : bool</span>
-<span class="sd">            Explode the set into sets for each member of selection.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -767,12 +765,7 @@
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="n">selection</span> <span class="o">=</span> <span class="p">[</span><span class="n">selection</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">explode</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="s1">&#39;element&#39;</span><span class="p">]:</span>
-                <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">select</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="s1">&#39;selection&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">select</span><span class="p">],</span> <span class="s1">&#39;explode&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="s1">&#39;selection&#39;</span><span class="p">:</span> <span class="n">selection</span><span class="p">,</span> <span class="s1">&#39;explode&#39;</span><span class="p">:</span> <span class="n">explode</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="p">)}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="s1">&#39;selection&#39;</span><span class="p">:</span> <span class="n">selection</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sets</span><span class="p">)}</span>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -1645,7 +1638,7 @@
             
 
             
-                Last updated on Feb 06, 2018.
+                Last updated on Feb 07, 2018.
             
 
             

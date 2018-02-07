@@ -17,6 +17,7 @@ Rhino
     examples/block_tets_rhino
 
     examples/mesh_floor_rhino
+    examples/mesh_mould_rhino
     examples/mesh_plate_rhino
     examples/mesh_strip_rhino
 

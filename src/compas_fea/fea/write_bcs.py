@@ -14,6 +14,7 @@ __all__ = [
     'write_input_bcs',
 ]
 
+
 dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 fixitys = ['PX', 'PY', 'PZ', 'MX', 'MY' 'MZ']
 
@@ -61,11 +62,11 @@ def write_input_bcs(f, software, structure, steps, displacements, ndof=6):
 
     f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
     f.write('{0} ------------------------------------------------------------------------- BCs\n'.format(c))
+    f.write('{0}\n'.format(c))
 
     key = structure.steps_order[0]
     step = steps[key]
 
-    f.write('{0}\n'.format(c))
     f.write('{0} {1}\n'.format(c, key))
     f.write('{0} '.format(c) + '-' * len(key) + '\n')
 
@@ -74,6 +75,7 @@ def write_input_bcs(f, software, structure, steps, displacements, ndof=6):
         displacement = displacements[k]
         com = displacement.components
         nset = displacement.nodes
+        selection = structure.sets[nset]['selection']
 
         f.write('{0}\n'.format(c))
         f.write('{0} {1}\n'.format(c, k))
@@ -91,7 +93,7 @@ def write_input_bcs(f, software, structure, steps, displacements, ndof=6):
                 else:
                     j.append('0')
 
-            for node in sorted(structure.sets[nset]['selection'], key=int):
+            for node in sorted(selection, key=int):
                 f.write('fix {0} {1}\n'.format(node + 1, ' '.join(j)))
 
         elif software == 'sofistik':
@@ -103,7 +105,7 @@ def write_input_bcs(f, software, structure, steps, displacements, ndof=6):
                 if com[dof] == 0:
                     j += fixity
 
-            for node in sorted(structure.sets[nset]['selection'], key=int):
+            for node in sorted(selection, key=int):
                 f.write('{0} {1}\n'.format(node + 1, j))
 
         elif software == 'abaqus':
@@ -113,6 +115,10 @@ def write_input_bcs(f, software, structure, steps, displacements, ndof=6):
             for ci, dof in enumerate(dofs, 1):
                 if com[dof] is not None:
                     f.write('{0}, {1}, {1}, {2}\n'.format(nset, ci, com[dof]))
+
+        elif software == 'ansys':
+
+            pass
 
     f.write('{0}\n'.format(c))
     f.write('{0}\n'.format(c))
