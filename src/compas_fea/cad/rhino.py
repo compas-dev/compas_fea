@@ -495,15 +495,11 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         dtype = 'element'
 
     basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc(basedir=basedir, tmpdir=path, mode=1)
-    xfunc.funcname = 'functions.postprocess'
+    xfunc = XFunc(funcname='functions.postprocess', basedir=basedir, tmpdir=path)
     result = xfunc(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)
 
-    if result['error']:
-        print(result['error'])
-        print('\n***** Error during post-processing *****')
-    else:
-        toc, U, cnodes, fabs = result['data']
+    try:
+        toc, U, cnodes, fabs = result
         print('\n***** Data processed : {0} s *****'.format(toc))
 
         # Plot meshes
@@ -590,6 +586,9 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         rs.CurrentLayer(rs.AddLayer('Default'))
         rs.LayerVisible(layer, False)
         rs.EnableRedraw(True)
+        
+    except:
+        print('\n***** Error during post-processing *****')
 
 
 def plot_voxels(structure, step, field='smises', layer=None, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',
