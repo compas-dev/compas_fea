@@ -951,8 +951,7 @@ Steps
         """
 
         for displacement in displacements:
-            displacement.index = len(self.displacements)
-            self.displacements[displacement.name] = displacement
+            self.add_displacement(displacement)
 
     def add_element_properties(self, element_properties):
 
@@ -1024,8 +1023,7 @@ Steps
         """
 
         for load in loads:
-            load.index = len(self.loads)
-            self.loads[load.name] = load
+            self.add_load(load)
 
     def add_material(self, material):
 
@@ -1061,8 +1059,7 @@ Steps
         """
 
         for material in materials:
-            material.index = len(self.materials)
-            self.materials[material.name] = material
+            self.add_material(material)
 
     def add_misc(self, misc):
 
@@ -1116,8 +1113,7 @@ Steps
         """
 
         for section in sections:
-            section.index = len(self.sections)
-            self.sections[section.name] = section
+            self.add_section(section)
 
     def add_step(self, step):
 
@@ -1153,8 +1149,7 @@ Steps
         """
 
         for step in steps:
-            step.index = len(self.steps)
-            self.steps[step.name] = step
+            self.add_step(step)
 
 
 # ==============================================================================

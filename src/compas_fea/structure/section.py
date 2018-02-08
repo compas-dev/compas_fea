@@ -53,6 +53,10 @@ class AngleSection(object):
     -------
     None
 
+    Notes
+    -----
+    - Ixy not yet calculated.
+
     """
 
     def __init__(self, name, b, h, t):
@@ -281,6 +285,10 @@ class TrapezoidalSection(object):
     -------
     None
 
+    Notes
+    -----
+    - J not yet calculated.
+
     """
 
     def __init__(self, name, b1, b2, h):
@@ -370,10 +378,10 @@ class SpringSection(object):
     name : str
         Section name.
     forces : list
-        Forces data for non-linear springs.
+        Forces data (axial) for non-linear springs.
     displacements : list
-        Displacements data for non-linear springs.
-    stiffness : Dict
+        Displacements data (axial) for non-linear springs.
+    stiffness : dic
         Elastic stiffness for linear springs. The dictionary keys show the spring
         axis and the values represent the stifness.
 
@@ -387,7 +395,7 @@ class SpringSection(object):
 
     """
 
-    def __init__(self, name, forces=None, displacements=None, stiffness=None):
+    def __init__(self, name, forces=[], displacements=[], stiffness={}):
         self.__name__ = 'SpringSection'
         self.name = name
         self.geometry = None

@@ -8,7 +8,7 @@ This page shows how **Section** objects are added to the **Structure** object, h
 Adding sections
 ===============
 
-**Element** objects that are added to the **Structure** do not yet have a complete description of their geometry, and so must have a **Section** object associated with them. **Section** classes are first imported from module **compas_fea.structure.sections** and then objects instantiated and added to the dictionary ``.sections`` of the **Structure** object. This is done with method ``.add_section()`` with ``name`` as the string key. As the section geometry will differ for each class, the input data will vary for the different types of **Section** objects, these inputs are summarised for each section later. In the following example, the radius ``r`` and thickness ``t`` are needed for adding a **CircularSection** object and a **ShellSection** object.
+**Element** objects that are added to the **Structure** do not yet have a complete description of their geometry, and so must have a **Section** object associated with them. **Section** classes are first imported from module **compas_fea.structure.section** and then objects instantiated and added to the dictionary ``.sections`` of the **Structure** object. This is done with method ``.add_section()`` (or ``.add_sections()`` for a list of **Section** objects) with ``name`` as the string key. As the section geometry will differ for each class, the input data will vary for the different types of **Section** objects, these inputs are summarised for each section later on this page. In the following example, the radius ``r`` and thickness ``t`` are required for adding a **CircularSection** object and a **ShellSection** object.
 
 .. code-block:: python
 
@@ -42,7 +42,7 @@ Not only will the user input data be available for viewing or editing a **Sectio
 Types
 =====
 
-There are a variety of 1D: **AngleSection**, **SpringSection**, **BoxSection**, **CircularSection**, **GeneralSection**, **ISection**, **PipeSection**, **RectangularSection**, **TrapezoidalSection**, **TrussSection**, 2D: **ShellSection** and 3D: **SolidSection** objects that can be imported and then objects added with the ``.add_section()`` method.
+There are a variety of 1D: **AngleSection**, **SpringSection**, **BoxSection**, **CircularSection**, **GeneralSection**, **ISection**, **PipeSection**, **RectangularSection**, **TrapezoidalSection**, **TrussSection**, 2D: **ShellSection** and 3D: **SolidSection** objects that can be imported, and then added as objects with the ``.add_section()`` method.
 
 -----
 Truss
