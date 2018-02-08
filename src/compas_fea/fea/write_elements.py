@@ -62,6 +62,8 @@ def write_input_elements(f, software, sections, properties, elements, structure,
     f.write('{0} -------------------------------------------------------------------- Elements\n'.format(c))
     f.write('{0}\n'.format(c))
 
+    has_rebar = False
+
     for key, property in properties.items():
 
         section = sections[property.section]
@@ -72,6 +74,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
         reinforcement = property.reinforcement
         if reinforcement:
             rebar_index = materials[reinforcement.values()[0]['material']].index + 1
+            has_rebar = True
         else:
             rebar_index = None
 
@@ -114,16 +117,19 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 
                 _write_blocks(f, software, selection, elements, material, c)
 
+    if (software == 'sofistik') and has_rebar:
+        _write_sofistik_rebar(f)
 
-  # if software == 'sofistik':
 
-    #     f.write('$\n')
-    #     f.write('+PROG BEMESS\n')
-    #     f.write('$\n')
-    #     f.write('CTRL WARN 7\n')  # Upper cover (<10mm or >0.70d)
-    #     f.write('CTRL WARN 9\n')  # Bottom cover (<10mm or >0.70d)
-    #     f.write('CTRL WARN 471\n')  # Element thickness too thin and not allowed for design.
-    #     f.write('$\n')
+def _write_sofistik_rebar(f):
+
+        f.write('$\n')
+        f.write('+PROG BEMESS\n')
+        f.write('$\n')
+        f.write('CTRL WARN 7 $ Upper cover (<10mm or >0.70d)\n')
+        f.write('CTRL WARN 9 $ Bottom cover (<10mm or >0.70d)\n')
+        f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for design\n')
+        f.write('$\n')
 
     #     for key, property in properties.items():
 
@@ -204,9 +210,9 @@ def write_input_elements(f, software, sections, properties, elements, structure,
     #             f.write('$\n')
     #             f.write('$\n')
 
-    #     f.write('END\n')
-    #     f.write('$\n')
-    #     f.write('$\n')
+        f.write('END\n')
+        f.write('$\n')
+        f.write('$\n')
 
 
 def _write_blocks(f, software, selection, elements, material, c):
@@ -370,9 +376,6 @@ def _write_shells(f, software, selection, elements, geometry, material, reinforc
 #     'ShellSection':       {'name': None,          'geometry': ['t']},
 #     'SolidSection':       {'name': None,          'geometry': None},
 #     'TrussSection':       {'name': None,          'geometry': ['A']}}
-
-
-
 
 
     #         # Beam sections
