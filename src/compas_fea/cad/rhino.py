@@ -345,7 +345,7 @@ def add_sets_from_layers(structure, layers):
                 add_element_set(structure=structure, guids=guids, name=name)
 
 
-def mesh_extrude(structure, guid, nz, dz, setname, cap=None):
+def mesh_extrude(structure, guid, nz, dz, setname=None, cap=None, links=None):
 
     """ Extrudes a Rhino mesh into cells of many layers and adds to Structure.
 
@@ -360,9 +360,11 @@ def mesh_extrude(structure, guid, nz, dz, setname, cap=None):
     dz : float
         Layer thickness.
     setname : str
-        Name of set for added elements.
+        Name of set for added solid elements.
     cap : str
-        Name for a capping mesh on final surface.
+        Name of set for a capping mesh on final surface.
+    links : str
+        Name of set for adding links along extrusion.
 
     Returns
     -------
@@ -376,7 +378,7 @@ def mesh_extrude(structure, guid, nz, dz, setname, cap=None):
     """
 
     mesh = mesh_from_guid(Mesh(), guid)
-    extrude_mesh(structure=structure, mesh=mesh, nz=nz, dz=dz, setname=setname, cap=cap)
+    extrude_mesh(structure=structure, mesh=mesh, nz=nz, dz=dz, setname=setname, cap=cap, links=links)
 
 
 def network_from_lines(guids=[], layer=None):

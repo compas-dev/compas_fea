@@ -437,7 +437,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         if footers[software]:
             f.write(footers[software])
 
-        if software == 'sofistik':
+        if software == 'sofistik':  # this needs to be turned off when there is no rebar
 
             f.write('+PROG BEMESS\n')
             f.write('HEAD {0}\n'.format(state.upper()))

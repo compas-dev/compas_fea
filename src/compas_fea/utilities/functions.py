@@ -281,7 +281,7 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
     return points_all, faces_all
 
 
-def extrude_mesh(structure, mesh, nz, dz, setname, cap=None):
+def extrude_mesh(structure, mesh, nz, dz, setname=None, cap=None, links=None):
 
     """ Extrudes a Mesh into cells of many layers and adds to Structure.
 
@@ -296,9 +296,11 @@ def extrude_mesh(structure, mesh, nz, dz, setname, cap=None):
     dz : float
         Layer thickness.
     setname : str
-        Name of set for added elements.
+        Name of set for added solid elements.
     cap : str
-        Name for a capping mesh on final surface.
+        Name of set for a capping mesh on final surface.
+    links : str
+        Name of set for adding links along extrusion.
 
     Returns
     -------
@@ -323,6 +325,7 @@ def extrude_mesh(structure, mesh, nz, dz, setname, cap=None):
             ki['{0}_{1}'.format(key, i + 1)] = structure.add_node(xyzi)
 
     cap_faces = []
+    link_beams = []
     for face in mesh.faces():
         vs = mesh.face_vertices(face)
         if len(vs) == 3:
@@ -335,6 +338,12 @@ def extrude_mesh(structure, mesh, nz, dz, setname, cap=None):
             nodes = [ki[j] for j in bot + top]
             ekey = structure.add_element(nodes=nodes, type=type, acoustic=False, thermal=False)
             elements.append(ekey)
+            if links:
+                for j in vs:
+                    node1 = ki['{0}_{1}'.format(j, i + 0)]
+                    node2 = ki['{0}_{1}'.format(j, i + 1)]
+                ekey = structure.add_element(nodes=[node1, node2], type='BeamElement', acoustic=False, thermal=False)
+                link_beams.append(ekey)
             if (i == nz - 1) and cap:
                 nodes = [ki[j] for j in top]
                 ekey = structure.add_element(nodes=nodes, type='ShellElement', acoustic=False, thermal=False)
@@ -343,6 +352,8 @@ def extrude_mesh(structure, mesh, nz, dz, setname, cap=None):
     structure.add_set(name=setname, type='element', selection=elements)
     if cap:
         structure.add_set(name=cap, type='element', selection=cap_faces)
+    if links:
+        structure.add_set(name=links, type='element', selection=link_beams)
 
 
 def group_keys_by_attribute(adict, name, tol='3f'):
