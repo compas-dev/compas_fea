@@ -14,8 +14,8 @@ __email__     = 'liew@arch.ethz.ch'
 
 __all__ = [
     'Concrete',
-    'ConcreteSmearedCrack',
-    'ConcreteDamagedPlasticity',
+    # 'ConcreteSmearedCrack',
+    # 'ConcreteDamagedPlasticity',
     'ElasticIsotropic',
     'ElasticOrthotropic',
     'ElasticPlastic',
@@ -152,16 +152,16 @@ class ElasticPlastic(object):
     """
 
     def __init__(self, name, E, v, p, f, e):
+        fc = [-i for i in f]
+        ec = [-i for i in e]
         self.__name__ = 'ElasticPlastic'
         self.name = name
         self.E = {'E': E}
         self.v = {'v': v}
         self.G = {'G': 0.5 * E / (1 + v)}
         self.p = p
-        fc = [-i for i in f]
-        ec = [-i for i in e]
         self.compression = {'f': fc, 'e': ec}
-        self.tension = {'f': f, 'e': e}
+        self.tension     = {'f': f, 'e': e}
 
 
 # ==============================================================================
@@ -202,30 +202,34 @@ class Steel(object):
     """
 
     def __init__(self, name, fy=355, fu=None, eu=20, E=210, v=0.3, p=7850, type='elastic-plastic', id='s', sf=1.15):
-        E *= 10.**9
-        self.__name__ = 'Steel'
-        self.name = name
-        self.E = {'E': E}
-        self.v = {'v': v}
-        self.G = {'G': 0.5 * E / (1 + v)}
-        self.p = p
-        ep = 0.01 * eu - fy * 10**6 / E
+        E  *= 10.**9
+        fy *= 10.**6
         if not fu:
             fu = fy
+        else:
+            fu *= 10.**6
+        ep = 0.01 * eu - fy / E
         if type == 'elastic-plastic':
-            f = [i * 10**6 for i in [fy, fy]]
+            f = [fy, fy]
             e = [0, ep]
         if type == 'elastic-linear':
-            f = [i * 10**6 for i in [fy, fu]]
+            f = [fy, fu]
             e = [0, ep]
         fc = [-i for i in f]
         ec = [-i for i in e]
-        self.compression = {'f': fc, 'e': ec}
-        self.tension = {'f': f, 'e': e}
-        self.id = id
+
+        self.__name__ = 'Steel'
+        self.name = name
         self.fy = fy
         self.fu = fu
         self.eu = eu
+        self.p = p
+        self.E = {'E': E}
+        self.v = {'v': v}
+        self.G = {'G': 0.5 * E / (1 + v)}
+        self.compression = {'f': fc, 'e': ec}
+        self.tension     = {'f': f, 'e': e}
+        self.id = id
         self.sf = sf
 
 
@@ -293,7 +297,7 @@ class Concrete(object):
         self.fck = fck
         self.E = {'E': E}
         self.v = {'v': v}
-        self.G = None
+        self.G = {'G': None}  # not defined yet
         self.p = p
         self.compression = {'f': f[1:], 'e': ec}
         self.tension = {'f': ft, 'e': et}

@@ -76,7 +76,7 @@
 <p>This page shows how <strong>Section</strong> objects are added to the <strong>Structure</strong> object, here given as <code class="docutils literal"><span class="pre">mdl</span></code>. A variety of <strong>Section</strong> objects exist for 1D, 2D and 3D elements.</p>
 <div class="section" id="adding-sections">
 <h2>Adding sections</h2>
-<p><strong>Element</strong> objects that are added to the <strong>Structure</strong> do not yet have a complete description of their geometry, and so must have a <strong>Section</strong> object associated with them. <strong>Section</strong> classes are first imported from module <strong>compas_fea.structure.sections</strong> and then objects instantiated and added to the dictionary <code class="docutils literal"><span class="pre">.sections</span></code> of the <strong>Structure</strong> object. This is done with method <code class="docutils literal"><span class="pre">.add_section()</span></code> with <code class="docutils literal"><span class="pre">name</span></code> as the string key. As the section geometry will differ for each class, the input data will vary for the different types of <strong>Section</strong> objects, these inputs are summarised for each section later. In the following example, the radius <code class="docutils literal"><span class="pre">r</span></code> and thickness <code class="docutils literal"><span class="pre">t</span></code> are needed for adding a <strong>CircularSection</strong> object and a <strong>ShellSection</strong> object.</p>
+<p><strong>Element</strong> objects that are added to the <strong>Structure</strong> do not yet have a complete description of their geometry, and so must have a <strong>Section</strong> object associated with them. <strong>Section</strong> classes are first imported from module <strong>compas_fea.structure.section</strong> and then objects instantiated and added to the dictionary <code class="docutils literal"><span class="pre">.sections</span></code> of the <strong>Structure</strong> object. This is done with method <code class="docutils literal"><span class="pre">.add_section()</span></code> (or <code class="docutils literal"><span class="pre">.add_sections()</span></code> for a list of <strong>Section</strong> objects) with <code class="docutils literal"><span class="pre">name</span></code> as the string key. As the section geometry will differ for each class, the input data will vary for the different types of <strong>Section</strong> objects, these inputs are summarised for each section later on this page. In the following example, the radius <code class="docutils literal"><span class="pre">r</span></code> and thickness <code class="docutils literal"><span class="pre">t</span></code> are required for adding a <strong>CircularSection</strong> object and a <strong>ShellSection</strong> object.</p>
 <div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">CircularSection</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">CircularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_circ&#39;</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.010</span><span class="p">))</span>
@@ -101,7 +101,7 @@
 </div>
 <div class="section" id="types">
 <h2>Types</h2>
-<p>There are a variety of 1D: <strong>AngleSection</strong>, <strong>SpringSection</strong>, <strong>BoxSection</strong>, <strong>CircularSection</strong>, <strong>GeneralSection</strong>, <strong>ISection</strong>, <strong>PipeSection</strong>, <strong>RectangularSection</strong>, <strong>TrapezoidalSection</strong>, <strong>TrussSection</strong>, 2D: <strong>ShellSection</strong> and 3D: <strong>SolidSection</strong> objects that can be imported and then objects added with the <code class="docutils literal"><span class="pre">.add_section()</span></code> method.</p>
+<p>There are a variety of 1D: <strong>AngleSection</strong>, <strong>SpringSection</strong>, <strong>BoxSection</strong>, <strong>CircularSection</strong>, <strong>GeneralSection</strong>, <strong>ISection</strong>, <strong>PipeSection</strong>, <strong>RectangularSection</strong>, <strong>TrapezoidalSection</strong>, <strong>TrussSection</strong>, 2D: <strong>ShellSection</strong> and 3D: <strong>SolidSection</strong> objects that can be imported, and then added as objects with the <code class="docutils literal"><span class="pre">.add_section()</span></code> method.</p>
 <div class="section" id="truss">
 <h3>Truss</h3>
 <p>A <strong>TrussSection</strong> can take only axial forces (no shear forces or bending and torsion moments), and so only requires the cross-section area <code class="docutils literal"><span class="pre">A</span></code>.</p>
@@ -323,7 +323,7 @@
             
 
             
-                Last updated on Feb 07, 2018.
+                Last updated on Feb 09, 2018.
             
 
             

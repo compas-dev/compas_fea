@@ -2,13 +2,13 @@
 Materials
 ********************************************************************************
 
-This page shows how **Material** objects are added to the **Structure** object, here given as ``mdl``. A variety of linear and non-linear material models exist, either as simple to use templates or detailed models taking many parameters.
+This page shows how **Material** objects are added to the **Structure** object, here given as ``mdl``. A variety of linear and non-linear material models exist, either as simple to use templates for typical materials, or detailed models taking many parameters.
 
 ================
 Adding materials
 ================
 
-**Material** classes are first imported from module **compas_fea.structure.material** and then added as objects to the dictionary ``.materials`` of the **Structure** object, with ``name`` as its string key and by using the method ``.add_material()``. Here, a simple elastic and isotropic material is added as an example, requiring the Young's modulus ``E`` [Pa], Poisson's ratio ``v`` and density ``p``.
+**Material** classes are first imported from module **compas_fea.structure.material** and then added as objects to the dictionary ``.materials`` of the **Structure** object, with ``name`` as its string key and by using the method ``.add_material()`` (or ``.add_materials()`` for a list of **Material** objects). Below, a simple elastic and isotropic material is added as an example, requiring the Young's modulus ``E`` [in units of Pa], Poisson's ratio ``v`` and density ``p`` [kg per cubic metre].
 
 .. code-block:: python
 
@@ -21,7 +21,7 @@ Adding materials
 Accessing/editing materials
 ===========================
 
-Data are stored and accessed through the attributes of the **Material** object and its string key. Data on any **Material** object can be changed as needed.
+Data are stored and accessed through the attributes of the **Material** object and its string key. Data on any **Material** object can be changed whenever needed.
 
 .. code-block:: python
 
@@ -39,13 +39,13 @@ Data are stored and accessed through the attributes of the **Material** object a
 Materials
 =========
 
-Classes exist for commonly used materials such as concrete, steel and timber. Simple templates exist to quickly add frequently used material models for engineering, and will first assume typical design values for the material parameters, but still allow them to be changed by the user. Other classes require all material data to be provided explicitly and are used for creating detailed material models. The following section details the available material model objects.
+Classes exist for commonly used materials such as concrete, steel and timber. These simple templates exist to quickly add frequently used material models for engineering, and will first assume typical design values for the material parameters, but still allow them to be changed by the user. Other classes require all material data to be provided explicitly and are used for creating detailed material models. The following section details the available material model classes.
 
 -------
 Elastic
 -------
 
-The simplest material model is the elastic, isotropic and homogeneous material called **ElasticIsotropic**. This takes the Young's modulus ``E`` [Pa], Poisson's ratio ``v`` and density ``p``. Additionally, it can be stated if the material should allow ``tension`` or ``compression``, given as boolean arguments.
+The simplest material model is the elastic, isotropic and homogeneous material called **ElasticIsotropic**. This takes the Young's modulus ``E`` [Pa], Poisson's ratio ``v`` and density ``p`` [kg per cubic metre]. Additionally, it can be stated if the material should allow ``tension`` or ``compression``, given as boolean arguments.
 
 .. code-block:: python
 
@@ -53,7 +53,7 @@ The simplest material model is the elastic, isotropic and homogeneous material c
 
     mdl.add_material(ElasticIsotropic(name='mat_elastic', E=10*10**9, v=0.3, p=1500, tension=True, compression=True))
 
-Standard elastic material model, tension is taken as positive.
+The standard elastic material model is shown below, where tension is taken as positive.
 
 .. image:: /_images/material-elastic.png
    :scale: 40 %
@@ -73,7 +73,7 @@ To allow only tension, set ``compression=False``.
 Elastic--plastic
 ----------------
 
-The **ElasticPlastic** class can be used to make a general isotropic and homogeneous non-linear material object, with the same shape of stress--strain curve in both compression and tension. The elastic input data is the same as with the **ElasticIsotropic** class, given by Young's modulus ``E`` [Pa], Poisson's ratio ``v`` and density ``p``. For the plastic description of the material, use lists of plastic stresses ``f`` [Pa] and plastic strains ``e`` (total strain minus yield strain). The first value of ``f`` should be the stress at the end of the elastic region, i.e. the yield stress, and the first value of ``e`` should be zero, i.e. the beginning of plastic straining. Continue to give pairs of plastic stress and plastic strain to define the complete behaviour. To add the general elastic--plastic stress--strain data curve below as data to the **ElasticIsotropic** class, the input (with variables representing numbers) would look like:
+The **ElasticPlastic** class can be used to make a general isotropic and homogeneous non-linear material object, with the same shape of stress--strain curve in both compression and tension. The elastic input data is the same as with the **ElasticIsotropic** class, given by Young's modulus ``E`` [Pa], Poisson's ratio ``v`` and density ``p`` [kg per cubic metre]. For the plastic description of the material, use lists of plastic stresses ``f`` [Pa] and plastic strains ``e`` (total strain minus yield strain). The first value of ``f`` should be the stress at the end of the elastic region, i.e. the yield stress, and the first value of ``e`` should be zero, i.e. the beginning of plastic straining. Continue to give pairs of plastic stress and plastic strain to define the complete behaviour. To add the general elastic--plastic stress--strain data curve below as data to the **ElasticIsotropic** class, the input (with variables representing numbers) would look like:
 
 .. code-block:: python
 
@@ -91,7 +91,7 @@ The **ElasticPlastic** class can be used to make a general isotropic and homogen
 Steel
 -----
 
-The following use of the **Steel** class will create an object and add it to the **Structure** named **mdl**. The string ``name`` for the material must be given, while the yield stress ``fy`` [MPa], Young's modulus ``E`` [GPa], Poisson's ratio ``v`` and density ``p`` will default to common values used in design if no user specific values are given. The ``type`` represents what the material behaviour is like after first yield, where ``'elastic-plastic'`` defines a perfectly flat plastic plateau after the initial linear elastic range, while ``'elastic-linear'`` will create a linear strain-hardening slope up until the fracture stress and strain ``fu`` [Pa] and ``eu`` [%]. **Note**: that the yield stress is given in units of [MPa] and Young's modulus in [Pa], but then stored, as with all materials, as [Pa].
+The following use of the **Steel** class will create an object and add it to the **Structure** named **mdl**. The string ``name`` for the material must be given, while the yield stress ``fy`` [MPa], Young's modulus ``E`` [GPa], Poisson's ratio ``v`` and density ``p`` [kg per cubic metre] will default to common values used in design if no user specific values are given. The ``type`` represents what the material behaviour is like after first yield, where ``'elastic-plastic'`` defines a perfectly flat plastic plateau after the initial linear elastic range, while ``'elastic-linear'`` will create a linear strain-hardening slope up until the fracture stress and strain ``fu`` [Pa] and ``eu`` [%]. **Note**: that the yield stress is given in units of [MPa] and Young's modulus in [GPa], but then stored, as with all materials, as [Pa].
 
 .. code-block:: python
 

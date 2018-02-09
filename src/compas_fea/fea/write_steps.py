@@ -99,8 +99,11 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
             load = loads[k]
             load_index = load.index + 1
+            axes = load.axes
             ltype = load.__name__
             com = load.components
+            elset = load.elements
+            set_index = sets[elset]['index'] + 1
 
             if ltype != 'GravityLoad':
 
@@ -109,7 +112,6 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 f.write('$ ' + '-' * len(k) + '\n')
                 f.write('$\n')
                 f.write("LC {0} TITL '{1}'\n".format(load_index, k))
-                f.write('$\n')
 
                 if ltype == 'TributaryLoad':
 
@@ -121,15 +123,16 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                                 dl = com[node][dof] / 1000.
                                 f.write('P{0}{0} {1}\n'.format(dof.upper(), dl))
 
-                # f.write('\n')
-                # components = ''
-                # if com['x']:
-                #     pass
-                # if com['y']:
-                #     pass
-                # if com['z']:
-                #     components += ' PZZ {0}'.format(0.001 * com['z'] * lf)
-                # f.write('    QUAD GRP {0}{1}\n'.format(set_index, components))
+                elif ltype == 'AreaLoad':
+
+                    components = ''
+                    for i in 'xyz':
+                        if com[i]:
+                            if axes == 'local':
+                                components += ' P{0} {1}'.format(i.upper(), 0.001 * com[i])
+                            elif axes == 'global':
+                                components += ' P{0}{0} {1}'.format(i.upper(), 0.001 * com[i])
+                    f.write('    QUAD GRP {0} TYPE{1}\n'.format(set_index, components))
 
         f.write('$\n')
         f.write('END\n')
@@ -181,6 +184,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
                 f.write('*STEP, NLGEOM={0}, NAME={1}{2}, INC={3}\n'.format(nlgeom, key, perturbation, increments))
                 f.write('*{0}\n'.format(method.upper()))
+                f.write('**\n')
 
             elif software == 'opensees':
 
@@ -190,8 +194,6 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
             elif software == 'sofistik':
 
                 f.write("LC 10{0} TITL '{1}' FACT {2} DLZ 0.0\n".format(step_index, key, factor))
-
-            f.write('{0}\n'.format(c))
 
             # Loads
 
@@ -218,12 +220,14 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 if ltype == 'PointLoad':
 
                     if software == 'opensees':
+
                         coms = ' '.join([str(com[dof]) for dof in dofs[:ndof]])
                         for node in sets[nset]['selection']:
                             f.write('load {0} {1}\n'.format(node + 1, coms))
                             f.write('#\n')
 
                     elif software == 'abaqus':
+
                         f.write('*CLOAD\n')
                         f.write('**\n')
                         for ci, dof in enumerate(dofs, 1):
@@ -257,18 +261,16 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
                     elif software == 'abaqus':
 
-                        pass
+                        if axes == 'global':
+                            for dof in dofs[:3]:
+                                if com[dof]:
+                                    f.write('{0}, P{1}, {2}'.format(elset, dof.upper(), factor * com[dof]) + '\n')
 
-#                         if axes == 'global':
-#                             for dof in dofs[:3]:
-#                                 if com[dof]:
-#                                     f.write('{0}, P{1}, {2}'.format(elset, dof.upper(), lf * com[dof]) + '\n')
-
-#                         elif axes == 'local':
-#                             if com['x']:
-#                                 f.write('{0}, P1, {1}'.format(elset, lf * com['x']) + '\n')
-#                             if com['y']:
-#                                 f.write('{0}, P2, {1}'.format(elset, lf * com['y']) + '\n')
+                        elif axes == 'local':
+                            if com['x']:
+                                f.write('{0}, P1, {1}'.format(elset, factor * com['x']) + '\n')
+                            if com['y']:
+                                f.write('{0}, P2, {1}'.format(elset, factor * com['y']) + '\n')
 
                 # Area load
 
@@ -278,18 +280,18 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
                         pass
 
-                    elif software == 'abaqus':
-
-                        pass
+                    elif software == 'abaqus':  # only based on normal so far
 
                         # if axes == 'global':
                         #     raise NotImplementedError
 
                         # elif axes == 'local':
-                        #     # x COMPONENT
-                        #     # y COMPONENT
-                        #     if com['z']:
-                        #         f.write('{0}, P, {1}'.format(elset, lf * com['z']) + '\n')
+                        # x COMPONENT
+                        # y COMPONENT
+                        f.write('*DLOAD\n')
+                        f.write('**\n')
+                        if com['z']:
+                            f.write('{0}, P, {1}'.format(elset, factor * com['z']) + '\n')
 
                 # Body load
 
