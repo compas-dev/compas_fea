@@ -84,12 +84,12 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;Concrete&#39;</span><span class="p">,</span>
-    <span class="c1"># &#39;ConcreteSmearedCrack&#39;,</span>
-    <span class="c1"># &#39;ConcreteDamagedPlasticity&#39;,</span>
+    <span class="s1">&#39;ConcreteSmearedCrack&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ConcreteDamagedPlasticity&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ElasticIsotropic&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ElasticOrthotropic&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ElasticPlastic&#39;</span><span class="p">,</span>
-    <span class="c1"># &#39;ThermalMaterial&#39;,</span>
+    <span class="s1">&#39;ThermalMaterial&#39;</span><span class="p">,</span>
     <span class="s1">&#39;Steel&#39;</span>
 <span class="p">]</span>
 
@@ -346,15 +346,15 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fck</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2400</span><span class="p">,</span> <span class="n">fr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">de</span> <span class="o">=</span> <span class="mf">0.0001</span>
-        <span class="n">fcm</span> <span class="o">=</span> <span class="n">fck</span> <span class="o">+</span> <span class="mi">8</span>  <span class="c1"># MPa</span>
-        <span class="n">Ecm</span> <span class="o">=</span> <span class="mi">22</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">fcm</span> <span class="o">/</span> <span class="mf">10.</span><span class="p">)</span><span class="o">**</span><span class="mf">0.3</span>  <span class="c1"># MPa</span>
+        <span class="n">fcm</span> <span class="o">=</span> <span class="n">fck</span> <span class="o">+</span> <span class="mi">8</span>
+        <span class="n">Ecm</span> <span class="o">=</span> <span class="mi">22</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">fcm</span> <span class="o">/</span> <span class="mf">10.</span><span class="p">)</span><span class="o">**</span><span class="mf">0.3</span>
         <span class="n">ec1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">0.7</span> <span class="o">*</span> <span class="n">fcm</span><span class="o">**</span><span class="mf">0.31</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.001</span>
         <span class="n">ecu1</span> <span class="o">=</span> <span class="mf">0.0035</span> <span class="k">if</span> <span class="n">fck</span> <span class="o">&lt;</span> <span class="mi">50</span> <span class="k">else</span> <span class="p">(</span><span class="mf">2.8</span> <span class="o">+</span> <span class="mi">27</span> <span class="o">*</span> <span class="p">((</span><span class="mi">98</span> <span class="o">-</span> <span class="n">fcm</span><span class="p">)</span> <span class="o">/</span> <span class="mf">100.</span><span class="p">)</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.001</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ecu1</span> <span class="o">/</span> <span class="n">de</span><span class="p">)</span>
         <span class="n">k</span> <span class="o">=</span> <span class="mf">1.05</span> <span class="o">*</span> <span class="n">Ecm</span> <span class="o">*</span> <span class="n">ec1</span> <span class="o">/</span> <span class="n">fcm</span>
         <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">de</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
         <span class="n">ec</span> <span class="o">=</span> <span class="p">[</span><span class="n">ei</span> <span class="o">-</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">ei</span> <span class="ow">in</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
-        <span class="n">fctm</span> <span class="o">=</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">fck</span><span class="o">**</span><span class="p">(</span><span class="mf">2.</span> <span class="o">/</span> <span class="mf">3.</span><span class="p">)</span> <span class="k">if</span> <span class="n">fck</span> <span class="o">&lt;=</span> <span class="mi">50</span> <span class="k">else</span> <span class="mf">2.12</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">fcm</span> <span class="o">/</span> <span class="mf">10.</span><span class="p">)</span>  <span class="c1"># MPa</span>
+        <span class="n">fctm</span> <span class="o">=</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">fck</span><span class="o">**</span><span class="p">(</span><span class="mf">2.</span> <span class="o">/</span> <span class="mf">3.</span><span class="p">)</span> <span class="k">if</span> <span class="n">fck</span> <span class="o">&lt;=</span> <span class="mi">50</span> <span class="k">else</span> <span class="mf">2.12</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">fcm</span> <span class="o">/</span> <span class="mf">10.</span><span class="p">)</span>
         <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span> <span class="o">*</span> <span class="n">fcm</span> <span class="o">*</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">ei</span> <span class="o">/</span> <span class="n">ec1</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">ei</span> <span class="o">/</span> <span class="n">ec1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ei</span> <span class="o">/</span> <span class="n">ec1</span><span class="p">))</span> <span class="k">for</span> <span class="n">ei</span> <span class="ow">in</span> <span class="n">e</span><span class="p">]</span>
         <span class="n">E</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">ft</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]</span>
@@ -364,10 +364,10 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;Concrete&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fck</span> <span class="o">=</span> <span class="n">fck</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fck</span> <span class="o">=</span> <span class="n">fck</span> <span class="o">*</span> <span class="mf">10.</span><span class="o">**</span><span class="mi">6</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">E</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="n">E</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;v&#39;</span><span class="p">:</span> <span class="n">v</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;G&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>  <span class="c1"># not defined yet</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;G&#39;</span><span class="p">:</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">E</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">v</span><span class="p">)}</span>  <span class="c1"># check assumption</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="n">ec</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tension</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="n">ft</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="n">et</span><span class="p">}</span>
@@ -551,7 +551,7 @@
             
 
             
-                Last updated on Feb 09, 2018.
+                Last updated on Feb 13, 2018.
             
 
             

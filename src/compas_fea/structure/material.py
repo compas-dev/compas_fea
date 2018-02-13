@@ -14,8 +14,8 @@ __email__     = 'liew@arch.ethz.ch'
 
 __all__ = [
     'Concrete',
-    # 'ConcreteSmearedCrack',
-    # 'ConcreteDamagedPlasticity',
+    'ConcreteSmearedCrack',
+    'ConcreteDamagedPlasticity',
     'ElasticIsotropic',
     'ElasticOrthotropic',
     'ElasticPlastic',
@@ -276,15 +276,15 @@ class Concrete(object):
 
     def __init__(self, name, fck, v=0.2, p=2400, fr=None):
         de = 0.0001
-        fcm = fck + 8  # MPa
-        Ecm = 22 * 10**3 * (fcm / 10.)**0.3  # MPa
+        fcm = fck + 8
+        Ecm = 22 * 10**3 * (fcm / 10.)**0.3
         ec1 = min(0.7 * fcm**0.31, 2.8) * 0.001
         ecu1 = 0.0035 if fck < 50 else (2.8 + 27 * ((98 - fcm) / 100.)**4) * 0.001
         n = int(ecu1 / de)
         k = 1.05 * Ecm * ec1 / fcm
         e = [i * de for i in range(n + 1)]
         ec = [ei - e[1] for ei in e[1:]]
-        fctm = 0.3 * fck**(2. / 3.) if fck <= 50 else 2.12 * log(1 + fcm / 10.)  # MPa
+        fctm = 0.3 * fck**(2. / 3.) if fck <= 50 else 2.12 * log(1 + fcm / 10.)
         f = [10**6 * fcm * (k * (ei / ec1) - (ei / ec1)**2) / (1. + (k - 2) * (ei / ec1)) for ei in e]
         E = f[1] / e[1]
         ft = [1., 0.]
@@ -294,10 +294,10 @@ class Concrete(object):
 
         self.__name__ = 'Concrete'
         self.name = name
-        self.fck = fck
+        self.fck = fck * 10.**6
         self.E = {'E': E}
         self.v = {'v': v}
-        self.G = {'G': None}  # not defined yet
+        self.G = {'G': 0.5 * E / (1 + v)}  # check assumption
         self.p = p
         self.compression = {'f': f[1:], 'e': ec}
         self.tension = {'f': ft, 'e': et}

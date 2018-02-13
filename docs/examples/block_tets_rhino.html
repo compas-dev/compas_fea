@@ -103,13 +103,12 @@
 
 <span class="c1"># Add tetrahedrons</span>
 
-<span class="n">vol</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">)</span>
 <span class="n">mesh</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">ObjectsByLayer</span><span class="p">(</span><span class="s1">&#39;mesh&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">add_tets_from_mesh</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;elset_tets&#39;</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">draw_tets</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;tets&#39;</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="n">vol</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">add_tets_from_mesh</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;elset_tets&#39;</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">draw_tets</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;tets&#39;</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
 <span class="c1"># Add node sets</span>
 
-<span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;nset_bot&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_top&#39;</span><span class="p">])</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;base&#39;</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">])</span>
 
 <span class="c1"># Add materials</span>
 
@@ -126,11 +125,11 @@
 
 <span class="c1"># Add loads</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_top&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_top&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">100</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_top&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">100</span><span class="p">))</span>
 
 <span class="c1"># Add displacementss</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_bot&#39;</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;base&#39;</span><span class="p">))</span>
 
 <span class="c1"># Add steps</span>
 
@@ -146,11 +145,6 @@
 <span class="c1"># Run and extract data</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">])</span>
-
-<span class="c1"># Plot stresses</span>
-
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;smises&#39;</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
-<span class="c1">#rhino.plot_voxels(mdl, step=&#39;step_load&#39;, field=&#39;smises&#39;, cbar=[None, None], vmin=0.3, vdx=0.01)</span>
 </code></pre></div>
 </div>
 </div>
@@ -240,7 +234,7 @@
             
 
             
-                Last updated on Feb 09, 2018.
+                Last updated on Feb 13, 2018.
             
 
             

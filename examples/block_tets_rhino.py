@@ -24,13 +24,12 @@ mdl = Structure(name='block_tets', path='C:/Temp/')
 
 # Add tetrahedrons
 
-vol = 5 * 10**(-7)
 mesh = rs.ObjectsByLayer('mesh')[0]
-rhino.add_tets_from_mesh(mdl, name='elset_tets', mesh=mesh, draw_tets=True, layer='tets', volume=vol)
+rhino.add_tets_from_mesh(mdl, name='elset_tets', mesh=mesh, draw_tets=False, layer='tets', volume=None)
 
 # Add node sets
 
-rhino.add_sets_from_layers(mdl, layers=['nset_bot', 'nset_top'])
+rhino.add_sets_from_layers(mdl, layers=['base', 'top'])
 
 # Add materials
 
@@ -47,11 +46,11 @@ mdl.add_element_properties(ep)
 
 # Add loads
 
-mdl.add_load(PointLoad(name='load_top', nodes='nset_top', y=100, z=100))
+mdl.add_load(PointLoad(name='load_top', nodes='top', y=100, z=100))
 
 # Add displacementss
 
-mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_bot'))
+mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='base'))
 
 # Add steps
 
@@ -67,8 +66,3 @@ mdl.summary()
 # Run and extract data
 
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
-
-# Plot stresses
-
-rhino.plot_data(mdl, step='step_load', field='smises', cbar=[None, None])
-#rhino.plot_voxels(mdl, step='step_load', field='smises', cbar=[None, None], vmin=0.3, vdx=0.01)

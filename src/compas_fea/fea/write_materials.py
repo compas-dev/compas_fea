@@ -114,170 +114,75 @@ def write_input_materials(f, software, materials, sections=None, properties=None
 
             _write_steel(f, software, E, v, p, tension, c, material_index, material)
 
+        # Cracked Concrete
+
+        elif mtype == 'ConcreteSmearedCrack':
+
+            _write_cracked_concrete(f, software, E, v, compression, tension, material)
+
+        # Concrete
+
+        elif mtype == 'Concrete':
+
+            _write_concrete(f, software, E, v, p, compression, tension, material_index, material)
+
+        # Concrete damaged plasticity
+
+        elif mtype == 'ConcreteDamagedPlasticity':
+
+            _write_plasticity_concrete(f, software, material)
+
+        # Thermal
+
+        elif mtype == 'ThermalMaterial':
+
+            _write_thermal(f, software, material)
+
         # Density
 
         _write_density(f, software, p, c)
 
+    if software == 'sofistik':
 
-
-
-    #     # Concrete
-
-    #     elif mtype in ['ConcreteSmearedCrack', 'Concrete']:
-
-    #         if software == 'abaqus':
-
-    #             f.write('*ELASTIC\n')
-    #             f.write('** E[Pa], v[-]\n')
-    #             f.write('**\n')
-    #             f.write('{0}, {1}\n'.format(E, v))
-    #             f.write('**\n')
-
-    #             f.write('*CONCRETE\n')
-    #             f.write('** f[Pa], e[-] : compression\n')
-    #             f.write('**\n')
-    #             for cf, ce in zip(compression['f'], compression['e']):
-    #                 f.write('{0}, {1}\n'.format(cf, ce))
-    #             f.write('**\n')
-
-    #             f.write('*TENSION STIFFENING\n')
-    #             f.write('** f[Pa], e[-] : tension\n')
-    #             f.write('**\n')
-    #             for tf, te in zip(tension['f'], tension['e']):
-    #                 f.write('{0}, {1}\n'.format(tf, te))
-
-    #             f.write('**\n')
-    #             f.write('*FAILURE RATIOS\n')
-    #             a, b = material.fratios
-    #             f.write('{0}, {1}\n'.format(a, b))
-
-    #             f.write('**\n')
-    #             f.write('*DENSITY\n')
-    #             f.write('** p[kg/m3]\n')
-    #             f.write('**\n')
-    #             f.write('{0}\n'.format(density))
-    #             f.write('**\n')
-
-    #         elif software == 'opensees':
-    #             pass
-
-    #         elif software == 'sofistik':
-
-    #             fck = material.fck
-    #             f.write('CONC {0} TYPE C FCN {1} MUE {2} GAM {3} TYPR C\n'.format(material_index, fck, v, yc))
-    #             f.write('$\n')
-
-    #     # Concrete damaged plasticity
-
-    #     elif mtype == 'ConcreteDamagedPlasticity':
-
-    #         if software == 'abaqus':
-
-    #             pass
-
-    #             # f.write('**\n')
-    #             # f.write('*CONCRETE DAMAGED PLASTICITY\n')
-    #             # f.write('** psi[deg], e[-], sr[-], Kc[-], mu[-]\n')
-    #             # f.write('**\n')
-    #             # f.write(', '.join([str(i) for i in material.damage]) + '\n')
-    #             # f.write('**\n')
-
-    #             # f.write('*CONCRETE COMPRESSION HARDENING\n')
-    #             # f.write('** fy[Pa], eu[-], , T[C]\n')
-    #             # f.write('**\n')
-    #             # for i in material.hardening:
-    #             #     f.write(', '.join([str(j) for j in i]) + '\n')
-    #             # f.write('**\n')
-
-    #             # f.write('*CONCRETE TENSION STIFFENING, TYPE=GFI\n')
-    #             # f.write('** ft[Pa], et[-], etd[1/s], T[C]\n')
-    #             # f.write('**\n')
-    #             # for i in material.stiffening:
-    #             #     f.write(', '.join([str(j) for j in i]) + '\n')
-
-    #         elif software == 'opensees':
-
-    #             pass
-
-    #         elif software == 'sofistik':
-
-    #             pass
-
-    #     # Thermal
-
-    #     elif mtype == 'ThermalMaterial':
-
-    #         if software == 'abaqus':
-
-    #             pass
-
-    #             # f.write('**\n')
-    #             # f.write('*CONDUCTIVITY\n')
-    #             # f.write('** k[W/mK]\n')
-    #             # f.write('**\n')
-    #             # for i in material.conductivity:
-    #             #     f.write(', '.join([str(j) for j in i]) + '\n')
-
-    #             # f.write('**\n')
-    #             # f.write('*SPECIFIC HEAT\n')
-    #             # f.write('** c[J/kgK]\n')
-    #             # f.write('**\n')
-    #             # for i in material.sheat:
-    #             #     f.write(', '.join([str(j) for j in i]) + '\n')
-
-    #         elif software == 'opensees':
-
-    #             pass
-
-    #         elif software == 'sofistik':
-
-    #             pass
-
-    # f.write('{0}\n'.format(c))
-
-    # if software == 'sofistik':
-
-    #     f.write('$ -----------------------------------------------------------------------------\n')
-    #     f.write('$ -------------------------------------------------------------------- Sections\n')
-    #     f.write('$\n')
-
-    #     for key, property in properties.items():
-
-    #         section = sections[property.section]
-    #         section_index = section.index + 1
-    #         material = materials[property.material]
-    #         material_index = material.index + 1
-    #         geometry = section.geometry
-    #         stype = section.__name__
-
-    #         if stype not in ['SolidSection', 'ShellSection']:
-
-    #             f.write('{0} {1}\n'.format(c, section.name))
-    #             f.write('{0} '.format(c) + '-' * len(section.name) + '\n')
-    #             f.write('{0}\n'.format(c))
-
-    #             if stype in ['PipeSection', 'CircularSection']:
-
-    #                 if stype == 'PipeSection':
-
-    #                     D = geometry['r'] * 2 * 1000
-    #                     t = geometry['t'] * 1000
-    #                     f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, t, material_index))
-
-    #                 elif stype == 'CircularSection':
-
-    #                     D = geometry['r'] * 2 * 1000
-    #                     f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, 0, material_index))
-
-    #             elif stype in ['TrussSection']:
-
-    #                 D = sqrt(geometry['A'] * 4 / pi) * 1000
-    #                 f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, 0, material_index))
-
-    #             f.write('$\n')
+        _write_sofistik_sections(f, properties, materials, sections)
 
     if footers[software]:
         f.write('{0}'.format(footers[software]))
+
+
+def _write_sofistik_sections(f, properties, materials, sections):
+
+    f.write('$\n')
+    f.write('$ -----------------------------------------------------------------------------\n')
+    f.write('$ -------------------------------------------------------------------- Sections\n')
+    f.write('$\n')
+
+    for key, property in properties.items():
+
+        section = sections[property.section]
+        section_index = section.index + 1
+        stype = section.__name__
+        geometry = section.geometry
+        material_index = materials[property.material].index + 1
+
+        if stype not in ['SolidSection', 'ShellSection']:
+
+            f.write('$ {0}\n'.format(section.name))
+            f.write('$ ' + '-' * len(section.name) + '\n')
+            f.write('$\n')
+
+            if stype in ['PipeSection', 'CircularSection']:
+
+                D = geometry['r'] * 2 * 1000
+                t = geometry['t'] * 1000 if stype == 'PipeSection' else 0
+                f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, t, material_index))
+
+            elif stype in ['TrussSection']:
+
+                D = sqrt(geometry['A'] * 4 / pi) * 1000
+                f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, 0, material_index))
+
+            f.write('$\n')
 
 
 def _write_elastic(f, software, E, G, v, p, compression, tension, c, material_index):
@@ -405,6 +310,138 @@ def _write_steel(f, software, E, v, p, tension, c, material_index, material):
         f.write('STEE {0} {1} ES {2} GAM {3} FY {4} FT {5} FP {4} SCM {6} EPSY {7} EPST {8} MUE {9}\n'.format(
             material_index, id, E, yc, fy, fu, sf, eyp, eup, v))
         f.write('$\n')
+
+    elif software == 'ansys':
+
+        pass
+
+
+def _write_cracked_concrete(f, software, E, v, compression, tension, material):
+
+    if software == 'abaqus':
+
+        f.write('*ELASTIC\n')
+        f.write('** E[Pa], v[-]\n')
+        f.write('**\n')
+        f.write('{0}, {1}\n'.format(E, v))
+        f.write('**\n')
+
+        f.write('*CONCRETE\n')
+        f.write('** f[Pa], e[-] : compression\n')
+        f.write('**\n')
+        for cf, ce in zip(compression['f'], compression['e']):
+            f.write('{0}, {1}\n'.format(cf, ce))
+        f.write('**\n')
+
+        f.write('*TENSION STIFFENING\n')
+        f.write('** f[Pa], e[-] : tension\n')
+        f.write('**\n')
+        for tf, te in zip(tension['f'], tension['e']):
+            f.write('{0}, {1}\n'.format(tf, te))
+
+        f.write('**\n')
+        f.write('*FAILURE RATIOS\n')
+        a, b = material.fratios
+        f.write('{0}, {1}\n'.format(a, b))
+        f.write('**\n')
+
+    elif software == 'opensees':
+
+        pass
+
+    elif software == 'sofistik':
+
+        pass
+
+    elif software == 'ansys':
+
+        pass
+
+
+def _write_concrete(f, software, E, v, p, compression, tension, material_index, material):
+
+    if software == 'abaqus':
+
+        _write_cracked_concrete(f, software, E, v, compression, tension, material)
+
+    elif software == 'opensees':
+
+        pass
+
+    elif software == 'sofistik':
+
+        fck = material.fck / 10.**6
+        yc = p / 100
+        f.write('CONC {0} TYPE C FCN {1} MUE {2} GAM {3} TYPR C\n'.format(material_index, fck, v, yc))
+        f.write('$\n')
+
+    elif software == 'ansys':
+
+        pass
+
+
+def _write_thermal(f, software, material):
+
+    if software == 'abaqus':
+
+        f.write('**\n')
+        f.write('*CONDUCTIVITY\n')
+        f.write('** k[W/mK]\n')
+        f.write('**\n')
+        for i in material.conductivity:
+            f.write(', '.join([str(j) for j in i]) + '\n')
+
+        f.write('**\n')
+        f.write('*SPECIFIC HEAT\n')
+        f.write('** c[J/kgK]\n')
+        f.write('**\n')
+        for i in material.sheat:
+            f.write(', '.join([str(j) for j in i]) + '\n')
+
+    elif software == 'opensees':
+
+        pass
+
+    elif software == 'sofistik':
+
+        pass
+
+    elif software == 'ansys':
+
+        pass
+
+
+def _write_plasticity_concrete(f, software, material):
+
+    if software == 'abaqus':
+
+        f.write('**\n')
+        f.write('*CONCRETE DAMAGED PLASTICITY\n')
+        f.write('** psi[deg], e[-], sr[-], Kc[-], mu[-]\n')
+        f.write('**\n')
+        f.write(', '.join([str(i) for i in material.damage]) + '\n')
+        f.write('**\n')
+
+        f.write('*CONCRETE COMPRESSION HARDENING\n')
+        f.write('** fy[Pa], eu[-], , T[C]\n')
+        f.write('**\n')
+        for i in material.hardening:
+            f.write(', '.join([str(j) for j in i]) + '\n')
+        f.write('**\n')
+
+        f.write('*CONCRETE TENSION STIFFENING, TYPE=GFI\n')
+        f.write('** ft[Pa], et[-], etd[1/s], T[C]\n')
+        f.write('**\n')
+        for i in material.stiffening:
+            f.write(', '.join([str(j) for j in i]) + '\n')
+
+    elif software == 'opensees':
+
+        pass
+
+    elif software == 'sofistik':
+
+        pass
 
     elif software == 'ansys':
 

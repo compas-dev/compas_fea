@@ -154,7 +154,7 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
 
     path = structure.path
     basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc('post-process', basedir=basedir, tmpdir=path)
+    xfunc = XFunc('tets', basedir=basedir, tmpdir=path)
     xfunc.funcname = 'functions.tets_from_vertices_faces'
 
     try:
@@ -168,12 +168,12 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
             nodes = [structure.check_node_exists(tets_points[i]) for i in element]
             ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', acoustic=acoustic, thermal=thermal)
             ekeys.append(ekey)
-        structure.add_set(name=name, type='element', selection=ekeys, explode=False)
+        structure.add_set(name=name, type='element', selection=ekeys)
 
-        rs.EnableRedraw(False)
-        rs.DeleteObjects(rs.ObjectsByLayer(layer))
-        rs.CurrentLayer(layer)
         if draw_tets:
+            rs.EnableRedraw(False)
+            rs.DeleteObjects(rs.ObjectsByLayer(layer))
+            rs.CurrentLayer(layer)
             tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
             for i, points in enumerate(tets_elements):
                 xyz = [tets_points[j] for j in points]
