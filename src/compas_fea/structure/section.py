@@ -377,10 +377,10 @@ class SpringSection(object):
     ----------
     name : str
         Section name.
-    forces : list
-        Forces data (axial) for non-linear springs.
-    displacements : list
-        Displacements data (axial) for non-linear springs.
+    forces : dic
+        Forces data for non-linear springs.
+    displacements : dic
+        Displacements data for non-linear springs.
     stiffness : dic
         Elastic stiffness for linear springs. The dictionary keys show the spring
         axis and the values represent the stifness.
@@ -395,7 +395,7 @@ class SpringSection(object):
 
     """
 
-    def __init__(self, name, forces=[], displacements=[], stiffness={}):
+    def __init__(self, name, forces={}, displacements={}, stiffness={}):
         self.__name__ = 'SpringSection'
         self.name = name
         self.geometry = None

@@ -79,7 +79,7 @@
 <h1>SpringSection</h1>
 <dl class="class">
 <dt id="compas_fea.structure.section.SpringSection">
-<em class="property">class </em><code class="descclassname">compas_fea.structure.section.</code><code class="descname">SpringSection</code><span class="sig-paren">(</span><em>name</em>, <em>forces=[]</em>, <em>displacements=[]</em>, <em>stiffness={}</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/section.html#SpringSection"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="descclassname">compas_fea.structure.section.</code><code class="descname">SpringSection</code><span class="sig-paren">(</span><em>name</em>, <em>forces={}</em>, <em>displacements={}</em>, <em>stiffness={}</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/section.html#SpringSection"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>For use with spring elements. Requires either a stiffness dictonary for
 linear springs, or forces and displacement lists for non-linear springs.</p>
@@ -87,8 +87,8 @@ linear springs, or forces and displacement lists for non-linear springs.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – Section name.</p></li>
-<li><p><strong>forces</strong> (<em>list</em>) – Forces data (axial) for non-linear springs.</p></li>
-<li><p><strong>displacements</strong> (<em>list</em>) – Displacements data (axial) for non-linear springs.</p></li>
+<li><p><strong>forces</strong> (<em>dic</em>) – Forces data for non-linear springs.</p></li>
+<li><p><strong>displacements</strong> (<em>dic</em>) – Displacements data for non-linear springs.</p></li>
 <li><p><strong>stiffness</strong> (<em>dic</em>) – Elastic stiffness for linear springs. The dictionary keys show the spring
 axis and the values represent the stifness.</p></li>
 </ul>
@@ -192,7 +192,7 @@ axis and the values represent the stifness.</p></li>
             
 
             
-                Last updated on Feb 13, 2018.
+                Last updated on Feb 14, 2018.
             
 
             

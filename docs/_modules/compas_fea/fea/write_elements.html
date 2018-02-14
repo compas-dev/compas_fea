@@ -147,6 +147,7 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
 
     <span class="n">has_rebar</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">written_springs</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="nb">property</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
@@ -154,7 +155,7 @@
         <span class="n">section_index</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">stype</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="n">geometry</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">geometry</span>
-        <span class="n">material</span> <span class="o">=</span> <span class="n">materials</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">material</span><span class="p">]</span>
+        <span class="n">material</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">property</span><span class="o">.</span><span class="n">material</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">reinforcement</span> <span class="o">=</span> <span class="nb">property</span><span class="o">.</span><span class="n">reinforcement</span>
         <span class="k">if</span> <span class="n">reinforcement</span><span class="p">:</span>
             <span class="n">rebar_index</span> <span class="o">=</span> <span class="n">materials</span><span class="p">[</span><span class="n">reinforcement</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;material&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
@@ -188,9 +189,15 @@
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;GRP </span><span class="si">{0}</span><span class="s1"> BASE </span><span class="si">{0}</span><span class="s1">0000</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">set_index</span><span class="p">))</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
+            <span class="c1"># Springs</span>
+
+            <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">&#39;SpringSection&#39;</span><span class="p">:</span>
+
+                <span class="n">_write_springs</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">written_springs</span><span class="p">)</span>
+
             <span class="c1"># Beam sections</span>
 
-            <span class="k">if</span> <span class="n">stype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">shells</span> <span class="o">+</span> <span class="n">solids</span> <span class="o">+</span> <span class="n">trusses</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">stype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">shells</span> <span class="o">+</span> <span class="n">solids</span> <span class="o">+</span> <span class="n">trusses</span><span class="p">:</span>
 
                 <span class="n">_write_beams</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="n">geometry</span><span class="p">,</span> <span class="n">material</span><span class="p">,</span> <span class="n">section_index</span><span class="p">,</span> <span class="n">stype</span><span class="p">)</span>
 
@@ -533,69 +540,72 @@
             <span class="k">pass</span>
 
 
-<span class="k">def</span> <span class="nf">_write_springs</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">_write_springs</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">written_springs</span><span class="p">):</span>
 
-    <span class="k">pass</span>
+    <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
 
-<span class="c1">#     written_springs = []</span>
+        <span class="n">b1</span> <span class="o">=</span> <span class="s1">&#39;BEH_</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">b1</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">written_springs</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*CONNECTOR BEHAVIOR, NAME=</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">b1</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">stiffness</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*CONNECTOR ELASTICITY, COMPONENT=1</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">stiffness</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*CONNECTOR ELASTICITY, COMPONENT=1, NONLINEAR</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">forces</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="n">section</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]):</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+            <span class="n">written_springs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b1</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-<span class="c1">#         if property.elements:</span>
-<span class="c1">#             elset_name = &#39;elset_{0}&#39;.format(key)</span>
-<span class="c1">#             structure.add_set(name=elset_name, type=&#39;element&#39;, selection=property.elements)</span>
-<span class="c1">#             f.write(&#39;**\n&#39;)</span>
-<span class="c1">#             f.write(&#39;*ELSET, ELSET={0}\n&#39;.format(elset_name))</span>
-<span class="c1">#             selection = [i + 1 for i in property.elements]</span>
-<span class="c1">#             cnt = 0</span>
-<span class="c1">#             cm = 9</span>
-<span class="c1">#             for j in selection:</span>
-<span class="c1">#                 f.write(str(j))</span>
-<span class="c1">#                 if (cnt &lt; cm) and (j != selection[-1]):</span>
-<span class="c1">#                     f.write(&#39;,&#39;)</span>
-<span class="c1">#                     cnt += 1</span>
-<span class="c1">#                 elif cnt &gt;= cm:</span>
-<span class="c1">#                     f.write(&#39;\n&#39;)</span>
-<span class="c1">#                     cnt = 0</span>
-<span class="c1">#                 else:</span>
-<span class="c1">#                     f.write(&#39;\n&#39;)</span>
-<span class="c1">#             elsets = [elset_name]</span>
-<span class="c1">#         else:</span>
-<span class="c1">#             elsets = property.elsets</span>
+    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
 
-<span class="c1">#         sets = structure.sets</span>
+        <span class="n">section_index</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">section_index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">written_springs</span><span class="p">:</span>
+            <span class="n">E</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># WP</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;uniaxialMaterial Elastic </span><span class="si">{0}</span><span class="s1">01 </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">section_index</span><span class="p">,</span> <span class="n">E</span><span class="p">))</span>  <span class="c1"># WIP</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">written_springs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">section_index</span><span class="p">)</span>
 
-<span class="c1">#         for elset in elsets:</span>
+    <span class="k">for</span> <span class="n">select</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
 
-<span class="c1">#             # Springs</span>
+        <span class="n">element</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="n">select</span><span class="p">]</span>
+        <span class="n">sp</span><span class="p">,</span> <span class="n">ep</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">nodes</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">select</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">sp</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">ep</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">ey</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ey&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">ez</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ez&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-<span class="c1">#             if stype == &#39;SpringSection&#39;:</span>
+        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
 
-<span class="c1">#                 if explode:</span>
-<span class="c1">#                     for select in selection:</span>
-<span class="c1">#                         e1 = &#39;element_{0}&#39;.format(select)</span>
-<span class="c1">#                         behaviour = &#39;BEH_{0}&#39;.format(section.name)</span>
-<span class="c1">#                         f.write(&#39;*CONNECTOR SECTION, ELSET={0}, BEHAVIOR=BEH_{1}\n&#39;.format(e1, section.name))</span>
-<span class="c1">#                         f.write(&#39;AXIAL\n&#39;)</span>
-<span class="c1">#                         f.write(&#39;ORI_{0}_{1}\n&#39;.format(select, section.name))</span>
-<span class="c1">#                         f.write(&#39;**\n&#39;)</span>
-<span class="c1">#                         f.write(&#39;*ORIENTATION, NAME=ORI_{0}_{1}\n&#39;.format(select, section.name))</span>
-<span class="c1">#                         ey = elements[select].axes.get(&#39;ey&#39;, None)</span>
-<span class="c1">#                         ez = elements[select].axes.get(&#39;ez&#39;, None)</span>
-<span class="c1">#                         f.write(&#39;, &#39;.join([str(j) for j in ez]) + &#39;, &#39;)</span>
-<span class="c1">#                         f.write(&#39;, &#39;.join([str(j) for j in ey]) + &#39;\n&#39;)</span>
-<span class="c1">#                         f.write(&#39;**\n&#39;)</span>
+            <span class="n">e1</span> <span class="o">=</span> <span class="s1">&#39;element_</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">select</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*ELEMENT, TYPE=CONN3D2, ELSET=</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e1</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">,</span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
 
-<span class="c1">#                         if behaviour not in written_springs:</span>
-<span class="c1">#                             f.write(&#39;*CONNECTOR BEHAVIOR, NAME=BEH_{0}\n&#39;.format(section.name))</span>
-<span class="c1">#                             f.write(&#39;**\n&#39;)</span>
-<span class="c1">#                             if section.stiffness:</span>
-<span class="c1">#                                 f.write(&#39;*CONNECTOR ELASTICITY, COMPONENT=1\n&#39;)</span>
-<span class="c1">#                                 f.write(&#39;{0}\n&#39;.format(section.stiffness))</span>
-<span class="c1">#                             else:</span>
-<span class="c1">#                                 f.write(&#39;*CONNECTOR ELASTICITY, COMPONENT=1, NONLINEAR\n&#39;)</span>
-<span class="c1">#                                 for i, j in zip(section.forces, section.displacements):</span>
-<span class="c1">#                                     f.write(&#39;{0}, {1}\n&#39;.format(i, j))</span>
-<span class="c1">#                             written_springs.append(behaviour)</span>
-<span class="c1">#                 else:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*ORIENTATION, NAME=ORI_</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">select</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ez</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ey</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*CONNECTOR SECTION, ELSET=</span><span class="si">{0}</span><span class="s1">, BEHAVIOR=</span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">b1</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;AXIAL</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;ORI_</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">select</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+            <span class="k">pass</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+
+            <span class="n">orientation</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ey</span><span class="p">])</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;element twoNodeLink </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="s1"> -mat </span><span class="si">{3}</span><span class="s1">01 -dir 1 -orient </span><span class="si">{4}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">section_index</span><span class="p">,</span>
+                    <span class="n">orientation</span><span class="p">))</span>  <span class="c1"># WIP</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>
+
+            <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">written_springs</span>
 </code></pre></div>
                         
                         <!-- <nav class="compas-sideways">
@@ -662,7 +672,7 @@
             
 
             
-                Last updated on Feb 13, 2018.
+                Last updated on Feb 14, 2018.
             
 
             

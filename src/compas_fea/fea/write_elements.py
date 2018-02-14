@@ -77,6 +77,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
     f.write('{0}\n'.format(c))
 
     has_rebar = False
+    written_springs = []
 
     for key, property in properties.items():
 
@@ -84,7 +85,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
         section_index = section.index + 1
         stype = section.__name__
         geometry = section.geometry
-        material = materials[property.material]
+        material = materials.get(property.material, None)
         reinforcement = property.reinforcement
         if reinforcement:
             rebar_index = materials[reinforcement.values()[0]['material']].index + 1
@@ -118,9 +119,15 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                 f.write('GRP {0} BASE {0}0000\n'.format(set_index))
                 f.write('$\n')
 
+            # Springs
+
+            if stype == 'SpringSection':
+
+                _write_springs(f, software, selection, elements, section, written_springs)
+
             # Beam sections
 
-            if stype not in shells + solids + trusses:
+            elif stype not in shells + solids + trusses:
 
                 _write_beams(f, software, elements, selection, geometry, material, section_index, stype)
 
@@ -463,66 +470,69 @@ def _write_trusses(f, selection, software, elements, geometry, material, section
             pass
 
 
-def _write_springs():
+def _write_springs(f, software, selection, elements, section, written_springs):
 
-    pass
+    if software == 'abaqus':
 
-#     written_springs = []
+        b1 = 'BEH_{0}'.format(section.name)
+        if b1 not in written_springs:
+            f.write('*CONNECTOR BEHAVIOR, NAME={0}\n'.format(b1))
+            if section.stiffness:
+                f.write('*CONNECTOR ELASTICITY, COMPONENT=1\n')
+                f.write('{0}\n'.format(section.stiffness['x']))
+            else:
+                f.write('*CONNECTOR ELASTICITY, COMPONENT=1, NONLINEAR\n')
+                for i, j in zip(section.forces['x'], section.displacements['x']):
+                    f.write('{0}, {1}\n'.format(i, j))
+            written_springs.append(b1)
+            f.write('**\n')
 
-#         if property.elements:
-#             elset_name = 'elset_{0}'.format(key)
-#             structure.add_set(name=elset_name, type='element', selection=property.elements)
-#             f.write('**\n')
-#             f.write('*ELSET, ELSET={0}\n'.format(elset_name))
-#             selection = [i + 1 for i in property.elements]
-#             cnt = 0
-#             cm = 9
-#             for j in selection:
-#                 f.write(str(j))
-#                 if (cnt < cm) and (j != selection[-1]):
-#                     f.write(',')
-#                     cnt += 1
-#                 elif cnt >= cm:
-#                     f.write('\n')
-#                     cnt = 0
-#                 else:
-#                     f.write('\n')
-#             elsets = [elset_name]
-#         else:
-#             elsets = property.elsets
+    elif software == 'opensees':
 
-#         sets = structure.sets
+        section_index = section.index + 1
+        if section_index not in written_springs:
+            E = 1 # WP
+            f.write('uniaxialMaterial Elastic {0}01 {1}\n'.format(section_index, E))  # WIP
+            f.write('#\n')
+            written_springs.append(section_index)
 
-#         for elset in elsets:
+    for select in selection:
 
-#             # Springs
+        element = elements[select]
+        sp, ep = element.nodes
+        n = select + 1
+        i = sp + 1
+        j = ep + 1
+        ey = element.axes.get('ey', None)
+        ez = element.axes.get('ez', None)
 
-#             if stype == 'SpringSection':
+        if software == 'abaqus':
 
-#                 if explode:
-#                     for select in selection:
-#                         e1 = 'element_{0}'.format(select)
-#                         behaviour = 'BEH_{0}'.format(section.name)
-#                         f.write('*CONNECTOR SECTION, ELSET={0}, BEHAVIOR=BEH_{1}\n'.format(e1, section.name))
-#                         f.write('AXIAL\n')
-#                         f.write('ORI_{0}_{1}\n'.format(select, section.name))
-#                         f.write('**\n')
-#                         f.write('*ORIENTATION, NAME=ORI_{0}_{1}\n'.format(select, section.name))
-#                         ey = elements[select].axes.get('ey', None)
-#                         ez = elements[select].axes.get('ez', None)
-#                         f.write(', '.join([str(j) for j in ez]) + ', ')
-#                         f.write(', '.join([str(j) for j in ey]) + '\n')
-#                         f.write('**\n')
+            e1 = 'element_{0}'.format(select)
+            f.write('*ELEMENT, TYPE=CONN3D2, ELSET={0}\n'.format(e1))
+            f.write('{0}, {1},{2}\n'.format(n, i, j))
 
-#                         if behaviour not in written_springs:
-#                             f.write('*CONNECTOR BEHAVIOR, NAME=BEH_{0}\n'.format(section.name))
-#                             f.write('**\n')
-#                             if section.stiffness:
-#                                 f.write('*CONNECTOR ELASTICITY, COMPONENT=1\n')
-#                                 f.write('{0}\n'.format(section.stiffness))
-#                             else:
-#                                 f.write('*CONNECTOR ELASTICITY, COMPONENT=1, NONLINEAR\n')
-#                                 for i, j in zip(section.forces, section.displacements):
-#                                     f.write('{0}, {1}\n'.format(i, j))
-#                             written_springs.append(behaviour)
-#                 else:
+            f.write('*ORIENTATION, NAME=ORI_{0}\n'.format(select))
+            f.write(', '.join([str(k) for k in ez]) + ', ')
+            f.write(', '.join([str(k) for k in ey]) + '\n')
+
+            f.write('*CONNECTOR SECTION, ELSET={0}, BEHAVIOR={1}\n'.format(e1, b1))
+            f.write('AXIAL\n')
+            f.write('ORI_{0}\n'.format(select))
+            f.write('**\n')
+
+        elif software == 'sofistik':
+
+            pass
+
+        elif software == 'opensees':
+
+            orientation = ' '.join([str(k) for k in ey])
+            f.write('element twoNodeLink {0} {1} {2} -mat {3}01 -dir 1 -orient {4} \n'.format(n, i, j, section_index,
+                    orientation))  # WIP
+            f.write('#\n')
+        elif software == 'ansys':
+
+            pass
+
+    return written_springs

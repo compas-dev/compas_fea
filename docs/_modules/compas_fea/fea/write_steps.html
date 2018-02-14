@@ -260,6 +260,7 @@
 
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;timeSeries Constant </span><span class="si">{0}</span><span class="s1"> -factor 1.0</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">))</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;pattern Plain </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{0}</span><span class="s1"> -fact </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">,</span> <span class="n">factor</span><span class="p">,</span> <span class="s1">&#39;{&#39;</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
             <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
 
@@ -480,9 +481,9 @@
 
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                     <span class="n">fields</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">fields_dic_from_list</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
-                <span class="c1"># if &#39;spf&#39; in fields:</span>
-                    <span class="c1"># fields[&#39;ctf&#39;] = &#39;all&#39;</span>
-                    <span class="c1"># del fields[&#39;spf&#39;]</span>
+                <span class="k">if</span> <span class="s1">&#39;spf&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                    <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;ctf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span>
+                    <span class="k">del</span> <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;spf&#39;</span><span class="p">]</span>
 
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*OUTPUT, FIELD</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -691,7 +692,7 @@
             
 
             
-                Last updated on Feb 13, 2018.
+                Last updated on Feb 14, 2018.
             
 
             

@@ -24,6 +24,8 @@ Rhino
     examples/truss_tower_rhino
     examples/truss_frame_rhino
 
+    examples/spring_simple_rhino
+
 -------
 Blender
 -------
@@ -36,8 +38,6 @@ Scripted
 .. examples/beam_simple_blender
 .. examples/beam_tree_rhino
 .. examples/beam_frame_rhino
-
-.. examples/spring_simple_rhino
 
 .. examples/block_deepbeam_rhino
 .. examples/block_deepbeam_blender

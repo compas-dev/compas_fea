@@ -190,6 +190,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
                 f.write('timeSeries Constant {0} -factor 1.0\n'.format(step_index))
                 f.write('pattern Plain {0} {0} -fact {1} {2}\n'.format(step_index, factor, '{'))
+                f.write('#\n')
 
             elif software == 'sofistik':
 
@@ -410,9 +411,9 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
                 if isinstance(fields, list):
                     fields = structure.fields_dic_from_list(fields)
-                # if 'spf' in fields:
-                    # fields['ctf'] = 'all'
-                    # del fields['spf']
+                if 'spf' in fields:
+                    fields['ctf'] = 'all'
+                    del fields['spf']
 
                 f.write('**\n')
                 f.write('*OUTPUT, FIELD\n')
