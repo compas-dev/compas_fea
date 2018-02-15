@@ -750,6 +750,7 @@ def plot_voxels(structure, step, field='smises', scale=1.0, cbar=[None, None], i
         xfunc = XFunc('voxels', basedir=basedir, tmpdir=path)
         xfunc.funcname = 'functions.voxels'
         xfunc(values=fscaled, vmin=vmin, U=U, vdx=vdx, plot='mayavi')
+        print('\n***** Voxels finished *****')
 
     except:
         print('\n***** Error plotting voxels *****')

@@ -1,6 +1,6 @@
 """An example compas_fea package for block elements."""
 
-# Note: Requires mayavi to visualise the voxels.
+# Note: Requires mayavi to plot the voxels.
 
 from compas_fea.cad import rhino
 
@@ -15,10 +15,10 @@ from compas_fea.structure import Structure
 import rhinoscriptsyntax as rs
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 # Create empty Structure object
@@ -28,7 +28,7 @@ mdl = Structure(name='block_deepbeam', path='C:/Temp/')
 # Extrude mesh
 
 nz = 20
-rhino.mesh_extrude(mdl, guid=rs.ObjectsByLayer('base_mesh'), nz=nz, dz=1./nz, setname='blocks')
+rhino.mesh_extrude(mdl, guid=rs.ObjectsByLayer('base_mesh'), nz=nz, dz=1./nz, setname='elset_blocks')
 
 # Add node and element sets
 
@@ -44,8 +44,8 @@ mdl.add_section(SolidSection(name='sec_solid'))
 
 # Add element properties
 
-ep = Properties(material='mat_elastic', section='sec_solid', elsets='blocks')
-mdl.add_element_properties(ep, 'ep_solid')
+ep = Properties(name='ep_solid', material='mat_elastic', section='sec_solid', elsets='elset_blocks')
+mdl.add_element_properties(ep)
 
 # Add loads
 
@@ -57,8 +57,9 @@ mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_supports
 
 # Add steps
 
-mdl.add_step(GeneralStep(name='step', displacements=['disp_pinned'], loads=['load_point']))
-mdl.steps_order = ['step']
+mdl.add_step(GeneralStep(name='step_bc', displacements=['disp_pinned']))
+mdl.add_step(GeneralStep(name='step_load', loads=['load_point']))
+mdl.steps_order = ['step_bc', 'step_load']
 
 # Structure summary
 
@@ -70,4 +71,5 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
 # Plot stresses
 
-rhino.plot_voxels(mdl, step='step', field='smises', cbar=[0, 2], vmin=0.3, vdx=1./nz)
+rhino.plot_data(mdl, step='step_load', field='smises', cbar=[0, 2])
+#rhino.plot_voxels(mdl, step='step_load', field='smises', cbar=[0, 2], vmin=0.3, vdx=1./nz)
