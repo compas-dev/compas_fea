@@ -163,9 +163,12 @@ def _write_sofistik_sections(f, properties, materials, sections):
         section_index = section.index + 1
         stype = section.__name__
         geometry = section.geometry
-        material_index = materials[property.material].index + 1
+        if property.material:
+            material_index = materials[property.material].index + 1
+        else:
+            material_index = None
 
-        if stype not in ['SolidSection', 'ShellSection']:
+        if stype not in ['SolidSection', 'ShellSection', 'SpringSection']:
 
             f.write('$ {0}\n'.format(section.name))
             f.write('$ ' + '-' * len(section.name) + '\n')
@@ -176,6 +179,10 @@ def _write_sofistik_sections(f, properties, materials, sections):
                 D = geometry['r'] * 2 * 1000
                 t = geometry['t'] * 1000 if stype == 'PipeSection' else 0
                 f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, t, material_index))
+
+            elif stype == 'RectangularSection':
+
+                pass
 
             elif stype in ['TrussSection']:
 
