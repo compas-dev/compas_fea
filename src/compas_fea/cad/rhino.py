@@ -71,7 +71,7 @@ def add_element_set(structure, guids, name):
     guids : list
         Rhino curve and Rhino mesh guids.
     name : str
-        Set name.
+        Name of the new element set.
 
     Returns
     -------
@@ -195,7 +195,7 @@ def add_node_set(structure, guids, name):
     guids : list
         Rhino point guids.
     name : str
-        Set name.
+        Name of the new node set.
 
     Returns
     -------

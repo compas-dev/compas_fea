@@ -1424,7 +1424,7 @@ Steps
 
     def view(self):
 
-        """ Starts the QT app for visualisation.
+        """ Starts the Pyside app for visualisation.
 
         Parameters
         ----------
@@ -1441,11 +1441,12 @@ Steps
         """
 
         try:
-            from compas_fea.viewers.app import App
-            app = App(self)
+            print('***** Launching App *****')
+            from compas_fea.app.app import App
+            app = App(structure=self)
             app.start()
         except:
-            print('***** Failed to load QT App *****')
+            print('***** Failed/closed App *****')
 
 
 # ==============================================================================

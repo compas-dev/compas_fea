@@ -31,6 +31,11 @@ Rhino
 Blender
 -------
 
+.. toctree::
+    :maxdepth: 1
+
+    examples/truss_tower_blender
+
 --------
 Scripted
 --------
@@ -54,5 +59,4 @@ Scripted
 .. examples/script_introduction_abaqus
 
 .. examples/truss_frame_rhino
-.. examples/truss_tower_blender
 .. examples/truss_tower_rhino
