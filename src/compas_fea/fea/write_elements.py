@@ -479,10 +479,10 @@ def _write_springs(f, software, selection, elements, section, written_springs):
             f.write('*CONNECTOR BEHAVIOR, NAME={0}\n'.format(b1))
             if section.stiffness:
                 f.write('*CONNECTOR ELASTICITY, COMPONENT=1\n')
-                f.write('{0}\n'.format(section.stiffness['x']))
+                f.write('{0}\n'.format(section.stiffness['axial']))
             else:
                 f.write('*CONNECTOR ELASTICITY, COMPONENT=1, NONLINEAR\n')
-                for i, j in zip(section.forces['x'], section.displacements['x']):
+                for i, j in zip(section.forces['axial'], section.displacements['axial']):
                     f.write('{0}, {1}\n'.format(i, j))
             written_springs.append(b1)
             f.write('**\n')
@@ -523,7 +523,11 @@ def _write_springs(f, software, selection, elements, section, written_springs):
 
         elif software == 'sofistik':
 
-            pass
+            kx = section.stiffness.get('axial', 0)
+            ky = section.stiffness.get('lateral', 0)
+            kr = section.stiffness.get('rotation', 0)
+            f.write('SPRI NO {0} NA {1} NE {2} CP {3} CT {4} CM {5}\n'.format(n, j, i, kx, ky, kr))
+            f.write('$\n')
 
         elif software == 'opensees':
 

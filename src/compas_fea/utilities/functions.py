@@ -315,6 +315,8 @@ def extrude_mesh(structure, mesh, nz, dz, setname=None, cap=None, links=None):
 
     ki = {}
     elements = []
+    cap_faces = []
+    link_springs = []
 
     for key in mesh.vertices():
         normal = normalize_vector(mesh.vertex_normal(key))
@@ -323,9 +325,20 @@ def extrude_mesh(structure, mesh, nz, dz, setname=None, cap=None, links=None):
         for i in range(nz):
             xyzi = add_vectors(xyz, scale_vector(normal, (i + 1) * dz))
             ki['{0}_{1}'.format(key, i + 1)] = structure.add_node(xyzi)
+        if links:
+            node1 = ki['{0}_{1}'.format(key, 0)]
+            node2 = ki['{0}_{1}'.format(key, nz)]
+            ez_sp = structure.node_xyz(node1)
+            ez_ep = structure.node_xyz(node2)
+            ez = normalize_vector(subtract_vectors(ez_ep, ez_sp))
+            try:  # ths needs checking
+                ey = cross_vectors(ez, [1, 0, 0])
+            except:
+                pass
+            ekey = structure.add_element(nodes=[node1, node2], type='SpringElement', acoustic=False, thermal=False,
+                                         axes={'ez': ez, 'ey': ey})
+            link_springs.append(ekey)
 
-    cap_faces = []
-    link_beams = []
     for face in mesh.faces():
         vs = mesh.face_vertices(face)
         if len(vs) == 3:
@@ -338,12 +351,6 @@ def extrude_mesh(structure, mesh, nz, dz, setname=None, cap=None, links=None):
             nodes = [ki[j] for j in bot + top]
             ekey = structure.add_element(nodes=nodes, type=type, acoustic=False, thermal=False)
             elements.append(ekey)
-            if links:
-                for j in vs:
-                    node1 = ki['{0}_{1}'.format(j, i + 0)]
-                    node2 = ki['{0}_{1}'.format(j, i + 1)]
-                ekey = structure.add_element(nodes=[node1, node2], type='BeamElement', acoustic=False, thermal=False)
-                link_beams.append(ekey)
             if (i == nz - 1) and cap:
                 nodes = [ki[j] for j in top]
                 ekey = structure.add_element(nodes=nodes, type='ShellElement', acoustic=False, thermal=False)
@@ -353,7 +360,7 @@ def extrude_mesh(structure, mesh, nz, dz, setname=None, cap=None, links=None):
     if cap:
         structure.add_set(name=cap, type='element', selection=cap_faces)
     if links:
-        structure.add_set(name=links, type='element', selection=link_beams)
+        structure.add_set(name=links, type='element', selection=link_springs)
 
 
 def group_keys_by_attribute(adict, name, tol='3f'):

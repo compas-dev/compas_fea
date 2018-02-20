@@ -392,6 +392,7 @@ class SpringSection(object):
     Notes
     -----
     - Force and displacement data should start from negative to positive.
+    - Directions are 'axial', 'lateral', 'rotation'.
 
     """
 

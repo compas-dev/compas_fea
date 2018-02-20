@@ -32,10 +32,10 @@ rhino.add_sets_from_layers(mdl, layers=['pins', 'middle'])
 
 # Add sections
 
-mdl.add_section(SpringSection(name='spring_elastic', stiffness={'x': 10000}))
-mdl.add_section(SpringSection(name='spring_soft', stiffness={'x': 1000}))
+mdl.add_section(SpringSection(name='spring_elastic', stiffness={'axial': 10000}))
+mdl.add_section(SpringSection(name='spring_soft', stiffness={'axial': 1000}))
 mdl.add_section(SpringSection(name='spring_nonlinear', 
-    forces={'x': [-100, 0, 100]}, displacements={'x': [-0.01, 0, 0.01]}))
+    forces={'axial': [-100, 0, 100]}, displacements={'axial': [-0.01, 0, 0.01]}))
 
 # Add element properties
 
