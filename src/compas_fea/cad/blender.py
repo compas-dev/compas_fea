@@ -11,7 +11,7 @@ from compas_blender.utilities import clear_layer
 from compas_blender.utilities import draw_pipes
 from compas_blender.utilities import draw_plane
 from compas_blender.utilities import get_objects
-# from compas_blender.utilities import get_object_location
+from compas_blender.utilities import get_object_location
 from compas_blender.utilities import set_object_location
 # from compas_blender.utilities import xdraw_mesh
 from compas_blender.utilities import xdraw_texts
@@ -21,7 +21,7 @@ from compas.geometry import subtract_vectors
 
 from compas_fea.utilities import colorbar
 # from compas_fea.utilities import extrude_mesh
-# from compas_fea.utilities import network_order
+from compas_fea.utilities import network_order
 from compas_fea.utilities import postprocess
 # from compas_fea.utilities import tets_from_vertices_faces
 # from compas_fea.utilities import voxels
@@ -51,7 +51,7 @@ __all__ = [
     'add_elset_from_bmeshes',
     'add_nset_from_objects',
 #     'plot_data',
-#     'ordered_network',
+    'ordered_network',
 #     'plot_voxels',
 #     'mesh_extrude'
 ]
@@ -410,38 +410,38 @@ def add_nset_from_objects(structure, name, objects=None, layer=None):
 #     extrude_mesh(structure=structure, mesh=mesh, nz=nz, dz=dz, setname=setname)
 
 
-# def ordered_network(structure, network, layer):
+def ordered_network(structure, network, layer):
 
-#     """ Extract node and element orders from a Network for a given start-point.
+    """ Extract node and element orders from a Network for a given start-point.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object.
-#     network : obj
-#         Network object.
-#     layer : str
-#         Layer to extract start-point (Blender object).
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    network : obj
+        Network object.
+    layer : int
+        Layer to extract start-point (Blender object).
 
-#     Returns
-#     -------
-#     list
-#         Ordered nodes.
-#     list
-#         Ordered elements.
-#     list
-#         Cumulative lengths at element mid-points.
-#     float
-#         Total length.
+    Returns
+    -------
+    list
+        Ordered nodes.
+    list
+        Ordered elements.
+    list
+        Cumulative lengths at element mid-points.
+    float
+        Total length.
 
-#     Notes
-#     -----
-#     - Function is for a Network representing a single structural element.
+    Notes
+    -----
+    - Function is for a Network representing a single structural element.
 
-#     """
+    """
 
-#     sp_xyz = get_object_location(object=get_objects(layer=layer)[0])
-#     return network_order(sp_xyz=sp_xyz, structure=structure, network=network)
+    sp_xyz = get_object_location(object=get_objects(layer=layer)[0])
+    return network_order(sp_xyz=sp_xyz, structure=structure, network=network)
 
 
 def plot_axes():

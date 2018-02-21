@@ -109,11 +109,11 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 
         for elset in elsets:
 
-            # if isinstance(elset, str) and (elset[:8] == 'element_'):
-                # selection = [int(elset[8:])]
-            # else:
-            selection = sets[elset]['selection']
-            set_index = sets[elset]['index'] + 1
+            if isinstance(elset, str) and (elset[:8] == 'element_'):
+                selection = [int(elset[8:])]
+            else:
+                selection = sets[elset]['selection']
+                set_index = sets[elset]['index'] + 1
 
             if software == 'sofistik':  # co-ordinate this with abaqus nsets
                 f.write('GRP {0} BASE {0}0000\n'.format(set_index))

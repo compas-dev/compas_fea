@@ -12,9 +12,8 @@ from PySide.QtGui import QWidget
 from PySide.QtGui import QLabel
 from PySide.QtGui import QPushButton
 from PySide.QtGui import QGridLayout
-from PySide.QtGui import QCheckBox
 
-# from compas_fea.viewers.view import View
+from compas_fea.app.view import View
 
 import sys
 
@@ -41,8 +40,8 @@ class App(QApplication):
     """
 
     def __init__(self, structure=None):
-
         super(App, self).__init__(sys.argv)
+
         self.structure = structure
         self.setup()
 
@@ -57,7 +56,7 @@ class App(QApplication):
 
     def setup_mainwindow(self):
         self.main = QMainWindow()
-#         self.setup_centralwidget()
+        self.setup_centralwidget()
         self.setup_menubar()
         self.setup_sidebar()
         self.setup_statusbar()
@@ -66,19 +65,11 @@ class App(QApplication):
         self.main.show()
         sys.exit(self.exec_())
 
-#     def setup_centralwidget(self):
-#         """ Set-up the central widget.
-
-#         Parameters:
-#             None
-
-#         Returns:
-#             None
-#         """
-#         self.view = view = View(self.structure)
+    def setup_centralwidget(self):
+        self.view = view = View(self.structure)
 #         view.setFocusPolicy(Qt.StrongFocus)
 #         view.setFocus()
-#         self.main.setCentralWidget(view)
+        self.main.setCentralWidget(view)
 
     def setup_menubar(self):
         self.menu = menu = self.main.menuBar()

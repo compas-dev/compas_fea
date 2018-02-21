@@ -1,7 +1,17 @@
-# from PySide.QtCore import Qt
-# from PySide.QtGui import QColor
 
-# from compas.visualization.viewers.widgets.glview import GLView
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
+from PySide.QtCore import Qt
+from PySide.QtGui import QApplication
+from PySide.QtGui import QColor
+from PySide.QtOpenGL import QGLWidget
+
+from OpenGL.GL import *
+from OpenGL.GLUT import *
+from OpenGL.GLU import *
+
 # from compas.visualization.viewers.drawing import xdraw_points
 # from compas.visualization.viewers.drawing import xdraw_lines
 # from compas.visualization.viewers.drawing import xdraw_polygons
@@ -10,34 +20,141 @@
 # from compas.geometry import add_vectors
 
 
-# __author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-# __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-# __license__    = 'MIT License'
-# __email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
-# class View(GLView):
+class Camera(object):
 
-#     def __init__(self, structure):
+    def __init__(self, view):
+        self.view = view
+        self.fov = 60.
+        self.near = 1.
+        self.far = 100.
+        self.rx = -60.
+        self.rz = +45.
+        self.tx = +0.
+        self.ty = +0.
+        self.tz = -10.
+    #     self.dr = +0.5
+    #     self.dt = +0.05
 
-#     # ==============================================================================
-#     # initialise
-#     # ==============================================================================
+    @property
+    def aspect(self):
+        w = self.view.width()
+        h = self.view.height()
+        return float(w) / float(h)
 
-#         super(View, self).__init__()
+    # def zoom_in(self, steps=1):
+    #     self.tz -= steps * self.tz * self.dt
 
-#         self.nodes_on = Qt.Checked
-#         self.node_numbers_on = Qt.Unchecked
-#         self.elements_on = Qt.Checked
-#         self.element_numbers_on = Qt.Unchecked
-#         self.displacements_on = Qt.Checked
+    # def zoom_out(self, steps=1):
+    #     self.tz += steps * self.tz * self.dt
 
-#         self.clear_color = QColor.fromRgb(0, 0, 0)
-#         self.near = 0.1
+    # def rotate(self):
+    #     dx = self.view.mouse.dx()
+    #     dy = self.view.mouse.dy()
+    #     self.rx += self.dr * dy
+    #     self.rz += self.dr * dx
 
-#     # ==============================================================================
-#     # geometry
-#     # ==============================================================================
+    # def translate(self):
+    #     dx = self.view.mouse.dx()
+    #     dy = self.view.mouse.dy()
+    #     self.tx += self.dt * dx
+    #     self.ty -= self.dt * dy
+
+    def aim(self):
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+        glTranslatef(self.tx, self.ty, self.tz)
+        glRotatef(self.rx, 1, 0, 0)
+        glRotatef(self.rz, 0, 0, 1)
+
+    def focus(self):
+        glPushAttrib(GL_TRANSFORM_BIT)
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        gluPerspective(self.fov, self.aspect, self.near, self.far)
+        glPopAttrib()
+
+
+class View(QGLWidget):
+
+    def __init__(self, structure):
+        QGLWidget.__init__(self)
+        self.camera = Camera(self)
+        # self.mouse = Mouse(self)
+
+    def initializeGL(self):
+
+        self.qglClearColor(QColor.fromRgb(220, 220, 220))
+        self.camera.aim()
+        self.camera.focus()
+
+        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
+        # glCullFace(GL_BACK)
+        # glShadeModel(GL_SMOOTH)
+        # glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        # glPolygonOffset(1.0, 1.0)
+        # glEnable(GL_POLYGON_OFFSET_FILL)
+        # glEnable(GL_CULL_FACE)
+        # glEnable(GL_POINT_SMOOTH)
+        # glEnable(GL_LINE_SMOOTH)
+        # glEnable(GL_POLYGON_SMOOTH)
+        # glEnable(GL_DEPTH_TEST)
+        # glEnable(GL_BLEND)
+        # glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
+        # glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
+
+
+    def paintGL(self):
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        # glPushAttrib(GL_POLYGON_BIT)
+        # self.camera.aim()
+        # self.camera.focus()
+        self.paint()
+        # glPopAttrib()
+        # glutSwapBuffers()
+
+    def paint(self):
+
+        self.draw_axes()
+
+#         if self.nodes_on:
+#             xdraw_points(self.nodes)
+#         if self.node_numbers_on:
+#             xdraw_texts(self.node_numbers)
+#         if self.elements_on:
+#             xdraw_lines(self.lines)
+#             xdraw_polygons(self.faces)
+#         if self.element_numbers_on:
+#             xdraw_texts(self.element_numbers)
+#         if self.displacements_on:
+#             xdraw_lines(self.bcs_translations)
+#             xdraw_lines(self.bcs_rotations)
+
+
+    def draw_axes(self):
+
+        glLineWidth(3)
+        glBegin(GL_LINES)
+
+        glColor3f(*(1, 0, 0))
+        glVertex3f(0, 0, 0)
+        glVertex3f(0.1, 0, 0)
+
+        glColor3f(*(0, 1, 0))
+        glVertex3f(0, 0, 0)
+        glVertex3f(0, 0.1, 0)
+
+        glColor3f(*(0, 0, 1))
+        glVertex3f(0, 0, 0)
+        glVertex3f(0, 0, 0.1)
+
+        glEnd()
 
 #         if structure:
 
@@ -139,29 +256,3 @@
 #         elif key == 61:
 #             self.camera.zoom_in()
 #         return
-
-#     # ==============================================================================
-#     # paint
-#     # ==============================================================================
-
-#     def paint(self):
-#         """ Defines the paint function.
-
-#         Parameters:
-#             None
-
-#         Returns:
-#             None
-#         """
-#         if self.nodes_on:
-#             xdraw_points(self.nodes)
-#         if self.node_numbers_on:
-#             xdraw_texts(self.node_numbers)
-#         if self.elements_on:
-#             xdraw_lines(self.lines)
-#             xdraw_polygons(self.faces)
-#         if self.element_numbers_on:
-#             xdraw_texts(self.element_numbers)
-#         if self.displacements_on:
-#             xdraw_lines(self.bcs_translations)
-#             xdraw_lines(self.bcs_rotations)

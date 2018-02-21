@@ -58,7 +58,7 @@ for xi in x[n::n]:
 
 rs.EnableRedraw(True)
 
-# Add beam elements from Network
+# Add beam elements
 
 network = rhino.network_from_lines(layer='elset_lines')
 mdl.add_nodes_elements_from_network(network=network, element_type='BeamElement')
