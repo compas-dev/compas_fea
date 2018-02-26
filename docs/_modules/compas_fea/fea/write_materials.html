@@ -233,9 +233,12 @@
         <span class="n">section_index</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">stype</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="n">geometry</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">geometry</span>
-        <span class="n">material_index</span> <span class="o">=</span> <span class="n">materials</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">material</span><span class="p">]</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">property</span><span class="o">.</span><span class="n">material</span><span class="p">:</span>
+            <span class="n">material_index</span> <span class="o">=</span> <span class="n">materials</span><span class="p">[</span><span class="nb">property</span><span class="o">.</span><span class="n">material</span><span class="p">]</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">material_index</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="n">stype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;SolidSection&#39;</span><span class="p">,</span> <span class="s1">&#39;ShellSection&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">stype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;SolidSection&#39;</span><span class="p">,</span> <span class="s1">&#39;ShellSection&#39;</span><span class="p">,</span> <span class="s1">&#39;SpringSection&#39;</span><span class="p">]:</span>
 
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$ </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$ &#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -246,6 +249,10 @@
                 <span class="n">D</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">1000</span>
                 <span class="n">t</span> <span class="o">=</span> <span class="n">geometry</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span> <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">&#39;PipeSection&#39;</span> <span class="k">else</span> <span class="mi">0</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;TUBE NO </span><span class="si">{0}</span><span class="s1"> D </span><span class="si">{1}</span><span class="s1"> T </span><span class="si">{2}</span><span class="s1"> MNO </span><span class="si">{3}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">section_index</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">material_index</span><span class="p">))</span>
+
+            <span class="k">elif</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">&#39;RectangularSection&#39;</span><span class="p">:</span>
+
+                <span class="k">pass</span>
 
             <span class="k">elif</span> <span class="n">stype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;TrussSection&#39;</span><span class="p">]:</span>
 
@@ -582,7 +589,7 @@
             
 
             
-                Last updated on Feb 15, 2018.
+                Last updated on Feb 26, 2018.
             
 
             

@@ -75,8 +75,6 @@ class FixedDisplacement(GeneralDisplacement):
             Name of the FixedDisplacement object.
         nodes : str, list
             Node set or nodes the displacement is applied to.
-        axes : str
-            'local' or 'global' co-ordinate axes.
 
     Returns
     -------
@@ -100,8 +98,6 @@ class PinnedDisplacement(GeneralDisplacement):
         Name of the PinnedDisplacement object.
     nodes : str, list
         Node set or nodes the displacement is applied to.
-    axes : str
-        'local' or 'global' co-ordinate axes.
 
     Returns
     -------

@@ -96,7 +96,7 @@
 
 <div class="viewcode-block" id="Load"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.load.Load.html#compas_fea.structure.load.Load">[docs]</a><span class="k">class</span> <span class="nc">Load</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot; Initialises base Load object for use in finite element analysis.</span>
+    <span class="sd">&quot;&quot;&quot; Initialises base Load object.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -134,9 +134,9 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the PrestressLoad object.</span>
 <span class="sd">    elements : str, list</span>
-<span class="sd">        ELSET or elements the prestress is applied to.</span>
+<span class="sd">        Element set or elements the prestress is applied to.</span>
 <span class="sd">    sxx : float</span>
-<span class="sd">        Value of prestress for stress component sxx.</span>
+<span class="sd">        Value of prestress for axial stress component sxx.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -159,7 +159,7 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the PointLoad object.</span>
 <span class="sd">    nodes : str, list</span>
-<span class="sd">        NSET or nodes the load is applied to.</span>
+<span class="sd">        Node set or nodes the load is applied to.</span>
 <span class="sd">    x : float</span>
 <span class="sd">        x component of force.</span>
 <span class="sd">    y : float</span>
@@ -194,7 +194,7 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the LineLoad object.</span>
 <span class="sd">    elements : str</span>
-<span class="sd">        ist): ELSET or elements the load is applied to.</span>
+<span class="sd">        ist): Element set or elements the load is applied to.</span>
 <span class="sd">    x : float</span>
 <span class="sd">        x component of force / length.</span>
 <span class="sd">    y : float</span>
@@ -229,7 +229,7 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the AreaLoad object.</span>
 <span class="sd">    elements : str, list</span>
-<span class="sd">        ELSET or elements the load is applied to.</span>
+<span class="sd">        Element set or elements the load is applied to.</span>
 <span class="sd">    x : float</span>
 <span class="sd">        x component of pressure.</span>
 <span class="sd">    y : float</span>
@@ -258,7 +258,7 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the BodyLoad object.</span>
 <span class="sd">    elements : str, list</span>
-<span class="sd">        ELSET or elements the load is applied to.</span>
+<span class="sd">        Element set or elements the load is applied to.</span>
 <span class="sd">    x : float</span>
 <span class="sd">        x component of body load.</span>
 <span class="sd">    y : float</span>
@@ -287,15 +287,15 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the GravityLoad object.</span>
 <span class="sd">    elements : str, list</span>
-<span class="sd">        ELSET or elements the load is applied to.</span>
+<span class="sd">        Element set or elements the load is applied to.</span>
 <span class="sd">    g : float</span>
 <span class="sd">        Value of gravitational acceleration.</span>
-<span class="sd">    x : bool</span>
-<span class="sd">        Apply to x direction.</span>
-<span class="sd">    y : bool</span>
-<span class="sd">        Apply to y direction.</span>
-<span class="sd">    z : bool</span>
-<span class="sd">        Apply to z direction.</span>
+<span class="sd">    x : float</span>
+<span class="sd">        Factor to apply to x direction.</span>
+<span class="sd">    y : float</span>
+<span class="sd">        Factor to apply to y direction.</span>
+<span class="sd">    z : float</span>
+<span class="sd">        Factor to apply to z direction.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -303,7 +303,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">g</span><span class="o">=-</span><span class="mf">9.81</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">g</span><span class="o">=-</span><span class="mf">9.81</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
         <span class="n">Load</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="n">elements</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;global&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;GravityLoad&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">g</span>
@@ -319,7 +319,7 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the AcousticLoad object.</span>
 <span class="sd">    elements : str, list</span>
-<span class="sd">        ELSET or elements the load is applied to.</span>
+<span class="sd">        Element set or elements the load is applied to.</span>
 <span class="sd">    axes : str</span>
 <span class="sd">        AcousticLoad applied via &#39;local&#39; or &#39;global&#39; axes.</span>
 
@@ -369,6 +369,7 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    - The load components are loads per unit area [N/m2].</span>
+<span class="sd">    - Currently only supports &#39;global&#39; axis.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -393,7 +394,7 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the HarmonicPointLoad object.</span>
 <span class="sd">    nodes : str, list</span>
-<span class="sd">        NSET or nodes the load is applied to.</span>
+<span class="sd">        Node set or nodes the load is applied to.</span>
 <span class="sd">    x : float</span>
 <span class="sd">        x component of force.</span>
 <span class="sd">    y : float</span>
@@ -483,7 +484,7 @@
             
 
             
-                Last updated on Feb 15, 2018.
+                Last updated on Feb 26, 2018.
             
 
             

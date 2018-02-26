@@ -65,6 +65,112 @@
 
                         <div class="section" id="script-introduction">
 <h1>script_introduction</h1>
+<div class="highlight-default"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="c1"># &quot;&quot;&quot;Introduction to the compas_fea package.&quot;&quot;&quot;</span>
+
+<span class="c1"># from compas_fea.structure import CircularSection</span>
+<span class="c1"># from compas_fea.structure import ElasticIsotropic</span>
+<span class="c1"># from compas_fea.structure import ElementProperties</span>
+<span class="c1"># from compas_fea.structure import GeneralStep</span>
+<span class="c1"># from compas_fea.structure import GravityLoad</span>
+<span class="c1"># from compas_fea.structure import PinnedDisplacement</span>
+<span class="c1"># from compas_fea.structure import PointLoad</span>
+<span class="c1"># from compas_fea.structure import ShellSection</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
+
+
+<span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright 2018, BLOCK Research Group - ETH Zurich&#39;</span>
+<span class="n">__license__</span>   <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
+<span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
+
+
+<span class="c1"># Create empty Structure object</span>
+
+<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;introduction&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;C:/Temp/&#39;</span><span class="p">)</span>
+
+<span class="c1"># Add nodes</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_nodes</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">]])</span>
+
+<span class="c1"># print(&#39;Node number 3:&#39;, mdl.nodes[3])</span>
+<span class="c1"># print(&#39;Node number 3 xyz:&#39;, mdl.node_xyz(3))</span>
+<span class="c1"># print(&#39;Node count: &#39;, mdl.node_count())</span>
+<span class="c1"># print(&#39;Node index: &#39;, mdl.node_index)</span>
+<span class="c1"># print(&#39;Check node at [0, 0, 0]: &#39;, mdl.check_node_exists([0, 0, 0]))</span>
+<span class="c1"># print(&#39;Check node at [5, 5, 0]: &#39;, mdl.check_node_exists([5, 5, 0]))</span>
+
+<span class="c1"># # Add elements</span>
+
+<span class="c1"># mdl.add_elements(elements=[[0, 4], [1, 4], [2, 4], [3, 4]], type=&#39;BeamElement&#39;)</span>
+<span class="c1"># mdl.add_element(nodes=[0, 1, 4], type=&#39;ShellElement&#39;)</span>
+
+<span class="c1"># # print(&#39;Element 3 nodes: &#39;, mdl.elements[3].nodes)</span>
+<span class="c1"># # print(&#39;Element count: &#39;, mdl.element_count())</span>
+<span class="c1"># # print(&#39;Element index: &#39;, mdl.element_index)</span>
+<span class="c1"># # print(&#39;Check element with nodes 1-4: &#39;, mdl.check_element_exists([1, 4]))</span>
+<span class="c1"># # print(&#39;Check element with nodes 0-1: &#39;, mdl.check_element_exists([0, 1]))</span>
+
+<span class="c1"># # Add sets</span>
+
+<span class="c1"># mdl.add_set(name=&#39;nset_base&#39;, type=&#39;node&#39;, selection=[0, 1, 2, 3])</span>
+<span class="c1"># mdl.add_set(name=&#39;nset_top&#39;, type=&#39;node&#39;, selection=[4])</span>
+<span class="c1"># mdl.add_set(name=&#39;elset_beams&#39;, type=&#39;element&#39;, selection=[0, 1, 2, 3], explode=1)</span>
+<span class="c1"># mdl.add_set(name=&#39;elset_shell&#39;, type=&#39;element&#39;, selection=[4])</span>
+
+<span class="c1"># # print(&#39;Structure sets: &#39;, mdl.sets)</span>
+
+<span class="c1"># # Add sections</span>
+
+<span class="c1"># mdl.add_section(CircularSection(name=&#39;sec_circ&#39;, r=0.010))</span>
+<span class="c1"># mdl.add_section(ShellSection(name=&#39;sec_shell&#39;, t=0.005))</span>
+
+<span class="c1"># # print(&#39;Section geometry: &#39;, mdl.sections[&#39;sec_circ&#39;].geometry)</span>
+
+<span class="c1"># # Add materials</span>
+
+<span class="c1"># mdl.add_material(ElasticIsotropic(name=&#39;mat_elastic&#39;, E=10*10**9, v=0.3, p=1500))</span>
+
+<span class="c1"># # print(&#39;Material E: &#39;, mdl.materials[&#39;mat_elastic&#39;].E)</span>
+
+<span class="c1"># # Add element properties</span>
+
+<span class="c1"># ep1 = ElementProperties(material=&#39;mat_elastic&#39;, section=&#39;sec_circ&#39;, elsets=&#39;elset_beams&#39;)</span>
+<span class="c1"># ep2 = ElementProperties(material=&#39;mat_elastic&#39;, section=&#39;sec_shell&#39;, elsets=&#39;elset_shell&#39;)</span>
+<span class="c1"># mdl.add_element_properties(ep1, name=&#39;ep_circ&#39;)</span>
+<span class="c1"># mdl.add_element_properties(ep2, name=&#39;ep_shell&#39;)</span>
+
+<span class="c1"># # Add loads</span>
+
+<span class="c1"># mdl.add_load(PointLoad(name=&#39;load_point&#39;, nodes=&#39;nset_top&#39;, x=10000, z=-10000))</span>
+<span class="c1"># mdl.add_load(GravityLoad(name=&#39;load_gravity&#39;, elements=&#39;elset_all&#39;))</span>
+
+<span class="c1"># # print(&#39;load_point components: &#39;, mdl.loads[&#39;load_point&#39;].components)</span>
+
+<span class="c1"># # Add displacements</span>
+
+<span class="c1"># mdl.add_displacement(PinnedDisplacement(name=&#39;disp_pinned&#39;, nodes=&#39;nset_base&#39;))</span>
+
+<span class="c1"># # print(&#39;disp_pinned components: &#39;, mdl.displacements[&#39;disp_pinned&#39;].components)</span>
+
+<span class="c1"># # Add steps</span>
+
+<span class="c1"># mdl.add_step(GeneralStep(name=&#39;step_bc&#39;, displacements=[&#39;disp_pinned&#39;]))</span>
+<span class="c1"># mdl.add_step(GeneralStep(name=&#39;step_loads&#39;, loads=[&#39;load_point&#39;, &#39;load_gravity&#39;]))</span>
+<span class="c1"># mdl.steps_order = [&#39;step_bc&#39;, &#39;step_loads&#39;]</span>
+
+<span class="c1"># # Structure summary</span>
+
+<span class="c1"># mdl.summary()</span>
+
+<span class="c1"># # Generate input files</span>
+
+<span class="c1"># Launch App</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+
+<span class="c1"># mdl.write_input_file(software=&#39;abaqus&#39;, fields=[&#39;s&#39;, &#39;u&#39;])</span>
+</code></pre></div>
+</div>
 </div>
 
                         
@@ -135,7 +241,7 @@
             
 
             
-                Last updated on Feb 15, 2018.
+                Last updated on Feb 26, 2018.
             
 
             
