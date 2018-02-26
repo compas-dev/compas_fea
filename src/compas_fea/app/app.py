@@ -43,16 +43,18 @@ class App(QApplication):
         super(App, self).__init__(sys.argv)
 
         self.structure = structure
+        self.height = 900
+        self.width = 1500
+        # self.setWindowTitle('compas_fea App - Structure: {0}'.format(self.structure.name))
         self.setup()
 
-    # ==============================================================================
-    # Main
-    # ==============================================================================
+# ==============================================================================
+# Main
+# ==============================================================================
 
     def setup(self):
         self.setup_mainwindow()
-        # self.setWindowTitle('compas_fea App - Structure: {0}'.format(self.structure.name))
-        self.main.setFixedSize(1360, 768)
+        self.main.setFixedSize(self.width, self.height)
 
     def setup_mainwindow(self):
         self.main = QMainWindow()
@@ -66,26 +68,28 @@ class App(QApplication):
         sys.exit(self.exec_())
 
     def setup_centralwidget(self):
-        self.view = view = View(self.structure)
-#         view.setFocusPolicy(Qt.StrongFocus)
-#         view.setFocus()
-        self.main.setCentralWidget(view)
+        self.view = View(self.structure)
+        self.view.setFocusPolicy(Qt.StrongFocus)
+        self.view.setFocus()
+        self.view.setFixedSize(self.width, self.height - 45)
+        self.main.setCentralWidget(self.view)
 
     def setup_menubar(self):
-        self.menu = menu = self.main.menuBar()
-        self.main.setMenuBar(menu)
-        self.add_filemenu()
+        self.menu = self.main.menuBar()
+        self.main.setMenuBar(self.menu)
+        self.add_file_menu()
+        self.add_view_menu()
 
-    # ==============================================================================
-    # sidebar
-    # ==============================================================================
+# ==============================================================================
+# Sidebar
+# ==============================================================================
 
     def setup_sidebar(self):
-        self.sidebar = sidebar = QDockWidget()
-        # sidebar.setAllowedAreas(Qt.LeftDockWidgetArea)
-        # sidebar.setFeatures(QDockWidget.NoDockWidgetFeatures)
-        sidebar.setFixedWidth(150)
-        widget = QWidget(sidebar)
+        self.sidebar = QDockWidget()
+        self.sidebar.setFixedWidth(200)
+        self.sidebar.setWindowTitle('Sidebar')
+
+        widget = QWidget(self.sidebar)
         layout = QBoxLayout(QBoxLayout.TopToBottom)
         grid = QGridLayout()
 
@@ -101,10 +105,6 @@ class App(QApplication):
 
         grid.addWidget(QLabel('Nodes'), 0, 0)
         grid.addWidget(button_nodes_on, 1, 0)
-
-
-
-
 
 
         # toggle.stateChanged.connect(change)
@@ -166,15 +166,15 @@ class App(QApplication):
         layout.addLayout(grid)
         layout.addStretch()
         widget.setLayout(layout)
-        sidebar.setWidget(widget)
-        self.main.addDockWidget(Qt.LeftDockWidgetArea, sidebar)
+        self.sidebar.setWidget(widget)
+        self.main.addDockWidget(Qt.LeftDockWidgetArea, self.sidebar)
 
-    # ==============================================================================
-    # file menu
-    # ==============================================================================
+# ==============================================================================
+# File menu
+# ==============================================================================
 
-    def add_filemenu(self):
-        menu = self.menu.addMenu('&File')
+    def add_file_menu(self):
+        file_menu = self.menu.addMenu('&File')
 #         new_action = menu.addAction('&New')
 #         open_action = menu.addAction('&Open')
 #         save_action = menu.addAction('&Save')
@@ -182,42 +182,24 @@ class App(QApplication):
 #         open_action.triggered.connect(self.do_openfile)
 #         save_action.triggered.connect(self.do_savefile)
 
-#     def do_newfile(self):
-#         """ Action for File > New.
 
-#         Parameters:
-#             None
+# ==============================================================================
+# View menu
+# ==============================================================================
 
-#         Returns:
-#             None
-#         """
-#         self.status.showMessage('File created')
+    def add_view_menu(self):
+        view_menu = self.menu.addMenu('&View')
 
-#     def do_openfile(self):
-#         """ Action for File > Open.
+        sidebar_action = view_menu.addAction('&Sidebar')
+        sidebar_action.triggered.connect(self.do_view_sidebar)
 
-#         Parameters:
-#             None
+    def do_view_sidebar(self):
+        self.setup_sidebar()
 
-#         Returns:
-#             None
-#         """
-#         self.status.showMessage('File opened')
 
-#     def do_savefile(self):
-#         """ Action for File > Save.
-
-#         Parameters:
-#             None
-
-#         Returns:
-#             None
-#         """
-#         self.status.showMessage('File saved')
-
-    # ==============================================================================
-    # statusbar
-    # ==============================================================================
+# ==============================================================================
+# Statusbar
+# ==============================================================================
 
     def setup_statusbar(self):
         self.status = self.main.statusBar()
