@@ -26,7 +26,7 @@ __all__ = [
 
 class Load(object):
 
-    """ Initialises base Load object for use in finite element analysis.
+    """ Initialises base Load object.
 
     Parameters
     ----------
@@ -64,9 +64,9 @@ class PrestressLoad(Load):
     name : str
         Name of the PrestressLoad object.
     elements : str, list
-        ELSET or elements the prestress is applied to.
+        Element set or elements the prestress is applied to.
     sxx : float
-        Value of prestress for stress component sxx.
+        Value of prestress for axial stress component sxx.
 
     Returns
     -------
@@ -89,7 +89,7 @@ class PointLoad(Load):
     name : str
         Name of the PointLoad object.
     nodes : str, list
-        NSET or nodes the load is applied to.
+        Node set or nodes the load is applied to.
     x : float
         x component of force.
     y : float
@@ -124,7 +124,7 @@ class LineLoad(Load):
     name : str
         Name of the LineLoad object.
     elements : str
-        ist): ELSET or elements the load is applied to.
+        ist): Element set or elements the load is applied to.
     x : float
         x component of force / length.
     y : float
@@ -159,7 +159,7 @@ class AreaLoad(Load):
     name : str
         Name of the AreaLoad object.
     elements : str, list
-        ELSET or elements the load is applied to.
+        Element set or elements the load is applied to.
     x : float
         x component of pressure.
     y : float
@@ -188,7 +188,7 @@ class BodyLoad(Load):
     name : str
         Name of the BodyLoad object.
     elements : str, list
-        ELSET or elements the load is applied to.
+        Element set or elements the load is applied to.
     x : float
         x component of body load.
     y : float
@@ -217,15 +217,15 @@ class GravityLoad(Load):
     name : str
         Name of the GravityLoad object.
     elements : str, list
-        ELSET or elements the load is applied to.
+        Element set or elements the load is applied to.
     g : float
         Value of gravitational acceleration.
-    x : bool
-        Apply to x direction.
-    y : bool
-        Apply to y direction.
-    z : bool
-        Apply to z direction.
+    x : float
+        Factor to apply to x direction.
+    y : float
+        Factor to apply to y direction.
+    z : float
+        Factor to apply to z direction.
 
     Returns
     -------
@@ -233,7 +233,7 @@ class GravityLoad(Load):
 
     """
 
-    def __init__(self, name, elements, g=-9.81, x=0, y=0, z=1):
+    def __init__(self, name, elements, g=-9.81, x=0., y=0., z=1.):
         Load.__init__(self, name=name, elements=elements, axes='global')
         self.__name__ = 'GravityLoad'
         self.g = g
@@ -249,7 +249,7 @@ class AcousticLoad(Load):
     name : str
         Name of the AcousticLoad object.
     elements : str, list
-        ELSET or elements the load is applied to.
+        Element set or elements the load is applied to.
     axes : str
         AcousticLoad applied via 'local' or 'global' axes.
 
@@ -299,6 +299,7 @@ class TributaryLoad(Load):
     Notes
     -----
     - The load components are loads per unit area [N/m2].
+    - Currently only supports 'global' axis.
 
     """
 
@@ -323,7 +324,7 @@ class HarmonicPointLoad(Load):
     name : str
         Name of the HarmonicPointLoad object.
     nodes : str, list
-        NSET or nodes the load is applied to.
+        Node set or nodes the load is applied to.
     x : float
         x component of force.
     y : float

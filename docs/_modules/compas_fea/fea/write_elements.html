@@ -179,11 +179,11 @@
 
         <span class="k">for</span> <span class="n">elset</span> <span class="ow">in</span> <span class="n">elsets</span><span class="p">:</span>
 
-            <span class="c1"># if isinstance(elset, str) and (elset[:8] == &#39;element_&#39;):</span>
-                <span class="c1"># selection = [int(elset[8:])]</span>
-            <span class="c1"># else:</span>
-            <span class="n">selection</span> <span class="o">=</span> <span class="n">sets</span><span class="p">[</span><span class="n">elset</span><span class="p">][</span><span class="s1">&#39;selection&#39;</span><span class="p">]</span>
-            <span class="n">set_index</span> <span class="o">=</span> <span class="n">sets</span><span class="p">[</span><span class="n">elset</span><span class="p">][</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elset</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">elset</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;element_&#39;</span><span class="p">):</span>
+                <span class="n">selection</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">elset</span><span class="p">[</span><span class="mi">8</span><span class="p">:])]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">selection</span> <span class="o">=</span> <span class="n">sets</span><span class="p">[</span><span class="n">elset</span><span class="p">][</span><span class="s1">&#39;selection&#39;</span><span class="p">]</span>
+                <span class="n">set_index</span> <span class="o">=</span> <span class="n">sets</span><span class="p">[</span><span class="n">elset</span><span class="p">][</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
 
             <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>  <span class="c1"># co-ordinate this with abaqus nsets</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;GRP </span><span class="si">{0}</span><span class="s1"> BASE </span><span class="si">{0}</span><span class="s1">0000</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">set_index</span><span class="p">))</span>
@@ -549,10 +549,10 @@
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*CONNECTOR BEHAVIOR, NAME=</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">b1</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">stiffness</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*CONNECTOR ELASTICITY, COMPONENT=1</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">stiffness</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">stiffness</span><span class="p">[</span><span class="s1">&#39;axial&#39;</span><span class="p">]))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*CONNECTOR ELASTICITY, COMPONENT=1, NONLINEAR</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">forces</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="n">section</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">forces</span><span class="p">[</span><span class="s1">&#39;axial&#39;</span><span class="p">],</span> <span class="n">section</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="s1">&#39;axial&#39;</span><span class="p">]):</span>
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
             <span class="n">written_springs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b1</span><span class="p">)</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -593,7 +593,11 @@
 
         <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
 
-            <span class="k">pass</span>
+            <span class="n">kx</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">stiffness</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;axial&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">ky</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">stiffness</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lateral&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">kr</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">stiffness</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rotation&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;SPRI NO </span><span class="si">{0}</span><span class="s1"> NA </span><span class="si">{1}</span><span class="s1"> NE </span><span class="si">{2}</span><span class="s1"> CP </span><span class="si">{3}</span><span class="s1"> CT </span><span class="si">{4}</span><span class="s1"> CM </span><span class="si">{5}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">kx</span><span class="p">,</span> <span class="n">ky</span><span class="p">,</span> <span class="n">kr</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
 
@@ -672,7 +676,7 @@
             
 
             
-                Last updated on Feb 15, 2018.
+                Last updated on Feb 26, 2018.
             
 
             

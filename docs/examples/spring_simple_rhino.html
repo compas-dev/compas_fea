@@ -20,7 +20,7 @@
         <link rel="stylesheet" type="text/css" href="/_static/css/compas-reference.css" />
 
         
-            <link rel="next" title="Reference" href="../reference.html" />
+            <link rel="next" title="beam_simple Blender" href="beam_simple_blender.html" />
         
         
         
@@ -111,10 +111,10 @@
 
 <span class="c1"># Add sections</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">SpringSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;spring_elastic&#39;</span><span class="p">,</span> <span class="n">stiffness</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">10000</span><span class="p">}))</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">SpringSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;spring_soft&#39;</span><span class="p">,</span> <span class="n">stiffness</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">}))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">SpringSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;spring_elastic&#39;</span><span class="p">,</span> <span class="n">stiffness</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;axial&#39;</span><span class="p">:</span> <span class="mi">10000</span><span class="p">}))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">SpringSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;spring_soft&#39;</span><span class="p">,</span> <span class="n">stiffness</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;axial&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">}))</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">SpringSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;spring_nonlinear&#39;</span><span class="p">,</span> 
-    <span class="n">forces</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">]},</span> <span class="n">displacements</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">]}))</span>
+    <span class="n">forces</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;axial&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">]},</span> <span class="n">displacements</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;axial&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">]}))</span>
 
 <span class="c1"># Add element properties</span>
 
@@ -169,7 +169,7 @@
                             
 
                             
-                                <a href="../reference.html" class="btn btn-primary compas-next" role="button">Reference</a>
+                                <a href="beam_simple_blender.html" class="btn btn-primary compas-next" role="button">beam_simple Blender</a>
                             
                         </nav> -->
 
@@ -213,6 +213,8 @@
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame Rhino</a></li>
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">spring_simple Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_blender.html">truss_tower Blender</a></li>
 </ul>
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
@@ -249,7 +251,7 @@
             
 
             
-                Last updated on Feb 15, 2018.
+                Last updated on Feb 26, 2018.
             
 
             

@@ -79,18 +79,18 @@
 <h1>GravityLoad</h1>
 <dl class="class">
 <dt id="compas_fea.structure.load.GravityLoad">
-<em class="property">class </em><code class="descclassname">compas_fea.structure.load.</code><code class="descname">GravityLoad</code><span class="sig-paren">(</span><em>name</em>, <em>elements</em>, <em>g=-9.81</em>, <em>x=0</em>, <em>y=0</em>, <em>z=1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/load.html#GravityLoad"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="descclassname">compas_fea.structure.load.</code><code class="descname">GravityLoad</code><span class="sig-paren">(</span><em>name</em>, <em>elements</em>, <em>g=-9.81</em>, <em>x=0.0</em>, <em>y=0.0</em>, <em>z=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/load.html#GravityLoad"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference internal" href="compas_fea.structure.load.Load.html#compas_fea.structure.load.Load" title="compas_fea.structure.load.Load"><code class="xref py py-class docutils literal"><span class="pre">compas_fea.structure.load.Load</span></code></a></p>
 <p>Gravity load [units:N/m3] applied to element(s).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – Name of the GravityLoad object.</p></li>
-<li><p><strong>elements</strong> (<em>str, list</em>) – ELSET or elements the load is applied to.</p></li>
+<li><p><strong>elements</strong> (<em>str, list</em>) – Element set or elements the load is applied to.</p></li>
 <li><p><strong>g</strong> (<em>float</em>) – Value of gravitational acceleration.</p></li>
-<li><p><strong>x</strong> (<em>bool</em>) – Apply to x direction.</p></li>
-<li><p><strong>y</strong> (<em>bool</em>) – Apply to y direction.</p></li>
-<li><p><strong>z</strong> (<em>bool</em>) – Apply to z direction.</p></li>
+<li><p><strong>x</strong> (<em>float</em>) – Factor to apply to x direction.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Factor to apply to y direction.</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – Factor to apply to z direction.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -188,7 +188,7 @@
             
 
             
-                Last updated on Feb 15, 2018.
+                Last updated on Feb 26, 2018.
             
 
             

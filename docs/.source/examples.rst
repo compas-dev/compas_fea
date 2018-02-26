@@ -34,6 +34,8 @@ Blender
 .. toctree::
     :maxdepth: 1
 
+    examples/beam_simple_blender
+
     examples/truss_tower_blender
 
 --------
@@ -41,7 +43,6 @@ Scripted
 --------
 
 .. examples/beam_gridshell_rhino
-.. examples/beam_simple_blender
 .. examples/beam_tree_rhino
 .. examples/beam_frame_rhino
 

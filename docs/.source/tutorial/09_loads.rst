@@ -8,7 +8,7 @@ This page shows how **Load** objects are added to the **Structure** object, here
 Adding loads
 ============
 
-Loads can be applied directly to nodes or distributed (currently uniformly) across elements. To do this, a variety of **Load** classes can be imported from **compas_fea.structure.load** including types such as **PrestressLoad**, **PointLoad**, **LineLoad**, **AreaLoad**, **GravityLoad** and **TributaryLoad**. The objects are instantiated with these classes and stored within the ``.loads`` dictionary of the **Structure** object with the ``.add_load()`` method using ``name`` as the string key. An example of applying concentrated forces in the ``x`` and ``z`` directions directly to nodes, is shown with **PointLoad** example below. The **PointLoad** class requires the nodes to apply the point loads to, taken as the string name of the node set (``'nset_top'`` in this case).
+Loads can be applied directly to nodes or distributed (currently only uniformly) across elements. For this, a variety of **Load** classes can be imported from **compas_fea.structure.load** including types such as **PrestressLoad**, **PointLoad**, **LineLoad**, **AreaLoad**, **GravityLoad** and **TributaryLoad**. The **Load** objects are instantiated with these classes and stored within the ``.loads`` dictionary of the **Structure** object with the ``.add_load()`` method, and using ``name`` as the string key. An example of applying concentrated loads in the ``x`` and ``z`` directions directly to nodes, is shown with the **PointLoad** example below. The **PointLoad** class requires the components of the load and the ``nodes`` to apply the point loads to, taken as the string name of the node set (``'nset_top'`` in this case).
 
 .. code-block:: python
 
@@ -21,7 +21,7 @@ Loads can be applied directly to nodes or distributed (currently uniformly) acro
 Accessing loads
 ===============
 
-The **Load** objects can be inspected and edited at any time via their string keys and attributes, showing both the input data given at instantiation and any default zero component values. If no non-zero components are given at the time of creating the object, effectively a **Load** object is made that doesn't do anything, as all components are zero. In the example below, are the input components of the load ``x=10000`` and ``z=-10000`` (both forces with units N) with the ``y`` component and concentrated moments (units Nm) ``xx``, ``yy`` and ``zz`` all defaulted to zero.
+The **Load** objects can be inspected and edited at any time via their string keys and attributes, showing both the input data given at the time of instantiation and any default zero component values. If no non-zero components are given at the time of creating the object, effectively the **Load** object doesn't do anything, as all components are zero. In the example below are the input components of the load ``x=10000`` and ``z=-10000`` (both are forces with units N) with the ``y`` component and concentrated moments (units Nm) ``xx``, ``yy`` and ``zz`` all at the default of zero.
 
 .. code-block:: python
 
@@ -36,7 +36,7 @@ The **Load** objects can be inspected and edited at any time via their string ke
 Prestress load
 ==============
 
-A **PrestressLoad** is currently used to add an axial pre-stress before all other **Step** objects are activated, i.e. acting as an initial condition. It is created with the string ``name`` of the object, the ``elements`` (as an element set) that it applies to, and the ``sxx`` stress component in Pa, acting along the local `x` for shells and along the length for beams and trusses. It can be added as follows:
+A **PrestressLoad** is currently used to add an axial pre-stress, other components of stress will be added at a later date. It is created with the string ``name`` of the object, the ``elements`` (as an element set) that it applies to, and the ``sxx`` (axial) stress component in Pa which acts along the local `x` axis for shells and along the length for beams and trusses. This object can be added as follows:
 
 .. code-block:: python
 
@@ -49,7 +49,7 @@ A **PrestressLoad** is currently used to add an axial pre-stress before all othe
 Point load
 ==========
 
-The **PointLoad** object applies concentrated loads (forces N ``x``, ``y``, ``z`` and/or moments Nm ``xx``, ``yy``, ``zz``) directly to ``nodes`` of the **Structure**. The ``nodes`` to apply the load to is given as either the string name of the node set or a list of nodes. The ``name`` of the **PointLoad** is also required. **PointLoad** objects currently only utilise the global co-ordinate system, they do not yet use the local nodal system (`ex`, `ey`, `ez`).
+The **PointLoad** object applies concentrated loads (forces in units N for ``x``, ``y``, ``z`` and/or moments in units Nm for ``xx``, ``yy``, ``zz``) directly to ``nodes`` of the **Structure**. The ``nodes`` to apply the load to is given as either the string name of the node set or a list of nodes. The ``name`` of the **PointLoad** is also required for its key. **PointLoad** objects currently only utilise the global co-ordinate system, they do not yet use the local nodal co-ordinate system (`ex`, `ey`, `ez`).
 
 .. code-block:: python
 
@@ -62,7 +62,7 @@ The **PointLoad** object applies concentrated loads (forces N ``x``, ``y``, ``z`
 Line load
 =========
 
-The **LineLoad** object applies distributed loads per unit length (forces N / metre m ``x``, ``y``, ``z``) uniformly along line elements. The ``elements`` to apply the load to is given as either the string name of the element set or a list of elements. The ``name`` of the **LineLoad** is also required. If ``axis='global'``, the ``x``, ``y`` and ``z`` components will be in-line with the global co-ordinate system, while ``axis='local'`` takes ``x`` and ``y`` as the local cross-section axes `ex` and `ey`, i.e. positive ``y`` would be away from the centroid, not towards it.
+The **LineLoad** object applies distributed loads per unit length (forces in units of N/m in ``x``, ``y``, ``z``) uniformly along line elements such as beams. The ``elements`` to apply the load to is given as either the string name of the element set or a list of elements. The ``name`` of the **LineLoad** is also required as ist key. If ``axis='global'``, the ``x``, ``y`` and ``z`` components will be in-line with the global co-ordinate system, while ``axis='local'`` takes ``x`` and ``y`` as the local cross-section axes `ex` and `ey`, i.e. positive ``y`` would be away from the centroid, not towards it.
 
 .. code-block:: python
 
@@ -75,7 +75,7 @@ The **LineLoad** object applies distributed loads per unit length (forces N / me
 Area load
 =========
 
-The **AreaLoad** object applies distributed loads per unit area (pressures ``x``, ``y``, ``z`` in units of Pa) on elements. The ``elements`` to apply the load to is given as either the string name of the element set or a list of elements. The ``name`` of the **AreaLoad** is also required. Only ``axis='local'`` is currently supported, whereby ``x`` and ``y`` are local surface shears and ``z`` is the local normal pressure.
+The **AreaLoad** object applies distributed loads per unit area (pressures ``x``, ``y``, ``z`` in units of Pa) on elements such as **ShelElement** objects. The ``elements`` to apply the load to is given as either the string name of the element set or a list of elements, and the ``name`` of the **AreaLoad** is required for its key. Only ``axis='local'`` is currently supported, whereby ``x`` and ``y`` are local surface shears and ``z`` is the local normal pressure.
 
 .. code-block:: python
 
@@ -88,7 +88,7 @@ The **AreaLoad** object applies distributed loads per unit area (pressures ``x``
 Gravity load
 ============
 
-Gravity loading to elements is through the **GravityLoad** class and object. The **GravityLoad** object records the ``elements`` to apply gravitational acceleration to either via the element set name string, or a list of elements. The default gravitational acceleration is ``g=-9.81`` and applied in ``z``, but this can be varied in magnitude and for directions ``x`` and ``y`` (which is useful if a model isn't using ``z`` as the vertical direction). The ``elements`` for the gravity loading in the example below are those in the element set named ``'elset_all'``. Gravity loads are always calculated knowing the material density, element and cross-section geometry, so only the reference to the elements to apply the load to is needed, as all other data will be known.
+Gravity loading to elements is through the **GravityLoad** class and object. The **GravityLoad** object records the ``elements`` to apply gravitational acceleration to either via the element set name as a string, or as a list of elements. The default gravitational acceleration is ``g=-9.81`` and applied in ``z``, but this can be varied in magnitude and for directions ``x`` and ``y`` (which is useful if a model isn't using ``z`` as the vertical direction). The ``elements`` for the gravity loading in the example below are those in the element set named ``'elset_all'``. Gravity loads are always automatically calculated and applied knowing the material density, element type and cross-section geometry, so only the reference to the elements is needed to apply the load, as all other data will be known.
 
 .. code-block:: python
 
@@ -97,7 +97,7 @@ Gravity loading to elements is through the **GravityLoad** class and object. The
     mdl.add_load(GravityLoad(name='load_gravity', elements='elset_all'))
 
     >>> mdl.loads['load_gravity'].components
-    {'x': False, 'y': False, 'z': True}
+    {'x': 0.0, 'y': 0.0, 'z': 1.0}
 
     >>> mdl.loads['load_gravity'].g
     -9.81
@@ -107,7 +107,7 @@ Gravity loading to elements is through the **GravityLoad** class and object. The
 Tributary load
 ==============
 
-The **TributaryLoad** can be used to distribute a uniform area load that is applied to a **Mesh** datastructure, as equivalent point loads to the nodes of the **Structure** object. The class first takes the ``structure`` to apply the point loads to, then the ``name`` of the **TributaryLoad**, then a **Mesh** datastructure object with ``mesh``, and finally component pressures ``x``, ``y`` and ``z``. The class could be used in the following manner:
+The **TributaryLoad** class can be used to distribute a uniform area load (in units of Pa) that is applied to a **Mesh** datastructure, as equivalent point loads (in units of N) to the nodes of the **Structure** object. The class first takes the ``structure`` to apply the point loads to, then the ``name`` of the **TributaryLoad**, then a **Mesh** datastructure object with ``mesh``, and finally component pressures ``x``, ``y`` and ``z``. The class could be used in the following manner:
 
 .. code-block:: python
 
@@ -115,7 +115,7 @@ The **TributaryLoad** can be used to distribute a uniform area load that is appl
 
     mdl.add_load(TributaryLoad(structure=mdl, name='load_tributary', mesh=mesh, z=-2000))
 
-The **Mesh** datastructure will be combined with the pressures ``x``, ``y`` and ``z`` to calculate the tributary area of each vertex and multiply this area by the pressure to get a point load in the component direction. The ``.components`` attribute of the **TributaryLoad** object will be a dictionary of **Structure** node keys and items as a dictionary of point loads in ``x``, ``y`` and ``z`` (see below). The global co-ordinate directions (``axis='global'``) are used for the components of the pressures and final point loads.
+The **Mesh** datastructure will be combined with the pressures ``x``, ``y`` and ``z`` to calculate the tributary area of each vertex and multiply this area by the pressure to get a point load in the component direction. The ``.components`` attribute of the **TributaryLoad** object will be a dictionary with **Structure** node keys, and the items of these keys dictionaries of point loads data in ``x``, ``y`` and ``z`` (see below). The global co-ordinate directions (``axis='global'``) are used for the components of the pressures and final point loads.
 
 .. code-block:: python
 
