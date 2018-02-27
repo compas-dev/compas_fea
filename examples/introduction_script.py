@@ -32,16 +32,16 @@ mdl.add_nodes(nodes=[[-5., -5., 0.], [5., -5., 0.], [5., 5., 0.], [-5., 5., 0.],
 # print('Check node at [0, 0, 0]: ', mdl.check_node_exists([0, 0, 0]))
 # print('Check node at [5, 5, 0]: ', mdl.check_node_exists([5, 5, 0]))
 
-# # Add elements
+# Add elements
 
-# mdl.add_elements(elements=[[0, 4], [1, 4], [2, 4], [3, 4]], type='BeamElement')
-# mdl.add_element(nodes=[0, 1, 4], type='ShellElement')
+mdl.add_elements(elements=[[0, 4], [1, 4], [2, 4], [3, 4]], type='BeamElement')
+mdl.add_element(nodes=[0, 1, 4], type='ShellElement')
 
-# # print('Element 3 nodes: ', mdl.elements[3].nodes)
-# # print('Element count: ', mdl.element_count())
-# # print('Element index: ', mdl.element_index)
-# # print('Check element with nodes 1-4: ', mdl.check_element_exists([1, 4]))
-# # print('Check element with nodes 0-1: ', mdl.check_element_exists([0, 1]))
+# print('Element 3 nodes: ', mdl.elements[3].nodes)
+# print('Element count: ', mdl.element_count())
+# print('Element index: ', mdl.element_index)
+# print('Check element with nodes 1-4: ', mdl.check_element_exists([1, 4]))
+# print('Check element with nodes 0-1: ', mdl.check_element_exists([0, 1]))
 
 # # Add sets
 

@@ -13,7 +13,7 @@ from compas_blender.utilities import draw_plane
 from compas_blender.utilities import get_objects
 from compas_blender.utilities import get_object_location
 from compas_blender.utilities import set_object_location
-# from compas_blender.utilities import xdraw_mesh
+from compas_blender.utilities import xdraw_mesh
 from compas_blender.utilities import xdraw_texts
 
 from compas.geometry import cross_vectors
@@ -130,32 +130,32 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
             e = structure.add_element(nodes=[sp, ep], type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
             created_elements.add(e)
 
-    # if mesh_type:
+    if mesh_type:
 
-    #     if mesh_type in solids:
-    #         nodes = [structure.check_node_exists(i) for i in vertices]
-    #         e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
-    #         created_elements.add(e)
+        if mesh_type in solids:
+            nodes = [structure.check_node_exists(i) for i in vertices]
+            e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
+            created_elements.add(e)
 
-#         else:
-#             try:
-#                 dic = json.loads(name.replace("'", '"'))
-#                 ex = dic.get('ex', None)
-#                 ey = dic.get('ey', None)
-#                 if ex and ey:
-#                     ez = cross_vectors(ex, ey)
-#                 else:
-#                     ez = None
-#             except:
-#                 ex = None
-#                 ey = None
-#                 ez = None
-#             axes = {'ex': ex, 'ey': ey, 'ez': ez}
+        else:
+            try:
+                dic = json.loads(name.replace("'", '"'))
+                ex = dic.get('ex', None)
+                ey = dic.get('ey', None)
+                if ex and ey:
+                    ez = cross_vectors(ex, ey)
+                else:
+                    ez = None
+            except:
+                ex = None
+                ey = None
+                ez = None
+            axes = {'ex': ex, 'ey': ey, 'ez': ez}
 
-#             for face in faces:
-#                 nodes = [structure.check_node_exists(vertices[i]) for i in face]
-#                 e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal, axes=axes)
-#                 created_elements.add(e)
+            for face in faces:
+                nodes = [structure.check_node_exists(vertices[i]) for i in face]
+                e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal, axes=axes)
+                created_elements.add(e)
 
     return list(created_nodes), list(created_elements)
 
@@ -538,13 +538,13 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
             blendermesh.set_vertex_colors(vertices=range(0, 2 * npts, 2), colors=col1)
             blendermesh.set_vertex_colors(vertices=range(1, 2 * npts, 2), colors=col2)
 
-#         elif n in [3, 4]:
-#             mesh_faces.append(nodes)
+        elif n in [3, 4]:
+            mesh_faces.append(nodes)
 
-#     if mesh_faces:
-#         bmesh = xdraw_mesh(name='bmesh', vertices=U, faces=mesh_faces, layer=layer)
-#         blendermesh = BlenderMesh(bmesh)
-#         blendermesh.set_vertex_colors(vertices=range(U.shape[0]), colors=cnodes)
+    if mesh_faces:
+        bmesh = xdraw_mesh(name='bmesh', vertices=U, faces=mesh_faces, layer=layer)
+        blendermesh = BlenderMesh(bmesh)
+        blendermesh.set_vertex_colors(vertices=range(U.shape[0]), colors=cnodes)
 
     # Plot colourbar
 

@@ -4,6 +4,7 @@ from __future__ import division
 from __future__ import print_function
 
 from PySide.QtCore import Qt
+from PySide.QtCore import QPoint
 from PySide.QtGui import QApplication
 from PySide.QtGui import QColor
 from PySide.QtOpenGL import QGLWidget
@@ -12,34 +13,38 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-# from compas.visualization.viewers.drawing import xdraw_points
-# from compas.visualization.viewers.drawing import xdraw_lines
+from compas.viewers import xdraw_points
+from compas.viewers import xdraw_lines
+from compas.viewers import xdraw_texts
 # from compas.visualization.viewers.drawing import xdraw_polygons
-# from compas.visualization.viewers.drawing import xdraw_texts
 
 # from compas.geometry import add_vectors
 
 
-__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tom Van Mele <vanmelet@ethz.ch>']
 __copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
 __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
+
+# ==============================================================================
+# Camera
+# ==============================================================================
 
 class Camera(object):
 
     def __init__(self, view):
         self.view = view
         self.fov = 60.
-        self.near = 1.
+        self.near = 0.
         self.far = 100.
-        self.rx = -60.
+        self.rx  = -60.
         self.rz = +45.
         self.tx = +0.
         self.ty = +0.
         self.tz = -10.
-    #     self.dr = +0.5
-    #     self.dt = +0.05
+        self.dr = +0.5
+        self.dt = +0.05
 
     @property
     def aspect(self):
@@ -47,23 +52,23 @@ class Camera(object):
         h = self.view.height()
         return float(w) / float(h)
 
-    # def zoom_in(self, steps=1):
-    #     self.tz -= steps * self.tz * self.dt
+    def zoom_in(self, steps=1):
+        self.tz -= steps * self.tz * self.dt
 
-    # def zoom_out(self, steps=1):
-    #     self.tz += steps * self.tz * self.dt
+    def zoom_out(self, steps=1):
+        self.tz += steps * self.tz * self.dt
 
-    # def rotate(self):
-    #     dx = self.view.mouse.dx()
-    #     dy = self.view.mouse.dy()
-    #     self.rx += self.dr * dy
-    #     self.rz += self.dr * dx
+    def rotate(self):
+        dx = self.view.mouse.dx()
+        dy = self.view.mouse.dy()
+        self.rx += self.dr * dy
+        self.rz += self.dr * dx
 
-    # def translate(self):
-    #     dx = self.view.mouse.dx()
-    #     dy = self.view.mouse.dy()
-    #     self.tx += self.dt * dx
-    #     self.ty -= self.dt * dy
+    def translate(self):
+        dx = self.view.mouse.dx()
+        dy = self.view.mouse.dy()
+        self.tx += self.dt * dx
+        self.ty -= self.dt * dy
 
     def aim(self):
         glMatrixMode(GL_MODELVIEW)
@@ -80,20 +85,49 @@ class Camera(object):
         glPopAttrib()
 
 
+# ==============================================================================
+# Mouse
+# ==============================================================================
+
+class Mouse(object):
+
+    def __init__(self, view):
+        self.view  = view
+        self.pos = QPoint()
+        self.last_pos = QPoint()
+
+    def dx(self):
+        return self.pos.x() - self.last_pos.x()
+
+    def dy(self):
+        return self.pos.y() - self.last_pos.y()
+
+
+# ==============================================================================
+# View
+# ==============================================================================
+
 class View(QGLWidget):
 
     def __init__(self, structure):
         QGLWidget.__init__(self)
+
         self.camera = Camera(self)
-        # self.mouse = Mouse(self)
+        self.mouse = Mouse(self)
+
+        bx, by, bz = structure.node_bounds()
+        self.scale = max([(bx[1] - bx[0]), (by[1] - by[0]), (bz[1] - bz[0])])
+        self.structure = structure
+        self.nodes_on = True
+        self.node_numbers_on = True
+        self.lines_on = True
+
+        self.update_nodes()
+        self.update_elements()
 
     def initializeGL(self):
-
-        self.qglClearColor(QColor.fromRgb(220, 220, 220))
-        self.camera.aim()
-        self.camera.focus()
-
-        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
+        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE)
+        glEnable(GL_MULTISAMPLE)
         # glCullFace(GL_BACK)
         # glShadeModel(GL_SMOOTH)
         # glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
@@ -105,93 +139,121 @@ class View(QGLWidget):
         # glEnable(GL_POLYGON_SMOOTH)
         # glEnable(GL_DEPTH_TEST)
         # glEnable(GL_BLEND)
-        # glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
         # glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
+        # glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
+        glutInit()
 
+        self.qglClearColor(QColor.fromRgb(220, 220, 220))
+        self.camera.aim()
+        self.camera.focus()
+
+    def resizeGl(self, w, h):
+        glViewport(0, 0, w, h)
+        self.camera.aim()
+        self.camera.focus()
 
     def paintGL(self):
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         # glPushAttrib(GL_POLYGON_BIT)
-        # self.camera.aim()
-        # self.camera.focus()
+        self.camera.aim()
+        self.camera.focus()
         self.paint()
         # glPopAttrib()
         # glutSwapBuffers()
 
     def paint(self):
-
         self.draw_axes()
 
-#         if self.nodes_on:
-#             xdraw_points(self.nodes)
-#         if self.node_numbers_on:
-#             xdraw_texts(self.node_numbers)
-#         if self.elements_on:
-#             xdraw_lines(self.lines)
-#             xdraw_polygons(self.faces)
-#         if self.element_numbers_on:
-#             xdraw_texts(self.element_numbers)
-#         if self.displacements_on:
-#             xdraw_lines(self.bcs_translations)
-#             xdraw_lines(self.bcs_rotations)
-
+        if self.nodes_on:
+            xdraw_points(self.nodes)
+        if self.lines_on:
+            xdraw_lines(self.lines)
+        if self.node_numbers_on:
+            xdraw_texts(self.node_numbers)
 
     def draw_axes(self):
-
         glLineWidth(3)
         glBegin(GL_LINES)
-
         glColor3f(*(1, 0, 0))
         glVertex3f(0, 0, 0)
-        glVertex3f(0.1, 0, 0)
-
+        glVertex3f(1, 0, 0)
         glColor3f(*(0, 1, 0))
         glVertex3f(0, 0, 0)
-        glVertex3f(0, 0.1, 0)
-
+        glVertex3f(0, 1, 0)
         glColor3f(*(0, 0, 1))
         glVertex3f(0, 0, 0)
-        glVertex3f(0, 0, 0.1)
-
+        glVertex3f(0, 0, 1)
         glEnd()
 
-#         if structure:
 
-#             # Nodes
+# ==============================================================================
+# Events
+# ==============================================================================
 
-#             bx, by, bz = structure.node_bounds()
-#             s = max([(bx[1] - bx[0]), (by[1] - by[0]), (bz[1] - bz[0])])
-#             ds = s / 50.
+    def keyPressAction(self, key):
+        if key == 45:
+            self.camera.zoom_out()
+        elif key == 61:
+            self.camera.zoom_in()
+        return
 
-#             self.nodes = []
-#             self.node_numbers = []
-#             for nkey, node in structure.nodes.items():
-#                 self.nodes.append({'pos': [node[i] for i in 'xyz'],
-#                                    'color': [0.5, 0.5, 1.0],
-#                                    'size': 10})
-#                 self.node_numbers.append({'pos': [node[i] for i in 'xyz'],
-#                                           'color': [0.5, 0.5, 1.0, 1.0],
-#                                           'text': nkey,
-#                                           'shift': [0, 0, ds]})
+    def mouseMoveEvent(self, event):
+        self.mouse.pos = event.pos()
+        if event.buttons() & Qt.LeftButton:
+            self.camera.rotate()
+            self.mouse.last_pos = event.pos()
+            self.updateGL()
+        elif event.buttons() & Qt.RightButton:
+            self.camera.translate()
+            self.mouse.last_pos = event.pos()
+            self.updateGL()
 
-#             # Elements
+    def mousePressEvent(self, event):
+        self.mouse.last_pos = event.pos()
 
-#             self.lines = []
+
+# ==============================================================================
+# Update
+# ==============================================================================
+
+    def update_nodes(self):
+        ds = 0.01 * self.scale
+        self.nodes = []
+        self.node_numbers = []
+        for key, node in self.structure.nodes.items():
+            xyz = self.structure.node_xyz(key)
+            self.nodes.append({
+                'pos':   xyz,
+                'color': [1.0, 0.4, 0.4],
+                'size':  10
+            })
+            self.node_numbers.append({
+                'pos':   xyz,
+                'color': [1.0, 0.4, 0.4, 1.0],
+                'text':  str(key),
+                'shift': [0, 0, ds]
+            })
+
+    def update_elements(self):
+        self.lines = []
 #             self.faces = []
 #             self.element_numbers = []
-#             for ekey, element in structure.elements.items():
-#                 nodes = element.nodes
-#                 n = len(nodes)
-#                 line_colour = [0.4, 0.4, 0.4]
 #                 face_colour = [0.8, 0.8, 0.8, 0.5]
-#                 if n == 2:
-#                     sp = [structure.nodes[nodes[0]][i] for i in 'xyz']
-#                     ep = [structure.nodes[nodes[1]][i] for i in 'xyz']
-#                     self.lines.append({'start': sp,
-#                                        'end': ep,
-#                                        'color': line_colour,
-#                                        'width': 5})
+        line_colour = [0.5, 0.5, 1.0]
+
+        for key, element in self.structure.elements.items():
+            nodes = element.nodes
+            n = len(nodes)
+            if n == 2:
+                sp = self.structure.node_xyz(nodes[0])
+                ep = self.structure.node_xyz(nodes[1])
+                self.lines.append({
+                    'start': sp,
+                    'end':   ep,
+                    'color': line_colour,
+                    'width': 5
+                })
 #                 elif (n == 3) or (n == 4):
 #                     points = [[structure.nodes[str(node)][i] for i in 'xyz'] for node in nodes]
 #                     self.faces.append({'points': points,
@@ -201,6 +263,20 @@ class View(QGLWidget):
 #                                              'color': [0.4, 0.4, 0.4, 1.0],
 #                                              'text': ekey,
 #                                              'shift': [0, 0, ds]})
+
+
+
+
+
+
+#             xdraw_polygons(self.faces)
+#         if self.element_numbers_on:
+#             xdraw_texts(self.element_numbers)
+#         if self.displacements_on:
+#             xdraw_lines(self.bcs_translations)
+#             xdraw_lines(self.bcs_rotations)
+
+
 
 #             # Displacements
 
@@ -238,21 +314,4 @@ class View(QGLWidget):
 #                             if i in ['xx', 'yy', 'zz']:
 #                                 self.bcs_rotations.append({'start': a, 'end': b, 'color': bc_colour, 'width': 3})
 
-#     # ==============================================================================
-#     # keyboard
-#     # ==============================================================================
 
-#     def keyPressAction(self, key):
-#         """ Defines the paint function.
-
-#         Parameters:
-#             key (int): Pressed key.
-
-#         Returns:
-#             None
-#         """
-#         if key == 45:
-#             self.camera.zoom_out()
-#         elif key == 61:
-#             self.camera.zoom_in()
-#         return
