@@ -86,7 +86,7 @@ def extract_out_data(structure, fields):
                 except:
                     pass
 
-        elif field in ['sf']:
+        elif field in ['sf', 'spf']:
 
             file = step + '_element_' + field
             try:
@@ -193,7 +193,7 @@ def input_generate(structure, fields):
 
         ndof = 3
         for element in elements.values():
-            if element.__name__ not in ['TrussElement', 'TieElement', 'StrutElement']:
+            if element.__name__ not in ['TrussElement', 'TieElement', 'StrutElement', 'SpringElement']:
                 ndof = 6
                 break
 

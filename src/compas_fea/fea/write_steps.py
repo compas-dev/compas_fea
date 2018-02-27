@@ -391,6 +391,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                         nodal['node_rm.out'] = '4 5 6 reaction'
                 if 'sf' in fields:
                     elemental['element_sf.out'] = 'basicForces'
+                if 'spf' in fields:
+                    elemental['element_spf.out'] = 'basicForces'
 
                 for k, j in nodal.items():
                     f.write('recorder Node -file {0}{1}_{2} -time -nodeRange {3} -dof {4}\n'.format(temp, key, k, nodes, j))

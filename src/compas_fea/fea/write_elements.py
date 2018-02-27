@@ -491,9 +491,16 @@ def _write_springs(f, software, selection, elements, section, written_springs):
 
         section_index = section.index + 1
         if section_index not in written_springs:
-            E = 1 # WP
-            f.write('uniaxialMaterial Elastic {0}01 {1}\n'.format(section_index, E))  # WIP
-            f.write('#\n')
+            if section.stiffness:
+                E = section.stiffness['axial']
+                f.write('uniaxialMaterial Elastic {0}01 {1}\n'.format(section_index, E))
+                f.write('#\n')
+            else:
+                i = ' '.join([str(k) for k in section.forces['axial']])
+                j = ' '.join([str(k) for k in section.displacements['axial']])
+                f.write('uniaxialMaterial ElasticMultiLinear {0}01 -strain {1} -stress {2}\n'.format(
+                    section_index, j, i))
+                f.write('#\n')
             written_springs.append(section_index)
 
     for select in selection:
@@ -533,7 +540,7 @@ def _write_springs(f, software, selection, elements, section, written_springs):
 
             orientation = ' '.join([str(k) for k in ey])
             f.write('element twoNodeLink {0} {1} {2} -mat {3}01 -dir 1 -orient {4} \n'.format(n, i, j, section_index,
-                    orientation))  # WIP
+                    orientation))
             f.write('#\n')
         elif software == 'ansys':
 

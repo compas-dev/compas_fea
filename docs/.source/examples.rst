@@ -36,6 +36,8 @@ Blender
 
     examples/beam_simple_blender
 
+    examples/mesh_floor_blender
+
     examples/truss_tower_blender
 
 --------
@@ -49,8 +51,6 @@ Scripted
 .. examples/block_deepbeam_blender
 .. examples/block_tets_blender
 
-.. examples/mesh_floor_rhino
-.. examples/mesh_floor_blender
 .. examples/mesh_bridge_rhino
 .. examples/mesh_mould_blender
 .. examples/mesh_mould_rhino
