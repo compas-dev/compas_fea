@@ -180,7 +180,61 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </ul>
 <div class="section" id="fields-components-and-data">
 <h3>Fields, components and data</h3>
+<p>After the analysis, the data are stored in the <strong>Structure</strong> object, where they are accessed by the user to read or visualise the results. The organisation of the collected data in <code class="docutils literal"><span class="pre">structure.results</span></code> is in nested dictionaries with keys following a pattern of the: <code class="docutils literal"><span class="pre">step</span></code> string, data type string (<code class="docutils literal"><span class="pre">'nodal'</span></code> or <code class="docutils literal"><span class="pre">'element'</span></code>), the <code class="docutils literal"><span class="pre">field</span></code> string, and the node or element number (<code class="docutils literal"><span class="pre">structure.results[step][type][field][number]</span></code>). A helper method is also provided through <code class="docutils literal"><span class="pre">structure.get_nodal_results()</span></code> and <code class="docutils literal"><span class="pre">structure.get_element_results()</span></code>, where the <code class="docutils literal"><span class="pre">step</span></code>, <code class="docutils literal"><span class="pre">field</span></code> and <code class="docutils literal"><span class="pre">node</span></code> or <code class="docutils literal"><span class="pre">elements</span></code> are given, and the requested results returned:</p>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">get_nodal_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;rfm&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">)</span>
+</code></pre></div>
 </div>
+<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">get_element_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;sxx&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+</code></pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">field</span></code> strings are based on the notation below:</p>
+</div>
+</div>
+<div class="section" id="node-fields">
+<h2>Node fields</h2>
+<div class="line-block">
+<div class="line">Field | x | y | z | Magnitude |</div>
+<div class="line">— | — | — | — | — |</div>
+<div class="line">Reaction forces      <code class="docutils literal"><span class="pre">'rf'</span></code> | <code class="docutils literal"><span class="pre">'rfx'</span></code> | <code class="docutils literal"><span class="pre">'rfy'</span></code> | <code class="docutils literal"><span class="pre">'rfz'</span></code> | <code class="docutils literal"><span class="pre">'rfm'</span></code> |</div>
+<div class="line">Reaction moments     <code class="docutils literal"><span class="pre">'rm'</span></code> | <code class="docutils literal"><span class="pre">'rmx'</span></code> | <code class="docutils literal"><span class="pre">'rmy'</span></code> | <code class="docutils literal"><span class="pre">'rmz'</span></code> | <code class="docutils literal"><span class="pre">'rmm'</span></code> |</div>
+<div class="line">Displacements        <code class="docutils literal"><span class="pre">'u'</span></code>  | <code class="docutils literal"><span class="pre">'ux'</span></code>  | <code class="docutils literal"><span class="pre">'uy'</span></code>  | <code class="docutils literal"><span class="pre">'uz'</span></code>  | <code class="docutils literal"><span class="pre">'um'</span></code>  |</div>
+<div class="line">Rotations            <code class="docutils literal"><span class="pre">'ur'</span></code> | <code class="docutils literal"><span class="pre">'urx'</span></code> | <code class="docutils literal"><span class="pre">'ury'</span></code> | <code class="docutils literal"><span class="pre">'urz'</span></code> | <code class="docutils literal"><span class="pre">'urm'</span></code> |</div>
+<div class="line">Concentrated forces  <code class="docutils literal"><span class="pre">'cf'</span></code> | <code class="docutils literal"><span class="pre">'cfx'</span></code> | <code class="docutils literal"><span class="pre">'cfy'</span></code> | <code class="docutils literal"><span class="pre">'cfz'</span></code> | <code class="docutils literal"><span class="pre">'cfm'</span></code> |</div>
+<div class="line">Concentrated moments <code class="docutils literal"><span class="pre">'cm'</span></code> | <code class="docutils literal"><span class="pre">'cmx'</span></code> | <code class="docutils literal"><span class="pre">'cmy'</span></code> | <code class="docutils literal"><span class="pre">'cmz'</span></code> | <code class="docutils literal"><span class="pre">'cmm'</span></code> |</div>
+</div>
+</div>
+<div class="section" id="element-fields">
+<h2>Element fields</h2>
+<div class="line-block">
+<div class="line">— | — | — | — | — |</div>
+<div class="line">Spring forces <code class="docutils literal"><span class="pre">'spf'</span></code>                     | <code class="docutils literal"><span class="pre">'spfx'</span></code>                | <code class="docutils literal"><span class="pre">'spfy'</span></code>             | <code class="docutils literal"><span class="pre">'spfz'</span></code>           |</div>
+<div class="line">Section forces <code class="docutils literal"><span class="pre">'sf'</span></code> (beams)             | Axial <code class="docutils literal"><span class="pre">'sfnx'</span></code>          | Shear <cite>x</cite> <code class="docutils literal"><span class="pre">'sfvx'</span></code>   | Shear <cite>y</cite> <code class="docutils literal"><span class="pre">'sfvy'</span></code> |</div>
+<div class="line">Section forces per width <code class="docutils literal"><span class="pre">'sf'</span></code> (shells)  | Axial <cite>x</cite> <code class="docutils literal"><span class="pre">'sfnx'</span></code>      | Shear <cite>x</cite> <code class="docutils literal"><span class="pre">'sfvx'</span></code>   | Shear <cite>y</cite> <code class="docutils literal"><span class="pre">'sfvy'</span></code> | Transverse shear <cite>x</cite> <code class="docutils literal"><span class="pre">'sfwx'</span></code> | Transverse shear <cite>y</cite> <code class="docutils literal"><span class="pre">'sfwy'</span></code> |</div>
+<div class="line">Section moments <code class="docutils literal"><span class="pre">'sm'</span></code> (beams)            | Moment <cite>x-x</cite> <code class="docutils literal"><span class="pre">'smx'</span></code>    | Moment <cite>y-y</cite> <code class="docutils literal"><span class="pre">'smy'</span></code> | Torsion <code class="docutils literal"><span class="pre">'smz'</span></code>    |</div>
+<div class="line">Section moments per width <code class="docutils literal"><span class="pre">'sm'</span></code> (shells) | Moment <cite>y-y</cite> <code class="docutils literal"><span class="pre">'smx'</span></code>    | Moment <cite>x-x</cite> <code class="docutils literal"><span class="pre">'smy'</span></code> | Torsion <code class="docutils literal"><span class="pre">'smz'</span></code> |</div>
+<div class="line">Section strains <code class="docutils literal"><span class="pre">'se'</span></code> (beams)            | Axial <code class="docutils literal"><span class="pre">'senx'</span></code>          | Shear <cite>y</cite> <code class="docutils literal"><span class="pre">'sevy'</span></code>   | Shear <cite>x</cite> <code class="docutils literal"><span class="pre">'sevx'</span></code> |</div>
+</div>
+<div class="line-block">
+<div class="line">Section curvatures <code class="docutils literal"><span class="pre">'sk'</span></code> (beams)         | Curvature <cite>x-x</cite> <code class="docutils literal"><span class="pre">'skx'</span></code> | Curvature <cite>y-y</cite> <code class="docutils literal"><span class="pre">'sky'</span></code> | Twist <code class="docutils literal"><span class="pre">'skz'</span></code> |</div>
+<div class="line">Section curvatures <code class="docutils literal"><span class="pre">'sk'</span></code> (shells)        | Curvature <cite>y-y</cite> <code class="docutils literal"><span class="pre">'skx'</span></code> | Curvature <cite>x-x</cite> <code class="docutils literal"><span class="pre">'sky'</span></code> | Twist <code class="docutils literal"><span class="pre">'skz'</span></code> |</div>
+<div class="line">Stress <code class="docutils literal"><span class="pre">'s'</span></code> (beams)                      | Axial <code class="docutils literal"><span class="pre">'sxx'</span></code>           | Hoop <code class="docutils literal"><span class="pre">'syy'</span></code>            | Shear (torsion) <code class="docutils literal"><span class="pre">'sxy'</span></code> |</div>
+<div class="line">Stress <code class="docutils literal"><span class="pre">'s'</span></code> (shells)                     | Axial <code class="docutils literal"><span class="pre">'sxx'</span></code>           | Axial <code class="docutils literal"><span class="pre">'syy'</span></code>           | Shear <code class="docutils literal"><span class="pre">'sxy'</span></code> |</div>
+<div class="line">Stress (derived) <code class="docutils literal"><span class="pre">'s'</span></code> (shells and beams) | Von Mises <code class="docutils literal"><span class="pre">'smises'</span></code>    | Max principal <code class="docutils literal"><span class="pre">'smaxp'</span></code> | Min principal <code class="docutils literal"><span class="pre">'sminp'</span></code> |</div>
+<div class="line">Strain <code class="docutils literal"><span class="pre">'e'</span></code> (beams)                      | Axial <code class="docutils literal"><span class="pre">'exx'</span></code>           | Hoop <code class="docutils literal"><span class="pre">'eyy'</span></code>            | Shear (torsion) <code class="docutils literal"><span class="pre">'exy'</span></code> |</div>
+<div class="line">Strain <code class="docutils literal"><span class="pre">'e'</span></code> (shells)                     | Axial <code class="docutils literal"><span class="pre">'exx'</span></code>           | Axial <code class="docutils literal"><span class="pre">'eyy'</span></code>           | Shear <code class="docutils literal"><span class="pre">'exy'</span></code> |</div>
+<div class="line">Strain (derived) <code class="docutils literal"><span class="pre">'e'</span></code> (shells and beams) | Max principal <code class="docutils literal"><span class="pre">'emaxp'</span></code> | Min principal <code class="docutils literal"><span class="pre">'eminp'</span></code> |</div>
+</div>
+<p>Reinforcement forces <code class="docutils literal"><span class="pre">'rbfor'</span></code></p>
+</div>
+<div class="section" id="integration-and-section-points">
+<h2>Integration and section points</h2>
+<p>For <code class="docutils literal"><span class="pre">'nodal'</span></code> data, accessing the displacement in <cite>z</cite> for step <code class="docutils literal"><span class="pre">'step_load'</span></code> and for node 4 would be <code class="docutils literal"><span class="pre">structure.results['step_load']['nodal']['uz'][4]</span></code>, which would give a single float value. For <code class="docutils literal"><span class="pre">'element'</span></code> data, there is often no single data value that can represent the entire element, as some elements require many data values to be evaluated across its volume. During a finite element analysis, specific points are evaluated across an element and  section related to the element shape function and cross-section shape (Gauss points). Each of these data-points is stored for the element as an integration point–section point string key. This key looks  like <code class="docutils literal"><span class="pre">'ip4_sp1'</span></code>, which would be the data for integration point 4 and section point 1 (see the Elements and Sections topics for the locations of these points).</p>
+<p>The data request <code class="docutils literal"><span class="pre">structure.results['step_load']['element']['smises'][4]</span></code> for an example shell element, will return a dictionary of data with keys as the integration point–section point keys. For a four noded shell element these would be four integration points (the four internal points, unless a reduced integration scheme is used leading to one point) and two section points (top and bottom layers by default). When data stored in this format are converted to nodal data (which happens during the plotting data process), the following points must be observed:</p>
+<ul class="simple">
+<li><p>For some situations, taking a mean value of all points could give meaningless or misleading results. For example, the mean value of normal stresses in a beam under pure bending would be zero, as positive and negative normal stresses would cancel each other out.</p></li>
+<li><p>Selecting one representative integration point is generally not possible without some understanding of the structural model and loading. For instance, points on a beam cross-section will have completely different stress values depending on the combination of major axis and minor axis bending.</p></li>
+<li><p>Picking a maximum value of Von Mises stress could be used to find a critical heavily stressed point, as these stresses are always positive. But picking a maximum or minimum value for a stress where the sign matters, as with  compression or tension, is not so straightforward.</p></li>
+</ul>
 </div>
 </div>
 
@@ -263,6 +317,9 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 <li class="nav-item"><a class="nav-link reference internal" href="#fields-components-and-data">Fields, components and data</a></li>
 </ul>
 </li>
+<li class="nav-item"><a class="nav-link reference internal" href="#node-fields">Node fields</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#element-fields">Element fields</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#integration-and-section-points">Integration and section points</a></li>
 </ul>
 </li>
 </ul>
@@ -280,7 +337,7 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
             
 
             
-                Last updated on Feb 27, 2018.
+                Last updated on Feb 28, 2018.
             
 
             

@@ -79,12 +79,15 @@
 </div>
 <div class="highlight-default"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="sd">&quot;&quot;&quot;A compas_fea package example for spring elements.&quot;&quot;&quot;</span>
 
+<span class="c1"># Note: Abaqus and OpenSees results dont yet match.</span>
+
 <span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">rhino</span>
 
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">SpringSection</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PinnedDisplacement</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">RollerDisplacementXZ</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PointLoad</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralStep</span>
 
@@ -114,14 +117,14 @@
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">SpringSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;spring_elastic&#39;</span><span class="p">,</span> <span class="n">stiffness</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;axial&#39;</span><span class="p">:</span> <span class="mi">10000</span><span class="p">}))</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">SpringSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;spring_soft&#39;</span><span class="p">,</span> <span class="n">stiffness</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;axial&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">}))</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">SpringSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;spring_nonlinear&#39;</span><span class="p">,</span> 
-    <span class="n">forces</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;axial&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">]},</span> <span class="n">displacements</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;axial&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">]}))</span>
+    <span class="n">forces</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;axial&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]},</span> <span class="n">displacements</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;axial&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">1</span><span class="p">]}))</span>
 
 <span class="c1"># Add element properties</span>
 
-<span class="n">ep_bl</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_bl&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;spring_elastic&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;spring_bot_left&#39;</span><span class="p">)</span>
-<span class="n">ep_br</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_br&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;spring_soft&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;spring_bot_right&#39;</span><span class="p">)</span>
+<span class="n">ep_bl</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_bl&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;spring_nonlinear&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;spring_bot_left&#39;</span><span class="p">)</span>
+<span class="n">ep_br</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_br&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;spring_elastic&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;spring_bot_right&#39;</span><span class="p">)</span>
 <span class="n">ep_tl</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_tl&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;spring_elastic&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;spring_top_left&#39;</span><span class="p">)</span>
-<span class="n">ep_tr</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_tr&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;spring_nonlinear&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;spring_top_right&#39;</span><span class="p">)</span>
+<span class="n">ep_tr</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_tr&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;spring_soft&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;spring_top_right&#39;</span><span class="p">)</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep_bl</span><span class="p">)</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep_br</span><span class="p">)</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep_tl</span><span class="p">)</span>
@@ -133,12 +136,14 @@
 
 <span class="c1"># Add displacements</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_pins&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;pins&#39;</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacements</span><span class="p">([</span>
+    <span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_pins&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;pins&#39;</span><span class="p">),</span>
+    <span class="n">RollerDisplacementXZ</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_roller&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;middle&#39;</span><span class="p">)])</span>
 
 <span class="c1"># Add steps</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_steps</span><span class="p">([</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_pins&#39;</span><span class="p">]),</span>
+    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_pins&#39;</span><span class="p">,</span> <span class="s1">&#39;disp_roller&#39;</span><span class="p">]),</span>
     <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_middle&#39;</span><span class="p">])])</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="s1">&#39;step_load&#39;</span><span class="p">]</span>
 
@@ -148,8 +153,8 @@
 
 <span class="c1"># Run and extract data</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;spf&#39;</span><span class="p">])</span>
-<span class="c1">#mdl.analyse_and_extract(software=&#39;opensees&#39;, fields=[&#39;u&#39;])</span>
+<span class="c1">#mdl.analyse_and_extract(software=&#39;abaqus&#39;, fields=[&#39;u&#39;, &#39;spf&#39;])</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;opensees&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;spf&#39;</span><span class="p">])</span>
 
 <span class="c1"># Plot displacements</span>
 
@@ -214,6 +219,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame Rhino</a></li>
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">spring_simple Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_blender.html">mesh_floor Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_blender.html">truss_tower Blender</a></li>
 </ul>
 </li>
@@ -251,7 +257,7 @@
             
 
             
-                Last updated on Feb 27, 2018.
+                Last updated on Feb 28, 2018.
             
 
             

@@ -157,79 +157,73 @@ Ansys
 Fields, components and data
 ===========================
 
-.. After the analysis, the data are stored in the **Structure** object, where they are accessed by the user to read or visualise the results. The organisation of the collected data in ``structure.results`` is in nested dictionaries with keys following a pattern of the: ``step`` string, data type string (``'nodal'`` or ``'element'``), ``field`` string, and the node or element number string (``structure.results[step][type][field][number]``). The ``field`` strings are based on the notation below:
+After the analysis, the data are stored in the **Structure** object, where they are accessed by the user to read or visualise the results. The organisation of the collected data in ``structure.results`` is in nested dictionaries with keys following a pattern of the: ``step`` string, data type string (``'nodal'`` or ``'element'``), the ``field`` string, and the node or element number (``structure.results[step][type][field][number]``). A helper method is also provided through ``structure.get_nodal_results()`` and ``structure.get_element_results()``, where the ``step``, ``field`` and ``node`` or ``elements`` are given, and the requested results returned:
 
-.. -----------
-.. Node fields
-.. -----------
+.. code-block:: python
 
-.. - ``'rf'``: reaction forces ``'rfx'``, ``'rfy'``, ``'rfz'`` and magnitude ``'rfm'``.
+    mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins')
 
-.. - ``'rm'``: reaction moments ``'rmx'``, ``'rmy'``, ``'rmz'`` and magnitude ``'rmm'``.
+.. code-block:: python
 
-.. - ``'u'``: displacements ``'ux'``, ``'uy'``, ``'uz'`` and magnitude ``'um'``.
+    mdl.get_element_results(step='step_load', field='sxx', elements=[10]
 
-.. - ``'ur'``: rotations ``'urx'``, ``'ury'``, ``'urz'`` and magnitude ``'urm'``.
+The ``field`` strings are based on the notation below:
 
-.. - ``'cf'``: concentrated forces ``'cfx'``, ``'cfy'``, ``'cfz'`` and magnitude ``'cfm'``.
+-----------
+Node fields
+-----------
 
-.. - ``'cm'``: concentrated moments ``'cmx'``, ``'cmy'``, ``'cmz'`` and magnitude ``'cmm'``.
-
+| Field | x | y | z | Magnitude |
+| --- | --- | --- | --- | --- |
+| Reaction forces      ``'rf'`` | ``'rfx'`` | ``'rfy'`` | ``'rfz'`` | ``'rfm'`` |
+| Reaction moments     ``'rm'`` | ``'rmx'`` | ``'rmy'`` | ``'rmz'`` | ``'rmm'`` |
+| Displacements        ``'u'``  | ``'ux'``  | ``'uy'``  | ``'uz'``  | ``'um'``  |
+| Rotations            ``'ur'`` | ``'urx'`` | ``'ury'`` | ``'urz'`` | ``'urm'`` |
+| Concentrated forces  ``'cf'`` | ``'cfx'`` | ``'cfy'`` | ``'cfz'`` | ``'cfm'`` |
+| Concentrated moments ``'cm'`` | ``'cmx'`` | ``'cmy'`` | ``'cmz'`` | ``'cmm'`` |
 .. - ``'nt'``: nodal temperatures.
 
-.. --------------
-.. Element fields
-.. --------------
+--------------
+Element fields
+--------------
 
-.. - ``'sf'`` (beams): section forces, axial force in ``'sfnx'`` , shear force `x` ``'sfvx'`` and shear force `y` ``'sfvy'``.
+| --- | --- | --- | --- | --- |
+| Spring forces ``'spf'``                     | ``'spfx'``                | ``'spfy'``             | ``'spfz'``           |
+| Section forces ``'sf'`` (beams)             | Axial ``'sfnx'``          | Shear `x` ``'sfvx'``   | Shear `y` ``'sfvy'`` |
+| Section forces per width ``'sf'`` (shells)  | Axial `x` ``'sfnx'``      | Shear `x` ``'sfvx'``   | Shear `y` ``'sfvy'`` | Transverse shear `x` ``'sfwx'`` | Transverse shear `y` ``'sfwy'`` |
+| Section moments ``'sm'`` (beams)            | Moment `x-x` ``'smx'``    | Moment `y-y` ``'smy'`` | Torsion ``'smz'``    |
+| Section moments per width ``'sm'`` (shells) | Moment `y-y` ``'smx'``    | Moment `x-x` ``'smy'`` | Torsion ``'smz'`` |
+| Section strains ``'se'`` (beams)            | Axial ``'senx'``          | Shear `y` ``'sevy'``   | Shear `x` ``'sevx'`` |
+.. | Section strains ``'se'`` (shells)           | Axial `x` ``'senx'``   | , ``'SE2'`` axial strain in `y`, ``'SE3'`` shear strain, ``'SE4'`` transverse shear strain in `x`, ``'SE5'`` transverse shear strain in `y`, ``'SE6'`` through thickness strain.
 
-.. - ``'spf'`` (springs): spring forces ``'spfx'``, ``'spfy'`` and ``'spfz'``.
-
-.. .. - ``'sf'`` (shells): section forces per width, axial force in `x` ``'sfnx'``, shear force `x` ``'sfvx'``, shear force `y` ``'sfvy'``, transverse shear force `x` ``'sfwx'`` and transverse shear force `y` ``'sfwy'``.
-
-.. - ``'sm'`` (beams): section moments, bending moment about `x` ``'smx'``, bending moment about `y` ``'smy'`` and torsion moment ``'smz'``.
-
-.. - ``'sm'`` (shells): section moments per width, bending moment about `y` ``'smx'``, bending moment about `x` ``'smy'`` and torsion moment ``'smz'``.
-
-.. - ``'se'`` (beams): section strains, axial strain ``'senx'``, shear strain in `y` ``'sevy'`` and shear strain in `x` ``'sevx'``.
-
-.. .. - ``'se'`` (shells): section strains, axial strain in `x` ``'senx'``, ``'SE2'`` axial strain in `y`, ``'SE3'`` shear strain, ``'SE4'`` transverse shear strain in `x`, ``'SE5'`` transverse shear strain in `y`, ``'SE6'`` through thickness strain.
-
-.. - ``'sk'`` (beams): section curvatures, curvature about `x` ``'skx'`` , curvature about `y` ``'sky'`` and twist ``'skz'``.
-
-.. - ``'sk'`` (shells): section curvatures, curvature about `y` ``'skx'``, curvature about `x` ``'sky'`` and twist ``'skz'``.
-
-.. - ``'s'`` basic (beams): axial stress ``'sxx'``, hoop stress ``'syy'`` and shear stresse (torsion) ``'sxy'``.
-
-.. - ``'s'`` basic (shells): axial stresses ``'sxx'`` ``'syy'`` and shear stress ``'sxy'``.
-
-.. - ``'s'`` derived (shells and beams): Von Mises stress ``'smises'``, max principal stress ``'smaxp'`` and min principal stress ``'sminp'``.
-
-.. - ``'e'`` basic (beams): axial strain ``'exx'``, hoop strain ``'eyy'`` and shear strain (torsion) ``'exy'``.
-
-.. - ``'e'`` basic (shells): axial strains ``'exx'`` ``'eyy'`` and shear strain ``'exy'``.
-
-.. - ``'e'`` derived (shells and beams): max principal strain ``'emaxp'`` and min principal strain ``'eminp'``.
-
-.. .. - ``'pe'`` basic (beams): plastic axial strains ``'pexx'``, ``'peyy'``, ``'pezz'``  and plastic shear strains ``'pexy'``. ``'pexz'``, ``'peyz'``.
+| Section curvatures ``'sk'`` (beams)         | Curvature `x-x` ``'skx'`` | Curvature `y-y` ``'sky'`` | Twist ``'skz'`` |
+| Section curvatures ``'sk'`` (shells)        | Curvature `y-y` ``'skx'`` | Curvature `x-x` ``'sky'`` | Twist ``'skz'`` |
+| Stress ``'s'`` (beams)                      | Axial ``'sxx'``           | Hoop ``'syy'``            | Shear (torsion) ``'sxy'`` |
+| Stress ``'s'`` (shells)                     | Axial ``'sxx'``           | Axial ``'syy'``           | Shear ``'sxy'`` |
+| Stress (derived) ``'s'`` (shells and beams) | Von Mises ``'smises'``    | Max principal ``'smaxp'`` | Min principal ``'sminp'`` |
+| Strain ``'e'`` (beams)                      | Axial ``'exx'``           | Hoop ``'eyy'``            | Shear (torsion) ``'exy'`` |
+| Strain ``'e'`` (shells)                     | Axial ``'exx'``           | Axial ``'eyy'``           | Shear ``'exy'`` |
+| Strain (derived) ``'e'`` (shells and beams) | Max principal ``'emaxp'`` | Min principal ``'eminp'`` |
+.. | Plastic strain ``'pe'`` (beams)             | Axial ``'pexx'``          | Axial ``'peyy'``          | Axial ``'pezz'`` | Shear ``'pexy'`` | Shear ``'pexz'`` | Shear ``'peyz'`` |
 
 .. .. - ``'pe'`` derived (shells and beams): max principal plastc strain ``'pemaxp'`` and min principal plastic strain ``'peminp'``.
 
-.. - ``'rbfor'``: reinforcement forces.
+Reinforcement forces ``'rbfor'``
 
-.. .. - For elements such as shell elements, the local element axes can be accessed through ``'axes'`` as a component entry.
+.. - For elements such as shell elements, the local element axes can be accessed through ``'axes'`` as a component entry.
+
 
 ------------------------------
 Integration and section points
 ------------------------------
 
-.. For ``'nodal'`` data, accessing the displacement in `z`, for step ``'step_load'``, and for node 4 would be ``structure.results['step_load']['nodal']['uz'][4]``, which would give a single float value. For ``'element'`` data, there is no single data value that can represent the entire element, as each element has physical dimensions and requires many data values across its volume. During a finite element analysis, specific points are evaluated across an element and  section related to the element shape function and cross-section shape (Gauss points). Each of these data-points is stored for the element as an integration point--section point string key. This key looks  like ``'ip4_sp1'``, which would be the data for integration point 4 and section point 1 (see the Elements and Sections topics for the locations of these points).
+For ``'nodal'`` data, accessing the displacement in `z` for step ``'step_load'`` and for node 4 would be ``structure.results['step_load']['nodal']['uz'][4]``, which would give a single float value. For ``'element'`` data, there is often no single data value that can represent the entire element, as some elements require many data values to be evaluated across its volume. During a finite element analysis, specific points are evaluated across an element and  section related to the element shape function and cross-section shape (Gauss points). Each of these data-points is stored for the element as an integration point--section point string key. This key looks  like ``'ip4_sp1'``, which would be the data for integration point 4 and section point 1 (see the Elements and Sections topics for the locations of these points).
 
-.. The data request ``structure.results['step_load']['element']['smises'][4]``, will, for an example shell element, return a dictionary of data with keys as the integration point--section point keys. For a four noded shell element these would be four integration points (the four internal points, unless a reduced integration scheme is used leading to one point) and two section points (top and bottom layers by default). When data stored in this format are converted to nodal data, the following points must be observed:
+The data request ``structure.results['step_load']['element']['smises'][4]`` for an example shell element, will return a dictionary of data with keys as the integration point--section point keys. For a four noded shell element these would be four integration points (the four internal points, unless a reduced integration scheme is used leading to one point) and two section points (top and bottom layers by default). When data stored in this format are converted to nodal data (which happens during the plotting data process), the following points must be observed:
 
-.. - Taking a mean value of all points could give meaningless or misleading results, for example, the mean value of normal stresses in a beam under pure bending would be zero, as positive and negative normal stresses would cancel each other out.
+- For some situations, taking a mean value of all points could give meaningless or misleading results. For example, the mean value of normal stresses in a beam under pure bending would be zero, as positive and negative normal stresses would cancel each other out.
 
-.. - Selecting one representative integration point is not possible without some understanding of the structural model and loading. For instance, any given point of a beam section will have completely different stress values depending on the degree of major axis or minor axis bending.
+- Selecting one representative integration point is generally not possible without some understanding of the structural model and loading. For instance, points on a beam cross-section will have completely different stress values depending on the combination of major axis and minor axis bending.
 
-.. - Picking a maximum value of Von Mises stress could be used to find a critical heavily stressed point, as these stresses are always positive. But picking a maximum or minimum value for a stress where the sign matters, as with  compression or tension, is not so straightforward.
+- Picking a maximum value of Von Mises stress could be used to find a critical heavily stressed point, as these stresses are always positive. But picking a maximum or minimum value for a stress where the sign matters, as with  compression or tension, is not so straightforward.
 

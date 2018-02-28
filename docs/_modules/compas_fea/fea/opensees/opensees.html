@@ -156,7 +156,7 @@
                 <span class="k">except</span><span class="p">:</span>
                     <span class="k">pass</span>
 
-        <span class="k">elif</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;sf&#39;</span><span class="p">]:</span>
+        <span class="k">elif</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;sf&#39;</span><span class="p">,</span> <span class="s1">&#39;spf&#39;</span><span class="p">]:</span>
 
             <span class="n">file</span> <span class="o">=</span> <span class="n">step</span> <span class="o">+</span> <span class="s1">&#39;_element_&#39;</span> <span class="o">+</span> <span class="n">field</span>
             <span class="k">try</span><span class="p">:</span>
@@ -263,7 +263,7 @@
 
         <span class="n">ndof</span> <span class="o">=</span> <span class="mi">3</span>
         <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;TrussElement&#39;</span><span class="p">,</span> <span class="s1">&#39;TieElement&#39;</span><span class="p">,</span> <span class="s1">&#39;StrutElement&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;TrussElement&#39;</span><span class="p">,</span> <span class="s1">&#39;TieElement&#39;</span><span class="p">,</span> <span class="s1">&#39;StrutElement&#39;</span><span class="p">,</span> <span class="s1">&#39;SpringElement&#39;</span><span class="p">]:</span>
                 <span class="n">ndof</span> <span class="o">=</span> <span class="mi">6</span>
                 <span class="k">break</span>
 
@@ -340,7 +340,7 @@
             
 
             
-                Last updated on Feb 27, 2018.
+                Last updated on Feb 28, 2018.
             
 
             
