@@ -461,6 +461,8 @@
                         <span class="n">nodal</span><span class="p">[</span><span class="s1">&#39;node_rm.out&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;4 5 6 reaction&#39;</span>
                 <span class="k">if</span> <span class="s1">&#39;sf&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
                     <span class="n">elemental</span><span class="p">[</span><span class="s1">&#39;element_sf.out&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;basicForces&#39;</span>
+                <span class="k">if</span> <span class="s1">&#39;spf&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                    <span class="n">elemental</span><span class="p">[</span><span class="s1">&#39;element_spf.out&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;basicForces&#39;</span>
 
                 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">nodal</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;recorder Node -file </span><span class="si">{0}{1}</span><span class="s1">_</span><span class="si">{2}</span><span class="s1"> -time -nodeRange </span><span class="si">{3}</span><span class="s1"> -dof </span><span class="si">{4}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
@@ -692,7 +694,7 @@
             
 
             
-                Last updated on Feb 26, 2018.
+                Last updated on Feb 28, 2018.
             
 
             
