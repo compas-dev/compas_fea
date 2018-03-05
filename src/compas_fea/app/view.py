@@ -16,7 +16,7 @@ from OpenGL.GLU import *
 from compas.viewers import xdraw_points
 from compas.viewers import xdraw_lines
 from compas.viewers import xdraw_texts
-# from compas.visualization.viewers.drawing import xdraw_polygons
+from compas.viewers import xdraw_polygons
 
 # from compas.geometry import add_vectors
 
@@ -121,6 +121,9 @@ class View(QGLWidget):
         self.nodes_on = True
         self.node_numbers_on = True
         self.lines_on = True
+        self.line_numbers_on = True
+        self.faces_on = True
+        self.face_numbers_on = True
 
         self.update_nodes()
         self.update_elements()
@@ -128,19 +131,16 @@ class View(QGLWidget):
     def initializeGL(self):
         glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE)
         glEnable(GL_MULTISAMPLE)
-        # glCullFace(GL_BACK)
-        # glShadeModel(GL_SMOOTH)
-        # glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        glShadeModel(GL_SMOOTH)
         # glPolygonOffset(1.0, 1.0)
         # glEnable(GL_POLYGON_OFFSET_FILL)
-        # glEnable(GL_CULL_FACE)
-        # glEnable(GL_POINT_SMOOTH)
-        # glEnable(GL_LINE_SMOOTH)
-        # glEnable(GL_POLYGON_SMOOTH)
-        # glEnable(GL_DEPTH_TEST)
-        # glEnable(GL_BLEND)
-        # glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
-        # glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        glEnable(GL_POINT_SMOOTH)
+        glEnable(GL_LINE_SMOOTH)
+        glEnable(GL_POLYGON_SMOOTH)
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
+        glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST)
         glutInit()
 
         self.qglClearColor(QColor.fromRgb(220, 220, 220))
@@ -167,10 +167,16 @@ class View(QGLWidget):
 
         if self.nodes_on:
             xdraw_points(self.nodes)
-        if self.lines_on:
-            xdraw_lines(self.lines)
         if self.node_numbers_on:
             xdraw_texts(self.node_numbers)
+        if self.lines_on:
+            xdraw_lines(self.lines)
+        if self.line_numbers_on:
+            xdraw_texts(self.line_numbers)
+        if self.faces_on:
+            xdraw_polygons(self.faces)
+        if self.face_numbers_on:
+            xdraw_texts(self.face_numbers)
 
     def draw_axes(self):
         glLineWidth(3)
@@ -236,11 +242,13 @@ class View(QGLWidget):
             })
 
     def update_elements(self):
+        ds = 0.01 * self.scale
         self.lines = []
-#             self.faces = []
-#             self.element_numbers = []
-#                 face_colour = [0.8, 0.8, 0.8, 0.5]
+        self.line_numbers = []
+        self.faces = []
+        self.face_numbers = []
         line_colour = [0.5, 0.5, 1.0]
+        face_colour = [0.5, 1.0, 0.5, 0.5]
 
         for key, element in self.structure.elements.items():
             nodes = element.nodes
@@ -252,26 +260,30 @@ class View(QGLWidget):
                     'start': sp,
                     'end':   ep,
                     'color': line_colour,
-                    'width': 5
+                    'width': 5,
                 })
-#                 elif (n == 3) or (n == 4):
-#                     points = [[structure.nodes[str(node)][i] for i in 'xyz'] for node in nodes]
-#                     self.faces.append({'points': points,
-#                                        'color.front': face_colour,
-#                                        'color.back' : face_colour})
-#                 self.element_numbers.append({'pos': structure.element_centroid(ekey),
-#                                              'color': [0.4, 0.4, 0.4, 1.0],
-#                                              'text': ekey,
-#                                              'shift': [0, 0, ds]})
+                self.line_numbers.append({
+                    'pos':   self.structure.element_centroid(key),
+                    'color': [0.5, 0.5, 1.0, 1.0],
+                    'text':  str(key),
+                    'shift': [0, 0, ds],
+                })
+            elif (n == 3) or (n == 4):
+                points = [self.structure.node_xyz(node) for node in nodes]
+                self.faces.append({
+                    'points':      points,
+                    'color.front': face_colour,
+                    'color.back':  face_colour,
+                })
+                self.face_numbers.append({
+                    'pos':   self.structure.element_centroid(key),
+                    'color': [0.0, 0.7, 0.0, 1.0],
+                    'text':  str(key),
+                    'shift': [0, 0, ds],
+                })
 
 
 
-
-
-
-#             xdraw_polygons(self.faces)
-#         if self.element_numbers_on:
-#             xdraw_texts(self.element_numbers)
 #         if self.displacements_on:
 #             xdraw_lines(self.bcs_translations)
 #             xdraw_lines(self.bcs_rotations)

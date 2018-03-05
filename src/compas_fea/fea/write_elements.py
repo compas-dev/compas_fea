@@ -88,7 +88,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
         material = materials.get(property.material, None)
         reinforcement = property.reinforcement
         if reinforcement:
-            rebar_index = materials[reinforcement.values()[0]['material']].index + 1
+            rebar_index = materials[list(reinforcement.values())[0]['material']].index + 1
             has_rebar = True
         else:
             rebar_index = None
