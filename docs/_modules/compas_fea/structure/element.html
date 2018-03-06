@@ -127,8 +127,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">number</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">acoustic</span> <span class="o">=</span> <span class="n">acoustic</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">thermal</span> <span class="o">=</span> <span class="n">thermal</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acoustic</span> <span class="o">=</span> <span class="n">acoustic</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thermal</span> <span class="o">=</span> <span class="n">thermal</span>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -150,8 +150,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">Element</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;BeamElement&#39;</span></div>
+        <span class="n">Element</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;BeamElement&#39;</span>
 
 
 <div class="viewcode-block" id="SpringElement"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.element.SpringElement.html#compas_fea.structure.element.SpringElement">[docs]</a><span class="k">class</span> <span class="nc">SpringElement</span><span class="p">(</span><span class="n">Element</span><span class="p">):</span>
@@ -169,8 +169,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">Element</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;SpringElement&#39;</span></div>
+        <span class="n">Element</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;SpringElement&#39;</span>
 
 
 <div class="viewcode-block" id="TrussElement"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.element.TrussElement.html#compas_fea.structure.element.TrussElement">[docs]</a><span class="k">class</span> <span class="nc">TrussElement</span><span class="p">(</span><span class="n">BeamElement</span><span class="p">):</span>
@@ -188,8 +188,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">BeamElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;TrussElement&#39;</span></div>
+        <span class="n">BeamElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;TrussElement&#39;</span>
 
 
 <div class="viewcode-block" id="StrutElement"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.element.StrutElement.html#compas_fea.structure.element.StrutElement">[docs]</a><span class="k">class</span> <span class="nc">StrutElement</span><span class="p">(</span><span class="n">TrussElement</span><span class="p">):</span>
@@ -207,8 +207,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">TrussElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;StrutElement&#39;</span></div>
+        <span class="n">TrussElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;StrutElement&#39;</span>
 
 
 <div class="viewcode-block" id="TieElement"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.element.TieElement.html#compas_fea.structure.element.TieElement">[docs]</a><span class="k">class</span> <span class="nc">TieElement</span><span class="p">(</span><span class="n">TrussElement</span><span class="p">):</span>
@@ -226,8 +226,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">TrussElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;TieElement&#39;</span></div>
+        <span class="n">TrussElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;TieElement&#39;</span>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -249,8 +249,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">Element</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;ShellElement&#39;</span></div>
+        <span class="n">Element</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;ShellElement&#39;</span>
 
 
 <div class="viewcode-block" id="MembraneElement"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.element.MembraneElement.html#compas_fea.structure.element.MembraneElement">[docs]</a><span class="k">class</span> <span class="nc">MembraneElement</span><span class="p">(</span><span class="n">ShellElement</span><span class="p">):</span>
@@ -268,8 +268,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">ShellElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;MembraneElement&#39;</span></div>
+        <span class="n">ShellElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;MembraneElement&#39;</span>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -291,8 +291,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">Element</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;SolidElement&#39;</span></div>
+        <span class="n">Element</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;SolidElement&#39;</span>
 
 
 <div class="viewcode-block" id="PentahedronElement"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.element.PentahedronElement.html#compas_fea.structure.element.PentahedronElement">[docs]</a><span class="k">class</span> <span class="nc">PentahedronElement</span><span class="p">(</span><span class="n">SolidElement</span><span class="p">):</span>
@@ -310,8 +310,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">SolidElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;PentahedronElement&#39;</span></div>
+        <span class="n">SolidElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;PentahedronElement&#39;</span>
 
 
 <div class="viewcode-block" id="TetrahedronElement"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.element.TetrahedronElement.html#compas_fea.structure.element.TetrahedronElement">[docs]</a><span class="k">class</span> <span class="nc">TetrahedronElement</span><span class="p">(</span><span class="n">SolidElement</span><span class="p">):</span>
@@ -329,8 +329,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">SolidElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;TetrahedronElement&#39;</span></div>
+        <span class="n">SolidElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;TetrahedronElement&#39;</span>
 
 
 <div class="viewcode-block" id="HexahedronElement"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.element.HexahedronElement.html#compas_fea.structure.element.HexahedronElement">[docs]</a><span class="k">class</span> <span class="nc">HexahedronElement</span><span class="p">(</span><span class="n">SolidElement</span><span class="p">):</span>
@@ -348,8 +348,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">SolidElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;HexahedronElement&#39;</span></div>
+        <span class="n">SolidElement</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;HexahedronElement&#39;</span>
 </code></pre></div>
                         
                         <!-- <nav class="compas-sideways">
@@ -416,11 +416,11 @@
             
 
             
-                Last updated on Feb 28, 2018.
+                Last updated on Mar 06, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 

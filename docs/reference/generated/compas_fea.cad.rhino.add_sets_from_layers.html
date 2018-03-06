@@ -20,7 +20,11 @@
         <link rel="stylesheet" type="text/css" href="/_static/css/compas-reference.css" />
 
         
+            <link rel="next" title="mesh_extrude" href="compas_fea.cad.rhino.mesh_extrude.html" />
         
+        
+        
+            <link rel="prev" title="add_nodes_elements_from_layers" href="compas_fea.cad.rhino.add_nodes_elements_from_layers.html" />
         
 
         <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -58,6 +62,14 @@
         <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
         <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">additional packages</a>
         
+            
+                <a class="breadcrumb-item" href="../../reference.html" >reference</a>
+            
+                <a class="breadcrumb-item" href="../compas_fea.html" >compas_fea</a>
+            
+                <a class="breadcrumb-item" href="../compas_fea.cad.html" accesskey="U">cad</a>
+            
+        
     </nav>
  -->
 
@@ -65,12 +77,38 @@
 
                         <div class="section" id="add-sets-from-layers">
 <h1>add_sets_from_layers</h1>
+<dl class="function">
+<dt id="compas_fea.cad.rhino.add_sets_from_layers">
+<code class="descclassname">compas_fea.cad.rhino.</code><code class="descname">add_sets_from_layers</code><span class="sig-paren">(</span><em>structure</em>, <em>layers</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/cad/rhino.html#add_sets_from_layers"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Add node or element sets to the Structure object from Rhino layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>structure</strong> (<em>obj</em>) – Structure object to update.</p></li>
+<li><p><strong>layers</strong> (<em>list</em>) – List of layer names to take objects from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Layers should exclusively contain nodes or elements.</p></li>
+<li><p>Sets will inherit the layer names as their keys.</p></li>
+</ul>
+</dd></dl>
+
 </div>
 
                         
                         <!-- <nav class="compas-sideways">
                             
+                                <a href="compas_fea.cad.rhino.add_nodes_elements_from_layers.html" class="btn btn-primary compas-prev" role="button">add_nodes_elements_from_layers</a>
+                            
 
+                            
+                                <a href="compas_fea.cad.rhino.mesh_extrude.html" class="btn btn-primary compas-next" role="button">mesh_extrude</a>
                             
                         </nav> -->
 
@@ -97,11 +135,14 @@
                             <div class="navbar-expand-md">
                                 <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
 
-                                <ul class="nav flex-column">
+                                <ul class="nav flex-column active">
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../tutorial.html">Tutorial</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../../reference.html">Reference</a></li>
+<li class="nav-item active"><a class="nav-link reference internal" href="../../reference.html">Reference</a><ul class="nav active">
+<li class="nav-item active"><a class="nav-link reference internal" href="../compas_fea.html">compas_fea</a></li>
+</ul>
+</li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../license.html">License</a></li>
 </ul>
 
@@ -135,11 +176,11 @@
             
 
             
-                Last updated on Feb 28, 2018.
+                Last updated on Mar 06, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 
