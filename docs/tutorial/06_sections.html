@@ -73,16 +73,16 @@
 
                         <div class="section" id="sections">
 <h1>Sections</h1>
-<p>This page shows how <strong>Section</strong> objects are added to the <strong>Structure</strong> object, here given as <code class="docutils literal"><span class="pre">mdl</span></code>. A variety of <strong>Section</strong> objects exist for 1D, 2D and 3D elements.</p>
+<p>This page shows how <strong>Section</strong> objects are added to the <strong>Structure</strong> object, here given as <code class="docutils literal notranslate"><span class="pre">mdl</span></code>. A variety of <strong>Section</strong> objects exist for 1D, 2D and 3D elements.</p>
 <div class="section" id="adding-sections">
 <h2>Adding sections</h2>
-<p><strong>Element</strong> objects that are added to the <strong>Structure</strong> do not yet have a complete description of their geometry, and so must have a <strong>Section</strong> object associated with them. <strong>Section</strong> classes are first imported from module <strong>compas_fea.structure.section</strong> and then objects instantiated and added to the dictionary <code class="docutils literal"><span class="pre">.sections</span></code> of the <strong>Structure</strong> object. This is done with method <code class="docutils literal"><span class="pre">.add_section()</span></code> (or <code class="docutils literal"><span class="pre">.add_sections()</span></code> for a list of <strong>Section</strong> objects) with <code class="docutils literal"><span class="pre">name</span></code> as the string key. As the section geometry will differ for each class, the input data will vary for the different types of <strong>Section</strong> objects, these inputs are summarised for each section later on this page. In the following example, the radius <code class="docutils literal"><span class="pre">r</span></code> and thickness <code class="docutils literal"><span class="pre">t</span></code> are required for adding a <strong>CircularSection</strong> object and a <strong>ShellSection</strong> object.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">CircularSection</span>
+<p><strong>Element</strong> objects that are added to the <strong>Structure</strong> do not yet have a complete description of their geometry, and so must have a <strong>Section</strong> object associated with them. <strong>Section</strong> classes are first imported from module <strong>compas_fea.structure.section</strong> and then objects instantiated and added to the dictionary <code class="docutils literal notranslate"><span class="pre">.sections</span></code> of the <strong>Structure</strong> object. This is done with method <code class="docutils literal notranslate"><span class="pre">.add_section()</span></code> (or <code class="docutils literal notranslate"><span class="pre">.add_sections()</span></code> for a list of <strong>Section</strong> objects) with <code class="docutils literal notranslate"><span class="pre">name</span></code> as the string key. As the section geometry will differ for each class, the input data will vary for the different types of <strong>Section</strong> objects, these inputs are summarised for each section later on this page. In the following example, the radius <code class="docutils literal notranslate"><span class="pre">r</span></code> and thickness <code class="docutils literal notranslate"><span class="pre">t</span></code> are required for adding a <strong>CircularSection</strong> object and a <strong>ShellSection</strong> object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">CircularSection</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">CircularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_circ&#39;</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.010</span><span class="p">))</span>
 </code></pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ShellSection</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ShellSection</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_shell&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.005</span><span class="p">))</span>
 </code></pre></div>
@@ -90,8 +90,8 @@
 </div>
 <div class="section" id="geometric-properties">
 <h2>Geometric properties</h2>
-<p>Not only will the user input data be available for viewing or editing a <strong>Section</strong> object, but other geometric data will also be automatically calculated, such as the area and second moments of area. The objects are accessed through <code class="docutils literal"><span class="pre">structure.sections</span></code> using the string key to access the <strong>Section</strong> object attributes,</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;sec_circ&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">geometry</span>
+<p>Not only will the user input data be available for viewing or editing a <strong>Section</strong> object, but other geometric data will also be automatically calculated, such as the area and second moments of area. The objects are accessed through <code class="docutils literal notranslate"><span class="pre">structure.sections</span></code> using the string key to access the <strong>Section</strong> object attributes,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;sec_circ&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">geometry</span>
 <span class="go">{&#39;r&#39;: 0.01, &#39;D&#39;: 0.02, &#39;A&#39;: 0.0003141592653, &#39;Ixx&#39;: 7.853981633e-09, &#39;Iyy&#39;: 7.853981633e-09, &#39;Ixy&#39;: 0}</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;sec_circ&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span>
@@ -101,11 +101,11 @@
 </div>
 <div class="section" id="types">
 <h2>Types</h2>
-<p>There are a variety of 1D: <strong>AngleSection</strong>, <strong>SpringSection</strong>, <strong>BoxSection</strong>, <strong>CircularSection</strong>, <strong>GeneralSection</strong>, <strong>ISection</strong>, <strong>PipeSection</strong>, <strong>RectangularSection</strong>, <strong>TrapezoidalSection</strong>, <strong>TrussSection</strong>, 2D: <strong>ShellSection</strong> and 3D: <strong>SolidSection</strong> objects that can be imported, and then added as objects with the <code class="docutils literal"><span class="pre">.add_section()</span></code> method.</p>
+<p>There are a variety of 1D: <strong>AngleSection</strong>, <strong>SpringSection</strong>, <strong>BoxSection</strong>, <strong>CircularSection</strong>, <strong>GeneralSection</strong>, <strong>ISection</strong>, <strong>PipeSection</strong>, <strong>RectangularSection</strong>, <strong>TrapezoidalSection</strong>, <strong>TrussSection</strong>, 2D: <strong>ShellSection</strong> and 3D: <strong>SolidSection</strong> objects that can be imported, and then added as objects with the <code class="docutils literal notranslate"><span class="pre">.add_section()</span></code> method.</p>
 <div class="section" id="truss">
 <h3>Truss</h3>
-<p>A <strong>TrussSection</strong> can take only axial forces (no shear forces or bending and torsion moments), and so only requires the cross-section area <code class="docutils literal"><span class="pre">A</span></code>.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">TrussSection</span>
+<p>A <strong>TrussSection</strong> can take only axial forces (no shear forces or bending and torsion moments), and so only requires the cross-section area <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">TrussSection</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">TrussSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_truss&#39;</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="mf">0.0050</span><span class="p">))</span>
 </code></pre></div>
@@ -113,8 +113,8 @@
 </div>
 <div class="section" id="box">
 <h3>Box</h3>
-<p>A hollow <strong>BoxSection</strong> requires the width <code class="docutils literal"><span class="pre">b</span></code>, height <code class="docutils literal"><span class="pre">h</span></code>, thickness of web <code class="docutils literal"><span class="pre">tw</span></code> and thickness of flange <code class="docutils literal"><span class="pre">tf</span></code>.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">BoxSection</span>
+<p>A hollow <strong>BoxSection</strong> requires the width <code class="docutils literal notranslate"><span class="pre">b</span></code>, height <code class="docutils literal notranslate"><span class="pre">h</span></code>, thickness of web <code class="docutils literal notranslate"><span class="pre">tw</span></code> and thickness of flange <code class="docutils literal notranslate"><span class="pre">tf</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">BoxSection</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">BoxSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_box&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">tw</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <span class="n">tf</span><span class="o">=</span><span class="mf">0.005</span><span class="p">))</span>
 </code></pre></div>
@@ -123,8 +123,8 @@
 </div>
 <div class="section" id="circular">
 <h3>Circular</h3>
-<p>A solid <strong>CircularSection</strong> requires the radius <code class="docutils literal"><span class="pre">r</span></code>.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">CircularSection</span>
+<p>A solid <strong>CircularSection</strong> requires the radius <code class="docutils literal notranslate"><span class="pre">r</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">CircularSection</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">CircularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_circular&#39;</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.01</span><span class="p">))</span>
 </code></pre></div>
@@ -133,8 +133,8 @@
 </div>
 <div class="section" id="i">
 <h3>I</h3>
-<p>An <strong>ISection</strong> requires the width <code class="docutils literal"><span class="pre">b</span></code>, height <code class="docutils literal"><span class="pre">h</span></code>, thickness of web <code class="docutils literal"><span class="pre">tw</span></code> and thickness of flange <code class="docutils literal"><span class="pre">tf</span></code>.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ISection</span>
+<p>An <strong>ISection</strong> requires the width <code class="docutils literal notranslate"><span class="pre">b</span></code>, height <code class="docutils literal notranslate"><span class="pre">h</span></code>, thickness of web <code class="docutils literal notranslate"><span class="pre">tw</span></code> and thickness of flange <code class="docutils literal notranslate"><span class="pre">tf</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ISection</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">ISection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_I&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">tw</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <span class="n">tf</span><span class="o">=</span><span class="mf">0.005</span><span class="p">))</span>
 </code></pre></div>
@@ -143,8 +143,8 @@
 </div>
 <div class="section" id="angle">
 <h3>Angle</h3>
-<p>An unequal <strong>AngleSection</strong> requires the width <code class="docutils literal"><span class="pre">b</span></code>, height <code class="docutils literal"><span class="pre">h</span></code> and thickness <code class="docutils literal"><span class="pre">t</span></code>.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">AngleSection</span>
+<p>An unequal <strong>AngleSection</strong> requires the width <code class="docutils literal notranslate"><span class="pre">b</span></code>, height <code class="docutils literal notranslate"><span class="pre">h</span></code> and thickness <code class="docutils literal notranslate"><span class="pre">t</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">AngleSection</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">AngleSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_angle&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.003</span><span class="p">))</span>
 </code></pre></div>
@@ -153,8 +153,8 @@
 </div>
 <div class="section" id="pipe">
 <h3>Pipe</h3>
-<p>A hollow <strong>PipeSection</strong> requires the radius <code class="docutils literal"><span class="pre">r</span></code> and thickness <code class="docutils literal"><span class="pre">t</span></code>.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PipeSection</span>
+<p>A hollow <strong>PipeSection</strong> requires the radius <code class="docutils literal notranslate"><span class="pre">r</span></code> and thickness <code class="docutils literal notranslate"><span class="pre">t</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PipeSection</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">PipeSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_pipe&#39;</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.005</span><span class="p">))</span>
 </code></pre></div>
@@ -163,8 +163,8 @@
 </div>
 <div class="section" id="rectangular">
 <h3>Rectangular</h3>
-<p>A solid <strong>RectangularSection</strong> requires the width <code class="docutils literal"><span class="pre">b</span></code> and height <code class="docutils literal"><span class="pre">h</span></code>.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">RectangularSection</span>
+<p>A solid <strong>RectangularSection</strong> requires the width <code class="docutils literal notranslate"><span class="pre">b</span></code> and height <code class="docutils literal notranslate"><span class="pre">h</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">RectangularSection</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">RectangularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_rectangular&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
 </code></pre></div>
@@ -173,8 +173,8 @@
 </div>
 <div class="section" id="trapezoidal">
 <h3>Trapezoidal</h3>
-<p>A <strong>TrapezoidalSection</strong> requires the base width <code class="docutils literal"><span class="pre">b1</span></code>, top width <code class="docutils literal"><span class="pre">b2</span></code> and height <code class="docutils literal"><span class="pre">h</span></code>.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">TrapezoidalSection</span>
+<p>A <strong>TrapezoidalSection</strong> requires the base width <code class="docutils literal notranslate"><span class="pre">b1</span></code>, top width <code class="docutils literal notranslate"><span class="pre">b2</span></code> and height <code class="docutils literal notranslate"><span class="pre">h</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">TrapezoidalSection</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">TrapezoidalSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_trapezoidal&#39;</span><span class="p">,</span> <span class="n">b1</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">b2</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
 </code></pre></div>
@@ -183,12 +183,12 @@
 </div>
 <div class="section" id="general">
 <h3>General</h3>
-<p>A <strong>GeneralSection</strong> takes explicit cross-section information: area <code class="docutils literal"><span class="pre">A</span></code>, second moment of area about axis (ex) <code class="docutils literal"><span class="pre">Ixx</span></code>, cross moment of area <code class="docutils literal"><span class="pre">Ixy</span></code>, second moment of area about axis (ey) <code class="docutils literal"><span class="pre">Iyy</span></code>, torsional rigidity <code class="docutils literal"><span class="pre">J</span></code>, sectorial moment <code class="docutils literal"><span class="pre">g0</span></code>, warping constant <code class="docutils literal"><span class="pre">gw</span></code>.</p>
+<p>A <strong>GeneralSection</strong> takes explicit cross-section information: area <code class="docutils literal notranslate"><span class="pre">A</span></code>, second moment of area about axis (ex) <code class="docutils literal notranslate"><span class="pre">Ixx</span></code>, cross moment of area <code class="docutils literal notranslate"><span class="pre">Ixy</span></code>, second moment of area about axis (ey) <code class="docutils literal notranslate"><span class="pre">Iyy</span></code>, torsional rigidity <code class="docutils literal notranslate"><span class="pre">J</span></code>, sectorial moment <code class="docutils literal notranslate"><span class="pre">g0</span></code>, warping constant <code class="docutils literal notranslate"><span class="pre">gw</span></code>.</p>
 </div>
 <div class="section" id="spring">
 <h3>Spring</h3>
-<p>A <strong>SpringSection</strong> can currently take only axial forces (no shear forces or bending and torsion moments). It requires either the <code class="docutils literal"><span class="pre">stiffness</span></code>, for which a linear elastic spring will be made, or lists of <code class="docutils literal"><span class="pre">forces</span></code> and <code class="docutils literal"><span class="pre">displacements</span></code> for the definition of a non-linear spring. The <code class="docutils literal"><span class="pre">forces</span></code> and <code class="docutils literal"><span class="pre">displacements</span></code> should be given in order from negative (compression) to positive (tension).</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">SpringSection</span>
+<p>A <strong>SpringSection</strong> can currently take only axial forces (no shear forces or bending and torsion moments). It requires either the <code class="docutils literal notranslate"><span class="pre">stiffness</span></code>, for which a linear elastic spring will be made, or lists of <code class="docutils literal notranslate"><span class="pre">forces</span></code> and <code class="docutils literal notranslate"><span class="pre">displacements</span></code> for the definition of a non-linear spring. The <code class="docutils literal notranslate"><span class="pre">forces</span></code> and <code class="docutils literal notranslate"><span class="pre">displacements</span></code> should be given in order from negative (compression) to positive (tension).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">SpringSection</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">SpringSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_elastic&#39;</span><span class="p">,</span> <span class="n">stiffness</span><span class="o">=</span><span class="mi">100000</span><span class="p">))</span>
 
@@ -198,8 +198,8 @@
 </div>
 <div class="section" id="shell">
 <h3>Shell</h3>
-<p>The area of a shell or membrane element is known from the geometry of the element through the co-ordinates of the nodes it connects to. All that is needed for the definition of a <strong>ShellSection</strong> is the thickness <code class="docutils literal"><span class="pre">t</span></code>. For a <strong>MembraneElement</strong>, the dimensions will be used to calculate the element cross-section area for membrane forces, while a <strong>ShellElement</strong> will also use the geometry for shear forces, bending moments and torsional moments.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ShellSection</span>
+<p>The area of a shell or membrane element is known from the geometry of the element through the co-ordinates of the nodes it connects to. All that is needed for the definition of a <strong>ShellSection</strong> is the thickness <code class="docutils literal notranslate"><span class="pre">t</span></code>. For a <strong>MembraneElement</strong>, the dimensions will be used to calculate the element cross-section area for membrane forces, while a <strong>ShellElement</strong> will also use the geometry for shear forces, bending moments and torsional moments.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ShellSection</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_shell&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.005</span><span class="p">))</span>
 </code></pre></div>
@@ -208,7 +208,7 @@
 <div class="section" id="solid">
 <h3>Solid</h3>
 <p>The volume of a solid element is known from the geometry of the element through the co-ordinates of the nodes it connects to. The creation of a <strong>SolidSection</strong> therefore only needs the name of the object.</p>
-<div class="highlight-python"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">SolidSection</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">SolidSection</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">SolidSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_solid&#39;</span><span class="p">))</span>
 </code></pre></div>
@@ -323,11 +323,11 @@
             
 
             
-                Last updated on Feb 28, 2018.
+                Last updated on Mar 06, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 

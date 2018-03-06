@@ -20,7 +20,11 @@
         <link rel="stylesheet" type="text/css" href="/_static/css/compas-reference.css" />
 
         
+            <link rel="next" title="plot_data" href="compas_fea.cad.rhino.plot_data.html" />
         
+        
+        
+            <link rel="prev" title="plot_axes" href="compas_fea.cad.rhino.plot_axes.html" />
         
 
         <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -58,6 +62,14 @@
         <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
         <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">additional packages</a>
         
+            
+                <a class="breadcrumb-item" href="../../reference.html" >reference</a>
+            
+                <a class="breadcrumb-item" href="../compas_fea.html" >compas_fea</a>
+            
+                <a class="breadcrumb-item" href="../compas_fea.cad.html" accesskey="U">cad</a>
+            
+        
     </nav>
  -->
 
@@ -65,12 +77,35 @@
 
                         <div class="section" id="plot-mode-shapes">
 <h1>plot_mode_shapes</h1>
+<dl class="function">
+<dt id="compas_fea.cad.rhino.plot_mode_shapes">
+<code class="descclassname">compas_fea.cad.rhino.</code><code class="descname">plot_mode_shapes</code><span class="sig-paren">(</span><em>structure</em>, <em>step</em>, <em>layer=None</em>, <em>scale=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/cad/rhino.html#plot_mode_shapes"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Plots modal shapes from structure.results</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>structure</strong> (<em>obj</em>) – Structure object.</p></li>
+<li><p><strong>step</strong> (<em>str</em>) – Name of the Step.</p></li>
+<li><p><strong>layer</strong> (<em>str</em>) – Each mode will be placed in a layer with this string as its base.</p></li>
+<li><p><strong>scale</strong> (<em>float</em>) – Scale displacements for the deformed plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 
                         
                         <!-- <nav class="compas-sideways">
                             
+                                <a href="compas_fea.cad.rhino.plot_axes.html" class="btn btn-primary compas-prev" role="button">plot_axes</a>
+                            
 
+                            
+                                <a href="compas_fea.cad.rhino.plot_data.html" class="btn btn-primary compas-next" role="button">plot_data</a>
                             
                         </nav> -->
 
@@ -97,11 +132,14 @@
                             <div class="navbar-expand-md">
                                 <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
 
-                                <ul class="nav flex-column">
+                                <ul class="nav flex-column active">
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../tutorial.html">Tutorial</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../../reference.html">Reference</a></li>
+<li class="nav-item active"><a class="nav-link reference internal" href="../../reference.html">Reference</a><ul class="nav active">
+<li class="nav-item active"><a class="nav-link reference internal" href="../compas_fea.html">compas_fea</a></li>
+</ul>
+</li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../license.html">License</a></li>
 </ul>
 
@@ -135,11 +173,11 @@
             
 
             
-                Last updated on Feb 28, 2018.
+                Last updated on Mar 06, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 

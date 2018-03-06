@@ -130,7 +130,7 @@
 <span class="p">]</span>
 
 
-<div class="viewcode-block" id="add_element_set"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.add_element_set.html#compas_fea.cad.rhino.add_element_set">[docs]</a><span class="k">def</span> <span class="nf">add_element_set</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">guids</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="add_element_set"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.add_element_set.html#compas_fea.cad.rhino.add_element_set">[docs]</a><span class="k">def</span> <span class="nf">add_element_set</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">guids</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Adds element set information from Rhino curve and mesh guids.</span>
 
@@ -141,9 +141,7 @@
 <span class="sd">    guids : list</span>
 <span class="sd">        Rhino curve and Rhino mesh guids.</span>
 <span class="sd">    name : str</span>
-<span class="sd">        Set name.</span>
-<span class="sd">    explode : bool</span>
-<span class="sd">        Explode the set into sets for each member of selection.</span>
+<span class="sd">        Name of the new element set.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -186,8 +184,8 @@
                     <span class="n">element</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
-
-    <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">elements</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="n">explode</span><span class="p">)</span></div>
+</div>
+    <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">elements</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="add_tets_from_mesh"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.add_tets_from_mesh.html#compas_fea.cad.rhino.add_tets_from_mesh">[docs]</a><span class="k">def</span> <span class="nf">add_tets_from_mesh</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">draw_tets</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;Default&#39;</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -226,7 +224,7 @@
 
     <span class="n">path</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">path</span>
     <span class="n">basedir</span> <span class="o">=</span> <span class="n">utilities</span><span class="o">.</span><span class="vm">__file__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;__init__.py&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">xfunc</span> <span class="o">=</span> <span class="n">XFunc</span><span class="p">(</span><span class="s1">&#39;post-process&#39;</span><span class="p">,</span> <span class="n">basedir</span><span class="o">=</span><span class="n">basedir</span><span class="p">,</span> <span class="n">tmpdir</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">xfunc</span> <span class="o">=</span> <span class="n">XFunc</span><span class="p">(</span><span class="s1">&#39;tets&#39;</span><span class="p">,</span> <span class="n">basedir</span><span class="o">=</span><span class="n">basedir</span><span class="p">,</span> <span class="n">tmpdir</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
     <span class="n">xfunc</span><span class="o">.</span><span class="n">funcname</span> <span class="o">=</span> <span class="s1">&#39;functions.tets_from_vertices_faces&#39;</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -240,23 +238,23 @@
             <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">structure</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">tets_points</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">element</span><span class="p">]</span>
             <span class="n">ekey</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;TetrahedronElement&#39;</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="n">acoustic</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="n">thermal</span><span class="p">)</span>
             <span class="n">ekeys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ekey</span><span class="p">)</span>
-        <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">ekeys</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">ekeys</span><span class="p">)</span>
 
-        <span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">rs</span><span class="o">.</span><span class="n">DeleteObjects</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">ObjectsByLayer</span><span class="p">(</span><span class="n">layer</span><span class="p">))</span>
-        <span class="n">rs</span><span class="o">.</span><span class="n">CurrentLayer</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">draw_tets</span><span class="p">:</span>
+            <span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">rs</span><span class="o">.</span><span class="n">DeleteObjects</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">ObjectsByLayer</span><span class="p">(</span><span class="n">layer</span><span class="p">))</span>
+            <span class="n">rs</span><span class="o">.</span><span class="n">CurrentLayer</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
             <span class="n">tet_faces</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">points</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tets_elements</span><span class="p">):</span>
                 <span class="n">xyz</span> <span class="o">=</span> <span class="p">[</span><span class="n">tets_points</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">points</span><span class="p">]</span>
                 <span class="n">rs</span><span class="o">.</span><span class="n">AddMesh</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">xyz</span><span class="p">,</span> <span class="n">face_vertices</span><span class="o">=</span><span class="n">tet_faces</span><span class="p">)</span>
         <span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">except</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Error using MeshPy and/or generating Tets *****&#39;</span><span class="p">)</span></div>
+    <span class="k">except</span><span class="p">:</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Error using MeshPy and/or generating Tets *****&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="add_node_set"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.add_node_set.html#compas_fea.cad.rhino.add_node_set">[docs]</a><span class="k">def</span> <span class="nf">add_node_set</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">guids</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="add_node_set"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.add_node_set.html#compas_fea.cad.rhino.add_node_set">[docs]</a><span class="k">def</span> <span class="nf">add_node_set</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">guids</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Adds node set information from Rhino point guids.</span>
 
@@ -267,9 +265,7 @@
 <span class="sd">    guids : list</span>
 <span class="sd">        Rhino point guids.</span>
 <span class="sd">    name : str</span>
-<span class="sd">        Set name.</span>
-<span class="sd">    explode : bool</span>
-<span class="sd">        Explode the set into sets for each member of selection.</span>
+<span class="sd">        Name of the new node set.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -281,8 +277,8 @@
     <span class="k">for</span> <span class="n">guid</span> <span class="ow">in</span> <span class="n">guids</span><span class="p">:</span>
         <span class="n">node</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">PointCoordinates</span><span class="p">(</span><span class="n">guid</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-    <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="n">explode</span><span class="p">)</span></div>
+            <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
+    <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">nodes</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="add_nodes_elements_from_layers"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.add_nodes_elements_from_layers.html#compas_fea.cad.rhino.add_nodes_elements_from_layers">[docs]</a><span class="k">def</span> <span class="nf">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">line_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -379,11 +375,11 @@
                         <span class="n">e</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="n">acoustic</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="n">thermal</span><span class="p">,</span>
                                                   <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
                         <span class="n">created_elements</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">created_nodes</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">created_elements</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">created_nodes</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">created_elements</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="add_sets_from_layers"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.add_sets_from_layers.html#compas_fea.cad.rhino.add_sets_from_layers">[docs]</a><span class="k">def</span> <span class="nf">add_sets_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="add_sets_from_layers"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.add_sets_from_layers.html#compas_fea.cad.rhino.add_sets_from_layers">[docs]</a><span class="k">def</span> <span class="nf">add_sets_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">layers</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Add node or element sets to the Structure object from Rhino layers.</span>
 
@@ -393,8 +389,6 @@
 <span class="sd">        Structure object to update.</span>
 <span class="sd">    layers : list</span>
 <span class="sd">        List of layer names to take objects from.</span>
-<span class="sd">    explode : bool</span>
-<span class="sd">        Explode the set into sets for each member of selection.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -416,12 +410,12 @@
             <span class="n">name</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;::&#39;</span> <span class="ow">in</span> <span class="n">layer</span> <span class="k">else</span> <span class="n">layer</span>
             <span class="n">check_points</span> <span class="o">=</span> <span class="p">[</span><span class="n">rs</span><span class="o">.</span><span class="n">IsPoint</span><span class="p">(</span><span class="n">guid</span><span class="p">)</span> <span class="k">for</span> <span class="n">guid</span> <span class="ow">in</span> <span class="n">guids</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">check_points</span><span class="p">):</span>
-                <span class="n">add_node_set</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">guids</span><span class="o">=</span><span class="n">guids</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="n">explode</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">check_points</span><span class="p">):</span>
-                <span class="n">add_element_set</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">guids</span><span class="o">=</span><span class="n">guids</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="n">explode</span><span class="p">)</span></div>
+                <span class="n">add_node_set</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">guids</span><span class="o">=</span><span class="n">guids</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">check_points</span><span class="p">):</span></div>
+                <span class="n">add_element_set</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">guids</span><span class="o">=</span><span class="n">guids</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="mesh_extrude"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.mesh_extrude.html#compas_fea.cad.rhino.mesh_extrude">[docs]</a><span class="k">def</span> <span class="nf">mesh_extrude</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dz</span><span class="p">,</span> <span class="n">setname</span><span class="p">,</span> <span class="n">cap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="mesh_extrude"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.mesh_extrude.html#compas_fea.cad.rhino.mesh_extrude">[docs]</a><span class="k">def</span> <span class="nf">mesh_extrude</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dz</span><span class="p">,</span> <span class="n">setname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Extrudes a Rhino mesh into cells of many layers and adds to Structure.</span>
 
@@ -436,9 +430,11 @@
 <span class="sd">    dz : float</span>
 <span class="sd">        Layer thickness.</span>
 <span class="sd">    setname : str</span>
-<span class="sd">        Name of set for added elements.</span>
+<span class="sd">        Name of set for added solid elements.</span>
 <span class="sd">    cap : str</span>
-<span class="sd">        Name for a capping mesh on final surface.</span>
+<span class="sd">        Name of set for a capping mesh on final surface.</span>
+<span class="sd">    links : str</span>
+<span class="sd">        Name of set for adding links along extrusion.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -451,8 +447,8 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_from_guid</span><span class="p">(</span><span class="n">Mesh</span><span class="p">(),</span> <span class="n">guid</span><span class="p">)</span>
-    <span class="n">extrude_mesh</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">nz</span><span class="o">=</span><span class="n">nz</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">dz</span><span class="p">,</span> <span class="n">setname</span><span class="o">=</span><span class="n">setname</span><span class="p">,</span> <span class="n">cap</span><span class="o">=</span><span class="n">cap</span><span class="p">)</span></div>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_from_guid</span><span class="p">(</span><span class="n">Mesh</span><span class="p">(),</span> <span class="n">guid</span><span class="p">)</span></div>
+    <span class="n">extrude_mesh</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">nz</span><span class="o">=</span><span class="n">nz</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">dz</span><span class="p">,</span> <span class="n">setname</span><span class="o">=</span><span class="n">setname</span><span class="p">,</span> <span class="n">cap</span><span class="o">=</span><span class="n">cap</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="n">links</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="network_from_lines"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.network_from_lines.html#compas_fea.cad.rhino.network_from_lines">[docs]</a><span class="k">def</span> <span class="nf">network_from_lines</span><span class="p">(</span><span class="n">guids</span><span class="o">=</span><span class="p">[],</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -475,8 +471,8 @@
 
     <span class="k">if</span> <span class="n">layer</span><span class="p">:</span>
         <span class="n">guids</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">ObjectsByLayer</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
-    <span class="n">lines</span> <span class="o">=</span> <span class="p">[[</span><span class="n">rs</span><span class="o">.</span><span class="n">CurveStartPoint</span><span class="p">(</span><span class="n">guid</span><span class="p">),</span> <span class="n">rs</span><span class="o">.</span><span class="n">CurveEndPoint</span><span class="p">(</span><span class="n">guid</span><span class="p">)]</span> <span class="k">for</span> <span class="n">guid</span> <span class="ow">in</span> <span class="n">guids</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">Network</span><span class="o">.</span><span class="n">from_lines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[[</span><span class="n">rs</span><span class="o">.</span><span class="n">CurveStartPoint</span><span class="p">(</span><span class="n">guid</span><span class="p">),</span> <span class="n">rs</span><span class="o">.</span><span class="n">CurveEndPoint</span><span class="p">(</span><span class="n">guid</span><span class="p">)]</span> <span class="k">for</span> <span class="n">guid</span> <span class="ow">in</span> <span class="n">guids</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">Network</span><span class="o">.</span><span class="n">from_lines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ordered_network"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.ordered_network.html#compas_fea.cad.rhino.ordered_network">[docs]</a><span class="k">def</span> <span class="nf">ordered_network</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">network</span><span class="p">,</span> <span class="n">layer</span><span class="p">):</span>
@@ -509,8 +505,8 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">sp_xyz</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">PointCoordinates</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">ObjectsByLayer</span><span class="p">(</span><span class="n">layer</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">network_order</span><span class="p">(</span><span class="n">sp_xyz</span><span class="o">=</span><span class="n">sp_xyz</span><span class="p">,</span> <span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="p">)</span></div>
+    <span class="n">sp_xyz</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">PointCoordinates</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">ObjectsByLayer</span><span class="p">(</span><span class="n">layer</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">network_order</span><span class="p">(</span><span class="n">sp_xyz</span><span class="o">=</span><span class="n">sp_xyz</span><span class="p">,</span> <span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="plot_axes"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.plot_axes.html#compas_fea.cad.rhino.plot_axes">[docs]</a><span class="k">def</span> <span class="nf">plot_axes</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">e11</span><span class="p">,</span> <span class="n">e22</span><span class="p">,</span> <span class="n">e33</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">sc</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
@@ -546,8 +542,8 @@
     <span class="n">rs</span><span class="o">.</span><span class="n">ObjectColor</span><span class="p">(</span><span class="n">ey</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
     <span class="n">rs</span><span class="o">.</span><span class="n">ObjectColor</span><span class="p">(</span><span class="n">ez</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">])</span>
     <span class="n">rs</span><span class="o">.</span><span class="n">ObjectLayer</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
-    <span class="n">rs</span><span class="o">.</span><span class="n">ObjectLayer</span><span class="p">(</span><span class="n">ey</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
-    <span class="n">rs</span><span class="o">.</span><span class="n">ObjectLayer</span><span class="p">(</span><span class="n">ez</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span></div>
+    <span class="n">rs</span><span class="o">.</span><span class="n">ObjectLayer</span><span class="p">(</span><span class="n">ey</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span></div>
+    <span class="n">rs</span><span class="o">.</span><span class="n">ObjectLayer</span><span class="p">(</span><span class="n">ez</span><span class="p">,</span> <span class="n">layer</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="plot_mode_shapes"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.plot_mode_shapes.html#compas_fea.cad.rhino.plot_mode_shapes">[docs]</a><span class="k">def</span> <span class="nf">plot_mode_shapes</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
@@ -573,8 +569,8 @@
 
     <span class="n">freq</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="s1">&#39;frequencies&#39;</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">fk</span> <span class="ow">in</span> <span class="n">freq</span><span class="p">:</span>
-        <span class="n">layerk</span> <span class="o">=</span> <span class="n">layer</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fk</span><span class="p">)</span>
-        <span class="n">plot_data</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;um&#39;</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layerk</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">fk</span><span class="p">)</span></div>
+        <span class="n">layerk</span> <span class="o">=</span> <span class="n">layer</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fk</span><span class="p">)</span></div>
+        <span class="n">plot_data</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;um&#39;</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layerk</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">fk</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="plot_data"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.plot_data.html#compas_fea.cad.rhino.plot_data">[docs]</a><span class="k">def</span> <span class="nf">plot_data</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;um&#39;</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
@@ -749,8 +745,8 @@
         <span class="n">rs</span><span class="o">.</span><span class="n">LayerVisible</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">except</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">***** Error encountered *****&#39;</span><span class="p">)</span></div>
+    <span class="k">except</span><span class="p">:</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">***** Error encountered *****&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="plot_voxels"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.plot_voxels.html#compas_fea.cad.rhino.plot_voxels">[docs]</a><span class="k">def</span> <span class="nf">plot_voxels</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;smises&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">nodal</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
@@ -824,9 +820,10 @@
         <span class="n">xfunc</span> <span class="o">=</span> <span class="n">XFunc</span><span class="p">(</span><span class="s1">&#39;voxels&#39;</span><span class="p">,</span> <span class="n">basedir</span><span class="o">=</span><span class="n">basedir</span><span class="p">,</span> <span class="n">tmpdir</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
         <span class="n">xfunc</span><span class="o">.</span><span class="n">funcname</span> <span class="o">=</span> <span class="s1">&#39;functions.voxels&#39;</span>
         <span class="n">xfunc</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">fscaled</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">U</span><span class="o">=</span><span class="n">U</span><span class="p">,</span> <span class="n">vdx</span><span class="o">=</span><span class="n">vdx</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="s1">&#39;mayavi&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">***** Voxels finished *****&#39;</span><span class="p">)</span>
 
-    <span class="k">except</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">***** Error plotting voxels *****&#39;</span><span class="p">)</span></div>
+    <span class="k">except</span><span class="p">:</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">***** Error plotting voxels *****&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="plot_principal_stresses"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.rhino.plot_principal_stresses.html#compas_fea.cad.rhino.plot_principal_stresses">[docs]</a><span class="k">def</span> <span class="nf">plot_principal_stresses</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">ptype</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">layer</span><span class="p">):</span>
@@ -859,8 +856,8 @@
 <span class="sd">    - Currently alpha script and for only four-noded S4 shell elements.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">pass</span>  <span class="c1"># make this function external</span></div>
+</div>
+    <span class="k">pass</span>  <span class="c1"># make this function external</span>
 
 <span class="c1">#     name = structure.name</span>
 <span class="c1">#     path = structure.path</span>
@@ -986,11 +983,11 @@
             
 
             
-                Last updated on Jan 30, 2018.
+                Last updated on Mar 06, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 
