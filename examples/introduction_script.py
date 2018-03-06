@@ -1,13 +1,13 @@
 # """Introduction to the compas_fea package."""
 
-# from compas_fea.structure import CircularSection
-# from compas_fea.structure import ElasticIsotropic
-# from compas_fea.structure import ElementProperties
-# from compas_fea.structure import GeneralStep
-# from compas_fea.structure import GravityLoad
-# from compas_fea.structure import PinnedDisplacement
-# from compas_fea.structure import PointLoad
-# from compas_fea.structure import ShellSection
+from compas_fea.structure import CircularSection
+from compas_fea.structure import ElasticIsotropic
+from compas_fea.structure import ElementProperties
+from compas_fea.structure import GeneralStep
+from compas_fea.structure import GravityLoad
+from compas_fea.structure import PinnedDisplacement
+from compas_fea.structure import PointLoad
+from compas_fea.structure import ShellSection
 from compas_fea.structure import Structure
 
 

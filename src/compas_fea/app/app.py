@@ -6,12 +6,13 @@ from __future__ import print_function
 from PySide.QtCore import Qt
 from PySide.QtGui import QMainWindow
 from PySide.QtGui import QApplication
-from PySide.QtGui import QBoxLayout
+from PySide.QtGui import QHBoxLayout
 from PySide.QtGui import QDockWidget
 from PySide.QtGui import QWidget
 from PySide.QtGui import QLabel
 from PySide.QtGui import QPushButton
-from PySide.QtGui import QGridLayout
+from PySide.QtGui import QVBoxLayout
+from PySide.QtGui import QComboBox
 
 from compas_fea.app.view import View
 
@@ -90,40 +91,108 @@ class App(QApplication):
         self.sidebar.setWindowTitle('Sidebar')
 
         widget = QWidget(self.sidebar)
-        layout = QBoxLayout(QBoxLayout.TopToBottom)
-        grid = QGridLayout()
+        layout = QVBoxLayout()
 
         # Nodes
 
         def change_view_nodes():
-            print('view nodes')
-            # self.view.nodes_on = state
-        #     self.view.updateGL()
+            if self.view.nodes_on:
+                self.view.nodes_on = False
+                self.status.showMessage('Nodes display: OFF')
+            else:
+                self.view.nodes_on = True
+                self.status.showMessage('Nodes display: ON')
+            self.view.updateGL()
+
+        def change_view_node_numbers():
+            if self.view.node_numbers_on:
+                self.view.node_numbers_on = False
+                self.status.showMessage('Node numbers display: OFF')
+            else:
+                self.view.node_numbers_on = True
+                self.status.showMessage('Node numbers display: ON')
+            self.view.updateGL()
+
+        layout.addWidget(QLabel('Nodes'))
 
         button_nodes_on = QPushButton('1')
         button_nodes_on.clicked.connect(change_view_nodes)
 
-        grid.addWidget(QLabel('Nodes'), 0, 0)
-        grid.addWidget(button_nodes_on, 1, 0)
+        button_node_numbers_on = QPushButton('2')
+        button_node_numbers_on.clicked.connect(change_view_node_numbers)
 
+        node_layout = QHBoxLayout()
+        node_layout.addWidget(button_nodes_on)
+        node_layout.addWidget(button_node_numbers_on)
+
+        layout.addLayout(node_layout)
 
         # toggle.stateChanged.connect(change)
 
-        # # Node numbers
-
         # toggle = QCheckBox('Node numbers')
         # toggle.setCheckState(self.view.node_numbers_on)
-        # grid.addWidget(toggle, 2, 0)
-
-        # def change(state):
-        #     self.view.node_numbers_on = state
-        #     self.view.updateGL()
 
         # toggle.stateChanged.connect(change)
 
         # Elements
 
-        grid.addWidget(QLabel('Elements'), 2, 0)
+        def change_view_lines():
+            if self.view.lines_on:
+                self.view.lines_on = False
+                self.status.showMessage('Elements (lines) display: OFF')
+            else:
+                self.view.lines_on = True
+                self.status.showMessage('Elements (lines) display: ON')
+            self.view.updateGL()
+
+        def change_view_line_numbers():
+            if self.view.line_numbers_on:
+                self.view.line_numbers_on = False
+                self.status.showMessage('Element numbers (lines) display: OFF')
+            else:
+                self.view.line_numbers_on = True
+                self.status.showMessage('Element numbers (lines) display: ON')
+            self.view.updateGL()
+
+        def change_view_faces():
+            if self.view.faces_on:
+                self.view.faces_on = False
+                self.status.showMessage('Elements (faces) display: OFF')
+            else:
+                self.view.faces_on = True
+                self.status.showMessage('Elements (faces) display: ON')
+            self.view.updateGL()
+
+        def change_view_face_numbers():
+            if self.view.face_numbers_on:
+                self.view.face_numbers_on = False
+                self.status.showMessage('Element numbers (faces) display: OFF')
+            else:
+                self.view.face_numbers_on = True
+                self.status.showMessage('Element numbers (faces) display: ON')
+            self.view.updateGL()
+
+        layout.addWidget(QLabel('Elements'))
+
+        button_lines_on = QPushButton('1')
+        button_lines_on.clicked.connect(change_view_lines)
+
+        button_line_numbers_on = QPushButton('2')
+        button_line_numbers_on.clicked.connect(change_view_line_numbers)
+
+        button_faces_on = QPushButton('3')
+        button_faces_on.clicked.connect(change_view_faces)
+
+        button_face_numbers_on = QPushButton('4')
+        button_face_numbers_on.clicked.connect(change_view_face_numbers)
+
+        element_layout = QHBoxLayout()
+        element_layout.addWidget(button_lines_on)
+        element_layout.addWidget(button_line_numbers_on)
+        element_layout.addWidget(button_faces_on)
+        element_layout.addWidget(button_face_numbers_on)
+
+        layout.addLayout(element_layout)
 
         # toggle = QCheckBox('Elements')
         # toggle.setCheckState(self.view.elements_on)
@@ -147,7 +216,7 @@ class App(QApplication):
 
         # Boundary conditions
 
-        grid.addWidget(QLabel('Boundary conditions'), 4, 0)
+        layout.addWidget(QLabel('Boundary conditions'))
 
         # toggle = QCheckBox('Displacements')
         # toggle.setCheckState(self.view.displacements_on)
@@ -161,9 +230,24 @@ class App(QApplication):
 
         # Loads
 
-        grid.addWidget(QLabel('Loads'), 6, 0)
+        layout.addWidget(QLabel('Loads'))
 
-        layout.addLayout(grid)
+        # Results
+
+        steps_list = QComboBox()
+        steps_list.addItems(['Step1', 'Step2'])
+
+        fields_list = QComboBox()
+        fields_list.addItems(['Field1', 'Field2'])
+
+        components_list = QComboBox()
+        components_list.addItems(['Component1', 'Component2'])
+
+        layout.addWidget(QLabel('Results'))
+        layout.addWidget(steps_list)
+        layout.addWidget(fields_list)
+        layout.addWidget(components_list)
+
         layout.addStretch()
         widget.setLayout(layout)
         self.sidebar.setWidget(widget)
