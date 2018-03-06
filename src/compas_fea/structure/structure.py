@@ -776,6 +776,7 @@ Steps
 
         return structure
 
+    @classmethod
     def from_network(self, network):
         pass
 
@@ -796,7 +797,8 @@ Steps
 
         Returns
         -------
-        list: Keys of the created elements.
+        list
+            Keys of the created elements.
 
         """
 
@@ -825,17 +827,19 @@ Steps
 
         Returns
         -------
-        None
-            Nodes and elements are updated in the Structure object.
+        list
+            Keys of the created elements.
 
         """
 
         for key in sorted(list(network.vertices()), key=int):
             self.add_node(network.vertex_coordinates(key))
+        ekeys = []
         for u, v in list(network.edges()):
             sp = self.check_node_exists(network.vertex_coordinates(u))
             ep = self.check_node_exists(network.vertex_coordinates(v))
-            self.add_element(nodes=[sp, ep], type=element_type, acoustic=acoustic, thermal=thermal)
+            ekeys.append(self.add_element(nodes=[sp, ep], type=element_type, acoustic=acoustic, thermal=thermal))
+        return ekeys
 
 
 # ==============================================================================

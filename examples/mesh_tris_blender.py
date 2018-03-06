@@ -1,4 +1,3 @@
-"""An example compas_fea package use for meshing."""
 
 # Note: testing for meshing functions.
 
@@ -6,24 +5,24 @@ from compas_fea.cad import blender
 from compas_fea.structure import Structure
 
 from compas_blender.geometry import BlenderMesh
-from compas_blender.utilities import xdraw_mesh
-from compas_blender.utilities import get_objects
 from compas_blender.utilities import clear_layer
+from compas_blender.utilities import get_objects
+from compas_blender.utilities import xdraw_mesh
 
 from compas_fea.utilities import discretise_faces
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 clear_layer(layer=1)
 
 # Create empty Structure object
 
-mdl = Structure(name='mesh_triangle', path='/home/al/Temp/')
+mdl = Structure(name='mesh_triangle', path='C:/Temp/')
 
 # Discretise mesh
 

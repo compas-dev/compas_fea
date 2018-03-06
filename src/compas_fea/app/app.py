@@ -8,6 +8,7 @@ from PySide.QtGui import QMainWindow
 from PySide.QtGui import QApplication
 from PySide.QtGui import QHBoxLayout
 from PySide.QtGui import QDockWidget
+from PySide.QtGui import QFileDialog
 from PySide.QtGui import QWidget
 from PySide.QtGui import QLabel
 from PySide.QtGui import QPushButton
@@ -15,6 +16,7 @@ from PySide.QtGui import QVBoxLayout
 from PySide.QtGui import QComboBox
 
 from compas_fea.app.view import View
+from compas_fea.structure import Structure
 
 import sys
 
@@ -85,9 +87,24 @@ class App(QApplication):
 # Sidebar
 # ==============================================================================
 
+    def setup_steps_list(self):
+        self.steps_list.clear()
+        if self.structure.steps_order:
+            self.steps_list.addItems(self.structure.steps_order)
+        else:
+            self.steps_list.addItems(['No Steps'])
+
+    def setup_fields_list_nodes(self):
+        self.fields_list_nodes.clear()
+        current_step = self.steps_list.currentText()
+        if (current_step != 'No Steps') and (current_step in self.structure.results.keys()):
+            self.fields_list_nodes.addItems(list(self.structure.results[current_step]['nodal'].keys()))
+        else:
+            self.fields_list_nodes.addItems(['No Node Fields'])
+
     def setup_sidebar(self):
         self.sidebar = QDockWidget()
-        self.sidebar.setFixedWidth(200)
+        self.sidebar.setFixedWidth(120)
         self.sidebar.setWindowTitle('Sidebar')
 
         widget = QWidget(self.sidebar)
@@ -115,10 +132,14 @@ class App(QApplication):
 
         layout.addWidget(QLabel('Nodes'))
 
-        button_nodes_on = QPushButton('1')
+        button_nodes_on = QPushButton('On/Off')
+        button_nodes_on.setCheckable(True)
+        button_nodes_on.setChecked(True)
         button_nodes_on.clicked.connect(change_view_nodes)
 
-        button_node_numbers_on = QPushButton('2')
+        button_node_numbers_on = QPushButton('No.')
+        button_node_numbers_on.setCheckable(True)
+        button_node_numbers_on.setChecked(False)
         button_node_numbers_on.clicked.connect(change_view_node_numbers)
 
         node_layout = QHBoxLayout()
@@ -134,7 +155,7 @@ class App(QApplication):
 
         # toggle.stateChanged.connect(change)
 
-        # Elements
+        # Lines
 
         def change_view_lines():
             if self.view.lines_on:
@@ -154,6 +175,27 @@ class App(QApplication):
                 self.status.showMessage('Element numbers (lines) display: ON')
             self.view.updateGL()
 
+        layout.addWidget(QLabel('Lines'))
+
+        button_lines_on = QPushButton('On/Off')
+        button_lines_on.setCheckable(True)
+        button_lines_on.setChecked(True)
+        button_lines_on.clicked.connect(change_view_lines)
+
+        button_line_numbers_on = QPushButton('No.')
+        button_line_numbers_on.setCheckable(True)
+        button_line_numbers_on.setChecked(False)
+        button_line_numbers_on.clicked.connect(change_view_line_numbers)
+
+        lines_layout = QHBoxLayout()
+        lines_layout.addWidget(button_lines_on)
+        lines_layout.addWidget(button_line_numbers_on)
+        layout.addLayout(lines_layout)
+
+        # Faces
+
+        layout.addWidget(QLabel('Faces'))
+
         def change_view_faces():
             if self.view.faces_on:
                 self.view.faces_on = False
@@ -172,47 +214,20 @@ class App(QApplication):
                 self.status.showMessage('Element numbers (faces) display: ON')
             self.view.updateGL()
 
-        layout.addWidget(QLabel('Elements'))
-
-        button_lines_on = QPushButton('1')
-        button_lines_on.clicked.connect(change_view_lines)
-
-        button_line_numbers_on = QPushButton('2')
-        button_line_numbers_on.clicked.connect(change_view_line_numbers)
-
-        button_faces_on = QPushButton('3')
+        button_faces_on = QPushButton('On/Off')
+        button_faces_on.setCheckable(True)
+        button_faces_on.setChecked(True)
         button_faces_on.clicked.connect(change_view_faces)
 
-        button_face_numbers_on = QPushButton('4')
+        button_face_numbers_on = QPushButton('No.')
+        button_face_numbers_on.setCheckable(True)
+        button_face_numbers_on.setChecked(False)
         button_face_numbers_on.clicked.connect(change_view_face_numbers)
 
-        element_layout = QHBoxLayout()
-        element_layout.addWidget(button_lines_on)
-        element_layout.addWidget(button_line_numbers_on)
-        element_layout.addWidget(button_faces_on)
-        element_layout.addWidget(button_face_numbers_on)
-
-        layout.addLayout(element_layout)
-
-        # toggle = QCheckBox('Elements')
-        # toggle.setCheckState(self.view.elements_on)
-        # grid.addWidget(toggle, 4, 0)
-
-        # def change(state):
-        #     self.view.elements_on = state
-        #     self.view.updateGL()
-
-        # toggle.stateChanged.connect(change)
-
-        # toggle = QCheckBox('Element numbers')
-        # toggle.setCheckState(self.view.element_numbers_on)
-        # grid.addWidget(toggle, 5, 0)
-
-        # def change(state):
-        #     self.view.element_numbers_on = state
-        #     self.view.updateGL()
-
-        # toggle.stateChanged.connect(change)
+        faces_layout = QHBoxLayout()
+        faces_layout.addWidget(button_faces_on)
+        faces_layout.addWidget(button_face_numbers_on)
+        layout.addLayout(faces_layout)
 
         # Boundary conditions
 
@@ -234,19 +249,28 @@ class App(QApplication):
 
         # Results
 
-        steps_list = QComboBox()
-        steps_list.addItems(['Step1', 'Step2'])
+        self.steps_list = QComboBox()
+        self.steps_list.addItems(['No Steps'])
+        self.setup_steps_list()
 
-        fields_list = QComboBox()
-        fields_list.addItems(['Field1', 'Field2'])
+        self.fields_list_nodes = QComboBox()
+        self.fields_list_nodes.addItems(['No Node Fields'])
+        self.setup_fields_list_nodes()
 
-        components_list = QComboBox()
-        components_list.addItems(['Component1', 'Component2'])
+        self.fields_list_elements = QComboBox()
+        self.fields_list_elements.addItems(['No Element Fields'])
+        # self.setup_fields_list_elements()
+
+        self.components_list = QComboBox()
+        self.components_list.addItems(['No Components'])
+
+        self.steps_list.currentIndexChanged.connect(self.setup_fields_list_nodes)
 
         layout.addWidget(QLabel('Results'))
-        layout.addWidget(steps_list)
-        layout.addWidget(fields_list)
-        layout.addWidget(components_list)
+        layout.addWidget(self.steps_list)
+        layout.addWidget(self.fields_list_nodes)
+        layout.addWidget(self.fields_list_elements)
+        layout.addWidget(self.components_list)
 
         layout.addStretch()
         widget.setLayout(layout)
@@ -257,14 +281,18 @@ class App(QApplication):
 # File menu
 # ==============================================================================
 
+    def file_open(self):
+        filename, _ = QFileDialog.getOpenFileName(caption='File Open', dir='.', filter='*.obj')
+        self.structure = Structure.load_from_obj(filename)
+        self.setup_centralwidget()
+        self.setup_steps_list()
+        self.setup_fields_list_nodes()
+
+
     def add_file_menu(self):
         file_menu = self.menu.addMenu('&File')
-#         new_action = menu.addAction('&New')
-#         open_action = menu.addAction('&Open')
-#         save_action = menu.addAction('&Save')
-#         new_action.triggered.connect(self.do_newfile)
-#         open_action.triggered.connect(self.do_openfile)
-#         save_action.triggered.connect(self.do_savefile)
+        open_action = file_menu.addAction('&Open')
+        open_action.triggered.connect(self.file_open)
 
 
 # ==============================================================================

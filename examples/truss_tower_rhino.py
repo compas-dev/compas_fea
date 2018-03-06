@@ -1,4 +1,3 @@
-"""A compas_fea package example for truss elements."""
 
 from compas_fea.cad import rhino
 
@@ -81,3 +80,7 @@ print(mdl.get_element_results(step='step_load', field='sxx', elements=[10]))
 
 rhino.plot_data(mdl, step='step_load', field='rfm')
 print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))
+
+# Save Structure
+
+mdl.save_to_obj()

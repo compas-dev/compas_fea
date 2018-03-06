@@ -1,4 +1,3 @@
-"""A compas_fea package example for spring elements."""
 
 # Note: Abaqus and OpenSees results dont yet match.
 
@@ -37,7 +36,7 @@ rhino.add_sets_from_layers(mdl, layers=['pins', 'middle'])
 
 mdl.add_section(SpringSection(name='spring_elastic', stiffness={'axial': 10000}))
 mdl.add_section(SpringSection(name='spring_soft', stiffness={'axial': 1000}))
-mdl.add_section(SpringSection(name='spring_nonlinear', 
+mdl.add_section(SpringSection(name='spring_nonlinear',
     forces={'axial': [-100, -100, 0, 100, 100]}, displacements={'axial': [-1, -0.01, 0, 0.01, 1]}))
 
 # Add element properties

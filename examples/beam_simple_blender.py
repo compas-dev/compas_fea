@@ -1,4 +1,3 @@
-"""An example compas_fea package use for beam elements."""
 
 from compas_fea.cad import blender
 

@@ -1,4 +1,3 @@
-"""An example compas_fea package for block elements."""
 
 # Note: Requires mayavi to plot the voxels.
 

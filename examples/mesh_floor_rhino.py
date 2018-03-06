@@ -1,4 +1,3 @@
-"""An example compas_fea package use for meshes."""
 
 from compas.datastructures.mesh.mesh import Mesh
 from compas_rhino.helpers.mesh import mesh_from_guid
@@ -101,6 +100,6 @@ rhino.plot_data(mdl, step='step_prestress', field='uz', radius=0.02, colorbar_si
 rhino.plot_data(mdl, step='step_loads', field='uz', radius=0.02, colorbar_size=0.5)
 
 # Plot stress
-                
-rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.02, 
+
+rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.02,
                 cbar=[0, 3*10**6], nodal='max', colorbar_size=0.5)

@@ -1,4 +1,3 @@
-"""An example compas_fea package use for meshes."""
 
 from compas_blender.helpers import mesh_from_bmesh
 from compas_blender.utilities import get_objects
@@ -103,5 +102,5 @@ blender.plot_data(mdl, step='step_loads', field='uz', radius=0.02, layer=7, colo
 
 # Plot stress
 
-blender.plot_data(mdl, step='step_loads', field='smises', iptype='max', nodal='max', 
+blender.plot_data(mdl, step='step_loads', field='smises', iptype='max', nodal='max',
                   radius=0.02, cbar=[0, 1*10**6], layer=8, colorbar_size=0.5)

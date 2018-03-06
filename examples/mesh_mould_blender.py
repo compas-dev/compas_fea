@@ -1,4 +1,3 @@
-""" Example Meshmould analysed with shell elements and rebar."""
 
 # Note: this model takes a long time to analyse.
 

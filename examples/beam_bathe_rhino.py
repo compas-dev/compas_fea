@@ -1,4 +1,3 @@
-"""An example compas_fea package use for beams."""
 
 from compas.geometry import cross_vectors
 from compas.geometry import normalize_vector

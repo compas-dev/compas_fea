@@ -119,11 +119,11 @@ class View(QGLWidget):
         self.scale = max([(bx[1] - bx[0]), (by[1] - by[0]), (bz[1] - bz[0])])
         self.structure = structure
         self.nodes_on = True
-        self.node_numbers_on = True
+        self.node_numbers_on = False
         self.lines_on = True
-        self.line_numbers_on = True
+        self.line_numbers_on = False
         self.faces_on = True
-        self.face_numbers_on = True
+        self.face_numbers_on = False
 
         self.update_nodes()
         self.update_elements()

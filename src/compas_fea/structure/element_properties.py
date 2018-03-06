@@ -27,8 +27,8 @@ class ElementProperties(object):
         Name of the material to assign.
     section : str
         Name of the section to assign.
-    elsets : list
-        tr): Element sets the properties are assigned to.
+    elsets : list, str
+        Element sets the properties are assigned to.
     elements : list
         Elements the properties are assigned to.
     reinforcement : dic
@@ -52,4 +52,4 @@ class ElementProperties(object):
         self.elements = elements
         self.reinforcement = reinforcement
         if (not elsets) and (not elements):
-            raise NameError('Element properties require elements or element sets (ELSETs)')
+            raise NameError('Element properties require elements or element sets')

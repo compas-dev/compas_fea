@@ -7,12 +7,11 @@ from compas.datastructures.mesh import Mesh
 from compas.datastructures import Network
 from compas.utilities import XFunc
 
+from compas_rhino.geometry import RhinoMesh
 from compas_rhino.helpers.mesh import mesh_from_guid
 from compas_rhino.utilities import clear_layer
-from compas_rhino.geometry import RhinoMesh
 
 from compas.geometry import add_vectors
-from compas.geometry import centroid_points
 from compas.geometry import cross_vectors
 from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
@@ -21,11 +20,6 @@ from compas_fea import utilities
 from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
 from compas_fea.utilities import network_order
-
-from math import atan2
-from math import cos
-from math import sin
-from math import pi
 
 try:
     import rhinoscriptsyntax as rs
@@ -79,7 +73,7 @@ def add_element_set(structure, guids, name):
 
     Notes
     -----
-        - Meshes representing solids must have 'solid' in their name.
+    - Meshes representing solids must have 'solid' in their name.
 
     """
 
@@ -478,7 +472,7 @@ def plot_axes(xyz, e11, e22, e33, layer, sc=1):
 
 def plot_mode_shapes(structure, step, layer=None, scale=1.0):
 
-    """Plots modal shapes from structure.results
+    """ Plots modal shapes from structure.results
 
     Parameters
     ----------
@@ -787,7 +781,7 @@ def plot_principal_stresses(structure, step, ptype, scale, layer):
 
     """
 
-    pass  # make this function external
+    pass
 
 #     name = structure.name
 #     path = structure.path

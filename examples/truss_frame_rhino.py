@@ -1,4 +1,3 @@
-"""An example compas_fea package use for truss elements."""
 
 from compas_fea.cad import rhino
 

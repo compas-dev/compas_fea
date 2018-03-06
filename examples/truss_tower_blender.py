@@ -1,4 +1,3 @@
-"""A compas_fea package example for truss elements."""
 
 from compas_fea.cad import blender
 

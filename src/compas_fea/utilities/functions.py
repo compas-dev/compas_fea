@@ -23,7 +23,6 @@ from time import time
 
 try:
     from numpy import abs
-    from numpy import arccos
     from numpy import arctan2
     from numpy import array
     from numpy import asarray
@@ -40,7 +39,6 @@ try:
     from numpy import sin
     from numpy import squeeze
     from numpy import sum
-    from numpy import vdot
     from numpy import vstack
     from numpy import zeros
     from numpy.linalg import inv
@@ -236,12 +234,6 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
             tris = DT.simplices
             change = False
             for u, v, w in tris:
-                # v1 = V[v, :] - V[u, :]
-                # v2 = V[w, :] - V[v, :]
-                # v3 = V[u, :] - V[w, :]
-                # th1 = arccos(vdot(+v1, -v3)) * 180 / pi
-                # th2 = arccos(vdot(+v2, -v2)) * 180 / pi
-                # th3 = arccos(vdot(+v3, -v3)) * 180 / pi
                 p1 = [float(i) for i in V[u, :2]]
                 p2 = [float(i) for i in V[v, :2]]
                 p3 = [float(i) for i in V[w, :2]]
@@ -752,6 +744,3 @@ def tets_from_vertices_faces(vertices, faces, volume=None):
 if __name__ == "__main__":
 
     pass
-#     vertices = [[1, 3, 4], [2, 0, 3], [4, 4, 1], [3, 3, 3]]
-#     faces = [[0, 1, 2], [1, 2, 3]]
-#     pts, fcs = discretise_faces(vertices, faces, target=0.2, min_angle=15, factor=3, iterations=200)

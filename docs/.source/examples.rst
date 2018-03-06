@@ -37,8 +37,11 @@ Blender
 
     examples/beam_simple_blender
 
+    examples/block_deepbeam_blender
+
     examples/mesh_floor_blender
     examples/mesh_mould_blender
+    examples/mesh_tris_blender
 
     examples/truss_tower_blender
 
@@ -46,10 +49,8 @@ Blender
 Scripted
 --------
 
-.. examples/block_deepbeam_blender
 .. examples/block_tets_blender
 
 .. examples/mesh_bridge_rhino
-.. examples/mesh_tris_blender
 
 .. examples/script_introduction_abaqus

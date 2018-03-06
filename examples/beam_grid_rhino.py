@@ -1,4 +1,3 @@
-"""An example compas_fea package use for beams in a grid."""
 
 # Note: Sliding at the nodes/joints is not included.
 

@@ -4,10 +4,10 @@ from __future__ import division
 from __future__ import print_function
 
 from compas_blender.geometry import BlenderMesh
-# from compas_blender.helpers import mesh_from_bmesh
+from compas_blender.helpers import mesh_from_bmesh
 from compas_blender.utilities import clear_layer
-# from compas_blender.utilities import delete_all_materials
-# from compas_blender.utilities import draw_cuboid
+from compas_blender.utilities import delete_all_materials
+from compas_blender.utilities import draw_cuboid
 from compas_blender.utilities import draw_pipes
 from compas_blender.utilities import draw_plane
 from compas_blender.utilities import get_objects
@@ -20,11 +20,11 @@ from compas.geometry import cross_vectors
 from compas.geometry import subtract_vectors
 
 from compas_fea.utilities import colorbar
-# from compas_fea.utilities import extrude_mesh
+from compas_fea.utilities import extrude_mesh
 from compas_fea.utilities import network_order
 from compas_fea.utilities import postprocess
 # from compas_fea.utilities import tets_from_vertices_faces
-# from compas_fea.utilities import voxels
+from compas_fea.utilities import voxels
 
 from numpy import array
 from numpy import newaxis
@@ -50,10 +50,10 @@ __all__ = [
     'add_nset_from_bmeshes',
     'add_elset_from_bmeshes',
     'add_nset_from_objects',
-#     'plot_data',
+    'plot_data',
     'ordered_network',
-#     'plot_voxels',
-#     'mesh_extrude'
+    'plot_voxels',
+    'mesh_extrude'
 ]
 
 
@@ -378,36 +378,40 @@ def add_nset_from_objects(structure, name, objects=None, layer=None):
     structure.add_set(name=name, type='node', selection=nodes)
 
 
-# def mesh_extrude(structure, bmesh, nz, dz, setname):
+def mesh_extrude(structure, bmesh, nz, dz, setname=None, cap=None, links=None):
 
-#     """ Extrudes a Blender mesh into cells of many layers and adds to Structure.
+    """ Extrudes a Blender mesh into cells of many layers and adds to Structure.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     bmesh : obj
-#         Blender mesh object.
-#     nz : int
-#         Number of layers.
-#     dz : float
-#         Layer thickness.
-#     setname : str
-#         Name of set for added elements.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    bmesh : obj
+        Blender mesh object.
+    nz : int
+        Number of layers.
+    dz : float
+        Layer thickness.
+    setname : str
+        Name of set for added solid elements.
+    cap : str
+        Name of set for a capping mesh on final surface.
+    links : str
+        Name of set for adding links along extrusion.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     Notes
-#     -----
-#     - Extrusion is along the vertex normals.
-#     - Elements are added automatically to the Structure object.
+    Notes
+    -----
+    - Extrusion is along the vertex normals.
+    - Elements are added automatically to the Structure object.
 
-#     """
+    """
 
-#     mesh = mesh_from_bmesh(bmesh)
-#     extrude_mesh(structure=structure, mesh=mesh, nz=nz, dz=dz, setname=setname)
+    mesh = mesh_from_bmesh(bmesh)
+    extrude_mesh(structure=structure, mesh=mesh, nz=nz, dz=dz, setname=setname, cap=cap, links=links)
 
 
 def ordered_network(structure, network, layer):
@@ -583,119 +587,119 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
     xdraw_texts(texts)
 
 
-# def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',
-#                 vdx=None, cube_size=[10, 10, 10], mode='', colorbar_size=1):
+def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',
+                vdx=None, cube_size=[10, 10, 10], mode='', colorbar_size=1):
 
-#     """Applies a base voxel material and texture to a cube for 4D visualisation.
+    """Applies a base voxel material and texture to a cuboid for 4D visualisation.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object.
-#     step : str
-#         Name of the Step.
-#     field : str
-#         Field to plot, e.g. 'smises'.
-#     layer : int
-#         Layer to plot voxel cuboid on.
-#     scale : float
-#         Scale displacements for the deformed plot.
-#     cbar : list
-#         Minimum and maximum limits on the colorbar.
-#     iptype : str
-#         'mean', 'max' or 'min' of an element's integration point data.
-#     nodal : str
-#         'mean', 'max' or 'min' for nodal values.
-#     vdx : float
-#         Voxel spacing.
-#     cube_size : list
-#         x, y, and z lengths of the cube.
-#     mode : int
-#         mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
-#     colorbar_size : float
-#         Scale on the size of the colorbar.
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    field : str
+        Field to plot, e.g. 'smises'.
+    layer : int
+        Layer to plot the voxel cuboid on.
+    scale : float
+        Scale displacements for the deformed plot.
+    cbar : list
+        Minimum and maximum limits on the colorbar.
+    iptype : str
+        'mean', 'max' or 'min' of an element's integration point data.
+    nodal : str
+        'mean', 'max' or 'min' for nodal values.
+    vdx : float
+        Voxel spacing.
+    cube_size : list
+        x, y, and z lengths of the cube.
+    mode : int
+        mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
+    colorbar_size : float
+        Scale on the size of the colorbar.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     Notes
-#     -----
-#     - Texture ramping should be done manually afterwards.
-#     - Voxel display works best with cube dimensions >= 10.
-#     - The absolute value is plotted, ranged between [0, 1].
+    Notes
+    -----
+    - Texture ramping should be done manually in Blender afterwards.
+    - Voxel display works best with cube dimensions >= 10.
+    - The absolute value is plotted, ranged between [0, 1].
 
-#     """
+    """
 
-#     # Node and element data
+    # Node and element data
 
-#     nkeys = sorted(structure.nodes, key=int)
-#     ekeys = sorted(structure.elements, key=int)
-#     nodes = [structure.node_xyz(nkey) for nkey in nkeys]
-#     elements = [structure.elements[ekey].nodes for ekey in ekeys]
+    nkeys = sorted(structure.nodes, key=int)
+    ekeys = sorted(structure.elements, key=int)
+    nodes = [structure.node_xyz(nkey) for nkey in nkeys]
+    elements = [structure.elements[ekey].nodes for ekey in ekeys]
 
-#     nodal_data = structure.results[step]['nodal']
-#     ux = [nodal_data['ux{0}'.format(str(mode))][key] for key in nkeys]
-#     uy = [nodal_data['uy{0}'.format(str(mode))][key] for key in nkeys]
-#     uz = [nodal_data['uz{0}'.format(str(mode))][key] for key in nkeys]
+    nodal_data = structure.results[step]['nodal']
+    ux = [nodal_data['ux{0}'.format(str(mode))][key] for key in nkeys]
+    uy = [nodal_data['uy{0}'.format(str(mode))][key] for key in nkeys]
+    uz = [nodal_data['uz{0}'.format(str(mode))][key] for key in nkeys]
 
-#     # Process data
+    # Process data
 
-#     try:
-#         data = [nodal_data[field + str(mode)][key] for key in nkeys]
-#         dtype = 'nodal'
-#     except(Exception):
-#         elemental_data = structure.results[step]['element']
-#         data = elemental_data[field]
-#         dtype = 'element'
+    try:
+        data = [nodal_data[field + str(mode)][key] for key in nkeys]
+        dtype = 'nodal'
+    except(Exception):
+        elemental_data = structure.results[step]['element']
+        data = elemental_data[field]
+        dtype = 'element'
 
-#     toc, U, cnodes, fabs, data = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1, iptype, nodal, 1)
-#     U = array(U)
+    toc, U, cnodes, fabs, data, _ = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1, iptype, nodal)
+    U = array(U)
 
-#     print('\n***** Data processed : {0} s *****'.format(toc))
+    print('\n***** Data processed : {0} s *****'.format(toc))
 
-#     # Process data
+    # Process data
 
-#     Am = voxels(values=data, vmin=None, U=U, vdx=vdx, plot=None, indexing='ij')
-#     sx, sy, sz = Am.shape
+    Am = voxels(values=data, vmin=None, U=U, vdx=vdx, plot=None, indexing='ij')
+    sx, sy, sz = Am.shape
 
-#     # Save bvox data
+    # Save bvox data
 
-#     name = structure.name
-#     path = structure.path
-#     temp = '{0}{1}/'.format(path, name)
-#     header = array([sx, sy, sz, 1])
-#     data = Am.flatten()
-#     fnm_bvox = '{0}{1}-voxels.bvox'.format(temp, name)
-#     with open(fnm_bvox, 'wb') as fnm:
-#         header.astype('<i4').tofile(fnm)
-#         data.astype('<f4').tofile(fnm)
-#     print('***** bvox file created *****')
+    name = structure.name
+    path = structure.path
+    temp = '{0}{1}/'.format(path, name)
+    header = array([sx, sy, sz, 1])
+    data = Am.flatten()
+    fnm_bvox = '{0}{1}-voxels.bvox'.format(temp, name)
+    with open(fnm_bvox, 'wb') as fnm:
+        header.astype('<i4').tofile(fnm)
+        data.astype('<f4').tofile(fnm)
+    print('***** bvox file created *****')
 
-#     # Create cube with volumetric material
+    # Create cube with volumetric material
 
-#     clear_layer(layer=layer)
-#     cx, cy, cz = cube_size
-#     cube = draw_cuboid(cx, cy, cz, pos=[0, 0, 0], layer=layer)
-#     delete_all_materials()
-#     material = bpy.data.materials.new('material')
-#     material.type = 'VOLUME'
-#     material.volume.density = 0
-#     material.volume.density_scale = 5
-#     material.volume.scattering = 0.5
-#     cube.data.materials.append(material)
+    clear_layer(layer=layer)
+    cx, cy, cz = cube_size
+    cube = draw_cuboid(cx, cy, cz, pos=[0, 0, 0], layer=layer)
+    delete_all_materials()
+    material = bpy.data.materials.new('material')
+    material.type = 'VOLUME'
+    material.volume.density = 0
+    material.volume.density_scale = 5
+    material.volume.scattering = 0.5
+    cube.data.materials.append(material)
 
-#     # Create base voxel texture
+    # Create base voxel texture
 
-#     texture = bpy.data.textures.new('texture', type='VOXEL_DATA')
-#     texture.voxel_data.file_format = 'BLENDER_VOXEL'
-#     texture.voxel_data.filepath = fnm_bvox
-#     texture.voxel_data.extension = 'EXTEND'
-#     texture.voxel_data.interpolation = 'TRILINEAR'
-#     slot = cube.data.materials['material'].texture_slots.add()
-#     slot.texture = texture
-#     slot.texture_coords = 'ORCO'
-#     slot.mapping = 'FLAT'
-#     slot.use_map_density = True
-#     slot.use_map_emission = True
-#     slot.use_map_color_emission = True
+    texture = bpy.data.textures.new('texture', type='VOXEL_DATA')
+    texture.voxel_data.file_format = 'BLENDER_VOXEL'
+    texture.voxel_data.filepath = fnm_bvox
+    texture.voxel_data.extension = 'EXTEND'
+    texture.voxel_data.interpolation = 'TRILINEAR'
+    slot = cube.data.materials['material'].texture_slots.add()
+    slot.texture = texture
+    slot.texture_coords = 'ORCO'
+    slot.mapping = 'FLAT'
+    slot.use_map_density = True
+    slot.use_map_emission = True
+    slot.use_map_color_emission = True

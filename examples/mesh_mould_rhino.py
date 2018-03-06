@@ -1,4 +1,3 @@
-""" Example Meshmould analysed with shell elements and rebar."""
 
 # Note: this model takes a long time to analyse.
 
@@ -61,9 +60,9 @@ reb_wall = {
     'w_l2': {'pos': -0.035, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010, 'angle': 90},
     'w_l1': {'pos': -0.045, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010, 'angle': 0}}
 
-epp = Properties(name='ep_plinth', material='mat_concrete', section='sec_plinth', 
+epp = Properties(name='ep_plinth', material='mat_concrete', section='sec_plinth',
                  elsets='elset_plinth', reinforcement=reb_plinth)
-epw = Properties(name='ep_wall', material='mat_concrete', section='sec_wall', 
+epw = Properties(name='ep_wall', material='mat_concrete', section='sec_wall',
                  elsets='elset_wall', reinforcement=reb_wall)
 mdl.add_element_properties(epp)
 mdl.add_element_properties(epw)
@@ -97,7 +96,7 @@ mdl.summary()
 
 # Run and extract data
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'rbfor']) 
+mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'rbfor'])
 
 # Plot displacements
 

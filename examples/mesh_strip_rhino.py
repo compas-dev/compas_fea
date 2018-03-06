@@ -1,4 +1,3 @@
-"""An example compas_fea package use for meshes."""
 
 from compas_fea.cad import rhino
 

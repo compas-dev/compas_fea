@@ -1,4 +1,3 @@
-# """Introduction to the compas_fea package."""
 
 from compas_fea.structure import CircularSection
 from compas_fea.structure import ElasticIsotropic
