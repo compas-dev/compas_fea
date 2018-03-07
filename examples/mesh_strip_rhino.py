@@ -74,6 +74,10 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
 rhino.plot_data(mdl, step='step_lift', field='um')
 
-# Plot stress
+# Plot stresses
 
 rhino.plot_data(mdl, step='step_lift', field='smises')
+
+# Save Structure
+
+mdl.save_to_obj()

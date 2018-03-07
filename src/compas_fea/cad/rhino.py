@@ -750,7 +750,7 @@ def plot_voxels(structure, step, field='smises', scale=1.0, cbar=[None, None], i
         print('\n***** Error plotting voxels *****')
 
 
-def plot_principal_stresses(structure, step, ptype, scale, layer):
+def plot_principal_stresses(structure, step, ptype, scale, rotate, layer=None):
 
     """ Plots the principal stresses of the elements.
 
@@ -768,6 +768,8 @@ def plot_principal_stresses(structure, step, ptype, scale, layer):
         'max' 'min' for maxPrincipal or minPrincipal stresses.
     scale : float
         Scale on the length of the line markers.
+    rotate : int
+        Rotate lines by 90 deg, 0 or 1.
     layer : str
         Layer name for plotting.
 
@@ -777,67 +779,41 @@ def plot_principal_stresses(structure, step, ptype, scale, layer):
 
     Notes
     -----
-    - Currently alpha script and for only four-noded S4 shell elements.
+    - Currently alpha script and for only four-noded S4 shell elements in Abaqus.
+    - Centroids are taken on the undeformed geometry.
 
     """
 
-    pass
+    data = structure.results[step]
+    centroids = [structure.element_centroid(i) for i in sorted(structure.elements, key=int)]
 
-#     name = structure.name
-#     path = structure.path
+    path = structure.path
+    basedir = utilities.__file__.split('__init__.py')[0]
+    xfunc = XFunc('principal_stresses', basedir=basedir, tmpdir=path)
+    xfunc.funcname = 'functions.principal_stresses'
+    result = xfunc(data, ptype, centroids, scale, rotate)
 
-#     # Clear and create layer
+    try:
+        vec1, vec5, pr1m, pr5m = result
+        print('\n***** Plotted principal stresses *****')
 
-#     if not layer:
-#         layer = '{0}_principal_{1}'.format(step, ptype)
-#     rs.CurrentLayer(rs.AddLayer(layer))
-#     rs.DeleteObjects(rs.ObjectsByLayer(layer))
 
-#     # Process and plot
+        if not layer:
+            layer = '{0}_principal_{1}'.format(step, ptype)
+        rs.CurrentLayer(rs.AddLayer(layer))
+        rs.DeleteObjects(rs.ObjectsByLayer(layer))
 
-#     rs.EnableRedraw(False)
+        rs.EnableRedraw(False)
 
-#     temp = '{0}{1}/'.format(path, name)
-#     with open('{0}{1}-{2}-S.json'.format(temp, name, step), 'r') as f:
-#         S = json.load(f)
-#     S11, S22, S12, axes = S['S11'], S['S22'], S['S12'], S['axes']
-#     SPr = S['{0}Principal'.format(ptype)]
-#     sp1_keys = ['ip3_sp1', 'ip4_sp1', 'ip2_sp1', 'ip1_sp1']
-#     sp5_keys = ['ip3_sp5', 'ip2_sp5', 'ip4_sp5', 'ip1_sp5']
-#     ipkeys = sp1_keys + sp5_keys
+        for c, centroid in enumerate(centroids):
+            id1 = rs.AddLine(centroid, add_vectors(centroid, vec1[c]))
+            col1 = [255, 0, 0] if pr1m[c] > 0 else [0, 0, 255]
+            rs.ObjectColor(id1, col1)
+            id5 = rs.AddLine(centroid, add_vectors(centroid, vec5[c]))
+            col5 = [255, 0, 0] if pr5m[c] > 0 else [0, 0, 255]
+            rs.ObjectColor(id5, col5)
 
-#     print('Plotting principal stress vectors ...')
+        rs.EnableRedraw(True)
 
-#     for ekey in SPr:
-
-#         if len(structure.elements[int(ekey)].nodes) == 4:
-#             th1 = [0.5 * atan2(S12[ekey][ip], 0.5 * (S11[ekey][ip] - S22[ekey][ip])) for ip in sp1_keys]
-#             th5 = [0.5 * atan2(S12[ekey][ip], 0.5 * (S11[ekey][ip] - S22[ekey][ip])) for ip in sp5_keys]
-#             th1m = sum(th1) / len(th1) + pi / 2
-#             th5m = sum(th5) / len(th5) + pi / 2
-#             pr1 = [i for i in [SPr[ekey][ip] for ip in sp1_keys] if i is not None]
-#             pr5 = [i for i in [SPr[ekey][ip] for ip in sp5_keys] if i is not None]
-#             e11 = centroid_points([axes[ekey][ip][0] for ip in ipkeys])
-#             e22 = centroid_points([axes[ekey][ip][1] for ip in ipkeys])
-#             # e33 = centroid_points([axes[ekey][ip][2] for ip in ipkeys])
-#             c = structure.element_centroid(int(ekey))
-#             if pr1:
-#                 pr1m = sum(pr1) / len(pr1)
-#                 ex1 = scale_vector(e11, cos(th1m))
-#                 ey1 = scale_vector(e22, sin(th1m))
-#                 er1 = add_vectors(ex1, ey1)
-#                 vec1 = add_vectors(c, scale_vector(er1, (pr1m * scale / 10**7) + 0.0001))
-#                 id1 = rs.AddLine(c, vec1)
-#                 col1 = [255, 0, 0] if pr1m > 0 else [0, 0, 255]
-#                 rs.ObjectColor(id1, col1)
-#             if pr5:
-#                 pr5m = sum(pr5) / len(pr5)
-#                 ex5 = scale_vector(e11, cos(th5m))
-#                 ey5 = scale_vector(e22, sin(th5m))
-#                 er5 = add_vectors(ex5, ey5)
-#                 vec5 = add_vectors(c, scale_vector(er5, (pr5m * scale / 10**7) + 0.0001))
-#                 id5 = rs.AddLine(c, vec5)
-#                 col5 = [255, 0, 0] if pr5m > 0 else [0, 0, 255]
-#                 rs.ObjectColor(id5, col5)
-
-#     rs.EnableRedraw(True)
+    except:
+        print('\n***** Error calculating/plotting principal stresses *****')

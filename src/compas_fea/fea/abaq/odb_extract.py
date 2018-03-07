@@ -130,6 +130,7 @@ def extract_odb_data(temp, name, fields, steps='all'):
                 if field in ['s', 'e', 'pe']:
                     ref[field + 'maxp'] = {}
                     ref[field + 'minp'] = {}
+                    ref['axes'] = {}
                 elif field == 'le':
                     ref['emaxp'] = {}
                     ref['eminp'] = {}
@@ -168,6 +169,7 @@ def extract_odb_data(temp, name, fields, steps='all'):
                         try:
                             ref[field + 'maxp'][element][id] = float(value.maxPrincipal)
                             ref[field + 'minp'][element][id] = float(value.minPrincipal)
+                            ref['axes'][element] = value.localCoordSystem
                         except:
                             ref[field + 'maxp'][element] = {}
                             ref[field + 'minp'][element] = {}
@@ -191,9 +193,6 @@ def extract_odb_data(temp, name, fields, steps='all'):
                             except:
                                 ref['emaxp'][element][id] = None
                                 ref['eminp'][element][id] = None
-
-                    # if field is not 'RBFOR':
-                        # dic['axes'][element][id] = value.localCoordSystem
 
     with open('{0}{1}-results.json'.format(temp, name), 'w') as f:
         json.dump(results, f)

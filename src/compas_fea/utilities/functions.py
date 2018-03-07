@@ -32,6 +32,7 @@ try:
     from numpy import isnan
     from numpy import linspace
     from numpy import meshgrid
+    from numpy import mean
     from numpy import min
     from numpy import max
     from numpy import newaxis
@@ -84,6 +85,7 @@ __all__ = [
     'postprocess',
     'process_data',
     'tets_from_vertices_faces',
+    'principal_stresses',
     'voxels',
 ]
 
@@ -735,6 +737,63 @@ def tets_from_vertices_faces(vertices, faces, volume=None):
     tets_points = [list(i) for i in list(tets.points)]
     tets_elements = [list(i) for i in list(tets.elements)]
     return tets_points, tets_elements
+
+
+def principal_stresses(data, ptype, centroids, scale, rotate):
+
+    S = data['element']
+    s11 = S['sxx']
+    s22 = S['syy']
+    s12 = S['sxy']
+    spr = S['s{0}p'.format(ptype)]
+    axes = S['axes']
+    sp1_keys = ['ip3_sp1', 'ip4_sp1', 'ip2_sp1', 'ip1_sp1']
+    sp5_keys = ['ip3_sp5', 'ip2_sp5', 'ip4_sp5', 'ip1_sp5']
+
+    ekeys = spr.keys()
+    m = len(ekeys)
+    k = len(sp1_keys)
+    s11_sp1 = zeros((m, k))
+    s22_sp1 = zeros((m, k))
+    s12_sp1 = zeros((m, k))
+    spr_sp1 = zeros((m, k))
+    s11_sp5 = zeros((m, k))
+    s22_sp5 = zeros((m, k))
+    s12_sp5 = zeros((m, k))
+    spr_sp5 = zeros((m, k))
+    e11 = zeros((m, 3))
+    e22 = zeros((m, 3))
+    centroids = array(centroids)
+
+    for ekey in ekeys:
+        i = int(ekey)
+        e11[i, :] = axes[ekey][0]
+        e22[i, :] = axes[ekey][1]
+
+        for j, ipkey in enumerate(sp1_keys):
+            s11_sp1[i, j] = s11[ekey][ipkey]
+            s22_sp1[i, j] = s22[ekey][ipkey]
+            s12_sp1[i, j] = s12[ekey][ipkey]
+            spr_sp1[i, j] = spr[ekey][ipkey]
+
+        for j, ipkey in enumerate(sp5_keys):
+            s11_sp5[i, j] = s11[ekey][ipkey]
+            s22_sp5[i, j] = s22[ekey][ipkey]
+            s12_sp5[i, j] = s12[ekey][ipkey]
+            spr_sp5[i, j] = spr[ekey][ipkey]
+
+    th1 = 0.5 * arctan2(s12_sp1, 0.5 * (s11_sp1 - s22_sp1))
+    th5 = 0.5 * arctan2(s12_sp5, 0.5 * (s11_sp5 - s22_sp5))
+    th1m = mean(th1, 1)[:, newaxis] + 0.5 * pi * rotate
+    th5m = mean(th5, 1)[:, newaxis] + 0.5 * pi * rotate
+    pr1m = mean(spr_sp1, 1)[:, newaxis]
+    pr5m = mean(spr_sp5, 1)[:, newaxis]
+    er1 = e11 * cos(th1m) + e22 * sin(th1m)
+    er5 = e11 * cos(th5m) + e22 * sin(th5m)
+    vec1 = er1 * (pr1m * scale / 10**7 + 0.0001)
+    vec5 = er5 * (pr5m * scale / 10**7 + 0.0001)
+
+    return vec1, vec5, pr1m, pr5m
 
 
 # ==============================================================================
