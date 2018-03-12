@@ -421,7 +421,7 @@ Steps
         """
 
         if not nodes:
-            nodes = self.nodes
+            nodes = sorted(self.nodes, key=int)
         return [self.node_xyz(node=node) for node in nodes]
 
 
@@ -1446,9 +1446,8 @@ Steps
 
         try:
             print('***** Launching App *****')
-            from compas_fea.app.app import App
-            app = App(structure=self)
-            app.start()
+            from compas_fea.app.app import FeaApp
+            app = FeaApp(structure=self).show()
         except:
             print('***** Failed/closed App *****')
 
