@@ -155,7 +155,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
         step       = steps[key]
         stype      = step.__name__
-        state      = step.state
+        state      = getattr(step, 'state', None)
         step_index = step.index
         factor     = getattr(step, 'factor', None)
         increments = getattr(step, 'increments', None)
@@ -164,10 +164,6 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         method     = getattr(step, 'type', None)
         nlgeom     = 'YES' if getattr(step, 'nlgeom', None) else 'NO'
         perturbation = ', PERTURBATION' if stype == 'BucklingStep' else ''
-
-        # if stype == 'BucklingStep':
-            # modes = step.modes
-            # f.write('{0}, {1}, {2}, {3}\n'.format(modes, modes, 2 * modes, increments))
 
         # Mechanical
 
@@ -184,6 +180,11 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
                 f.write('*STEP, NLGEOM={0}, NAME={1}{2}, INC={3}\n'.format(nlgeom, key, perturbation, increments))
                 f.write('*{0}\n'.format(method.upper()))
+
+                if stype == 'BucklingStep':
+                    modes = step.modes
+                    f.write('{0}, {1}, {2}, {3}\n'.format(modes, modes, 2 * modes, increments))
+
                 f.write('**\n')
 
             elif software == 'opensees':

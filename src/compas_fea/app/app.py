@@ -98,7 +98,7 @@ class Front(Controller):
 
     settings = {
         'label_offset': 0.01,
-        
+
         'vertices.on': True,
         'vertices.color': [1.0, 0.4, 0.4],
         'vertices_labels.color': [1.0, 0.4, 0.4, 1.0],
@@ -286,7 +286,7 @@ class FeaApp(App):
         self.controller = Front(self)
         self.view = View(self.controller)
         self.view.make_buffers()
-        self.setup(width, height)
+        self.setup()
         self.setApplicationName('compas_fea App - Structure: {0}'.format(self.structure.name))
         self.init()
         print('***** FeaApp launched *****')
@@ -298,7 +298,8 @@ class FeaApp(App):
 
 if __name__ == '__main__':
 
-    FeaApp().show()
+    # FeaApp().show()
+    FeaApp()
 
 
 

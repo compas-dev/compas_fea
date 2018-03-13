@@ -68,6 +68,7 @@ def extract_odb_data(temp, name, fields, steps='all'):
     odb = openOdb(path='{0}{1}.odb'.format(temp, name))
 
     results = {}
+    info = {}
 
     if steps == 'all':
         steps = list(odb.steps.keys())
@@ -76,8 +77,10 @@ def extract_odb_data(temp, name, fields, steps='all'):
 
         results[step] = {}
         frame = odb.steps[step].frames[-1]
-        # description = frame.description
         fieldoutputs = frame.fieldOutputs
+
+        info[step] = {}
+        info[step]['description'] = frame.description
 
         # Node data
 
@@ -196,6 +199,9 @@ def extract_odb_data(temp, name, fields, steps='all'):
 
     with open('{0}{1}-results.json'.format(temp, name), 'w') as f:
         json.dump(results, f)
+
+    with open('{0}{1}-info.json'.format(temp, name), 'w') as f:
+            json.dump(info, f)
 
 
 if __name__ == "__main__":

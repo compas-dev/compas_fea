@@ -197,13 +197,19 @@ def extract_odb_data(structure, fields, exe):
     try:
         with open('{0}{1}-results.json'.format(temp, name), 'r') as f:
             results = json.load(f)
+        with open('{0}{1}-info.json'.format(temp, name), 'r') as f:
+            info = json.load(f)
 
         for step in results:
+            print('***** Saving step: {0} *****'.format(step))
             for dtype in results[step]:
                 for field in results[step][dtype]:
                     results[step][dtype][field] = {int(k): v for k, v in results[step][dtype][field].items()}
 
         structure.results = results
+
+        for step in info:
+            structure.results[step]['info'] = info[step]
 
         print('***** Saving data to structure.results successful *****')
 
