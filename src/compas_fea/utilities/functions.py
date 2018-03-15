@@ -156,7 +156,7 @@ def combine_all_sets(sets_a, sets_b):
     return comb
 
 
-def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations=100):
+def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations=100, refine=True):
 
     """ Make an FE mesh from an input coarse mesh data.
 
@@ -174,6 +174,8 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
         Factor on the maximum area of each triangle.
     iterations : int
         Number of iterations per face.
+    refine : bool
+        Refine beyond Delaunay.
 
     Returns
     -------
@@ -187,9 +189,12 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
     points_all = []
     faces_all = []
 
-    for count, face in enumerate(faces):
+    Amax = factor * 0.5 * target**2
 
-        # Prepare points and facets
+    for count, face in enumerate(faces):
+        print('Face {0}/{1}'.format(count + 1, len(faces)))
+
+        # Seed
 
         face.append(face[0])
         points = []
@@ -212,63 +217,78 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
         vecn = cross_vectors(vec1, vecc)
 
         # Rotate about x
-
         points = array(points).transpose()
         phi = -arctan2(vecn[2], vecn[1]) + pi / 2
         Rx = array([[1., 0., 0.], [0., cos(phi), -sin(phi)], [0., sin(phi), cos(phi)]])
         vecn_x = dot(Rx, array(vecn)[:, newaxis])
         points_x = dot(Rx, points)
+        Rxinv = inv(Rx)
 
         # Rotate about y
 
         psi = +arctan2(vecn_x[2, 0], vecn_x[0, 0]) - pi / 2
         Ry = array([[cos(psi), 0., sin(psi)], [0., 1., 0.], [-sin(psi), 0., cos(psi)]])
         points_y = dot(Ry, points_x)
+        Ryinv = inv(Ry)
+
+        # Store
+
+        Vs = points_y.transpose()
+        DTs = Delaunay(Vs[:, :2], furthest_site=False, incremental=False)
+        tris = DTs.simplices
+        points_xs = dot(Ryinv, Vs.transpose())
+        points_new = [list(i) for i in list(dot(Rxinv, points_xs).transpose())]
+        faces_new = [[int(i) for i in tri] for tri in list(tris)]
 
         # Algorithm
 
-        V = points_y.transpose()
-        z = float(V[0, 2])
-        Amax = factor * 0.5 * target**2
-        it = 0
-        while it < iterations:
-            DT = Delaunay(V[:, :2], furthest_site=False, incremental=False)
-            tris = DT.simplices
-            change = False
-            for u, v, w in tris:
-                p1 = [float(i) for i in V[u, :2]]
-                p2 = [float(i) for i in V[v, :2]]
-                p3 = [float(i) for i in V[w, :2]]
-                th1 = angles_points_xy(p1, p2, p3)[0] * 180 / pi
-                th2 = angles_points_xy(p2, p1, p3)[0] * 180 / pi
-                th3 = angles_points_xy(p3, p1, p2)[0] * 180 / pi
-                thm = min([th1, th2, th3])
-                c, r, _ = circle_from_points_xy(p1, p2, p3)
-                c = list(c)
-                c[2] = z
-                A = area_polygon_xy([p1, p2, p3])
-                if (thm < min_angle) or (A > Amax):
-                    change = True
-                    dist = distance_matrix(array([c]), V, threshold=10**5)
-                    if len(dist[dist <= r]) <= 3:
-                        V = vstack([V, array([c])])
+        if refine:
+
+            try:
+
+                V = points_y.transpose()
+                z = float(V[0, 2])
+
+                it = 0
+                while it < iterations:
+                    print('Iteration', it)
+                    DT = Delaunay(V[:, :2], furthest_site=False, incremental=False)
+                    if DT:
+                        tris = DT.simplices
+                        for u, v, w in tris:
+                            p1 = [float(i) for i in V[u, :2]]
+                            p2 = [float(i) for i in V[v, :2]]
+                            p3 = [float(i) for i in V[w, :2]]
+                            th1 = angles_points_xy(p1, p2, p3)[0] * 180 / pi
+                            th2 = angles_points_xy(p2, p1, p3)[0] * 180 / pi
+                            th3 = angles_points_xy(p3, p1, p2)[0] * 180 / pi
+                            thm = min([th1, th2, th3])
+                            res = circle_from_points_xy(p1, p2, p3)
+                            if res:
+                                c, r, _ = res
+                                c = list(c)
+                                c[2] = z
+                                A = area_polygon_xy([p1, p2, p3])
+                                if (thm < min_angle) or (A > Amax):
+                                    dist = distance_matrix(array([c]), V, threshold=10**5)
+                                    if len(dist[dist <= r]) <= 3:
+                                        V = vstack([V, array([c])])
+                                        break
+                            else:
+                                continue
+                    else:
                         break
-            if not change:
-                break
-            it += 1
-        print('Iterations for face {0}: {1}'.format(count, it))
+                    it += 1
+                print('Iterations for face {0}: {1}'.format(count + 1, it))
 
-        # Rotate back to global
+                points_x = dot(Ryinv, V.transpose())
+                points_new = [list(i) for i in list(dot(Rxinv, points_x).transpose())]
+                faces_new = [[int(i) for i in tri] for tri in list(tris)]
 
-        Rxinv = inv(Rx)
-        Ryinv = inv(Ry)
-        points_x = dot(Ryinv, V.transpose())
-        points = dot(Rxinv, points_x)
+            except:
 
-        # Save
+                print('------------------- Refine failed')
 
-        points_new = [list(i) for i in list(points.transpose())]
-        faces_new = [[int(i) for i in tri] for tri in list(tris)]
         points_all.append(points_new)
         faces_all.append(faces_new)
 

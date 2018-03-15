@@ -10,6 +10,7 @@ from compas.utilities import XFunc
 from compas_rhino.geometry import RhinoMesh
 from compas_rhino.helpers.mesh import mesh_from_guid
 from compas_rhino.utilities import clear_layer
+from compas_rhino.utilities import xdraw_mesh
 
 from compas.geometry import add_vectors
 from compas.geometry import cross_vectors
@@ -41,6 +42,7 @@ __all__ = [
     'add_element_set',
     'add_tets_from_mesh',
     'add_node_set',
+    # 'discretise_mesh',
     'add_nodes_elements_from_layers',
     'add_sets_from_layers',
     'mesh_extrude',
@@ -52,6 +54,65 @@ __all__ = [
     'plot_voxels',
     'plot_principal_stresses',
 ]
+
+
+def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iterations=5, refine=True):
+
+    """ Discretise a mesh from an input coarse mesh guid into small denser meshes.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    guid : str
+        guid of the Rhino input mesh.
+    layer : str
+        Layer name to plot resulting meshes on.
+    target : float
+        Target length of each triangle.
+    min_angle : float
+        Minimum internal angle of triangles.
+    factor : float
+        Factor on the maximum area of each triangle.
+    iterations : int
+        Number of iterations per face.
+    refine : bool
+        Refine beyond Delaunay.
+
+    Returns
+    -------
+    None
+
+    """
+
+    rhinomesh = RhinoMesh(guid)
+    pts = rhinomesh.get_vertex_coordinates()
+    fcs = [face[:3] for face in rhinomesh.get_face_vertices()]
+
+    path = structure.path
+    basedir = utilities.__file__.split('__init__.py')[0]
+    xfunc = XFunc('discretise', basedir=basedir, tmpdir=path)
+    xfunc.funcname = 'functions.discretise_faces'
+
+    try:
+        vertices, faces = xfunc(vertices=pts, faces=fcs, target=target, min_angle=min_angle, factor=factor,
+                                iterations=iterations, refine=refine)
+
+        rs.CurrentLayer(rs.AddLayer(layer))
+        rs.DeleteObjects(rs.ObjectsByLayer(layer))
+        rs.EnableRedraw(False)
+
+        for points, face in zip(vertices, faces):
+            mesh_faces = []
+            for i in face:
+                face_ = i + [i[-1]]
+                mesh_faces.append(face_)
+            rs.AddMesh(points, mesh_faces)
+
+        rs.EnableRedraw(True)
+
+    except:
+        '***** Mesh discretisation failed *****'
 
 
 def add_element_set(structure, guids, name):
@@ -242,6 +303,8 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
     created_elements = set()
 
     for layer in layers:
+        elset = set()
+
         for guid in rs.ObjectsByLayer(layer):
 
             if line_type and rs.IsCurve(guid):
@@ -266,7 +329,9 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                 axes = {'ex': ex, 'ey': ey, 'ez': ez}
                 sp_ep = [sp, ep]
                 e = structure.add_element(nodes=sp_ep, type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
-                created_elements.add(e)
+                if e is not None:
+                    created_elements.add(e)
+                    elset.add(e)
 
             elif mesh_type and rs.IsMesh(guid):
                 vertices = rs.MeshVertices(guid)
@@ -275,7 +340,9 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 
                 if mesh_type in solids:
                     e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
-                    created_elements.add(e)
+                    if e is not None:
+                        created_elements.add(e)
+                        elset.add(e)
 
                 else:
                     try:
@@ -298,7 +365,11 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                             del nodes[-1]
                         e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal,
                                                   axes=axes)
-                        created_elements.add(e)
+                        if e is not None:
+                            created_elements.add(e)
+                            elset.add(e)
+
+        structure.add_set(name=layer, type='element', selection=list(elset))
 
     return list(created_nodes), list(created_elements)
 
@@ -339,7 +410,7 @@ def add_sets_from_layers(structure, layers):
                 add_element_set(structure=structure, guids=guids, name=name)
 
 
-def mesh_extrude(structure, guid, nz, dz, setname=None, cap=None, links=None):
+def mesh_extrude(structure, guid, nz, dz, setname=None, cap=None, links=None, plot_blocks=None, plot_cap=None):
 
     """ Extrudes a Rhino mesh into cells of many layers and adds to Structure.
 
@@ -359,6 +430,10 @@ def mesh_extrude(structure, guid, nz, dz, setname=None, cap=None, links=None):
         Name of set for a capping mesh on final surface.
     links : str
         Name of set for adding links along extrusion.
+    plot_blocks : str
+        Layer to plot representative block meshes.
+    plot_cap : str
+        Layer to plot representative cap mesh.
 
     Returns
     -------
@@ -373,6 +448,38 @@ def mesh_extrude(structure, guid, nz, dz, setname=None, cap=None, links=None):
 
     mesh = mesh_from_guid(Mesh(), guid)
     extrude_mesh(structure=structure, mesh=mesh, nz=nz, dz=dz, setname=setname, cap=cap, links=links)
+
+    block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
+    xyz = structure.nodes_xyz()
+
+    if plot_blocks:
+
+        rs.CurrentLayer(rs.AddLayer(plot_blocks))
+        rs.DeleteObjects(rs.ObjectsByLayer(plot_blocks))
+        rs.EnableRedraw(False)
+
+        for select in structure.sets[setname]['selection']:
+            nodes = structure.elements[select].nodes
+            vertices = structure.nodes_xyz(nodes)
+            guid = rs.AddMesh(vertices, block_faces)
+
+        rs.EnableRedraw(True)
+
+    if plot_cap:
+
+        rs.CurrentLayer(rs.AddLayer(plot_cap))
+        rs.DeleteObjects(rs.ObjectsByLayer(plot_cap))
+        rs.EnableRedraw(False)
+
+        faces = []
+        for select in structure.sets[cap]['selection']:
+            enodes = structure.elements[select].nodes
+            if len(enodes) == 3:
+                enodes.append(enodes[-1])
+            faces.append(enodes)
+        guid = rs.AddMesh(xyz, faces)
+
+        rs.EnableRedraw(True)
 
 
 def network_from_lines(guids=[], layer=None):

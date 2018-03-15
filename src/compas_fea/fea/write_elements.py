@@ -116,7 +116,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                 set_index = sets[elset]['index'] + 1
 
             if software == 'sofistik':  # co-ordinate this with abaqus nsets
-                f.write('GRP {0} BASE {0}0000\n'.format(set_index))
+                f.write('GRP {0} BASE {0}00000\n'.format(set_index))
                 f.write('$\n')
 
             # Springs
@@ -354,7 +354,6 @@ def _write_shells(f, software, selection, elements, geometry, material, reinforc
         elif software == 'sofistik':
 
             if len(nodes) == 3:
-                # f.write('TRI NO N1 N2 N3 MNO T1 T2 T3')  # guessed input
                 pass
             elif len(nodes) == 4:
                 f.write('QUAD NO N1 N2 N3 N4 MNO T1 T2 T3 T4')
