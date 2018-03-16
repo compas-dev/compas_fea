@@ -410,7 +410,8 @@ def add_sets_from_layers(structure, layers):
                 add_element_set(structure=structure, guids=guids, name=name)
 
 
-def mesh_extrude(structure, guid, nz, dz, setname=None, cap=None, links=None, plot_blocks=None, plot_cap=None):
+def mesh_extrude(structure, guid, nz, dz, setname=None, cap=None, links=None, plot_blocks=None, plot_cap=None,
+                 plot_links=None):
 
     """ Extrudes a Rhino mesh into cells of many layers and adds to Structure.
 
@@ -434,6 +435,8 @@ def mesh_extrude(structure, guid, nz, dz, setname=None, cap=None, links=None, pl
         Layer to plot representative block meshes.
     plot_cap : str
         Layer to plot representative cap mesh.
+    plot_links : str
+        Layer to plot representative links.
 
     Returns
     -------
@@ -452,24 +455,22 @@ def mesh_extrude(structure, guid, nz, dz, setname=None, cap=None, links=None, pl
     block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
     xyz = structure.nodes_xyz()
 
+    rs.EnableRedraw(False)
+
     if plot_blocks:
 
         rs.CurrentLayer(rs.AddLayer(plot_blocks))
         rs.DeleteObjects(rs.ObjectsByLayer(plot_blocks))
-        rs.EnableRedraw(False)
 
         for select in structure.sets[setname]['selection']:
             nodes = structure.elements[select].nodes
             vertices = structure.nodes_xyz(nodes)
             guid = rs.AddMesh(vertices, block_faces)
 
-        rs.EnableRedraw(True)
-
     if plot_cap:
 
         rs.CurrentLayer(rs.AddLayer(plot_cap))
         rs.DeleteObjects(rs.ObjectsByLayer(plot_cap))
-        rs.EnableRedraw(False)
 
         faces = []
         for select in structure.sets[cap]['selection']:
@@ -479,7 +480,18 @@ def mesh_extrude(structure, guid, nz, dz, setname=None, cap=None, links=None, pl
             faces.append(enodes)
         guid = rs.AddMesh(xyz, faces)
 
-        rs.EnableRedraw(True)
+    if plot_links:
+
+        rs.CurrentLayer(rs.AddLayer(plot_links))
+        rs.DeleteObjects(rs.ObjectsByLayer(plot_links))
+
+        for select in structure.sets[links]['selection']:
+            nodes = structure.elements[select].nodes
+            vertices = structure.nodes_xyz(nodes)
+            guid = rs.AddLine(vertices[0], vertices[1])
+
+    rs.EnableRedraw(True)
+    rs.CurrentLayer(rs.AddLayer('Default'))
 
 
 def network_from_lines(guids=[], layer=None):
