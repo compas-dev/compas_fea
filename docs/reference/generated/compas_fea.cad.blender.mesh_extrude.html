@@ -22,6 +22,8 @@
         
         
         
+            <link rel="prev" title="plot_voxels" href="compas_fea.cad.blender.plot_voxels.html" />
+        
 
         <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
@@ -58,6 +60,14 @@
         <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
         <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">additional packages</a>
         
+            
+                <a class="breadcrumb-item" href="../../reference.html" >reference</a>
+            
+                <a class="breadcrumb-item" href="../compas_fea.html" >compas_fea</a>
+            
+                <a class="breadcrumb-item" href="../compas_fea.cad.html" accesskey="U">cad</a>
+            
+        
     </nav>
  -->
 
@@ -65,10 +75,39 @@
 
                         <div class="section" id="mesh-extrude">
 <h1>mesh_extrude</h1>
+<dl class="function">
+<dt id="compas_fea.cad.blender.mesh_extrude">
+<code class="descclassname">compas_fea.cad.blender.</code><code class="descname">mesh_extrude</code><span class="sig-paren">(</span><em>structure</em>, <em>bmesh</em>, <em>nz</em>, <em>dz</em>, <em>setname=None</em>, <em>cap=None</em>, <em>links=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/cad/blender.html#mesh_extrude"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Extrudes a Blender mesh into cells of many layers and adds to Structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>structure</strong> (<em>obj</em>) – Structure object to update.</p></li>
+<li><p><strong>bmesh</strong> (<em>obj</em>) – Blender mesh object.</p></li>
+<li><p><strong>nz</strong> (<em>int</em>) – Number of layers.</p></li>
+<li><p><strong>dz</strong> (<em>float</em>) – Layer thickness.</p></li>
+<li><p><strong>setname</strong> (<em>str</em>) – Name of set for added solid elements.</p></li>
+<li><p><strong>cap</strong> (<em>str</em>) – Name of set for a capping mesh on final surface.</p></li>
+<li><p><strong>links</strong> (<em>str</em>) – Name of set for adding links along extrusion.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Extrusion is along the vertex normals.</p></li>
+<li><p>Elements are added automatically to the Structure object.</p></li>
+</ul>
+</dd></dl>
+
 </div>
 
                         
                         <!-- <nav class="compas-sideways">
+                            
+                                <a href="compas_fea.cad.blender.plot_voxels.html" class="btn btn-primary compas-prev" role="button">plot_voxels</a>
                             
 
                             
@@ -97,11 +136,14 @@
                             <div class="navbar-expand-md">
                                 <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
 
-                                <ul class="nav flex-column">
+                                <ul class="nav flex-column active">
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../tutorial.html">Tutorial</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../../reference.html">Reference</a></li>
+<li class="nav-item active"><a class="nav-link reference internal" href="../../reference.html">Reference</a><ul class="nav active">
+<li class="nav-item active"><a class="nav-link reference internal" href="../compas_fea.html">compas_fea</a></li>
+</ul>
+</li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../license.html">License</a></li>
 </ul>
 
@@ -135,7 +177,7 @@
             
 
             
-                Last updated on Mar 06, 2018.
+                Last updated on Mar 19, 2018.
             
 
             

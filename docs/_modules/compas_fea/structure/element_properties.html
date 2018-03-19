@@ -97,8 +97,8 @@
 <span class="sd">        Name of the material to assign.</span>
 <span class="sd">    section : str</span>
 <span class="sd">        Name of the section to assign.</span>
-<span class="sd">    elsets : list</span>
-<span class="sd">        tr): Element sets the properties are assigned to.</span>
+<span class="sd">    elsets : list, str</span>
+<span class="sd">        Element sets the properties are assigned to.</span>
 <span class="sd">    elements : list</span>
 <span class="sd">        Elements the properties are assigned to.</span>
 <span class="sd">    reinforcement : dic</span>
@@ -122,7 +122,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">elements</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reinforcement</span> <span class="o">=</span> <span class="n">reinforcement</span>
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">elsets</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">elements</span><span class="p">):</span></div>
-            <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s1">&#39;Element properties require elements or element sets (ELSETs)&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s1">&#39;Element properties require elements or element sets&#39;</span><span class="p">)</span>
 </code></pre></div>
                         
                         <!-- <nav class="compas-sideways">
@@ -189,7 +189,7 @@
             
 
             
-                Last updated on Mar 06, 2018.
+                Last updated on Mar 19, 2018.
             
 
             

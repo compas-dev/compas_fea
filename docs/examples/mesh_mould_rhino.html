@@ -77,8 +77,7 @@
 <div class="figure">
 <img alt="../_images/mesh_mould_rhino.png" class="figure-img img-fluid" src="../_images/mesh_mould_rhino.png" />
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="sd">&quot;&quot;&quot; Example Meshmould analysed with shell elements and rebar.&quot;&quot;&quot;</span>
-
+<div class="highlight-default notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span>
 <span class="c1"># Note: this model takes a long time to analyse.</span>
 
 <span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">rhino</span>
@@ -140,9 +139,9 @@
     <span class="s1">&#39;w_l2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.035</span><span class="p">,</span> <span class="s1">&#39;spacing&#39;</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">:</span> <span class="s1">&#39;mat_rebar&#39;</span><span class="p">,</span> <span class="s1">&#39;dia&#39;</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="mi">90</span><span class="p">},</span>
     <span class="s1">&#39;w_l1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.045</span><span class="p">,</span> <span class="s1">&#39;spacing&#39;</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">:</span> <span class="s1">&#39;mat_rebar&#39;</span><span class="p">,</span> <span class="s1">&#39;dia&#39;</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}}</span>
 
-<span class="n">epp</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_plinth&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_plinth&#39;</span><span class="p">,</span> 
+<span class="n">epp</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_plinth&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_plinth&#39;</span><span class="p">,</span>
                  <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_plinth&#39;</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="n">reb_plinth</span><span class="p">)</span>
-<span class="n">epw</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_wall&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_wall&#39;</span><span class="p">,</span> 
+<span class="n">epw</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_wall&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_wall&#39;</span><span class="p">,</span>
                  <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_wall&#39;</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="n">reb_wall</span><span class="p">)</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">epp</span><span class="p">)</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">epw</span><span class="p">)</span>
@@ -176,7 +175,7 @@
 
 <span class="c1"># Run and extract data</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;rbfor&#39;</span><span class="p">])</span> 
+<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;rbfor&#39;</span><span class="p">])</span>
 
 <span class="c1"># Plot displacements</span>
 
@@ -236,6 +235,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="beam_frame_rhino.html">beam_frame Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_grid_rhino.html">beam_grid Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_simple_rhino.html">beam_simple Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="beam_tree_rhino.html">beam_tree Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_rhino.html">block_deepbeam Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="block_tets_rhino.html">block_tets Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_rhino.html">mesh_floor Rhino</a></li>
@@ -246,7 +246,11 @@
 <li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="spring_simple_rhino.html">spring_simple Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_blender.html">block_deepbeam Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_bridge_rhino.html">mesh_bridge Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_blender.html">mesh_floor Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_tris_blender.html">mesh_tris Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_blender.html">truss_tower Blender</a></li>
 </ul>
 </li>
@@ -284,7 +288,7 @@
             
 
             
-                Last updated on Mar 06, 2018.
+                Last updated on Mar 19, 2018.
             
 
             

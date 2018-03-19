@@ -225,7 +225,7 @@
 
         <span class="n">step</span>       <span class="o">=</span> <span class="n">steps</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
         <span class="n">stype</span>      <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="vm">__name__</span>
-        <span class="n">state</span>      <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">state</span>
+        <span class="n">state</span>      <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">step_index</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">index</span>
         <span class="n">factor</span>     <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;factor&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">increments</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;increments&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -234,10 +234,6 @@
         <span class="n">method</span>     <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">nlgeom</span>     <span class="o">=</span> <span class="s1">&#39;YES&#39;</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;nlgeom&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;NO&#39;</span>
         <span class="n">perturbation</span> <span class="o">=</span> <span class="s1">&#39;, PERTURBATION&#39;</span> <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">&#39;BucklingStep&#39;</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
-
-        <span class="c1"># if stype == &#39;BucklingStep&#39;:</span>
-            <span class="c1"># modes = step.modes</span>
-            <span class="c1"># f.write(&#39;{0}, {1}, {2}, {3}\n&#39;.format(modes, modes, 2 * modes, increments))</span>
 
         <span class="c1"># Mechanical</span>
 
@@ -254,6 +250,11 @@
 
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*STEP, NLGEOM=</span><span class="si">{0}</span><span class="s1">, NAME=</span><span class="si">{1}{2}</span><span class="s1">, INC=</span><span class="si">{3}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nlgeom</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">perturbation</span><span class="p">,</span> <span class="n">increments</span><span class="p">))</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">upper</span><span class="p">()))</span>
+
+                <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">&#39;BucklingStep&#39;</span><span class="p">:</span>
+                    <span class="n">modes</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">modes</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">, </span><span class="si">{3}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">modes</span><span class="p">,</span> <span class="n">modes</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">modes</span><span class="p">,</span> <span class="n">increments</span><span class="p">))</span>
+
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
             <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
@@ -694,7 +695,7 @@
             
 
             
-                Last updated on Mar 06, 2018.
+                Last updated on Mar 19, 2018.
             
 
             
