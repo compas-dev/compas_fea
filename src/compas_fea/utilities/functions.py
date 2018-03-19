@@ -351,6 +351,7 @@ def extrude_mesh(structure, mesh, nz, dz, setname=None, cap=None, links=None):
                 pass
             ekey = structure.add_element(nodes=[node1, node2], type='SpringElement', acoustic=False, thermal=False,
                                          axes={'ez': ez, 'ey': ey})
+            structure.elements[ekey].A = mesh.vertex_area(key)
             link_springs.append(ekey)
 
     for face in mesh.faces():
@@ -363,14 +364,16 @@ def extrude_mesh(structure, mesh, nz, dz, setname=None, cap=None, links=None):
             bot = ['{0}_{1}'.format(j, i + 0) for j in vs]
             top = ['{0}_{1}'.format(j, i + 1) for j in vs]
             nodes = [ki[j] for j in bot + top]
-            ekey = structure.add_element(nodes=nodes, type=type, acoustic=False, thermal=False)
-            elements.append(ekey)
+            if setname:
+                ekey = structure.add_element(nodes=nodes, type=type, acoustic=False, thermal=False)
+                elements.append(ekey)
             if (i == nz - 1) and cap:
                 nodes = [ki[j] for j in top]
                 ekey = structure.add_element(nodes=nodes, type='ShellElement', acoustic=False, thermal=False)
                 cap_faces.append(ekey)
 
-    structure.add_set(name=setname, type='element', selection=elements)
+    if setname:
+        structure.add_set(name=setname, type='element', selection=elements)
     if cap:
         structure.add_set(name=cap, type='element', selection=cap_faces)
     if links:

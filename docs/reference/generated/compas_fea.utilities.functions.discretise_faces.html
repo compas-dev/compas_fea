@@ -79,7 +79,7 @@
 <h1>discretise_faces</h1>
 <dl class="function">
 <dt id="compas_fea.utilities.functions.discretise_faces">
-<code class="descclassname">compas_fea.utilities.functions.</code><code class="descname">discretise_faces</code><span class="sig-paren">(</span><em>vertices</em>, <em>faces</em>, <em>target</em>, <em>min_angle=15</em>, <em>factor=3</em>, <em>iterations=100</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/utilities/functions.html#discretise_faces"><span class="viewcode-link">[source]</span></a></dt>
+<code class="descclassname">compas_fea.utilities.functions.</code><code class="descname">discretise_faces</code><span class="sig-paren">(</span><em>vertices</em>, <em>faces</em>, <em>target</em>, <em>min_angle=15</em>, <em>factor=3</em>, <em>iterations=100</em>, <em>refine=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/utilities/functions.html#discretise_faces"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Make an FE mesh from an input coarse mesh data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -90,6 +90,7 @@
 <li><p><strong>min_angle</strong> (<em>float</em>) – Minimum internal angle of triangles.</p></li>
 <li><p><strong>factor</strong> (<em>float</em>) – Factor on the maximum area of each triangle.</p></li>
 <li><p><strong>iterations</strong> (<em>int</em>) – Number of iterations per face.</p></li>
+<li><p><strong>refine</strong> (<em>bool</em>) – Refine beyond Delaunay.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -179,7 +180,7 @@
             
 
             
-                Last updated on Mar 06, 2018.
+                Last updated on Mar 19, 2018.
             
 
             

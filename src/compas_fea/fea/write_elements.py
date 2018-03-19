@@ -79,7 +79,9 @@ def write_input_elements(f, software, sections, properties, elements, structure,
     has_rebar = False
     written_springs = []
 
-    for key, property in properties.items():
+    for key in sorted(properties):
+
+        property = properties[key]
 
         section = sections[property.section]
         section_index = section.index + 1
@@ -111,11 +113,12 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 
             if isinstance(elset, str) and (elset[:8] == 'element_'):
                 selection = [int(elset[8:])]
+                set_index = None
             else:
                 selection = sets[elset]['selection']
                 set_index = sets[elset]['index'] + 1
 
-            if software == 'sofistik':  # co-ordinate this with abaqus nsets
+            if (software == 'sofistik') and set_index:  # co-ordinate this with abaqus nsets
                 f.write('GRP {0} BASE {0}00000\n'.format(set_index))
                 f.write('$\n')
 
