@@ -37,7 +37,9 @@ Blender
 
     examples/beam_simple_blender
 
+    .. examples/block_bridge_blender
     examples/block_deepbeam_blender
+    examples/block_tets_blender
 
     examples/mesh_bridge_rhino
     examples/mesh_floor_blender
@@ -50,5 +52,4 @@ Blender
 Scripted
 --------
 
-.. examples/block_tets_blender
-.. examples/script_introduction_abaqus
+    examples/script_introduction_abaqus

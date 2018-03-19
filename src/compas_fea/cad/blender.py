@@ -23,7 +23,7 @@ from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
 from compas_fea.utilities import network_order
 from compas_fea.utilities import postprocess
-# from compas_fea.utilities import tets_from_vertices_faces
+from compas_fea.utilities import tets_from_vertices_faces
 from compas_fea.utilities import voxels
 
 from numpy import array
@@ -46,7 +46,7 @@ __email__     = 'liew@arch.ethz.ch'
 __all__ = [
     'add_nodes_elements_from_bmesh',
     'add_nodes_elements_from_layers',
-#     'add_tets_from_bmesh',
+    'add_tets_from_bmesh',
     'add_nset_from_bmeshes',
     'add_elset_from_bmeshes',
     'add_nset_from_objects',
@@ -205,55 +205,54 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
     return list(created_nodes), list(created_elements)
 
 
-# def add_tets_from_bmesh(structure, name, bmesh, draw_tets=False, volume=None, layer=19, acoustic=False, thermal=False):
+def add_tets_from_bmesh(structure, name, bmesh, draw_tets=False, volume=None, layer=19, acoustic=False, thermal=False):
 
-#     """ Adds tetrahedron elements from a Blender mesh to the Structure object.
+    """ Adds tetrahedron elements from a Blender mesh to the Structure object.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     name : str
-#         Name for the element set of tetrahedrons.
-#     bmesh : ob
-#         The Blender mesh representing the outer surface.
-#     draw_tets : bool
-#         Draw the generated tetrahedrons.
-#     volume : float
-#         Maximum volume for tets.
-#     layer : int
-#         Layer to draw tetrahedrons if draw_tets=True.
-#     acoustic : bool
-#         Acoustic properties on or off.
-#     thermal : bool
-#         Thermal properties on or off.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    name : str
+        Name for the element set of tetrahedrons.
+    bmesh : ob
+        The Blender mesh representing the outer surface.
+    draw_tets : bool
+        Draw the generated tetrahedrons.
+    volume : float
+        Maximum volume for tets.
+    layer : int
+        Layer to draw tetrahedrons if draw_tets=True.
+    acoustic : bool
+        Acoustic properties on or off.
+    thermal : bool
+        Thermal properties on or off.
 
-#     Returns
-#     -------
-#     None
-#         Nodes and elements are updated in the Structure object.
+    Returns
+    -------
+    None
 
-#     """
+    """
 
-#     blendermesh = BlenderMesh(bmesh)
-#     vertices = blendermesh.get_vertex_coordinates()
-#     faces = blendermesh.get_face_vertex_indices()
+    blendermesh = BlenderMesh(bmesh)
+    vertices = blendermesh.get_vertex_coordinates()
+    faces = blendermesh.get_face_vertex_indices()
 
-#     tets_points, tets_elements = tets_from_vertices_faces(vertices=vertices, faces=faces, volume=volume)
-#     for point in tets_points:
-#         structure.add_node(point)
-#     ekeys = []
-#     for element in tets_elements:
-#         nodes = [structure.check_node_exists(tets_points[i]) for i in element]
-#         ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', acoustic=acoustic, thermal=thermal)
-#         ekeys.append(ekey)
-#     structure.add_set(name=name, type='element', selection=ekeys, explode=False)
+    tets_points, tets_elements = tets_from_vertices_faces(vertices=vertices, faces=faces, volume=volume)
+    for point in tets_points:
+        structure.add_node(point)
+    ekeys = []
+    for element in tets_elements:
+        nodes = [structure.check_node_exists(tets_points[i]) for i in element]
+        ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', acoustic=acoustic, thermal=thermal)
+        ekeys.append(ekey)
+    structure.add_set(name=name, type='element', selection=ekeys)
 
-#     if draw_tets:
-#         tet_faces = [[0, 1, 2], [1, 3, 2], [1, 3, 0], [0, 2, 3]]
-#         for i, points in enumerate(tets_elements):
-#             xyz = [tets_points[j] for j in points]
-#             xdraw_mesh(name=str(i), vertices=xyz, faces=tet_faces, layer=layer)
+    if draw_tets:
+        tet_faces = [[0, 1, 2], [1, 3, 2], [1, 3, 0], [0, 2, 3]]
+        for i, points in enumerate(tets_elements):
+            xyz = [tets_points[j] for j in points]
+            xdraw_mesh(name=str(i), vertices=xyz, faces=tet_faces, layer=layer)
 
 
 def add_elset_from_bmeshes(structure, name, bmeshes=None, layer=None):
