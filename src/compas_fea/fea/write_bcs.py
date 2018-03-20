@@ -15,7 +15,7 @@ __all__ = [
 ]
 
 
-dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
+dofs    = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 fixitys = ['PX', 'PY', 'PZ', 'MX', 'MY' 'MZ']
 
 comments = {
@@ -26,7 +26,7 @@ comments = {
 }
 
 
-def write_input_bcs(f, software, structure, steps, displacements, ndof=6):
+def write_input_bcs(f, software, structure, steps, displacements, sets, ndof=6):
 
     """ Writes boundary condition information to the input file.
 
@@ -35,13 +35,15 @@ def write_input_bcs(f, software, structure, steps, displacements, ndof=6):
     f : obj
         The open file object for the input file.
     software : str
-        Analysis software or library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
+        Analysis software or library to use: 'abaqus', 'opensees', 'sofistik' or 'ansys'.
     structure : obj
         Struture object.
     steps : dic
         Step objects from structure.steps.
     displacements : dic
         Displacement objects from structure.displacements.
+    sets : dic
+        Sets dictionary from structure.sets.
     ndof : int
         Number of degrees-of-freedom per node.
 
@@ -70,12 +72,21 @@ def write_input_bcs(f, software, structure, steps, displacements, ndof=6):
     f.write('{0} {1}\n'.format(c, key))
     f.write('{0} '.format(c) + '-' * len(key) + '\n')
 
+    if isinstance(step.displacements, str):
+        step.displacements = [step.displacements]
+
     for k in step.displacements:
 
         displacement = displacements[k]
         com = displacement.components
-        nset = displacement.nodes
-        selection = structure.sets[nset]['selection']
+
+        if isinstance(displacement.nodes, str):
+            nset = displacement.nodes
+            selection = sets[nset]['selection']
+
+        elif isinstance(displacement.nodes, list):
+            nset = None
+            selection = displacement.nodes
 
         f.write('{0}\n'.format(c))
         f.write('{0} {1}\n'.format(c, k))
@@ -99,7 +110,7 @@ def write_input_bcs(f, software, structure, steps, displacements, ndof=6):
         elif software == 'sofistik':
 
             f.write('NODE NO FIX\n')
-            f.write('{0}\n'.format(c))
+            f.write('$\n')
             j = ''
             for dof, fixity in zip(dofs, fixitys):
                 if com[dof] == 0:
@@ -111,10 +122,15 @@ def write_input_bcs(f, software, structure, steps, displacements, ndof=6):
         elif software == 'abaqus':
 
             f.write('*BOUNDARY\n')
-            f.write('{0}\n'.format(c))
+            f.write('**\n')
+
             for ci, dof in enumerate(dofs, 1):
                 if com[dof] is not None:
-                    f.write('{0}, {1}, {1}, {2}\n'.format(nset, ci, com[dof]))
+                    if nset:
+                        f.write('{0}, {1}, {1}, {2}\n'.format(nset, ci, com[dof]))
+                    else:
+                        for node in sorted(selection, key=int):
+                            f.write('{0}, {1}, {1}, {2}\n'.format(node + 1, ci, com[dof]))
 
         elif software == 'ansys':
 

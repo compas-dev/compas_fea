@@ -67,7 +67,7 @@ def input_generate(structure, fields, units='m'):
         write_input_heading(f, software='sofistik')
         write_input_materials(f, 'sofistik', materials, sections, properties)
         write_input_nodes(f, 'sofistik', nodes)
-        write_input_bcs(f, 'sofistik', structure, steps, displacements)
+        write_input_bcs(f, 'sofistik', structure, steps, displacements, sets)
         write_input_elements(f, 'sofistik', sections, properties, elements, structure, materials)
         write_input_steps(f, 'sofistik', structure, steps, loads, displacements, sets, fields,
                           properties=properties, sections=sections)

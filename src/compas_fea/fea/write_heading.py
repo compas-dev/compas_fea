@@ -44,6 +44,7 @@ authors = {
 }
 
 
+
 def write_input_heading(f, software, ndof=6):
 
     """ Creates the input file heading.
@@ -53,7 +54,7 @@ def write_input_heading(f, software, ndof=6):
     f : obj
         The open file object for the input file.
     software : str
-        Analysis software or library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
+        Analysis software or library to use: 'abaqus', 'opensees', 'sofistik' or 'ansys'.
     ndof : float
         Numbers of degrees-of-freedom per node.
 
@@ -74,16 +75,15 @@ def write_input_heading(f, software, ndof=6):
     f.write('{0}\n'.format(c))
     f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
 
-    if software == 'abaqus':
+    misc = {
+        'abaqus':   '**\n*PHYSICAL CONSTANTS, ABSOLUTE ZERO=-273.15, STEFAN BOLTZMANN=5.67e-8\n',
+        'opensees': '#\nwipe\nmodel basic -ndm 3 -ndf {0}\n'.format(ndof),
+        'sofistik': '',
+        'ansys':    '',
+    }
 
-        f.write('**\n')
-        f.write('*PHYSICAL CONSTANTS, ABSOLUTE ZERO=-273.15, STEFAN BOLTZMANN=5.67e-8\n')
-
-    elif software == 'opensees':
-
-        f.write('#\n')
-        f.write('wipe\n')
-        f.write('model basic -ndm 3 -ndf {0}\n'.format(ndof))
+    if misc[software]:
+        f.write(misc[software])
 
     f.write('{0}\n'.format(c))
     f.write('{0}\n'.format(c))

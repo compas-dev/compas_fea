@@ -341,7 +341,7 @@ def input_generate(structure, fields, units='m'):
 
         write_input_heading(f, 'abaqus')
         write_input_nodes(f, 'abaqus', nodes)
-        write_input_bcs(f, 'abaqus', structure, steps, displacements)
+        write_input_bcs(f, 'abaqus', structure, steps, displacements, sets)
         write_input_materials(f, 'abaqus', materials)
         write_input_elements(f, 'abaqus', sections, properties, elements, structure, materials)
         input_write_sets(f, sets)  # to make general if possible

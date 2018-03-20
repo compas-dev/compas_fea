@@ -50,8 +50,8 @@ node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
 
 
-def write_input_steps(f, software, structure, steps, loads, displacements, sets, fields, ndof=6, properties=None,
-                      sections=None):
+def write_input_steps(f, software, structure, steps, loads, displacements, sets, fields, ndof=6, properties={},
+                      sections={}):
 
     """ Writes the Steps information to the input file.
 
@@ -95,6 +95,9 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         f.write('$\n')
         f.write('+PROG SOFILOAD\n')
 
+        if isinstance(loads, str):
+            loads = [loads]
+
         for k in loads:
 
             load = loads[k]
@@ -102,37 +105,44 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
             axes = load.axes
             ltype = load.__name__
             com = load.components
-            elset = load.elements
-            set_index = sets[elset]['index'] + 1
 
-            if ltype != 'GravityLoad':
+            if ltype in ['PointLoad']:
 
-                f.write('$\n')
-                f.write('$ {0}\n'.format(k))
-                f.write('$ ' + '-' * len(k) + '\n')
-                f.write('$\n')
-                f.write("LC {0} TITL '{1}'\n".format(load_index, k))
+                pass
 
-                if ltype == 'TributaryLoad':
+            else:
 
-                    for node in sorted(com, key=int):
-                        ni = node + 1
-                        f.write('    NODE NO {0} TYPE '.format(ni))
-                        for ci, dof in enumerate(dofs[:3], 1):
-                            if com[node][dof]:
-                                dl = com[node][dof] / 1000.
-                                f.write('P{0}{0} {1}\n'.format(dof.upper(), dl))
+                elset = load.elements
+                set_index = sets[elset]['index'] + 1
 
-                elif ltype == 'AreaLoad':
+                if ltype != 'GravityLoad':
 
-                    components = ''
-                    for i in 'xyz':
-                        if com[i]:
-                            if axes == 'local':
-                                components += ' P{0} {1}'.format(i.upper(), 0.001 * com[i])
-                            elif axes == 'global':
-                                components += ' P{0}{0} {1}'.format(i.upper(), 0.001 * com[i])
-                    f.write('    QUAD GRP {0} TYPE{1}\n'.format(set_index, components))
+                    f.write('$\n')
+                    f.write('$ {0}\n'.format(k))
+                    f.write('$ ' + '-' * len(k) + '\n')
+                    f.write('$\n')
+                    f.write("LC {0} TITL '{1}'\n".format(load_index, k))
+
+                    if ltype == 'TributaryLoad':
+
+                        for node in sorted(com, key=int):
+                            ni = node + 1
+                            f.write('    NODE NO {0} TYPE '.format(ni))
+                            for ci, dof in enumerate(dofs[:3], 1):
+                                if com[node][dof]:
+                                    dl = com[node][dof] / 1000.
+                                    f.write('P{0}{0} {1}\n'.format(dof.upper(), dl))
+
+                    elif ltype == 'AreaLoad':
+
+                        components = ''
+                        for i in 'xyz':
+                            if com[i]:
+                                if axes == 'local':
+                                    components += ' P{0} {1}'.format(i.upper(), 0.001 * com[i])
+                                elif axes == 'global':
+                                    components += ' P{0}{0} {1}'.format(i.upper(), 0.001 * com[i])
+                        f.write('    QUAD GRP {0} TYPE{1}\n'.format(set_index, components))
 
         f.write('$\n')
         f.write('END\n')
@@ -198,6 +208,9 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 f.write("LC 10{0} TITL '{1}' FACT {2} DLZ 0.0\n".format(step_index, key, factor))
 
             # Loads
+
+            if isinstance(step.loads, str):
+                step.loads = [step.loads]
 
             for k in step.loads:
 
@@ -443,65 +456,72 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         if footers[software]:
             f.write(footers[software])
 
-        if software == 'sofistik':  # this needs to be turned off when there is no rebar
+        has_rebar = False
+        for key in sorted(properties):
+            property = properties[key]
+            if property.reinforcement:
+                has_rebar = True
 
-            f.write('+PROG BEMESS\n')
-            f.write('HEAD {0}\n'.format(state.upper()))
-            f.write('$\n')
-            f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
-            f.write('CTRL WARN 496 $ Possible non-constant longitudinal reinforcement.\n')
-            f.write('CTRL WARN 254 $ Vertical shear reinforcement not allowed for slab thickness smaller 20 cm.\n')
-            f.write('CTRL PFAI 2\n')
-            if state == 'sls':
-                f.write('CTRL SLS\n')
-                f.write('CRAC WK PARA\n')
-            else:
-                f.write('CTRL ULTI\n')
-            f.write('CTRL LCR {0}\n'.format(step_index))
-            f.write('LC 10{0}\n'.format(step_index))
+        if has_rebar:
+            if software == 'sofistik':
 
-            f.write('$\n')
-            f.write('$\n')
-            f.write('END\n')
-            f.write('$\n')
-            f.write('$\n')
-
-            f.write('+PROG ASE\n')
-            f.write('$\n')
-            f.write('CTRL SOLV 1\n')
-            f.write('CTRL CONC\n')
-            f.write('$CREP NCRE 20\n')
-
-            if state == 'sls':
-                f.write('NSTR KMOD S1 KSV SLD\n')
-            elif state == 'uls':
-                f.write('NSTR KMOD S1 KSV ULD\n')
-            if nlgeom == 'YES':
+                f.write('+PROG BEMESS\n')
+                f.write('HEAD {0}\n'.format(state.upper()))
                 f.write('$\n')
-                f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT YES\n'.format(increments, tolerance))
+                f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
+                f.write('CTRL WARN 496 $ Possible non-constant longitudinal reinforcement.\n')
+                f.write('CTRL WARN 254 $ Vertical shear reinforcement not allowed for slab thickness smaller 20 cm.\n')
+                f.write('CTRL PFAI 2\n')
+                if state == 'sls':
+                    f.write('CTRL SLS\n')
+                    f.write('CRAC WK PARA\n')
+                else:
+                    f.write('CTRL ULTI\n')
+                f.write('CTRL LCR {0}\n'.format(step_index))
+                f.write('LC 10{0}\n'.format(step_index))
 
-            f.write('REIQ LCR {0}\n'.format(step_index))
-            f.write('$\n')
+                f.write('$\n')
+                f.write('$\n')
+                f.write('END\n')
+                f.write('$\n')
+                f.write('$\n')
 
-            f.write("LC 20{0} TITL '{1}'".format(step_index, key))
-            DLX, DLY, DLZ = 0, 0, 0
-            for key, load in loads.items():
-                if load.__name__ in ['GravityLoad']:
-                    com = load.components
-                    gx = com['x'] if com['x'] else 0
-                    gy = com['y'] if com['y'] else 0
-                    gz = com['z'] if com['z'] else 0
-                    DLX = gx
-                    DLY = gy
-                    DLZ = gz
-            f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * factor, DLY * factor, DLZ * factor))
-            f.write('    LCC 10{0}\n'.format(step_index))
+                f.write('+PROG ASE\n')
+                f.write('$\n')
+                f.write('CTRL SOLV 1\n')
+                f.write('CTRL CONC\n')
+                f.write('$CREP NCRE 20\n')
 
-            f.write('$\n')
-            f.write('$\n')
-            f.write('END\n')
-            f.write('$\n')
-            f.write('$\n')
+                if state == 'sls':
+                    f.write('NSTR KMOD S1 KSV SLD\n')
+                elif state == 'uls':
+                    f.write('NSTR KMOD S1 KSV ULD\n')
+                if nlgeom == 'YES':
+                    f.write('$\n')
+                    f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT YES\n'.format(increments, tolerance))
+
+                f.write('REIQ LCR {0}\n'.format(step_index))
+                f.write('$\n')
+
+                f.write("LC 20{0} TITL '{1}'".format(step_index, key))
+                DLX, DLY, DLZ = 0, 0, 0
+                for key, load in loads.items():
+                    if load.__name__ in ['GravityLoad']:
+                        com = load.components
+                        gx = com['x'] if com['x'] else 0
+                        gy = com['y'] if com['y'] else 0
+                        gz = com['z'] if com['z'] else 0
+                        DLX = gx
+                        DLY = gy
+                        DLZ = gz
+                f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * factor, DLY * factor, DLZ * factor))
+                f.write('    LCC 10{0}\n'.format(step_index))
+
+                f.write('$\n')
+                f.write('$\n')
+                f.write('END\n')
+                f.write('$\n')
+                f.write('$\n')
 
 
 # Thermal
