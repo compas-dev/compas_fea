@@ -379,7 +379,8 @@ def _write_concrete(f, software, E, v, p, compression, tension, material_index, 
 
         fck = material.fck / 10.**6
         yc = p / 100
-        f.write('CONC {0} TYPE C FCN {1} MUE {2} GAM {3} TYPR C\n'.format(material_index, fck, v, yc))
+        sf = material.sf
+        f.write('CONC {0} TYPE C FCN {1} MUE {2} GAM {3} TYPR C SCM {4}\n'.format(material_index, fck, v, yc, sf))
         f.write('$\n')
 
     elif software == 'ansys':

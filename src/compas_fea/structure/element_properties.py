@@ -17,22 +17,22 @@ __all__ = [
 
 class ElementProperties(object):
 
-    """ Initialises ElementProperties object.
+    """ Initialises an ElementProperties object.
 
     Parameters
     ----------
-    name : str, int
-        Key for the ElementProperties object.
+    name : str
+        Key name for the ElementProperties object.
     material : str
-        Name of the material to assign.
+        Name of the Material object to assign.
     section : str
-        Name of the section to assign.
+        Name of the Section object to assign.
     elsets : list, str
         Element sets the properties are assigned to.
     elements : list
         Elements the properties are assigned to.
     reinforcement : dic
-        Reinforcement information.
+        Reinforcement data for the elements.
 
     Returns
     -------
@@ -40,11 +40,11 @@ class ElementProperties(object):
 
     Notes
     -----
-    - elements or elsets should be given, not both.
+    - Either ``elements`` or ``elsets`` should be given, not both.
 
     """
 
-    def __init__(self, name, material, section, elsets=None, elements=None, reinforcement={}):
+    def __init__(self, name, material=None, section=None, elsets=None, elements=None, reinforcement={}):
         self.name = name
         self.material = material
         self.section = section

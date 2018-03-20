@@ -263,6 +263,8 @@ class Concrete(object):
         Density [kg/m3].
     fr : list
         Failure ratios.
+    sf : float
+        Material safety factor.
 
     Returns
     -------
@@ -274,7 +276,7 @@ class Concrete(object):
 
     """
 
-    def __init__(self, name, fck, v=0.2, p=2400, fr=None):
+    def __init__(self, name, fck, v=0.2, p=2400, fr=None, sf=1.5):
         de = 0.0001
         fcm = fck + 8
         Ecm = 22 * 10**3 * (fcm / 10.)**0.3
@@ -302,6 +304,7 @@ class Concrete(object):
         self.compression = {'f': f[1:], 'e': ec}
         self.tension = {'f': ft, 'e': et}
         self.fratios = fr
+        self.sf = sf
 
 
 class ConcreteSmearedCrack(object):

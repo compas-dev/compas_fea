@@ -12,13 +12,13 @@ __email__     = 'liew@arch.ethz.ch'
 
 __all__ = [
     'Amplitude',
-    'Temperature'
+    # 'Temperatures'
 ]
 
 
 class Amplitude(object):
 
-    """ Initialises Amplitude object to act as discretised function f(x).
+    """ Initialises an Amplitude object to act as a discretised function f(x).
 
     Parameters
     ----------
@@ -39,17 +39,19 @@ class Amplitude(object):
         self.values = values
 
 
-class Temperature(object):
+class Temperatures(object):
 
-    """ Define nodal temperatures from a time dependent data file.
+    """ Define nodal temperatures.
 
     Parameters
     ----------
     name : str
         Temperature object name.
     file : str
-        Location of nodal temperatures file.
-    tend : int
+        Path of nodal temperatures file.
+    values : list
+        List of [node, temperature, time] data.
+    time_end : int
         End time in seconds.
 
     Returns
@@ -58,8 +60,9 @@ class Temperature(object):
 
     """
 
-    def __init__(self, name, file, tend=None):
-        self.__name__ = 'Temperature'
+    def __init__(self, name, file=None, values=[], time_end=None):
+        self.__name__ = 'Temperatures'
         self.name = name
         self.file = file
-        self.tend = tend
+        self.values = values
+        self.time_end = time_end
