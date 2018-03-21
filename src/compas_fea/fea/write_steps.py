@@ -98,7 +98,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         if isinstance(loads, str):
             loads = [loads]
 
-        for k in loads:
+        for k in sorted(loads):
 
             load = loads[k]
             load_index = load.index + 1
@@ -106,22 +106,46 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
             ltype = load.__name__
             com = load.components
 
-            if ltype in ['PointLoad']:
+            if ltype != 'GravityLoad':
 
-                pass
+                f.write('$\n')
+                f.write('$ {0}\n'.format(k))
+                f.write('$ ' + '-' * len(k) + '\n')
+                f.write('$\n')
+                f.write("LC {0} TITL '{1}'\n".format(load_index, k))
 
-            else:
+                if ltype in ['PointLoad', 'PointLoads']:
 
-                elset = load.elements
-                set_index = sets[elset]['index'] + 1
+                    if ltype == 'PointLoad':
 
-                if ltype != 'GravityLoad':
+                        if isinstance(load.nodes, str):
+                            nodes = sets[load.nodes]['selection']
+                        elif isinstance(load.nodes, list):
+                            nodes = load.nodes
 
-                    f.write('$\n')
-                    f.write('$ {0}\n'.format(k))
-                    f.write('$ ' + '-' * len(k) + '\n')
-                    f.write('$\n')
-                    f.write("LC {0} TITL '{1}'\n".format(load_index, k))
+                        pass
+                        # for node in sorted(nodes, key=int):
+                            # ni = node + 1
+                            # f.write('    NODE NO {0} TYPE PX\n'.format(ni))
+                        # for ci, dof in enumerate(dofs[:3], 1):
+                            # if com[node][dof]:
+                                # dl = com[node][dof] / 1000.
+                                # f.write('P{0}{0} {1}\n'.format(dof.upper(), dl))
+
+                    elif ltype == 'PointLoads':
+
+                        for node, coms in com.items():
+                            ni = node + 1
+                            for ci, value in coms.items():
+                                if ci in 'xyz':
+                                    f.write('    NODE NO {0} TYPE P{1}{1} {2}\n'.format(ni, ci.upper(), value * 0.001))
+                                else:
+                                    f.write('    NODE NO {0} TYPE M{1} {2}\n'.format(ni, ci.upper(), value * 0.001))
+
+                else:
+
+                    elset = load.elements
+                    set_index = sets[elset]['index'] + 1
 
                     if ltype == 'TributaryLoad':
 
@@ -205,7 +229,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
             elif software == 'sofistik':
 
-                f.write("LC 10{0} TITL '{1}' FACT {2} DLZ 0.0\n".format(step_index, key, factor))
+                f.write("LC 1{0:0>2} TITL '{1}' FACT {2} DLZ 0.0\n".format(step_index, key, factor))
 
             # Loads
 
@@ -228,7 +252,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     f.write('{0}\n'.format(c))
                 else:
                     if ltype != 'GravityLoad':
-                        f.write('    LCC {0}\n'.format(load_index))
+                        f.write('    LCC {0} $ {1}\n'.format(load_index, k))
 
                 # Point load
 
@@ -457,8 +481,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
             f.write(footers[software])
 
         has_rebar = False
-        for key in sorted(properties):
-            property = properties[key]
+        for kk in sorted(properties):
+            property = properties[kk]
             if property.reinforcement:
                 has_rebar = True
 
@@ -478,7 +502,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 else:
                     f.write('CTRL ULTI\n')
                 f.write('CTRL LCR {0}\n'.format(step_index))
-                f.write('LC 10{0}\n'.format(step_index))
+                f.write('LC 1{0:0>2}\n'.format(step_index))
 
                 f.write('$\n')
                 f.write('$\n')
@@ -503,7 +527,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 f.write('REIQ LCR {0}\n'.format(step_index))
                 f.write('$\n')
 
-                f.write("LC 20{0} TITL '{1}'".format(step_index, key))
+                f.write("LC 2{0:0>2} TITL '{1}'".format(step_index, key))
                 DLX, DLY, DLZ = 0, 0, 0
                 for key, load in loads.items():
                     if load.__name__ in ['GravityLoad']:
@@ -515,7 +539,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                         DLY = gy
                         DLZ = gz
                 f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * factor, DLY * factor, DLZ * factor))
-                f.write('    LCC 10{0}\n'.format(step_index))
+                f.write('    LCC 1{0:0>2}\n'.format(step_index))
 
                 f.write('$\n')
                 f.write('$\n')

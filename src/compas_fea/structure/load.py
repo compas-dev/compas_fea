@@ -14,6 +14,7 @@ __all__ = [
     'Load',
     'PrestressLoad',
     'PointLoad',
+    'PointLoads',
     'LineLoad',
     'AreaLoad',
     'BodyLoad',
@@ -113,6 +114,28 @@ class PointLoad(Load):
         Load.__init__(self, name=name, nodes=nodes, axes='global')
         self.__name__ = 'PointLoad'
         self.components = {'x': x, 'y': y, 'z': z, 'xx': xx, 'yy': yy, 'zz': zz}
+
+
+class PointLoads(Load):
+
+    """ Different concentrated forces and moments [units:N, Nm] applied to different nodes.
+
+    Parameters
+    ----------
+    name : str
+        Name of the PointLoads object.
+    com : dic
+        Node key : components dictionary data.
+
+    Returns
+    -------
+    None
+
+    """
+
+    def __init__(self, name, com):
+        Load.__init__(self, name=name, components=com, axes='global')
+        self.__name__ = 'PointLoads'
 
 
 class LineLoad(Load):

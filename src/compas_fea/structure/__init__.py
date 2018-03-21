@@ -108,6 +108,7 @@ load
     Load
     PrestressLoad
     PointLoad
+    PointLoads
     LineLoad
     AreaLoad
     BodyLoad
