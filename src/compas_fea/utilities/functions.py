@@ -591,6 +591,7 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
         escaled, eabs = normalise_data(data=values_, cmin=cbar[0], cmax=cbar[1])
     else:
         escaled = None
+        eabs = 0
     fscaled_ = [float(i) for i in list(fscaled)]
     fabs = float(fabs)
 
@@ -604,7 +605,7 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
 
     toc = time() - tic
 
-    return toc, U, cnodes_, fabs, fscaled_, celements_
+    return toc, U, cnodes_, fabs, fscaled_, celements_, eabs
 
 
 def process_data(data, dtype, iptype, nodal, elements, n):

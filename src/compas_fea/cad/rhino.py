@@ -692,7 +692,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     result = xfunc(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)
 
     try:
-        toc, U, cnodes, fabs, fscaled, celements = result
+        toc, U, cnodes, fabs, fscaled, celements, eabs = result
         print('\n***** Data processed : {0} s *****'.format(toc))
 
         # Plot meshes
@@ -772,8 +772,8 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
             x0 = xmin + 1.2 * s
             yu = ymin + (5.8 + i) * s
             yl = ymin + (3.8 - i) * s
-            valu = float(+fabs * (i + 1) / 5.)
-            vall = float(-fabs * (i + 1) / 5.)
+            valu = float(+max(eabs, fabs) * (i + 1) / 5.)
+            vall = float(-max(eabs, fabs) * (i + 1) / 5.)
             rs.AddText('{0:.5g}'.format(valu), [x0, yu, 0], height=h)
             rs.AddText('{0:.5g}'.format(vall), [x0, yl, 0], height=h)
             rs.AddText('0', [x0, ymin + 4.8 * s, 0], height=h)

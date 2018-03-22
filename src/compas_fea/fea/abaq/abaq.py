@@ -164,7 +164,7 @@ def extract_odb_data(structure, fields, exe):
     loc = odb_extract.__file__
     subprocess = 'noGUI={0}'.format(loc.replace('\\', '/'))
 
-    tic = time()
+    tic1 = time()
 
     if isinstance(fields, str):
         fields = [fields]
@@ -188,11 +188,11 @@ def extract_odb_data(structure, fields, exe):
         os.chdir(temp)
         os.system('{0}{1}'.format(exe, args))
 
-    toc = time() - tic
+    toc1 = time() - tic1
 
-    print('\n***** Data extracted from Abaqus .odb file : {0} s *****\n'.format(toc))
+    print('\n***** Data extracted from Abaqus .odb file : {0} s *****\n'.format(toc1))
 
-    tic = time()
+    tic2 = time()
 
     try:
         with open('{0}{1}-results.json'.format(temp, name), 'r') as f:
@@ -204,21 +204,27 @@ def extract_odb_data(structure, fields, exe):
             print('***** Saving step: {0} *****'.format(step))
             for dtype in results[step]:
                 for field in results[step][dtype]:
-                    results[step][dtype][field] = {int(k): v for k, v in results[step][dtype][field].items()}
+                    data = {}
+                    for key in results[step][dtype][field]:
+                        data[int(key)] = results[step][dtype][field][key]
+                    results[step][dtype][field] = data
 
         structure.results = results
 
         for step in info:
-            structure.results[step]['info'] = info[step]
+            try:
+                structure.results[step]['info'] = info[step]
+            except:
+                structure.results[step] = {}
+                structure.results[step]['info'] = info[step]
 
-        print('***** Saving data to structure.results successful *****')
+        toc2 = time() - tic2
+        print('***** Saving data to structure.results successful : {0} s *****\n'.format(toc2))
 
     except:
         print('***** Saving data to structure.results unsuccessful *****')
 
-    toc = time() - tic
 
-    print('\n***** Data saved to structure.results : {0} s *****\n'.format(toc))
 
 
 def input_write_constraints(f, constraints):
@@ -340,11 +346,11 @@ def input_generate(structure, fields, units='m'):
         steps         = structure.steps
 
         write_input_heading(f, 'abaqus')
-        write_input_nodes(f, 'abaqus', nodes)
+        write_input_nodes(f, 'abaqus', nodes, sets)
         write_input_bcs(f, 'abaqus', structure, steps, displacements, sets)
         write_input_materials(f, 'abaqus', materials)
         write_input_elements(f, 'abaqus', sections, properties, elements, structure, materials)
-        input_write_sets(f, sets)  # to make general if possible
+        # input_write_sets(f, sets)  # to make general if possible
         write_input_steps(f, 'abaqus', structure, steps, loads, displacements, sets, fields)
 
     print('***** Abaqus input file generated: {0} *****\n'.format(filename))

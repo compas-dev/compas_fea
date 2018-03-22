@@ -13,8 +13,9 @@ from subprocess import Popen
 from subprocess import PIPE
 
 from time import time
-
 from math import sqrt
+
+import json
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -56,8 +57,7 @@ def extract_out_data(structure, fields):
 
     nodal_data = {}
     nodal = structure.results[step]['nodal']
-    element_data = {}
-    element = structure.results[step]['element']  # ! element data only working for trusses
+    element = structure.results[step]['element']
 
     for field in fields:
 
@@ -86,27 +86,26 @@ def extract_out_data(structure, fields):
                 except:
                     pass
 
-        elif field in ['sf', 'spf']:
+        else:
 
-            file = step + '_element_' + field
             try:
+
+                file = step + '_element_truss_sf'
                 with open('{0}{1}.out'.format(temp, file), 'r') as f:
                     lines = f.readlines()
-                element_data[file] = [float(i) for i in lines[-1].split(' ')[1:]]
+                truss_data = [float(i) for i in lines[-1].split(' ')[1:]]
+
+                with open('{0}truss_numbers.json'.format(temp), 'r') as f:
+                    truss_numbers = json.load(f)['truss_numbers']
+
+                element['sfx'] = {}
+                for ekey, sfx in zip(truss_numbers, truss_data):
+                    element['sfx'][ekey] = {}
+                    element['sfx'][ekey]['ip'] = sfx
+
             except:
-                print('***** {0}.out data not loaded *****'.format(file))
 
-            for dof in ['x']:  # needs updating for more than axial force
-                element['{0}{1}'.format(field, dof)] = {}
-
-            for i in structure.elements:
-                try:
-                    for c, dof in enumerate('x'):
-                        val = element_data[file][i + c]
-                        element['{0}{1}'.format(field, dof)][i] = {}
-                        element['{0}{1}'.format(field, dof)][i]['ip'] = val
-                except:
-                    pass
+                print('***** No data loaded *****')
 
     toc = time() - tic
 
