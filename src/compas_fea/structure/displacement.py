@@ -71,10 +71,10 @@ class FixedDisplacement(GeneralDisplacement):
 
     Parameters
     ----------
-        name : str
-            Name of the FixedDisplacement object.
-        nodes : str, list
-            Node set or nodes the displacement is applied to.
+    name : str
+        Name of the FixedDisplacement object.
+    nodes : str, list
+        Node set or nodes the displacement is applied to.
 
     Returns
     -------
