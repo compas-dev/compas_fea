@@ -7,7 +7,7 @@ fea
 
 .. module:: compas_fea.fea
 
-The compas_fea package supports ABAQUS, ANSYS and OpenSEES as analysis backends.
+The compas_fea package supports Abaqus, Ansys, Sofistik and OpenSees as analysis backends.
 
 
 write_heading
@@ -148,6 +148,8 @@ sofistik
 
 .. autosummary::
     :toctree: generated/
+
+    input_generate
 
 """
 
