@@ -442,15 +442,17 @@ def _write_trusses(f, selection, software, elements, section, material, elset):
 
     elif software == 'sofistik':
 
-        f.write('TRUS NO NA NE NCS\n')
-        f.write('$\n')
+        f.write('TRUS NO NA NE NCS')
+        if material.__name__ in ['Steel']:
+            Ny = A * material.fy / 1000.
+            f.write(' YIEL')
+        else:
+            Ny = None
+        f.write('\n$\n')
 
     elif software == 'opensees':
 
-        if material.__name__ == 'ElasticIsotropic':
-            material_index = material.index + 1
-            f.write('uniaxialMaterial Elastic {0} {1}\n'.format(material_index, material.E['E']))
-            f.write('#\n')
+        pass
 
     for select in selection:
 
@@ -465,11 +467,14 @@ def _write_trusses(f, selection, software, elements, section, material, elset):
 
         elif software == 'sofistik':
 
-            f.write('{0} {1} {2} {3}\n'.format(n, i, j, section.index + 1))
+            if Ny:
+                f.write('{0} {1} {2} {3} {4}\n'.format(n, i, j, section.index + 1, Ny))
+            else:
+                f.write('{0} {1} {2} {3}\n'.format(n, i, j, section.index + 1))
 
         elif software == 'opensees':
 
-            f.write('element corotTruss {0} {1} {2} {3} {4}\n'.format(n, i, j, A, material_index))
+            f.write('element corotTruss {0} {1} {2} {3} {4}\n'.format(n, i, j, A, material.index + 1))
 
         elif software == 'ansys':
 

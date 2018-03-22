@@ -6,6 +6,7 @@ from __future__ import print_function
 from compas_fea.fea import write_input_bcs
 from compas_fea.fea import write_input_elements
 from compas_fea.fea import write_input_heading
+from compas_fea.fea import write_input_materials
 from compas_fea.fea import write_input_nodes
 from compas_fea.fea import write_input_steps
 
@@ -199,6 +200,7 @@ def input_generate(structure, fields):
         write_input_heading(f, 'opensees', ndof)
         write_input_nodes(f, 'opensees', nodes)
         write_input_bcs(f, 'opensees', structure, steps, displacements, sets, ndof)
+        write_input_materials(f, 'opensees', materials)
         write_input_elements(f, 'opensees', sections, properties, elements, structure, materials)
         write_input_steps(f, 'opensees', structure, steps, loads, displacements, sets, fields, ndof)
 

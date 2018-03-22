@@ -959,12 +959,12 @@ Steps
 
     def add_element_properties(self, element_properties):
 
-        """ Adds an ElementProperties object to structure.element_properties.
+        """ Adds ElementProperties object(s) to structure.element_properties.
 
         Parameters
         ----------
-        element_properties : obj
-            The ElementProperties object.
+        element_properties : obj, list
+            The ElementProperties object(s).
 
         Returns
         -------
@@ -972,8 +972,13 @@ Steps
 
         """
 
-        element_properties.index = len(self.element_properties)
-        self.element_properties[element_properties.name] = element_properties
+        if isinstance(element_properties, list):
+            for element_property in element_properties:
+                element_property.index = len(self.element_properties)
+                self.element_properties[element_property.name] = element_property
+        else:
+            element_properties.index = len(self.element_properties)
+            self.element_properties[element_properties.name] = element_properties
 
     def add_interaction(self, interaction):
 

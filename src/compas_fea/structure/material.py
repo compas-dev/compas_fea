@@ -204,11 +204,12 @@ class Steel(object):
     def __init__(self, name, fy=355, fu=None, eu=20, E=210, v=0.3, p=7850, type='elastic-plastic', id='s', sf=1.15):
         E  *= 10.**9
         fy *= 10.**6
+        eu *= 0.01
         if not fu:
             fu = fy
         else:
             fu *= 10.**6
-        ep = 0.01 * eu - fy / E
+        ep = eu - fy / E
         if type == 'elastic-plastic':
             f = [fy, fy]
             e = [0, ep]
@@ -223,6 +224,7 @@ class Steel(object):
         self.fy = fy
         self.fu = fu
         self.eu = eu
+        self.ep = ep
         self.p = p
         self.E = {'E': E}
         self.v = {'v': v}

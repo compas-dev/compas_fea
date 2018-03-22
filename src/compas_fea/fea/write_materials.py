@@ -107,11 +107,10 @@ def write_input_materials(f, software, materials, sections=None, properties=None
 
 #             _write_elastic_plastic(f, software, E, v, tension, c)
 
-#         # Steel
+        # Steel
 
-#         elif mtype == 'Steel':
-
-#             _write_steel(f, software, E, v, p, tension, c, material_index, material)
+        elif mtype == 'Steel':
+            _write_steel(f, software, E, v, p, tension, c, material_index, material)
 
 #         # Cracked Concrete
 
@@ -164,10 +163,10 @@ def _write_sofistik_sections(f, properties, materials, sections):
         geometry = section.geometry
 
         if stype not in ['SolidSection', 'ShellSection', 'SpringSection']:
-            pass
-#             f.write('$ {0}\n'.format(section.name))
-#             f.write('$ ' + '-' * len(section.name) + '\n')
-#             f.write('$\n')
+
+            f.write('$ {0}\n'.format(section.name))
+            f.write('$ ' + '-' * len(section.name) + '\n')
+            f.write('$\n')
 
             if stype in ['PipeSection', 'CircularSection']:
                 pass
@@ -203,7 +202,7 @@ def _write_elastic(f, software, E, G, v, p, compression, tension, c, material_in
 
     elif software == 'opensees':
 
-        pass
+        f.write('uniaxialMaterial Elastic {0} {1}\n#\n'.format(material_index, E))
 
     elif software == 'sofistik':
 
@@ -244,21 +243,21 @@ def _write_density(f, software, p, c):
         pass
 
 
-# def _write_elastic_plastic(f, software, E, v, tension, c):
+def _write_elastic_plastic(f, software, E, v, tension, c):
 
-#     if software == 'abaqus':
+    if software == 'abaqus':
 
-#         f.write('*ELASTIC\n')
-#         f.write('** E[Pa], v[-]\n')
-#         f.write('**\n')
-#         f.write('{0}, {1}\n'.format(E, v))
-#         f.write('**\n')
+        f.write('*ELASTIC\n')
+        f.write('** E[Pa], v[-]\n')
+        f.write('**\n')
+        f.write('{0}, {1}\n'.format(E, v))
+        f.write('**\n')
 
-#         f.write('*PLASTIC\n')
-#         f.write('** f[Pa], e[-] : compression-tension\n')
-#         f.write('**\n')
-#         for i, j in zip(tension['f'], tension['e']):
-#             f.write('{0}, {1}\n'.format(i, j))
+        f.write('*PLASTIC\n')
+        f.write('** f[Pa], e[-] : compression-tension\n')
+        f.write('**\n')
+        for i, j in zip(tension['f'], tension['e']):
+            f.write('{0}, {1}\n'.format(i, j))
 
 #     elif software == 'opensees':
 
@@ -272,36 +271,41 @@ def _write_density(f, software, p, c):
 
 #         pass
 
-#     f.write('{0}\n'.format(c))
+    f.write('{0}\n'.format(c))
 
 
-# def _write_steel(f, software, E, v, p, tension, c, material_index, material):
+def _write_steel(f, software, E, v, p, tension, c, material_index, material):
 
-#     if software == 'abaqus':
+    if software == 'abaqus':
 
-#         _write_elastic_plastic(f, software, E, v, tension, c)
+        _write_elastic_plastic(f, software, E, v, tension, c)
 
-#     elif software == 'opensees':
+    elif software == 'opensees':
 
-#         pass
+        fy = material.fy
+        fu = material.fu
+        ep = material.ep
+        EshE = (fu - fy) / ep
 
-#     elif software == 'sofistik':
+        f.write('uniaxialMaterial Steel01 {0} {1} {2} {3}\n#\n'.format(material_index, fy, E, EshE))
 
-#         id = 'B' if material.id == 'r' else 'S'
-#         E /= 10**6
-#         yc = p / 100
-#         fy = material.fy / 10.**6
-#         fu = material.fu / 10.**6
-#         sf = material.sf
-#         eyp = 1000 * fy / E
-#         eup = 10 * material.eu
-#         f.write('STEE {0} {1} ES {2} GAM {3} FY {4} FT {5} FP {4} SCM {6} EPSY {7} EPST {8} MUE {9}\n'.format(
-#             material_index, id, E, yc, fy, fu, sf, eyp, eup, v))
-#         f.write('$\n')
+    elif software == 'sofistik':
 
-#     elif software == 'ansys':
+        id = 'B' if material.id == 'r' else 'S'
+        E /= 10**6
+        yc = p / 100
+        fy = material.fy / 10.**6
+        fu = material.fu / 10.**6
+        sf = material.sf
+        eyp = 1000 * fy / E
+        eup = 1000 * material.eu
 
-#         pass
+        f.write('STEE {0} {1} ES {2} GAM {3} FY {4} FT {5} FP {4} SCM {6} EPSY {7} EPST {8} MUE {9}\n$\n'.format(
+            material_index, id, E, yc, fy, fu, sf, eyp, eup, v))
+
+    elif software == 'ansys':
+
+        pass
 
 
 # def _write_cracked_concrete(f, software, E, v, compression, tension, material):

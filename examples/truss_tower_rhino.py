@@ -77,7 +77,6 @@ print(mdl.get_element_results(step='step_load', field='sfx', elements=[10]))
 
 mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 's'])
 
-# Plot (Abaqus)
 # Note: Abaqus returns stress data 'sxx' for truss elements, not section forces 'sfx'.
 
 rhino.plot_data(mdl, step='step_load', field='sxx')

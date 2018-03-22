@@ -66,7 +66,10 @@ def write_input_bcs(f, software, structure, steps, displacements, sets, ndof=6):
     f.write('{0} ------------------------------------------------------------------------- BCs\n'.format(c))
     f.write('{0}\n'.format(c))
 
-    key = structure.steps_order[0]
+    try:
+        key = structure.steps_order[0]
+    except:
+        print('***** No boundary condition Step present *****')
     step = steps[key]
 
     f.write('{0} {1}\n'.format(c, key))
