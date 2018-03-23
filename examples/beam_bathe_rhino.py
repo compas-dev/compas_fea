@@ -4,7 +4,6 @@ from compas.geometry import normalize_vector
 from compas.geometry import subtract_vectors
 
 from compas_fea.cad import rhino
-
 from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import FixedDisplacement
@@ -23,65 +22,71 @@ __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
 
-# Note: this example is in inches and pounds, ignore any SI unit comments in input files.
+# Local ex
 
-# Create empty Structure object
+for line in rs.ObjectsByLayer('elset_lines'):
+    ez = subtract_vectors(rs.CurveEndPoint(line), rs.CurveStartPoint(line))
+    ex = normalize_vector(cross_vectors(ez, [0, 0, 1]))
+    rs.ObjectName(line, json.dumps({'ex': ex}))
+    
+# Structure
 
 mdl = Structure(name='beam_bathe', path='C:/Temp/')
 
-# Local axis ex
-
-for line in rs.ObjectsByLayer('elset_lines'):
-    ez = subtract_vectors(rs.CurveStartPoint(line), rs.CurveEndPoint(line))
-    ex = normalize_vector(cross_vectors(ez, [0, 0, 1]))
-    rs.ObjectName(line, json.dumps({'ex': ex}))
-
-# Add nodes and elements
+# Elements
 
 rhino.add_nodes_elements_from_layers(mdl, line_type='BeamElement', layers='elset_lines')
 
-# Add sets
+# Sets
 
 rhino.add_sets_from_layers(mdl, layers=['nset_support', 'nset_load'])
-rhino.add_sets_from_layers(mdl, layers='elset_lines')
 
-# Add materials
+# Materials
 
-mdl.add_material(ElasticIsotropic(name='mat_elastic', E=10**7, v=10**(-5), p=1))
+mdl.add_material(ElasticIsotropic(name='mat_elastic', E=10**7, v=0.0001, p=1))
 
-# Add sections
+# Sections
 
-mdl.add_section(RectangularSection(name='sec_rectangular', b=1, h=1))
+mdl.add_section(RectangularSection(name='sec_rect', b=1, h=1))
 
-# Add element properties
+# Properties
 
-ep = Properties(name='ep', material='mat_elastic', section='sec_rectangular', elsets='elset_lines')
+ep = Properties(name='ep', material='mat_elastic', section='sec_rect', elsets='elset_lines')
 mdl.add_element_properties(ep)
 
-# Add displacements
+# Displacements
 
 mdl.add_displacement(FixedDisplacement(name='disp_fixed', nodes='nset_support'))
 
-# Add loads
+# Loads
 
-mdl.add_load(PointLoad(name='load_vertical', nodes='nset_load', z=600))
+mdl.add_load(PointLoad(name='load_point', nodes='nset_load', z=600))
 
-# Add steps
+# Steps
 
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements=['disp_fixed']),
-    GeneralStep(name='step_load', loads=['load_vertical'])])
+    GeneralStep(name='step_load', loads=['load_point'])])
 mdl.steps_order = ['step_bc', 'step_load']
 
-# Structure summary
+# Summary
 
 mdl.summary()
 
-# Run and extract data
+# Run (Sofistik)
+# Note: Sofistik depends on input with correct SI units, model and data must be 
+# converted from lbs and inches.
 
-#mdl.analyse_and_extract(software='abaqus', fields=['u'])
+mdl.write_input_file(software='sofistik', fields=['u'])
+
+# Run (Abaqus)
+
+mdl.analyse_and_extract(software='abaqus', fields=['u'])
+
+rhino.plot_data(mdl, step='step_load', field='uz', radius=1)
+
+# Run (OpenSees)
+
 mdl.analyse_and_extract(software='opensees', fields=['u'])
-
-# Plot
 
 rhino.plot_data(mdl, step='step_load', field='uz', radius=1)

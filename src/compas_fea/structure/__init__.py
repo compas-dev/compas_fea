@@ -188,7 +188,6 @@ step
     :toctree: generated/
 
     GeneralStep
-    HeatStep
     ModalStep
     HarmonicStep
     BucklingStep

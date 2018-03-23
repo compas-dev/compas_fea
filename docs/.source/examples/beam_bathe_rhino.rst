@@ -2,7 +2,7 @@
 beam_bathe Rhino
 ********************************************************************************
 
-This example works for: **Abaqus**, **OpenSees**.
+This example works for: **Abaqus**, **OpenSees**, **Sofistik**.
 
 .. figure:: /_images/beam_bathe_rhino.png
     :figclass: figure

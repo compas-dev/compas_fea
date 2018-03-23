@@ -24,19 +24,19 @@ comments = {
     'ansys':    '!',
 }
 
-# abaqus_data = {
-#     'AngleSection':       {'name': 'L',           'geometry': ['b', 'h', 't', 't']},
-#     'BoxSection':         {'name': 'BOX',         'geometry': ['b', 'h', 'tw', 'tf', 'tw', 'tf']},
-#     'CircularSection':    {'name': 'CIRC',        'geometry': ['r']},
-#     'ISection':           {'name': 'I',           'geometry': ['c', 'h', 'b', 'b', 'tf', 'tf', 'tw']},
-#     'PipeSection':        {'name': 'PIPE',        'geometry': ['r', 't']},
-#     'RectangularSection': {'name': 'RECTANGULAR', 'geometry': ['b', 'h']},
-#     'TrapezoidalSection': {'name': 'TRAPEZOID',   'geometry': ['b1', 'h', 'b2', 'c']},
-#     'GeneralSection':     {'name': 'GENERAL',     'geometry': ['A', 'I11', 'I12', 'I22', 'J', 'g0', 'gw']},
-#     'ShellSection':       {'name': None,          'geometry': ['t']},
-#     'SolidSection':       {'name': None,          'geometry': None},
-#     'TrussSection':       {'name': None,          'geometry': ['A']},
-# }
+abaqus_data = {
+    'AngleSection':       {'name': 'L',           'geometry': ['b', 'h', 't', 't']},
+    'BoxSection':         {'name': 'BOX',         'geometry': ['b', 'h', 'tw', 'tf', 'tw', 'tf']},
+    'CircularSection':    {'name': 'CIRC',        'geometry': ['r']},
+    'ISection':           {'name': 'I',           'geometry': ['c', 'h', 'b', 'b', 'tf', 'tf', 'tw']},
+    'PipeSection':        {'name': 'PIPE',        'geometry': ['r', 't']},
+    'RectangularSection': {'name': 'RECTANGULAR', 'geometry': ['b', 'h']},
+    'TrapezoidalSection': {'name': 'TRAPEZOID',   'geometry': ['b1', 'h', 'b2', 'c']},
+    'GeneralSection':     {'name': 'GENERAL',     'geometry': ['A', 'I11', 'I12', 'I22', 'J', 'g0', 'gw']},
+    'ShellSection':       {'name': None,          'geometry': ['t']},
+    'SolidSection':       {'name': None,          'geometry': None},
+    'TrussSection':       {'name': None,          'geometry': ['A']},
+}
 
 
 def write_input_elements(f, software, sections, properties, elements, structure, materials):
@@ -68,8 +68,8 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 
     c = comments[software]
 
-    # shells = ['ShellSection']
-#     solids = ['SolidSection']
+    shells = ['ShellSection']
+    solids = ['SolidSection']
     trusses = ['TrussSection', 'StrutSection', 'TieSection']
 
     f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
@@ -83,7 +83,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
         property = properties[key]
 
         section = sections[property.section]
-#         section_index = section.index + 1
+        section_index = section.index + 1
         stype = section.__name__
         geometry = section.geometry
         material = materials.get(property.material, None)
@@ -125,10 +125,10 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                 pass
 #                 _write_springs(f, software, selection, elements, section, written_springs)
 
-#             # Beam sections
+            # Beam sections
 
-#             elif stype not in shells + solids + trusses:
-#                 _write_beams(f, software, elements, selection, geometry, material, section_index, stype)
+            elif stype not in shells + solids + trusses:
+                _write_beams(f, software, elements, selection, geometry, material, section_index, stype, elset)
 
             # Truss sections
 
@@ -373,58 +373,74 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 #         f.write('{0}\n'.format(c))
 
 
-# def _write_beams(f, software, elements, selection, geometry, material, section_index, stype):
+def _write_beams(f, software, elements, selection, geometry, material, section_index, stype, elset):
 
-#     for select in selection:
+    for select in selection:
 
-#         element = elements[select]
-#         sp, ep = element.nodes
-#         n = select + 1
-#         i = sp + 1
-#         j = ep + 1
+        element = elements[select]
+        sp, ep = element.nodes
+        n = select + 1
+        i = sp + 1
+        j = ep + 1
+        ex = element.axes.get('ex', None)
 
-#         if software == 'abaqus':
+        if software == 'abaqus':
 
-#             title = '*BEAM GENERAL SECTION' if stype == 'GeneralSection' else '*BEAM SECTION'
-#             f.write('*ELEMENT, TYPE=B31, ELSET=element_{0}\n'.format(select))
-#             f.write('{0}, {1},{2}\n'.format(n, i, j))
-#             f.write(title)
-#             e1 = 'element_{0}'.format(select)
-#             f.write(', SECTION={0}, ELSET={1}, MATERIAL={2}\n'.format(abaqus_data[stype]['name'], e1, material.name))
-#             f.write(', '.join([str(geometry[entry]) for entry in abaqus_data[stype]['geometry']]) + '\n')
-#             ex = element.axes.get('ex', None)
-#             if ex:
-#                 f.write(', '.join([str(v) for v in ex]) + '\n')
-#             f.write('**\n')
+            e1 = 'element_{0}'.format(select)
+            f.write('*ELEMENT, TYPE=B31, ELSET={0}\n'.format(e1))
+            f.write('{0}, {1},{2}\n'.format(n, i, j))
 
-#         elif software == 'opensees':
+            data = abaqus_data[stype]
+            f.write('*BEAM GENERAL SECTION' if stype == 'GeneralSection' else '*BEAM SECTION')
+            f.write(', SECTION={0}, ELSET={1}, MATERIAL={2}\n'.format(data['name'], e1, material.name))
+            f.write(', '.join([str(geometry[k]) for k in data['geometry']]) + '\n')
+            if ex:
+                f.write(', '.join([str(k) for k in ex]) + '\n')
+            f.write('**\n')
 
-#             E   = material.E['E']
-#             G   = material.G['G']
-#             A   = geometry['A']
-#             J   = geometry['J']
-#             Ixx = geometry['Ixx']
-#             Iyy = geometry['Iyy']
-#             # Avy = geometry['Avy']
-#             # Avx = geometry['Avx']
+        elif software == 'opensees':
 
-#             ex = ' '.join([str(k) for k in element.axes['ex']])
-#             et = 'element elasticBeamColumn'
-#             f.write('geomTransf Corotational {0} {1}\n'.format(select + 1, ex))
-#             f.write('{} {} {} {} {} {} {} {} {} {} {}\n'.format(et, n, i, j, A, E, G, J, Ixx, Iyy, n))
-#             f.write('#\n')
-#             # f.write('geomTransf PDelta {0} {1}\n'.format(n, ex))
-#             # f.write('element ElasticTimoshenkoBeam {} {} {} {} {} {} {} {} {} {} {} {}\n'.format(n, i, j, E, G, A, J, Ixx, Iyy, Avy, Avx, n))
+            A   = geometry['A']
+            E   = material.E['E']
+            G   = material.G['G']
+            J   = geometry['J']
+            Ixx = geometry['Ixx']
+            Iyy = geometry['Iyy']
 
-#         elif software == 'sofistik':
+            ex = ' '.join([str(k) for k in element.axes['ex']])
+            et = 'element elasticBeamColumn'
+            f.write('geomTransf Corotational {0} {1}\n'.format(select + 1, ex))
+            f.write('{} {} {} {} {} {} {} {} {} {} {}\n'.format(et, n, i, j, A, E, G, J, Ixx, Iyy, n))
+            f.write('#\n')
 
-#             f.write('BEAM NO NA NE NCS\n')
-#             f.write('{0} {1} {2} {3}\n'.format(n, i, j, section_index))
-#             f.write('$\n')
+        elif software == 'sofistik':
 
-#         elif software == 'ansys':
+            f.write('BEAM NO {0} NA {1} NE {2} NCS {3}\n'.format(n, i, j, section_index))
 
-#             pass
+        elif software == 'ansys':
+
+            pass
+
+    if software == 'abaqus':
+
+        f.write('** {0}\n'.format(elset))
+        f.write('** ' + '-' * len(elset) + '\n')
+        f.write('**\n')
+        f.write('*ELSET, ELSET={0}\n'.format(elset))
+        f.write('**\n')
+
+        cm = 9
+        cnt = 0
+        for j in selection:
+            f.write(str(j + 1))
+            if (cnt < cm) and (j != selection[-1]):
+                f.write(',')
+                cnt += 1
+            elif cnt >= cm:
+                f.write('\n')
+                cnt = 0
+            else:
+                f.write('\n')
 
 
 def _write_trusses(f, selection, software, elements, section, material, elset):

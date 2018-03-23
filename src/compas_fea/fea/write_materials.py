@@ -174,9 +174,11 @@ def _write_sofistik_sections(f, properties, materials, sections):
 #                 t = geometry['t'] * 1000 if stype == 'PipeSection' else 0
 #                 f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, t, material_index))
 
-#             elif stype == 'RectangularSection':
+            elif stype == 'RectangularSection':
 
-#                 pass
+                b = geometry['b'] * 1000
+                h = geometry['h'] * 1000
+                f.write('SREC NO {0} H {1} B {2} MNO {3}\n'.format(section_index, h, b, material_index))
 
             elif stype in ['TrussSection', 'StrutSection', 'TieSection']:
 
