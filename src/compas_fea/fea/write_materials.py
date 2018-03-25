@@ -169,10 +169,10 @@ def _write_sofistik_sections(f, properties, materials, sections):
             f.write('$\n')
 
             if stype in ['PipeSection', 'CircularSection']:
-                pass
-#                 D = geometry['r'] * 2 * 1000
-#                 t = geometry['t'] * 1000 if stype == 'PipeSection' else 0
-#                 f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, t, material_index))
+
+                D = geometry['D'] * 1000
+                t = geometry['t'] * 1000 if stype == 'PipeSection' else 0
+                f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, t, material_index))
 
             elif stype == 'RectangularSection':
 
@@ -244,6 +244,8 @@ def _write_density(f, software, p, c):
 
         pass
 
+    f.write('{0}\n'.format(c))
+
 
 def _write_elastic_plastic(f, software, E, v, tension, c):
 
@@ -308,6 +310,8 @@ def _write_steel(f, software, E, v, p, tension, c, material_index, material):
     elif software == 'ansys':
 
         pass
+
+    f.write('{0}\n'.format(c))
 
 
 # def _write_cracked_concrete(f, software, E, v, compression, tension, material):

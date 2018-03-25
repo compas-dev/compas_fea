@@ -102,6 +102,59 @@ def _write_point_load(f, software, com, nodes, ndof, sets, factor):
         pass
 
 
+def _write_line_load(f, software, axes, com, factor, elset, sets, structure):
+
+    for k in elset:
+
+        if software == 'abaqus':
+
+            f.write('*DLOAD\n')
+            f.write('**\n')
+
+            if axes == 'global':
+                for dof in dofs[:3]:
+                    if com[dof]:
+                        f.write('{0}, P{1}, {2}'.format(k, dof.upper(), factor * com[dof]) + '\n')
+
+            elif axes == 'local':
+                if com['x']:
+                    f.write('{0}, P1, {1}'.format(k, factor * com['x']) + '\n')
+                if com['y']:
+                    f.write('{0}, P2, {1}'.format(k, factor * com['y']) + '\n')
+
+        elif software == 'opensees':
+
+            if axes == 'global':
+                raise NotImplementedError
+
+            elif axes == 'local':
+                elements = ' '.join([str(i + 1) for i in sets[k]['selection']])
+                f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, -com['y'], -com['x']))
+
+        elif software == 'sofistik':
+
+            for i in sets[k]['selection']:
+                ni = structure.sofistik_mapping[i]
+                if axes == 'global':
+                    if com['x']:
+                        f.write('    BEAM {0} TYPE PXX {1}\n'.format(ni, com['x'] * 0.001))
+                    if com['y']:
+                        f.write('    BEAM {0} TYPE PYY {1}\n'.format(ni, com['y'] * 0.001))
+                    if com['z']:
+                        f.write('    BEAM {0} TYPE PZZ {1}\n'.format(ni, com['z'] * 0.001))
+                elif axes == 'local':
+                    if com['z']:
+                        f.write('    BEAM {0} TYPE PX {1}\n'.format(ni, com['z'] * 0.001))
+                    if com['x']:
+                        f.write('    BEAM {0} TYPE PY {1}\n'.format(ni, com['x'] * 0.001))
+                    if com['y']:
+                        f.write('    BEAM {0} TYPE PZ {1}\n'.format(ni, com['y'] * 0.001))
+
+        elif software == 'ansys':
+
+            pass
+
+
 def _write_gravity_load(f, software, g, com, elset, factor):
 
     gx = com['x'] if com['x'] else 0
@@ -183,13 +236,17 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
             load = loads[k]
             load_index = load.index + 1
-#             axes = load.axes
+            axes = load.axes
             ltype = load.__name__
             com = load.components
 
             nodes = load.nodes
             if isinstance(nodes, str):
                 nodes = [nodes]
+
+            elset = load.elements
+            if isinstance(elset, str):
+                elset = [elset]
 
             if ltype != 'GravityLoad':
 
@@ -201,6 +258,9 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
                 if ltype == 'PointLoad':
                     _write_point_load(f, software, com, nodes, ndof, sets, 1)
+
+                elif ltype == 'LineLoad':
+                    _write_line_load(f, software, axes, com, 1, elset, sets, structure)
 
 #                         if isinstance(load.nodes, str):
 #                             nodes = sets[load.nodes]['selection']
@@ -228,7 +288,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
 #                 else:
 
-#                     elset = load.elements
+#
 #                     set_index = sets[elset]['index'] + 1
 
 #                     if ltype == 'TributaryLoad':
@@ -328,7 +388,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 load_index = load.index + 1
                 ltype = load.__name__
                 com = load.components
-#                 # axes = load.axes
+                axes = load.axes
 
                 nodes = load.nodes
                 if isinstance(nodes, str):
@@ -362,33 +422,11 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 #                     if com['sxx']:
 #                         f.write('{0}\n'.format(com['sxx']))
 
-#                 # Line load
+                # Line load
 
-#                 elif ltype == 'LineLoad':
-
-#                     if software == 'opensees':
-
-#                         pass
-
-#                         # if axes == 'global':
-#                         #     raise NotImplementedError
-
-#                         # elif axes == 'local':
-#                         #     elements = ' '.join([str(i + 1) for i in sets[elset]['selection']])
-#                         #     f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, -com['y'], -com['x']))
-
-#                     elif software == 'abaqus':
-
-#                         if axes == 'global':
-#                             for dof in dofs[:3]:
-#                                 if com[dof]:
-#                                     f.write('{0}, P{1}, {2}'.format(elset, dof.upper(), factor * com[dof]) + '\n')
-
-#                         elif axes == 'local':
-#                             if com['x']:
-#                                 f.write('{0}, P1, {1}'.format(elset, factor * com['x']) + '\n')
-#                             if com['y']:
-#                                 f.write('{0}, P2, {1}'.format(elset, factor * com['y']) + '\n')
+                elif ltype == 'LineLoad':
+                    if software != 'sofistik':
+                        _write_line_load(f, software, axes, com, factor, elset, sets, structure)
 
 #                 # Area load
 

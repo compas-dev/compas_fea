@@ -78,6 +78,8 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 
 #     has_rebar = False
 #     written_springs = []
+    written_elsets = []
+    structure.sofistik_mapping = {}
 
     for key in sorted(properties):
         property = properties[key]
@@ -106,6 +108,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
             elsets = property.elsets
             if isinstance(elsets, str):
                 elsets = [elsets]
+            written_elsets.extend(elsets)
 
         for elset in elsets:
 
@@ -116,6 +119,9 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 
             if software == 'sofistik':
                 set_index = structure.sets[elset]['index'] + 1
+                for i in selection:
+                    entry = int(100000 * set_index + i + 1)
+                    structure.sofistik_mapping[i] = entry
                 f.write('GRP {0} BASE {0}00000\n'.format(set_index))
                 f.write('$\n')
 
@@ -153,6 +159,55 @@ def write_input_elements(f, software, sections, properties, elements, structure,
         f.write('END\n')
         f.write('$\n')
         f.write('$\n')
+
+    elif software == 'abaqus':
+
+        cm = 9
+        for key, set in structure.sets.items():
+            stype = set['type']
+
+            if (key not in written_elsets) and (stype != 'node'):
+
+                f.write('** {0}\n'.format(key))
+                f.write('** ' + '-' * len(key) + '\n')
+                f.write('**\n')
+
+                if stype in ['element', 'surface_node']:
+
+                    if stype == 'element':
+                        f.write('*ELSET, ELSET={0}\n'.format(key))
+                        f.write('**\n')
+
+                    elif stype == 'surface_node':
+                        f.write('*SURFACE, TYPE=NODE, NAME={0}\n'.format(key))
+                        f.write('**\n')
+
+                    selection = [i + 1 for i in set['selection']]
+                    cnt = 0
+                    for j in selection:
+                        f.write(str(j))
+                        if (cnt < cm) and (j != selection[-1]):
+                            f.write(',')
+                            cnt += 1
+                        elif cnt >= cm:
+                            f.write('\n')
+                            cnt = 0
+                        else:
+                            f.write('\n')
+
+                if stype == 'surface_element':
+
+                    f.write('*SURFACE, TYPE=ELEMENT, NAME={0}\n'.format(key))
+                    f.write('** ELEMENT, SIDE\n')
+
+                    selection = set['selection']
+                    for element, sides in selection.items():
+                        for side in sides:
+                            f.write('{0}, {1}'.format(element + 1, side))
+                            f.write('\n')
+
+                f.write('**\n')
+                f.write('**\n')
 
 #         if has_rebar:
 #             _write_sofistik_rebar(f, properties, sections, sets)
