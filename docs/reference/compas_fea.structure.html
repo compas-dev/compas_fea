@@ -24,8 +24,6 @@
         
         
         
-            <link rel="prev" title="opensees_launch_process" href="generated/compas_fea.fea.opensees.opensees_launch_process.html" />
-        
 
         <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
@@ -210,23 +208,8 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.element_properties.ElementProperties.html#compas_fea.structure.element_properties.ElementProperties" title="compas_fea.structure.element_properties.ElementProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElementProperties</span></code></a>(name, material, section[, …])</p></td>
-<td><p>Initialises ElementProperties object.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section" id="interaction">
-<h2>interaction</h2>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.structure.interaction</span></code></p>
-<table class="longtable docutils">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.interaction.HeatTransfer.html#compas_fea.structure.interaction.HeatTransfer" title="compas_fea.structure.interaction.HeatTransfer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HeatTransfer</span></code></a>(name, amplitude, interface, …)</p></td>
-<td><p>Heat transfer across an interface.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.element_properties.ElementProperties.html#compas_fea.structure.element_properties.ElementProperties" title="compas_fea.structure.element_properties.ElementProperties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElementProperties</span></code></a>(name[, material, section, …])</p></td>
+<td><p>Initialises an ElementProperties object.</p></td>
 </tr>
 </tbody>
 </table>
@@ -249,25 +232,28 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.PointLoad.html#compas_fea.structure.load.PointLoad" title="compas_fea.structure.load.PointLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PointLoad</span></code></a>(name, nodes[, x, y, z, xx, yy, zz])</p></td>
 <td><p>Concentrated forces and moments [units:N, Nm] applied to node(s).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.LineLoad.html#compas_fea.structure.load.LineLoad" title="compas_fea.structure.load.LineLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LineLoad</span></code></a>(name, elements[, x, y, z, xx, yy, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.PointLoads.html#compas_fea.structure.load.PointLoads" title="compas_fea.structure.load.PointLoads"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PointLoads</span></code></a>(name, com)</p></td>
+<td><p>Different concentrated forces and moments [units:N, Nm] applied to different nodes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.LineLoad.html#compas_fea.structure.load.LineLoad" title="compas_fea.structure.load.LineLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LineLoad</span></code></a>(name, elements[, x, y, z, xx, yy, …])</p></td>
 <td><p>Distributed line forces and moments [units:N/m or Nm/m] applied to element(s).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.AreaLoad.html#compas_fea.structure.load.AreaLoad" title="compas_fea.structure.load.AreaLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AreaLoad</span></code></a>(name, elements[, x, y, z, axes])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.AreaLoad.html#compas_fea.structure.load.AreaLoad" title="compas_fea.structure.load.AreaLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AreaLoad</span></code></a>(name, elements[, x, y, z, axes])</p></td>
 <td><p>Distributed area force [units:N/m2] applied to element(s).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.BodyLoad.html#compas_fea.structure.load.BodyLoad" title="compas_fea.structure.load.BodyLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BodyLoad</span></code></a>(name, elements[, x, y, z])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.BodyLoad.html#compas_fea.structure.load.BodyLoad" title="compas_fea.structure.load.BodyLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BodyLoad</span></code></a>(name, elements[, x, y, z])</p></td>
 <td><p>Distributed body force [units:N/m3] applied to element(s).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.GravityLoad.html#compas_fea.structure.load.GravityLoad" title="compas_fea.structure.load.GravityLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GravityLoad</span></code></a>(name, elements[, g, x, y, z])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.GravityLoad.html#compas_fea.structure.load.GravityLoad" title="compas_fea.structure.load.GravityLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GravityLoad</span></code></a>(name, elements[, g, x, y, z])</p></td>
 <td><p>Gravity load [units:N/m3] applied to element(s).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.AcousticLoad.html#compas_fea.structure.load.AcousticLoad" title="compas_fea.structure.load.AcousticLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AcousticLoad</span></code></a>(name, elements[, axes])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.AcousticLoad.html#compas_fea.structure.load.AcousticLoad" title="compas_fea.structure.load.AcousticLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AcousticLoad</span></code></a>(name, elements[, axes])</p></td>
 <td><p>Acoustic load.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.TributaryLoad.html#compas_fea.structure.load.TributaryLoad" title="compas_fea.structure.load.TributaryLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TributaryLoad</span></code></a>(structure, name, mesh[, x, y, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.TributaryLoad.html#compas_fea.structure.load.TributaryLoad" title="compas_fea.structure.load.TributaryLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TributaryLoad</span></code></a>(structure, name, mesh[, x, y, …])</p></td>
 <td><p>Tributary area pressure loads applied to nodes.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.HarmonicPointLoad.html#compas_fea.structure.load.HarmonicPointLoad" title="compas_fea.structure.load.HarmonicPointLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HarmonicPointLoad</span></code></a>(name, nodes[, x, y, z, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.load.HarmonicPointLoad.html#compas_fea.structure.load.HarmonicPointLoad" title="compas_fea.structure.load.HarmonicPointLoad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HarmonicPointLoad</span></code></a>(name, nodes[, x, y, z, …])</p></td>
 <td><p>Harmonic concentrated forces and moments [units:N, Nm] applied to node(s).</p></td>
 </tr>
 </tbody>
@@ -282,7 +268,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.Concrete.html#compas_fea.structure.material.Concrete" title="compas_fea.structure.material.Concrete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Concrete</span></code></a>(name, fck[, v, p, fr])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.Concrete.html#compas_fea.structure.material.Concrete" title="compas_fea.structure.material.Concrete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Concrete</span></code></a>(name, fck[, v, p, fr, sf])</p></td>
 <td><p>Elastic and plastic-cracking concrete material.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.ConcreteSmearedCrack.html#compas_fea.structure.material.ConcreteSmearedCrack" title="compas_fea.structure.material.ConcreteSmearedCrack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConcreteSmearedCrack</span></code></a>(name, E, v, p, fc, ec, …)</p></td>
@@ -319,10 +305,7 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.misc.Amplitude.html#compas_fea.structure.misc.Amplitude" title="compas_fea.structure.misc.Amplitude"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Amplitude</span></code></a>(name[, values])</p></td>
-<td><p>Initialises Amplitude object to act as discretised function f(x).</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.misc.Temperature.html#compas_fea.structure.misc.Temperature" title="compas_fea.structure.misc.Temperature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Temperature</span></code></a>(name, file[, tend])</p></td>
-<td><p>Define nodal temperatures from a time dependent data file.</p></td>
+<td><p>Initialises an Amplitude object to act as a discretised function f(x).</p></td>
 </tr>
 </tbody>
 </table>
@@ -337,7 +320,7 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.AngleSection.html#compas_fea.structure.section.AngleSection" title="compas_fea.structure.section.AngleSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AngleSection</span></code></a>(name, b, h, t)</p></td>
-<td><p>Equal angle cross-section for beam elements.</p></td>
+<td><p>Uniform thickness angle cross-section for beam elements.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.BoxSection.html#compas_fea.structure.section.BoxSection" title="compas_fea.structure.section.BoxSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BoxSection</span></code></a>(name, b, h, tw, tf)</p></td>
 <td><p>Hollow rectangular box cross-section for beam elements.</p></td>
@@ -391,19 +374,16 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.step.GeneralStep.html#compas_fea.structure.step.GeneralStep" title="compas_fea.structure.step.GeneralStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GeneralStep</span></code></a>(name[, increments, iterations, …])</p></td>
-<td><p>Initialises GeneralStep object for use in static analysis types.</p></td>
+<td><p>Initialises GeneralStep object for use in a static analysis.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.step.HeatStep.html#compas_fea.structure.step.HeatStep" title="compas_fea.structure.step.HeatStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HeatStep</span></code></a>(name, interaction[, increments, …])</p></td>
-<td><p>Initialises HeatStep object for use in thermal analysis types.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.step.ModalStep.html#compas_fea.structure.step.ModalStep" title="compas_fea.structure.step.ModalStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModalStep</span></code></a>(name[, modes, increments, …])</p></td>
+<td><p>Initialises ModalStep object for use in a modal analysis.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.step.ModalStep.html#compas_fea.structure.step.ModalStep" title="compas_fea.structure.step.ModalStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModalStep</span></code></a>(name[, modes, increments, …])</p></td>
-<td><p>Initialises ModalStep object for use in modal analysis types.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.step.HarmonicStep.html#compas_fea.structure.step.HarmonicStep" title="compas_fea.structure.step.HarmonicStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HarmonicStep</span></code></a>(name, freq_range, freq_steps[, …])</p></td>
+<td><p>Initialises HarmonicStep object for use in a harmonic analysis.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.step.HarmonicStep.html#compas_fea.structure.step.HarmonicStep" title="compas_fea.structure.step.HarmonicStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HarmonicStep</span></code></a>(name, freq_range, freq_steps[, …])</p></td>
-<td><p>Initialises HarmonicStep object analysis type.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.step.BucklingStep.html#compas_fea.structure.step.BucklingStep" title="compas_fea.structure.step.BucklingStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BucklingStep</span></code></a>(name[, modes, increments, …])</p></td>
-<td><p>Initialises BucklingStep object for use in buckling analysis types.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.step.BucklingStep.html#compas_fea.structure.step.BucklingStep" title="compas_fea.structure.step.BucklingStep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BucklingStep</span></code></a>(name[, modes, increments, …])</p></td>
+<td><p>Initialises BucklingStep object for use in a buckling analysis.</p></td>
 </tr>
 </tbody>
 </table>
@@ -412,8 +392,6 @@
 
                         
                         <!-- <nav class="compas-sideways">
-                            
-                                <a href="generated/compas_fea.fea.opensees.opensees_launch_process.html" class="btn btn-primary compas-prev" role="button">opensees_launch_process</a>
                             
 
                             
@@ -475,7 +453,6 @@
 <li class="nav-item"><a class="nav-link reference internal" href="#displacement">displacement</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#element">element</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#element-properties">element_properties</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#interaction">interaction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#load">load</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#material">material</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#misc">misc</a></li>
@@ -498,7 +475,7 @@
             
 
             
-                Last updated on Mar 19, 2018.
+                Last updated on Mar 27, 2018.
             
 
             

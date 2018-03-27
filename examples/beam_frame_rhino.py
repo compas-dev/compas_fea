@@ -72,7 +72,7 @@ mdl.summary()
 
 # Run (Sofistik)
 
-mdl.write_input_file(software='sofistik', fields=['u', 'ur', 'rf'])
+mdl.write_input_file(software='sofistik')
 
 # Run (Abaqus/OpenSees)
 

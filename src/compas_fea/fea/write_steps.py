@@ -182,6 +182,41 @@ def _write_gravity_load(f, software, g, com, elset, factor):
         pass
 
 
+def _write_displacements(f, software, com, nset, factor, sets, ndof):
+
+    if software == 'abaqus':
+
+        f.write('*BOUNDARY\n')
+        f.write('**\n')
+        for ci, dof in enumerate(dofs, 1):
+            if com[dof] is not None:
+                f.write('{0}, {1}, {1}, {2}\n'.format(nset, ci, com[dof] * factor))
+
+    elif software == 'opensees':
+
+        for ci, dof in enumerate(dofs[:ndof], 1):
+            if com[dof] is not None:
+                for node in sets[nset]['selection']:
+                    f.write('sp {0} {1} {2}\n'.format(node + 1, ci, com[dof]))
+
+    elif software == 'sofistik':
+
+        for i in sets[nset]['selection']:
+            ni = i + 1
+            if com['x']:
+                f.write('    NODE {0} TYPE WXX {1}\n'.format(ni, com['x'] * 1000))
+            if com['y']:
+                f.write('    NODE {0} TYPE WYY {1}\n'.format(ni, com['y'] * 1000))
+            if com['z']:
+                f.write('    NODE {0} TYPE WZZ {1}\n'.format(ni, com['z'] * 1000))
+            if com['xx']:
+                f.write('    NODE {0} TYPE DXX {1}\n'.format(ni, com['xx'] * 1000))
+            if com['yy']:
+                f.write('    NODE {0} TYPE DYY {1}\n'.format(ni, com['yy'] * 1000))
+            if com['zz']:
+                f.write('    NODE {0} TYPE DZZ {1}\n'.format(ni, com['zz'] * 1000))
+
+
 def write_input_steps(f, software, structure, steps, loads, displacements, sets, fields, ndof=6, properties={},
                       sections={}):
 
@@ -219,11 +254,6 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
     """
 
     c = comments[software]
-
-    if isinstance(loads, str):
-        loads = [loads]
-    if isinstance(displacements, str):
-        displacements = [displacements]
 
     if software == 'sofistik':
 
@@ -311,6 +341,28 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 #                                 elif axes == 'global':
 #                                     components += ' P{0}{0} {1}'.format(i.upper(), 0.001 * com[i])
 #                         f.write('    QUAD GRP {0} TYPE{1}\n'.format(set_index, components))
+
+                f.write('$\n')
+
+        for k in sorted(displacements):
+
+            bc_disps = steps[structure.steps_order[0]].displacements
+            if isinstance(bc_disps, str):
+                bc_disps = [bc_disps]
+
+            if k not in bc_disps:
+
+                displacement = displacements[k]
+                displacement_index = displacement.index + 1 + len(structure.loads)
+                com = displacement.components
+                nset = displacement.nodes
+
+                f.write('{0} {1}\n'.format(c, k))
+                f.write('{0} '.format(c) + '-' * len(k) + '\n')
+                f.write('$\n')
+                f.write("LC {0} TITL '{1}'\n".format(displacement_index, k))
+
+                _write_displacements(f, software, com, nset, 1, sets, ndof)
 
         f.write('$\n')
         f.write('END\n')
@@ -480,38 +532,25 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 #                                     dl = com[node][dof] * factor
 #                                     f.write('{0}, {1}, {2}\n'.format(ni, ci, dl))
 
-#             # Displacements
+            # Displacements
 
-#             for k in step.displacements:
+            for k in step.displacements:
 
-#                 displacement = displacements[k]
-#                 com = displacement.components
-#                 nset = displacement.nodes
-#                 nnodes = sorted(structure.sets[nset]['selection'], key=int)
+                displacement = displacements[k]
+                displacement_index = displacement.index + 1 + len(structure.loads)
+                com = displacement.components
+                nset = displacement.nodes
 
-#                 f.write('{0} {1}\n'.format(c, k))
-#                 f.write('{0} '.format(c) + '-' * len(k) + '\n')
-#                 f.write('{0}\n'.format(c))
+                if software != 'sofistik':
+                    f.write('{0} {1}\n'.format(c, k))
+                    f.write('{0} '.format(c) + '-' * len(k) + '\n')
+                    f.write('{0}\n'.format(c))
+                    _write_displacements(f, software, com, nset, factor, sets, ndof)
 
-#                 if software == 'abaqus':
+                else:
+                    f.write('    LCC {0} $ {1}\n'.format(displacement_index, k))
 
-#                     f.write('*BOUNDARY\n')
-#                     f.write('**\n')
-#                     for ci, dof in enumerate(dofs, 1):
-#                         if com[dof] is not None:
-#                             f.write('{0}, {1}, {1}, {2}\n'.format(nset, ci, com[dof] * factor))
-
-#                 elif software == 'opensees':
-
-#                     # for ci, dof in enumerate(dofs[:ndof], 1):
-#                     #     if com[dof] is not None:
-#                     #         for node in nnodes:
-#                     #             f.write('sp {0} {1} {2}\n'.format(node + 1, ci, com[dof]))
-#                     pass
-
-#                 elif software == 'sofistik':
-
-#                     pass
+            # Output
 
             if middle[software]:
                 f.write(middle[software])
@@ -558,7 +597,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     json.dump({'truss_numbers': truss_numbers}, fo)
 
                 f.write('#\n')
-                f.write('constraints Plain\n')
+                # f.write('constraints Plain\n')
+                f.write('constraints Transformation\n')
                 f.write('numberer RCM\n')
                 f.write('system ProfileSPD\n')
                 f.write('test NormUnbalance {0} {1} 5\n'.format(tolerance, iterations))

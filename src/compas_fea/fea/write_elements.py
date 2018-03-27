@@ -115,15 +115,19 @@ def write_input_elements(f, software, sections, properties, elements, structure,
             if property.elements:
                 selection = property.elements
             else:
-                selection = structure.sets[elset]['selection']
+                if elset.startswith('element_'):
+                    selection = [int(elset.strip('element_'))]
+                else:
+                    selection = structure.sets[elset]['selection']
 
             if software == 'sofistik':
-                set_index = structure.sets[elset]['index'] + 1
-                for i in selection:
-                    entry = int(100000 * set_index + i + 1)
-                    structure.sofistik_mapping[i] = entry
-                f.write('GRP {0} BASE {0}00000\n'.format(set_index))
-                f.write('$\n')
+                if elset in structure.sets:
+                    set_index = structure.sets[elset]['index'] + 1
+                    for i in selection:
+                        entry = int(100000 * set_index + i + 1)
+                        structure.sofistik_mapping[i] = entry
+                    f.write('GRP {0} BASE {0}00000\n'.format(set_index))
+                    f.write('$\n')
 
             # Springs
 
@@ -476,7 +480,7 @@ def _write_beams(f, software, elements, selection, geometry, material, section_i
 
             pass
 
-    if software == 'abaqus':
+    if (software == 'abaqus') and not (elset.startswith('element_')):
 
         f.write('** {0}\n'.format(elset))
         f.write('** ' + '-' * len(elset) + '\n')

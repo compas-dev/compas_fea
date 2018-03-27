@@ -661,6 +661,7 @@
         <span class="n">escaled</span><span class="p">,</span> <span class="n">eabs</span> <span class="o">=</span> <span class="n">normalise_data</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">values_</span><span class="p">,</span> <span class="n">cmin</span><span class="o">=</span><span class="n">cbar</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cmax</span><span class="o">=</span><span class="n">cbar</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">escaled</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">eabs</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">fscaled_</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">fscaled</span><span class="p">)]</span>
     <span class="n">fabs</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">fabs</span><span class="p">)</span>
 
@@ -674,7 +675,7 @@
 
     <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic</span>
 </div>
-    <span class="k">return</span> <span class="n">toc</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">cnodes_</span><span class="p">,</span> <span class="n">fabs</span><span class="p">,</span> <span class="n">fscaled_</span><span class="p">,</span> <span class="n">celements_</span>
+    <span class="k">return</span> <span class="n">toc</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">cnodes_</span><span class="p">,</span> <span class="n">fabs</span><span class="p">,</span> <span class="n">fscaled_</span><span class="p">,</span> <span class="n">celements_</span><span class="p">,</span> <span class="n">eabs</span>
 
 
 <div class="viewcode-block" id="process_data"><a class="viewcode-back" href="../../../reference/generated/compas_fea.utilities.functions.process_data.html#compas_fea.utilities.functions.process_data">[docs]</a><span class="k">def</span> <span class="nf">process_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">iptype</span><span class="p">,</span> <span class="n">nodal</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
@@ -962,7 +963,7 @@
             
 
             
-                Last updated on Mar 19, 2018.
+                Last updated on Mar 27, 2018.
             
 
             

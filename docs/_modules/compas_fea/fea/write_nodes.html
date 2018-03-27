@@ -92,14 +92,14 @@
     <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>    <span class="s1">&#39;!&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="n">leader</span> <span class="o">=</span> <span class="p">{</span>
+<span class="n">prefix</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>   <span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="s1">&#39;opensees&#39;</span><span class="p">:</span> <span class="s1">&#39;node &#39;</span><span class="p">,</span>
     <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>    <span class="s1">&#39;&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="n">seperators</span> <span class="o">=</span> <span class="p">{</span>
+<span class="n">spacer</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>   <span class="s1">&#39;, &#39;</span><span class="p">,</span>
     <span class="s1">&#39;opensees&#39;</span><span class="p">:</span> <span class="s1">&#39; &#39;</span><span class="p">,</span>
     <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span> <span class="s1">&#39; &#39;</span><span class="p">,</span>
@@ -107,7 +107,7 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="write_input_nodes"><a class="viewcode-back" href="../../../reference/generated/compas_fea.fea.write_nodes.write_input_nodes.html#compas_fea.fea.write_nodes.write_input_nodes">[docs]</a><span class="k">def</span> <span class="nf">write_input_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
+<div class="viewcode-block" id="write_input_nodes"><a class="viewcode-back" href="../../../reference/generated/compas_fea.fea.write_nodes.write_input_nodes.html#compas_fea.fea.write_nodes.write_input_nodes">[docs]</a><span class="k">def</span> <span class="nf">write_input_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">sets</span><span class="o">=</span><span class="p">{}):</span>
 
     <span class="sd">&quot;&quot;&quot; Writes the nodal co-ordinates information to the input file.</span>
 
@@ -116,9 +116,11 @@
 <span class="sd">    f : obj</span>
 <span class="sd">        The open file object for the input file.</span>
 <span class="sd">    software : str</span>
-<span class="sd">        Analysis software or library to use, &#39;abaqus&#39;, &#39;opensees&#39;, &#39;sofistik&#39; or &#39;ansys&#39;.</span>
+<span class="sd">        Analysis software or library to use: &#39;abaqus&#39;, &#39;opensees&#39;, &#39;sofistik&#39; or &#39;ansys&#39;.</span>
 <span class="sd">    nodes : dic</span>
 <span class="sd">        Node dictionary from structure.nodes.</span>
+<span class="sd">    sets : dic</span>
+<span class="sd">        Set dictionary from structure.sets (for Abaqus).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -140,12 +142,12 @@
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;SYST 3D GDIR POSX,POSY,NEGZ</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL OPT OPTI 10</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;NODE NO X Y Z</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
 
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*NODE, NSET=nset_all</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
 
@@ -160,8 +162,35 @@
 
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>
         <span class="n">xyz</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="s1">&#39;xyz&#39;</span><span class="p">]</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">seperators</span><span class="p">[</span><span class="n">software</span><span class="p">]</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">+</span> <span class="n">xyz</span><span class="p">)</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">leader</span><span class="p">[</span><span class="n">software</span><span class="p">],</span> <span class="n">data</span><span class="p">))</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">spacer</span><span class="p">[</span><span class="n">software</span><span class="p">]</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">+</span> <span class="n">xyz</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">[</span><span class="n">software</span><span class="p">],</span> <span class="n">data</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+
+        <span class="n">cm</span> <span class="o">=</span> <span class="mi">9</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sets</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+            <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;node&#39;</span><span class="p">:</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;** &#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*NSET, NSET=</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="n">selection</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;selection&#39;</span><span class="p">]]</span>
+                <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">cnt</span> <span class="o">&lt;</span> <span class="n">cm</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">j</span> <span class="o">!=</span> <span class="n">selection</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                        <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="n">cnt</span> <span class="o">&gt;=</span> <span class="n">cm</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span></div>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
@@ -231,7 +260,7 @@
             
 
             
-                Last updated on Mar 19, 2018.
+                Last updated on Mar 27, 2018.
             
 
             

@@ -87,22 +87,22 @@
 
 <div class="viewcode-block" id="ElementProperties"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.element_properties.ElementProperties.html#compas_fea.structure.element_properties.ElementProperties">[docs]</a><span class="k">class</span> <span class="nc">ElementProperties</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot; Initialises ElementProperties object.</span>
+    <span class="sd">&quot;&quot;&quot; Initialises an ElementProperties object.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    name : str, int</span>
-<span class="sd">        Key for the ElementProperties object.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Key name for the ElementProperties object.</span>
 <span class="sd">    material : str</span>
-<span class="sd">        Name of the material to assign.</span>
+<span class="sd">        Name of the Material object to assign.</span>
 <span class="sd">    section : str</span>
-<span class="sd">        Name of the section to assign.</span>
+<span class="sd">        Name of the Section object to assign.</span>
 <span class="sd">    elsets : list, str</span>
 <span class="sd">        Element sets the properties are assigned to.</span>
 <span class="sd">    elements : list</span>
 <span class="sd">        Elements the properties are assigned to.</span>
 <span class="sd">    reinforcement : dic</span>
-<span class="sd">        Reinforcement information.</span>
+<span class="sd">        Reinforcement data for the elements.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -110,11 +110,11 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    - elements or elsets should be given, not both.</span>
+<span class="sd">    - Either ``elements`` or ``elsets`` should be given, not both.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">material</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="p">{}):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">material</span> <span class="o">=</span> <span class="n">material</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">section</span> <span class="o">=</span> <span class="n">section</span>
@@ -189,7 +189,7 @@
             
 
             
-                Last updated on Mar 19, 2018.
+                Last updated on Mar 27, 2018.
             
 
             

@@ -81,15 +81,15 @@
 <dt id="compas_fea.structure.step.HarmonicStep">
 <em class="property">class </em><code class="descclassname">compas_fea.structure.step.</code><code class="descname">HarmonicStep</code><span class="sig-paren">(</span><em>name</em>, <em>freq_range</em>, <em>freq_steps</em>, <em>displacements=[]</em>, <em>loads=[]</em>, <em>factor=1.0</em>, <em>damping=None</em>, <em>type='harmonic'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/step.html#HarmonicStep"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Initialises HarmonicStep object analysis type.</p>
+<p>Initialises HarmonicStep object for use in a harmonic analysis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – Name of the HarmonicStep.</p></li>
 <li><p><strong>freq_range</strong> (<em>list</em>) – First and last frequencies to analyse.</p></li>
 <li><p><strong>freq_steps</strong> (<em>int</em>) – The number of equally spaced frequency steps.</p></li>
-<li><p><strong>displacements</strong> (<em>list</em>) – Displacement object names (str).</p></li>
-<li><p><strong>loads</strong> (<em>list</em>) – Load object names (str).</p></li>
+<li><p><strong>displacements</strong> (<em>list</em>) – Displacement object names.</p></li>
+<li><p><strong>loads</strong> (<em>list</em>) – Load object names.</p></li>
 <li><p><strong>factor</strong> (<em>float</em>) – Proportionality factor on the loads and displacements.</p></li>
 <li><p><strong>damping</strong> (<em>float</em>) – Constant harmonic damping ratio.</p></li>
 <li><p><strong>type</strong> (<em>str</em>) – ‘harmonic’.</p></li>
@@ -190,7 +190,7 @@
             
 
             
-                Last updated on Mar 19, 2018.
+                Last updated on Mar 27, 2018.
             
 
             

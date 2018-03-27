@@ -82,13 +82,13 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;Amplitude&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;Temperature&#39;</span>
+    <span class="c1"># &#39;Temperatures&#39;</span>
 <span class="p">]</span>
 
 
 <div class="viewcode-block" id="Amplitude"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.misc.Amplitude.html#compas_fea.structure.misc.Amplitude">[docs]</a><span class="k">class</span> <span class="nc">Amplitude</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot; Initialises Amplitude object to act as discretised function f(x).</span>
+    <span class="sd">&quot;&quot;&quot; Initialises an Amplitude object to act as a discretised function f(x).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -109,17 +109,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
 
 
-<div class="viewcode-block" id="Temperature"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.misc.Temperature.html#compas_fea.structure.misc.Temperature">[docs]</a><span class="k">class</span> <span class="nc">Temperature</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Temperatures</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot; Define nodal temperatures from a time dependent data file.</span>
+    <span class="sd">&quot;&quot;&quot; Define nodal temperatures.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    name : str</span>
 <span class="sd">        Temperature object name.</span>
 <span class="sd">    file : str</span>
-<span class="sd">        Location of nodal temperatures file.</span>
-<span class="sd">    tend : int</span>
+<span class="sd">        Path of nodal temperatures file.</span>
+<span class="sd">    values : list</span>
+<span class="sd">        List of [node, temperature, time] data.</span>
+<span class="sd">    time_end : int</span>
 <span class="sd">        End time in seconds.</span>
 
 <span class="sd">    Returns</span>
@@ -128,11 +130,12 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">tend</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;Temperature&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[],</span> <span class="n">time_end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;Temperatures&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">file</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tend</span> <span class="o">=</span> <span class="n">tend</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_end</span> <span class="o">=</span> <span class="n">time_end</span>
 </code></pre></div>
                         
                         <!-- <nav class="compas-sideways">
@@ -199,7 +202,7 @@
             
 
             
-                Last updated on Mar 19, 2018.
+                Last updated on Mar 27, 2018.
             
 
             

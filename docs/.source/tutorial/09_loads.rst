@@ -58,6 +58,23 @@ The **PointLoad** object applies concentrated loads (forces in units N for ``x``
     mdl.add_load(PointLoad(name='load_point', nodes='nset_top', x=10000, z=-10000, yy=1000))
 
 
+===========
+Point loads
+===========
+
+The **PointLoads** object applies different values of concentrated loads (forces in units N for ``x``, ``y``, ``z`` and/or moments in units Nm for ``xx``, ``yy``, ``zz``) directly to different nodes of the **Structure**. The nodes to apply the loads to are the keys of the ``components`` dictionary, with the values as the components of each individual point load. The ``name`` of the **PointLoads** is required for its own key. **PointLoads** objects currently only utilise the global co-ordinate system, they do not yet use the local nodal co-ordinate system (`ex`, `ey`, `ez`).
+
+.. code-block:: python
+
+    from compas_fea.structure import PointLoads
+
+    components = {
+        4: {'x': 1000, 'y': -500},
+        9: {'zz': 200}
+    }
+    mdl.add_load(PointLoads(name='load_points', components=components))
+
+
 =========
 Line load
 =========

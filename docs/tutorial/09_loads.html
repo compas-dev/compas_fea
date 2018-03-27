@@ -112,6 +112,19 @@
 </code></pre></div>
 </div>
 </div>
+<div class="section" id="point-loads">
+<h2>Point loads</h2>
+<p>The <strong>PointLoads</strong> object applies different values of concentrated loads (forces in units N for <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code> and/or moments in units Nm for <code class="docutils literal notranslate"><span class="pre">xx</span></code>, <code class="docutils literal notranslate"><span class="pre">yy</span></code>, <code class="docutils literal notranslate"><span class="pre">zz</span></code>) directly to different nodes of the <strong>Structure</strong>. The nodes to apply the loads to are the keys of the <code class="docutils literal notranslate"><span class="pre">components</span></code> dictionary, with the values as the component of each individual point load. The <code class="docutils literal notranslate"><span class="pre">name</span></code> of the <strong>PointLoads</strong> is required for its key. <strong>PointLoads</strong> objects currently only utilise the global co-ordinate system, they do not yet use the local nodal co-ordinate system (<cite>ex</cite>, <cite>ey</cite>, <cite>ez</cite>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PointLoads</span>
+
+<span class="n">components</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">4</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">500</span><span class="p">},</span>
+    <span class="mi">9</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;zz&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">}</span>
+<span class="p">}</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">PointLoads</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_points&#39;</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="n">components</span><span class="p">))</span>
+</code></pre></div>
+</div>
+</div>
 <div class="section" id="line-load">
 <h2>Line load</h2>
 <p>The <strong>LineLoad</strong> object applies distributed loads per unit length (forces in units of N/m in <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code>) uniformly along line elements such as beams. The <code class="docutils literal notranslate"><span class="pre">elements</span></code> to apply the load to is given as either the string name of the element set or a list of elements. The <code class="docutils literal notranslate"><span class="pre">name</span></code> of the <strong>LineLoad</strong> is also required as ist key. If <code class="docutils literal notranslate"><span class="pre">axis='global'</span></code>, the <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code> components will be in-line with the global co-ordinate system, while <code class="docutils literal notranslate"><span class="pre">axis='local'</span></code> takes <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> as the local cross-section axes <cite>ex</cite> and <cite>ey</cite>, i.e. positive <code class="docutils literal notranslate"><span class="pre">y</span></code> would be away from the centroid, not towards it.</p>
@@ -252,6 +265,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="#accessing-loads">Accessing loads</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#prestress-load">Prestress load</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#point-load">Point load</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#point-loads">Point loads</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#line-load">Line load</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#area-load">Area load</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#gravity-load">Gravity load</a></li>
@@ -274,7 +288,7 @@
             
 
             
-                Last updated on Mar 19, 2018.
+                Last updated on Mar 27, 2018.
             
 
             

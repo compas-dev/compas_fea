@@ -124,7 +124,7 @@ class PointLoads(Load):
     ----------
     name : str
         Name of the PointLoads object.
-    com : dic
+    components : dic
         Node key : components dictionary data.
 
     Returns
@@ -133,8 +133,8 @@ class PointLoads(Load):
 
     """
 
-    def __init__(self, name, com):
-        Load.__init__(self, name=name, components=com, axes='global')
+    def __init__(self, name, components):
+        Load.__init__(self, name=name, components=components, axes='global')
         self.__name__ = 'PointLoads'
 
 
@@ -146,8 +146,8 @@ class LineLoad(Load):
     ----------
     name : str
         Name of the LineLoad object.
-    elements : str
-        ist): Element set or elements the load is applied to.
+    elements : str, list
+        Element set or elements the load is applied to.
     x : float
         x component of force / length.
     y : float

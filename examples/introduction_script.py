@@ -1,7 +1,7 @@
 
 from compas_fea.structure import CircularSection
 from compas_fea.structure import ElasticIsotropic
-from compas_fea.structure import ElementProperties
+from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import GravityLoad
 from compas_fea.structure import PinnedDisplacement
@@ -18,7 +18,7 @@ __email__     = 'liew@arch.ethz.ch'
 
 # Create empty Structure object
 
-mdl = Structure(name='introduction', path='C:/Temp/')
+mdl = Structure(name='introduction', path='/home/al/temp/')
 
 # Add nodes
 
@@ -66,8 +66,8 @@ mdl.add_material(ElasticIsotropic(name='mat_elastic', E=10*10**9, v=0.3, p=1500)
 
 # Add element properties
 
-ep1 = ElementProperties(name='ep_circ', material='mat_elastic', section='sec_circ', elsets='elset_beams')
-ep2 = ElementProperties(name='ep_shell', material='mat_elastic', section='sec_shell', elsets='elset_shell')
+ep1 = Properties(name='ep_circ', material='mat_elastic', section='sec_circ', elsets='elset_beams')
+ep2 = Properties(name='ep_shell', material='mat_elastic', section='sec_shell', elsets='elset_shell')
 mdl.add_element_properties(ep1)
 mdl.add_element_properties(ep2)
 

@@ -126,7 +126,7 @@ Followed by a completion message after the analysis:
 
     ***** OpenSees analysis time : 0.9063 s *****
 
-Only simple constant static loads are currently implemented with basic analysis settings: ``constraints Plain``, ``numberer RCM``, ``system ProfileSPD``, ``test NormUnbalance`` based on the ``step.tolerance`` and ``step.iterations``, ``algorithm NewtonLineSearch``, ``integrator LoadControl``, ``analysis Static`` and ``analyze`` using the number of increments in ``step.increments``.
+Only simple constant static loads are currently implemented with basic analysis settings: ``constraints Transformation``, ``numberer RCM``, ``system ProfileSPD``, ``test NormUnbalance`` based on the ``step.tolerance`` and ``step.iterations``, ``algorithm NewtonLineSearch``, ``integrator LoadControl``, ``analysis Static`` and ``analyze`` using the number of increments in ``step.increments``.
 
 As OpenSees support is still in development, only limited output is currently implemented (``'u'``: displacements and ``'ur'``: rotations, ``rf``: reaction forces and ``rm``: reaction moments). Data will be stored for all nodes and elements as ``.out`` text files such as ``step_name_node_u.out``. These files are organised with OpenSees defaults, which list analysis increments vertically and data horizontally. **Note**: plotting functions currently use only the final increment, i.e. the last line of the file.
 

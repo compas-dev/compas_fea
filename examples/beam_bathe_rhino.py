@@ -77,7 +77,7 @@ mdl.summary()
 # Note: Sofistik depends on input with correct SI units, model and data must be 
 # converted from lbs and inches.
 
-mdl.write_input_file(software='sofistik', fields=['u'])
+mdl.write_input_file(software='sofistik')
 
 # Run (Abaqus)
 

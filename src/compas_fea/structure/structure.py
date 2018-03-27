@@ -780,7 +780,7 @@ Steps
     def from_network(self, network):
         pass
 
-    def add_nodes_elements_from_mesh(self, mesh, element_type, acoustic=False, thermal=False):
+    def add_nodes_elements_from_mesh(self, mesh, element_type, acoustic=False, thermal=False, elset=None):
 
         """ Adds the nodes and faces of a Mesh to the Structure object.
 
@@ -794,6 +794,8 @@ Steps
             Acoustic properties on or off.
         thermal : bool
             Thermal properties on or off.
+        elset : str
+            Name of element set to create.
 
         Returns
         -------
@@ -808,9 +810,11 @@ Steps
         for fkey in list(mesh.faces()):
             face = [self.check_node_exists(mesh.vertex_coordinates(i)) for i in mesh.face[fkey]]
             ekeys.append(self.add_element(nodes=face, type=element_type, acoustic=acoustic, thermal=thermal))
+        if elset:
+            self.add_set(name=elset, type='element', selection=ekeys)
         return ekeys
 
-    def add_nodes_elements_from_network(self, network, element_type, acoustic=False, thermal=False):
+    def add_nodes_elements_from_network(self, network, element_type, acoustic=False, thermal=False, elset=None, axes={}):
 
         """ Adds the nodes and edges of a Network to the Structure object.
 
@@ -824,6 +828,10 @@ Steps
             Acoustic properties on or off.
         thermal : bool
             Thermal properties on or off.
+        elset : str
+            Name of element set to create.
+        axes : dic
+            The local element axes 'ex', 'ey' and 'ez' for all elements.
 
         Returns
         -------
@@ -838,7 +846,10 @@ Steps
         for u, v in list(network.edges()):
             sp = self.check_node_exists(network.vertex_coordinates(u))
             ep = self.check_node_exists(network.vertex_coordinates(v))
-            ekeys.append(self.add_element(nodes=[sp, ep], type=element_type, acoustic=acoustic, thermal=thermal))
+            ekeys.append(self.add_element(nodes=[sp, ep], type=element_type, acoustic=acoustic, thermal=thermal,
+                                          axes=axes))
+        if elset:
+            self.add_set(name=elset, type='element', selection=ekeys)
         return ekeys
 
 
@@ -1451,10 +1462,10 @@ Steps
 
         try:
             print('***** Launching App *****')
-            from compas_fea.app.app import FeaApp
-            app = FeaApp(structure=self).show()
+            from compas_fea.app.app import main
+            main()
         except:
-            print('***** Failed/closed App *****')
+            print('***** Launching App failed *****')
 
 
 # ==============================================================================

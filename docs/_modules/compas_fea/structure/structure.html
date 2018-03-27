@@ -850,7 +850,7 @@
     <span class="k">def</span> <span class="nf">from_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
         <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">add_nodes_elements_from_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">element_type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">add_nodes_elements_from_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">element_type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">elset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot; Adds the nodes and faces of a Mesh to the Structure object.</span>
 
@@ -864,6 +864,8 @@
 <span class="sd">            Acoustic properties on or off.</span>
 <span class="sd">        thermal : bool</span>
 <span class="sd">            Thermal properties on or off.</span>
+<span class="sd">        elset : str</span>
+<span class="sd">            Name of element set to create.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -878,9 +880,11 @@
         <span class="k">for</span> <span class="n">fkey</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">faces</span><span class="p">()):</span>
             <span class="n">face</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">face</span><span class="p">[</span><span class="n">fkey</span><span class="p">]]</span>
             <span class="n">ekeys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">face</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">element_type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="n">acoustic</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="n">thermal</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">elset</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">elset</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">ekeys</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ekeys</span>
 
-    <span class="k">def</span> <span class="nf">add_nodes_elements_from_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network</span><span class="p">,</span> <span class="n">element_type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">add_nodes_elements_from_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network</span><span class="p">,</span> <span class="n">element_type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">elset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">{}):</span>
 
         <span class="sd">&quot;&quot;&quot; Adds the nodes and edges of a Network to the Structure object.</span>
 
@@ -894,6 +898,10 @@
 <span class="sd">            Acoustic properties on or off.</span>
 <span class="sd">        thermal : bool</span>
 <span class="sd">            Thermal properties on or off.</span>
+<span class="sd">        elset : str</span>
+<span class="sd">            Name of element set to create.</span>
+<span class="sd">        axes : dic</span>
+<span class="sd">            The local element axes &#39;ex&#39;, &#39;ey&#39; and &#39;ez&#39; for all elements.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -908,7 +916,10 @@
         <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">edges</span><span class="p">()):</span>
             <span class="n">sp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">u</span><span class="p">))</span>
             <span class="n">ep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
-            <span class="n">ekeys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="n">sp</span><span class="p">,</span> <span class="n">ep</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="n">element_type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="n">acoustic</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="n">thermal</span><span class="p">))</span>
+            <span class="n">ekeys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="n">sp</span><span class="p">,</span> <span class="n">ep</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="n">element_type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="n">acoustic</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="n">thermal</span><span class="p">,</span>
+                                          <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">elset</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">elset</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">ekeys</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ekeys</span>
 
 
@@ -1029,12 +1040,12 @@
 
     <span class="k">def</span> <span class="nf">add_element_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_properties</span><span class="p">):</span>
 
-        <span class="sd">&quot;&quot;&quot; Adds an ElementProperties object to structure.element_properties.</span>
+        <span class="sd">&quot;&quot;&quot; Adds ElementProperties object(s) to structure.element_properties.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        element_properties : obj</span>
-<span class="sd">            The ElementProperties object.</span>
+<span class="sd">        element_properties : obj, list</span>
+<span class="sd">            The ElementProperties object(s).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1042,8 +1053,13 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">element_properties</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">element_properties</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">element_properties</span><span class="p">[</span><span class="n">element_properties</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">element_properties</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element_properties</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">element_property</span> <span class="ow">in</span> <span class="n">element_properties</span><span class="p">:</span>
+                <span class="n">element_property</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">element_properties</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">element_properties</span><span class="p">[</span><span class="n">element_property</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">element_property</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">element_properties</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">element_properties</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">element_properties</span><span class="p">[</span><span class="n">element_properties</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">element_properties</span>
 
     <span class="k">def</span> <span class="nf">add_interaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interaction</span><span class="p">):</span>
 
@@ -1516,10 +1532,10 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Launching App *****&#39;</span><span class="p">)</span>
-            <span class="kn">from</span> <span class="nn">compas_fea.app.app</span> <span class="k">import</span> <span class="n">FeaApp</span>
-            <span class="n">app</span> <span class="o">=</span> <span class="n">FeaApp</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+            <span class="kn">from</span> <span class="nn">compas_fea.app.app</span> <span class="k">import</span> <span class="n">main</span>
+            <span class="n">main</span><span class="p">()</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Failed/closed App *****&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Launching App failed *****&#39;</span><span class="p">)</span>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -1637,7 +1653,7 @@
             
 
             
-                Last updated on Mar 19, 2018.
+                Last updated on Mar 27, 2018.
             
 
             
