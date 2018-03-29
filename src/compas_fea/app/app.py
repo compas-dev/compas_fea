@@ -6,8 +6,10 @@ from __future__ import print_function
 from vtk import vtkAxesActor
 from vtk import vtkActor2D
 from vtk import vtkActor
+from vtk import vtkCellArray
 from vtk import vtkCamera
 from vtk import vtkGlyph3DMapper
+from vtk import vtkIdList
 from vtk import vtkLabeledDataMapper
 from vtk import vtkLine
 from vtk import vtkPoints
@@ -42,10 +44,14 @@ class App(object):
         self.structure = structure
         self.xb, self.yb, self.zb = structure.node_bounds()
 
-        self.draw_axes = True
+        self.draw_axes  = True
+        self.draw_grid  = True
         self.draw_nodes = True
         self.draw_lines = True
         self.draw_faces = True
+        self.draw_loads = True
+        self.draw_bcs   = True
+
         self.draw_node_labels = True
         self.draw_line_labels = True
         self.draw_face_labels = True
@@ -57,14 +63,12 @@ class App(object):
 
     def camera(self):
 
-        xm = 0.5 * (self.xb[0] + self.xb[1])
-
         self.camera = vtkCamera()
-        self.camera.SetPosition(xm, 5 * self.yb[0], self.zb[1])
+        self.camera.SetPosition(0.5 * (self.xb[0] + self.xb[1]), -5 * abs(self.yb[0]), self.zb[1])
         self.camera.SetFocalPoint(0, 0, 0)
         self.camera.SetViewUp(0, 0, 1)
-        # self.camera.Azimuth(150)
-        # self.camera.Elevation(30)
+        self.camera.Azimuth(30)
+        self.camera.Elevation(30)
 
     def setup(self, width, height):
 
@@ -74,8 +78,8 @@ class App(object):
         self.renderer.GradientBackgroundOn()
 
         self.render_window = vtkRenderWindow()
-        self.render_window.AddRenderer(self.renderer)
         self.render_window.SetSize(width, height)
+        self.render_window.AddRenderer(self.renderer)
         self.render_window.SetWindowName(self.name)
 
         self.interactor = vtkRenderWindowInteractor()
@@ -90,122 +94,122 @@ class App(object):
 
     def draw(self):
 
-        # cylinder = vtk.vtkCylinderSource()
-        # cylinder.SetCenter(0, 0, 0)
-        # cylinder.SetRadius(0.5)
-        # cylinder.SetResolution(8)
-        # cylinderMapper = vtkPolyDataMapper()
-        # cylinderMapper.SetInputConnection(cylinder.GetOutputPort())
-        # cylinderActor = vtkActor()
-        # cylinderActor.SetMapper(cylinderMapper)
-        # # cylinderActor.RotateX(30.0)
-        # # cylinderActor.RotateY(-45.0)
+        PolyData = vtkPolyData()
+        points   = vtkPoints()
+        lines    = vtkCellArray()
+        polys    = vtkCellArray()
 
-        # self.renderer.AddActor(cylinderActor)
+        for node in self.structure.nodes:
+            points.InsertNextPoint(self.structure.node_xyz(node))
+        PolyData.SetPoints(points)
+
+        line_nodes = []
+        tri_nodes = []
+        quad_nodes = []
+
+        for ekey, element in self.structure.elements.items():
+            nodes = element.nodes
+
+            if len(nodes) == 2:
+                line_nodes.append(nodes)
+
+            elif len(nodes) == 3:
+                tri_nodes.append(nodes)
+
+            if len(nodes) == 4:
+                quad_nodes.append(nodes)
 
         if self.draw_axes:
 
             axes = vtkAxesActor()
-            # transform = vtk.vtkTransform()
-            # transform.Translate(1.0, 0.0, 0.0)
-            # axes.SetUserTransform(transform)
             self.renderer.AddActor(axes)
 
-        pts = vtkPoints()
-        for node in self.structure.nodes:
-            pts.InsertNextPoint(self.structure.node_xyz(node))
-        PolyData = vtkPolyData()
-        PolyData.SetPoints(pts)
+        # if self.draw_nodes:
 
-        if self.draw_nodes:
+        #     node_size = 0.1
+        #     res = 10
 
-            node_size = 0.1
-            res = 10
+        #     sphere = vtk.vtkSphereSource()
+        #     sphere.SetCenter(0, 0, 0)
+        #     sphere.SetRadius(node_size)
+        #     sphere.SetPhiResolution(res)
+        #     sphere.SetThetaResolution(res)
 
-            sphere = vtk.vtkSphereSource()
-            sphere.SetCenter(0, 0, 0)
-            sphere.SetRadius(node_size)
-            sphere.SetPhiResolution(res)
-            sphere.SetThetaResolution(res)
+        #     sphereMapper = vtkPolyDataMapper()
+        #     sphereMapper.SetInputConnection(sphere.GetOutputPort())
+        #     sphereActor = vtkActor()
+        #     sphereActor.SetMapper(sphereMapper)
+        #     # # sphereActor.GetProperty().SetSpecular(.6)
+        #     # # sphereActor.GetProperty().SetSpecularPower(30)
+        #     self.renderer.AddActor(sphereActor)
 
-            sphereMapper = vtkPolyDataMapper()
-            sphereMapper.SetInputConnection(sphere.GetOutputPort())
-            sphereActor = vtkActor()
-            sphereActor.SetMapper(sphereMapper)
-            # # sphereActor.GetProperty().SetSpecular(.6)
-            # # sphereActor.GetProperty().SetSpecularPower(30)
-            self.renderer.AddActor(sphereActor)
+        #     pointMapper = vtkGlyph3DMapper()
+        #     # pointMapper.SetInputConnection(cylinder.GetOutputPort())
+        #     # pointMapper.SetSourceConnection(sphere.GetOutputPort())
+        #     # # pointMapper.ScalingOff()
+        #     # # pointMapper.ScalarVisibilityOff()
 
-            pointMapper = vtkGlyph3DMapper()
-            # pointMapper.SetInputConnection(cylinder.GetOutputPort())
-            # pointMapper.SetSourceConnection(sphere.GetOutputPort())
-            # # pointMapper.ScalingOff()
-            # # pointMapper.ScalarVisibilityOff()
+        #     # pointActor = vtkActor()
+        #     # pointActor.SetMapper(pointMapper)
+        #     # # pointActor.GetProperty().SetDiffuseColor()
+        #     # # pointActor.GetProperty().SetSpecular(.6)
+        #     # # pointActor.GetProperty().SetSpecularColor(1.0, 1.0, 1.0)
+        #     # # pointActor.GetProperty().SetSpecularPower(100)
 
-            # pointActor = vtkActor()
-            # pointActor.SetMapper(pointMapper)
-            # # pointActor.GetProperty().SetDiffuseColor()
-            # # pointActor.GetProperty().SetSpecular(.6)
-            # # pointActor.GetProperty().SetSpecularColor(1.0, 1.0, 1.0)
-            # # pointActor.GetProperty().SetSpecularPower(100)
+        #     # self.renderer.AddActor(pointActor)
 
-            # self.renderer.AddActor(pointActor)
+        if self.draw_node_labels:
 
-            # labelMapper = vtkLabeledDataMapper()
-            # labelMapper.SetInputConnection(cylinder.GetOutputPort())
+            labelMapper = vtkLabeledDataMapper()
+            # labelMapper.SetInputConnection(PolyData.GetOutputPort())
             # labelActor = vtkActor2D()
             # labelActor.SetMapper(labelMapper)
-
             # self.renderer.AddActor(labelActor)
 
         if self.draw_lines:
 
-            lines = vtkCellArray()
-            line_width = 4
+            for u, v in line_nodes:
+                line = vtkLine()
+                line.GetPointIds().SetId(0, u)
+                line.GetPointIds().SetId(1, v)
+                lines.InsertNextCell(line)
 
-            for ekey, element in self.structure.elements.items():
-                nodes = element.nodes
+        #     namedColors = vtk.vtkNamedColors()
+        #     colors = vtk.vtkUnsignedCharArray()
+        #     colors.SetNumberOfComponents(4)
+        #     # try:
+        #     # colors.InsertNextTupleValue(namedColors.GetColor3ub("Tomato"))
+        #     # colors.InsertNextTupleValue(namedColors.GetColor3ub("Mint"))
+        #     # except AttributeError:
+        #         # For compatibility with new VTK generic data arrays.
+        #     # colors.InsertNextTypedTuple(namedColors.GetColor3ub("Tomato"))
+        #     # colors.InsertNextTypedTuple(namedColors.GetColor3ub("Mint"))
+        #     # colors.InsertNextTypedTuple(namedColors.GetColor3ub("Mint"))
+        #     # colors.InsertNextTypedTuple(namedColors.GetColor3ub("Tomato"))
 
-                if len(nodes) == 2:
-                    u, v = nodes
-                    line = vtkLine()
-                    line.GetPointIds().SetId(0, u)
-                    line.GetPointIds().SetId(1, v)
-                    lines.InsertNextCell(line)
+        #     # PolyData.GetCellData().SetScalars(colors)
 
-            PolyData.SetLines(lines)
-
-            namedColors = vtk.vtkNamedColors()
-            colors = vtk.vtkUnsignedCharArray()
-            colors.SetNumberOfComponents(4)
-            # try:
-            # colors.InsertNextTupleValue(namedColors.GetColor3ub("Tomato"))
-            # colors.InsertNextTupleValue(namedColors.GetColor3ub("Mint"))
-            # except AttributeError:
-                # For compatibility with new VTK generic data arrays.
-            # colors.InsertNextTypedTuple(namedColors.GetColor3ub("Tomato"))
-            # colors.InsertNextTypedTuple(namedColors.GetColor3ub("Mint"))
-            # colors.InsertNextTypedTuple(namedColors.GetColor3ub("Mint"))
-            # colors.InsertNextTypedTuple(namedColors.GetColor3ub("Tomato"))
-
-            # PolyData.GetCellData().SetScalars(colors)
-
-        # axes.GetXAxisCaptionActor2D().GetCaptionTextProperty().SetColor(colors.GetColor3d("Red"));
+        # # axes.GetXAxisCaptionActor2D().GetCaptionTextProperty().SetColor(colors.GetColor3d("Red"));
 
         if self.draw_faces:
 
-            for ekey, element in self.structure.elements.items():
-                nodes = element.nodes
+            for nodes in tri_nodes + quad_nodes:
+                vil = vtkIdList()
+                for i in nodes:
+                    vil.InsertNextId(i)
+                polys.InsertNextCell(vil)
 
-                if len(nodes) == 3:
+        #             faces = [1,  # number of faces
+        #                      3, nodes[0], nodes[1], nodes[2]]  # number of ids on face, ids
+        #             #          5, 19, 14, 9, 13, 18,
+        #             #          5, 19, 18, 17, 16, 15]
+        #             # PolyData.SetFaces(faces)
+        #             # PolyData.Initialize()
 
-                    faces = [1,  # number of faces
-                             3, nodes[0], nodes[1], nodes[2]]  # number of ids on face, ids
-                    #          5, 19, 14, 9, 13, 18,
-                    #          5, 19, 18, 17, 16, 15]
+        line_width = 4
 
-                    # PolyData.SetFaces(faces)
-                    # PolyData.Initialize()
+        PolyData.SetLines(lines)
+        PolyData.SetPolys(polys)
 
         mapper = vtkPolyDataMapper()
         mapper.SetInputData(PolyData)
@@ -214,114 +218,39 @@ class App(object):
         actor.GetProperty().SetLineWidth(line_width)
         self.renderer.AddActor(actor)
 
-            # mapper.SetInputData(dodecahedron.GetPolyData())
+        # if self.fdraw_loads:
+
+        #     arrow = vtk.vtkArrowSource()
+        #     # geometricObjectSources.append(vtk.vtkConeSource()) for BC
 
     def start(self):
 
         self.interactor.Start()
 
+        # # cylinder = vtk.vtkCylinderSource()
+        # # cylinder.SetCenter(0, 0, 0)
+        # # cylinder.SetRadius(0.5)
+        # # cylinder.SetResolution(8)
+        # # cylinderMapper = vtkPolyDataMapper()
+        # # cylinderMapper.SetInputConnection(cylinder.GetOutputPort())
+        # # cylinderActor = vtkActor()
+        # # cylinderActor.SetMapper(cylinderMapper)
+        # # # cylinderActor.RotateX(30.0)
+        # # # cylinderActor.RotateY(-45.0)
 
 
+        #     scalars = vtk.vtkFloatArray()
+        #     for i in range(8):
+        #         scalars.InsertTuple1(i, i)
+        #     cube.GetPointData().SetScalars(scalars)
 
-    # def MakePolyVertex():
-    #     # A polyvertex is a cell represents a set of 0D vertices
-    #     numberOfVertices = 6
+        #     cubeMapper.SetScalarRange(0, 7)
+        #     cubeActor = vtk.vtkActor()
+        #     cubeActor.SetMapper(cubeMapper)
 
-    #     points = vtk.vtkPoints()
-    #     points.InsertNextPoint(0, 0, 0)
-    #     points.InsertNextPoint(1, 0, 0)
-    #     points.InsertNextPoint(0, 1, 0)
-    #     points.InsertNextPoint(0, 0, 1)
-    #     points.InsertNextPoint(1, 0, .4)
-    #     points.InsertNextPoint(0, 1, .6)
-
-    #     polyVertex = vtk.vtkPolyVertex()
-    #     polyVertex.GetPointIds().SetNumberOfIds(numberOfVertices)
-
-    #     for i in range(0, numberOfVertices):
-    #         polyVertex.GetPointIds().SetId(i, i)
-
-    #     ug = vtk.vtkUnstructuredGrid()
-    #     ug.SetPoints(points)
-    #     ug.InsertNextCell(polyVertex.GetCellType(), polyVertex.GetPointIds())
-
-    #     return ug
-
-
-    # def MakePolyLine():
-    #     # A polyline is a cell that represents a set of 1D lines
-    #     numberOfVertices = 5
-
-    #     points = vtk.vtkPoints()
-    #     points.InsertNextPoint(0, .5, 0)
-    #     points.InsertNextPoint(.5, 0, 0)
-    #     points.InsertNextPoint(1, .3, 0)
-    #     points.InsertNextPoint(1.5, .4, 0)
-    #     points.InsertNextPoint(2.0, .4, 0)
-
-    #     polyline = vtk.vtkPolyLine()
-    #     polyline.GetPointIds().SetNumberOfIds(numberOfVertices)
-
-    #     for i in range(0, numberOfVertices):
-    #         polyline.GetPointIds().SetId(i, i)
-
-    #     ug = vtk.vtkUnstructuredGrid()
-    #     ug.SetPoints(points)
-    #     ug.InsertNextCell(polyline.GetCellType(), polyline.GetPointIds())
-
-    #     return ug
-
-
-    # def MakeTriangleStrip():
-    #     # A triangle is a cell that represents a triangle strip
-    #     numberOfVertices = 10
-
-    #     points = vtk.vtkPoints()
-    #     points.InsertNextPoint(0, 0, 0)
-    #     points.InsertNextPoint(.5, 1, 0)
-    #     points.InsertNextPoint(1, -.1, 0)
-    #     points.InsertNextPoint(1.5, .8, 0)
-    #     points.InsertNextPoint(2.0, -.1, 0)
-    #     points.InsertNextPoint(2.5, .9, 0)
-    #     points.InsertNextPoint(3.0, 0, 0)
-    #     points.InsertNextPoint(3.5, .8, 0)
-    #     points.InsertNextPoint(4.0, -.2, 0)
-    #     points.InsertNextPoint(4.5, 1.1, 0)
-
-    #     trianglestrip = vtk.vtkTriangleStrip()
-    #     trianglestrip.GetPointIds().SetNumberOfIds(numberOfVertices)
-    #     for i in range(0, numberOfVertices):
-    #         trianglestrip.GetPointIds().SetId(i, i)
-
-    #     ug = vtk.vtkUnstructuredGrid()
-    #     ug.SetPoints(points)
-    #     ug.InsertNextCell(trianglestrip.GetCellType(), trianglestrip.GetPointIds())
-
-    #     return ug
-
-
-    # def MakePolygon():
-    #     # A polygon is a cell that represents a polygon
-    #     numberOfVertices = 6
-
-    #     points = vtk.vtkPoints()
-    #     points.InsertNextPoint(0, 0, 0)
-    #     points.InsertNextPoint(1, -.1, 0)
-    #     points.InsertNextPoint(.8, .5, 0)
-    #     points.InsertNextPoint(1, 1, 0)
-    #     points.InsertNextPoint(.6, 1.2, 0)
-    #     points.InsertNextPoint(0, .8, 0)
-
-    #     polygon = vtk.vtkPolygon()
-    #     polygon.GetPointIds().SetNumberOfIds(numberOfVertices)
-    #     for i in range(0, numberOfVertices):
-    #         polygon.GetPointIds().SetId(i, i)
-
-    #     ug = vtk.vtkUnstructuredGrid()
-    #     ug.SetPoints(points)
-    #     ug.InsertNextCell(polygon.GetCellType(), polygon.GetPointIds())
-
-    #     return ug
+    # transform = vtk.vtkTransform()
+    # transform.Translate(1.0, 0.0, 0.0)
+    # axes.SetUserTransform(transform)
 
 
 # ==============================================================================
