@@ -53,45 +53,49 @@ def extract_out_data(structure, fields):
 
     temp = '{0}{1}/'.format(structure.path, structure.name)
 
-    step = structure.steps_order[1]  # expand to other steps later
+    step = structure.steps_order[1]
     structure.results[step] = {'nodal': {}, 'element': {}}
-
-    nodal_data = {}
     nodal = structure.results[step]['nodal']
     element = structure.results[step]['element']
+
+    nodal_data = {}
 
     for field in fields:
 
         if field in ['u', 'ur', 'rf', 'rm']:
 
             file = step + '_node_' + field
+
             try:
+
                 with open('{0}{1}.out'.format(temp, file), 'r') as f:
                     lines = f.readlines()
                 nodal_data[file] = [float(i) for i in lines[-1].split(' ')[1:]]
-            except:
-                print('***** {0}.out data not loaded *****'.format(file))
 
-            for dof in 'xyz':
-                nodal['{0}{1}'.format(field, dof)] = {}
-            nodal['{0}m'.format(field)] = {}
+                for dof in 'xyz':
+                    nodal['{0}{1}'.format(field, dof)] = {}
+                nodal['{0}m'.format(field)] = {}
 
-            for node in structure.nodes:
-                try:
+                for node in structure.nodes:
                     sum2 = 0
                     for c, dof in enumerate('xyz'):
                         val = nodal_data[file][node * 3 + c]
                         nodal['{0}{1}'.format(field, dof)][node] = val
                         sum2 += val**2
                     nodal['{0}m'.format(field)][node] = sqrt(sum2)
-                except:
-                    pass
+
+                print('***** {0}.out data loaded *****'.format(file))
+
+            except:
+
+                print('***** {0}.out data not loaded *****'.format(file))
 
         else:
 
             try:
 
                 file = step + '_element_truss_sf'
+
                 with open('{0}{1}.out'.format(temp, file), 'r') as f:
                     lines = f.readlines()
                 truss_data = [float(i) for i in lines[-1].split(' ')[1:]]
@@ -106,7 +110,24 @@ def extract_out_data(structure, fields):
 
             except:
 
-                print('***** No data loaded *****')
+                print('***** No truss element data loaded *****')
+
+            try:
+
+                file = step + '_element_beam_sf'
+
+                with open('{0}{1}.out'.format(temp, file), 'r') as f:
+                    lines = f.readlines()
+                beam_data = [float(i) for i in lines[-1].split(' ')[1:]]
+
+                with open('{0}beam_numbers.json'.format(temp), 'r') as f:
+                    beam_numbers = json.load(f)['beam_numbers']
+
+                # sort beam data here
+
+            except:
+
+                print('***** No beam element data loaded *****')
 
     toc = time() - tic
 
@@ -130,31 +151,37 @@ def opensees_launch_process(structure, exe):
 
     """
 
-    name = structure.name
-    path = structure.path
-    temp = '{0}{1}/'.format(path, name)
+    try:
 
-    tic = time()
+        name = structure.name
+        path = structure.path
+        temp = '{0}{1}/'.format(path, name)
 
-    if not exe:
-        exe = 'C:/OpenSees.exe'
+        tic = time()
 
-    command = '{0} {1}{2}.tcl'.format(exe, path, name)
-    print(command)
-    p = Popen(command, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
-    while True:
-        line = p.stdout.readline()
-        if not line:
-            break
-        line = str(line.strip())
-        print(line)
-    stdout, stderr = p.communicate()
-    print(stdout)
-    print(stderr)
+        if not exe:
+            exe = 'C:/OpenSees.exe'
 
-    toc = time() - tic
+        command = '{0} {1}{2}.tcl'.format(exe, path, name)
+        print(command)
+        p = Popen(command, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+        while True:
+            line = p.stdout.readline()
+            if not line:
+                break
+            line = str(line.strip())
+            print(line)
+        stdout, stderr = p.communicate()
+        print(stdout)
+        print(stderr)
 
-    print('\n***** OpenSees analysis time : {0} s *****'.format(toc))
+        toc = time() - tic
+
+        print('\n***** OpenSees analysis time : {0} s *****'.format(toc))
+
+    except:
+
+        print('\n***** OpenSees analysis failed')
 
 
 def input_generate(structure, fields):

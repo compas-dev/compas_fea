@@ -1462,8 +1462,9 @@ Steps
 
         try:
             print('***** Launching App *****')
-            from compas_fea.app.app import main
-            main()
+            from compas_fea.app.app import App
+            app = App(structure=self)
+            app.start()
         except:
             print('***** Launching App failed *****')
 

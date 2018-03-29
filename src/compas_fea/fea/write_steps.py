@@ -575,26 +575,43 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     f.write('{0}{1} -time -nodeRange {2} -dof {3}\n'.format(prefix, k, node_range, j))
 
                 truss_elements = ''
+                beam_elements = ''
                 truss_numbers = []
+                beam_numbers = []
 
                 for ekey, element in structure.elements.items():
                     etype = element.__name__
 
-                    if etype in ['TrussElement']:
+                    if etype in ['TrussElement', 'StrutElement', 'TieElement']:
                         truss_elements += '{0} '.format(ekey + 1)
                         truss_numbers.append(ekey)
 
+                    elif etype in ['BeamElement']:
+                        beam_elements += '{0} '.format(ekey + 1)
+                        beam_numbers.append(ekey)
+
                 prefix = 'recorder Element -file {0}{1}_'.format(temp, key)
+
                 if 'sf' in fields:
+
                     if truss_elements:
                         k = 'element_truss_sf.out'
                         j = 'axialForce'
                         f.write('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, truss_elements, j))
+
+                    if beam_elements:
+                        k = 'element_beam_sf.out'
+                        j = 'force'
+                        f.write('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, beam_elements, j))
+
 #                 if 'spf' in fields:
 #                     elemental['element_spf.out'] = 'basicForces'
 
                 with open('{0}truss_numbers.json'.format(temp), 'w') as fo:
                     json.dump({'truss_numbers': truss_numbers}, fo)
+
+                with open('{0}beam_numbers.json'.format(temp), 'w') as fo:
+                    json.dump({'beam_numbers': beam_numbers}, fo)
 
                 f.write('#\n')
                 # f.write('constraints Plain\n')
