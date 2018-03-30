@@ -89,10 +89,10 @@ def write_input_elements(f, software, sections, properties, elements, structure,
         stype = section.__name__
         geometry = section.geometry
         material = materials.get(property.material, None)
-#         reinforcement = property.reinforcement
-#         if reinforcement:
-#             rebar_index = materials[list(reinforcement.values())[0]['material']].index + 1
-#             has_rebar = True
+        reinforcement = property.reinforcement
+        # if reinforcement:
+            #
+            # has_rebar = True
 #         else:
 #             rebar_index = None
 
@@ -133,7 +133,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 
             if stype == 'SpringSection':
                 pass
-#                 _write_springs(f, software, selection, elements, section, written_springs)
+                # _write_springs(f, software, selection, elements, section, written_springs)
 
             # Beam sections
 
@@ -145,15 +145,15 @@ def write_input_elements(f, software, sections, properties, elements, structure,
             elif stype in trusses:
                 _write_trusses(f, selection, software, elements, section, material, elset)
 
-#             # Shell sections
+            # Shell sections
 
-#             elif stype in shells:
-#                 _write_shells(f, software, selection, elements, geometry, material, reinforcement, rebar_index, c)
+            elif stype in shells:
+                _write_shells(f, software, selection, elements, geometry, material, reinforcement, c)
 
-#             # Solid sections
+            # Solid sections
 
-#             elif stype in solids:
-#                 _write_blocks(f, software, selection, elements, material, c)
+            # elif stype in solids:
+                # _write_blocks(f, software, selection, elements, material, c)
 
             f.write('{0}\n'.format(c))
             f.write('{0}\n'.format(c))
@@ -350,41 +350,37 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 #         f.write('{0}\n'.format(c))
 
 
-# def _write_shells(f, software, selection, elements, geometry, material, reinforcement, rebar_index, c):
+def _write_shells(f, software, selection, elements, geometry, material, reinforcement, c):
 
-#     for select in selection:
+    for select in selection:
 
-#         element = elements[select]
-#         nodes = element.nodes
-#         n = select + 1
-#         t = geometry['t']
+        element = elements[select]
+        nodes = element.nodes
+        ni = select + 1
+        t = geometry['t']
+        ex = element.axes.get('ex', None)
+        ey = element.axes.get('ey', None)
 
-#         if software == 'abaqus':
+        if software == 'abaqus':
 
-#             if len(nodes) == 3:
-#                 etype = 'S3'
-#             elif len(nodes) == 4:
-#                 etype = 'S4'
+            etype = 'S3' if len(nodes) == 3 else 'S4'
+            e1 = 'element_{0}'.format(select)
+            f.write('*ELEMENT, TYPE={0}, ELSET={1}\n'.format(etype, e1))
+            f.write('{0}, {1}\n'.format(ni, ','.join([str(i + 1) for i in nodes])))
 
-#             f.write('*ELEMENT, TYPE={0}, ELSET=element_{1}\n'.format(etype, select))
-#             f.write('{0}, {1}\n'.format(n, ','.join([str(i + 1) for i in nodes])))
+            if ex and ey:
+                ori = 'ORI_element_{0}'.format(select)
+                f.write('*ORIENTATION, NAME={0}\n'.format(ori))
+                f.write(', '.join([str(j) for j in ex]) + ', ')
+                f.write(', '.join([str(j) for j in ey]) + '\n')
+                f.write('**\n')
+            else:
+                ori = None
 
-#             e1 = 'element_{0}'.format(select)
-#             ex = element.axes.get('ex', None)
-#             ey = element.axes.get('ey', None)
-#             pre = '*SHELL SECTION, ELSET='
-
-#             if ex and ey:
-#                 ori = 'ORI_element_{0}'.format(select)
-#                 f.write('*ORIENTATION, NAME={0}\n'.format(ori))
-#                 f.write(', '.join([str(j) for j in ex]) + ', ')
-#                 f.write(', '.join([str(j) for j in ey]) + '\n')
-#                 f.write('**\n')
-#                 f.write('{0}{1}, MATERIAL={2}, ORIENTATION={3}\n'.format(pre, e1, material.name, ori))
-#             else:
-#                 f.write('{0}{1}, MATERIAL={2}\n'.format(pre, e1, material.name))
-
-#             f.write(str(t) + '\n')
+            f.write('*SHELL SECTION, ELSET={0}, MATERIAL={1}'.format(e1, material.name))
+            if ori:
+                f.write(', ORIENTATION={0}\n'.format(ori))
+            f.write('\n{0}\n'.format(t))
 
 #             if reinforcement:
 #                 f.write('*REBAR LAYER\n')
@@ -397,39 +393,36 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 #                     area    = 0.25 * pi * dia**2
 #                     f.write('{0}, {1}, {2}, {3}, {4}, {5}\n'.format(name, area, spacing, pos, rmat, angle))
 
-#         elif software == 'opensees':
+        elif software == 'opensees':
 
-#             E = material.E['E']
-#             v = material.v['v']
-#             p = material.p
+            f.write('section PlateFiber {0} {1} {2}\n'.format(ni, material.index + 101, t))
+            if len(nodes) == 3:
+                f.write('element ShellNLDKGT {0} {1} {0}\n'.format(ni, ' '.join([str(i + 1) for i in nodes])))
+            elif len(nodes) == 4:
+                f.write('element ShellNLDKGQ {0} {1} {0}\n'.format(ni, ' '.join([str(i + 1) for i in nodes])))
 
-#             if len(nodes) == 3:
-#                 pass
-#             if len(nodes) == 4:
-#                 f.write('section ElasticMembranePlateSection {0} {1} {2} {3} {4}\n'.format(n, E, v, t, p))
-#                 f.write('element ShellNLDKGQ {0} {1} {0}\n'.format(n, ' '.join([str(i + 1) for i in nodes])))
+        elif software == 'sofistik':
 
-#         elif software == 'sofistik':
+            if len(nodes) == 3:
+                raise NotImplementedError
+            elif len(nodes) == 4:
+                f.write('QUAD NO N1 N2 N3 N4 MNO T1 T2 T3 T4')
 
-#             if len(nodes) == 3:
-#                 pass
-#             elif len(nodes) == 4:
-#                 f.write('QUAD NO N1 N2 N3 N4 MNO T1 T2 T3 T4')
-
+            # rebar_index = materials[list(reinforcement.values())[0]['material']].index + 1
 #             if rebar_index:
 #                 f.write(' MRF')
-#             f.write('\n')
+            f.write('\n')
 
-#             data = [n] + [i + 1 for i in nodes] + [material.index + 1] + [t] * len(nodes)
+            data = [ni] + [i + 1 for i in nodes] + [material.index + 1] + [t] * len(nodes)
 #             if rebar_index:
 #                 data.append(rebar_index)
-#             f.write('{0}\n'.format(' '.join([str(i) for i in data])))
+            f.write('{0}\n'.format(' '.join([str(i) for i in data])))
 
-#         elif software == 'ansys':
+        elif software == 'ansys':
 
-#             pass
+            pass
 
-#         f.write('{0}\n'.format(c))
+        f.write('{0}\n'.format(c))
 
 
 def _write_beams(f, software, elements, selection, geometry, material, section_index, stype, elset):

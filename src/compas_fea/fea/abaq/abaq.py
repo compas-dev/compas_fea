@@ -1,6 +1,3 @@
-"""
-compas_fea.fea.abaq : Abaqus specific functions.
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -19,8 +16,6 @@ from compas_fea.fea.abaq import odb_extract
 from subprocess import Popen
 from subprocess import PIPE
 
-from math import pi
-
 from time import time
 
 import json
@@ -36,12 +31,11 @@ __email__     = 'liew@arch.ethz.ch'
 __all__ = [
     'abaqus_launch_process',
     'extract_odb_data',
-    'input_write_constraints',
     'input_generate',
 ]
 
 
-node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
+node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
 
 
@@ -64,25 +58,23 @@ def abaqus_launch_process(structure, exe, cpus):
 
     """
 
-    name = structure.name
-    path = structure.path
-
     # Create temp folder
 
+    name = structure.name
+    path = structure.path
     temp = '{0}{1}/'.format(path, name)
     try:
         os.stat(temp)
     except:
         os.mkdir(temp)
 
-    # Run sub-process file
-
-    loc = launch_job.__file__
-    subprocess = 'noGUI={0}'.format(loc.replace('\\', '/'))
+    # Run subprocess file
 
     tic = time()
 
+    subprocess = 'noGUI={0}'.format(launch_job.__file__.replace('\\', '/'))
     success = False
+
     if not exe:
 
         args = ['abaqus', 'cae', subprocess, '--', str(cpus), path, name]
@@ -99,44 +91,58 @@ def abaqus_launch_process(structure, exe, cpus):
         print(stdout)
         print(stderr)
 
-        if not success:
-            print('***** Analysis failed - attempting to read error logs *****')
-
-            try:
-                print('\n***** Attempting to read .msg log *****')
-
-                with open('{0}{1}.msg'.format(temp, name)) as f:
-                    lines = f.readlines()
-                    for c, line in enumerate(lines):
-                        if (' ***ERROR' in line) or (' ***WARNING' in line):
-                            print(lines[c][:-2])
-                            print(lines[c + 1][:-2])
-            except:
-                print('***** Loading .msg log failed *****')
-
-            try:
-                print('\n***** Attempting to read abaqus.rpy log *****')
-
-                with open('{0}abaqus.rpy'.format(temp)) as f:
-                    lines = f.readlines()
-                    for c, line in enumerate(lines):
-                        if '#: ' in line:
-                            print(lines[c])
-            except:
-                print('***** Loading abaqus.rpy log failed *****')
-
-        else:
-            print('***** Analysis successful *****')
-
     else:
 
-        args = '{0} -- {1} {2} {3}'.format(subprocess, cpus, path, name)
-        os.chdir(temp)
-        os.system('{0}{1}'.format(exe, args))
+        try:
+            args = '{0} -- {1} {2} {3}'.format(subprocess, cpus, path, name)
+            os.chdir(temp)
+            os.system('{0}{1}'.format(exe, args))
+            success = True
+        except:
+            pass
 
-    toc = time() - tic
+    if success:
+        print('***** Analysis successful: analysis time : {0} s *****'.format(time() - tic))
 
-    print('\n***** Abaqus analysis time : {0} s *****'.format(toc))
+    else:
+        print('***** Analysis failed: attempting to read error logs *****')
+
+        try:
+            with open('{0}{1}.msg'.format(temp, name)) as f:
+                lines = f.readlines()
+                for c, line in enumerate(lines):
+                    if (' ***ERROR' in line) or (' ***WARNING' in line):
+                        print(lines[c][:-2])
+                        print(lines[c + 1][:-2])
+        except:
+            pass
+
+        try:
+            with open('{0}abaqus.rpy'.format(temp)) as f:
+                lines = f.readlines()
+                for c, line in enumerate(lines):
+                    if '#: ' in line:
+                        print(lines[c])
+        except:
+            pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def extract_odb_data(structure, fields, exe):

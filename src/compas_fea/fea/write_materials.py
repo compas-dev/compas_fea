@@ -204,7 +204,8 @@ def _write_elastic(f, software, E, G, v, p, compression, tension, c, material_in
 
     elif software == 'opensees':
 
-        f.write('uniaxialMaterial Elastic {0} {1}\n#\n'.format(material_index, E))
+        f.write('uniaxialMaterial Elastic {0} {1}\n'.format(material_index, E))
+        f.write('nDMaterial ElasticIsotropic {0} {1} {2} {3}\n#\n'.format(material_index + 100, E, v, p))
 
     elif software == 'sofistik':
 

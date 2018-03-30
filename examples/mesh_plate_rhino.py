@@ -1,6 +1,5 @@
 
 from compas_fea.cad import rhino
-
 from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
@@ -17,57 +16,62 @@ __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
 
-# Create empty Structure object
+# Structure 
 
 mdl = Structure(name='mesh_plate', path='C:/Temp/')
 
-# Add shell elements
+# Elements
 
 rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers='elset_mesh')
 
-# Add node and element sets
+# Sets
 
-rhino.add_sets_from_layers(mdl, layers=['elset_mesh', 'nset_load', 'nset_left', 'nset_right'])
+rhino.add_sets_from_layers(mdl, layers=['nset_load', 'nset_left', 'nset_right'])
 
-# Add materials
+# Materials
 
 mdl.add_material(ElasticIsotropic(name='mat_linear', E=75*10**9, v=0.3, p=2700))
 
-# Add sections
+# Sections
 
 mdl.add_section(ShellSection(name='sec_plate', t=0.020))
 
-# Add element properties
+# Properties
 
-ep = Properties(name='ep_plate', material='mat_linear', section='sec_plate', elsets='elset_mesh')
+ep = Properties(name='ep', material='mat_linear', section='sec_plate', elsets='elset_mesh')
 mdl.add_element_properties(ep)
 
-# Add loads
-
-mdl.add_load(PointLoad(name='load_point', nodes='nset_load', y=100, z=-300))
-
-# Add displacements
+# Displacements
 
 mdl.add_displacements([
     PinnedDisplacement(name='disp_left', nodes='nset_left'),
     RollerDisplacementX(name='disp_right', nodes='nset_right')])
 
-# Add steps
+# Loads
+
+mdl.add_load(PointLoad(name='load_point', nodes='nset_load', y=100, z=-300))
+
+# Steps
 
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements=['disp_left', 'disp_right']),
     GeneralStep(name='step_load', loads=['load_point'], tolerance=1, iterations=500)])
 mdl.steps_order = ['step_bc', 'step_load']
 
-# Structure summary
+# Summary
 
 mdl.summary()
 
-# Run and extract data
+# Run (Sofistik)
 
-#mdl.analyse_and_extract(software='abaqus', fields=['u'])
+mdl.write_input_file(software='sofistik')
+
+# Run (Abaqus)
+
+mdl.analyse_and_extract(software='abaqus', fields=['u'])
+
+# Run (OpenSees)
+
 mdl.analyse_and_extract(software='opensees', fields=['u'])
-
-# Plot displacements
 
 rhino.plot_data(mdl, step='step_load', field='um')

@@ -12,15 +12,14 @@ from vtk import vtkGlyph3DMapper
 from vtk import vtkIdList
 from vtk import vtkLabeledDataMapper
 from vtk import vtkLine
+from vtk import vtkNamedColors
 from vtk import vtkPoints
-from vtk import vtkCellArray
 from vtk import vtkPolyData
 from vtk import vtkPolyDataMapper
 from vtk import vtkRenderer
 from vtk import vtkRenderWindow
 from vtk import vtkRenderWindowInteractor
-
-import vtk
+from vtk import vtkUnsignedCharArray
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -107,6 +106,10 @@ class App(object):
         tri_nodes = []
         quad_nodes = []
 
+        named_colors = vtkNamedColors()
+        colors = vtkUnsignedCharArray()
+        colors.SetNumberOfComponents(3)
+
         for ekey, element in self.structure.elements.items():
             nodes = element.nodes
 
@@ -173,21 +176,11 @@ class App(object):
                 line.GetPointIds().SetId(0, u)
                 line.GetPointIds().SetId(1, v)
                 lines.InsertNextCell(line)
+                try:
+                    colors.InsertNextTypedTuple(named_colors.GetColor3ub('Mint'))
+                except:
+                    colors.InsertNextTupleValue(named_colors.GetColor3ub('Mint'))
 
-        #     namedColors = vtk.vtkNamedColors()
-        #     colors = vtk.vtkUnsignedCharArray()
-        #     colors.SetNumberOfComponents(4)
-        #     # try:
-        #     # colors.InsertNextTupleValue(namedColors.GetColor3ub("Tomato"))
-        #     # colors.InsertNextTupleValue(namedColors.GetColor3ub("Mint"))
-        #     # except AttributeError:
-        #         # For compatibility with new VTK generic data arrays.
-        #     # colors.InsertNextTypedTuple(namedColors.GetColor3ub("Tomato"))
-        #     # colors.InsertNextTypedTuple(namedColors.GetColor3ub("Mint"))
-        #     # colors.InsertNextTypedTuple(namedColors.GetColor3ub("Mint"))
-        #     # colors.InsertNextTypedTuple(namedColors.GetColor3ub("Tomato"))
-
-        #     # PolyData.GetCellData().SetScalars(colors)
 
         # # axes.GetXAxisCaptionActor2D().GetCaptionTextProperty().SetColor(colors.GetColor3d("Red"));
 
@@ -198,6 +191,10 @@ class App(object):
                 for i in nodes:
                     vil.InsertNextId(i)
                 polys.InsertNextCell(vil)
+                try:
+                    colors.InsertNextTypedTuple(named_colors.GetColor3ub('Tomato'))
+                except:
+                    colors.InsertNextTupleValue(named_colors.GetColor3ub('Tomato'))
 
         #             faces = [1,  # number of faces
         #                      3, nodes[0], nodes[1], nodes[2]]  # number of ids on face, ids
@@ -206,10 +203,11 @@ class App(object):
         #             # PolyData.SetFaces(faces)
         #             # PolyData.Initialize()
 
-        line_width = 4
+        line_width = 6
 
         PolyData.SetLines(lines)
         PolyData.SetPolys(polys)
+        PolyData.GetCellData().SetScalars(colors)
 
         mapper = vtkPolyDataMapper()
         mapper.SetInputData(PolyData)
@@ -251,6 +249,12 @@ class App(object):
     # transform = vtk.vtkTransform()
     # transform.Translate(1.0, 0.0, 0.0)
     # axes.SetUserTransform(transform)
+
+    # contour = vtk.vtkDiscreteMarchingCubes()  # for label images
+    # if vtk.VTK_MAJOR_VERSION <= 5:
+    #     contour.SetInput(voi.GetOutput())
+    # else:
+    #     contour.SetInputConnection(voi.GetOutputPort())
 
 
 # ==============================================================================

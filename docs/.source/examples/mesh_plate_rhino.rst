@@ -2,7 +2,7 @@
 mesh_plate Rhino
 ********************************************************************************
 
-This example works for: **Abaqus**, **OpenSees**.
+This example works for: **Abaqus**, **OpenSees**, **Sofistik**.
 
 .. figure:: /_images/mesh_plate_rhino.png
     :figclass: figure
