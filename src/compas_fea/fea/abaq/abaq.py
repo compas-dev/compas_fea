@@ -127,192 +127,7 @@ def abaqus_launch_process(structure, exe, cpus):
             pass
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def extract_odb_data(structure, fields, exe):
-
-    """ Extract data from the Abaqus .odb file.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object.
-    fields : list
-        Data field requests.
-    exe : str
-        Full terminal command to bypass subprocess defaults.
-
-    Returns
-    -------
-    None
-
-    """
-
-    name = structure.name
-    path = structure.path
-    temp = '{0}{1}/'.format(path, name)
-    loc = odb_extract.__file__
-    subprocess = 'noGUI={0}'.format(loc.replace('\\', '/'))
-
-    tic1 = time()
-
-    if isinstance(fields, str):
-        fields = [fields]
-    fields = ','.join(list(structure.fields_dic_from_list(fields).keys()))
-
-    if not exe:
-        args = ['abaqus', 'cae', subprocess, '--', fields, name, temp]
-        p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
-        while True:
-            line = p.stdout.readline()
-            if not line:
-                break
-            line = str(line.strip())
-            print(line)
-        stdout, stderr = p.communicate()
-        print(stdout)
-        print(stderr)
-
-    else:
-        args = '{0} -- {1} {2} {3}'.format(subprocess, fields, name, temp)
-        os.chdir(temp)
-        os.system('{0}{1}'.format(exe, args))
-
-    toc1 = time() - tic1
-
-    print('\n***** Data extracted from Abaqus .odb file : {0} s *****\n'.format(toc1))
-
-    tic2 = time()
-
-    try:
-        with open('{0}{1}-results.json'.format(temp, name), 'r') as f:
-            results = json.load(f)
-        with open('{0}{1}-info.json'.format(temp, name), 'r') as f:
-            info = json.load(f)
-
-        for step in results:
-            print('***** Saving step: {0} *****'.format(step))
-            for dtype in results[step]:
-                for field in results[step][dtype]:
-                    data = {}
-                    for key in results[step][dtype][field]:
-                        data[int(key)] = results[step][dtype][field][key]
-                    results[step][dtype][field] = data
-
-        structure.results = results
-
-        for step in info:
-            try:
-                structure.results[step]['info'] = info[step]
-            except:
-                structure.results[step] = {}
-                structure.results[step]['info'] = info[step]
-
-        toc2 = time() - tic2
-        print('***** Saving data to structure.results successful : {0} s *****\n'.format(toc2))
-
-    except:
-        print('***** Saving data to structure.results unsuccessful *****')
-
-
-
-
-def input_write_constraints(f, constraints):
-
-    """ Writes the constraints information to the Abaqus .inp file.
-
-    Parameters
-    ----------
-    f : obj
-        The open file object for the .inp file.
-    constraints : dic
-        Constraint dictionary from structure.constraints.
-
-    Returns
-    -------
-    None
-
-    """
-
-    f.write('** -----------------------------------------------------------------------------\n')
-    f.write('** ----------------------------------------------------------------- Constraints\n')
-    f.write('**\n')
-
-    for key, constraint in constraints.items():
-
-        ctype = constraint.__name__
-
-        f.write('** {0}\n'.format(key))
-        f.write('** ' + '-' * len(key) + '\n')
-
-        # Tie constraint
-
-        if ctype == 'TieConstraint':
-
-            tol = constraint.tol
-            slave = constraint.slave
-            master = constraint.master
-
-            f.write('*TIE, POSITION TOLERANCE={0}, NAME={1}, ADJUST=NO\n'.format(tol, key))
-            f.write('** SLAVE, MASTER\n')
-            f.write('{0}, {1}\n'.format(slave, master))
-
-    f.write('**\n')
-
-    # etypes = ['T3D2', 'CONN3D2', 'B31', 'S3', 'S4', 'M3D3', 'M3D4', 'C3D4', 'C3D6', 'C3D8', 'DC3D4', 'DC3D6', 'DC3D8']
-    # edic = {i: [] for i in etypes}
-
-    # for ekey in sorted(elements, key=int):
-
-    #     element = elements[ekey]
-    #     nodes = [node + 1 for node in element.nodes]
-    #     data = [element.number + 1] + nodes
-    #     etype = element.__name__
-
-    #     if etype == 'TrussElement':
-    #         estr = 'T3D2'
-
-    #     elif etype == 'SpringElement':
-    #         estr = 'CONN3D2'
-
-    #     elif etype == 'MembraneElement':
-    #         estr = 'M3D{0}'.format(len(nodes))
-
-    #     elif etype == 'TetrahedronElement':
-    #         estr = 'C3D4'
-
-    #     elif etype == 'PentahedronElement':
-    #         estr = 'C3D6'
-
-    #     elif etype == 'HexahedronElement':
-    #         estr = 'C3D8'
-
-    #     if element.thermal and estr in ['C3D4', 'C3D6', 'C3D8']:
-    #         estr = 'D{0}'.format(estr)
-
-    #     edic[estr].append(data)
-
-    # f.write('** -----------------------------------------------------------------------------\n')
-    # f.write('** ------------------------------------------------------------------------ Sets\n')
-
-
-def input_generate(structure, fields, units='m'):
+def input_generate(structure, fields):
 
     """ Creates the Abaqus .inp file from the Structure object.
 
@@ -322,8 +137,6 @@ def input_generate(structure, fields, units='m'):
         The Structure object to read from.
     fields : list
         Data field requests.
-    units : str
-        Units of the nodal co-ordinates 'm','cm','mm'.
 
     Returns
     -------
@@ -356,22 +169,23 @@ def input_generate(structure, fields, units='m'):
         write_input_bcs(f, 'abaqus', structure, steps, displacements, sets)
         write_input_materials(f, 'abaqus', materials)
         write_input_elements(f, 'abaqus', sections, properties, elements, structure, materials)
-        # input_write_sets(f, sets)  # to make general if possible
         write_input_steps(f, 'abaqus', structure, steps, loads, displacements, sets, fields)
 
     print('***** Abaqus input file generated: {0} *****\n'.format(filename))
 
 
-def input_write_misc(f, misc):
+def extract_odb_data(structure, fields, exe):
 
-    """ Writes misc class info to the Abaqus .inp file.
+    """ Extract data from the Abaqus .odb file.
 
     Parameters
     ----------
-    f : obj
-        The open file object for the .inp file.
-    misc : dic
-        Misc objects from structure.misc.
+    structure : obj
+        Structure object.
+    fields : list
+        Data field requests.
+    exe : str
+        Full terminal command to bypass subprocess defaults.
 
     Returns
     -------
@@ -379,99 +193,62 @@ def input_write_misc(f, misc):
 
     """
 
-    f.write('** -----------------------------------------------------------------------------\n')
-    f.write('** ------------------------------------------------------------------------ Misc\n')
-    f.write('**\n')
+    name = structure.name
+    path = structure.path
+    temp = '{0}{1}/'.format(path, name)
 
-    for key, misc in misc.items():
+    if isinstance(fields, str):
+        fields = [fields]
+    fields = ','.join(list(structure.fields_dic_from_list(fields).keys()))
 
-        mtype = misc.__name__
+    tic1 = time()
 
-        if mtype in ['Amplitude']:
+    subprocess = 'noGUI={0}'.format(odb_extract.__file__.replace('\\', '/'))
 
-            f.write('** {0}\n'.format(key))
-            f.write('** ' + '-' * len(key) + '\n')
-            f.write('**\n')
+    if not exe:
+        args = ['abaqus', 'cae', subprocess, '--', fields, name, temp]
+        p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+        while True:
+            line = p.stdout.readline()
+            if not line:
+                break
+            line = str(line.strip())
+            print(line)
+        stdout, stderr = p.communicate()
+        print(stdout)
+        print(stderr)
 
-        # Amplitude
+    else:
+        args = '{0} -- {1} {2} {3}'.format(subprocess, fields, name, temp)
+        os.chdir(temp)
+        os.system('{0}{1}'.format(exe, args))
 
-        if mtype == 'Amplitude':
+    print('\n***** Data extracted from Abaqus .odb file : {0} s *****\n'.format(time() - tic1))
 
-            f.write('*AMPLITUDE, NAME={0}\n'.format(key))
-            f.write('**\n')
-            for i, j in misc.values:
-                f.write('{0}, {1}\n'.format(i, j))
+    tic2 = time()
 
-        f.write('**\n')
+    try:
+        with open('{0}{1}-results.json'.format(temp, name), 'r') as f:
+            results = json.load(f)
 
+        with open('{0}{1}-info.json'.format(temp, name), 'r') as f:
+            info = json.load(f)
 
-def input_write_sets(f, sets):
+        for step in results:
+            print('***** Saving step: {0} *****'.format(step))
+            for dtype in results[step]:
+                for field in results[step][dtype]:
+                    data = {}
+                    for key in results[step][dtype][field]:
+                        data[int(key)] = results[step][dtype][field][key]
+                    results[step][dtype][field] = data
 
-    """ Creates the Abaqus .inp file node sets NSETs and element sets ELSETs.
+        structure.results = results
 
-    Parameters
-    ----------
-    f : obj
-        The open file object for the .inp file.
-    sets : dic
-        Sets dictionary from structure.sets.
+        for step in info:
+            structure.results[step]['info'] = info[step]
 
-    Returns
-    -------
-    None
+        print('***** Saving data to structure.results successful : {0} s *****\n'.format(time() - tic2))
 
-    Notes
-    -----
-    - Restriction in Abaqus to 10 entries written per line in the .inp file.
-
-    """
-
-    cm = 9
-    for key, set in sets.items():
-
-        stype = set['type']
-
-        f.write('** {0}\n'.format(key))
-        f.write('** ' + '-' * len(key) + '\n')
-        f.write('**\n')
-
-        if stype in ['node', 'element', 'surface_node']:
-
-            if stype == 'node':
-                f.write('*NSET, NSET={0}\n'.format(key))
-                f.write('**\n')
-
-            elif stype == 'element':
-                f.write('*ELSET, ELSET={0}\n'.format(key))
-                f.write('**\n')
-
-            elif stype == 'surface_node':
-                f.write('*SURFACE, TYPE=NODE, NAME={0}\n'.format(key))
-                f.write('**\n')
-
-            selection = [i + 1 for i in set['selection']]
-            cnt = 0
-            for j in selection:
-                f.write(str(j))
-                if (cnt < cm) and (j != selection[-1]):
-                    f.write(',')
-                    cnt += 1
-                elif cnt >= cm:
-                    f.write('\n')
-                    cnt = 0
-                else:
-                    f.write('\n')
-
-        if stype == 'surface_element':
-
-            f.write('*SURFACE, TYPE=ELEMENT, NAME={0}\n'.format(key))
-            f.write('** ELEMENT, SIDE\n')
-
-            selection = set['selection']
-            for element, sides in selection.items():
-                for side in sides:
-                    f.write('{0}, {1}'.format(element + 1, side))
-                    f.write('\n')
-
-        f.write('**\n')
-    f.write('**\n')
+    except:
+        print('***** Saving data to structure.results unsuccessful *****')

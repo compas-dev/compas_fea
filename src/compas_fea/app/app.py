@@ -3,11 +3,11 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from vtk import vtkAxesActor
 from vtk import vtkActor2D
 from vtk import vtkActor
-from vtk import vtkCellArray
+from vtk import vtkAxesActor
 from vtk import vtkCamera
+from vtk import vtkCellArray
 from vtk import vtkGlyph3DMapper
 from vtk import vtkIdList
 from vtk import vtkLabeledDataMapper
@@ -19,7 +19,12 @@ from vtk import vtkPolyDataMapper
 from vtk import vtkRenderer
 from vtk import vtkRenderWindow
 from vtk import vtkRenderWindowInteractor
+from vtk import vtkSliderRepresentation2D
+from vtk import vtkSliderWidget
+from vtk import vtkSphereSource
 from vtk import vtkUnsignedCharArray
+
+import vtk
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -29,6 +34,7 @@ __email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
+    'App',
 ]
 
 
@@ -39,76 +45,145 @@ class App(object):
 
     def __init__(self, structure, name='compas_fea App'):
 
-        self.name = name
         self.structure = structure
         self.xb, self.yb, self.zb = structure.node_bounds()
-
         self.draw_axes  = True
         self.draw_grid  = True
-        self.draw_nodes = True
-        self.draw_lines = True
-        self.draw_faces = True
-        self.draw_loads = True
-        self.draw_bcs   = True
-
-        self.draw_node_labels = True
-        self.draw_line_labels = True
-        self.draw_face_labels = True
 
         self.camera()
-        self.setup(width=1000, height=700)
+        self.setup(width=1000, height=700, name=name)
         self.draw()
+        self.gui()
         self.start()
 
     def camera(self):
 
-        self.camera = vtkCamera()
-        self.camera.SetPosition(0.5 * (self.xb[0] + self.xb[1]), -5 * abs(self.yb[0]), self.zb[1])
-        self.camera.SetFocalPoint(0, 0, 0)
-        self.camera.SetViewUp(0, 0, 1)
-        self.camera.Azimuth(30)
-        self.camera.Elevation(30)
+        xc = 0.5 * (self.xb[0] + self.xb[1])
+        yc = -5 * abs(self.yb[0])
+        zc = self.zb[1]
 
-    def setup(self, width, height):
+        self.camera = camera = vtkCamera()
+        camera.SetPosition(xc, yc, zc)
+        camera.SetFocalPoint(0, 0, 0)
+        camera.SetViewUp(0, 0, 1)
+        camera.Azimuth(30)
+        camera.Elevation(30)
 
-        self.renderer = vtkRenderer()
-        self.renderer.SetBackground(1.0, 1.0, 1.0)
-        self.renderer.SetBackground2(0.7, 0.7, 0.7)
-        self.renderer.GradientBackgroundOn()
+    def setup(self, width, height, name):
 
-        self.render_window = vtkRenderWindow()
-        self.render_window.SetSize(width, height)
-        self.render_window.AddRenderer(self.renderer)
-        self.render_window.SetWindowName(self.name)
+        self.renderer = renderer = vtkRenderer()
+        renderer.SetBackground(1.0, 1.0, 1.0)
+        renderer.SetBackground2(0.8, 0.8, 0.8)
+        renderer.GradientBackgroundOn()
+        renderer.SetActiveCamera(self.camera)
+        renderer.ResetCamera()
+        renderer.ResetCameraClippingRange()
 
-        self.interactor = vtkRenderWindowInteractor()
-        self.interactor.SetRenderWindow(self.render_window)
-        self.interactor.Initialize()
+        self.render_window = render_window = vtkRenderWindow()
+        render_window.SetSize(width, height)
+        render_window.SetWindowName(name)
+        render_window.AddRenderer(renderer)
 
-        self.renderer.SetActiveCamera(self.camera)
-        self.renderer.ResetCamera()
-        # self.renderer.ResetCameraClippingRange()
-        # self.renderer.GetActiveCamera().Zoom(0.5)
-        # self.render_window.Render()
+        self.interactor = interactor = vtkRenderWindowInteractor()
+        interactor.SetRenderWindow(render_window)
+
+    def gui(self):
+
+        slider_width  = 0.002
+        slider_height = 0.015
+        slider_label  = 0.015
+
+        self.slider_node_size = self.make_slider(slider_width, slider_height, slider_label, [0.1, 0.90], [0.01, 0.90],
+                                                 0.0, 0.2, 0.05, 'Node size', self.interactor)
+
+        self.slider_line_width = self.make_slider(slider_width, slider_height, slider_label, [0.1, 0.80], [0.01, 0.80],
+                                                 0.1, 20.0, 2.0, 'Linewidth', self.interactor)
+
+        self.slider_face_opacity = self.make_slider(slider_width, slider_height, slider_label, [0.1, 0.7], [0.01, 0.7],
+                                                    0.0, 1.0, 0.9, 'Opacity', self.interactor)
+
+        self.slider_node_labels = self.make_slider(slider_width, slider_height, slider_label, [0.1, 0.6], [0.01, 0.6],
+                                                   0.0, 0.5, 0.1, 'Node labels', self.interactor)
+
+        self.slider_node_size.AddObserver(vtk.vtkCommand.InteractionEvent, node_size_callback(self.node_sphere))
+        self.slider_line_width.AddObserver(vtk.vtkCommand.InteractionEvent, line_width_callback(self.poly_data))
+        self.slider_face_opacity.AddObserver(vtk.vtkCommand.InteractionEvent, face_opacity_callback(self.poly_data))
+
+    @staticmethod
+    def make_slider(width, height, label, posx, posy, minimum, maximum, value, text, interactor):
+
+        slider = vtkSliderRepresentation2D()
+        slider.SetMinimumValue(minimum)
+        slider.SetMaximumValue(maximum)
+        slider.SetValue(value)
+        slider.SetTitleText(text)
+        slider.GetPoint1Coordinate().SetCoordinateSystemToNormalizedDisplay()
+        slider.GetPoint1Coordinate().SetValue(posy[0], posy[1])
+        slider.GetPoint2Coordinate().SetCoordinateSystemToNormalizedDisplay()
+        slider.GetPoint2Coordinate().SetValue(posx[0], posx[1])
+        slider.SetTubeWidth(width)
+        slider.SetTitleHeight(height)
+        slider.SetLabelHeight(label)
+
+        sliderwidget = vtkSliderWidget()
+        sliderwidget.SetInteractor(interactor)
+        sliderwidget.SetRepresentation(slider)
+        sliderwidget.SetAnimationModeToAnimate()
+        sliderwidget.EnabledOn()
+
+        return sliderwidget
 
     def draw(self):
 
-        PolyData = vtkPolyData()
-        points   = vtkPoints()
-        lines    = vtkCellArray()
-        polys    = vtkCellArray()
+        # Colours
+
+        named_colors = vtkNamedColors()
+        named_colors.SetColor('red', [255, 100, 100, 255])
+        named_colors.SetColor('green', [150, 255, 150, 255])
+        named_colors.SetColor('dark_green', [0, 20, 0, 255])
+        named_colors.SetColor('blue', [100, 100, 255, 255])
+        colors = vtkUnsignedCharArray()
+        colors.SetNumberOfComponents(3)
+
+        # Axes
+
+        if self.draw_axes:
+            axes = vtkAxesActor()
+            axes.AxisLabelsOff()
+            self.renderer.AddActor(axes)
+
+        # Initialise PolyData
+
+        poly_data = vtkPolyData()
+        points    = vtkPoints()
+        lines     = vtkCellArray()
+        faces     = vtkCellArray()
+
+        # Nodes
 
         for node in self.structure.nodes:
             points.InsertNextPoint(self.structure.node_xyz(node))
-        PolyData.SetPoints(points)
+        poly_data.SetPoints(points)
+
+        self.node_sphere = node_sphere = vtkSphereSource()
+        node_sphere.SetRadius(0.1)
+        node_sphere.SetPhiResolution(15)
+        node_sphere.SetThetaResolution(15)
+        pmapper = vtkGlyph3DMapper()
+        pmapper.SetInputData(poly_data)
+        pmapper.SetSourceConnection(node_sphere.GetOutputPort())
+        pmapper.ScalingOff()
+        pmapper.ScalarVisibilityOff()
+        pactor = vtkActor()
+        pactor.SetMapper(pmapper)
+        pactor.GetProperty().SetColor(named_colors.GetColor3d('blue'))
+        self.renderer.AddActor(pactor)
+
+        # Group elements
 
         line_nodes = []
-        tri_nodes = []
+        tri_nodes  = []
         quad_nodes = []
-
-        named_colors = vtkNamedColors()
-        colors = vtkUnsignedCharArray()
-        colors.SetNumberOfComponents(3)
 
         for ekey, element in self.structure.elements.items():
             nodes = element.nodes
@@ -122,120 +197,82 @@ class App(object):
             if len(nodes) == 4:
                 quad_nodes.append(nodes)
 
-        if self.draw_axes:
+        # Lines
 
-            axes = vtkAxesActor()
-            self.renderer.AddActor(axes)
+        for u, v in line_nodes:
 
-        # if self.draw_nodes:
+            line = vtkLine()
+            line.GetPointIds().SetId(0, u)
+            line.GetPointIds().SetId(1, v)
+            lines.InsertNextCell(line)
+            try:
+                colors.InsertNextTypedTuple(named_colors.GetColor3ub('red'))
+            except:
+                colors.InsertNextTupleValue(named_colors.GetColor3ub('red'))
 
-        #     node_size = 0.1
-        #     res = 10
+        # Node labels
 
-        #     sphere = vtk.vtkSphereSource()
-        #     sphere.SetCenter(0, 0, 0)
-        #     sphere.SetRadius(node_size)
-        #     sphere.SetPhiResolution(res)
-        #     sphere.SetThetaResolution(res)
+        lmapper = vtkLabeledDataMapper()
+        lmapper.SetInputData(poly_data)
+        # lmapper.GetTextProperty().LabelHeight(10)
+        # lactor.GetTextProperty().SetFontSize(10)
+        lactor = vtkActor2D()
+        lactor.SetMapper(lmapper)
+        self.renderer.AddActor(lactor)
 
-        #     sphereMapper = vtkPolyDataMapper()
-        #     sphereMapper.SetInputConnection(sphere.GetOutputPort())
-        #     sphereActor = vtkActor()
-        #     sphereActor.SetMapper(sphereMapper)
-        #     # # sphereActor.GetProperty().SetSpecular(.6)
-        #     # # sphereActor.GetProperty().SetSpecularPower(30)
-        #     self.renderer.AddActor(sphereActor)
+        # Faces
 
-        #     pointMapper = vtkGlyph3DMapper()
-        #     # pointMapper.SetInputConnection(cylinder.GetOutputPort())
-        #     # pointMapper.SetSourceConnection(sphere.GetOutputPort())
-        #     # # pointMapper.ScalingOff()
-        #     # # pointMapper.ScalarVisibilityOff()
+        for nodes in tri_nodes + quad_nodes:
 
-        #     # pointActor = vtkActor()
-        #     # pointActor.SetMapper(pointMapper)
-        #     # # pointActor.GetProperty().SetDiffuseColor()
-        #     # # pointActor.GetProperty().SetSpecular(.6)
-        #     # # pointActor.GetProperty().SetSpecularColor(1.0, 1.0, 1.0)
-        #     # # pointActor.GetProperty().SetSpecularPower(100)
+            vil = vtkIdList()
+            for i in nodes:
+                vil.InsertNextId(i)
+            faces.InsertNextCell(vil)
+            try:
+                colors.InsertNextTypedTuple(named_colors.GetColor3ub('green'))
+            except:
+                colors.InsertNextTupleValue(named_colors.GetColor3ub('green'))
 
-        #     # self.renderer.AddActor(pointActor)
+        # Set-up PolyData
 
-        if self.draw_node_labels:
-
-            labelMapper = vtkLabeledDataMapper()
-            # labelMapper.SetInputConnection(PolyData.GetOutputPort())
-            # labelActor = vtkActor2D()
-            # labelActor.SetMapper(labelMapper)
-            # self.renderer.AddActor(labelActor)
-
-        if self.draw_lines:
-
-            for u, v in line_nodes:
-                line = vtkLine()
-                line.GetPointIds().SetId(0, u)
-                line.GetPointIds().SetId(1, v)
-                lines.InsertNextCell(line)
-                try:
-                    colors.InsertNextTypedTuple(named_colors.GetColor3ub('Mint'))
-                except:
-                    colors.InsertNextTupleValue(named_colors.GetColor3ub('Mint'))
-
-
-        # # axes.GetXAxisCaptionActor2D().GetCaptionTextProperty().SetColor(colors.GetColor3d("Red"));
-
-        if self.draw_faces:
-
-            for nodes in tri_nodes + quad_nodes:
-                vil = vtkIdList()
-                for i in nodes:
-                    vil.InsertNextId(i)
-                polys.InsertNextCell(vil)
-                try:
-                    colors.InsertNextTypedTuple(named_colors.GetColor3ub('Tomato'))
-                except:
-                    colors.InsertNextTupleValue(named_colors.GetColor3ub('Tomato'))
-
-        #             faces = [1,  # number of faces
-        #                      3, nodes[0], nodes[1], nodes[2]]  # number of ids on face, ids
-        #             #          5, 19, 14, 9, 13, 18,
-        #             #          5, 19, 18, 17, 16, 15]
-        #             # PolyData.SetFaces(faces)
-        #             # PolyData.Initialize()
-
-        line_width = 6
-
-        PolyData.SetLines(lines)
-        PolyData.SetPolys(polys)
-        PolyData.GetCellData().SetScalars(colors)
-
+        poly_data.SetLines(lines)
+        poly_data.SetPolys(faces)
+        poly_data.GetCellData().SetScalars(colors)
         mapper = vtkPolyDataMapper()
-        mapper.SetInputData(PolyData)
-        actor = vtkActor()
+        mapper.SetInputData(poly_data)
+
+        self.poly_data = actor = vtkActor()
         actor.SetMapper(mapper)
-        actor.GetProperty().SetLineWidth(line_width)
+        actor.GetProperty().SetLineWidth(2)
+        actor.GetProperty().EdgeVisibilityOn()
+        actor.GetProperty().SetEdgeColor(named_colors.GetColor3ub('dark_green'))
+        actor.GetProperty().SetOpacity(0.9)
         self.renderer.AddActor(actor)
+
+    def start(self):
+
+        self.interactor.Initialize()
+        self.interactor.Start()
 
         # if self.fdraw_loads:
 
         #     arrow = vtk.vtkArrowSource()
         #     # geometricObjectSources.append(vtk.vtkConeSource()) for BC
+        # arrowSource.SetTipResolution(31)
+        # arrowSource.SetShaftResolution(21)
+        # https://lorensen.github.io/VTKExamples/site/Python/GeometricObjects/OrientedArrow/
 
-    def start(self):
-
-        self.interactor.Start()
-
-        # # cylinder = vtk.vtkCylinderSource()
-        # # cylinder.SetCenter(0, 0, 0)
-        # # cylinder.SetRadius(0.5)
-        # # cylinder.SetResolution(8)
-        # # cylinderMapper = vtkPolyDataMapper()
-        # # cylinderMapper.SetInputConnection(cylinder.GetOutputPort())
-        # # cylinderActor = vtkActor()
-        # # cylinderActor.SetMapper(cylinderMapper)
-        # # # cylinderActor.RotateX(30.0)
-        # # # cylinderActor.RotateY(-45.0)
-
+        # cylinder = vtk.vtkCylinderSource()
+        # cylinder.SetCenter(0, 0, 0)
+        # cylinder.SetRadius(0.5)
+        # cylinder.SetResolution(8)
+        # cylinderSource.SetHeight(7.0)
+        # cylinderMapper = vtkPolyDataMapper()
+        # cylinderMapper.SetInputConnection(cylinder.GetOutputPort())
+        # cylinderActor = vtkActor()
+        # cylinderActor.SetMapper(cylinderMapper)
+        # # cylinderActor.RotateX(30.0)
+        # # cylinderActor.RotateY(-45.0)
 
         #     scalars = vtk.vtkFloatArray()
         #     for i in range(8):
@@ -248,6 +285,7 @@ class App(object):
 
     # transform = vtk.vtkTransform()
     # transform.Translate(1.0, 0.0, 0.0)
+    # transform.Scale(length, length, length)
     # axes.SetUserTransform(transform)
 
     # contour = vtk.vtkDiscreteMarchingCubes()  # for label images
@@ -257,6 +295,36 @@ class App(object):
     #     contour.SetInputConnection(voi.GetOutputPort())
 
 
+class node_size_callback():
+
+    def __init__(self, node_sphere):
+        self.node_sphere = node_sphere
+
+    def __call__(self, caller, ev):
+        value = caller.GetRepresentation().GetValue()
+        self.node_sphere.SetRadius(value)
+
+
+class line_width_callback():
+
+    def __init__(self, poly_data):
+        self.poly_data = poly_data
+
+    def __call__(self, caller, ev):
+        value = caller.GetRepresentation().GetValue()
+        self.poly_data.GetProperty().SetLineWidth(value)
+
+
+class face_opacity_callback():
+
+    def __init__(self, poly_data):
+        self.poly_data = poly_data
+
+    def __call__(self, caller, ev):
+        value = caller.GetRepresentation().GetValue()
+        self.poly_data.GetProperty().SetOpacity(value)
+
+
 # ==============================================================================
 # Debugging
 # ==============================================================================
@@ -264,4 +332,3 @@ class App(object):
 if __name__ == "__main__":
 
     app = App(structure=None)
-    app.start()

@@ -108,7 +108,6 @@ def write_input_elements(f, software, sections, properties, elements, structure,
             elsets = property.elsets
             if isinstance(elsets, str):
                 elsets = [elsets]
-            written_elsets.extend(elsets)
 
         for elset in elsets:
 
@@ -172,6 +171,8 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 
             if (key not in written_elsets) and (stype != 'node'):
 
+                written_elsets.append(key)
+
                 f.write('** {0}\n'.format(key))
                 f.write('** ' + '-' * len(key) + '\n')
                 f.write('**\n')
@@ -212,6 +213,8 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 
                 f.write('**\n')
                 f.write('**\n')
+
+
 
 #         if has_rebar:
 #             _write_sofistik_rebar(f, properties, sections, sets)
@@ -413,10 +416,10 @@ def _write_shells(f, software, selection, elements, geometry, material, reinforc
 #                 f.write(' MRF')
             f.write('\n')
 
-            data = [ni] + [i + 1 for i in nodes] + [material.index + 1] + [t] * len(nodes)
+            data = [str(ni)] + [str(i + 1) for i in nodes] + [str(material.index + 1)] + ['{0}[m]'.format(t)] * len(nodes)
 #             if rebar_index:
 #                 data.append(rebar_index)
-            f.write('{0}\n'.format(' '.join([str(i) for i in data])))
+            f.write('{0}\n'.format(' '.join(data)))
 
         elif software == 'ansys':
 
@@ -472,27 +475,6 @@ def _write_beams(f, software, elements, selection, geometry, material, section_i
         elif software == 'ansys':
 
             pass
-
-    if (software == 'abaqus') and not (elset.startswith('element_')):
-
-        f.write('** {0}\n'.format(elset))
-        f.write('** ' + '-' * len(elset) + '\n')
-        f.write('**\n')
-        f.write('*ELSET, ELSET={0}\n'.format(elset))
-        f.write('**\n')
-
-        cm = 9
-        cnt = 0
-        for j in selection:
-            f.write(str(j + 1))
-            if (cnt < cm) and (j != selection[-1]):
-                f.write(',')
-                cnt += 1
-            elif cnt >= cm:
-                f.write('\n')
-                cnt = 0
-            else:
-                f.write('\n')
 
 
 def _write_trusses(f, selection, software, elements, section, material, elset):

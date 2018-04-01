@@ -178,7 +178,7 @@ def _write_sofistik_sections(f, properties, materials, sections):
 
                 b = geometry['b'] * 1000
                 h = geometry['h'] * 1000
-                f.write('SREC NO {0} H {1} B {2} MNO {3}\n'.format(section_index, h, b, material_index))
+                f.write('SREC NO {0} H {1}[mm] B {2}[mm] MNO {3}\n'.format(section_index, h, b, material_index))
 
             elif stype in ['TrussSection', 'StrutSection', 'TieSection']:
 
@@ -209,7 +209,8 @@ def _write_elastic(f, software, E, G, v, p, compression, tension, c, material_in
 
     elif software == 'sofistik':
 
-        f.write('MATE {0} E {1} MUE {2} G {3} GAM {4}\n'.format(material_index, E/10.**6, v, G/10.**6, p/100.))
+        f.write('MATE {0} E {1}[MPa] MUE {2} G {3}[MPa] GAM {4}\n'.format(material_index, E/10.**6, v, G/10.**6,
+                                                                          p/100.))
 
     elif software == 'ansys':
 

@@ -16,7 +16,7 @@ __all__ = [
 
 
 dofs    = ['x', 'y', 'z', 'xx', 'yy', 'zz']
-fixitys = ['PX', 'PY', 'PZ', 'MX', 'MY' 'MZ']
+fixitys = ['PX', 'PY', 'PZ', 'MX', 'MY', 'MZ']
 
 comments = {
     'abaqus':   '**',

@@ -203,17 +203,17 @@ def _write_displacements(f, software, com, nset, factor, sets, ndof):
 
         for i in sets[nset]['selection']:
             ni = i + 1
-            if com['x']:
-                f.write('    NODE {0} TYPE WXX {1}\n'.format(ni, com['x'] * 1000))
-            if com['y']:
-                f.write('    NODE {0} TYPE WYY {1}\n'.format(ni, com['y'] * 1000))
-            if com['z']:
-                f.write('    NODE {0} TYPE WZZ {1}\n'.format(ni, com['z'] * 1000))
-            if com['xx']:
+            if com['x'] is not None:
+                f.write('    NODE {0} TYPE WXX {1}[mm]\n'.format(ni, com['x'] * 1000))
+            if com['y'] is not None:
+                f.write('    NODE {0} TYPE WYY {1}[mm]\n'.format(ni, com['y'] * 1000))
+            if com['z'] is not None:
+                f.write('    NODE {0} TYPE WZZ {1}[mm]\n'.format(ni, com['z'] * 1000))
+            if com['xx'] is not None:
                 f.write('    NODE {0} TYPE DXX {1}\n'.format(ni, com['xx'] * 1000))
-            if com['yy']:
+            if com['yy'] is not None:
                 f.write('    NODE {0} TYPE DYY {1}\n'.format(ni, com['yy'] * 1000))
-            if com['zz']:
+            if com['zz'] is not None:
                 f.write('    NODE {0} TYPE DZZ {1}\n'.format(ni, com['zz'] * 1000))
 
 

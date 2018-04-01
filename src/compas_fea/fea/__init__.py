@@ -22,6 +22,17 @@ write_heading
 
     write_input_heading
 
+write_constraints
+=================
+
+.. currentmodule:: compas_fea.fea.write_constraints
+
+:mod:`compas_fea.fea.write_constraints`
+
+.. autosummary::
+    :toctree: generated/
+
+    write_input_constraints
 
 write_steps
 ===========
@@ -154,6 +165,7 @@ sofistik
 """
 
 from .write_heading import *
+from .write_constraints import *
 from .write_nodes import *
 from .write_bcs import *
 from .write_materials import *
