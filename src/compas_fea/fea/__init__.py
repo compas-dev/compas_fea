@@ -99,6 +99,19 @@ write_materials
     write_input_materials
 
 
+write_misc
+==========
+
+.. currentmodule:: compas_fea.fea.write_misc
+
+:mod:`compas_fea.fea.write_misc`
+
+.. autosummary::
+    :toctree: generated/
+
+    write_input_misc
+
+
 abaq
 ====
 
@@ -171,3 +184,4 @@ from .write_bcs import *
 from .write_materials import *
 from .write_elements import *
 from .write_steps import *
+from .write_misc import *

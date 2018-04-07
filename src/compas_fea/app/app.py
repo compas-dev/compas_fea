@@ -93,17 +93,20 @@ class App(object):
         slider_height = 0.015
         slider_label  = 0.015
 
-        self.slider_node_size = self.make_slider(slider_width, slider_height, slider_label, [0.1, 0.90], [0.01, 0.90],
-                                                 0.0, 0.2, 0.05, 'Node size', self.interactor)
+        self.slider_node_size = self.make_slider(slider_width, slider_height, slider_label, [0.1, 0.95], [0.01, 0.95],
+                                                 0.0, 0.05, 0.01, 'Node size', self.interactor)
 
         self.slider_line_width = self.make_slider(slider_width, slider_height, slider_label, [0.1, 0.80], [0.01, 0.80],
-                                                 0.1, 20.0, 2.0, 'Linewidth', self.interactor)
+                                                 0.1, 10.0, 1, 'Linewidth', self.interactor)
 
-        self.slider_face_opacity = self.make_slider(slider_width, slider_height, slider_label, [0.1, 0.7], [0.01, 0.7],
-                                                    0.0, 1.0, 0.9, 'Opacity', self.interactor)
+        self.slider_face_opacity = self.make_slider(slider_width, slider_height, slider_label, [0.1, 0.65], [0.01, 0.65],
+                                                    0.0, 1.0, 1.0, 'Opacity', self.interactor)
 
-        self.slider_node_labels = self.make_slider(slider_width, slider_height, slider_label, [0.1, 0.6], [0.01, 0.6],
+        self.slider_node_labels = self.make_slider(slider_width, slider_height, slider_label, [0.1, 0.5], [0.01, 0.5],
                                                    0.0, 0.5, 0.1, 'Node labels', self.interactor)
+
+        self.slider_ele_labels = self.make_slider(slider_width, slider_height, slider_label, [0.1, 0.35], [0.01, 0.35],
+                                                  0.0, 0.5, 0.1, 'Element labels', self.interactor)
 
         self.slider_node_size.AddObserver(vtk.vtkCommand.InteractionEvent, node_size_callback(self.node_sphere))
         self.slider_line_width.AddObserver(vtk.vtkCommand.InteractionEvent, line_width_callback(self.poly_data))
@@ -142,6 +145,7 @@ class App(object):
         named_colors.SetColor('green', [150, 255, 150, 255])
         named_colors.SetColor('dark_green', [0, 20, 0, 255])
         named_colors.SetColor('blue', [100, 100, 255, 255])
+        named_colors.SetColor('black', [0, 0, 0, 255])
         colors = vtkUnsignedCharArray()
         colors.SetNumberOfComponents(3)
 
@@ -155,6 +159,8 @@ class App(object):
         # Initialise PolyData
 
         poly_data = vtkPolyData()
+        ele_data  = vtkPolyData()
+        midpoints = vtkPoints()
         points    = vtkPoints()
         lines     = vtkCellArray()
         faces     = vtkCellArray()
@@ -166,7 +172,7 @@ class App(object):
         poly_data.SetPoints(points)
 
         self.node_sphere = node_sphere = vtkSphereSource()
-        node_sphere.SetRadius(0.1)
+        node_sphere.SetRadius(0.01)
         node_sphere.SetPhiResolution(15)
         node_sphere.SetThetaResolution(15)
         pmapper = vtkGlyph3DMapper()
@@ -184,12 +190,15 @@ class App(object):
         line_nodes = []
         tri_nodes  = []
         quad_nodes = []
+        line_types = []
 
         for ekey, element in self.structure.elements.items():
             nodes = element.nodes
+            midpoints.InsertNextPoint(self.structure.element_centroid(ekey))
 
             if len(nodes) == 2:
                 line_nodes.append(nodes)
+                line_types.append(element.__name__)
 
             elif len(nodes) == 3:
                 tri_nodes.append(nodes)
@@ -197,18 +206,30 @@ class App(object):
             if len(nodes) == 4:
                 quad_nodes.append(nodes)
 
+        ele_data.SetPoints(midpoints)
+
         # Lines
 
-        for u, v in line_nodes:
+        for uv, etype in zip(line_nodes, line_types):
+
+            u, v = uv
 
             line = vtkLine()
             line.GetPointIds().SetId(0, u)
             line.GetPointIds().SetId(1, v)
             lines.InsertNextCell(line)
+
+            if etype == 'BeamElement':
+                col = 'red'
+            elif etype == 'TrussElement':
+                col = 'blue'
+            elif etype == 'SpringElement':
+                col = 'black'
+
             try:
-                colors.InsertNextTypedTuple(named_colors.GetColor3ub('red'))
+                colors.InsertNextTypedTuple(named_colors.GetColor3ub(col))
             except:
-                colors.InsertNextTupleValue(named_colors.GetColor3ub('red'))
+                colors.InsertNextTupleValue(named_colors.GetColor3ub(col))
 
         # Node labels
 
@@ -218,7 +239,15 @@ class App(object):
         # lactor.GetTextProperty().SetFontSize(10)
         lactor = vtkActor2D()
         lactor.SetMapper(lmapper)
-        self.renderer.AddActor(lactor)
+        # self.renderer.AddActor(lactor)
+
+        # Element labels
+
+        emapper = vtkLabeledDataMapper()
+        emapper.SetInputData(ele_data)
+        eactor = vtkActor2D()
+        eactor.SetMapper(emapper)
+        # self.renderer.AddActor(eactor)
 
         # Faces
 
@@ -243,10 +272,10 @@ class App(object):
 
         self.poly_data = actor = vtkActor()
         actor.SetMapper(mapper)
-        actor.GetProperty().SetLineWidth(2)
-        actor.GetProperty().EdgeVisibilityOn()
+        actor.GetProperty().SetLineWidth(1)
+        # actor.GetProperty().EdgeVisibilityOn()
         actor.GetProperty().SetEdgeColor(named_colors.GetColor3ub('dark_green'))
-        actor.GetProperty().SetOpacity(0.9)
+        actor.GetProperty().SetOpacity(1.0)
         self.renderer.AddActor(actor)
 
     def start(self):
@@ -331,4 +360,9 @@ class face_opacity_callback():
 
 if __name__ == "__main__":
 
-    app = App(structure=None)
+    from compas_fea.structure import Structure
+
+    fnm = '/home/al/temp/mesh_roof.obj'
+
+    mdl = Structure.load_from_obj(fnm)
+    mdl.view()

@@ -1,41 +1,81 @@
-# def input_write_misc(f, misc):
 
-#     """ Writes misc class info to the Abaqus .inp file.
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
-#     Parameters
-#     ----------
-#     f : obj
-#         The open file object for the .inp file.
-#     misc : dic
-#         Misc objects from structure.misc.
 
-#     Returns
-#     -------
-#     None
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
-#     """
 
-#     f.write('** -----------------------------------------------------------------------------\n')
-#     f.write('** ------------------------------------------------------------------------ Misc\n')
-#     f.write('**\n')
+__all__ = [
+    'write_input_misc',
+]
 
-#     for key, misc in misc.items():
 
-#         mtype = misc.__name__
+comments = {
+    'abaqus':   '**',
+    'opensees': '#',
+    'sofistik': '$',
+    'ansys':    '!',
+}
 
-#         if mtype in ['Amplitude']:
 
-#             f.write('** {0}\n'.format(key))
-#             f.write('** ' + '-' * len(key) + '\n')
-#             f.write('**\n')
+def write_input_misc(f, software, miscs):
 
-#         # Amplitude
+    """ Writes Misc info to the input file.
 
-#         if mtype == 'Amplitude':
+    Parameters
+    ----------
+    f : obj
+        The open file object for the input file.
+    software : str
+        Analysis software or library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
+    miscs : dic
+        Misc objects from structure.misc.
 
-#             f.write('*AMPLITUDE, NAME={0}\n'.format(key))
-#             f.write('**\n')
-#             for i, j in misc.values:
-#                 f.write('{0}, {1}\n'.format(i, j))
+    Returns
+    -------
+    None
 
-#         f.write('**\n')
+    """
+
+    c = comments[software]
+
+    f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
+    f.write('{0} ------------------------------------------------------------------------ Misc\n'.format(c))
+    f.write('{0}\n'.format(c))
+
+    for key, misc in miscs.items():
+
+        mtype = misc.__name__
+
+        # Amplitude
+
+        if mtype == 'Amplitude':
+
+            if software == 'abaqus':
+
+                f.write('*AMPLITUDE, NAME={0}\n'.format(key))
+                f.write('**\n')
+                for i, j in misc.values:
+                    f.write('{0}, {1}\n'.format(i, j))
+
+
+            elif software == 'opensees':
+
+                    pass
+
+            elif software == 'sofistik':
+
+                pass
+
+            elif software == 'ansys':
+
+                pass
+
+        f.write('{0}\n'.format(c))
+
+    f.write('{0}\n'.format(c))

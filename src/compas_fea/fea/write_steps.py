@@ -51,6 +51,37 @@ node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
 
 
+def _write_point_loads(f, software, com, factor):
+
+    if software == 'abaqus':
+
+        f.write('*CLOAD\n')
+        f.write('**\n')
+
+        for node, coms in com.items():
+            ni = node + 1
+            for ci, value in coms.items():
+                index = dofs.index(ci)
+                f.write('{0}, {1}, {2}'.format(ni, index, value * factor) + '\n')
+
+    elif software == 'sofistik':
+
+        for node, coms in com.items():
+            ni = node + 1
+            for ci, value in coms.items():
+                if ci in 'xyz':
+                    f.write('    NODE NO {0} TYPE P{1}{1} {2}[kN]\n'.format(ni, ci.upper(), value * 0.001))
+                else:
+                    f.write('    NODE NO {0} TYPE M{1} {2}[kNm]\n'.format(ni, ci.upper(), value * 0.001))
+
+    elif software == 'opensees':
+
+        pass
+    elif software == 'ansys':
+
+        pass
+
+
 def _write_point_load(f, software, com, nodes, ndof, sets, factor):
 
     if software == 'abaqus':
@@ -289,6 +320,9 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 if ltype == 'PointLoad':
                     _write_point_load(f, software, com, nodes, ndof, sets, 1)
 
+                elif ltype == 'PointLoads':
+                    _write_point_loads(f, software, com, 1)
+
                 elif ltype == 'LineLoad':
                     _write_line_load(f, software, axes, com, 1, elset, sets, structure)
 
@@ -305,16 +339,6 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 #                             # if com[node][dof]:
 #                                 # dl = com[node][dof] / 1000.
 #                                 # f.write('P{0}{0} {1}\n'.format(dof.upper(), dl))
-
-#                     elif ltype == 'PointLoads':
-
-#                         for node, coms in com.items():
-#                             ni = node + 1
-#                             for ci, value in coms.items():
-#                                 if ci in 'xyz':
-#                                     f.write('    NODE NO {0} TYPE P{1}{1} {2}\n'.format(ni, ci.upper(), value * 0.001))
-#                                 else:
-#                                     f.write('    NODE NO {0} TYPE M{1} {2}\n'.format(ni, ci.upper(), value * 0.001))
 
 #                 else:
 
@@ -385,8 +409,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
         step       = steps[key]
         stype      = step.__name__
-#         state      = getattr(step, 'state', None)
         step_index = step.index
+        state      = getattr(step, 'state', None)
         factor     = getattr(step, 'factor', None)
         increments = getattr(step, 'increments', None)
         tolerance  = getattr(step, 'tolerance', None)
@@ -464,6 +488,12 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 if ltype == 'PointLoad':
                     if software != 'sofistik':
                         _write_point_load(f, software, com, nodes, ndof, sets, factor)
+
+                # Point loads
+
+                elif ltype == 'PointLoads':
+                    if software != 'sofistik':
+                        _write_point_loads(f, software, com, factor)
 
 #                 # Pre-stress
 
@@ -642,9 +672,9 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 f.write('*ELEMENT OUTPUT\n')
                 f.write('**\n')
                 f.write(', '.join([i.upper() for i in element_fields if (i in fields and i != 'rbfor')]) + '\n')
-#                 if 'rbfor' in fields:
-#                     f.write('*ELEMENT OUTPUT, REBAR\n')
-#                     f.write('RBFOR\n')
+                if 'rbfor' in fields:
+                    f.write('*ELEMENT OUTPUT, REBAR\n')
+                    f.write('RBFOR\n')
                 f.write('**\n')
                 f.write('*END STEP\n')
 
@@ -662,52 +692,52 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         if footers[software]:
             f.write(footers[software])
 
-#         has_rebar = False
-#         for kk in sorted(properties):
-#             property = properties[kk]
-#             if property.reinforcement:
-#                 has_rebar = True
-
         if software == 'sofistik':
-#         if has_rebar:
 
-#                 f.write('+PROG BEMESS\n')
-#                 f.write('HEAD {0}\n'.format(state.upper()))
-#                 f.write('$\n')
+            is_rebar = False
+            for property in properties.values():
+                if property.reinforcement:
+                    is_rebar = True
+
+            if is_rebar:
+
+                f.write('+PROG BEMESS\n')
+                f.write('HEAD {0}\n'.format(state.upper()))
+                f.write('$\n')
 #                 f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
 #                 f.write('CTRL WARN 496 $ Possible non-constant longitudinal reinforcement.\n')
 #                 f.write('CTRL WARN 254 $ Vertical shear reinforcement not allowed for slab thickness smaller 20 cm.\n')
-#                 f.write('CTRL PFAI 2\n')
-#                 if state == 'sls':
-#                     f.write('CTRL SLS\n')
-#                     f.write('CRAC WK PARA\n')
-#                 else:
-#                     f.write('CTRL ULTI\n')
-#                 f.write('CTRL LCR {0}\n'.format(step_index))
-#                 f.write('LC 1{0:0>2}\n'.format(step_index))
+                f.write('CTRL PFAI 2\n')
+                if state == 'sls':
+                    f.write('CTRL SLS\n')
+                    f.write('CRAC WK PARA\n')
+                else:
+                    f.write('CTRL ULTI\n')
+                f.write('CTRL LCR {0}\n'.format(step_index))
+                f.write('LC 1{0:0>2}\n'.format(step_index))
 
-#                 f.write('$\n')
-#                 f.write('$\n')
-#                 f.write('END\n')
-#                 f.write('$\n')
-#                 f.write('$\n')
+                f.write('$\n')
+                f.write('$\n')
+                f.write('END\n')
+                f.write('$\n')
+                f.write('$\n')
 
             f.write('+PROG ASE\n')
             f.write('$\n')
             f.write('CTRL SOLV 1\n')
-#                 f.write('CTRL CONC\n')
-#                 f.write('$CREP NCRE 20\n')
+            f.write('CTRL CONC\n')
+            # f.write('$CREP NCRE 20\n')
 
-                # if state == 'sls':
-                    # f.write('NSTR KMOD S1 KSV SLD\n')
-                # elif state == 'uls':
-                    # f.write('NSTR KMOD S1 KSV ULD\n')
-            nlmat = 'NO'
+            if state == 'sls':
+                f.write('NSTR KMOD S1 KSV SLD\n')
+            elif state == 'uls':
+                f.write('NSTR KMOD S1 KSV ULD\n')
+            nlmat = 'YES'
             if nlgeom == 'YES':
                 f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2}\n'.format(increments, tolerance, nlmat))
 
-#                 f.write('REIQ LCR {0}\n'.format(step_index))
-#                 f.write('$\n')
+            f.write('REIQ LCR {0}\n'.format(step_index))
+            f.write('$\n')
 
             DLX, DLY, DLZ = 0, 0, 0
             for load in loads.values():
@@ -729,58 +759,58 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
             f.write('$\n')
 
 
-# # Thermal
+# Thermal
 
-# # try:
-# #     duration = step.duration
-# # except:
-# #     duration = 1
-# #     temperatures = steps[key].temperatures
-# #     if temperatures:
-# #         file = misc[temperatures].file
-# #         einc = str(misc[temperatures].einc)
-# #         f.write('**\n')
-# #         f.write('*TEMPERATURE, FILE={0}, BSTEP=1, BINC=1, ESTEP=1, EINC={1}, INTERPOLATE\n'.format(file, einc))
+# try:
+#     duration = step.duration
+# except:
+#     duration = 1
+#     temperatures = steps[key].temperatures
+#     if temperatures:
+#         file = misc[temperatures].file
+#         einc = str(misc[temperatures].einc)
+#         f.write('**\n')
+#         f.write('*TEMPERATURE, FILE={0}, BSTEP=1, BINC=1, ESTEP=1, EINC={1}, INTERPOLATE\n'.format(file, einc))
 
-# # elif stype == 'HeatStep':
+# elif stype == 'HeatStep':
 
-# #     temp0 = step.temp0
-# #     duration = step.duration
-# #     deltmx = steps[key].deltmx
-# #     interaction = interactions[step.interaction]
-# #     amplitude = interaction.amplitude
-# #     interface = interaction.interface
-# #     sink_t = interaction.sink_t
-# #     film_c = interaction.film_c
-# #     ambient_t = interaction.ambient_t
-# #     emissivity = interaction.emissivity
+#     temp0 = step.temp0
+#     duration = step.duration
+#     deltmx = steps[key].deltmx
+#     interaction = interactions[step.interaction]
+#     amplitude = interaction.amplitude
+#     interface = interaction.interface
+#     sink_t = interaction.sink_t
+#     film_c = interaction.film_c
+#     ambient_t = interaction.ambient_t
+#     emissivity = interaction.emissivity
 
-# #     # Initial T
+#     # Initial T
 
-# #     f.write('*INITIAL CONDITIONS, TYPE=TEMPERATURE\n')
-# #     f.write('NSET_ALL, {0}\n'.format(temp0))
-# #     f.write('**\n')
+#     f.write('*INITIAL CONDITIONS, TYPE=TEMPERATURE\n')
+#     f.write('NSET_ALL, {0}\n'.format(temp0))
+#     f.write('**\n')
 
-# #     # Interface
+#     # Interface
 
-# #     f.write('*STEP, NAME={0}, INC={1}\n'.format(sname, increments))
-# #     f.write('*{0}, END=PERIOD, DELTMX={1}\n'.format(method, deltmx))
-# #     f.write('1, {0}, 5.4e-05, {0}\n'.format(duration))
-# #     f.write('**\n')
-# #     f.write('*SFILM, AMPLITUDE={0}\n'.format(amplitude))
-# #     f.write('{0}, F, {1}, {2}\n'.format(interface, sink_t, film_c))
-# #     f.write('**\n')
-# #     f.write('*SRADIATE, AMPLITUDE={0}\n'.format(amplitude))
-# #     f.write('{0}, R, {1}, {2}\n'.format(interface, ambient_t, emissivity))
+#     f.write('*STEP, NAME={0}, INC={1}\n'.format(sname, increments))
+#     f.write('*{0}, END=PERIOD, DELTMX={1}\n'.format(method, deltmx))
+#     f.write('1, {0}, 5.4e-05, {0}\n'.format(duration))
+#     f.write('**\n')
+#     f.write('*SFILM, AMPLITUDE={0}\n'.format(amplitude))
+#     f.write('{0}, F, {1}, {2}\n'.format(interface, sink_t, film_c))
+#     f.write('**\n')
+#     f.write('*SRADIATE, AMPLITUDE={0}\n'.format(amplitude))
+#     f.write('{0}, R, {1}, {2}\n'.format(interface, ambient_t, emissivity))
 
-# #     # fieldOutputs
+#     # fieldOutputs
 
-# #     f.write('**\n')
-# #     f.write('** OUTPUT\n')
-# #     f.write('** ------\n')
-# #     f.write('*OUTPUT, FIELD\n')
-# #     f.write('**\n')
-# #     f.write('*NODE OUTPUT\n')
-# #     f.write('NT\n')
-# #     f.write('**\n')
-# #     f.write('*END STEP\n')
+#     f.write('**\n')
+#     f.write('** OUTPUT\n')
+#     f.write('** ------\n')
+#     f.write('*OUTPUT, FIELD\n')
+#     f.write('**\n')
+#     f.write('*NODE OUTPUT\n')
+#     f.write('NT\n')
+#     f.write('**\n')
+#     f.write('*END STEP\n')

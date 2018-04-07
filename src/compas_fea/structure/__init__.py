@@ -134,7 +134,6 @@ material
     ElasticIsotropic
     ElasticOrthotropic
     ElasticPlastic
-    ThermalMaterial
     Steel
 
 

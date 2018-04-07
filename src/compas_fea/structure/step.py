@@ -55,7 +55,7 @@ class GeneralStep(object):
     """
 
     def __init__(self, name, increments=100, iterations=100, factor=1.0, nlgeom=True, nlmat=True, displacements=[],
-                 loads=[], type='static', tolerance=0.01, state=None):
+                 loads=[], type='static', tolerance=0.01, state='sls'):
         self.__name__ = 'GeneralStep'
         self.name = name
         self.increments = increments
