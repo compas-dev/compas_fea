@@ -248,8 +248,7 @@ def _write_displacements(f, software, com, nset, factor, sets, ndof):
                 f.write('    NODE {0} TYPE DZZ {1}\n'.format(ni, com['zz'] * 1000))
 
 
-def write_input_steps(f, software, structure, steps, loads, displacements, sets, fields, ndof=6, properties={},
-                      sections={}):
+def write_input_steps(f, software, structure, steps, loads, displacements, sets, fields, ndof=6, properties={}):
 
     """ Writes the Steps information to the input file.
 
@@ -259,8 +258,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         The open file object for the .tcl file.
     software : str
         Analysis software or library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
-#     structure : obj
-#         The Structure object to read from.
+    structure : obj
+        The Structure object to read from.
     steps : dic
         Step objects from structure.steps.
     loads : dic
@@ -273,10 +272,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         Requested fields output.
     ndof : int
         Number of degrees-of-freedom per node.
-#     properties : dic
-#         ElementProperties objects from structure.element_properties
-#     sections : dic
-#         Section objects from structure.sections.
+    properties : dic
+        ElementProperties objects from structure.element_properties
 
     Returns
     -------
@@ -440,11 +437,11 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 f.write(', {0}\n'.format(factor))
                 f.write('**\n')
 
-#                 if stype == 'BucklingStep':
-#                     modes = step.modes
-#                     f.write('{0}, {1}, {2}, {3}\n'.format(modes, modes, 2 * modes, increments))
+                if stype == 'BucklingStep':
+                    modes = step.modes
+                    f.write('{0}, {1}, {2}, {3}\n'.format(modes, modes, 2 * modes, increments))
 
-#                 f.write('**\n')
+                f.write('**\n')
 
             elif software == 'opensees':
 
@@ -495,14 +492,14 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     if software != 'sofistik':
                         _write_point_loads(f, software, com, factor)
 
-#                 # Pre-stress
+                # # Pre-stress
 
-#                 elif ltype in ['PrestressLoad']:
+                # elif ltype in ['PrestressLoad']:
 
-#                     f.write('*INITIAL CONDITIONS, TYPE=STRESS\n')
-#                     f.write('{0}, '.format(elset))
-#                     if com['sxx']:
-#                         f.write('{0}\n'.format(com['sxx']))
+                #     f.write('*INITIAL CONDITIONS, TYPE=STRESS\n')
+                #     f.write('{0}, '.format(elset))
+                #     if com['sxx']:
+                #         f.write('{0}\n'.format(com['sxx']))
 
                 # Line load
 
@@ -510,32 +507,32 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     if software != 'sofistik':
                         _write_line_load(f, software, axes, com, factor, elset, sets, structure)
 
-#                 # Area load
+                # # Area load
 
-#                 elif ltype == 'AreaLoad':
+                # elif ltype == 'AreaLoad':
 
-#                     if software == 'opensees':
+                #     if software == 'opensees':
 
-#                         pass
+                #         pass
 
-#                     elif software == 'abaqus':  # only based on normal so far
+                #     elif software == 'abaqus':  # only based on normal so far
 
-#                         # if axes == 'global':
-#                         #     raise NotImplementedError
+                #         # if axes == 'global':
+                #         #     raise NotImplementedError
 
-#                         # elif axes == 'local':
-#                         # x COMPONENT
-#                         # y COMPONENT
-#                         f.write('*DLOAD\n')
-#                         f.write('**\n')
-#                         if com['z']:
-#                             f.write('{0}, P, {1}'.format(elset, factor * com['z']) + '\n')
+                #         # elif axes == 'local':
+                #         # x COMPONENT
+                #         # y COMPONENT
+                #         f.write('*DLOAD\n')
+                #         f.write('**\n')
+                #         if com['z']:
+                #             f.write('{0}, P, {1}'.format(elset, factor * com['z']) + '\n')
 
-#                 # Body load
+                # # Body load
 
-#                 elif ltype == 'BodyLoad':
+                # elif ltype == 'BodyLoad':
 
-#                     raise NotImplementedError
+                #     raise NotImplementedError
 
                 # Gravity load
 
@@ -543,24 +540,24 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     if software != 'sofistik':
                         _write_gravity_load(f, software, load.g, com, elset, factor)
 
-#                 # Tributary load
+                # # Tributary load
 
-#                 elif ltype == 'TributaryLoad':
+                # elif ltype == 'TributaryLoad':
 
-#                     if software == 'opensees':
+                #     if software == 'opensees':
 
-#                         pass
+                #         pass
 
-#                     elif software == 'abaqus':
+                #     elif software == 'abaqus':
 
-#                         f.write('*CLOAD\n')
-#                         f.write('**\n')
-#                         for node in sorted(com, key=int):
-#                             for ci, dof in enumerate(dofs[:3], 1):
-#                                 if com[node][dof]:
-#                                     ni = node + 1
-#                                     dl = com[node][dof] * factor
-#                                     f.write('{0}, {1}, {2}\n'.format(ni, ci, dl))
+                #         f.write('*CLOAD\n')
+                #         f.write('**\n')
+                #         for node in sorted(com, key=int):
+                #             for ci, dof in enumerate(dofs[:3], 1):
+                #                 if com[node][dof]:
+                #                     ni = node + 1
+                #                     dl = com[node][dof] * factor
+                #                     f.write('{0}, {1}, {2}\n'.format(ni, ci, dl))
 
             # Displacements
 
@@ -634,8 +631,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                         j = 'force'
                         f.write('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, beam_elements, j))
 
-#                 if 'spf' in fields:
-#                     elemental['element_spf.out'] = 'basicForces'
+                # if 'spf' in fields:
+                #     elemental['element_spf.out'] = 'basicForces'
 
                 with open('{0}truss_numbers.json'.format(temp), 'w') as fo:
                     json.dump({'truss_numbers': truss_numbers}, fo)
@@ -658,9 +655,9 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
                 if isinstance(fields, list):
                     fields = structure.fields_dic_from_list(fields)
-#                 if 'spf' in fields:
-#                     fields['ctf'] = 'all'
-#                     del fields['spf']
+                # if 'spf' in fields:
+                #     fields['ctf'] = 'all'
+                #     del fields['spf']
 
                 f.write('**\n')
                 f.write('*OUTPUT, FIELD\n')
@@ -704,9 +701,9 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 f.write('+PROG BEMESS\n')
                 f.write('HEAD {0}\n'.format(state.upper()))
                 f.write('$\n')
-#                 f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
-#                 f.write('CTRL WARN 496 $ Possible non-constant longitudinal reinforcement.\n')
-#                 f.write('CTRL WARN 254 $ Vertical shear reinforcement not allowed for slab thickness smaller 20 cm.\n')
+                # f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
+                # f.write('CTRL WARN 496 $ Possible non-constant longitudinal reinforcement.\n')
+                # f.write('CTRL WARN 254 $ Vertical shear reinforcement not allowed for slab thickness smaller 20 cm.\n')
                 f.write('CTRL PFAI 2\n')
                 if state == 'sls':
                     f.write('CTRL SLS\n')
