@@ -3,21 +3,21 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-# from compas_blender.geometry import BlenderMesh
+from compas_blender.geometry import BlenderMesh
 from compas_blender.helpers import mesh_from_bmesh
 # from compas_blender.utilities import clear_layer
 # from compas_blender.utilities import delete_all_materials
 # from compas_blender.utilities import draw_cuboid
 # from compas_blender.utilities import draw_pipes
 # from compas_blender.utilities import draw_plane
-# from compas_blender.utilities import get_objects
+from compas_blender.utilities import get_objects
 # from compas_blender.utilities import get_object_location
 # from compas_blender.utilities import set_object_location
 # from compas_blender.utilities import xdraw_mesh
 # from compas_blender.utilities import xdraw_texts
 
-# from compas.geometry import cross_vectors
-# from compas.geometry import subtract_vectors
+from compas.geometry import cross_vectors
+from compas.geometry import subtract_vectors
 
 # from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
@@ -29,7 +29,7 @@ from compas_fea.utilities import extrude_mesh
 # from numpy import array
 # from numpy import newaxis
 
-# import json
+import json
 
 # try:
 #     import bpy
@@ -44,12 +44,12 @@ __email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
-#     'add_nodes_elements_from_bmesh',
-#     'add_nodes_elements_from_layers',
+    'add_nodes_elements_from_bmesh',
+    'add_nodes_elements_from_layers',
 #     'add_tets_from_bmesh',
-#     'add_nset_from_bmeshes',
-#     'add_elset_from_bmeshes',
-#     'add_nset_from_objects',
+    'add_nset_from_bmeshes',
+    'add_elset_from_bmeshes',
+    'add_nset_from_objects',
 #     'plot_data',
 #     'ordered_network',
 #     'plot_voxels',
@@ -57,152 +57,152 @@ __all__ = [
 ]
 
 
-# def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=None, acoustic=False, thermal=False):
+def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=None, acoustic=False, thermal=False):
 
-#     """ Adds the Blender mesh's nodes, edges and faces to the Structure object.
+    """ Adds the Blender mesh's nodes, edges and faces to the Structure object.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     bmesh : obj
-#         Blender mesh object.
-#     line_type : str
-#         Element type for lines (bmesh edges).
-#     mesh_type : str
-#         Element type for meshes.
-#     acoustic : bool
-#         Acoustic properties on or off.
-#     thermal : bool
-#         Thermal properties on or off.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    bmesh : obj
+        Blender mesh object.
+    line_type : str
+        Element type for lines (bmesh edges).
+    mesh_type : str
+        Element type for meshes.
+    acoustic : bool
+        Acoustic properties on or off.
+    thermal : bool
+        Thermal properties on or off.
 
-#     Returns
-#     -------
-#     list
-#         Node keys that were added to the Structure.
-#     list
-#         Element keys that were added to the Structure.
+    Returns
+    -------
+    list
+        Node keys that were added to the Structure.
+    list
+        Element keys that were added to the Structure.
 
-#     """
+    """
 
-#     solids = ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']
+    blendermesh = BlenderMesh(bmesh)
+    vertices = blendermesh.get_vertex_coordinates()
+    edges    = blendermesh.get_edge_vertex_indices()
+    faces    = blendermesh.get_face_vertex_indices()
 
-#     blendermesh = BlenderMesh(bmesh)
-#     vertices = blendermesh.get_vertex_coordinates()
-#     edges = blendermesh.get_edge_vertex_indices()
-#     faces = blendermesh.get_face_vertex_indices()
+    try:
+        name = blendermesh.guid
+        if name[-5:-3] == '}.':
+            name = name[:-4]
+    except:
+        pass
 
-#     try:
-#         name = blendermesh.guid
-#         if name[-5:-3] == '}.':
-#             name = name[:-4]
-#     except:
-#         pass
+    created_nodes = set()
+    created_elements = set()
 
-#     created_nodes = set()
-#     created_elements = set()
+    for vertex in vertices:
+        node = structure.add_node(vertex)
+        created_nodes.add(node)
 
-#     for vertex in vertices:
-#         node = structure.add_node(vertex)
-#         created_nodes.add(node)
+    if line_type and edges:
 
-#     if line_type and edges:
+        try:
+            dic = json.loads(name.replace("'", '"'))
+            ex = dic.get('ex', None)
+            ey = dic.get('ey', None)
+        except:
+            ex = None
+            ey = None
+        axes = {'ex': ex, 'ey': ey}
 
-#         try:
-#             dic = json.loads(name.replace("'", '"'))
-#             ex = dic.get('ex', None)
-#             ey = dic.get('ey', None)
-#         except:
-#             ex = None
-#             ey = None
-#         axes = {'ex': ex, 'ey': ey}
+        for u, v in edges:
+            sp_xyz = vertices[u]
+            ep_xyz = vertices[v]
+            sp = structure.check_node_exists(sp_xyz)
+            ep = structure.check_node_exists(ep_xyz)
+            ez = subtract_vectors(ep_xyz, sp_xyz)
+            if ex and not ey:
+                ey = cross_vectors(ex, ez)
+            axes['ey'] = ey
+            axes['ez'] = ez
+            e = structure.add_element(nodes=[sp, ep], type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
+            if e is not None:
+                created_elements.add(e)
 
-#         for u, v in edges:
-#             sp_xyz = vertices[u]
-#             ep_xyz = vertices[v]
-#             sp = structure.check_node_exists(sp_xyz)
-#             ep = structure.check_node_exists(ep_xyz)
-#             ez = subtract_vectors(ep_xyz, sp_xyz)
-#             if ex and not ey:
-#                 ey = cross_vectors(ex, ez)
-#             axes['ey'] = ey
-#             axes['ez'] = ez
-#             e = structure.add_element(nodes=[sp, ep], type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
-#             created_elements.add(e)
+    if mesh_type:
 
-#     if mesh_type:
+        if mesh_type in ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']:
+            nodes = [structure.check_node_exists(i) for i in vertices]
+            e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
+            if e is not None:
+                created_elements.add(e)
 
-#         if mesh_type in solids:
-#             nodes = [structure.check_node_exists(i) for i in vertices]
-#             e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
-#             created_elements.add(e)
+        else:
+            try:
+                dic = json.loads(name.replace("'", '"'))
+                ex = dic.get('ex', None)
+                ey = dic.get('ey', None)
+                if ex and ey:
+                    ez = cross_vectors(ex, ey)
+                else:
+                    ez = None
+            except:
+                ex = None
+                ey = None
+                ez = None
+            axes = {'ex': ex, 'ey': ey, 'ez': ez}
 
-#         else:
-#             try:
-#                 dic = json.loads(name.replace("'", '"'))
-#                 ex = dic.get('ex', None)
-#                 ey = dic.get('ey', None)
-#                 if ex and ey:
-#                     ez = cross_vectors(ex, ey)
-#                 else:
-#                     ez = None
-#             except:
-#                 ex = None
-#                 ey = None
-#                 ez = None
-#             axes = {'ex': ex, 'ey': ey, 'ez': ez}
+            for face in faces:
+                nodes = [structure.check_node_exists(vertices[i]) for i in face]
+                e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal, axes=axes)
+                if e is not None:
+                    created_elements.add(e)
 
-#             for face in faces:
-#                 nodes = [structure.check_node_exists(vertices[i]) for i in face]
-#                 e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal, axes=axes)
-#                 created_elements.add(e)
-
-#     return list(created_nodes), list(created_elements)
+    return list(created_nodes), list(created_elements)
 
 
-# def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, acoustic=False, thermal=False):
+def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, acoustic=False, thermal=False):
 
-#     """ Adds node and element data from Blender layers to Structure object.
+    """ Adds node and element data from Blender layers to Structure object.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     layers : list
-#         Layers to extract nodes and elements.
-#     line_type : str
-#         Element type for lines (bmesh edges).
-#     mesh_type : str
-#         Element type for meshes.
-#     acoustic : bool
-#         Acoustic properties on or off.
-#     thermal : bool
-#         Thermal properties on or off.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    layers : list
+        Layers to extract nodes and elements.
+    line_type : str
+        Element type for lines (bmesh edges).
+    mesh_type : str
+        Element type for meshes.
+    acoustic : bool
+        Acoustic properties on or off.
+    thermal : bool
+        Thermal properties on or off.
 
-#     Returns
-#     -------
-#     list
-#         Node keys that were added to the Structure.
-#     list
-#         Element keys that were added to the Structure.
+    Returns
+    -------
+    list
+        Node keys that were added to the Structure.
+    list
+        Element keys that were added to the Structure.
 
-#     """
+    """
 
-#     if isinstance(layers, int):
-#         layers = [layers]
+    if isinstance(layers, int):
+        layers = [layers]
 
-#     created_nodes = set()
-#     created_elements = set()
+    created_nodes = set()
+    created_elements = set()
 
-#     for layer in layers:
-#         for bmesh in get_objects(layer=layer):
+    for layer in layers:
+        for bmesh in get_objects(layer=layer):
+            nodes, elements = add_nodes_elements_from_bmesh(structure=structure, bmesh=bmesh, line_type=line_type,
+                                                            mesh_type=mesh_type, acoustic=acoustic, thermal=thermal)
+            created_nodes.update(nodes)
+            created_elements.update(elements)
 
-#             nodes, elements = add_nodes_elements_from_bmesh(structure=structure, bmesh=bmesh, line_type=line_type,
-#                                                             mesh_type=mesh_type, acoustic=acoustic, thermal=thermal)
-#             created_nodes.update(nodes)
-#             created_elements.update(elements)
-
-#     return list(created_nodes), list(created_elements)
+    return list(created_nodes), list(created_elements)
 
 
 # def add_tets_from_bmesh(structure, name, bmesh, draw_tets=False, volume=None, layer=19, acoustic=False, thermal=False):
@@ -255,126 +255,125 @@ __all__ = [
 #             xdraw_mesh(name=str(i), vertices=xyz, faces=tet_faces, layer=layer)
 
 
-# def add_elset_from_bmeshes(structure, name, bmeshes=None, layer=None):
+def add_elset_from_bmeshes(structure, name, bmeshes=None, layer=None):
 
-#     """ Adds the Blender meshes' edges and faces as an element set.
+    """ Adds the Blender meshes' edges and faces as an element set.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     name : str
-#         Name of the new element set.
-#     bmeshes : list
-#         Blender mesh objects to extract edges and faces.
-#     layer : int
-#         Layer to get bmeshes from if bmeshes are not given.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    name : str
+        Name of the new element set.
+    bmeshes : list
+        Blender mesh objects to extract edges and faces.
+    layer : int
+        Layer to get bmeshes from if bmeshes are not given.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     Notes
-#     -----
-#     - Either bmeshes or layer should be given, not both.
+    Notes
+    -----
+    - Either bmeshes or layer should be given, not both.
 
-#     """
+    """
 
-#     if layer is not None:
-#         bmeshes = [object for object in get_objects(layer=layer) if object.type == 'MESH']
+    if layer is not None:
+        bmeshes = [object for object in get_objects(layer=layer) if object.type == 'MESH']
 
-#     elements = []
+    elements = []
 
-#     for bmesh in bmeshes:
+    for bmesh in bmeshes:
 
-#         blendermesh = BlenderMesh(bmesh)
-#         vertices = blendermesh.get_vertex_coordinates()
-#         edges = blendermesh.get_edge_vertex_indices()
-#         faces = blendermesh.get_face_vertex_indices()
+        blendermesh = BlenderMesh(bmesh)
+        vertices = blendermesh.get_vertex_coordinates()
+        edges    = blendermesh.get_edge_vertex_indices()
+        faces    = blendermesh.get_face_vertex_indices()
 
-#         for u, v in edges:
-#             sp = structure.check_node_exists(vertices[u])
-#             ep = structure.check_node_exists(vertices[v])
-#             element = structure.check_element_exists([sp, ep])
-#             if element is not None:
-#                 elements.append(element)
+        for u, v in edges:
+            sp = structure.check_node_exists(vertices[u])
+            ep = structure.check_node_exists(vertices[v])
+            element = structure.check_element_exists([sp, ep])
+            if element is not None:
+                elements.append(element)
 
-#         for face in faces:
-#             nodes = [structure.check_node_exists(vertices[i]) for i in face]
-#             element = structure.check_element_exists(nodes)
-#             if element is not None:
-#                 elements.append(element)
+        for face in faces:
+            nodes = [structure.check_node_exists(vertices[i]) for i in face]
+            element = structure.check_element_exists(nodes)
+            if element is not None:
+                elements.append(element)
 
-#     structure.add_set(name=name, type='element', selection=elements)
-
-
-# def add_nset_from_bmeshes(structure, name, bmeshes=None, layer=None):
-
-#     """ Adds the Blender meshes' vertices as a node set.
-
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     name : str
-#         Name of the new node set.
-#     bmeshes : list
-#         Blender mesh objects to extract vertices.
-#     layer : int
-#         Layer to get bmeshes from if bmeshes are not given.
-
-#     Returns
-#     -------
-#     None
-
-#     Notes
-#     -----
-#     - Either bmeshes or layer should be given, not both.
-
-#     """
-
-#     if layer is not None:
-#         bmeshes = [object for object in get_objects(layer=layer) if object.type == 'MESH']
-
-#     nodes = []
-#     for bmesh in bmeshes:
-#         blendermesh = BlenderMesh(bmesh)
-#         for vertex in blendermesh.get_vertex_coordinates():
-#             node = structure.check_node_exists(vertex)
-#             if node is not None:
-#                 nodes.append(node)
-#     structure.add_set(name=name, type='node', selection=nodes)
+    structure.add_set(name=name, type='element', selection=elements)
 
 
-# def add_nset_from_objects(structure, name, objects=None, layer=None):
+def add_nset_from_bmeshes(structure, name, bmeshes=None, layer=None):
 
-#     """ Adds the objects' locations as a node set.
+    """ Adds the Blender meshes' vertices as a node set.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     name : str
-#         Name of the new node set.
-#     objects : list
-#         Objects to use location values.
-#     layer : int
-#         Layer to get objects from if objects are not given.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    name : str
+        Name of the new node set.
+    bmeshes : list
+        Blender mesh objects to extract vertices.
+    layer : int
+        Layer to get bmeshes from if bmeshes are not given.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     Notes
-#     -----
-#     - Either objects or layer should be given, not both.
+    Notes
+    -----
+    - Either bmeshes or layer should be given, not both.
 
-#     """
+    """
 
-#     if layer is not None:
-#         objects = get_objects(layer=layer)
-#     nodes = [structure.check_node_exists(object.location) for object in objects]
-#     structure.add_set(name=name, type='node', selection=nodes)
+    if layer is not None:
+        bmeshes = [object for object in get_objects(layer=layer) if object.type == 'MESH']
+
+    nodes = []
+    for bmesh in bmeshes:
+        for vertex in BlenderMesh(bmesh).get_vertex_coordinates():
+            node = structure.check_node_exists(vertex)
+            if node is not None:
+                nodes.append(node)
+    structure.add_set(name=name, type='node', selection=nodes)
+
+
+def add_nset_from_objects(structure, name, objects=None, layer=None):
+
+    """ Adds the objects' locations as a node set.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    name : str
+        Name of the new node set.
+    objects : list
+        Objects to use location values.
+    layer : int
+        Layer to get objects from if objects are not given.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    - Either objects or layer should be given, not both.
+
+    """
+
+    if layer is not None:
+        objects = get_objects(layer=layer)
+    nodes = [structure.check_node_exists(object.location) for object in objects]
+    structure.add_set(name=name, type='node', selection=nodes)
 
 
 def mesh_extrude(structure, bmesh, layers, thickness, mesh_name='', links_name='', blocks_name=''):

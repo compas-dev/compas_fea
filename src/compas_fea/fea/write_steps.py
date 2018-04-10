@@ -186,6 +186,45 @@ def _write_line_load(f, software, axes, com, factor, elset, sets, structure):
             pass
 
 
+def _write_area_load(f, software, com, axes, elset, sets):
+
+    if software == 'opensees':
+
+        pass
+
+    elif software == 'abaqus':  # only based on normal so far
+
+        pass
+
+        # if axes == 'global':
+        #     raise NotImplementedError
+
+        # elif axes == 'local':
+        # x COMPONENT
+        # y COMPONENT
+        # f.write('*DLOAD\n')
+        # f.write('**\n')
+        # if com['z']:
+        #     f.write('{0}, P, {1}'.format(elset, factor * com['z']) + '\n')
+
+    elif software == 'sofistik':
+
+        components = ''
+        for i in 'xyz':
+            if com[i]:
+                if axes == 'local':
+                    components += ' P{0} {1}[kN/m2]'.format(i.upper(), 0.001 * com[i])
+                elif axes == 'global':
+                    components += ' P{0}{0} {1}[kN/m2]'.format(i.upper(), 0.001 * com[i])
+        for k in elset:
+            set_index = sets[k]['index'] + 1
+            f.write('    QUAD GRP {0} TYPE{1}\n'.format(set_index, components))
+
+    elif software == 'ansys':
+
+        pass
+
+
 def _write_gravity_load(f, software, g, com, elset, factor):
 
     gx = com['x'] if com['x'] else 0
@@ -340,7 +379,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 #                 else:
 
 #
-#                     set_index = sets[elset]['index'] + 1
+#
 
 #                     if ltype == 'TributaryLoad':
 
@@ -352,16 +391,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 #                                     dl = com[node][dof] / 1000.
 #                                     f.write('P{0}{0} {1}\n'.format(dof.upper(), dl))
 
-#                     elif ltype == 'AreaLoad':
-
-#                         components = ''
-#                         for i in 'xyz':
-#                             if com[i]:
-#                                 if axes == 'local':
-#                                     components += ' P{0} {1}'.format(i.upper(), 0.001 * com[i])
-#                                 elif axes == 'global':
-#                                     components += ' P{0}{0} {1}'.format(i.upper(), 0.001 * com[i])
-#                         f.write('    QUAD GRP {0} TYPE{1}\n'.format(set_index, components))
+                elif ltype == 'AreaLoad':
+                    _write_area_load(f, software, com, axes, elset, sets)
 
                 f.write('$\n')
 
@@ -507,26 +538,11 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     if software != 'sofistik':
                         _write_line_load(f, software, axes, com, factor, elset, sets, structure)
 
-                # # Area load
+                # Area load
 
-                # elif ltype == 'AreaLoad':
-
-                #     if software == 'opensees':
-
-                #         pass
-
-                #     elif software == 'abaqus':  # only based on normal so far
-
-                #         # if axes == 'global':
-                #         #     raise NotImplementedError
-
-                #         # elif axes == 'local':
-                #         # x COMPONENT
-                #         # y COMPONENT
-                #         f.write('*DLOAD\n')
-                #         f.write('**\n')
-                #         if com['z']:
-                #             f.write('{0}, P, {1}'.format(elset, factor * com['z']) + '\n')
+                elif ltype == 'AreaLoad':
+                    if software != 'sofistik':
+                        _write_area_load(f, software, com, axes, elset, sets)
 
                 # # Body load
 
@@ -701,7 +717,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 f.write('+PROG BEMESS\n')
                 f.write('HEAD {0}\n'.format(state.upper()))
                 f.write('$\n')
-                # f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
+                f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
                 # f.write('CTRL WARN 496 $ Possible non-constant longitudinal reinforcement.\n')
                 # f.write('CTRL WARN 254 $ Vertical shear reinforcement not allowed for slab thickness smaller 20 cm.\n')
                 f.write('CTRL PFAI 2\n')

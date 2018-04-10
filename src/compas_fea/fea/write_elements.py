@@ -77,7 +77,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
     f.write('{0}\n'.format(c))
 
     is_rebar = False
-#     written_springs = []
+    written_springs = []
     written_elsets = []
     structure.sofistik_mapping = {}
 
@@ -92,12 +92,11 @@ def write_input_elements(f, software, sections, properties, elements, structure,
         reinforcement = property.reinforcement
         if reinforcement:
             is_rebar = True
-#         else:
-#             rebar_index = None
 
-        f.write('{0} Property: {1}\n'.format(c, key))
-        f.write('{0} ----------'.format(c) + '-' * (len(key)) + '\n')
-        f.write('{0}\n'.format(c))
+        if stype != 'SpringSection':
+            f.write('{0} Property: {1}\n'.format(c, key))
+            f.write('{0} ----------'.format(c) + '-' * (len(key)) + '\n')
+            f.write('{0}\n'.format(c))
 
         if property.elements:
             elset = 'elset_{0}'.format(key)
@@ -130,8 +129,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
             # Springs
 
             if stype == 'SpringSection':
-                pass
-                # _write_springs(f, software, selection, elements, section, written_springs)
+                _write_springs(f, software, selection, elements, section, written_springs)
 
             # Beam sections
 
@@ -146,15 +144,16 @@ def write_input_elements(f, software, sections, properties, elements, structure,
             # Shell sections
 
             elif stype in shells:
-                _write_shells(f, software, selection, elements, geometry, material, reinforcement, c)
+                _write_shells(f, software, selection, elements, geometry, material, materials, reinforcement, c)
 
             # Solid sections
 
-            # elif stype in solids:
-                # _write_blocks(f, software, selection, elements, material, c)
+            elif stype in solids:
+                _write_blocks(f, software, selection, elements, material, c)
 
-            f.write('{0}\n'.format(c))
-            f.write('{0}\n'.format(c))
+            if stype != 'SpringSection':
+                f.write('{0}\n'.format(c))
+                f.write('{0}\n'.format(c))
 
     if software == 'sofistik':
 
@@ -296,7 +295,8 @@ def _write_sofistik_rebar(f, properties, sections, sets):
         f.write('$\n')
 
 
-# def _write_blocks(f, software, selection, elements, material, c):
+def _write_blocks(f, software, selection, elements, material, c):
+    pass
 
 #     for select in selection:
 
@@ -336,7 +336,7 @@ def _write_sofistik_rebar(f, properties, sections, sets):
 #         f.write('{0}\n'.format(c))
 
 
-def _write_shells(f, software, selection, elements, geometry, material, reinforcement, c):
+def _write_shells(f, software, selection, elements, geometry, material, materials, reinforcement, c):
 
     for select in selection:
 
@@ -394,14 +394,14 @@ def _write_shells(f, software, selection, elements, geometry, material, reinforc
             elif len(nodes) == 4:
                 f.write('QUAD NO N1 N2 N3 N4 MNO T1 T2 T3 T4')
 
-            # rebar_index = materials[list(reinforcement.values())[0]['material']].index + 1
-#             if rebar_index:
-#                 f.write(' MRF')
+            rebar_index = materials[list(reinforcement.values())[0]['material']].index + 1
+            if rebar_index:
+                f.write(' MRF')
             f.write('\n')
 
             data = [str(ni)] + [str(i + 1) for i in nodes] + [str(material.index + 1)] + ['{0}[m]'.format(t)] * len(nodes)
-#             if rebar_index:
-#                 data.append(rebar_index)
+            if rebar_index:
+                data.append(str(rebar_index))
             f.write('{0}\n'.format(' '.join(data)))
 
         elif software == 'ansys':
@@ -477,8 +477,9 @@ def _write_trusses(f, selection, software, elements, section, material, elset):
 
         f.write('TRUS NO NA NE NCS')
         if material.__name__ in ['Steel']:
-            Ny = A * material.fy / 1000.
-            f.write(' YIEL')
+            Ny = None
+            # Ny = A * material.fy / 1000.
+            # f.write(' YIEL')
         else:
             Ny = None
         f.write('\n$\n')
@@ -514,50 +515,51 @@ def _write_trusses(f, selection, software, elements, section, material, elset):
             pass
 
 
-# def _write_springs(f, software, selection, elements, section, written_springs):
+def _write_springs(f, software, selection, elements, section, written_springs):
 
-#     if software == 'abaqus':
+    # if software == 'abaqus':
 
-#         b1 = 'BEH_{0}'.format(section.name)
-#         if b1 not in written_springs:
-#             f.write('*CONNECTOR BEHAVIOR, NAME={0}\n'.format(b1))
-#             if section.stiffness:
-#                 f.write('*CONNECTOR ELASTICITY, COMPONENT=1\n')
-#                 f.write('{0}\n'.format(section.stiffness['axial']))
-#             else:
-#                 f.write('*CONNECTOR ELASTICITY, COMPONENT=1, NONLINEAR\n')
-#                 for i, j in zip(section.forces['axial'], section.displacements['axial']):
-#                     f.write('{0}, {1}\n'.format(i, j))
-#             written_springs.append(b1)
-#             f.write('**\n')
+    #     b1 = 'BEH_{0}'.format(section.name)
+    #     if b1 not in written_springs:
+    #         f.write('*CONNECTOR BEHAVIOR, NAME={0}\n'.format(b1))
+    #         if section.stiffness:
+    #             f.write('*CONNECTOR ELASTICITY, COMPONENT=1\n')
+    #             f.write('{0}\n'.format(section.stiffness['axial']))
+    #         else:
+    #             f.write('*CONNECTOR ELASTICITY, COMPONENT=1, NONLINEAR\n')
+    #             for i, j in zip(section.forces['axial'], section.displacements['axial']):
+    #                 f.write('{0}, {1}\n'.format(i, j))
+    #         written_springs.append(b1)
+    #         f.write('**\n')
 
-#     elif software == 'opensees':
+    # elif software == 'opensees':
 
-#         section_index = section.index + 1
-#         if section_index not in written_springs:
-#             if section.stiffness:
-#                 E = section.stiffness['axial']
-#                 f.write('uniaxialMaterial Elastic {0}01 {1}\n'.format(section_index, E))
-#                 f.write('#\n')
-#             else:
-#                 i = ' '.join([str(k) for k in section.forces['axial']])
-#                 j = ' '.join([str(k) for k in section.displacements['axial']])
-#                 f.write('uniaxialMaterial ElasticMultiLinear {0}01 -strain {1} -stress {2}\n'.format(
-#                     section_index, j, i))
-#                 f.write('#\n')
-#             written_springs.append(section_index)
+    #     section_index = section.index + 1
+    #     if section_index not in written_springs:
+    #         if section.stiffness:
+    #             E = section.stiffness['axial']
+    #             f.write('uniaxialMaterial Elastic {0}01 {1}\n'.format(section_index, E))
+    #             f.write('#\n')
+    #         else:
+    #             i = ' '.join([str(k) for k in section.forces['axial']])
+    #             j = ' '.join([str(k) for k in section.displacements['axial']])
+    #             f.write('uniaxialMaterial ElasticMultiLinear {0}01 -strain {1} -stress {2}\n'.format(
+    #                 section_index, j, i))
+    #             f.write('#\n')
+    #         written_springs.append(section_index)
 
-#     for select in selection:
+    for select in selection:
 
-#         element = elements[select]
-#         sp, ep = element.nodes
-#         n = select + 1
-#         i = sp + 1
-#         j = ep + 1
+        element = elements[select]
+        sp, ep = element.nodes
+        ni = select + 1
+        i = sp + 1
+        j = ep + 1
 #         ey = element.axes.get('ey', None)
 #         ez = element.axes.get('ez', None)
 
-#         if software == 'abaqus':
+        if software == 'abaqus':
+            pass
 
 #             e1 = 'element_{0}'.format(select)
 #             f.write('*ELEMENT, TYPE=CONN3D2, ELSET={0}\n'.format(e1))
@@ -572,13 +574,12 @@ def _write_trusses(f, selection, software, elements, section, material, elset):
 #             f.write('ORI_{0}\n'.format(select))
 #             f.write('**\n')
 
-#         elif software == 'sofistik':
+        elif software == 'sofistik':
 
-#             kx = section.stiffness.get('axial', 0)
-#             ky = section.stiffness.get('lateral', 0)
-#             kr = section.stiffness.get('rotation', 0)
-#             f.write('SPRI NO {0} NA {1} NE {2} CP {3} CT {4} CM {5}\n'.format(n, j, i, kx, ky, kr))
-#             f.write('$\n')
+            kx = section.stiffness.get('axial', 0)
+            ky = section.stiffness.get('lateral', 0)
+            kr = section.stiffness.get('rotation', 0)
+            f.write('SPRI NO {0} NA {1} NE {2} CP {3} CT {4} CM {5}\n'.format(ni, j, i, kx, ky, kr))
 
 #         elif software == 'opensees':
 
@@ -590,4 +591,4 @@ def _write_trusses(f, selection, software, elements, section, material, elset):
 
 #             pass
 
-#     return written_springs
+    return written_springs

@@ -13,9 +13,9 @@ from compas_rhino.helpers.mesh import mesh_from_guid
 # from compas_rhino.utilities import xdraw_mesh
 
 # from compas.geometry import add_vectors
-# from compas.geometry import cross_vectors
+from compas.geometry import cross_vectors
 # from compas.geometry import scale_vector
-# from compas.geometry import subtract_vectors
+from compas.geometry import subtract_vectors
 
 # from compas_fea import utilities
 # from compas_fea.utilities import colorbar
@@ -29,7 +29,7 @@ except ImportError:
     if platform.system() == 'Windows':
         raise
 
-# import json
+import json
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
@@ -39,12 +39,12 @@ __email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
-#     'add_element_set',
+    'add_element_set',
 #     'add_tets_from_mesh',
-#     'add_node_set',
+    'add_node_set',
 #     # 'discretise_mesh',
-#     'add_nodes_elements_from_layers',
-#     'add_sets_from_layers',
+    'add_nodes_elements_from_layers',
+    'add_sets_from_layers',
     'mesh_extrude',
 #     'network_from_lines',
 #     'ordered_network',
@@ -115,62 +115,62 @@ __all__ = [
 #         '***** Mesh discretisation failed *****'
 
 
-# def add_element_set(structure, guids, name):
+def add_element_set(structure, guids, name):
 
-#     """ Adds element set information from Rhino curve and mesh guids.
+    """ Adds element set information from Rhino curve and mesh guids.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     guids : list
-#         Rhino curve and Rhino mesh guids.
-#     name : str
-#         Name of the new element set.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    guids : list
+        Rhino curve and Rhino mesh guids.
+    name : str
+        Name of the new element set.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     Notes
-#     -----
-#     - Meshes representing solids must have 'solid' in their name.
+    Notes
+    -----
+    - Meshes representing solids must have 'solid' in their name.
 
-#     """
+    """
 
-#     elements = []
+    elements = []
 
-#     for guid in guids:
+    for guid in guids:
 
-#         if rs.IsCurve(guid):
+        if rs.IsCurve(guid):
 
-#             sp = structure.check_node_exists(rs.CurveStartPoint(guid))
-#             ep = structure.check_node_exists(rs.CurveEndPoint(guid))
-#             element = structure.check_element_exists([sp, ep])
-#             if element is not None:
-#                 elements.append(element)
+            sp = structure.check_node_exists(rs.CurveStartPoint(guid))
+            ep = structure.check_node_exists(rs.CurveEndPoint(guid))
+            element = structure.check_element_exists([sp, ep])
+            if element is not None:
+                elements.append(element)
 
-#         if rs.IsMesh(guid):
+        if rs.IsMesh(guid):
 
-#             vertices = rs.MeshVertices(guid)
-#             faces = rs.MeshFaceVertices(guid)
+            vertices = rs.MeshVertices(guid)
+            faces = rs.MeshFaceVertices(guid)
 
-#             if 'solid' in rs.ObjectName(guid):
-#                 nodes = [structure.check_node_exists(i) for i in vertices]
-#                 element = structure.check_element_exists(nodes)
-#                 if element is not None:
-#                     elements.append(element)
+            if 'solid' in rs.ObjectName(guid):
+                nodes = [structure.check_node_exists(i) for i in vertices]
+                element = structure.check_element_exists(nodes)
+                if element is not None:
+                    elements.append(element)
 
-#             else:
-#                 for face in faces:
-#                     nodes = [structure.check_node_exists(vertices[i]) for i in face]
-#                     if nodes[2] == nodes[3]:
-#                         nodes = nodes[:-1]
-#                     element = structure.check_element_exists(nodes)
-#                     if element is not None:
-#                         elements.append(element)
+            else:
+                for face in faces:
+                    nodes = [structure.check_node_exists(vertices[i]) for i in face]
+                    if nodes[2] == nodes[3]:
+                        nodes = nodes[:-1]
+                    element = structure.check_element_exists(nodes)
+                    if element is not None:
+                        elements.append(element)
 
-#     structure.add_set(name=name, type='element', selection=elements)
+    structure.add_set(name=name, type='element', selection=elements)
 
 
 # def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, layer='Default', acoustic=False, thermal=False):
@@ -239,175 +239,178 @@ __all__ = [
 #         print('***** Error using MeshPy and/or generating Tets *****')
 
 
-# def add_node_set(structure, guids, name):
+def add_node_set(structure, guids, name):
 
-#     """ Adds node set information from Rhino point guids.
+    """ Adds node set information from Rhino point guids.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     guids : list
-#         Rhino point guids.
-#     name : str
-#         Name of the new node set.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    guids : list
+        Rhino point guids.
+    name : str
+        Name of the new node set.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     """
+    """
 
-#     nodes = []
-#     for guid in guids:
-#         node = structure.check_node_exists(rs.PointCoordinates(guid))
-#         if node is not None:
-#             nodes.append(node)
-#     structure.add_set(name=name, type='node', selection=nodes)
-
-
-# def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, acoustic=False, thermal=False):
-
-#     """ Adds node and element data from Rhino layers to Structure object.
-
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     layers : list
-#         Layers to extract nodes and elements.
-#     line_type : str
-#         Element type for lines.
-#     mesh_type : str
-#         Element type for meshes.
-#     acoustic : bool
-#         Acoustic properties on or off.
-#     thermal : bool
-#         Thermal properties on or off.
-
-#     Returns
-#     -------
-#     list
-#         Node keys that were added to the Structure.
-#     list
-#         Element keys that were added to the Structure.
-
-#     """
-
-#     solids = ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']
-
-#     if isinstance(layers, str):
-#         layers = [layers]
-
-#     created_nodes = set()
-#     created_elements = set()
-
-#     for layer in layers:
-#         elset = set()
-
-#         for guid in rs.ObjectsByLayer(layer):
-
-#             if line_type and rs.IsCurve(guid):
-#                 sp_xyz = rs.CurveStartPoint(guid)
-#                 ep_xyz = rs.CurveEndPoint(guid)
-#                 sp = structure.add_node(sp_xyz)
-#                 ep = structure.add_node(ep_xyz)
-#                 created_nodes.add(sp)
-#                 created_nodes.add(ep)
-#                 ez = subtract_vectors(ep_xyz, sp_xyz)
-
-#                 try:
-#                     dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
-#                     ex = dic.get('ex', None)
-#                     ey = dic.get('ey', None)
-#                     if ex and not ey:
-#                         ey = cross_vectors(ex, ez)
-#                 except:
-#                     ex = None
-#                     ey = None
-
-#                 axes = {'ex': ex, 'ey': ey, 'ez': ez}
-#                 sp_ep = [sp, ep]
-#                 e = structure.add_element(nodes=sp_ep, type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
-#                 if e is not None:
-#                     created_elements.add(e)
-#                     elset.add(e)
-
-#             elif mesh_type and rs.IsMesh(guid):
-#                 vertices = rs.MeshVertices(guid)
-#                 nodes = [structure.add_node(vertex) for vertex in vertices]
-#                 created_nodes.update(nodes)
-
-#                 if mesh_type in solids:
-#                     e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
-#                     if e is not None:
-#                         created_elements.add(e)
-#                         elset.add(e)
-
-#                 else:
-#                     try:
-#                         dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
-#                         ex = dic.get('ex', None)
-#                         ey = dic.get('ey', None)
-#                         if ex and ey:
-#                             ez = cross_vectors(ex, ey)
-#                         else:
-#                             ez = None
-#                     except:
-#                         ex = None
-#                         ey = None
-#                         ez = None
-#                     axes = {'ex': ex, 'ey': ey, 'ez': ez}
-
-#                     for face in rs.MeshFaceVertices(guid):
-#                         nodes = [structure.check_node_exists(vertices[i]) for i in face]
-#                         if nodes[-1] == nodes[-2]:
-#                             del nodes[-1]
-#                         e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal,
-#                                                   axes=axes)
-#                         if e is not None:
-#                             created_elements.add(e)
-#                             elset.add(e)
-
-#         structure.add_set(name=layer, type='element', selection=list(elset))
-
-#     return list(created_nodes), list(created_elements)
+    nodes = []
+    for guid in guids:
+        node = structure.check_node_exists(rs.PointCoordinates(guid))
+        if node is not None:
+            nodes.append(node)
+    structure.add_set(name=name, type='node', selection=nodes)
 
 
-# def add_sets_from_layers(structure, layers):
+def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, acoustic=False, thermal=False):
 
-#     """ Add node or element sets to the Structure object from Rhino layers.
+    """ Adds node and element data from Rhino layers to Structure object.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     layers : list
-#         List of layer names to take objects from.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    layers : list
+        Layers to extract nodes and elements.
+    line_type : str
+        Element type for lines.
+    mesh_type : str
+        Element type for meshes.
+    acoustic : bool
+        Acoustic properties on or off.
+    thermal : bool
+        Thermal properties on or off.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    list
+        Node keys that were added to the Structure.
+    list
+        Element keys that were added to the Structure.
 
-#     Notes
-#     -----
-#     - Layers should exclusively contain nodes or elements.
-#     - Sets will inherit the layer names as their keys.
+    """
 
-#     """
+    if isinstance(layers, str):
+        layers = [layers]
 
-#     if isinstance(layers, str):
-#         layers = [layers]
+    created_nodes = set()
+    created_elements = set()
 
-#     for layer in layers:
-#         guids = rs.ObjectsByLayer(layer)
-#         if guids:
-#             name = layer.split('::')[-1] if '::' in layer else layer
-#             check_points = [rs.IsPoint(guid) for guid in guids]
-#             if all(check_points):
-#                 add_node_set(structure=structure, guids=guids, name=name)
-#             elif not all(check_points):
-#                 add_element_set(structure=structure, guids=guids, name=name)
+    for layer in layers:
+        elset = set()
+        for guid in rs.ObjectsByLayer(layer):
+
+            if line_type and rs.IsCurve(guid):
+
+                sp_xyz = rs.CurveStartPoint(guid)
+                ep_xyz = rs.CurveEndPoint(guid)
+                sp = structure.add_node(sp_xyz)
+                ep = structure.add_node(ep_xyz)
+                sp_ep = [sp, ep]
+                created_nodes.add(sp)
+                created_nodes.add(ep)
+                ez = subtract_vectors(ep_xyz, sp_xyz)
+
+                try:
+                    dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
+                    ex = dic.get('ex', None)
+                    ey = dic.get('ey', None)
+                    if ex and not ey:
+                        ey = cross_vectors(ex, ez)
+                except:
+                    ex = None
+                    ey = None
+                axes = {'ex': ex, 'ey': ey, 'ez': ez}
+
+                e = structure.add_element(nodes=sp_ep, type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
+                if e is not None:
+                    created_elements.add(e)
+                    elset.add(e)
+
+            elif mesh_type and rs.IsMesh(guid):
+
+                vertices = rs.MeshVertices(guid)
+                nodes = [structure.add_node(vertex) for vertex in vertices]
+                created_nodes.update(nodes)
+
+                if mesh_type in ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']:
+                    e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
+                    if e is not None:
+                        created_elements.add(e)
+                        elset.add(e)
+
+                else:
+                    try:
+                        dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
+                        ex = dic.get('ex', None)
+                        ey = dic.get('ey', None)
+                        if ex and ey:
+                            ez = cross_vectors(ex, ey)
+                        else:
+                            ez = None
+                    except:
+                        ex = None
+                        ey = None
+                        ez = None
+                    axes = {'ex': ex, 'ey': ey, 'ez': ez}
+
+                    for face in rs.MeshFaceVertices(guid):
+                        nodes = [structure.check_node_exists(vertices[i]) for i in face]
+                        if nodes[-1] == nodes[-2]:
+                            del nodes[-1]
+                        e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal,
+                                                  axes=axes)
+                        if e is not None:
+                            created_elements.add(e)
+                            elset.add(e)
+
+        structure.add_set(name=layer, type='element', selection=list(elset))
+
+    return list(created_nodes), list(created_elements)
+
+
+def add_sets_from_layers(structure, layers):
+
+    """ Add node and element sets to the Structure object from Rhino layers.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    layers : list
+        List of layer names to take objects from.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    - Layers should exclusively contain nodes or elements.
+    - Sets will inherit the layer names as their keys.
+
+    """
+
+    if isinstance(layers, str):
+        layers = [layers]
+
+    for layer in layers:
+        guids = rs.ObjectsByLayer(layer)
+
+        if guids:
+            name = layer.split('::')[-1] if '::' in layer else layer
+            check_points = [rs.IsPoint(guid) for guid in guids]
+
+            if all(check_points):
+                add_node_set(structure=structure, guids=guids, name=name)
+            elif not any(check_points):
+                add_element_set(structure=structure, guids=guids, name=name)
+            else:
+                print('***** Layer {0} contained a mixture of points and elements, set not created *****'.format(name))
 
 
 def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name='', blocks_name='',
