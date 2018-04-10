@@ -1,7 +1,5 @@
-"""An example compas_fea package use for meshes."""
 
 from compas_fea.cad import rhino
-
 from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralDisplacement
@@ -19,62 +17,57 @@ __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
 
-# Create empty Structure object
+# Structure
 
 mdl = Structure(name='mesh_strip', path='C:/Temp/')
 
-# Add shell elements
+# Elements
 
 rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers='elset_mesh')
 
-# Add node and element sets
+# Sets
 
-rhino.add_sets_from_layers(mdl, layers=['nset_left', 'nset_right', 'nset_middle', 'elset_mesh'])
+rhino.add_sets_from_layers(mdl, layers=['nset_left', 'nset_right', 'nset_middle'])
 
-# Add materials
+# Materials
 
 mdl.add_material(ElasticIsotropic(name='mat_alu', E=75*10**9, v=0.3, p=2700))
 
-# Add sections
+# Sections
 
 mdl.add_section(ShellSection(name='sec_plate', t=0.001))
 
-# Add element properties
+# Properties
 
 ep = Properties(name='ep_plate', material='mat_alu', section='sec_plate', elsets='elset_mesh')
 mdl.add_element_properties(ep)
 
-# Add loads
-
-mdl.add_load(GravityLoad(name='load_gravity', elements='elset_mesh'))
-
-# Add displacements
+# Displacements
 
 mdl.add_displacements([
     PinnedDisplacement(name='disp_left', nodes='nset_left'),
     RollerDisplacementX(name='disp_right', nodes='nset_right'),
-    GeneralDisplacement(name='disp_middle', nodes='nset_middle', z=0.2)])
+    GeneralDisplacement(name='disp_stability', nodes='nset_stability', y=0),
+    GeneralDisplacement(name='disp_middle', nodes='nset_middle', z=0.200)])
 
-# Add steps
+# Loads
+
+mdl.add_load(GravityLoad(name='load_gravity', elements='elset_mesh'))
+
+# Steps
 
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements=['disp_left', 'disp_right']),
-    GeneralStep(name='step_load', loads=['load_gravity']),
-    GeneralStep(name='step_lift', displacements=['disp_middle'])])
-mdl.steps_order = ['step_bc', 'step_load', 'step_lift']
+    GeneralStep(name='step_load', loads=['load_gravity'], displacements=['disp_middle'])])
+mdl.steps_order = ['step_bc', 'step_load']
 
-# Structure summary
+# Summary
 
 mdl.summary()
 
-# Run and extract data
+# Run (Abaqus)
 
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
-# Plot displacements
-
-rhino.plot_data(mdl, step='step_lift', field='um')
-
-# Plot stress
-
-rhino.plot_data(mdl, step='step_lift', field='smises')
+rhino.plot_data(mdl, step='step_load', field='um')
+rhino.plot_data(mdl, step='step_load', field='smises')  # Abaqus results only

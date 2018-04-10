@@ -77,7 +77,7 @@
 <h1>mesh_extrude</h1>
 <dl class="function">
 <dt id="compas_fea.cad.blender.mesh_extrude">
-<code class="descclassname">compas_fea.cad.blender.</code><code class="descname">mesh_extrude</code><span class="sig-paren">(</span><em>structure</em>, <em>bmesh</em>, <em>nz</em>, <em>dz</em>, <em>setname</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/cad/blender.html#mesh_extrude"><span class="viewcode-link">[source]</span></a></dt>
+<code class="descclassname">compas_fea.cad.blender.</code><code class="descname">mesh_extrude</code><span class="sig-paren">(</span><em>structure</em>, <em>bmesh</em>, <em>nz</em>, <em>dz</em>, <em>setname=None</em>, <em>cap=None</em>, <em>links=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/cad/blender.html#mesh_extrude"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Extrudes a Blender mesh into cells of many layers and adds to Structure.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -86,7 +86,9 @@
 <li><p><strong>bmesh</strong> (<em>obj</em>) – Blender mesh object.</p></li>
 <li><p><strong>nz</strong> (<em>int</em>) – Number of layers.</p></li>
 <li><p><strong>dz</strong> (<em>float</em>) – Layer thickness.</p></li>
-<li><p><strong>setname</strong> (<em>str</em>) – Name of set for added elements.</p></li>
+<li><p><strong>setname</strong> (<em>str</em>) – Name of set for added solid elements.</p></li>
+<li><p><strong>cap</strong> (<em>str</em>) – Name of set for a capping mesh on final surface.</p></li>
+<li><p><strong>links</strong> (<em>str</em>) – Name of set for adding links along extrusion.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -175,11 +177,11 @@
             
 
             
-                Last updated on Feb 14, 2018.
+                Last updated on Mar 27, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 

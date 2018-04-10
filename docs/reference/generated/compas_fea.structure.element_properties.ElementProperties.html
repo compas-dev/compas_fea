@@ -20,7 +20,7 @@
         <link rel="stylesheet" type="text/css" href="/_static/css/compas-reference.css" />
 
         
-            <link rel="next" title="HeatTransfer" href="compas_fea.structure.interaction.HeatTransfer.html" />
+            <link rel="next" title="Load" href="compas_fea.structure.load.Load.html" />
         
         
         
@@ -79,18 +79,18 @@
 <h1>ElementProperties</h1>
 <dl class="class">
 <dt id="compas_fea.structure.element_properties.ElementProperties">
-<em class="property">class </em><code class="descclassname">compas_fea.structure.element_properties.</code><code class="descname">ElementProperties</code><span class="sig-paren">(</span><em>name</em>, <em>material</em>, <em>section</em>, <em>elsets=None</em>, <em>elements=None</em>, <em>reinforcement={}</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/element_properties.html#ElementProperties"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<p>Initialises ElementProperties object.</p>
+<em class="property">class </em><code class="descclassname">compas_fea.structure.element_properties.</code><code class="descname">ElementProperties</code><span class="sig-paren">(</span><em>name</em>, <em>material=None</em>, <em>section=None</em>, <em>elsets=None</em>, <em>elements=None</em>, <em>reinforcement={}</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/element_properties.html#ElementProperties"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Initialises an ElementProperties object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str, int</em>) – Key for the ElementProperties object.</p></li>
-<li><p><strong>material</strong> (<em>str</em>) – Name of the material to assign.</p></li>
-<li><p><strong>section</strong> (<em>str</em>) – Name of the section to assign.</p></li>
-<li><p><strong>elsets</strong> (<em>list</em>) – tr): Element sets the properties are assigned to.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Key name for the ElementProperties object.</p></li>
+<li><p><strong>material</strong> (<em>str</em>) – Name of the Material object to assign.</p></li>
+<li><p><strong>section</strong> (<em>str</em>) – Name of the Section object to assign.</p></li>
+<li><p><strong>elsets</strong> (<em>list, str</em>) – Element sets the properties are assigned to.</p></li>
 <li><p><strong>elements</strong> (<em>list</em>) – Elements the properties are assigned to.</p></li>
-<li><p><strong>reinforcement</strong> (<em>dic</em>) – Reinforcement information.</p></li>
+<li><p><strong>reinforcement</strong> (<em>dic</em>) – Reinforcement data for the elements.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -99,7 +99,7 @@
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>elements or elsets should be given, not both.</p></li>
+<li><p>Either <code class="docutils literal notranslate"><span class="pre">elements</span></code> or <code class="docutils literal notranslate"><span class="pre">elsets</span></code> should be given, not both.</p></li>
 </ul>
 <p class="rubric">Methods</p>
 <table class="longtable docutils">
@@ -108,8 +108,8 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code>(name, material, section[, elsets, …])</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code>(name[, material, section, elsets, …])</p></td>
+<td><p>Initialize self.</p></td>
 </tr>
 </tbody>
 </table>
@@ -124,7 +124,7 @@
                             
 
                             
-                                <a href="compas_fea.structure.interaction.HeatTransfer.html" class="btn btn-primary compas-next" role="button">HeatTransfer</a>
+                                <a href="compas_fea.structure.load.Load.html" class="btn btn-primary compas-next" role="button">Load</a>
                             
                         </nav> -->
 
@@ -192,11 +192,11 @@
             
 
             
-                Last updated on Feb 14, 2018.
+                Last updated on Mar 27, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 

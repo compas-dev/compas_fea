@@ -19,7 +19,7 @@ __all__ = [
     'ElasticIsotropic',
     'ElasticOrthotropic',
     'ElasticPlastic',
-    'ThermalMaterial',
+    # 'ThermalMaterial',
     'Steel'
 ]
 
@@ -36,7 +36,7 @@ class ElasticIsotropic(object):
     ----------
     name : str
         Material name.
-    E : float, list
+    E : float
         Young's modulus E [Pa].
     v : float
         Poisson's ratio v [-].
@@ -72,25 +72,25 @@ class ElasticOrthotropic(object):
     ----------
     name : str
         Material name.
-    Ex : float, list
+    Ex : float
         Young's modulus Ex in x direction [Pa].
-    Ey : float, list
+    Ey : float
         Young's modulus Ey in y direction [Pa].
-    Ez : float, list
+    Ez : float
         Young's modulus Ez in z direction [Pa].
-    vxy : float, list
+    vxy : float
         Poisson's ratio vxy in x-y directions [-].
-    vyz : float, list
+    vyz : float
         Poisson's ratio vyz in y-z directions [-].
-    vzx : float, list
+    vzx : float
         Poisson's ratio vzx in z-x directions [-].
-    Gxy : float, list
+    Gxy : float
         Shear modulus Gxy in x-y directions [Pa].
-    Gyz : float, list
+    Gyz : float
         Shear modulus Gyz in y-z directions [Pa].
-    Gzx : float, list
+    Gzx : float
         Shear modulus Gzx in z-x directions [Pa].
-    p : float, list
+    p : float
         Density [kg/m3].
     tension : bool
         Can take tension.
@@ -130,11 +130,11 @@ class ElasticPlastic(object):
     ----------
     name : str
         Material name.
-    E : float, list
+    E : float
         Young's modulus E [Pa].
-    v : float, list
+    v : float
         Poisson's ratio v [-].
-    p : float, list
+    p : float
         Density [kg/m3].
     f : list
         Plastic stress data (positive tension values) [Pa].
@@ -170,7 +170,7 @@ class ElasticPlastic(object):
 
 class Steel(object):
 
-    """ Construction steel with given yield stress.
+    """ Bi-linear non-linear steel with yield stress.
 
     Parameters
     ----------
@@ -188,8 +188,6 @@ class Steel(object):
         Poisson's ratio v [-].
     p : float
         Density [kg/m3].
-    type : str
-        'elastic-plastic.
     id : str
         's' structural steel, 'r' reinforcement steel.
     sf : float
@@ -201,20 +199,17 @@ class Steel(object):
 
     """
 
-    def __init__(self, name, fy=355, fu=None, eu=20, E=210, v=0.3, p=7850, type='elastic-plastic', id='s', sf=1.15):
+    def __init__(self, name, fy=355, fu=None, eu=20, E=210, v=0.3, p=7850, id='s', sf=1.15):
         E  *= 10.**9
         fy *= 10.**6
+        eu *= 0.01
         if not fu:
             fu = fy
         else:
             fu *= 10.**6
-        ep = 0.01 * eu - fy / E
-        if type == 'elastic-plastic':
-            f = [fy, fy]
-            e = [0, ep]
-        if type == 'elastic-linear':
-            f = [fy, fu]
-            e = [0, ep]
+        ep = eu - fy / E
+        f = [fy, fu]
+        e = [0, ep]
         fc = [-i for i in f]
         ec = [-i for i in e]
 
@@ -223,6 +218,7 @@ class Steel(object):
         self.fy = fy
         self.fu = fu
         self.eu = eu
+        self.ep = ep
         self.p = p
         self.E = {'E': E}
         self.v = {'v': v}
@@ -249,7 +245,7 @@ class Steel(object):
 
 class Concrete(object):
 
-    """ Elastic and plastic-cracking concrete material.
+    """ Elastic and plastic-cracking Eurocode based concrete material.
 
     Parameters
     ----------
@@ -257,12 +253,14 @@ class Concrete(object):
         Material name.
     fck : float
         Characteristic (5%) 28 day cylinder strength [MPa].
-    v : float, list
+    v : float
         Poisson's ratio v [-].
-    p : float, list
+    p : float
         Density [kg/m3].
     fr : list
         Failure ratios.
+    sf : float
+        Material safety factor.
 
     Returns
     -------
@@ -274,21 +272,20 @@ class Concrete(object):
 
     """
 
-    def __init__(self, name, fck, v=0.2, p=2400, fr=None):
-        de = 0.0001
-        fcm = fck + 8
-        Ecm = 22 * 10**3 * (fcm / 10.)**0.3
-        ec1 = min(0.7 * fcm**0.31, 2.8) * 0.001
+    def __init__(self, name, fck, v=0.2, p=2400, fr=None, sf=1.5):
+        de   = 0.0001
+        fcm  = fck + 8
+        Ecm  = 22 * 10**3 * (fcm / 10.)**0.3
+        ec1  = min(0.7 * fcm**0.31, 2.8) * 0.001
         ecu1 = 0.0035 if fck < 50 else (2.8 + 27 * ((98 - fcm) / 100.)**4) * 0.001
-        n = int(ecu1 / de)
-        k = 1.05 * Ecm * ec1 / fcm
-        e = [i * de for i in range(n + 1)]
-        ec = [ei - e[1] for ei in e[1:]]
+        k    = 1.05 * Ecm * ec1 / fcm
+        e    = [i * de for i in range(int(ecu1 / de) + 1)]
+        ec   = [ei - e[1] for ei in e[1:]]
         fctm = 0.3 * fck**(2. / 3.) if fck <= 50 else 2.12 * log(1 + fcm / 10.)
-        f = [10**6 * fcm * (k * (ei / ec1) - (ei / ec1)**2) / (1. + (k - 2) * (ei / ec1)) for ei in e]
-        E = f[1] / e[1]
-        ft = [1., 0.]
-        et = [0., 0.001]
+        f    = [10**6 * fcm * (k * (ei / ec1) - (ei / ec1)**2) / (1. + (k - 2) * (ei / ec1)) for ei in e]
+        E    = f[1] / e[1]
+        ft   = [1., 0.]
+        et   = [0., 0.001]
         if not fr:
             fr = [1.16, fctm / fcm]
 
@@ -302,6 +299,7 @@ class Concrete(object):
         self.compression = {'f': f[1:], 'e': ec}
         self.tension = {'f': ft, 'e': et}
         self.fratios = fr
+        self.sf = sf
 
 
 class ConcreteSmearedCrack(object):
@@ -312,11 +310,11 @@ class ConcreteSmearedCrack(object):
     ----------
     name : str
         Material name.
-    E : float, list
+    E : float
         Young's modulus E [Pa].
-    v : float, list
+    v : float
         Poisson's ratio v [-].
-    p : float, list
+    p : float
         Density [kg/m3].
     fc : list
         Plastic stress data in compression [Pa].
@@ -354,11 +352,11 @@ class ConcreteDamagedPlasticity(object):
     ----------
     name : str
         Material name.
-    E : float, list
+    E : float
         Young's modulus E [Pa].
-    v : float, list
+    v : float
         Poisson's ratio v [-].
-    p : float, list
+    p : float
         Density [kg/m3].
     damage : list
         Damage parameters.

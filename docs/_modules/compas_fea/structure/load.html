@@ -84,6 +84,7 @@
     <span class="s1">&#39;Load&#39;</span><span class="p">,</span>
     <span class="s1">&#39;PrestressLoad&#39;</span><span class="p">,</span>
     <span class="s1">&#39;PointLoad&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PointLoads&#39;</span><span class="p">,</span>
     <span class="s1">&#39;LineLoad&#39;</span><span class="p">,</span>
     <span class="s1">&#39;AreaLoad&#39;</span><span class="p">,</span>
     <span class="s1">&#39;BodyLoad&#39;</span><span class="p">,</span>
@@ -96,7 +97,7 @@
 
 <div class="viewcode-block" id="Load"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.load.Load.html#compas_fea.structure.load.Load">[docs]</a><span class="k">class</span> <span class="nc">Load</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot; Initialises base Load object for use in finite element analysis.</span>
+    <span class="sd">&quot;&quot;&quot; Initialises base Load object.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -121,8 +122,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="n">components</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">elements</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">elements</span>
 
 
 <div class="viewcode-block" id="PrestressLoad"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.load.PrestressLoad.html#compas_fea.structure.load.PrestressLoad">[docs]</a><span class="k">class</span> <span class="nc">PrestressLoad</span><span class="p">(</span><span class="n">Load</span><span class="p">):</span>
@@ -134,9 +135,9 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the PrestressLoad object.</span>
 <span class="sd">    elements : str, list</span>
-<span class="sd">        ELSET or elements the prestress is applied to.</span>
+<span class="sd">        Element set or elements the prestress is applied to.</span>
 <span class="sd">    sxx : float</span>
-<span class="sd">        Value of prestress for stress component sxx.</span>
+<span class="sd">        Value of prestress for axial stress component sxx.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -146,8 +147,8 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">sxx</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="n">Load</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="n">elements</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;PrestressLoad&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sxx&#39;</span><span class="p">:</span> <span class="n">sxx</span><span class="p">}</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;PrestressLoad&#39;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sxx&#39;</span><span class="p">:</span> <span class="n">sxx</span><span class="p">}</span>
 
 
 <div class="viewcode-block" id="PointLoad"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.load.PointLoad.html#compas_fea.structure.load.PointLoad">[docs]</a><span class="k">class</span> <span class="nc">PointLoad</span><span class="p">(</span><span class="n">Load</span><span class="p">):</span>
@@ -159,7 +160,7 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the PointLoad object.</span>
 <span class="sd">    nodes : str, list</span>
-<span class="sd">        NSET or nodes the load is applied to.</span>
+<span class="sd">        Node set or nodes the load is applied to.</span>
 <span class="sd">    x : float</span>
 <span class="sd">        x component of force.</span>
 <span class="sd">    y : float</span>
@@ -181,8 +182,30 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">yy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zz</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="n">Load</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;global&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;PointLoad&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span><span class="p">,</span> <span class="s1">&#39;xx&#39;</span><span class="p">:</span> <span class="n">xx</span><span class="p">,</span> <span class="s1">&#39;yy&#39;</span><span class="p">:</span> <span class="n">yy</span><span class="p">,</span> <span class="s1">&#39;zz&#39;</span><span class="p">:</span> <span class="n">zz</span><span class="p">}</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;PointLoad&#39;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span><span class="p">,</span> <span class="s1">&#39;xx&#39;</span><span class="p">:</span> <span class="n">xx</span><span class="p">,</span> <span class="s1">&#39;yy&#39;</span><span class="p">:</span> <span class="n">yy</span><span class="p">,</span> <span class="s1">&#39;zz&#39;</span><span class="p">:</span> <span class="n">zz</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="PointLoads"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.load.PointLoads.html#compas_fea.structure.load.PointLoads">[docs]</a><span class="k">class</span> <span class="nc">PointLoads</span><span class="p">(</span><span class="n">Load</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot; Different concentrated forces and moments [units:N, Nm] applied to different nodes.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the PointLoads object.</span>
+<span class="sd">    com : dic</span>
+<span class="sd">        Node key : components dictionary data.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">com</span><span class="p">):</span>
+        <span class="n">Load</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="n">com</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;global&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;PointLoads&#39;</span>
 
 
 <div class="viewcode-block" id="LineLoad"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.load.LineLoad.html#compas_fea.structure.load.LineLoad">[docs]</a><span class="k">class</span> <span class="nc">LineLoad</span><span class="p">(</span><span class="n">Load</span><span class="p">):</span>
@@ -194,7 +217,7 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the LineLoad object.</span>
 <span class="sd">    elements : str</span>
-<span class="sd">        ist): ELSET or elements the load is applied to.</span>
+<span class="sd">        ist): Element set or elements the load is applied to.</span>
 <span class="sd">    x : float</span>
 <span class="sd">        x component of force / length.</span>
 <span class="sd">    y : float</span>
@@ -216,8 +239,8 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">yy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zz</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">):</span>
         <span class="n">Load</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="n">elements</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;LineLoad&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span><span class="p">,</span> <span class="s1">&#39;xx&#39;</span><span class="p">:</span> <span class="n">xx</span><span class="p">,</span> <span class="s1">&#39;yy&#39;</span><span class="p">:</span> <span class="n">yy</span><span class="p">,</span> <span class="s1">&#39;zz&#39;</span><span class="p">:</span> <span class="n">zz</span><span class="p">}</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;LineLoad&#39;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span><span class="p">,</span> <span class="s1">&#39;xx&#39;</span><span class="p">:</span> <span class="n">xx</span><span class="p">,</span> <span class="s1">&#39;yy&#39;</span><span class="p">:</span> <span class="n">yy</span><span class="p">,</span> <span class="s1">&#39;zz&#39;</span><span class="p">:</span> <span class="n">zz</span><span class="p">}</span>
 
 
 <div class="viewcode-block" id="AreaLoad"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.load.AreaLoad.html#compas_fea.structure.load.AreaLoad">[docs]</a><span class="k">class</span> <span class="nc">AreaLoad</span><span class="p">(</span><span class="n">Load</span><span class="p">):</span>
@@ -229,7 +252,7 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the AreaLoad object.</span>
 <span class="sd">    elements : str, list</span>
-<span class="sd">        ELSET or elements the load is applied to.</span>
+<span class="sd">        Element set or elements the load is applied to.</span>
 <span class="sd">    x : float</span>
 <span class="sd">        x component of pressure.</span>
 <span class="sd">    y : float</span>
@@ -245,8 +268,8 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">):</span>
         <span class="n">Load</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="n">elements</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;AreaLoad&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span><span class="p">}</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;AreaLoad&#39;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span><span class="p">}</span>
 
 
 <div class="viewcode-block" id="BodyLoad"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.load.BodyLoad.html#compas_fea.structure.load.BodyLoad">[docs]</a><span class="k">class</span> <span class="nc">BodyLoad</span><span class="p">(</span><span class="n">Load</span><span class="p">):</span>
@@ -258,7 +281,7 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the BodyLoad object.</span>
 <span class="sd">    elements : str, list</span>
-<span class="sd">        ELSET or elements the load is applied to.</span>
+<span class="sd">        Element set or elements the load is applied to.</span>
 <span class="sd">    x : float</span>
 <span class="sd">        x component of body load.</span>
 <span class="sd">    y : float</span>
@@ -274,8 +297,8 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="n">Load</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="n">elements</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;global&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;BodyLoad&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span><span class="p">}</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;BodyLoad&#39;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span><span class="p">}</span>
 
 
 <div class="viewcode-block" id="GravityLoad"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.load.GravityLoad.html#compas_fea.structure.load.GravityLoad">[docs]</a><span class="k">class</span> <span class="nc">GravityLoad</span><span class="p">(</span><span class="n">Load</span><span class="p">):</span>
@@ -287,15 +310,15 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the GravityLoad object.</span>
 <span class="sd">    elements : str, list</span>
-<span class="sd">        ELSET or elements the load is applied to.</span>
+<span class="sd">        Element set or elements the load is applied to.</span>
 <span class="sd">    g : float</span>
 <span class="sd">        Value of gravitational acceleration.</span>
-<span class="sd">    x : bool</span>
-<span class="sd">        Apply to x direction.</span>
-<span class="sd">    y : bool</span>
-<span class="sd">        Apply to y direction.</span>
-<span class="sd">    z : bool</span>
-<span class="sd">        Apply to z direction.</span>
+<span class="sd">    x : float</span>
+<span class="sd">        Factor to apply to x direction.</span>
+<span class="sd">    y : float</span>
+<span class="sd">        Factor to apply to y direction.</span>
+<span class="sd">    z : float</span>
+<span class="sd">        Factor to apply to z direction.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -303,11 +326,11 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">g</span><span class="o">=-</span><span class="mf">9.81</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">g</span><span class="o">=-</span><span class="mf">9.81</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
         <span class="n">Load</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="n">elements</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;global&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;GravityLoad&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">g</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span><span class="p">}</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">g</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span><span class="p">}</span>
 
 
 <div class="viewcode-block" id="AcousticLoad"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.load.AcousticLoad.html#compas_fea.structure.load.AcousticLoad">[docs]</a><span class="k">class</span> <span class="nc">AcousticLoad</span><span class="p">(</span><span class="n">Load</span><span class="p">):</span>
@@ -319,7 +342,7 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the AcousticLoad object.</span>
 <span class="sd">    elements : str, list</span>
-<span class="sd">        ELSET or elements the load is applied to.</span>
+<span class="sd">        Element set or elements the load is applied to.</span>
 <span class="sd">    axes : str</span>
 <span class="sd">        AcousticLoad applied via &#39;local&#39; or &#39;global&#39; axes.</span>
 
@@ -337,8 +360,8 @@
         <span class="n">Load</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;AcousticLoad&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">elements</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">elements</span>
 
 
 <div class="viewcode-block" id="TributaryLoad"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.load.TributaryLoad.html#compas_fea.structure.load.TributaryLoad">[docs]</a><span class="k">class</span> <span class="nc">TributaryLoad</span><span class="p">(</span><span class="n">Load</span><span class="p">):</span>
@@ -369,6 +392,7 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    - The load components are loads per unit area [N/m2].</span>
+<span class="sd">    - Currently only supports &#39;global&#39; axis.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -380,8 +404,8 @@
             <span class="n">node</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">A</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertex_area</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span> <span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span> <span class="o">*</span> <span class="n">A</span><span class="p">}</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span> <span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span> <span class="o">*</span> <span class="n">A</span><span class="p">}</span>
 
 
 <div class="viewcode-block" id="HarmonicPointLoad"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.load.HarmonicPointLoad.html#compas_fea.structure.load.HarmonicPointLoad">[docs]</a><span class="k">class</span> <span class="nc">HarmonicPointLoad</span><span class="p">(</span><span class="n">Load</span><span class="p">):</span>
@@ -393,7 +417,7 @@
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the HarmonicPointLoad object.</span>
 <span class="sd">    nodes : str, list</span>
-<span class="sd">        NSET or nodes the load is applied to.</span>
+<span class="sd">        Node set or nodes the load is applied to.</span>
 <span class="sd">    x : float</span>
 <span class="sd">        x component of force.</span>
 <span class="sd">    y : float</span>
@@ -415,8 +439,8 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">yy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">zz</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="n">Load</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;global&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;HarmonicPointLoad&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span><span class="p">,</span> <span class="s1">&#39;xx&#39;</span><span class="p">:</span> <span class="n">xx</span><span class="p">,</span> <span class="s1">&#39;yy&#39;</span><span class="p">:</span> <span class="n">yy</span><span class="p">,</span> <span class="s1">&#39;zz&#39;</span><span class="p">:</span> <span class="n">zz</span><span class="p">}</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;HarmonicPointLoad&#39;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span><span class="p">,</span> <span class="s1">&#39;xx&#39;</span><span class="p">:</span> <span class="n">xx</span><span class="p">,</span> <span class="s1">&#39;yy&#39;</span><span class="p">:</span> <span class="n">yy</span><span class="p">,</span> <span class="s1">&#39;zz&#39;</span><span class="p">:</span> <span class="n">zz</span><span class="p">}</span>
 </code></pre></div>
                         
                         <!-- <nav class="compas-sideways">
@@ -483,11 +507,11 @@
             
 
             
-                Last updated on Feb 14, 2018.
+                Last updated on Mar 27, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 

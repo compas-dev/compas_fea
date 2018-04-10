@@ -2,7 +2,7 @@
 truss_frame Rhino
 ********************************************************************************
 
-This example works for: **Abaqus**.
+This example works for: **Abaqus**, **OpenSees**, **Sofistik**.
 
 .. figure:: /_images/truss_frame_rhino.png
     :figclass: figure

@@ -12,7 +12,7 @@ __email__     = 'liew@arch.ethz.ch'
 
 __all__ = [
     'GeneralStep',
-    'HeatStep',
+    # 'HeatStep',
     'ModalStep',
     'HarmonicStep',
     'BucklingStep'
@@ -21,7 +21,7 @@ __all__ = [
 
 class GeneralStep(object):
 
-    """ Initialises GeneralStep object for use in static analysis types.
+    """ Initialises GeneralStep object for use in a static analysis.
 
     Parameters
     ----------
@@ -35,20 +35,18 @@ class GeneralStep(object):
         Proportionality factor on the loads and displacements.
     nlgeom : bool
         Analyse non-linear geometry effects.
+    nlmat : bool
+        Analyse non-linear material effects.
     displacements : list
-        Displacement object names (str).
+        Displacement object names.
     loads : list
-        Load object names (str).
+        Load object names.
     type : str
         'static','static,riks'.
-    temperatures : str
-        Name of Temperature object to apply.
-    duration : float
-        Duration of step.
     tolerance : float
         A tolerance for analysis solvers.
     state : str
-        Limit state 'sls' or 'uls'.
+        Limit state 'sls' or 'uls' for design.
 
     Returns
     -------
@@ -56,26 +54,25 @@ class GeneralStep(object):
 
     """
 
-    def __init__(self, name, increments=100, iterations=100, factor=1.0, nlgeom=True, displacements=[], loads=[],
-                 type='static', temperatures=None, duration=1, tolerance=0.01, state=None):
+    def __init__(self, name, increments=100, iterations=100, factor=1.0, nlgeom=True, nlmat=True, displacements=[],
+                 loads=[], type='static', tolerance=0.01, state='sls'):
         self.__name__ = 'GeneralStep'
         self.name = name
         self.increments = increments
         self.iterations = iterations
         self.factor = factor
         self.nlgeom = nlgeom
+        self.nlmat = nlmat
         self.displacements = displacements
         self.loads = loads
         self.type = type
-        self.temperatures = temperatures
-        self.duration = duration
         self.tolerance = tolerance
         self.state = state
 
 
 class HeatStep(object):
 
-    """ Initialises HeatStep object for use in thermal analysis types.
+    """ Initialises HeatStep object for use in a thermal analysis.
 
     Parameters
     ----------
@@ -90,7 +87,7 @@ class HeatStep(object):
     dTmax : float
         Maximum temperature increase per increment.
     type : str
-        'HEAT TRANSFER'.
+        'heat transfer'.
     duration : float
         Duration of step.
 
@@ -100,7 +97,7 @@ class HeatStep(object):
 
     """
 
-    def __init__(self, name, interaction, increments=100, temp0=20, dTmax=1, type='HEAT TRANSFER', duration=1):
+    def __init__(self, name, interaction, increments=100, temp0=20, dTmax=1, type='heat transfer', duration=1):
         self.__name__ = 'HeatStep'
         self.name = name
         self.interaction = interaction
@@ -113,7 +110,7 @@ class HeatStep(object):
 
 class ModalStep(object):
 
-    """ Initialises ModalStep object for use in modal analysis types.
+    """ Initialises ModalStep object for use in a modal analysis.
 
     Parameters
     ----------
@@ -124,7 +121,7 @@ class ModalStep(object):
     increments : int
         Number of increments.
     displacements : list
-        Displacement object names (str).
+        Displacement object names.
     type : str
         'modal'.
 
@@ -145,7 +142,7 @@ class ModalStep(object):
 
 class HarmonicStep(object):
 
-    """ Initialises HarmonicStep object analysis type.
+    """ Initialises HarmonicStep object for use in a harmonic analysis.
 
     Parameters
     ----------
@@ -156,9 +153,9 @@ class HarmonicStep(object):
     freq_steps : int
         The number of equally spaced frequency steps.
     displacements : list
-        Displacement object names (str).
+        Displacement object names.
     loads : list
-        Load object names (str).
+        Load object names.
     factor : float
         Proportionality factor on the loads and displacements.
     damping : float
@@ -187,7 +184,7 @@ class HarmonicStep(object):
 
 class BucklingStep(object):
 
-    """ Initialises BucklingStep object for use in buckling analysis types.
+    """ Initialises BucklingStep object for use in a buckling analysis.
 
     Parameters
     ----------
@@ -200,9 +197,9 @@ class BucklingStep(object):
     factor : float
         Proportionality factor on the loads and displacements.
     displacements : list
-        Displacement object names (str).
+        Displacement object names.
     loads : list
-        Load object names (str).
+        Load object names.
     type : str
         'buckle'.
 

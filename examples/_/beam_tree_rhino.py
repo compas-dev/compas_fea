@@ -1,4 +1,3 @@
-"""An example compas_fea package use for beams in a tree structure."""
 
 from compas_fea.cad import rhino
 

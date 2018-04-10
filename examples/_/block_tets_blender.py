@@ -1,4 +1,3 @@
-"""An example compas_fea package use for tetrahedron elements."""
 
 from compas_fea.cad import blender
 
@@ -13,15 +12,15 @@ from compas_fea.structure import Structure
 from compas_blender.utilities import get_objects
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 # Create empty Structure object
 
-mdl = Structure(name='block_tets', path='/home/al/Temp/')
+mdl = Structure(name='block_tets', path='C:/Temp/')
 
 # Add tetrahedrons
 
@@ -42,12 +41,12 @@ mdl.add_section(SolidSection(name='sec_solid'))
 
 # Add element properties
 
-ep = Properties(material='mat_steel', section='sec_solid', elsets='elset_tets')
-mdl.add_element_properties(ep, name='ep_tets')
+ep = Properties(name='ep_tets', material='mat_steel', section='sec_solid', elsets='elset_tets')
+mdl.add_element_properties(ep)
 
 # Add loads
 
-mdl.add_load(PointLoad(name='load_top', nodes='nset_all', y=0.1, z=0.1))
+mdl.add_load(PointLoad(name='load_top', nodes='nset_top', y=0.1, z=0.1))
 
 # Add displacementss
 

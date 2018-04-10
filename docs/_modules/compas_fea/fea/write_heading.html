@@ -114,6 +114,7 @@
 <span class="p">}</span>
 
 
+
 <div class="viewcode-block" id="write_input_heading"><a class="viewcode-back" href="../../../reference/generated/compas_fea.fea.write_heading.write_input_heading.html#compas_fea.fea.write_heading.write_input_heading">[docs]</a><span class="k">def</span> <span class="nf">write_input_heading</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">ndof</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Creates the input file heading.</span>
@@ -123,7 +124,7 @@
 <span class="sd">    f : obj</span>
 <span class="sd">        The open file object for the input file.</span>
 <span class="sd">    software : str</span>
-<span class="sd">        Analysis software or library to use, &#39;abaqus&#39;, &#39;opensees&#39;, &#39;sofistik&#39; or &#39;ansys&#39;.</span>
+<span class="sd">        Analysis software or library to use: &#39;abaqus&#39;, &#39;opensees&#39;, &#39;sofistik&#39; or &#39;ansys&#39;.</span>
 <span class="sd">    ndof : float</span>
 <span class="sd">        Numbers of degrees-of-freedom per node.</span>
 
@@ -144,19 +145,18 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+    <span class="n">misc</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>   <span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">*PHYSICAL CONSTANTS, ABSOLUTE ZERO=-273.15, STEFAN BOLTZMANN=5.67e-8</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;opensees&#39;</span><span class="p">:</span> <span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">wipe</span><span class="se">\n</span><span class="s1">model basic -ndm 3 -ndf </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ndof</span><span class="p">),</span>
+        <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>    <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
 
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*PHYSICAL CONSTANTS, ABSOLUTE ZERO=-273.15, STEFAN BOLTZMANN=5.67e-8</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">misc</span><span class="p">[</span><span class="n">software</span><span class="p">]:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">misc</span><span class="p">[</span><span class="n">software</span><span class="p">])</span>
 
-    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
-
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;wipe</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;model basic -ndm 3 -ndf </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ndof</span><span class="p">))</span>
-
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span></div>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
 </code></pre></div>
                         
                         <!-- <nav class="compas-sideways">
@@ -223,11 +223,11 @@
             
 
             
-                Last updated on Feb 14, 2018.
+                Last updated on Mar 27, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 

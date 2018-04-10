@@ -80,14 +80,14 @@
 <dl class="function">
 <dt id="compas_fea.cad.blender.plot_voxels">
 <code class="descclassname">compas_fea.cad.blender.</code><code class="descname">plot_voxels</code><span class="sig-paren">(</span><em>structure, step, field='smises', layer=0, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean', vdx=None, cube_size=[10, 10, 10], mode='', colorbar_size=1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/cad/blender.html#plot_voxels"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Applies a base voxel material and texture to a cube for 4D visualisation.</p>
+<dd><p>Applies a base voxel material and texture to a cuboid for 4D visualisation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>structure</strong> (<em>obj</em>) – Structure object.</p></li>
 <li><p><strong>step</strong> (<em>str</em>) – Name of the Step.</p></li>
 <li><p><strong>field</strong> (<em>str</em>) – Field to plot, e.g. ‘smises’.</p></li>
-<li><p><strong>layer</strong> (<em>int</em>) – Layer to plot voxel cuboid on.</p></li>
+<li><p><strong>layer</strong> (<em>int</em>) – Layer to plot the voxel cuboid on.</p></li>
 <li><p><strong>scale</strong> (<em>float</em>) – Scale displacements for the deformed plot.</p></li>
 <li><p><strong>cbar</strong> (<em>list</em>) – Minimum and maximum limits on the colorbar.</p></li>
 <li><p><strong>iptype</strong> (<em>str</em>) – ‘mean’, ‘max’ or ‘min’ of an element’s integration point data.</p></li>
@@ -104,7 +104,7 @@
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>Texture ramping should be done manually afterwards.</p></li>
+<li><p>Texture ramping should be done manually in Blender afterwards.</p></li>
 <li><p>Voxel display works best with cube dimensions &gt;= 10.</p></li>
 <li><p>The absolute value is plotted, ranged between [0, 1].</p></li>
 </ul>
@@ -187,11 +187,11 @@
             
 
             
-                Last updated on Feb 14, 2018.
+                Last updated on Mar 27, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 

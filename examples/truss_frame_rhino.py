@@ -1,7 +1,5 @@
-"""An example compas_fea package use for truss elements."""
 
 from compas_fea.cad import rhino
-
 from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import GravityLoad
@@ -18,74 +16,73 @@ __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
 
-# Create empty Structure object
+# Structure
 
 mdl = Structure(name='truss_frame', path='C:/Temp/')
 
-# Add truss elements
+# Elements
 
 layers = ['elset_main', 'elset_diag', 'elset_stays']
 rhino.add_nodes_elements_from_layers(mdl, line_type='TrussElement', layers=layers)
 
-# Add node and element sets
+# Sets
 
-layers.extend(['nset_pins', 'nset_load_v', 'nset_load_h'])
-rhino.add_sets_from_layers(mdl, layers=layers)
+rhino.add_sets_from_layers(mdl, layers=['nset_pins', 'nset_load_v', 'nset_load_h'])
 
-# Add materials
+# Materials
 
 mdl.add_material(Steel(name='mat_steel', fy=355))
 
-# Add sections
+# Sections
 
 mdl.add_sections([
-    TrussSection(name='sec_main', A=0.020),
-    TrussSection(name='sec_diag', A=0.005),
-    TrussSection(name='sec_stays', A=0.001)])
+    TrussSection(name='sec_main', A=0.0008),
+    TrussSection(name='sec_diag', A=0.0005),
+    TrussSection(name='sec_stays', A=0.0001)])
 
-# Add element properties
+# Properties
 
-ep1 = Properties(name='ep_main', material='mat_steel', section='sec_main', elsets='elset_main')
-ep2 = Properties(name='ep_diag', material='mat_steel', section='sec_diag', elsets='elset_diag')
-ep3 = Properties(name='ep_stays', material='mat_steel', section='sec_stays', elsets='elset_stays')
-mdl.add_element_properties(ep1)
-mdl.add_element_properties(ep2)
-mdl.add_element_properties(ep3)
+mdl.add_element_properties([
+    Properties(name='ep_main', material='mat_steel', section='sec_main', elsets='elset_main'),
+    Properties(name='ep_diag', material='mat_steel', section='sec_diag', elsets='elset_diag'),
+    Properties(name='ep_stays', material='mat_steel', section='sec_stays', elsets='elset_stays')])
 
-# Add loads
-
-mdl.add_loads([
-    PointLoad(name='load_pl_v', nodes='nset_load_v', z=-250000),
-    PointLoad(name='load_pl_h', nodes='nset_load_h', x=500000),
-    GravityLoad(name='load_gravity_main', elements='elset_main'),
-    GravityLoad(name='load_gravity_diag', elements='elset_diag'),
-])
-
-# Add displacements
+# Displacements
 
 mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
 
-# Add steps
+# Loads
+# Note: GravityLoad doesnt activate for OpenSees
+
+mdl.add_loads([
+    PointLoad(name='load_pl_v', nodes='nset_load_v', z=-15500),
+    PointLoad(name='load_pl_h', nodes='nset_load_h', x=5000),
+    GravityLoad(name='load_gravity', elements=['elset_diag', 'elset_main'])])
+
+# Steps
 
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements=['disp_pinned']),
-    GeneralStep(name='step_loads', loads=['load_pl_v', 'load_pl_h', 'load_gravity_main', 'load_gravity_diag'], factor=1.5)])
+    GeneralStep(name='step_loads', loads=['load_pl_v', 'load_pl_h', 'load_gravity'], factor=1.5, increments=200)])
 mdl.steps_order = ['step_bc', 'step_loads']
 
-# Structure summary
+# Summary
 
 mdl.summary()
 
-# Run and extract data
+# Run (Sofistik)
+
+mdl.write_input_file(software='sofistik')
+
+# Run (Abaqus)
 
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
-# Plot displacements
+rhino.plot_data(mdl, step='step_loads', field='um', radius=0.1, scale=10, colorbar_size=0.3)
+rhino.plot_data(mdl, step='step_loads', field='smises', iptype='max', nodal='max', radius=0.1, colorbar_size=0.3)
 
-rhino.plot_data(mdl, step='step_loads', field='um', radius=0.1, scale=10, colorbar_size=0.5)
-rhino.plot_data(mdl, step='step_loads', field='ux', radius=0.1, colorbar_size=0.5)
-rhino.plot_data(mdl, step='step_loads', field='uz', radius=0.1, colorbar_size=0.5)
+# Run (OpenSees)
 
-# Plot stress
+mdl.analyse_and_extract(software='opensees', fields=['u', 'sf'])
 
-rhino.plot_data(mdl, step='step_loads', field='smises', iptype='max', nodal='max', radius=0.1, colorbar_size=0.5)
+rhino.plot_data(mdl, step='step_loads', field='sfx', radius=0.1, colorbar_size=0.3)

@@ -36,7 +36,7 @@ __all__ = [
 
 class AngleSection(object):
 
-    """ Equal angle cross-section for beam elements.
+    """ Uniform thickness angle cross-section for beam elements.
 
     Parameters
     ----------
@@ -60,14 +60,15 @@ class AngleSection(object):
     """
 
     def __init__(self, name, b, h, t):
-        xc = (b**2 + h * t - t**2) / (2. * (b + h - t))
-        yc = (h**2 + b * t - t**2) / (2. * (b + h - t))
+        p = 2. * (b + h - t)
+        xc = (b**2 + h * t - t**2) / p
+        yc = (h**2 + b * t - t**2) / p
         A = t * (b + h - t)
         Ixx = (1. / 3) * (b * h**3 - (b - t) * (h - t)**3) - A * (h - yc)**2
         Iyy = (1. / 3) * (h * b**3 - (h - t) * (b - t)**3) - A * (b - xc)**2
         J = (1. / 3) * (h + b - t) * t**3
         self.__name__ = 'AngleSection'
-        self.geometry = {'b': b, 'h': h, 't': t, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
+        self.geometry = {'b': b, 'h': h, 't': t, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 'NA'}
         self.name = name
 
 
@@ -126,8 +127,7 @@ class CircularSection(object):
     def __init__(self, name, r):
         D = 2 * r
         A = 0.25 * pi * D**2
-        Ixx = (pi * D**4) / 64.
-        Iyy = (pi * D**4) / 64.
+        Ixx = Iyy = (pi * D**4) / 64.
         J = (pi * D**4) / 32
         self.__name__ = 'CircularSection'
         self.geometry = {'r': r, 'D': D, 'A': A, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0, 'J': J}
@@ -145,11 +145,11 @@ class GeneralSection(object):
     A : float
         Area.
     Ixx : float
-        Second moment of area about axis 1-1.
+        Second moment of area about axis x-x.
     Ixy : float
         Cross moment of area.
     Iyy : float
-        Second moment of area about axis 2-2.
+        Second moment of area about axis y-y.
     J : float
         Torsional rigidity.
     g0 : float
@@ -225,8 +225,7 @@ class PipeSection(object):
     def __init__(self, name, r, t):
         D = 2 * r
         A = 0.25 * pi * (D**2 - (D - 2 * t)**2)
-        Ixx = 0.25 * pi * (r**4 - (r - t)**4)
-        Iyy = 0.25 * pi * (r**4 - (r - t)**4)
+        Ixx = Iyy = 0.25 * pi * (r**4 - (r - t)**4)
         J = (2. / 3) * pi * (r + 0.5 * t) * t**3
         self.__name__ = 'PipeSection'
         self.geometry = {'r': r, 't': t, 'D': D, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
@@ -258,11 +257,11 @@ class RectangularSection(object):
         Iyy = (1 / 12.) * h * b**3
         l1 = max([b, h])
         l2 = min([b, h])
-        Avy = 0.833 * A
-        Avx = 0.833 * A
+        # Avy = 0.833 * A
+        # Avx = 0.833 * A
         J = (l1 * l2**3) * (0.33333 - 0.21 * (l2 / l1) * (1 - (l2**4) / (12 * l1**4)))
         self.__name__ = 'RectangularSection'
-        self.geometry = {'b': b, 'h': h, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0, 'Avx': Avx, 'Avy': Avy}
+        self.geometry = {'b': b, 'h': h, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
         self.name = name
 
 
@@ -297,7 +296,7 @@ class TrapezoidalSection(object):
         Ixx = (1 / 12.) * (3 * b2 + b1) * h**3
         Iyy = (1 / 48.) * h * (b1 + b2) * (b2**2 + 7 * b1**2)
         self.__name__ = 'TrapezoidalSection'
-        self.geometry = {'b1': b1, 'b2': b2, 'h': h, 'A': A, 'c': c, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
+        self.geometry = {'b1': b1, 'b2': b2, 'h': h, 'A': A, 'c': c, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0, 'J': 'NA'}
         self.name = name
 
 
@@ -320,7 +319,7 @@ class TrussSection(object):
 
     def __init__(self, name, A):
         self.__name__ = 'TrussSection'
-        self.geometry = {'A': A}
+        self.geometry = {'A': A, 'Ixx': 0, 'Iyy': 0, 'Ixy': 0, 'J': 0}
         self.name = name
 
 
@@ -370,8 +369,7 @@ class TieSection(TrussSection):
 
 class SpringSection(object):
 
-    """ For use with spring elements. Requires either a stiffness dictonary for
-    linear springs, or forces and displacement lists for non-linear springs.
+    """ For use with spring elements.
 
     Parameters
     ----------
@@ -382,8 +380,7 @@ class SpringSection(object):
     displacements : dic
         Displacements data for non-linear springs.
     stiffness : dic
-        Elastic stiffness for linear springs. The dictionary keys show the spring
-        axis and the values represent the stifness.
+        Elastic stiffness for linear springs.
 
     Returns
     -------
@@ -391,7 +388,9 @@ class SpringSection(object):
 
     Notes
     -----
-    - Force and displacement data should start from negative to positive.
+    - Force and displacement data should range from negative to positive values.
+    - Requires either a stiffness dictonary for linear springs, or forces and displacement lists for non-linear springs.
+    - Directions are 'axial', 'lateral', 'rotation'.
 
     """
 
@@ -443,7 +442,6 @@ class SolidSection(object):
     ----------
     name : str
         Section name.
-
 
     Returns
     -------

@@ -1,4 +1,3 @@
-"""An example compas_fea package use for tetrahedron elements."""
 
 from compas_fea.cad import blender
 
@@ -17,15 +16,15 @@ from compas_fea.structure import TrussSection
 from compas_blender.utilities import get_objects
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 # Create empty Structure object
 
-mdl = Structure(name='block_bridge', path='/home/al/Temp/')
+mdl = Structure(name='block_bridge', path='C:/Temp/')
 
 # Add tetrahedrons
 
@@ -38,8 +37,8 @@ blender.add_nodes_elements_from_layers(mdl, layers=[3], line_type='TrussElement'
 
 # Add node sets
 
-blender.add_elset_from_bmeshes(mdl, name='elset_top-plate', layer=1)
-blender.add_elset_from_bmeshes(mdl, name='elset_bot-plate', layer=2)
+blender.add_elset_from_bmeshes(mdl, name='elset_top_plate', layer=1)
+blender.add_elset_from_bmeshes(mdl, name='elset_bot_plate', layer=2)
 blender.add_elset_from_bmeshes(mdl, name='elset_ties', layer=3)
 blender.add_nset_from_bmeshes(mdl, name='nset_supports', layer=4)
 blender.add_nset_from_bmeshes(mdl, name='nset_load', layer=5)
@@ -52,25 +51,24 @@ mdl.add_materials([
 
 # Add sections
 
-A = 0.25 * 3.142 * 0.008**2
 mdl.add_sections([
     ShellSection(name='sec_plate', t=0.005),
-    TrussSection(name='sec_tie', A=A),
+    TrussSection(name='sec_tie', A=0.25*3.142*0.008**2),
     SolidSection(name='sec_solid')])
 
 # Add element properties
 
-eps = Properties(material='mat_steel', section='sec_plate', elsets=['elset_top-plate', 'elset_bot-plate'])
-ept = Properties(material='mat_steel', section='sec_tie', elsets='elset_ties')
-epc = Properties(material='mat_concrete', section='sec_solid', elsets='elset_tets')
-mdl.add_element_properties(eps, name='ep_plates')
-mdl.add_element_properties(ept, name='ep_ties')
-mdl.add_element_properties(epc, name='ep_concrete')
+eps = Properties(name='ep_plates', material='mat_steel', section='sec_plate', elsets=['elset_top_plate', 'elset_bot_plate'])
+ept = Properties(name='ep_ties', material='mat_steel', section='sec_tie', elsets='elset_ties')
+epc = Properties(name='ep_concrete', material='mat_concrete', section='sec_solid', elsets='elset_tets')
+mdl.add_element_properties(eps)
+mdl.add_element_properties(ept)
+mdl.add_element_properties(epc)
 
 # Add loads
 
 mdl.add_loads([
-    GravityLoad(name='load_gravity', elements='elset_all'),
+    GravityLoad(name='load_gravity', elements='elset_tets'),
     PointLoad(name='load_point', nodes='nset_load', z=-5)])
 
 # Add displacements

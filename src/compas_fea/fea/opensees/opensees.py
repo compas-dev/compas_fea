@@ -6,6 +6,7 @@ from __future__ import print_function
 from compas_fea.fea import write_input_bcs
 from compas_fea.fea import write_input_elements
 from compas_fea.fea import write_input_heading
+from compas_fea.fea import write_input_materials
 from compas_fea.fea import write_input_nodes
 from compas_fea.fea import write_input_steps
 
@@ -13,8 +14,9 @@ from subprocess import Popen
 from subprocess import PIPE
 
 from time import time
-
 from math import sqrt
+
+import json
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -51,62 +53,81 @@ def extract_out_data(structure, fields):
 
     temp = '{0}{1}/'.format(structure.path, structure.name)
 
-    step = structure.steps_order[1]  # expand to other steps later
+    step = structure.steps_order[1]
     structure.results[step] = {'nodal': {}, 'element': {}}
+    nodal = structure.results[step]['nodal']
+    element = structure.results[step]['element']
 
     nodal_data = {}
-    nodal = structure.results[step]['nodal']
-    element_data = {}
-    element = structure.results[step]['element']  # ! element data only working for trusses
 
     for field in fields:
 
         if field in ['u', 'ur', 'rf', 'rm']:
 
             file = step + '_node_' + field
+
             try:
+
                 with open('{0}{1}.out'.format(temp, file), 'r') as f:
                     lines = f.readlines()
                 nodal_data[file] = [float(i) for i in lines[-1].split(' ')[1:]]
-            except:
-                print('***** {0}.out data not loaded *****'.format(file))
 
-            for dof in 'xyz':
-                nodal['{0}{1}'.format(field, dof)] = {}
-            nodal['{0}m'.format(field)] = {}
+                for dof in 'xyz':
+                    nodal['{0}{1}'.format(field, dof)] = {}
+                nodal['{0}m'.format(field)] = {}
 
-            for node in structure.nodes:
-                try:
+                for node in structure.nodes:
                     sum2 = 0
                     for c, dof in enumerate('xyz'):
                         val = nodal_data[file][node * 3 + c]
                         nodal['{0}{1}'.format(field, dof)][node] = val
                         sum2 += val**2
                     nodal['{0}m'.format(field)][node] = sqrt(sum2)
-                except:
-                    pass
 
-        elif field in ['sf']:
+                print('***** {0}.out data loaded *****'.format(file))
 
-            file = step + '_element_' + field
-            try:
-                with open('{0}{1}.out'.format(temp, file), 'r') as f:
-                    lines = f.readlines()
-                element_data[file] = [float(i) for i in lines[-1].split(' ')[1:]]
             except:
+
                 print('***** {0}.out data not loaded *****'.format(file))
 
-            for dof in ['x']:  # needs updating for more than axial force
-                element['{0}{1}'.format(field, dof)] = {}
+        else:
 
-            for i in structure.elements:
-                try:
-                    for c, dof in enumerate('x'):
-                        val = element_data[file][i + c]
-                        element['{0}{1}'.format(field, dof)][i] = {}
-                        element['{0}{1}'.format(field, dof)][i]['ip'] = val
-                except:
-                    pass
+            try:
+
+                file = step + '_element_truss_sf'
+
+                with open('{0}{1}.out'.format(temp, file), 'r') as f:
+                    lines = f.readlines()
+                truss_data = [float(i) for i in lines[-1].split(' ')[1:]]
+
+                with open('{0}truss_numbers.json'.format(temp), 'r') as f:
+                    truss_numbers = json.load(f)['truss_numbers']
+
+                element['sfx'] = {}
+                for ekey, sfx in zip(truss_numbers, truss_data):
+                    element['sfx'][ekey] = {}
+                    element['sfx'][ekey]['ip'] = sfx
+
+            except:
+
+                print('***** No truss element data loaded *****')
+
+            try:
+
+                file = step + '_element_beam_sf'
+
+                with open('{0}{1}.out'.format(temp, file), 'r') as f:
+                    lines = f.readlines()
+                beam_data = [float(i) for i in lines[-1].split(' ')[1:]]
+
+                with open('{0}beam_numbers.json'.format(temp), 'r') as f:
+                    beam_numbers = json.load(f)['beam_numbers']
+
+                # sort beam data here
+
+            except:
+
+                print('***** No beam element data loaded *****')
 
     toc = time() - tic
 
@@ -130,31 +151,37 @@ def opensees_launch_process(structure, exe):
 
     """
 
-    name = structure.name
-    path = structure.path
-    temp = '{0}{1}/'.format(path, name)
+    try:
 
-    tic = time()
+        name = structure.name
+        path = structure.path
+        temp = '{0}{1}/'.format(path, name)
 
-    if not exe:
-        exe = 'C:/OpenSees.exe'
+        tic = time()
 
-    command = '{0} {1}{2}.tcl'.format(exe, path, name)
-    print(command)
-    p = Popen(command, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
-    while True:
-        line = p.stdout.readline()
-        if not line:
-            break
-        line = str(line.strip())
-        print(line)
-    stdout, stderr = p.communicate()
-    print(stdout)
-    print(stderr)
+        if not exe:
+            exe = 'C:/OpenSees.exe'
 
-    toc = time() - tic
+        command = '{0} {1}{2}.tcl'.format(exe, path, name)
+        print(command)
+        p = Popen(command, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+        while True:
+            line = p.stdout.readline()
+            if not line:
+                break
+            line = str(line.strip())
+            print(line)
+        stdout, stderr = p.communicate()
+        print(stdout)
+        print(stderr)
 
-    print('\n***** OpenSees analysis time : {0} s *****'.format(toc))
+        toc = time() - tic
+
+        print('\n***** OpenSees analysis time : {0} s *****'.format(toc))
+
+    except:
+
+        print('\n***** OpenSees analysis failed')
 
 
 def input_generate(structure, fields):
@@ -193,13 +220,14 @@ def input_generate(structure, fields):
 
         ndof = 3
         for element in elements.values():
-            if element.__name__ not in ['TrussElement', 'TieElement', 'StrutElement']:
+            if element.__name__ not in ['TrussElement', 'TieElement', 'StrutElement', 'SpringElement']:
                 ndof = 6
                 break
 
         write_input_heading(f, 'opensees', ndof)
         write_input_nodes(f, 'opensees', nodes)
-        write_input_bcs(f, 'opensees', structure, steps, displacements, ndof)
+        write_input_bcs(f, 'opensees', structure, steps, displacements, sets, ndof)
+        write_input_materials(f, 'opensees', materials)
         write_input_elements(f, 'opensees', sections, properties, elements, structure, materials)
         write_input_steps(f, 'opensees', structure, steps, loads, displacements, sets, fields, ndof)
 

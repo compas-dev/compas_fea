@@ -103,7 +103,7 @@ class SpringElement(Element):
         self.__name__ = 'SpringElement'
 
 
-class TrussElement(BeamElement):
+class TrussElement(Element):
 
     """ A 1D element that takes axial loads.
 
@@ -118,7 +118,7 @@ class TrussElement(BeamElement):
     """
 
     def __init__(self):
-        BeamElement.__init__(self)
+        Element.__init__(self)
         self.__name__ = 'TrussElement'
 
 

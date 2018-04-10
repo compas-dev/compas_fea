@@ -7,7 +7,7 @@ fea
 
 .. module:: compas_fea.fea
 
-The compas_fea package supports ABAQUS, ANSYS and OpenSEES as analysis backends.
+The compas_fea package supports Abaqus, Ansys, Sofistik and OpenSees as analysis backends.
 
 
 write_heading
@@ -22,6 +22,17 @@ write_heading
 
     write_input_heading
 
+write_constraints
+=================
+
+.. currentmodule:: compas_fea.fea.write_constraints
+
+:mod:`compas_fea.fea.write_constraints`
+
+.. autosummary::
+    :toctree: generated/
+
+    write_input_constraints
 
 write_steps
 ===========
@@ -34,19 +45,6 @@ write_steps
     :toctree: generated/
 
     write_input_steps
-
-
-write_postprocess
-=================
-
-.. currentmodule:: compas_fea.fea.write_postprocess
-
-:mod:`compas_fea.fea.write_postprocess`
-
-.. autosummary::
-    :toctree: generated/
-
-    write_input_postprocess
 
 
 write_elements
@@ -99,6 +97,19 @@ write_materials
     :toctree: generated/
 
     write_input_materials
+
+
+write_misc
+==========
+
+.. currentmodule:: compas_fea.fea.write_misc
+
+:mod:`compas_fea.fea.write_misc`
+
+.. autosummary::
+    :toctree: generated/
+
+    write_input_misc
 
 
 abaq
@@ -162,11 +173,15 @@ sofistik
 .. autosummary::
     :toctree: generated/
 
+    input_generate
+
 """
 
 from .write_heading import *
+from .write_constraints import *
 from .write_nodes import *
 from .write_bcs import *
 from .write_materials import *
 from .write_elements import *
 from .write_steps import *
+from .write_misc import *

@@ -179,9 +179,9 @@
     <span class="k">if</span> <span class="n">line_type</span> <span class="ow">and</span> <span class="n">edges</span><span class="p">:</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">dic_</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">))</span>
-            <span class="n">ex</span> <span class="o">=</span> <span class="n">dic_</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ex&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="n">ey</span> <span class="o">=</span> <span class="n">dic_</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ey&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">dic</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">))</span>
+            <span class="n">ex</span> <span class="o">=</span> <span class="n">dic</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ex&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">ey</span> <span class="o">=</span> <span class="n">dic</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ey&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="n">ex</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">ey</span> <span class="o">=</span> <span class="kc">None</span>
@@ -226,8 +226,8 @@
                 <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">structure</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">face</span><span class="p">]</span>
                 <span class="n">e</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="n">acoustic</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="n">thermal</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
                 <span class="n">created_elements</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">created_nodes</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">created_elements</span><span class="p">)</span></div>
+</div>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">created_nodes</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">created_elements</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="add_nodes_elements_from_layers"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.add_nodes_elements_from_layers.html#compas_fea.cad.blender.add_nodes_elements_from_layers">[docs]</a><span class="k">def</span> <span class="nf">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">line_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -266,11 +266,13 @@
 
     <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">bmesh</span> <span class="ow">in</span> <span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">):</span>
-            <span class="n">nodes</span><span class="p">,</span> <span class="n">elements</span> <span class="o">=</span> <span class="n">add_nodes_elements_from_bmesh</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">bmesh</span><span class="o">=</span><span class="n">bmesh</span><span class="p">,</span> <span class="n">line_type</span><span class="o">=</span><span class="n">line_type</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="n">acoustic</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="n">thermal</span><span class="p">)</span>
+
+            <span class="n">nodes</span><span class="p">,</span> <span class="n">elements</span> <span class="o">=</span> <span class="n">add_nodes_elements_from_bmesh</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">bmesh</span><span class="o">=</span><span class="n">bmesh</span><span class="p">,</span> <span class="n">line_type</span><span class="o">=</span><span class="n">line_type</span><span class="p">,</span>
+                                                            <span class="n">mesh_type</span><span class="o">=</span><span class="n">mesh_type</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="n">acoustic</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="n">thermal</span><span class="p">)</span>
             <span class="n">created_nodes</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
             <span class="n">created_elements</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">created_nodes</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">created_elements</span><span class="p">)</span></div>
+</div>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">created_nodes</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">created_elements</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="add_tets_from_bmesh"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.add_tets_from_bmesh.html#compas_fea.cad.blender.add_tets_from_bmesh">[docs]</a><span class="k">def</span> <span class="nf">add_tets_from_bmesh</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bmesh</span><span class="p">,</span> <span class="n">draw_tets</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -299,7 +301,6 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
-<span class="sd">        Nodes and elements are updated in the Structure object.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -315,16 +316,16 @@
         <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">structure</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">tets_points</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">element</span><span class="p">]</span>
         <span class="n">ekey</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;TetrahedronElement&#39;</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="n">acoustic</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="n">thermal</span><span class="p">)</span>
         <span class="n">ekeys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ekey</span><span class="p">)</span>
-    <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">ekeys</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">ekeys</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">draw_tets</span><span class="p">:</span>
         <span class="n">tet_faces</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">points</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tets_elements</span><span class="p">):</span>
-            <span class="n">xyz</span> <span class="o">=</span> <span class="p">[</span><span class="n">tets_points</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">points</span><span class="p">]</span>
-            <span class="n">xdraw_mesh</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">vertices</span><span class="o">=</span><span class="n">xyz</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">tet_faces</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span></div>
+            <span class="n">xyz</span> <span class="o">=</span> <span class="p">[</span><span class="n">tets_points</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">points</span><span class="p">]</span></div>
+            <span class="n">xdraw_mesh</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">vertices</span><span class="o">=</span><span class="n">xyz</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">tet_faces</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="add_elset_from_bmeshes"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.add_elset_from_bmeshes.html#compas_fea.cad.blender.add_elset_from_bmeshes">[docs]</a><span class="k">def</span> <span class="nf">add_elset_from_bmeshes</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bmeshes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="add_elset_from_bmeshes"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.add_elset_from_bmeshes.html#compas_fea.cad.blender.add_elset_from_bmeshes">[docs]</a><span class="k">def</span> <span class="nf">add_elset_from_bmeshes</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bmeshes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Adds the Blender meshes&#39; edges and faces as an element set.</span>
 
@@ -338,8 +339,6 @@
 <span class="sd">        Blender mesh objects to extract edges and faces.</span>
 <span class="sd">    layer : int</span>
 <span class="sd">        Layer to get bmeshes from if bmeshes are not given.</span>
-<span class="sd">    explode : bool</span>
-<span class="sd">        Explode the set into sets for each member of selection.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -347,7 +346,7 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">        - Either bmeshes or layer should be given, not both.</span>
+<span class="sd">    - Either bmeshes or layer should be given, not both.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -355,6 +354,7 @@
         <span class="n">bmeshes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">object</span> <span class="k">for</span> <span class="nb">object</span> <span class="ow">in</span> <span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span> <span class="k">if</span> <span class="nb">object</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;MESH&#39;</span><span class="p">]</span>
 
     <span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
+
     <span class="k">for</span> <span class="n">bmesh</span> <span class="ow">in</span> <span class="n">bmeshes</span><span class="p">:</span>
 
         <span class="n">blendermesh</span> <span class="o">=</span> <span class="n">BlenderMesh</span><span class="p">(</span><span class="n">bmesh</span><span class="p">)</span>
@@ -374,11 +374,11 @@
             <span class="n">element</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+</div>
+    <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">elements</span><span class="p">)</span>
 
-    <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">elements</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="n">explode</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="add_nset_from_bmeshes"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.add_nset_from_bmeshes.html#compas_fea.cad.blender.add_nset_from_bmeshes">[docs]</a><span class="k">def</span> <span class="nf">add_nset_from_bmeshes</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bmeshes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="add_nset_from_bmeshes"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.add_nset_from_bmeshes.html#compas_fea.cad.blender.add_nset_from_bmeshes">[docs]</a><span class="k">def</span> <span class="nf">add_nset_from_bmeshes</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bmeshes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Adds the Blender meshes&#39; vertices as a node set.</span>
 
@@ -392,8 +392,6 @@
 <span class="sd">        Blender mesh objects to extract vertices.</span>
 <span class="sd">    layer : int</span>
 <span class="sd">        Layer to get bmeshes from if bmeshes are not given.</span>
-<span class="sd">    explode : bool</span>
-<span class="sd">        Explode the set into sets for each member of selection.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -411,16 +409,14 @@
     <span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">bmesh</span> <span class="ow">in</span> <span class="n">bmeshes</span><span class="p">:</span>
         <span class="n">blendermesh</span> <span class="o">=</span> <span class="n">BlenderMesh</span><span class="p">(</span><span class="n">bmesh</span><span class="p">)</span>
-        <span class="n">vertices</span> <span class="o">=</span> <span class="n">blendermesh</span><span class="o">.</span><span class="n">get_vertex_coordinates</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">blendermesh</span><span class="o">.</span><span class="n">get_vertex_coordinates</span><span class="p">():</span>
             <span class="n">node</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
+    <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">nodes</span><span class="p">)</span>
 
-    <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="n">explode</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="add_nset_from_objects"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.add_nset_from_objects.html#compas_fea.cad.blender.add_nset_from_objects">[docs]</a><span class="k">def</span> <span class="nf">add_nset_from_objects</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="add_nset_from_objects"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.add_nset_from_objects.html#compas_fea.cad.blender.add_nset_from_objects">[docs]</a><span class="k">def</span> <span class="nf">add_nset_from_objects</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Adds the objects&#39; locations as a node set.</span>
 
@@ -434,8 +430,6 @@
 <span class="sd">        Objects to use location values.</span>
 <span class="sd">    layer : int</span>
 <span class="sd">        Layer to get objects from if objects are not given.</span>
-<span class="sd">    explode : bool</span>
-<span class="sd">        Explode the set into sets for each member of selection.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -444,15 +438,16 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    - Either objects or layer should be given, not both.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">objects</span> <span class="o">=</span> <span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)</span>
-    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">structure</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">location</span><span class="p">)</span> <span class="k">for</span> <span class="nb">object</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">]</span>
-    <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="n">explode</span><span class="o">=</span><span class="n">explode</span><span class="p">)</span></div>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">structure</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">location</span><span class="p">)</span> <span class="k">for</span> <span class="nb">object</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">]</span></div>
+    <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">nodes</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="mesh_extrude"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.mesh_extrude.html#compas_fea.cad.blender.mesh_extrude">[docs]</a><span class="k">def</span> <span class="nf">mesh_extrude</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">bmesh</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dz</span><span class="p">,</span> <span class="n">setname</span><span class="p">):</span>
+<div class="viewcode-block" id="mesh_extrude"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.mesh_extrude.html#compas_fea.cad.blender.mesh_extrude">[docs]</a><span class="k">def</span> <span class="nf">mesh_extrude</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">bmesh</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dz</span><span class="p">,</span> <span class="n">setname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Extrudes a Blender mesh into cells of many layers and adds to Structure.</span>
 
@@ -467,7 +462,11 @@
 <span class="sd">    dz : float</span>
 <span class="sd">        Layer thickness.</span>
 <span class="sd">    setname : str</span>
-<span class="sd">        Name of set for added elements.</span>
+<span class="sd">        Name of set for added solid elements.</span>
+<span class="sd">    cap : str</span>
+<span class="sd">        Name of set for a capping mesh on final surface.</span>
+<span class="sd">    links : str</span>
+<span class="sd">        Name of set for adding links along extrusion.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -480,8 +479,8 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_from_bmesh</span><span class="p">(</span><span class="n">bmesh</span><span class="p">)</span>
-    <span class="n">extrude_mesh</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">nz</span><span class="o">=</span><span class="n">nz</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">dz</span><span class="p">,</span> <span class="n">setname</span><span class="o">=</span><span class="n">setname</span><span class="p">)</span></div>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_from_bmesh</span><span class="p">(</span><span class="n">bmesh</span><span class="p">)</span></div>
+    <span class="n">extrude_mesh</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">nz</span><span class="o">=</span><span class="n">nz</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">dz</span><span class="p">,</span> <span class="n">setname</span><span class="o">=</span><span class="n">setname</span><span class="p">,</span> <span class="n">cap</span><span class="o">=</span><span class="n">cap</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="n">links</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ordered_network"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.ordered_network.html#compas_fea.cad.blender.ordered_network">[docs]</a><span class="k">def</span> <span class="nf">ordered_network</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">network</span><span class="p">,</span> <span class="n">layer</span><span class="p">):</span>
@@ -494,7 +493,7 @@
 <span class="sd">        Structure object.</span>
 <span class="sd">    network : obj</span>
 <span class="sd">        Network object.</span>
-<span class="sd">    layer : str</span>
+<span class="sd">    layer : int</span>
 <span class="sd">        Layer to extract start-point (Blender object).</span>
 
 <span class="sd">    Returns</span>
@@ -514,8 +513,8 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">sp_xyz</span> <span class="o">=</span> <span class="n">get_object_location</span><span class="p">(</span><span class="nb">object</span><span class="o">=</span><span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">network_order</span><span class="p">(</span><span class="n">sp_xyz</span><span class="o">=</span><span class="n">sp_xyz</span><span class="p">,</span> <span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="p">)</span></div>
+    <span class="n">sp_xyz</span> <span class="o">=</span> <span class="n">get_object_location</span><span class="p">(</span><span class="nb">object</span><span class="o">=</span><span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">network_order</span><span class="p">(</span><span class="n">sp_xyz</span><span class="o">=</span><span class="n">sp_xyz</span><span class="p">,</span> <span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">plot_axes</span><span class="p">():</span>
@@ -586,9 +585,9 @@
         <span class="n">data</span> <span class="o">=</span> <span class="n">elemental_data</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
         <span class="n">dtype</span> <span class="o">=</span> <span class="s1">&#39;element&#39;</span>
 
-    <span class="n">toc</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">cnodes</span><span class="p">,</span> <span class="n">fabs</span> <span class="o">=</span> <span class="n">postprocess</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">ux</span><span class="p">,</span> <span class="n">uy</span><span class="p">,</span> <span class="n">uz</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">cbar</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">iptype</span><span class="p">,</span> <span class="n">nodal</span><span class="p">)</span>
+    <span class="n">toc</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">cnodes</span><span class="p">,</span> <span class="n">fabs</span><span class="p">,</span> <span class="n">fscaled</span><span class="p">,</span> <span class="n">celements</span> <span class="o">=</span> <span class="n">postprocess</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">ux</span><span class="p">,</span> <span class="n">uy</span><span class="p">,</span> <span class="n">uz</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">cbar</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+                                                           <span class="n">iptype</span><span class="p">,</span> <span class="n">nodal</span><span class="p">)</span>
     <span class="n">U</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">***** Data processed : </span><span class="si">{0}</span><span class="s1"> s *****&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">toc</span><span class="p">))</span>
 
     <span class="c1"># Plot meshes</span>
@@ -596,14 +595,18 @@
     <span class="n">npts</span> <span class="o">=</span> <span class="mi">8</span>
     <span class="n">mesh_faces</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">for</span> <span class="n">nodes</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">element</span><span class="p">,</span> <span class="n">nodes</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">elements</span><span class="p">):</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">nodes</span>
             <span class="n">pipe</span> <span class="o">=</span> <span class="n">draw_pipes</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="n">U</span><span class="p">[</span><span class="n">u</span><span class="p">]],</span> <span class="n">end</span><span class="o">=</span><span class="p">[</span><span class="n">U</span><span class="p">[</span><span class="n">v</span><span class="p">]],</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">col1</span> <span class="o">=</span> <span class="p">[</span><span class="n">cnodes</span><span class="p">[</span><span class="n">u</span><span class="p">]]</span> <span class="o">*</span> <span class="n">npts</span>
-            <span class="n">col2</span> <span class="o">=</span> <span class="p">[</span><span class="n">cnodes</span><span class="p">[</span><span class="n">v</span><span class="p">]]</span> <span class="o">*</span> <span class="n">npts</span>
+            <span class="k">if</span> <span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;element&#39;</span><span class="p">:</span>
+                <span class="n">col1</span> <span class="o">=</span> <span class="p">[</span><span class="n">celements</span><span class="p">[</span><span class="n">element</span><span class="p">]]</span> <span class="o">*</span> <span class="n">npts</span>
+                <span class="n">col2</span> <span class="o">=</span> <span class="p">[</span><span class="n">celements</span><span class="p">[</span><span class="n">element</span><span class="p">]]</span> <span class="o">*</span> <span class="n">npts</span>
+            <span class="k">elif</span> <span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;nodal&#39;</span><span class="p">:</span>
+                <span class="n">col1</span> <span class="o">=</span> <span class="p">[</span><span class="n">cnodes</span><span class="p">[</span><span class="n">u</span><span class="p">]]</span> <span class="o">*</span> <span class="n">npts</span>
+                <span class="n">col2</span> <span class="o">=</span> <span class="p">[</span><span class="n">cnodes</span><span class="p">[</span><span class="n">v</span><span class="p">]]</span> <span class="o">*</span> <span class="n">npts</span>
             <span class="n">blendermesh</span> <span class="o">=</span> <span class="n">BlenderMesh</span><span class="p">(</span><span class="n">pipe</span><span class="p">)</span>
             <span class="n">blendermesh</span><span class="o">.</span><span class="n">set_vertex_colors</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">npts</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">colors</span><span class="o">=</span><span class="n">col1</span><span class="p">)</span>
             <span class="n">blendermesh</span><span class="o">.</span><span class="n">set_vertex_colors</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">npts</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">colors</span><span class="o">=</span><span class="n">col2</span><span class="p">)</span>
@@ -649,14 +652,14 @@
     <span class="n">texts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
         <span class="p">{</span><span class="s1">&#39;radius&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">+</span> <span class="mf">4.8</span> <span class="o">*</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;layer&#39;</span><span class="p">:</span> <span class="n">layer</span><span class="p">},</span>
         <span class="p">{</span><span class="s1">&#39;radius&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;Step:</span><span class="si">{0}</span><span class="s1">   Field:</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">field</span><span class="p">),</span> <span class="s1">&#39;layer&#39;</span><span class="p">:</span> <span class="n">layer</span><span class="p">}])</span>
-
-    <span class="n">xdraw_texts</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span></div>
+</div>
+    <span class="n">xdraw_texts</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="plot_voxels"><a class="viewcode-back" href="../../../reference/generated/compas_fea.cad.blender.plot_voxels.html#compas_fea.cad.blender.plot_voxels">[docs]</a><span class="k">def</span> <span class="nf">plot_voxels</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;smises&#39;</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">nodal</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
                 <span class="n">vdx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cube_size</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot;Applies a base voxel material and texture to a cube for 4D visualisation.</span>
+    <span class="sd">&quot;&quot;&quot;Applies a base voxel material and texture to a cuboid for 4D visualisation.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -667,7 +670,7 @@
 <span class="sd">    field : str</span>
 <span class="sd">        Field to plot, e.g. &#39;smises&#39;.</span>
 <span class="sd">    layer : int</span>
-<span class="sd">        Layer to plot voxel cuboid on.</span>
+<span class="sd">        Layer to plot the voxel cuboid on.</span>
 <span class="sd">    scale : float</span>
 <span class="sd">        Scale displacements for the deformed plot.</span>
 <span class="sd">    cbar : list</span>
@@ -691,7 +694,7 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    - Texture ramping should be done manually afterwards.</span>
+<span class="sd">    - Texture ramping should be done manually in Blender afterwards.</span>
 <span class="sd">    - Voxel display works best with cube dimensions &gt;= 10.</span>
 <span class="sd">    - The absolute value is plotted, ranged between [0, 1].</span>
 
@@ -719,7 +722,7 @@
         <span class="n">data</span> <span class="o">=</span> <span class="n">elemental_data</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
         <span class="n">dtype</span> <span class="o">=</span> <span class="s1">&#39;element&#39;</span>
 
-    <span class="n">toc</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">cnodes</span><span class="p">,</span> <span class="n">fabs</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">postprocess</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">ux</span><span class="p">,</span> <span class="n">uy</span><span class="p">,</span> <span class="n">uz</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">cbar</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">iptype</span><span class="p">,</span> <span class="n">nodal</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">toc</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">cnodes</span><span class="p">,</span> <span class="n">fabs</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">postprocess</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">ux</span><span class="p">,</span> <span class="n">uy</span><span class="p">,</span> <span class="n">uz</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">cbar</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">iptype</span><span class="p">,</span> <span class="n">nodal</span><span class="p">)</span>
     <span class="n">U</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">***** Data processed : </span><span class="si">{0}</span><span class="s1"> s *****&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">toc</span><span class="p">))</span>
@@ -767,8 +770,8 @@
     <span class="n">slot</span><span class="o">.</span><span class="n">texture_coords</span> <span class="o">=</span> <span class="s1">&#39;ORCO&#39;</span>
     <span class="n">slot</span><span class="o">.</span><span class="n">mapping</span> <span class="o">=</span> <span class="s1">&#39;FLAT&#39;</span>
     <span class="n">slot</span><span class="o">.</span><span class="n">use_map_density</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">slot</span><span class="o">.</span><span class="n">use_map_emission</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">slot</span><span class="o">.</span><span class="n">use_map_color_emission</span> <span class="o">=</span> <span class="kc">True</span></div>
+    <span class="n">slot</span><span class="o">.</span><span class="n">use_map_emission</span> <span class="o">=</span> <span class="kc">True</span></div>
+    <span class="n">slot</span><span class="o">.</span><span class="n">use_map_color_emission</span> <span class="o">=</span> <span class="kc">True</span>
 </code></pre></div>
                         
                         <!-- <nav class="compas-sideways">
@@ -835,11 +838,11 @@
             
 
             
-                Last updated on Feb 14, 2018.
+                Last updated on Mar 27, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 

@@ -1,4 +1,3 @@
-"""An example compas_fea package use for meshes."""
 
 from compas_blender.helpers import mesh_from_bmesh
 from compas_blender.utilities import get_objects
@@ -11,6 +10,7 @@ from compas_fea.structure import GeneralDisplacement
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import GravityLoad
 from compas_fea.structure import PinnedDisplacement
+from compas_fea.structure import PrestressLoad
 from compas_fea.structure import RollerDisplacementXY
 from compas_fea.structure import ShellSection
 from compas_fea.structure import Steel
@@ -19,22 +19,22 @@ from compas_fea.structure import TributaryLoad
 from compas_fea.structure import TrussSection
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 # Create empty Structure object
 
-mdl = Structure(name='mesh_floor', path='/home/al/Temp/')
+mdl = Structure(name='mesh_floor', path='C:/Temp/')
 
 # Add truss and shell elements
 
 blender.add_nodes_elements_from_layers(mdl, layers=0, mesh_type='ShellElement')
 blender.add_nodes_elements_from_layers(mdl, layers=1, line_type='TrussElement')
 
-## Add node and element sets
+# Add node and element sets
 
 blender.add_elset_from_bmeshes(mdl, layer=0, name='elset_concrete')
 blender.add_elset_from_bmeshes(mdl, layer=1, name='elset_ties')
@@ -56,33 +56,36 @@ mdl.add_sections([
 
 # Add element properties
 
-epc = Properties(material='mat_concrete', section='sec_concrete', elsets='elset_concrete')
-eps = Properties(material='mat_steel', section='sec_ties', elsets='elset_ties')
-mdl.add_element_properties(epc, name='ep_concrete')
-mdl.add_element_properties(eps, name='ep_steel')
+epc = Properties(name='ep_concrete', material='mat_concrete', section='sec_concrete', elsets='elset_concrete')
+eps = Properties(name='ep_steel', material='mat_steel', section='sec_ties', elsets='elset_ties')
+mdl.add_element_properties(epc)
+mdl.add_element_properties(eps)
 
 # Add loads
 
-mdl.add_load(GravityLoad(name='load_gravity', elements='elset_concrete'))
+mdl.add_loads([
+    GravityLoad(name='load_gravity', elements='elset_concrete'),
+    PrestressLoad(name='load_prestress', elements='elset_ties', sxx=50*10**6)])
 
 # Add tributary loads from mesh
 
 mesh = mesh_from_bmesh(get_objects(layer=2)[0])
-mdl.add_load(TributaryLoad(mdl, name='load_tributary', mesh=mesh, z=-2000))
+mdl.add_load(TributaryLoad(mdl, name='load_tributary', mesh=mesh, z=-5000))
 
 # Add displacements
 
 mdl.add_displacements([
     RollerDisplacementXY(name='disp_roller', nodes='nset_corners'),
     PinnedDisplacement(name='disp_pinned', nodes='nset_corner1'),
-    GeneralDisplacement(name='disp_dofx', nodes='nset_corner2', x=0)])
+    GeneralDisplacement(name='disp_xdof', nodes='nset_corner2', x=0)])
 
 # Add steps
 
 mdl.add_steps([
-    GeneralStep(name='step_bc', displacements=['disp_roller', 'disp_pinned', 'disp_dofx']),
-    GeneralStep(name='step_loads', loads=['load_gravity', 'load_tributary'], factor=1.5)])
-mdl.steps_order = ['step_bc', 'step_loads']
+    GeneralStep(name='step_bc', displacements=['disp_roller', 'disp_pinned', 'disp_xdof']),
+    GeneralStep(name='step_prestress', loads=['load_prestress']),
+    GeneralStep(name='step_loads', loads=['load_gravity', 'load_tributary'], factor=1.1)])
+mdl.steps_order = ['step_bc', 'step_prestress', 'step_loads']
 
 # Structure summary
 
@@ -94,8 +97,10 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
 # Plot displacements
 
-blender.plot_data(mdl, step='step_loads', field='um', radius=0.02, layer=6, colorbar_size=0.5)
+blender.plot_data(mdl, step='step_prestress', field='uz', radius=0.02, layer=6, colorbar_size=0.5)
+blender.plot_data(mdl, step='step_loads', field='uz', radius=0.02, layer=7, colorbar_size=0.5)
 
 # Plot stress
 
-blender.plot_data(mdl, step='step_loads', field='smises', radius=0.02, cbar=[0, 3*10**6], layer=7, colorbar_size=0.5)
+blender.plot_data(mdl, step='step_loads', field='smises', iptype='max', nodal='max',
+                  radius=0.02, cbar=[0, 1*10**6], layer=8, colorbar_size=0.5)

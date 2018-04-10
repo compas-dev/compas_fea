@@ -79,16 +79,17 @@
 <h1>write_input_bcs</h1>
 <dl class="function">
 <dt id="compas_fea.fea.write_bcs.write_input_bcs">
-<code class="descclassname">compas_fea.fea.write_bcs.</code><code class="descname">write_input_bcs</code><span class="sig-paren">(</span><em>f</em>, <em>software</em>, <em>structure</em>, <em>steps</em>, <em>displacements</em>, <em>ndof=6</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/fea/write_bcs.html#write_input_bcs"><span class="viewcode-link">[source]</span></a></dt>
+<code class="descclassname">compas_fea.fea.write_bcs.</code><code class="descname">write_input_bcs</code><span class="sig-paren">(</span><em>f</em>, <em>software</em>, <em>structure</em>, <em>steps</em>, <em>displacements</em>, <em>sets</em>, <em>ndof=6</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/fea/write_bcs.html#write_input_bcs"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Writes boundary condition information to the input file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>f</strong> (<em>obj</em>) – The open file object for the input file.</p></li>
-<li><p><strong>software</strong> (<em>str</em>) – Analysis software or library to use, ‘abaqus’, ‘opensees’, ‘sofistik’ or ‘ansys’.</p></li>
+<li><p><strong>software</strong> (<em>str</em>) – Analysis software or library to use: ‘abaqus’, ‘opensees’, ‘sofistik’ or ‘ansys’.</p></li>
 <li><p><strong>structure</strong> (<em>obj</em>) – Struture object.</p></li>
 <li><p><strong>steps</strong> (<em>dic</em>) – Step objects from structure.steps.</p></li>
 <li><p><strong>displacements</strong> (<em>dic</em>) – Displacement objects from structure.displacements.</p></li>
+<li><p><strong>sets</strong> (<em>dic</em>) – Sets dictionary from structure.sets.</p></li>
 <li><p><strong>ndof</strong> (<em>int</em>) – Number of degrees-of-freedom per node.</p></li>
 </ul>
 </dd>
@@ -175,11 +176,11 @@
             
 
             
-                Last updated on Feb 14, 2018.
+                Last updated on Mar 27, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 

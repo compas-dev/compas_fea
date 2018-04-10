@@ -2,7 +2,7 @@
 truss_tower Rhino
 ********************************************************************************
 
-This example works for: **Abaqus**, **OpenSees**.
+This example works for: **Abaqus**, **OpenSees**, **Sofistik**.
 
 .. figure:: /_images/truss_tower_rhino.png
     :figclass: figure

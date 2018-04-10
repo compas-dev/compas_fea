@@ -421,7 +421,7 @@ Steps
         """
 
         if not nodes:
-            nodes = self.nodes
+            nodes = sorted(self.nodes, key=int)
         return [self.node_xyz(node=node) for node in nodes]
 
 
@@ -776,10 +776,11 @@ Steps
 
         return structure
 
+    @classmethod
     def from_network(self, network):
         pass
 
-    def add_nodes_elements_from_mesh(self, mesh, element_type, acoustic=False, thermal=False):
+    def add_nodes_elements_from_mesh(self, mesh, element_type, acoustic=False, thermal=False, elset=None):
 
         """ Adds the nodes and faces of a Mesh to the Structure object.
 
@@ -793,10 +794,13 @@ Steps
             Acoustic properties on or off.
         thermal : bool
             Thermal properties on or off.
+        elset : str
+            Name of element set to create.
 
         Returns
         -------
-        list: Keys of the created elements.
+        list
+            Keys of the created elements.
 
         """
 
@@ -806,9 +810,11 @@ Steps
         for fkey in list(mesh.faces()):
             face = [self.check_node_exists(mesh.vertex_coordinates(i)) for i in mesh.face[fkey]]
             ekeys.append(self.add_element(nodes=face, type=element_type, acoustic=acoustic, thermal=thermal))
+        if elset:
+            self.add_set(name=elset, type='element', selection=ekeys)
         return ekeys
 
-    def add_nodes_elements_from_network(self, network, element_type, acoustic=False, thermal=False):
+    def add_nodes_elements_from_network(self, network, element_type, acoustic=False, thermal=False, elset=None, axes={}):
 
         """ Adds the nodes and edges of a Network to the Structure object.
 
@@ -822,20 +828,29 @@ Steps
             Acoustic properties on or off.
         thermal : bool
             Thermal properties on or off.
+        elset : str
+            Name of element set to create.
+        axes : dic
+            The local element axes 'ex', 'ey' and 'ez' for all elements.
 
         Returns
         -------
-        None
-            Nodes and elements are updated in the Structure object.
+        list
+            Keys of the created elements.
 
         """
 
         for key in sorted(list(network.vertices()), key=int):
             self.add_node(network.vertex_coordinates(key))
+        ekeys = []
         for u, v in list(network.edges()):
             sp = self.check_node_exists(network.vertex_coordinates(u))
             ep = self.check_node_exists(network.vertex_coordinates(v))
-            self.add_element(nodes=[sp, ep], type=element_type, acoustic=acoustic, thermal=thermal)
+            ekeys.append(self.add_element(nodes=[sp, ep], type=element_type, acoustic=acoustic, thermal=thermal,
+                                          axes=axes))
+        if elset:
+            self.add_set(name=elset, type='element', selection=ekeys)
+        return ekeys
 
 
 # ==============================================================================
@@ -955,12 +970,12 @@ Steps
 
     def add_element_properties(self, element_properties):
 
-        """ Adds an ElementProperties object to structure.element_properties.
+        """ Adds ElementProperties object(s) to structure.element_properties.
 
         Parameters
         ----------
-        element_properties : obj
-            The ElementProperties object.
+        element_properties : obj, list
+            The ElementProperties object(s).
 
         Returns
         -------
@@ -968,8 +983,13 @@ Steps
 
         """
 
-        element_properties.index = len(self.element_properties)
-        self.element_properties[element_properties.name] = element_properties
+        if isinstance(element_properties, list):
+            for element_property in element_properties:
+                element_property.index = len(self.element_properties)
+                self.element_properties[element_property.name] = element_property
+        else:
+            element_properties.index = len(self.element_properties)
+            self.element_properties[element_properties.name] = element_properties
 
     def add_interaction(self, interaction):
 
@@ -1424,7 +1444,7 @@ Steps
 
     def view(self):
 
-        """ Starts the QT app for visualisation.
+        """ Starts the Pyside app for visualisation.
 
         Parameters
         ----------
@@ -1441,11 +1461,11 @@ Steps
         """
 
         try:
-            from compas_fea.viewers.app import App
-            app = App(self)
-            app.start()
+            print('***** Launching App *****')
+            from compas_fea.app.app import App
+            App(structure=self)
         except:
-            print('***** Failed to load QT App *****')
+            print('***** Launching App failed *****')
 
 
 # ==============================================================================

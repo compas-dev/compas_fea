@@ -114,8 +114,8 @@
         <span class="n">make_command_file_modal</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="k">elif</span> <span class="s1">&#39;harmonic&#39;</span> <span class="ow">in</span> <span class="n">stypes</span><span class="p">:</span>
         <span class="n">make_command_file_harmonic</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">skey</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;This analysis type has not yet been implemented for Compas Ansys&#39;</span><span class="p">)</span></div>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;This analysis type has not yet been implemented for Compas Ansys&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="make_command_file_static"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.make_command_file_static.html#compas_fea.fea.ansys.make_command_file_static">[docs]</a><span class="k">def</span> <span class="nf">make_command_file_static</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -126,8 +126,8 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">write_static_analysis_request</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+    <span class="n">write_static_analysis_request</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="make_command_file_modal"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.make_command_file_modal.html#compas_fea.fea.ansys.make_command_file_modal">[docs]</a><span class="k">def</span> <span class="nf">make_command_file_modal</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -138,8 +138,8 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">write_modal_analysis_request</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+    <span class="n">write_modal_analysis_request</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="make_command_file_harmonic"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.make_command_file_harmonic.html#compas_fea.fea.ansys.make_command_file_harmonic">[docs]</a><span class="k">def</span> <span class="nf">make_command_file_harmonic</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">skey</span><span class="p">):</span>
@@ -150,8 +150,8 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">write_harmonic_analysis_request</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">skey</span><span class="p">)</span></div>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+    <span class="n">write_harmonic_analysis_request</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">skey</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ansys_launch_process"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.ansys_launch_process.html#compas_fea.fea.ansys.ansys_launch_process">[docs]</a><span class="k">def</span> <span class="nf">ansys_launch_process</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">cpus</span><span class="p">,</span> <span class="n">license</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -191,8 +191,8 @@
     <span class="n">launch_string</span> <span class="o">+=</span> <span class="s1">&#39; -dir </span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">work_dir</span>
     <span class="n">launch_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1"> -j </span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1"> -s read -l en-us -b -i </span><span class="se">\&quot;</span><span class="s1">&#39;</span>
     <span class="n">launch_string</span> <span class="o">+=</span> <span class="n">inp_path</span> <span class="o">+</span> <span class="s1">&#39; </span><span class="se">\&quot;</span><span class="s1"> -o </span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">out_path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span>
-
-    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">launch_string</span><span class="p">)</span></div>
+</div>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">launch_string</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ansys_launch_process_extract"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.ansys_launch_process_extract.html#compas_fea.fea.ansys.ansys_launch_process_extract">[docs]</a><span class="k">def</span> <span class="nf">ansys_launch_process_extract</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s1">&#39;research&#39;</span><span class="p">):</span>
@@ -222,8 +222,8 @@
     <span class="n">launch_string</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">ansys_path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1"> -p &#39;</span> <span class="o">+</span> <span class="n">lic_str</span> <span class="o">+</span> <span class="s1">&#39; -np &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">cpus</span><span class="p">)</span>
     <span class="n">launch_string</span> <span class="o">+=</span> <span class="s1">&#39; -dir </span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">work_dir</span>
     <span class="n">launch_string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1"> -j </span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1"> -s read -l en-us -b -i </span><span class="se">\&quot;</span><span class="s1">&#39;</span>
-    <span class="n">launch_string</span> <span class="o">+=</span> <span class="n">inp_path</span> <span class="o">+</span> <span class="s1">&#39; </span><span class="se">\&quot;</span><span class="s1"> -o </span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">out_path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span>
-    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">launch_string</span><span class="p">)</span></div>
+    <span class="n">launch_string</span> <span class="o">+=</span> <span class="n">inp_path</span> <span class="o">+</span> <span class="s1">&#39; </span><span class="se">\&quot;</span><span class="s1"> -o </span><span class="se">\&quot;</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">out_path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span></div>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">launch_string</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="delete_result_files"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.delete_result_files.html#compas_fea.fea.ansys.delete_result_files">[docs]</a><span class="k">def</span> <span class="nf">delete_result_files</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -236,8 +236,8 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">out_path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_output/&#39;</span>
-    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span></div>
+    <span class="n">out_path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_output/&#39;</span></div>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="extract_rst_data"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.extract_rst_data.html#compas_fea.fea.ansys.extract_rst_data">[docs]</a><span class="k">def</span> <span class="nf">extract_rst_data</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="s1">&#39;last&#39;</span><span class="p">):</span>
@@ -251,8 +251,8 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">write_results_from_rst</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">steps</span><span class="p">)</span>
-    <span class="n">load_to_results</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">steps</span><span class="p">)</span></div>
+    <span class="n">write_results_from_rst</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">steps</span><span class="p">)</span></div>
+    <span class="n">load_to_results</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">steps</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="write_results_from_rst"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.write_results_from_rst.html#compas_fea.fea.ansys.write_results_from_rst">[docs]</a><span class="k">def</span> <span class="nf">write_results_from_rst</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">steps</span><span class="p">):</span>
@@ -286,8 +286,8 @@
                                                <span class="n">step_index</span><span class="o">=</span><span class="n">step_index</span><span class="p">,</span> <span class="n">step_name</span><span class="o">=</span><span class="n">skey</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">&#39;harmonic&#39;</span><span class="p">:</span>
             <span class="k">pass</span>
-    <span class="n">ansys_launch_process_extract</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span></div>
+    <span class="n">ansys_launch_process_extract</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="load_to_results"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.ansys.load_to_results.html#compas_fea.fea.ansys.load_to_results">[docs]</a><span class="k">def</span> <span class="nf">load_to_results</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">steps</span><span class="p">):</span>
@@ -341,8 +341,8 @@
             <span class="n">structure</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">]</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;nodal&#39;</span><span class="p">,</span> <span class="n">rlist</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rlist</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">rlist</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-                    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">att</span> <span class="ow">in</span> <span class="n">structure</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="s1">&#39;nodal&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                        <span class="n">att</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">])</span></div>
+                    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">att</span> <span class="ow">in</span> <span class="n">structure</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="s1">&#39;nodal&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span></div>
+                        <span class="n">att</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
 </code></pre></div>
                         
                         <!-- <nav class="compas-sideways">
@@ -409,11 +409,11 @@
             
 
             
-                Last updated on Feb 14, 2018.
+                Last updated on Mar 27, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 

@@ -20,7 +20,7 @@
         <link rel="stylesheet" type="text/css" href="/_static/css/compas-reference.css" />
 
         
-            <link rel="next" title="HeatStep" href="compas_fea.structure.step.HeatStep.html" />
+            <link rel="next" title="ModalStep" href="compas_fea.structure.step.ModalStep.html" />
         
         
         
@@ -79,9 +79,9 @@
 <h1>GeneralStep</h1>
 <dl class="class">
 <dt id="compas_fea.structure.step.GeneralStep">
-<em class="property">class </em><code class="descclassname">compas_fea.structure.step.</code><code class="descname">GeneralStep</code><span class="sig-paren">(</span><em>name</em>, <em>increments=100</em>, <em>iterations=100</em>, <em>factor=1.0</em>, <em>nlgeom=True</em>, <em>displacements=[]</em>, <em>loads=[]</em>, <em>type='static'</em>, <em>temperatures=None</em>, <em>duration=1</em>, <em>tolerance=0.01</em>, <em>state=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/step.html#GeneralStep"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<p>Initialises GeneralStep object for use in static analysis types.</p>
+<em class="property">class </em><code class="descclassname">compas_fea.structure.step.</code><code class="descname">GeneralStep</code><span class="sig-paren">(</span><em>name</em>, <em>increments=100</em>, <em>iterations=100</em>, <em>factor=1.0</em>, <em>nlgeom=True</em>, <em>nlmat=True</em>, <em>displacements=[]</em>, <em>loads=[]</em>, <em>type='static'</em>, <em>tolerance=0.01</em>, <em>state=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/step.html#GeneralStep"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Initialises GeneralStep object for use in a static analysis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -90,13 +90,12 @@
 <li><p><strong>iterations</strong> (<em>int</em>) – Number of step iterations.</p></li>
 <li><p><strong>factor</strong> (<em>float</em>) – Proportionality factor on the loads and displacements.</p></li>
 <li><p><strong>nlgeom</strong> (<em>bool</em>) – Analyse non-linear geometry effects.</p></li>
-<li><p><strong>displacements</strong> (<em>list</em>) – Displacement object names (str).</p></li>
-<li><p><strong>loads</strong> (<em>list</em>) – Load object names (str).</p></li>
+<li><p><strong>nlmat</strong> (<em>bool</em>) – Analyse non-linear material effects.</p></li>
+<li><p><strong>displacements</strong> (<em>list</em>) – Displacement object names.</p></li>
+<li><p><strong>loads</strong> (<em>list</em>) – Load object names.</p></li>
 <li><p><strong>type</strong> (<em>str</em>) – ‘static’,’static,riks’.</p></li>
-<li><p><strong>temperatures</strong> (<em>str</em>) – Name of Temperature object to apply.</p></li>
-<li><p><strong>duration</strong> (<em>float</em>) – Duration of step.</p></li>
 <li><p><strong>tolerance</strong> (<em>float</em>) – A tolerance for analysis solvers.</p></li>
-<li><p><strong>state</strong> (<em>str</em>) – Limit state ‘sls’ or ‘uls’.</p></li>
+<li><p><strong>state</strong> (<em>str</em>) – Limit state ‘sls’ or ‘uls’ for design.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -110,8 +109,8 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code>(name[, increments, iterations, …])</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code>(name[, increments, iterations, …])</p></td>
+<td><p>Initialize self.</p></td>
 </tr>
 </tbody>
 </table>
@@ -126,7 +125,7 @@
                             
 
                             
-                                <a href="compas_fea.structure.step.HeatStep.html" class="btn btn-primary compas-next" role="button">HeatStep</a>
+                                <a href="compas_fea.structure.step.ModalStep.html" class="btn btn-primary compas-next" role="button">ModalStep</a>
                             
                         </nav> -->
 
@@ -194,11 +193,11 @@
             
 
             
-                Last updated on Feb 14, 2018.
+                Last updated on Mar 27, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 

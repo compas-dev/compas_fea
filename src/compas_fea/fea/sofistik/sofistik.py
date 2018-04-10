@@ -22,10 +22,7 @@ __all__ = [
 ]
 
 
-dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
-
-
-def input_generate(structure, fields, units='m'):
+def input_generate(structure, fields=None):
 
     """ Creates the Sofistik .dat file from the Structure object.
 
@@ -35,8 +32,6 @@ def input_generate(structure, fields, units='m'):
         The Structure object to read from.
     fields : list
         Data field requests.
-    units : str
-        Units of the nodal co-ordinates 'm','cm','mm'.
 
     Returns
     -------
@@ -45,9 +40,6 @@ def input_generate(structure, fields, units='m'):
     """
 
     filename = '{0}{1}.dat'.format(structure.path, structure.name)
-
-    if isinstance(fields, str):
-        fields = [fields]
 
     with open(filename, 'w') as f:
 
@@ -64,12 +56,11 @@ def input_generate(structure, fields, units='m'):
         sets          = structure.sets
         steps         = structure.steps
 
-        write_input_heading(f, software='sofistik')
+        write_input_heading(f, 'sofistik')
         write_input_materials(f, 'sofistik', materials, sections, properties)
         write_input_nodes(f, 'sofistik', nodes)
-        write_input_bcs(f, 'sofistik', structure, steps, displacements)
+        write_input_bcs(f, 'sofistik', structure, steps, displacements, sets)
         write_input_elements(f, 'sofistik', sections, properties, elements, structure, materials)
-        write_input_steps(f, 'sofistik', structure, steps, loads, displacements, sets, fields,
-                          properties=properties, sections=sections)
+        write_input_steps(f, 'sofistik', structure, steps, loads, displacements, sets, fields, 6, properties)
 
     print('***** Sofistik input file generated: {0} *****\n'.format(filename))

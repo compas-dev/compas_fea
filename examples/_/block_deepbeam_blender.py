@@ -1,4 +1,3 @@
-"""An example compas_fea package for block elements."""
 
 from compas_fea.cad import blender
 
@@ -10,31 +9,33 @@ from compas_fea.structure import PointLoad
 from compas_fea.structure import SolidSection
 from compas_fea.structure import Structure
 
-from compas_blender.utilities import draw_plane
 from compas_blender.utilities import clear_layer
+from compas_blender.utilities import draw_plane
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'liew@arch.ethz.ch'
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 clear_layer(layer=0)
 
 # Create empty Structure object
 
-mdl = Structure(name='block_deepbeam', path='/home/al/Temp/')
+mdl = Structure(name='block_deepbeam', path='C:/Temp/')
 
 # Extrude mesh
 
 ds = 0.05
-bmesh = bmesh=draw_plane(Lx=1.0, Ly=2.0, dx=ds, dy=ds)
-blender.mesh_extrude(mdl, bmesh, nz=int(1/ds), dz=ds, setname='elset_solids')
+Lx = 1
+Ly = 2
+bmesh = bmesh=draw_plane(Lx=Lx, Ly=Ly, dx=ds, dy=ds)
+blender.mesh_extrude(mdl, bmesh=bmesh, nz=int(1/ds), dz=ds, setname='elset_blocks')
 
 # Add node and element sets
 
-pins = [[ds, ds, 0], [1 - ds, ds, 0], [1 - ds, 2 - ds, 0], [ds, 2 - ds, 0]]
+pins = [[ds, ds, 0], [Lx - ds, ds, 0], [Lx - ds, Ly - ds, 0], [ds, Ly - ds, 0]]
 supports = [mdl.check_node_exists(i) for i in pins]
 top = [mdl.check_node_exists([0.5, 1.0, 1.0])]
 mdl.add_set(name='nset_supports', type='node', selection=supports)
@@ -50,8 +51,8 @@ mdl.add_section(SolidSection(name='sec_solid'))
 
 # Add element properties
 
-ep = Properties(material='mat_elastic', section='sec_solid', elsets='elset_solids')
-mdl.add_element_properties(ep, name='ep_solid')
+ep = Properties(name='ep_solid', material='mat_elastic', section='sec_solid', elsets='elset_blocks')
+mdl.add_element_properties(ep)
 
 # Add loads
 
@@ -63,8 +64,9 @@ mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_supports
 
 # Add steps
 
-mdl.add_step(GeneralStep(name='step', displacements=['disp_pinned'], loads=['load_point']))
-mdl.steps_order = ['step']
+mdl.add_step(GeneralStep(name='step_bc', displacements=['disp_pinned']))
+mdl.add_step(GeneralStep(name='step_load', loads=['load_point']))
+mdl.steps_order = ['step_bc', 'step_load']
 
 # Structure summary
 
@@ -76,4 +78,4 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
 # Plot voxels
 
-blender.plot_voxels(mdl, step='step', field='smises', vdx=ds, cbar=[0, 1.5], cube_size=[10, 20, 10], layer=1)
+blender.plot_voxels(mdl, step='step_load', field='smises', vdx=ds, cbar=[0, 1.5], cube_size=[10, 20, 10], layer=1)

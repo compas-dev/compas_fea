@@ -73,14 +73,12 @@
 
                         <div class="section" id="beam-frame-rhino">
 <h1>beam_frame Rhino</h1>
-<p>This example works for: <strong>Abaqus</strong>, <strong>OpenSees</strong>.</p>
+<p>This example works for: <strong>Abaqus</strong>, <strong>OpenSees</strong>, <strong>Sofistik</strong>.</p>
 <div class="figure">
 <img alt="../_images/beam_frame_rhino.png" class="figure-img img-fluid" src="../_images/beam_frame_rhino.png" />
 </div>
-<div class="highlight-default"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="sd">&quot;&quot;&quot;An example compas_fea package use for beam elements.&quot;&quot;&quot;</span>
-
+<div class="highlight-default notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span>
 <span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">rhino</span>
-
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralStep</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">LineLoad</span>
@@ -98,70 +96,73 @@
 <span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
 
 
-<span class="c1"># Create empty Structure object</span>
+<span class="c1"># Structure</span>
 
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;beam_frame&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;C:/Temp/&#39;</span><span class="p">)</span>
 
-<span class="c1"># Add nodes and elements</span>
+<span class="c1"># Elements</span>
 
 <span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">line_type</span><span class="o">=</span><span class="s1">&#39;BeamElement&#39;</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="s1">&#39;elset_lines&#39;</span><span class="p">)</span>
 
-<span class="c1"># Add sets</span>
+<span class="c1"># Sets</span>
 
-<span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nset_supports&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_load_v&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_load_h&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_corners&#39;</span><span class="p">,</span> <span class="s1">&#39;elset_top&#39;</span><span class="p">,</span> <span class="s1">&#39;elset_lines&#39;</span><span class="p">]</span>
+<span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_load_v&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_load_h&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_rollers&#39;</span><span class="p">,</span> <span class="s1">&#39;elset_top&#39;</span><span class="p">]</span>
 <span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="n">layers</span><span class="p">)</span>
 
-<span class="c1"># Add materials</span>
+<span class="c1"># Materials</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">Steel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">))</span>
 
-<span class="c1"># Add sections</span>
+<span class="c1"># Sections</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">PipeSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_pipe&#39;</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.100</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.005</span><span class="p">))</span>
 
-<span class="c1"># Add element properties</span>
+<span class="c1"># Properties</span>
 
 <span class="n">ep</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_pipe&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_lines&#39;</span><span class="p">)</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span>
 
-<span class="c1"># Add displacements</span>
+<span class="c1"># Displacements</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_displacements</span><span class="p">([</span>
-    <span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_pins&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_supports&#39;</span><span class="p">),</span>
-    <span class="n">RollerDisplacementXZ</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_rollers&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_corners&#39;</span><span class="p">)])</span>
+    <span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_pins&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">),</span>
+    <span class="n">RollerDisplacementXZ</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_rollers&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_rollers&#39;</span><span class="p">)])</span>
 
-<span class="c1"># Add loads</span>
+<span class="c1"># Loads</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span>
     <span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_h&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_load_h&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">4000</span><span class="p">),</span>
     <span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_v&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_load_v&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mi">6000</span><span class="p">),</span>
-    <span class="n">LineLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_udl&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;elset_top&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">4000</span><span class="p">)])</span>
+    <span class="n">LineLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_udl&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;elset_top&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mi">4000</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;global&#39;</span><span class="p">),</span>
+<span class="p">])</span>
+<span class="c1"># Note: the OpenSees beam-column element with geomTransf Corotational does&#39;nt support LineLoads</span>
 
-<span class="c1"># Add steps</span>
+<span class="c1"># Steps</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_steps</span><span class="p">([</span>
     <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_pins&#39;</span><span class="p">,</span> <span class="s1">&#39;disp_rollers&#39;</span><span class="p">]),</span>
+<span class="c1">#    GeneralStep(name=&#39;step_loads&#39;, loads=[&#39;load_h&#39;, &#39;load_v&#39;], iterations=50)])</span>
     <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_h&#39;</span><span class="p">,</span> <span class="s1">&#39;load_v&#39;</span><span class="p">,</span> <span class="s1">&#39;load_udl&#39;</span><span class="p">],</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">50</span><span class="p">)])</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="s1">&#39;step_loads&#39;</span><span class="p">]</span>
 
-<span class="c1"># Structure summary</span>
+<span class="c1"># Summary</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
 
-<span class="c1"># Run and extract data</span>
+<span class="c1"># Run (Sofistik)</span>
 
-<span class="c1">#mdl.analyse_and_extract(software=&#39;abaqus&#39;, fields=[&#39;u&#39;, &#39;ur&#39;, &#39;rf&#39;])</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;opensees&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;ur&#39;</span><span class="p">,</span> <span class="s1">&#39;rf&#39;</span><span class="p">])</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">write_input_file</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;sofistik&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;ur&#39;</span><span class="p">,</span> <span class="s1">&#39;rf&#39;</span><span class="p">])</span>
 
-<span class="c1"># Plot deformations</span>
+<span class="c1"># Run (Abaqus/OpenSees)</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;ur&#39;</span><span class="p">,</span> <span class="s1">&#39;rf&#39;</span><span class="p">])</span>
+<span class="c1">#mdl.analyse_and_extract(software=&#39;opensees&#39;, fields=[&#39;u&#39;, &#39;ur&#39;, &#39;rf&#39;])</span>
 
 <span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;um&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 <span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;urm&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 
-<span class="c1"># Extract data</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">get_nodal_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;rfx&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_supports&#39;</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">get_nodal_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;rfz&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_supports&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">get_nodal_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;rfx&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">get_nodal_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;rfz&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">))</span>
 </code></pre></div>
 </div>
 </div>
@@ -208,6 +209,8 @@
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">beam_frame Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_grid_rhino.html">beam_grid Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_simple_rhino.html">beam_simple Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="beam_tree_rhino.html">beam_tree Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_rhino.html">block_deepbeam Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="block_tets_rhino.html">block_tets Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_rhino.html">mesh_floor Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_rhino.html">mesh_mould Rhino</a></li>
@@ -216,6 +219,14 @@
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="spring_simple_rhino.html">spring_simple Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_blender.html">block_deepbeam Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_tets_blender.html">block_tets Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_bridge_rhino.html">mesh_bridge Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_blender.html">mesh_floor Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_tris_blender.html">mesh_tris Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_blender.html">truss_tower Blender</a></li>
 </ul>
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
@@ -252,11 +263,11 @@
             
 
             
-                Last updated on Feb 14, 2018.
+                Last updated on Mar 27, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 

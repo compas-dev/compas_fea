@@ -22,14 +22,14 @@ comments = {
     'ansys':    '!',
 }
 
-leader = {
+prefix = {
     'abaqus':   '',
     'opensees': 'node ',
     'sofistik': '',
     'ansys':    '',
 }
 
-seperators = {
+spacer = {
     'abaqus':   ', ',
     'opensees': ' ',
     'sofistik': ' ',
@@ -37,7 +37,7 @@ seperators = {
 }
 
 
-def write_input_nodes(f, software, nodes):
+def write_input_nodes(f, software, nodes, sets={}):
 
     """ Writes the nodal co-ordinates information to the input file.
 
@@ -46,9 +46,11 @@ def write_input_nodes(f, software, nodes):
     f : obj
         The open file object for the input file.
     software : str
-        Analysis software or library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
+        Analysis software or library to use: 'abaqus', 'opensees', 'sofistik' or 'ansys'.
     nodes : dic
         Node dictionary from structure.nodes.
+    sets : dic
+        Set dictionary from structure.sets (for Abaqus).
 
     Returns
     -------
@@ -70,12 +72,12 @@ def write_input_nodes(f, software, nodes):
         f.write('SYST 3D GDIR POSX,POSY,NEGZ\n')
         f.write('CTRL OPT OPTI 10\n')
         f.write('NODE NO X Y Z\n')
-        f.write('{0}\n'.format(c))
+        f.write('$\n')
 
     elif software == 'abaqus':
 
         f.write('*NODE, NSET=nset_all\n')
-        f.write('{0}\n'.format(c))
+        f.write('**\n')
 
     elif software == 'opensees':
 
@@ -90,8 +92,35 @@ def write_input_nodes(f, software, nodes):
 
     for key in sorted(nodes, key=int):
         xyz = [str(nodes[key][i]) for i in 'xyz']
-        data = seperators[software].join([str(key + 1)] + xyz)
-        f.write('{0}{1}\n'.format(leader[software], data))
+        data = spacer[software].join([str(key + 1)] + xyz)
+        f.write('{0}{1}\n'.format(prefix[software], data))
+
+    if software == 'abaqus':
+
+        cm = 9
+        for key, s in sets.items():
+
+            if s['type'] == 'node':
+
+                f.write('**\n')
+                f.write('** {0}\n'.format(key))
+                f.write('** ' + '-' * len(key) + '\n')
+                f.write('**\n')
+                f.write('*NSET, NSET={0}\n'.format(key))
+                f.write('**\n')
+
+                selection = [i + 1 for i in s['selection']]
+                cnt = 0
+                for j in selection:
+                    f.write(str(j))
+                    if (cnt < cm) and (j != selection[-1]):
+                        f.write(',')
+                        cnt += 1
+                    elif cnt >= cm:
+                        f.write('\n')
+                        cnt = 0
+                    else:
+                        f.write('\n')
 
     f.write('{0}\n'.format(c))
     f.write('{0}\n'.format(c))

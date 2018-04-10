@@ -95,19 +95,6 @@ element_properties
     ElementProperties
 
 
-interaction
-===========
-
-.. currentmodule:: compas_fea.structure.interaction
-
-:mod:`compas_fea.structure.interaction`
-
-.. autosummary::
-    :toctree: generated/
-
-    HeatTransfer
-
-
 load
 ====
 
@@ -121,6 +108,7 @@ load
     Load
     PrestressLoad
     PointLoad
+    PointLoads
     LineLoad
     AreaLoad
     BodyLoad
@@ -146,7 +134,6 @@ material
     ElasticIsotropic
     ElasticOrthotropic
     ElasticPlastic
-    ThermalMaterial
     Steel
 
 
@@ -161,7 +148,6 @@ misc
     :toctree: generated/
 
     Amplitude
-    Temperature
 
 
 section
@@ -201,7 +187,6 @@ step
     :toctree: generated/
 
     GeneralStep
-    HeatStep
     ModalStep
     HarmonicStep
     BucklingStep

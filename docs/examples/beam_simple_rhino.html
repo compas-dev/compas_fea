@@ -20,7 +20,7 @@
         <link rel="stylesheet" type="text/css" href="/_static/css/compas-reference.css" />
 
         
-            <link rel="next" title="block_tets Rhino" href="block_tets_rhino.html" />
+            <link rel="next" title="beam_tree Rhino" href="beam_tree_rhino.html" />
         
         
         
@@ -77,10 +77,8 @@
 <div class="figure">
 <img alt="../_images/beam_simple_rhino.png" class="figure-img img-fluid" src="../_images/beam_simple_rhino.png" />
 </div>
-<div class="highlight-default"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="sd">&quot;&quot;&quot;An example compas_fea package use for beam elements.&quot;&quot;&quot;</span>
-
+<div class="highlight-default notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span>
 <span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">rhino</span>
-
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">CircularSection</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElasticIsotropic</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
@@ -88,6 +86,7 @@
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralStep</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PinnedDisplacement</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PointLoad</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">RollerDisplacementX</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
 
 <span class="kn">from</span> <span class="nn">compas_rhino.utilities</span> <span class="k">import</span> <span class="n">clear_layers</span>
@@ -103,17 +102,16 @@
 <span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
 
 
-<span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="c1"># Create empty Structure object</span>
+<span class="c1"># Structure</span>
 
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;beam_simple&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;C:/Temp/&#39;</span><span class="p">)</span>
 
-<span class="c1"># Clear layers</span>
+<span class="c1"># Clear</span>
 
 <span class="n">clear_layers</span><span class="p">([</span><span class="s1">&#39;elset_lines&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_left&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_right&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_weights&#39;</span><span class="p">])</span>
+<span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="c1"># Create beam lines</span>
+<span class="c1"># Lines</span>
 
 <span class="n">L</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="n">m</span> <span class="o">=</span> <span class="mi">100</span>
@@ -121,87 +119,88 @@
 <span class="n">rs</span><span class="o">.</span><span class="n">CurrentLayer</span><span class="p">(</span><span class="s1">&#39;elset_lines&#39;</span><span class="p">)</span>
 <span class="p">[</span><span class="n">rs</span><span class="o">.</span><span class="n">AddLine</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">)]</span>
 
-<span class="c1"># Create end-points</span>
+<span class="c1"># Points</span>
 
+<span class="n">n</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">rs</span><span class="o">.</span><span class="n">CurrentLayer</span><span class="p">(</span><span class="s1">&#39;nset_left&#39;</span><span class="p">)</span>
 <span class="n">rs</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="n">rs</span><span class="o">.</span><span class="n">CurrentLayer</span><span class="p">(</span><span class="s1">&#39;nset_right&#39;</span><span class="p">)</span>
 <span class="n">rs</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">([</span><span class="n">L</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-
-<span class="c1"># Create weights</span>
-
-<span class="n">n</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">rs</span><span class="o">.</span><span class="n">CurrentLayer</span><span class="p">(</span><span class="s1">&#39;nset_weights&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">x</span><span class="p">[</span><span class="n">n</span><span class="p">::</span><span class="n">n</span><span class="p">]:</span>
     <span class="n">rs</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">([</span><span class="n">xi</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 
 <span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># Add beam elements from Network</span>
+<span class="c1"># Elements</span>
 
 <span class="n">network</span> <span class="o">=</span> <span class="n">rhino</span><span class="o">.</span><span class="n">network_from_lines</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="s1">&#39;elset_lines&#39;</span><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_nodes_elements_from_network</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="p">,</span> <span class="n">element_type</span><span class="o">=</span><span class="s1">&#39;BeamElement&#39;</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_nodes_elements_from_network</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="p">,</span> <span class="n">element_type</span><span class="o">=</span><span class="s1">&#39;BeamElement&#39;</span><span class="p">,</span> 
+                                    <span class="n">elset</span><span class="o">=</span><span class="s1">&#39;elset_lines&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ex&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]})</span>
 
-<span class="c1"># Add node and element sets</span>
+<span class="c1"># Sets</span>
 
-<span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;nset_left&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_right&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_weights&#39;</span><span class="p">,</span> <span class="s1">&#39;elset_lines&#39;</span><span class="p">])</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;nset_left&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_right&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_weights&#39;</span><span class="p">])</span>
 
-<span class="c1"># Add materials</span>
+<span class="c1"># Materials</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_elastic&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">20</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1500</span><span class="p">))</span>
 
-<span class="c1"># Add sections</span>
+<span class="c1"># Sections</span>
 
-<span class="n">_</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">arcL</span><span class="p">,</span> <span class="n">L</span> <span class="o">=</span> <span class="n">rhino</span><span class="o">.</span><span class="n">ordered_network</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;nset_left&#39;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">Li</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">arcL</span><span class="p">):</span>
-    <span class="n">ri</span> <span class="o">=</span> <span class="p">(</span><span class="n">Li</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.020</span> <span class="o">+</span> <span class="mf">0.020</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
-    <span class="n">sname</span> <span class="o">=</span> <span class="s1">&#39;sec_rod_</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-    <span class="n">ename</span> <span class="o">=</span> <span class="s1">&#39;element_</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">ekeys</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">Lt</span> <span class="o">=</span> <span class="n">rhino</span><span class="o">.</span><span class="n">ordered_network</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;nset_left&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ekey</span><span class="p">,</span> <span class="n">Li</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ekeys</span><span class="p">,</span> <span class="n">L</span><span class="p">):</span>
+    <span class="n">ri</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">Li</span> <span class="o">/</span> <span class="n">Lt</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.020</span>
+    <span class="n">sname</span> <span class="o">=</span> <span class="s1">&#39;sec_</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ekey</span><span class="p">)</span>
+    <span class="n">pname</span> <span class="o">=</span> <span class="s1">&#39;ep_</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ekey</span><span class="p">)</span>
+    <span class="n">ename</span> <span class="o">=</span> <span class="s1">&#39;element_</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ekey</span><span class="p">)</span>
     <span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">CircularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">sname</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">ri</span><span class="p">))</span>
-    <span class="n">ep</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_elastic&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="n">sname</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="n">ename</span><span class="p">)</span>
+    <span class="n">ep</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">pname</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_elastic&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="n">sname</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="n">ename</span><span class="p">)</span>
     <span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span>
 
-<span class="c1"># Add loads</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_weights&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_weights&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">))</span>
-
-<span class="c1"># Add displacements</span>
+<span class="c1"># Displacements</span>
 
 <span class="n">deg</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">180</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_displacements</span><span class="p">([</span>
     <span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_bc_left&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_left&#39;</span><span class="p">),</span>
-    <span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_bc_right&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_right&#39;</span><span class="p">),</span>
-    <span class="n">GeneralDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_left&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_left&#39;</span><span class="p">,</span> <span class="n">xx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">yy</span><span class="o">=</span><span class="mi">30</span><span class="o">*</span><span class="n">deg</span><span class="p">),</span>
-    <span class="n">GeneralDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_right&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_right&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">x</span><span class="o">=-</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">yy</span><span class="o">=</span><span class="mi">30</span><span class="o">*</span><span class="n">deg</span><span class="p">)</span>
+    <span class="n">RollerDisplacementX</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_bc_right&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_right&#39;</span><span class="p">),</span>
+<span class="c1">#    GeneralDisplacement(name=&#39;disp_left&#39;, nodes=&#39;nset_left&#39;, xx=0, yy=30*deg),</span>
+<span class="c1">#    GeneralDisplacement(name=&#39;disp_right&#39;, nodes=&#39;nset_right&#39;, z=-0.2, x=-0.2, yy=30*deg)</span>
 <span class="p">])</span>
 
-<span class="c1"># Add steps</span>
+<span class="c1">## Add loads</span>
+<span class="c1">#</span>
+<span class="c1">#mdl.add_load(PointLoad(name=&#39;load_weights&#39;, nodes=&#39;nset_weights&#39;, z=-1.0))</span>
+
+<span class="c1"># Steps</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_steps</span><span class="p">([</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_bc_left&#39;</span><span class="p">,</span> <span class="s1">&#39;disp_bc_right&#39;</span><span class="p">]),</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_weights&#39;</span><span class="p">]),</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_move&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_left&#39;</span><span class="p">,</span> <span class="s1">&#39;disp_right&#39;</span><span class="p">])])</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="s1">&#39;step_move&#39;</span><span class="p">]</span>
+    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_bc_left&#39;</span><span class="p">,</span> <span class="s1">&#39;disp_bc_right&#39;</span><span class="p">])])</span>
+<span class="c1">#    GeneralStep(name=&#39;step_load&#39;, loads=[&#39;load_weights&#39;]),</span>
+<span class="c1">#    GeneralStep(name=&#39;step_move&#39;, displacements=[&#39;disp_left&#39;, &#39;disp_right&#39;])])</span>
+<span class="c1">#mdl.steps_order = [&#39;step_bc&#39;, &#39;step_load&#39;, &#39;step_move&#39;]</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;step_bc&#39;</span><span class="p">]</span>
 
-<span class="c1"># Structure summary</span>
+<span class="c1"># Summary</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-
-<span class="c1"># Run and extract data</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;ur&#39;</span><span class="p">,</span> <span class="s1">&#39;sf&#39;</span><span class="p">,</span> <span class="s1">&#39;sm&#39;</span><span class="p">])</span>
-
-<span class="c1"># Plot displacements</span>
-
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_move&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;um&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_move&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;ury&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-
-<span class="c1"># Plot section forces/moments</span>
-
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_move&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;sfnx&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_move&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;sfvy&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_move&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;smy&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">write_input_file</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;ur&#39;</span><span class="p">,</span> <span class="s1">&#39;sf&#39;</span><span class="p">,</span> <span class="s1">&#39;sm&#39;</span><span class="p">])</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">write_input_file</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;opensees&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;ur&#39;</span><span class="p">,</span> <span class="s1">&#39;sf&#39;</span><span class="p">,</span> <span class="s1">&#39;sm&#39;</span><span class="p">])</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">write_input_file</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;sofistik&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;ur&#39;</span><span class="p">,</span> <span class="s1">&#39;sf&#39;</span><span class="p">,</span> <span class="s1">&#39;sm&#39;</span><span class="p">])</span>
+<span class="c1">## Run and extract data</span>
+<span class="c1">#</span>
+<span class="c1">#mdl.analyse_and_extract(software=&#39;abaqus&#39;, fields=[&#39;u&#39;, &#39;ur&#39;, &#39;sf&#39;, &#39;sm&#39;])</span>
+<span class="c1">#</span>
+<span class="c1">## Plot displacements</span>
+<span class="c1">#</span>
+<span class="c1">#rhino.plot_data(mdl, step=&#39;step_move&#39;, field=&#39;um&#39;, radius=0.01, colorbar_size=0.3)</span>
+<span class="c1">#rhino.plot_data(mdl, step=&#39;step_move&#39;, field=&#39;ury&#39;, radius=0.01, colorbar_size=0.3)</span>
+<span class="c1">#</span>
+<span class="c1">## Plot section forces/moments</span>
+<span class="c1">#</span>
+<span class="c1">#rhino.plot_data(mdl, step=&#39;step_move&#39;, field=&#39;sfnx&#39;, radius=0.01, colorbar_size=0.3)</span>
+<span class="c1">#rhino.plot_data(mdl, step=&#39;step_move&#39;, field=&#39;sfvy&#39;, radius=0.01, colorbar_size=0.3)</span>
+<span class="c1">#rhino.plot_data(mdl, step=&#39;step_move&#39;, field=&#39;smy&#39;, radius=0.01, colorbar_size=0.3)</span>
 </code></pre></div>
 </div>
 </div>
@@ -213,7 +212,7 @@
                             
 
                             
-                                <a href="block_tets_rhino.html" class="btn btn-primary compas-next" role="button">block_tets Rhino</a>
+                                <a href="beam_tree_rhino.html" class="btn btn-primary compas-next" role="button">beam_tree Rhino</a>
                             
                         </nav> -->
 
@@ -248,6 +247,8 @@
 <li class="nav-item"><a class="nav-link reference internal" href="beam_frame_rhino.html">beam_frame Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_grid_rhino.html">beam_grid Rhino</a></li>
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">beam_simple Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="beam_tree_rhino.html">beam_tree Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_rhino.html">block_deepbeam Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="block_tets_rhino.html">block_tets Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_rhino.html">mesh_floor Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_rhino.html">mesh_mould Rhino</a></li>
@@ -256,6 +257,14 @@
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="spring_simple_rhino.html">spring_simple Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_blender.html">block_deepbeam Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_tets_blender.html">block_tets Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_bridge_rhino.html">mesh_bridge Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_blender.html">mesh_floor Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_tris_blender.html">mesh_tris Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_blender.html">truss_tower Blender</a></li>
 </ul>
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
@@ -292,11 +301,11 @@
             
 
             
-                Last updated on Feb 14, 2018.
+                Last updated on Mar 27, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
             
         </footer>
 

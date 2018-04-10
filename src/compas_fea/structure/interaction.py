@@ -11,7 +11,7 @@ __email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
-    'HeatTransfer'
+    # 'HeatTransfer',
 ]
 
 
