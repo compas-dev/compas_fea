@@ -123,6 +123,10 @@ def ansys_launch_process(path, name, cpus, license, delete=True):
     launch_string += inp_path + ' \" -o \"' + out_path + '\"'
 
     subprocess.call(launch_string)
+    # sp = subprocess.Popen(launch_string)
+    # sp.wait()
+    # sp.terminate()
+    # sp.kill()
 
 
 def ansys_launch_process_extract(path, name, cpus=2, license='research'):
@@ -154,6 +158,10 @@ def ansys_launch_process_extract(path, name, cpus=2, license='research'):
     launch_string += '\" -j \"' + name + '\" -s read -l en-us -b -i \"'
     launch_string += inp_path + ' \" -o \"' + out_path + '\"'
     subprocess.call(launch_string)
+    # sp = subprocess.Popen(launch_string)
+    # sp.wait()
+    # sp.terminate()
+    # sp.kill()
 
 
 def delete_result_files(path, name):
