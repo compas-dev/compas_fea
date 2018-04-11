@@ -21,30 +21,31 @@ from compas.geometry import subtract_vectors
 
 # from time import time
 
-# try:
+try:
 #     from numpy import abs
-#     from numpy import arctan2
-#     from numpy import array
+    from numpy import arctan2
+    from numpy import array
 #     from numpy import asarray
-#     from numpy import cos
+    from numpy import cos
 #     from numpy import dot
 #     from numpy import hstack
 #     from numpy import isnan
 #     from numpy import linspace
 #     from numpy import meshgrid
-#     from numpy import mean
+    # from numpy import mean
 #     from numpy import min
 #     from numpy import max
-#     from numpy import newaxis
-#     from numpy import pi
-#     from numpy import sin
+    from numpy import newaxis
+    from numpy import pi
+    from numpy import sin
 #     from numpy import squeeze
 #     from numpy import sum
 #     from numpy import vstack
-#     from numpy import zeros
+    from numpy import tile
+    from numpy import zeros
 #     from numpy.linalg import inv
-# except ImportError:
-#     pass
+except ImportError:
+    pass
 
 # try:
 #     from scipy.interpolate import griddata
@@ -85,7 +86,7 @@ __all__ = [
 #     'postprocess',
 #     'process_data',
 #     'tets_from_vertices_faces',
-#     'principal_stresses',
+    'principal_stresses',
 #     'voxels',
 ]
 
@@ -765,61 +766,74 @@ def group_keys_by_attributes(adict, names, tol='3f'):
 #     return tets_points, tets_elements
 
 
-# def principal_stresses(data, ptype, centroids, scale, rotate):
+def principal_stresses(data, ptype, scale, rotate):
 
-#     S = data['element']
-#     s11 = S['sxx']
-#     s22 = S['syy']
-#     s12 = S['sxy']
-#     spr = S['s{0}p'.format(ptype)]
-#     axes = S['axes']
-#     sp1_keys = ['ip3_sp1', 'ip4_sp1', 'ip2_sp1', 'ip1_sp1']
-#     sp5_keys = ['ip3_sp5', 'ip2_sp5', 'ip4_sp5', 'ip1_sp5']
+    """ Performs principal stress calculations.
 
-#     ekeys = spr.keys()
-#     m = len(ekeys)
-#     k = len(sp1_keys)
-#     s11_sp1 = zeros((m, k))
-#     s22_sp1 = zeros((m, k))
-#     s12_sp1 = zeros((m, k))
-#     spr_sp1 = zeros((m, k))
-#     s11_sp5 = zeros((m, k))
-#     s22_sp5 = zeros((m, k))
-#     s12_sp5 = zeros((m, k))
-#     spr_sp5 = zeros((m, k))
-#     e11 = zeros((m, 3))
-#     e22 = zeros((m, 3))
-#     centroids = array(centroids)
+    Parameters
+    ----------
+    data : dic
+        Element data from structure.results for the Step.
+    ptype : str
+        'max' 'min' for maximum or minimum principal stresses.
+    scale : float
+        Scale on the length of the vectors.
+    rotate : int
+        Rotate lines by 90 deg, 0 or 1.
 
-#     for ekey in ekeys:
-#         i = int(ekey)
-#         e11[i, :] = axes[ekey][0]
-#         e22[i, :] = axes[ekey][1]
+    Returns
+    -------
+    array
+        Vectors for section point 1.
+    array
+        Vectors for section point 5.
+    array
+        Principal stresses for section point 1.
+    array
+        Principal stresses for section point 5.
 
-#         for j, ipkey in enumerate(sp1_keys):
-#             s11_sp1[i, j] = s11[ekey][ipkey]
-#             s22_sp1[i, j] = s22[ekey][ipkey]
-#             s12_sp1[i, j] = s12[ekey][ipkey]
-#             spr_sp1[i, j] = spr[ekey][ipkey]
+    """
 
-#         for j, ipkey in enumerate(sp5_keys):
-#             s11_sp5[i, j] = s11[ekey][ipkey]
-#             s22_sp5[i, j] = s22[ekey][ipkey]
-#             s12_sp5[i, j] = s12[ekey][ipkey]
-#             spr_sp5[i, j] = spr[ekey][ipkey]
+    axes = data['axes']
+    s11  = data['sxx']
+    s22  = data['syy']
+    s12  = data['sxy']
+    spr  = data['s{0}p'.format(ptype)]
 
-#     th1 = 0.5 * arctan2(s12_sp1, 0.5 * (s11_sp1 - s22_sp1))
-#     th5 = 0.5 * arctan2(s12_sp5, 0.5 * (s11_sp5 - s22_sp5))
-#     th1m = mean(th1, 1)[:, newaxis] + 0.5 * pi * rotate
-#     th5m = mean(th5, 1)[:, newaxis] + 0.5 * pi * rotate
-#     pr1m = mean(spr_sp1, 1)[:, newaxis]
-#     pr5m = mean(spr_sp5, 1)[:, newaxis]
-#     er1 = e11 * cos(th1m) + e22 * sin(th1m)
-#     er5 = e11 * cos(th5m) + e22 * sin(th5m)
-#     vec1 = er1 * (pr1m * scale / 10**7 + 0.0001)
-#     vec5 = er5 * (pr5m * scale / 10**7 + 0.0001)
+    ekeys = spr.keys()
+    m = len(ekeys)
+    s11_sp1 = zeros(m)
+    s22_sp1 = zeros(m)
+    s12_sp1 = zeros(m)
+    spr_sp1 = zeros(m)
+    s11_sp5 = zeros(m)
+    s22_sp5 = zeros(m)
+    s12_sp5 = zeros(m)
+    spr_sp5 = zeros(m)
+    e11 = zeros((m, 3))
+    e22 = zeros((m, 3))
 
-#     return vec1, vec5, pr1m, pr5m
+    for ekey in ekeys:
+        i = int(ekey)
+        e11[i, :] = axes[ekey][0]
+        e22[i, :] = axes[ekey][1]
+        s11_sp1[i] = s11[ekey]['ip1_sp1']
+        s22_sp1[i] = s22[ekey]['ip1_sp1']
+        s12_sp1[i] = s12[ekey]['ip1_sp1']
+        spr_sp1[i] = spr[ekey]['ip1_sp1']
+        s11_sp5[i] = s11[ekey]['ip1_sp5']
+        s22_sp5[i] = s22[ekey]['ip1_sp5']
+        s12_sp5[i] = s12[ekey]['ip1_sp5']
+        spr_sp5[i] = spr[ekey]['ip1_sp5']
+
+    th1 = tile((0.5 * arctan2(s12_sp1, 0.5 * (s11_sp1 - s22_sp1)) + 0.5 * pi * rotate)[:, newaxis], (1, 3))
+    th5 = tile((0.5 * arctan2(s12_sp5, 0.5 * (s11_sp5 - s22_sp5)) + 0.5 * pi * rotate)[:, newaxis], (1, 3))
+    er1 = e11 * cos(th1) + e22 * sin(th1)
+    er5 = e11 * cos(th5) + e22 * sin(th5)
+    vec1 = er1 * (tile(spr_sp1[:, newaxis], (1, 3)) * scale / 10**7 + 0.0001)
+    vec5 = er5 * (tile(spr_sp5[:, newaxis], (1, 3)) * scale / 10**7 + 0.0001)
+
+    return vec1, vec5, spr_sp1, spr_sp5
 
 
 # ==============================================================================
