@@ -445,6 +445,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         iterations = getattr(step, 'iterations', None)
         method     = getattr(step, 'type', None)
         nlgeom = 'YES' if getattr(step, 'nlgeom', None) else 'NO'
+        nlmat = 'YES' if getattr(step, 'nlmat', None) else 'NO'
 
         if isinstance(step.loads, str):
             step.loads = [step.loads]
@@ -745,7 +746,6 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 f.write('NSTR KMOD S1 KSV SLD\n')
             elif state == 'uls':
                 f.write('NSTR KMOD S1 KSV ULD\n')
-            nlmat = 'YES'
             if nlgeom == 'YES':
                 f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2}\n'.format(increments, tolerance, nlmat))
 

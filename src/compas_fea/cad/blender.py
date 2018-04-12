@@ -5,7 +5,7 @@ from __future__ import print_function
 
 from compas_blender.geometry import BlenderMesh
 from compas_blender.helpers import mesh_from_bmesh
-# from compas_blender.utilities import clear_layer
+from compas_blender.utilities import clear_layer
 # from compas_blender.utilities import delete_all_materials
 # from compas_blender.utilities import draw_cuboid
 # from compas_blender.utilities import draw_pipes
@@ -22,11 +22,11 @@ from compas.geometry import subtract_vectors
 # from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
 # from compas_fea.utilities import network_order
-# from compas_fea.utilities import postprocess
+from compas_fea.utilities import postprocess
 # from compas_fea.utilities import tets_from_vertices_faces
 # from compas_fea.utilities import voxels
 
-# from numpy import array
+from numpy import array
 # from numpy import newaxis
 
 import json
@@ -50,7 +50,7 @@ __all__ = [
     'add_nset_from_bmeshes',
     'add_elset_from_bmeshes',
     'add_nset_from_objects',
-#     'plot_data',
+    'plot_data',
 #     'ordered_network',
 #     'plot_voxels',
     'mesh_extrude'
@@ -450,74 +450,77 @@ def mesh_extrude(structure, bmesh, layers, thickness, mesh_name='', links_name='
 #     raise NotImplementedError
 
 
-# def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
-#               nodal='mean', mode='', colorbar_size=1):
+def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
+              nodal='mean', mode='', colorbar_size=1):
 
-#     """ Plots analysis results on the deformed shape of the Structure.
+    """ Plots analysis results on the deformed shape of the Structure.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object.
-#     step : str
-#         Name of the Step.
-#     field : str
-#         Field to plot, e.g. 'um', 'sxx', 'sm1'.
-#     layer : int
-#         Layer number for plotting.
-#     scale : float
-#         Scale displacements for the deformed plot.
-#     radius : float
-#         Radius of the pipe visualisation meshes.
-#     cbar : list
-#         Minimum and maximum limits on the colorbar.
-#     iptype : str
-#         'mean', 'max' or 'min' of an element's integration point data.
-#     nodal : str
-#         'mean', 'max' or 'min' for nodal values.
-#     mode : int
-#         mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
-#     colorbar_size : float
-#         Scale on the size of the colorbar.
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    field : str
+        Field to plot, e.g. 'um', 'sxx', 'sm1'.
+    layer : int
+        Layer number for plotting.
+    scale : float
+        Scale on displacements for the deformed plot.
+    radius : float
+        Radius of the pipe visualisation meshes.
+    cbar : list
+        Minimum and maximum limits on the colorbar.
+    iptype : str
+        'mean', 'max' or 'min' of an element's integration point data.
+    nodal : str
+        'mean', 'max' or 'min' for nodal values.
+    mode : int
+        Mode or frequency number to plot, for modal, harmonic or buckling analysis.
+    colorbar_size : float
+        Scale on the size of the colorbar.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     Notes
-#     -----
-#     - Pipe visualisation of line elements is not based on the element section.
+    Notes
+    -----
+    - Pipe visualisation of line elements is not based on the element section.
 
-#     """
+    """
 
-#     clear_layer(layer=layer)
+    clear_layer(layer=layer)
 
-#     # Node and element data
+    # Node and element data
 
-#     nkeys = sorted(structure.nodes, key=int)
-#     ekeys = sorted(structure.elements, key=int)
-#     nodes = [structure.node_xyz(nkey) for nkey in nkeys]
-#     elements = [structure.elements[ekey].nodes for ekey in ekeys]
+    nodes = structure.nodes_xyz()
+    elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
+    nodal_data = structure.results[step]['nodal']
+    nkeys = sorted(structure.nodes, key=int)
+    ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
+    uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
+    uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
 
-#     nodal_data = structure.results[step]['nodal']
-#     ux = [nodal_data['ux{0}'.format(str(mode))][key] for key in nkeys]
-#     uy = [nodal_data['uy{0}'.format(str(mode))][key] for key in nkeys]
-#     uz = [nodal_data['uz{0}'.format(str(mode))][key] for key in nkeys]
+    try:
+        data = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
+        dtype = 'nodal'
+    except(Exception):
+        data = structure.results[step]['element'][field]
+        dtype = 'element'
 
-#     # Process data
+    # Postprocess
 
-#     try:
-#         data = [nodal_data[field + str(mode)][key] for key in nkeys]
-#         dtype = 'nodal'
-#     except(Exception):
-#         elemental_data = structure.results[step]['element']
-#         data = elemental_data[field]
-#         dtype = 'element'
+    result = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1, iptype, nodal)
 
-#     toc, U, cnodes, fabs, fscaled, celements = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1,
-#                                                            iptype, nodal)
-#     U = array(U)
-#     print('\n***** Data processed : {0} s *****'.format(toc))
+    try:
+        toc, U, cnodes, fabs, fscaled, celements, eabs = result
+        U = array(U)
+        print('\n***** Data processed : {0} s *****'.format(toc))
+
+    except:
+        print('\n***** Error encountered during data processing or plotting *****')
+
 
 #     # Plot meshes
 

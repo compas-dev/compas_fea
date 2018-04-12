@@ -19,41 +19,41 @@ from compas.geometry import subtract_vectors
 
 # from compas.utilities import geometric_key
 
-# from time import time
+from time import time
 
-# try:
+try:
 #     from numpy import abs
 #     from numpy import arctan2
-#     from numpy import array
-#     from numpy import asarray
+    from numpy import array
+    from numpy import asarray
 #     from numpy import cos
 #     from numpy import dot
-#     from numpy import hstack
+    from numpy import hstack
 #     from numpy import isnan
 #     from numpy import linspace
 #     from numpy import meshgrid
-#     from numpy import mean
-#     from numpy import min
-#     from numpy import max
-#     from numpy import newaxis
+    from numpy import mean
+    from numpy import min
+    from numpy import max
+    from numpy import newaxis
 #     from numpy import pi
 #     from numpy import sin
 #     from numpy import squeeze
-#     from numpy import sum
+    from numpy import sum
 #     from numpy import vstack
-#     from numpy import zeros
+    from numpy import zeros
 #     from numpy.linalg import inv
-# except ImportError:
-#     pass
+except ImportError:
+    pass
 
-# try:
+try:
 #     from scipy.interpolate import griddata
-#     from scipy.sparse import csr_matrix
-#     from scipy.sparse import find
+    from scipy.sparse import csr_matrix
+    from scipy.sparse import find
 #     from scipy.spatial import Delaunay
 #     from scipy.spatial import distance_matrix
-# except ImportError:
-#     pass
+except ImportError:
+    pass
 
 # try:
 #     from mayavi import mlab
@@ -82,7 +82,7 @@ __all__ = [
     'group_keys_by_attributes',
 #     'network_order',
 #     'normalise_data',
-#     'postprocess',
+    'postprocess',
 #     'process_data',
 #     'tets_from_vertices_faces',
 #     'principal_stresses',
@@ -536,39 +536,39 @@ def group_keys_by_attributes(adict, names, tol='3f'):
 #     return fscaled, fabs
 
 
-# def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, iptype, nodal):
+def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, iptype, nodal):
 
-#     """ Post-process data from analysis results for given step and field.
+    """ Post-process data from analysis results for given step and field.
 
-#     Parameters
-#     ----------
-#     nodes : list
-#         [[x, y, z], ..] co-ordinates of each node.
-#     elements : list
-#         Node numbers that each element connects.
-#     ux : list
-#         List of nodal x displacements.
-#     uy : list
-#         List of nodal y displacements.
-#     uz : list
-#         List of nodal z displacements.
-#     data : dic
-#         Unprocessed data.
-#     dtype : str
-#         'nodal' or 'elemental'.
-#     scale : float
-#         Scale displacements for the deformed plot.
+    Parameters
+    ----------
+    nodes : list
+        [[x, y, z], ..] co-ordinates of each node.
+    elements : list
+        Node numbers that each element connects.
+    ux : list
+        List of nodal x displacements.
+    uy : list
+        List of nodal y displacements.
+    uz : list
+        List of nodal z displacements.
+    data : dic
+        Unprocessed data.
+    dtype : str
+        'nodal' or 'element'.
+    scale : float
+        Scale displacements for the deformed plot.
 #     cbar : list
 #         Minimum and maximum limits on the colorbar.
 #     ctype : int
 #         RGB color type, 1 or 255.
-#     iptype : str
-#         'mean', 'max' or 'min' of an element's integration point data.
-#     nodal : str
-#         'mean', 'max' or 'min' for nodal values.
+    iptype : str
+        'mean', 'max' or 'min' of an element's integration point data.
+    nodal : str
+        'mean', 'max' or 'min' for nodal values.
 
-#     Returns
-#     -------
+    Returns
+    -------
 #     float
 #         Time taken to process data.
 #     list
@@ -580,17 +580,18 @@ def group_keys_by_attributes(adict, names, tol='3f'):
 #     list
 #         Normalised data values.
 
-#     """
+    """
 
-#     tic = time()
+    tic = time()
 
-#     dU = hstack([array(ux)[:, newaxis], array(uy)[:, newaxis], array(uz)[:, newaxis]])
-#     U = [list(i) for i in list(array(nodes) + scale * dU)]
+    dU = hstack([array(ux)[:, newaxis], array(uy)[:, newaxis], array(uz)[:, newaxis]])
+    U  = [list(i) for i in list(array(nodes) + scale * dU)]
 
-#     values, values_ = process_data(data=data, dtype=dtype, iptype=iptype, nodal=nodal, elements=elements, n=len(nodes))
-#     fscaled, fabs = normalise_data(data=values, cmin=cbar[0], cmax=cbar[1])
-#     if values_ is not None:
-#         escaled, eabs = normalise_data(data=values_, cmin=cbar[0], cmax=cbar[1])
+    vn, ve = process_data(data=data, dtype=dtype, iptype=iptype, nodal=nodal, elements=elements, n=len(U))
+
+#     fscaled, fabs = normalise_data(data=vn, cmin=cbar[0], cmax=cbar[1])
+#     if ve is not None:
+#         escaled, eabs = normalise_data(data=ve, cmin=cbar[0], cmax=cbar[1])
 #     else:
 #         escaled = None
 #         eabs = 0
@@ -605,84 +606,84 @@ def group_keys_by_attributes(adict, names, tol='3f'):
 #     else:
 #         celements_ = []
 
-#     toc = time() - tic
+    toc = time() - tic
 
 #     return toc, U, cnodes_, fabs, fscaled_, celements_, eabs
+    return 0, 0, 0, 0, 0, 0, 0
 
 
-# def process_data(data, dtype, iptype, nodal, elements, n):
+def process_data(data, dtype, iptype, nodal, elements, n):
 
-#     """ Processes the raw data.
+    """ Process the raw data.
 
-#     Parameters
-#     ----------
-#     data : dic
-#         Unprocessed data.
-#     dtype : str
-#         'nodal' or 'elemental'.
-#     iptype : str
-#         'mean', 'max' or 'min' of an element's integration point data.
-#     nodal : str
-#         'mean', 'max' or 'min' for nodal values.
-#     elements : list
-#         Node numbers that each element connects.
-#     n : int
-#         Number of nodes.
+    Parameters
+    ----------
+    data : dic
+        Unprocessed data.
+    dtype : str
+        'nodal' or 'element'.
+    iptype : str
+        'mean', 'max' or 'min' of an element's integration point data.
+    nodal : str
+        'mean', 'max' or 'min' for nodal values.
+    elements : list
+        Node numbers that each element connects.
+    n : int
+        Number of nodes.
 
-#     Returns
-#     -------
-#     array
-#         Data values at each node.
-#     array
-#         Data values at each element.
+    Returns
+    -------
+    array
+        Data values for each node.
+    array
+        Data values for each element.
 
-#     """
+    """
 
-#     if dtype == 'nodal':
-#         values = array(data)[:, newaxis]
-#         values_ = None
+    if dtype == 'nodal':
+        vn = array(data)[:, newaxis]
+        ve = None
 
-#     elif dtype == 'element':
-#         m = len(list(data.keys()))
-#         values_ = zeros((m, 1))
-#         values = zeros((n, 1))
+    elif dtype == 'element':
+        m  = len(elements)
+        ve = zeros((m, 1))
 
-#         for dkey, item in data.items():
-#             fdata = list(item.values())
-#             for i, c in enumerate(fdata):
-#                 if c is None:
-#                     fdata[i] = 0
-#             if iptype == 'max':
-#                 value = max(fdata)
-#             elif iptype == 'min':
-#                 value = min(fdata)
-#             elif iptype == 'mean':
-#                 value = sum(fdata) / len(fdata)
-#             values_[int(dkey)] = value
+        for ekey, item in data.items():
+            fdata = [i for i in item.values() if i is not None]
+            if not fdata:
+                fdata = [0]
+            if iptype == 'max':
+                v = max(fdata)
+            elif iptype == 'min':
+                v = min(fdata)
+            elif iptype == 'mean':
+                v = sum(fdata) / len(fdata)
+            ve[int(ekey)] = v
 
-#         srows, scols = [], []
-#         for c, i in enumerate(elements):
-#             srows.extend([c] * len(i))
-#             scols.extend(i)
-#         sdata = [1] * len(srows)
-#         A = csr_matrix((sdata, (srows, scols)), shape=(m, n))
-#         AT = A.transpose()
+        rows, cols = [], []
+        for c, i in enumerate(elements):
+            rows.extend([c] * len(i))
+            cols.extend(i)
+        sdata = [1] * len(rows)
+        A = csr_matrix((sdata, (rows, cols)), shape=(m, n))
+        AT = A.transpose()
 
-#         if nodal == 'mean':
-#             values = asarray(AT.dot(values_) / sum(AT, 1))
+        if nodal == 'mean':
+            vsum = asarray(AT.dot(ve))
+            vn = vsum / sum(AT, 1)
+        else:
+            vn = zeros((n, 1))
+            ATa = AT.todense()
+            for i in range(n):
+                row = ATa[i, :].transpose()
+                col = (row == 1)
+                val = ve[col]
+                if nodal == 'max':
+                    vn[i] = max(val)
+                elif nodal == 'min':
+                    vn[i] = min(val)
 
-#         else:
-#             rows, cols, vals = find(AT)
-#             dic = {i: [] for i in range(n)}
-#             for row, col in zip(rows, cols):
-#                 dic[row].append(values_[col, 0])
-#             for i in range(n):
-#                 if nodal == 'max':
-#                     values[i] = max(dic[i])
-#                 elif nodal == 'min':
-#                     values[i] = min(dic[i])
-
-#     return values, values_
+    return vn, ve
 
 
 # def voxels(values, vmin, U, vdx, plot=None, indexing=None):

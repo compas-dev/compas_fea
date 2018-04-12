@@ -5,7 +5,7 @@ from __future__ import print_function
 
 from compas.datastructures.mesh import Mesh
 # from compas.datastructures import Network
-# from compas.utilities import XFunc
+from compas.utilities import XFunc
 
 # from compas_rhino.geometry import RhinoMesh
 from compas_rhino.helpers.mesh import mesh_from_guid
@@ -17,7 +17,7 @@ from compas.geometry import cross_vectors
 # from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
 
-# from compas_fea import utilities
+from compas_fea import utilities
 # from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
 # from compas_fea.utilities import network_order
@@ -50,7 +50,7 @@ __all__ = [
 #     'ordered_network',
 #     'plot_axes',
 #     'plot_mode_shapes',
-#     'plot_data',
+    'plot_data',
 #     'plot_voxels',
 #     'plot_principal_stresses',
 ]
@@ -619,84 +619,89 @@ def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name=''
 #         plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=fk)
 
 
-# def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
-#               nodal='mean', mode='', colorbar_size=1):
+def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
+              nodal='mean', mode='', colorbar_size=1):
 
-#     """ Plots analysis results on the deformed shape of the Structure.
+    """ Plots analysis results on the deformed shape of the Structure.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object.
-#     step : str
-#         Name of the Step.
-#     field : str
-#         Field to plot, e.g. 'um', 'sxx', 'sm1'.
-#     layer : str
-#         Layer name for plotting.
-#     scale : float
-#         Scale displacements for the deformed plot.
-#     radius : float
-#         Radius of the pipe visualisation meshes.
-#     cbar : list
-#         Minimum and maximum limits on the colorbar.
-#     iptype : str
-#         'mean', 'max' or 'min' of an element's integration point data.
-#     nodal : str
-#         'mean', 'max' or 'min' for nodal values.
-#     mode : int
-#         mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
-#     colorbar_size : float
-#         Scale on the size of the colorbar.
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    field : str
+        Field to plot, e.g. 'um', 'sxx', 'sm1'.
+    layer : str
+        Layer name for plotting.
+    scale : float
+        Scale on displacements for the deformed plot.
+    radius : float
+        Radius of the pipe visualisation meshes.
+    cbar : list
+        Minimum and maximum limits on the colorbar.
+    iptype : str
+        'mean', 'max' or 'min' of an element's integration point data.
+    nodal : str
+        'mean', 'max' or 'min' for nodal values.
+    mode : int
+        Mode or frequency number to plot, for modal, harmonic or buckling analysis.
+    colorbar_size : float
+        Scale on the size of the colorbar.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     Notes
-#     -----
-#     - Pipe visualisation of line elements is not based on the element section.
+    Notes
+    -----
+    - Pipe visualisation of line elements is not based on the element section.
 
-#     """
+    """
 
-#     # Create and clear Rhino layer
+    # Create and clear Rhino layer
 
-#     if not layer:
-#         layer = '{0}-{1}'.format(step, field)
-#     rs.CurrentLayer(rs.AddLayer(layer))
-#     rs.DeleteObjects(rs.ObjectsByLayer(layer))
-#     rs.EnableRedraw(False)
+    if not layer:
+        layer = '{0}-{1}'.format(step, field)
+    rs.CurrentLayer(rs.AddLayer(layer))
+    rs.DeleteObjects(rs.ObjectsByLayer(layer))
+    rs.EnableRedraw(False)
 
-#     # Node and element data
+    # Node and element data
 
-#     nkeys = sorted(structure.nodes, key=int)
-#     ekeys = sorted(structure.elements, key=int)
-#     nodes = [structure.node_xyz(nkey) for nkey in nkeys]
-#     elements = [structure.elements[ekey].nodes for ekey in ekeys]
+    nodes = structure.nodes_xyz()
+    elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
+    nodal_data = structure.results[step]['nodal']
+    nkeys = sorted(structure.nodes, key=int)
+    ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
+    uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
+    uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
 
-#     nodal_data = structure.results[step]['nodal']
-#     ux = [nodal_data['ux{0}'.format(str(mode))][key] for key in nkeys]
-#     uy = [nodal_data['uy{0}'.format(str(mode))][key] for key in nkeys]
-#     uz = [nodal_data['uz{0}'.format(str(mode))][key] for key in nkeys]
+    nodes = structure.nodes_xyz()
+    elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
+    nodal_data = structure.results[step]['nodal']
+    nkeys = sorted(structure.nodes, key=int)
+    ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
+    uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
+    uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
 
-#     # Postprocess
+    try:
+        data = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
+        dtype = 'nodal'
+    except(Exception):
+        data = structure.results[step]['element'][field]
+        dtype = 'element'
 
-#     try:
-#         data = [nodal_data[field + str(mode)][key] for key in nkeys]
-#         dtype = 'nodal'
-#     except(Exception):
-#         elemental_data = structure.results[step]['element']
-#         data = elemental_data[field]
-#         dtype = 'element'
-#     path = structure.path
-#     basedir = utilities.__file__.split('__init__.py')[0]
-#     xfunc = XFunc('post-process', basedir=basedir, tmpdir=path)
-#     xfunc.funcname = 'functions.postprocess'
-#     result = xfunc(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)
+    # Postprocess
 
-#     try:
-#         toc, U, cnodes, fabs, fscaled, celements, eabs = result
-#         print('\n***** Data processed : {0} s *****'.format(toc))
+    basedir = utilities.__file__.split('__init__.py')[0]
+    xfunc = XFunc('postprocess', basedir=basedir, tmpdir=structure.path)
+    xfunc.funcname = 'functions.postprocess'
+    result = xfunc(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)
+
+    try:
+        toc, U, cnodes, fabs, fscaled, celements, eabs = result
+        print('\n***** Data processed : {0} s *****'.format(toc))
 
 #         # Plot meshes
 
@@ -791,8 +796,8 @@ def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name=''
 #         rs.LayerVisible(layer, False)
 #         rs.EnableRedraw(True)
 
-#     except:
-#         print('\n***** Error encountered *****')
+    except:
+        print('\n***** Error encountered during data processing or plotting *****')
 
 
 # def plot_voxels(structure, step, field='smises', scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',
