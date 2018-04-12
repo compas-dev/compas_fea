@@ -12,9 +12,9 @@ from compas_rhino.helpers.mesh import mesh_from_guid
 # from compas_rhino.utilities import clear_layer
 # from compas_rhino.utilities import xdraw_mesh
 
-# from compas.geometry import add_vectors
+from compas.geometry import add_vectors
 from compas.geometry import cross_vectors
-# from compas.geometry import scale_vector
+from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
 
 from compas_fea import utilities
@@ -52,7 +52,7 @@ __all__ = [
 #     'plot_mode_shapes',
     'plot_data',
 #     'plot_voxels',
-#     'plot_principal_stresses',
+    'plot_principal_stresses',
 ]
 
 
@@ -877,70 +877,64 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 #         print('\n***** Error plotting voxels *****')
 
 
-# def plot_principal_stresses(structure, step, ptype, scale, rotate, layer=None):
+def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None):
 
-#     """ Plots the principal stresses of the elements.
+    """ Plots the principal stresses of the elements.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object.
-#     path : str
-#         Folder where results files are stored.
-#     name : str
-#         Structure name.
-#     step : str
-#         Name of the Step.
-#     ptype : str
-#         'max' 'min' for maxPrincipal or minPrincipal stresses.
-#     scale : float
-#         Scale on the length of the line markers.
-#     rotate : int
-#         Rotate lines by 90 deg, 0 or 1.
-#     layer : str
-#         Layer name for plotting.
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    ptype : str
+        'max' 'min' for maximum or minimum principal stresses.
+    scale : float
+        Scale on the length of the line markers.
+    rotate : int
+        Rotate lines by 90 deg, 0 or 1.
+    layer : str
+        Layer name for plotting.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     Notes
-#     -----
-#     - Currently alpha script and for only four-noded S4 shell elements in Abaqus.
-#     - Centroids are taken on the undeformed geometry.
+    Notes
+    -----
+    - Currently an alpha script and only for triangular shell elements in Abaqus.
+    - Centroids are taken on the undeformed geometry.
 
-#     """
+    """
 
-#     data = structure.results[step]
-#     centroids = [structure.element_centroid(i) for i in sorted(structure.elements, key=int)]
+    data = structure.results[step]['element']
+    basedir = utilities.__file__.split('__init__.py')[0]
+    xfunc = XFunc('principal_stresses', basedir=basedir, tmpdir=structure.path)
+    xfunc.funcname = 'functions.principal_stresses'
+    result = xfunc(data, ptype, scale, rotate)
 
-#     path = structure.path
-#     basedir = utilities.__file__.split('__init__.py')[0]
-#     xfunc = XFunc('principal_stresses', basedir=basedir, tmpdir=path)
-#     xfunc.funcname = 'functions.principal_stresses'
-#     result = xfunc(data, ptype, centroids, scale, rotate)
+    try:
+        vec1, vec5, pr1, pr5 = result
 
-#     try:
-#         vec1, vec5, pr1m, pr5m = result
-#         print('\n***** Plotted principal stresses *****')
+        if not layer:
+            layer = '{0}_principal_{1}'.format(step, ptype)
+        rs.CurrentLayer(rs.AddLayer(layer))
+        rs.DeleteObjects(rs.ObjectsByLayer(layer))
+        centroids = [structure.element_centroid(i) for i in sorted(structure.elements, key=int)]
 
+        rs.EnableRedraw(False)
 
-#         if not layer:
-#             layer = '{0}_principal_{1}'.format(step, ptype)
-#         rs.CurrentLayer(rs.AddLayer(layer))
-#         rs.DeleteObjects(rs.ObjectsByLayer(layer))
+        for c, centroid in enumerate(centroids):
+            v1 = vec1[c]
+            v5 = vec5[c]
+            id1 = rs.AddLine(add_vectors(centroid, scale_vector(v1, -1)), add_vectors(centroid, v1))
+            id5 = rs.AddLine(add_vectors(centroid, scale_vector(v5, -1)), add_vectors(centroid, v5))
+            col1 = [255, 0, 0] if pr1[c] > 0 else [0, 0, 255]
+            col5 = [255, 0, 0] if pr5[c] > 0 else [0, 0, 255]
+            rs.ObjectColor(id1, col1)
+            rs.ObjectColor(id5, col5)
 
-#         rs.EnableRedraw(False)
+        rs.EnableRedraw(True)
 
-#         for c, centroid in enumerate(centroids):
-#             id1 = rs.AddLine(centroid, add_vectors(centroid, vec1[c]))
-#             col1 = [255, 0, 0] if pr1m[c] > 0 else [0, 0, 255]
-#             rs.ObjectColor(id1, col1)
-#             id5 = rs.AddLine(centroid, add_vectors(centroid, vec5[c]))
-#             col5 = [255, 0, 0] if pr5m[c] > 0 else [0, 0, 255]
-#             rs.ObjectColor(id5, col5)
-
-#         rs.EnableRedraw(True)
-
-#     except:
-#         print('\n***** Error calculating/plotting principal stresses *****')
+    except:
+        print('\n***** Error calculating/plotting principal stresses *****')
