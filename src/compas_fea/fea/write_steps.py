@@ -168,44 +168,42 @@ def _write_line_load(f, software, axes, com, factor, elset, sets, structure):
                 ni = structure.sofistik_mapping[i]
                 if axes == 'global':
                     if com['x']:
-                        f.write('    BEAM {0} TYPE PXX {1}\n'.format(ni, com['x'] * 0.001))
+                        f.write('    BEAM {0} TYPE PXX {1}[kN/m]\n'.format(ni, com['x'] * 0.001))
                     if com['y']:
-                        f.write('    BEAM {0} TYPE PYY {1}\n'.format(ni, com['y'] * 0.001))
+                        f.write('    BEAM {0} TYPE PYY {1}[kN/m]\n'.format(ni, com['y'] * 0.001))
                     if com['z']:
-                        f.write('    BEAM {0} TYPE PZZ {1}\n'.format(ni, com['z'] * 0.001))
+                        f.write('    BEAM {0} TYPE PZZ {1}[kN/m]\n'.format(ni, com['z'] * 0.001))
                 elif axes == 'local':
                     if com['z']:
-                        f.write('    BEAM {0} TYPE PX {1}\n'.format(ni, com['z'] * 0.001))
+                        f.write('    BEAM {0} TYPE PX {1}[kN/m]\n'.format(ni, com['z'] * 0.001))
                     if com['x']:
-                        f.write('    BEAM {0} TYPE PY {1}\n'.format(ni, com['x'] * 0.001))
+                        f.write('    BEAM {0} TYPE PY {1}[kN/m]\n'.format(ni, com['x'] * 0.001))
                     if com['y']:
-                        f.write('    BEAM {0} TYPE PZ {1}\n'.format(ni, com['y'] * 0.001))
+                        f.write('    BEAM {0} TYPE PZ {1}[kN/m]\n'.format(ni, com['y'] * 0.001))
 
         elif software == 'ansys':
 
             pass
 
 
-def _write_area_load(f, software, com, axes, elset, sets):
+def _write_area_load(f, software, com, axes, elset, sets, factor):
 
     if software == 'opensees':
 
         pass
 
-    elif software == 'abaqus':  # only based on normal so far
+    elif software == 'abaqus':
 
-        pass
+        if axes == 'global':
+            raise NotImplementedError
 
-        # if axes == 'global':
-        #     raise NotImplementedError
-
-        # elif axes == 'local':
-        # x COMPONENT
-        # y COMPONENT
-        # f.write('*DLOAD\n')
-        # f.write('**\n')
-        # if com['z']:
-        #     f.write('{0}, P, {1}'.format(elset, factor * com['z']) + '\n')
+        elif axes == 'local':
+            # x COMPONENT
+            # y COMPONENT
+            f.write('*DLOAD\n')
+            f.write('**\n')
+            if com['z']:
+                f.write('{0}, P, {1}'.format(elset, factor * com['z']) + '\n')
 
     elif software == 'sofistik':
 
@@ -392,7 +390,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 #                                     f.write('P{0}{0} {1}\n'.format(dof.upper(), dl))
 
                 elif ltype == 'AreaLoad':
-                    _write_area_load(f, software, com, axes, elset, sets)
+                    _write_area_load(f, software, com, axes, elset, sets, 1)
 
                 f.write('$\n')
 
@@ -543,7 +541,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
                 elif ltype == 'AreaLoad':
                     if software != 'sofistik':
-                        _write_area_load(f, software, com, axes, elset, sets)
+                        _write_area_load(f, software, com, axes, elset, sets, factor)
 
                 # # Body load
 

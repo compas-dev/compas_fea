@@ -93,11 +93,6 @@ def write_input_elements(f, software, sections, properties, elements, structure,
         if reinforcement:
             is_rebar = True
 
-        if stype != 'SpringSection':
-            f.write('{0} Property: {1}\n'.format(c, key))
-            f.write('{0} ----------'.format(c) + '-' * (len(key)) + '\n')
-            f.write('{0}\n'.format(c))
-
         if property.elements:
             elset = 'elset_{0}'.format(key)
             elsets = [elset]
@@ -106,6 +101,12 @@ def write_input_elements(f, software, sections, properties, elements, structure,
             elsets = property.elsets
             if isinstance(elsets, str):
                 elsets = [elsets]
+
+        if not (stype == 'SpringSection' and property.elsets.startswith('element_')):
+            f.write('{0}\n'.format(c))
+            f.write('{0} Property: {1}\n'.format(c, key))
+            f.write('{0} ----------'.format(c) + '-' * (len(key)) + '\n')
+            f.write('{0}\n'.format(c))
 
         for elset in elsets:
 
@@ -152,7 +153,6 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                 _write_blocks(f, software, selection, elements, material, c)
 
             if stype != 'SpringSection':
-                f.write('{0}\n'.format(c))
                 f.write('{0}\n'.format(c))
 
     if software == 'sofistik':

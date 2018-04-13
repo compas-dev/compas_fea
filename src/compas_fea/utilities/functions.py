@@ -49,7 +49,6 @@ except ImportError:
 try:
 #     from scipy.interpolate import griddata
     from scipy.sparse import csr_matrix
-    from scipy.sparse import find
 #     from scipy.spatial import Delaunay
 #     from scipy.spatial import distance_matrix
 except ImportError:
