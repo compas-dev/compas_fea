@@ -13,7 +13,7 @@ from compas_blender.utilities import draw_plane
 from compas_blender.utilities import get_objects
 from compas_blender.utilities import get_object_location
 from compas_blender.utilities import set_object_location
-# from compas_blender.utilities import xdraw_mesh
+from compas_blender.utilities import xdraw_mesh
 from compas_blender.utilities import xdraw_texts
 
 from compas.geometry import cross_vectors
@@ -525,7 +525,7 @@ def plot_data(structure, step, field, layer, scale=1.0, radius=0.05, cbar=[None,
     # Plot meshes
 
     npts = 8
-#     mesh_faces = []
+    mesh_faces = []
 
     for element, nodes in enumerate(elements):
         n = len(nodes)
@@ -542,13 +542,13 @@ def plot_data(structure, step, field, layer, scale=1.0, radius=0.05, cbar=[None,
             blendermesh.set_vertex_colors(vertices=range(0, 2*npts, 2), colors=col1)
             blendermesh.set_vertex_colors(vertices=range(1, 2*npts, 2), colors=col2)
 
-#         elif n in [3, 4]:
-#             mesh_faces.append(nodes)
+        elif n in [3, 4]:
+            mesh_faces.append(nodes)
 
-#     if mesh_faces:
-#         bmesh = xdraw_mesh(name='bmesh', vertices=U, faces=mesh_faces, layer=layer)
-#         blendermesh = BlenderMesh(bmesh)
-#         blendermesh.set_vertex_colors(vertices=range(U.shape[0]), colors=cnodes)
+    if mesh_faces:
+        bmesh = xdraw_mesh(name='bmesh', vertices=U, faces=mesh_faces, layer=layer)
+        blendermesh = BlenderMesh(bmesh)
+        blendermesh.set_vertex_colors(vertices=range(U.shape[0]), colors=cnodes)
 
     # Plot colourbar
 
@@ -562,7 +562,7 @@ def plot_data(structure, step, field, layer, scale=1.0, radius=0.05, cbar=[None,
     set_object_location(object=cmesh, location=[xmin, ymin, 0])
     blendermesh = BlenderMesh(cmesh)
     verts = blendermesh.get_vertex_coordinates()
-    
+
     y = array(verts)[:, 1]
     yn = yran * colorbar_size
     colors = colorbar(((y - ymin - 0.5 * yn) * 2 / yn)[:, newaxis], input='array', type=1)
