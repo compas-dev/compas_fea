@@ -17,7 +17,7 @@ __email__     = 'liew@arch.ethz.ch'
 
 # Structure
 
-mdl = Structure(name='truss_tower', path='C:/Temp/')
+mdl = Structure(name='truss_tower', path='/home/al/temp/')
 
 # Elements
 
@@ -61,28 +61,16 @@ mdl.steps_order = ['step_bc', 'step_load']
 
 mdl.summary()
 
-# Run (Sofistik)
+# Run (Abaqus)
 
-mdl.write_input_file(software='sofistik')
-
-# Run (OpenSees)
-
-mdl.analyse_and_extract(software='opensees', fields=['u', 'rf', 'sf'])
+exe = '/home/al/abaqus/Commands/abaqus cae '
+mdl.analyse_and_extract(software='abaqus', exe=exe, fields=['u', 'rf', 's'])
 
 blender.plot_data(mdl, step='step_load', field='um', layer=3)
 print(mdl.get_nodal_results(step='step_load', field='um', nodes='nset_top'))
 
-blender.plot_data(mdl, step='step_load', field='sfx', layer=4)
-print(mdl.get_element_results(step='step_load', field='sfx', elements=[10]))
+blender.plot_data(mdl, step='step_load', field='sxx', layer=4)
+print(mdl.get_element_results(step='step_load', field='sxx', elements=[10]))
 
-# Run (Abaqus)
-
-#mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 's'])
-
-# Note: Abaqus returns stress data 'sxx' for truss elements, not section forces 'sfx'.
-
-#rhino.plot_data(mdl, step='step_load', field='sxx')
-#print(mdl.get_element_results(step='step_load', field='sxx', elements=[10]))
-
-#rhino.plot_data(mdl, step='step_load', field='rfm')
-#print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))
+blender.plot_data(mdl, step='step_load', field='rfm', layer=5)
+print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))

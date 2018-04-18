@@ -223,7 +223,7 @@ def extract_odb_data(structure, fields, exe):
         os.chdir(temp)
         os.system('{0}{1}'.format(exe, args))
 
-    print('\n***** Data extracted from Abaqus .odb file : {0} s *****\n'.format(time() - tic1))
+    print('\n***** Data extracted from Abaqus .odb file : {0:.3f} s *****\n'.format(time() - tic1))
 
     tic2 = time()
 
@@ -248,7 +248,7 @@ def extract_odb_data(structure, fields, exe):
         for step in info:
             structure.results[step]['info'] = info[step]
 
-        print('***** Saving data to structure.results successful : {0} s *****\n'.format(time() - tic2))
+        print('***** Saving data to structure.results successful : {0:.3f} s *****\n'.format(time() - tic2))
 
     except:
         print('***** Saving data to structure.results unsuccessful *****')

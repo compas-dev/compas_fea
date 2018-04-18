@@ -8,26 +8,26 @@ from compas_blender.helpers import mesh_from_bmesh
 from compas_blender.utilities import clear_layer
 # from compas_blender.utilities import delete_all_materials
 # from compas_blender.utilities import draw_cuboid
-# from compas_blender.utilities import draw_pipes
-# from compas_blender.utilities import draw_plane
+from compas_blender.utilities import draw_pipes
+from compas_blender.utilities import draw_plane
 from compas_blender.utilities import get_objects
-# from compas_blender.utilities import get_object_location
-# from compas_blender.utilities import set_object_location
+from compas_blender.utilities import get_object_location
+from compas_blender.utilities import set_object_location
 # from compas_blender.utilities import xdraw_mesh
-# from compas_blender.utilities import xdraw_texts
+from compas_blender.utilities import xdraw_texts
 
 from compas.geometry import cross_vectors
 from compas.geometry import subtract_vectors
 
-# from compas_fea.utilities import colorbar
+from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
-# from compas_fea.utilities import network_order
+from compas_fea.utilities import network_order
 from compas_fea.utilities import postprocess
 # from compas_fea.utilities import tets_from_vertices_faces
 # from compas_fea.utilities import voxels
 
 from numpy import array
-# from numpy import newaxis
+from numpy import newaxis
 
 import json
 
@@ -51,7 +51,7 @@ __all__ = [
     'add_elset_from_bmeshes',
     'add_nset_from_objects',
     'plot_data',
-#     'ordered_network',
+    'ordered_network',
 #     'plot_voxels',
     'mesh_extrude'
 ]
@@ -412,45 +412,45 @@ def mesh_extrude(structure, bmesh, layers, thickness, mesh_name='', links_name='
                  links_name=links_name, blocks_name=blocks_name)
 
 
-# def ordered_network(structure, network, layer):
+def ordered_network(structure, network, layer):
 
-#     """ Extract node and element orders from a Network for a given start-point.
+    """ Extract node and element orders from a Network for a given start-point.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object.
-#     network : obj
-#         Network object.
-#     layer : int
-#         Layer to extract start-point (Blender object).
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    network : obj
+        Network object.
+    layer : int
+        Layer to extract start-point (Blender object).
 
-#     Returns
-#     -------
-#     list
-#         Ordered nodes.
-#     list
-#         Ordered elements.
-#     list
-#         Cumulative lengths at element mid-points.
-#     float
-#         Total length.
+    Returns
+    -------
+    list
+        Ordered nodes.
+    list
+        Ordered elements.
+    list
+        Cumulative lengths at element mid-points.
+    float
+        Total length.
 
-#     Notes
-#     -----
-#     - Function is for a Network representing a single structural element.
+    Notes
+    -----
+    - Function is for a Network representing a single structural element.
 
-#     """
+    """
 
-#     sp_xyz = get_object_location(object=get_objects(layer=layer)[0])
-#     return network_order(sp_xyz=sp_xyz, structure=structure, network=network)
-
-
-# def plot_axes():
-#     raise NotImplementedError
+    start = get_object_location(object=get_objects(layer=layer)[0])
+    return network_order(start=start, structure=structure, network=network)
 
 
-def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
+def plot_axes():
+    raise NotImplementedError
+
+
+def plot_data(structure, step, field, layer, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
               nodal='mean', mode='', colorbar_size=1):
 
     """ Plots analysis results on the deformed shape of the Structure.
@@ -516,32 +516,31 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
     try:
         toc, U, cnodes, fabs, fscaled, celements, eabs = result
         U = array(U)
-        print('\n***** Data processed : {0} s *****'.format(toc))
+        print('\n***** Data processed : {0:.3f} s *****'.format(toc))
 
     except:
         print('\n***** Error encountered during data processing or plotting *****')
 
 
-#     # Plot meshes
+    # Plot meshes
 
-#     npts = 8
+    npts = 8
 #     mesh_faces = []
 
-#     for element, nodes in enumerate(elements):
-#         n = len(nodes)
+    for element, nodes in enumerate(elements):
+        n = len(nodes)
 
-#         if n == 2:
-#             u, v = nodes
-#             pipe = draw_pipes(start=[U[u]], end=[U[v]], radius=radius, layer=layer)[0]
-#             if dtype == 'element':
-#                 col1 = [celements[element]] * npts
-#                 col2 = [celements[element]] * npts
-#             elif dtype == 'nodal':
-#                 col1 = [cnodes[u]] * npts
-#                 col2 = [cnodes[v]] * npts
-#             blendermesh = BlenderMesh(pipe)
-#             blendermesh.set_vertex_colors(vertices=range(0, 2 * npts, 2), colors=col1)
-#             blendermesh.set_vertex_colors(vertices=range(1, 2 * npts, 2), colors=col2)
+        if n == 2:
+            u, v = nodes
+            pipe = draw_pipes(start=[U[u]], end=[U[v]], radius=radius, layer=layer)[0]
+            if dtype == 'element':
+                col1 = col2 = [celements[element]] * npts
+            elif dtype == 'nodal':
+                col1 = [cnodes[u]] * npts
+                col2 = [cnodes[v]] * npts
+            blendermesh = BlenderMesh(pipe)
+            blendermesh.set_vertex_colors(vertices=range(0, 2*npts, 2), colors=col1)
+            blendermesh.set_vertex_colors(vertices=range(1, 2*npts, 2), colors=col2)
 
 #         elif n in [3, 4]:
 #             mesh_faces.append(nodes)
@@ -551,41 +550,40 @@ def plot_data(structure, step, field='um', layer=0, scale=1.0, radius=0.05, cbar
 #         blendermesh = BlenderMesh(bmesh)
 #         blendermesh.set_vertex_colors(vertices=range(U.shape[0]), colors=cnodes)
 
-#     # Plot colourbar
+    # Plot colourbar
 
-#     xr, yr, _ = structure.node_bounds()
-#     yran = yr[1] - yr[0]
-#     if not yran:
-#         yran = 1
-#     s = yran * 0.1 * colorbar_size
-#     xmin = xr[1] + 3 * s
-#     ymin = yr[0]
+    xr, yr, _ = structure.node_bounds()
+    yran = yr[1] - yr[0] if yr[1] - yr[0] else 1
+    s = yran * 0.1 * colorbar_size
+    xmin = xr[1] + 3 * s
+    ymin = yr[0]
 
-#     cmesh = draw_plane(name='colorbar', Lx=s, dx=s, Ly=10*s, dy=s, layer=layer)
-#     set_object_location(object=cmesh, location=[xmin, ymin, 0])
-#     blendermesh = BlenderMesh(cmesh)
-#     vertices = blendermesh.get_vertex_coordinates()
-#     y = array(vertices)[:, 1]
-#     yn = yran * colorbar_size
-#     colors = colorbar(((y - ymin - 0.5 * yn) * 2 / yn)[:, newaxis], input='array', type=1)
-#     blendermesh.set_vertex_colors(vertices=range(len(vertices)), colors=colors)
+    cmesh = draw_plane(name='colorbar', Lx=s, dx=s, Ly=10*s, dy=s, layer=layer)
+    set_object_location(object=cmesh, location=[xmin, ymin, 0])
+    blendermesh = BlenderMesh(cmesh)
+    verts = blendermesh.get_vertex_coordinates()
+    
+    y = array(verts)[:, 1]
+    yn = yran * colorbar_size
+    colors = colorbar(((y - ymin - 0.5 * yn) * 2 / yn)[:, newaxis], input='array', type=1)
+    blendermesh.set_vertex_colors(vertices=range(len(verts)), colors=colors)
 
-#     h = 0.6 * s
-#     texts = []
-#     for i in range(5):
-#         x0 = xmin + 1.2 * s
-#         yu = ymin + (5.8 + i) * s
-#         yl = ymin + (3.8 - i) * s
-#         valu = float(+fabs * (i + 1) / 5.)
-#         vall = float(-fabs * (i + 1) / 5.)
-#         texts.extend([
-#             {'radius': h, 'pos': [x0, yu, 0], 'text': '{0:.5g}'.format(valu), 'layer': layer},
-#             {'radius': h, 'pos': [x0, yl, 0], 'text': '{0:.5g}'.format(vall), 'layer': layer}])
-#     texts.extend([
-#         {'radius': h, 'pos': [x0, ymin + 4.8 * s, 0], 'text': '0', 'layer': layer},
-#         {'radius': h, 'pos': [xmin, ymin + 12 * s, 0], 'text': 'Step:{0}   Field:{1}'.format(step, field), 'layer': layer}])
+    h = 0.6 * s
+    texts = []
+    for i in range(5):
+        x0 = xmin + 1.2 * s
+        yu = ymin + (5.8 + i) * s
+        yl = ymin + (3.8 - i) * s
+        vu = float(+max(eabs, fabs) * (i + 1) / 5.)
+        vl = float(-max(eabs, fabs) * (i + 1) / 5.)
+        texts.extend([
+            {'radius': h, 'pos': [x0, yu, 0], 'text': '{0:.3g}'.format(vu), 'layer': layer},
+            {'radius': h, 'pos': [x0, yl, 0], 'text': '{0:.3g}'.format(vl), 'layer': layer}])
+    texts.extend([
+        {'radius': h, 'pos': [x0, ymin + 4.8 * s, 0], 'text': '0', 'layer': layer},
+        {'radius': h, 'pos': [xmin, ymin + 12 * s, 0], 'text': 'Step:{0}   Field:{1}'.format(step, field), 'layer': layer}])
 
-#     xdraw_texts(texts)
+    xdraw_texts(texts)
 
 
 # def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',

@@ -18,9 +18,9 @@ from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
 
 from compas_fea import utilities
-# from compas_fea.utilities import colorbar
+from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
-# from compas_fea.utilities import network_order
+from compas_fea.utilities import network_order
 
 try:
     import rhinoscriptsyntax as rs
@@ -47,7 +47,7 @@ __all__ = [
     'add_sets_from_layers',
     'mesh_extrude',
 #     'network_from_lines',
-#     'ordered_network',
+    'ordered_network',
 #     'plot_axes',
 #     'plot_mode_shapes',
     'plot_data',
@@ -521,38 +521,38 @@ def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name=''
 #     return Network.from_lines(lines)
 
 
-# def ordered_network(structure, network, layer):
+def ordered_network(structure, network, layer):
 
-#     """ Extract node and element orders from a Network for a given start-point.
+    """ Extract node and element orders from a Network for a given start-point.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object.
-#     network : obj
-#         Network object.
-#     layer : str
-#         Layer to extract start-point (Rhino point).
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    network : obj
+        Network object.
+    layer : str
+        Layer to extract start-point (Rhino point).
 
-#     Returns
-#     -------
-#     list
-#         Ordered nodes.
-#     list
-#         Ordered elements.
-#     list
-#         Cumulative lengths at element mid-points.
-#     float
-#         Total length.
+    Returns
+    -------
+    list
+        Ordered nodes.
+    list
+        Ordered elements.
+    list
+        Cumulative lengths at element mid-points.
+    float
+        Total length.
 
-#     Notes
-#     -----
-#     - Function is for a Network representing a single structural element.
+    Notes
+    -----
+    - Function is for a Network representing a single structural element.
 
-#     """
+    """
 
-#     sp_xyz = rs.PointCoordinates(rs.ObjectsByLayer(layer)[0])
-#     return network_order(sp_xyz=sp_xyz, structure=structure, network=network)
+    start = rs.PointCoordinates(rs.ObjectsByLayer(layer)[0])
+    return network_order(start=start, structure=structure, network=network)
 
 
 # def plot_axes(xyz, e11, e22, e33, layer, sc=1):
@@ -703,39 +703,38 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         toc, U, cnodes, fabs, fscaled, celements, eabs = result
         print('\n***** Data processed : {0} s *****'.format(toc))
 
-#         # Plot meshes
+        # Plot meshes
 
 #         mesh_faces = []
-#         beam_faces = [[0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]]
+        line_faces = [[0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]]
 #         block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
 #         tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
 
-#         for element, nodes in enumerate(elements):
-#             n = len(nodes)
+        for element, nodes in enumerate(elements):
+            n = len(nodes)
 
-#             if n == 2:
-#                 u, v = nodes
-#                 sp, ep = U[u], U[v]
-#                 plane = rs.PlaneFromNormal(sp, subtract_vectors(ep, sp))
-#                 xa = plane.XAxis
-#                 ya = plane.YAxis
-#                 r = radius
-#                 xa_pr = scale_vector(xa, +r)
-#                 xa_mr = scale_vector(xa, -r)
-#                 ya_pr = scale_vector(ya, +r)
-#                 ya_mr = scale_vector(ya, -r)
-#                 pts = [add_vectors(sp, xa_pr), add_vectors(sp, ya_pr),
-#                        add_vectors(sp, xa_mr), add_vectors(sp, ya_mr),
-#                        add_vectors(ep, xa_pr), add_vectors(ep, ya_pr),
-#                        add_vectors(ep, xa_mr), add_vectors(ep, ya_mr)]
-#                 guid = rs.AddMesh(pts, beam_faces)
-#                 if dtype == 'element':
-#                     col1 = celements[element]
-#                     col2 = celements[element]
-#                 elif dtype == 'nodal':
-#                     col1 = cnodes[u]
-#                     col2 = cnodes[v]
-#                 rs.MeshVertexColors(guid, [col1] * 4 + [col2] * 4)
+            if n == 2:
+                u, v = nodes
+                sp, ep = U[u], U[v]
+                plane = rs.PlaneFromNormal(sp, subtract_vectors(ep, sp))
+                xa = plane.XAxis
+                ya = plane.YAxis
+                r = radius
+                xa_pr = scale_vector(xa, +r)
+                xa_mr = scale_vector(xa, -r)
+                ya_pr = scale_vector(ya, +r)
+                ya_mr = scale_vector(ya, -r)
+                pts = [add_vectors(sp, xa_pr), add_vectors(sp, ya_pr),
+                       add_vectors(sp, xa_mr), add_vectors(sp, ya_mr),
+                       add_vectors(ep, xa_pr), add_vectors(ep, ya_pr),
+                       add_vectors(ep, xa_mr), add_vectors(ep, ya_mr)]
+                guid = rs.AddMesh(pts, line_faces)
+                if dtype == 'element':
+                    col1 = col2 = celements[element]
+                elif dtype == 'nodal':
+                    col1 = cnodes[u]
+                    col2 = cnodes[v]
+                rs.MeshVertexColors(guid, [col1]*4 + [col2]*4)
 
 #             elif n == 3:
 #                 mesh_faces.append(nodes + [nodes[-1]])
@@ -755,46 +754,45 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 #             guid = rs.AddMesh(U, mesh_faces)
 #             rs.MeshVertexColors(guid, cnodes)
 
-#         # Plot colorbar
+        # Plot colorbar
 
-#         xr, yr, _ = structure.node_bounds()
-#         yran = yr[1] - yr[0]
-#         if not yran:
-#             yran = 1
-#         s = yran * 0.1 * colorbar_size
-#         xmin = xr[1] + 3 * s
-#         ymin = yr[0]
-#         xl = [xmin, xmin + s]
-#         yl = [ymin + i * s for i in range(11)]
-#         vertices = [[xi, yi, 0] for xi in xl for yi in yl]
-#         faces = [[i, i + 1, i + 12, i + 11] for i in range(10)]
-#         y = [i[1] for i in vertices]
+        xr, yr, _ = structure.node_bounds()
+        yran = yr[1] - yr[0] if yr[1] - yr[0] else 1
+        s = yran * 0.1 * colorbar_size
+        xmin = xr[1] + 3 * s
+        ymin = yr[0]
 
-#         yn = yran * colorbar_size
-#         colors = [colorbar(2 * (yi - ymin - 0.5 * yn) / yn, input='float', type=255) for yi in y]
-#         id = rs.AddMesh(vertices, faces)
-#         rs.MeshVertexColors(id, colors)
+        xl = [xmin, xmin + s]
+        yl = [ymin + i * s for i in range(11)]
+        verts = [[xi, yi, 0] for xi in xl for yi in yl]
+        faces = [[i, i + 1, i + 12, i + 11] for i in range(10)]
+        id = rs.AddMesh(verts, faces)
 
-#         h = 0.6 * s
-#         for i in range(5):
-#             x0 = xmin + 1.2 * s
-#             yu = ymin + (5.8 + i) * s
-#             yl = ymin + (3.8 - i) * s
-#             valu = float(+max(eabs, fabs) * (i + 1) / 5.)
-#             vall = float(-max(eabs, fabs) * (i + 1) / 5.)
-#             rs.AddText('{0:.5g}'.format(valu), [x0, yu, 0], height=h)
-#             rs.AddText('{0:.5g}'.format(vall), [x0, yl, 0], height=h)
-#             rs.AddText('0', [x0, ymin + 4.8 * s, 0], height=h)
-#         rs.AddText('Step:{0}   Field:{1}'.format(step, field), [xmin, ymin + 12 * s, 0], height=h)
-#         if mode != '':
-#             freq = str(round(structure.results[step]['frequencies'][mode], 3))
-#             rs.AddText('Mode:{0}   Freq:{1}Hz'.format(mode, freq), [xmin, ymin - 1.5 * s, 0], height=h)
+        y = [i[1] for i in verts]
+        yn = yran * colorbar_size
+        colors = [colorbar(2 * (yi - ymin - 0.5 * yn) / yn, input='float', type=255) for yi in y]
+        rs.MeshVertexColors(id, colors)
 
-#         # Return to Default layer
+        h = 0.6 * s
+        for i in range(5):
+            x0 = xmin + 1.2 * s
+            yu = ymin + (5.8 + i) * s
+            yl = ymin + (3.8 - i) * s
+            vu = float(+max(eabs, fabs) * (i + 1) / 5.)
+            vl = float(-max(eabs, fabs) * (i + 1) / 5.)
+            rs.AddText('{0:.3g}'.format(vu), [x0, yu, 0], height=h)
+            rs.AddText('{0:.3g}'.format(vl), [x0, yl, 0], height=h)
+        rs.AddText('0', [x0, ymin + 4.8 * s, 0], height=h)
+        rs.AddText('Step:{0}   Field:{1}'.format(step, field), [xmin, ymin + 12 * s, 0], height=h)
+        if mode != '':
+            freq = str(round(structure.results[step]['frequencies'][mode], 3))
+            rs.AddText('Mode:{0}   Freq:{1}Hz'.format(mode, freq), [xmin, ymin - 1.5 * s, 0], height=h)
 
-#         rs.CurrentLayer(rs.AddLayer('Default'))
-#         rs.LayerVisible(layer, False)
-#         rs.EnableRedraw(True)
+        # Return to Default layer
+
+        rs.CurrentLayer(rs.AddLayer('Default'))
+        rs.LayerVisible(layer, False)
+        rs.EnableRedraw(True)
 
     except:
         print('\n***** Error encountered during data processing or plotting *****')

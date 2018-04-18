@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-# from compas.topology import dijkstra_path
+from compas.topology import dijkstra_path
 
 from compas.geometry import add_vectors
 # from compas.geometry import angles_points_xy
@@ -11,13 +11,13 @@ from compas.geometry import add_vectors
 # from compas.geometry import centroid_points
 # from compas.geometry import circle_from_points_xy
 from compas.geometry import cross_vectors
-# from compas.geometry import distance_point_point
+from compas.geometry import distance_point_point
 # from compas.geometry import length_vector
 from compas.geometry import normalize_vector
 from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
 
-# from compas.utilities import geometric_key
+from compas.utilities import geometric_key
 
 from time import time
 
@@ -73,14 +73,14 @@ __email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
-#     'colorbar',
+    'colorbar',
     'combine_all_sets',
 #     'discretise_faces',
     'extrude_mesh',
     'group_keys_by_attribute',
     'group_keys_by_attributes',
-#     'network_order',
-#     'normalise_data',
+    'network_order',
+    'normalise_data',
     'postprocess',
     'process_data',
 #     'tets_from_vertices_faces',
@@ -89,41 +89,41 @@ __all__ = [
 ]
 
 
-# def colorbar(fsc, input='array', type=255):
+def colorbar(fsc, input='array', type=255):
 
-#     """ Creates RGB color information from -1 to 1 scaled values.
+    """ Creates RGB color information from -1 to 1 scaled values.
 
-#     Parameters
-#     ----------
-#     fsc : array, float
-#         (n x 1) array of normalised data, or a single float value.
-#     input : str
-#         Input given as an 'array' of numbers or a 'float'.
-#     type : int
-#         RGB as 255 or 1 scaled.
+    Parameters
+    ----------
+    fsc : array, float
+        (n x 1) array of scaled data, or a single float value.
+    input : str
+        Input given as an 'array' of numbers or a 'float'.
+    type : int
+        RGB as 255 or 1 scaled.
 
-#     Returns
-#     -------
-#     array, list
-#         (n x 3) array of RGB values or single RGB list.
+    Returns
+    -------
+    array, list
+        (n x 3) array of RGB values or single RGB list.
 
-#     """
+    """
 
-#     r = abs(fsc + 0.25) * 2 - 0.5
-#     g = -abs(fsc - 0.25) * 2 + 1.5
-#     b = -(fsc - 0.25) * 2
+    r = +abs(fsc + 0.25) * 2 - 0.5
+    g = -abs(fsc - 0.25) * 2 + 1.5
+    b = -(fsc - 0.25) * 2
 
-#     if input == 'array':
-#         rgb = hstack([r, g, b])
-#         rgb[rgb > 1] = 1
-#         rgb[rgb < 0] = 0
-#         return rgb * type
+    if input == 'array':
+        rgb = hstack([r, g, b])
+        rgb[rgb > 1] = 1
+        rgb[rgb < 0] = 0
+        return rgb * type
 
-#     elif input == 'float':
-#         r = max([0, min([1, r])])
-#         g = max([0, min([1, g])])
-#         b = max([0, min([1, b])])
-#         return [i * type for i in [r, g, b]]
+    elif input == 'float':
+        r = max([0, min([1, r])])
+        g = max([0, min([1, g])])
+        b = max([0, min([1, b])])
+        return [i * type for i in [r, g, b]]
 
 
 def combine_all_sets(sets_a, sets_b):
@@ -449,90 +449,89 @@ def group_keys_by_attributes(adict, names, tol='3f'):
     return groups
 
 
-# def network_order(sp_xyz, structure, network):
+def network_order(start, structure, network):
 
-#     """ Extract node and element orders from a Network for a given start-point.
+    """ Extract node and element orders from a Network for a given start-point.
 
-#     Parameters
-#     ----------
-#     sp_xyz : list
-#         Start point co-ordinates.
-#     structure : obj
-#         Structure object.
-#     network : obj
-#         Network object.
+    Parameters
+    ----------
+    start : list
+        Start point co-ordinates.
+    structure : obj
+        Structure object.
+    network : obj
+        Network object.
 
-#     Returns
-#     -------
-#     list
-#         Ordered nodes.
-#     list
-#         Ordered elements.
-#     list
-#         Cumulative lengths at element mid-points.
-#     float
-#         Total length.
+    Returns
+    -------
+    list
+        Ordered nodes.
+    list
+        Ordered elements.
+    list
+        Cumulative lengths at element mid-points.
+    float
+        Total length.
 
-#     """
+    """
 
-#     gkey_key = network.gkey_key()
-#     start = gkey_key[geometric_key(sp_xyz, '{0}f'.format(structure.tol))]
-#     leaves = network.leaves()
-#     leaves.remove(start)
-#     end = leaves[0]
+    gkey_key = network.gkey_key()
+    start = gkey_key[geometric_key(start, '{0}f'.format(structure.tol))]
+    leaves = network.leaves()
+    leaves.remove(start)
+    end = leaves[0]
 
-#     adjacency = {key: network.vertex_neighbours(key) for key in network.vertices()}
-#     weight = {(u, v): network.edge_length(u, v) for u, v in network.edges()}
-#     weight.update({(v, u): weight[(u, v)] for u, v in network.edges()})
-#     path = dijkstra_path(adjacency, weight, start, end)
-#     nodes = [structure.check_node_exists(network.vertex_coordinates(i)) for i in path]
-#     elements, arclengths, length = [], [], 0
+    adjacency = {i: network.vertex_neighbours(i) for i in network.vertices()}
+    weight = {(u, v): 1 for u, v in network.edges()}
+    weight.update({(v, u): weight[(u, v)] for u, v in network.edges()})
+    path = dijkstra_path(adjacency, weight, start, end)
+    nodes = [structure.check_node_exists(network.vertex_coordinates(i)) for i in path]
+    elements, arclengths, length = [], [], 0
 
-#     for i in range(len(nodes) - 1):
-#         sp = nodes[i]
-#         ep = nodes[i + 1]
-#         elements.append(structure.check_element_exists([sp, ep]))
-#         xyz_sp = structure.node_xyz(sp)
-#         xyz_ep = structure.node_xyz(ep)
-#         dL = distance_point_point(xyz_sp, xyz_ep)
-#         arclengths.append(length + dL / 2.)
-#         length += dL
+    for i in range(len(nodes) - 1):
+        sp = nodes[i]
+        ep = nodes[i + 1]
+        elements.append(structure.check_element_exists([sp, ep]))
+        xyz_sp = structure.node_xyz(sp)
+        xyz_ep = structure.node_xyz(ep)
+        dL = distance_point_point(xyz_sp, xyz_ep)
+        arclengths.append(length + dL / 2.)
+        length += dL
 
-#     return nodes, elements, arclengths, length
+    return nodes, elements, arclengths, length
 
 
-# def normalise_data(data, cmin, cmax):
+def normalise_data(data, cmin, cmax):
 
-#     """ Normalise a vector of data to between -1 and 1.
+    """ Normalise a vector of data to between -1 and 1.
 
-#     Parameters
-#     ----------
-#     data : array
-#         Unscaled (n x 1) data.
-#     cmin : float
-#         Cap data values >= cmin.
-#     cmax : float
-#         Cap data values <= cmax.
+    Parameters
+    ----------
+    data : array
+        Raw data.
+    cmin : float
+        Cap data values >= cmin.
+    cmax : float
+        Cap data values <= cmax.
 
-#     Returns
-#     -------
-#     array
-#         -1 to 1 scaled data.
-#     float
-#         The maximum absolute unscaled value.
+    Returns
+    -------
+    array
+        -1 to 1 scaled data.
+    float
+        The maximum absolute unscaled value.
 
-#     """
+    """
 
-#     f = asarray(data)
-#     fmax = cmax if cmax is not None else max(abs(f))
-#     fmin = cmin if cmin is not None else min(abs(f))
-#     fabs = max([abs(fmin), abs(fmax)])
+    f = asarray(data)
+    fmax = cmax if cmax is not None else max(abs(f))
+    fmin = cmin if cmin is not None else min(abs(f))
+    fabs = max([abs(fmin), abs(fmax)])
+    fscaled = f / fabs if fabs else f
+    fscaled[fscaled > +1] = +1
+    fscaled[fscaled < -1] = -1
 
-#     fscaled = f / fabs if fabs else f
-#     fscaled[fscaled > +1] = +1
-#     fscaled[fscaled < -1] = -1
-
-#     return fscaled, fabs
+    return fscaled, fabs
 
 
 def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, iptype, nodal):
@@ -557,10 +556,10 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
         'nodal' or 'element'.
     scale : float
         Scale displacements for the deformed plot.
-#     cbar : list
-#         Minimum and maximum limits on the colorbar.
-#     ctype : int
-#         RGB color type, 1 or 255.
+    cbar : list
+        Minimum and maximum limits on the colorbar.
+    ctype : int
+        RGB color type, 1 or 255.
     iptype : str
         'mean', 'max' or 'min' of an element's integration point data.
     nodal : str
@@ -568,47 +567,46 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
 
     Returns
     -------
-#     float
-#         Time taken to process data.
-#     list
-#         Scaled deformed nodal co-ordinates.
-#     list
-#         Nodal colors.
-#     float
-#         Absolute maximum data value.
-#     list
-#         Normalised data values.
+    float
+        Time taken to process data.
+    list
+        Scaled deformed nodal co-ordinates.
+    list
+        Nodal colors.
+    float
+        Absolute maximum nodal data value.
+    list
+        Normalised data values.
+    list
+        Element colors.
+    float
+        Absolute maximum element data value.
 
     """
 
     tic = time()
 
     dU = hstack([array(ux)[:, newaxis], array(uy)[:, newaxis], array(uz)[:, newaxis]])
-    U  = [list(i) for i in list(array(nodes) + scale * dU)]
+    U = [list(i) for i in list(array(nodes) + scale * dU)]
 
     vn, ve = process_data(data=data, dtype=dtype, iptype=iptype, nodal=nodal, elements=elements, n=len(U))
 
-#     fscaled, fabs = normalise_data(data=vn, cmin=cbar[0], cmax=cbar[1])
-#     if ve is not None:
-#         escaled, eabs = normalise_data(data=ve, cmin=cbar[0], cmax=cbar[1])
-#     else:
-#         escaled = None
-#         eabs = 0
-#     fscaled_ = [float(i) for i in list(fscaled)]
-#     fabs = float(fabs)
+    fscaled, fabs = normalise_data(data=vn, cmin=cbar[0], cmax=cbar[1])
+    cnodes = colorbar(fsc=fscaled, input='array', type=ctype)
+    
+    if dtype == 'element':
+        escaled, eabs = normalise_data(data=ve, cmin=cbar[0], cmax=cbar[1])
+        celements = colorbar(fsc=escaled, input='array', type=ctype)
+        celements_ = [list(i) for i in list(celements)]
+    else:
+        eabs = 0
+        celements_ = []
 
-#     cnodes = colorbar(fsc=fscaled, input='array', type=ctype)
-#     cnodes_ = [list(i) for i in list(cnodes)]
-#     if escaled is not None:
-#         celements = colorbar(fsc=escaled, input='array', type=ctype)
-#         celements_ = [list(i) for i in list(celements)]
-#     else:
-#         celements_ = []
-
-    toc = time() - tic
-
-#     return toc, U, cnodes_, fabs, fscaled_, celements_, eabs
-    return 0, 0, 0, 0, 0, 0, 0
+    toc      = time() - tic
+    cnodes_  = [list(i) for i in list(cnodes)]
+    fabs_    = float(fabs)
+    fscaled_ = [float(i) for i in list(fscaled)]
+    return toc, U, cnodes_, fabs_, fscaled_, celements_, eabs
 
 
 def process_data(data, dtype, iptype, nodal, elements, n):
