@@ -24,7 +24,7 @@ from compas_fea.utilities import extrude_mesh
 from compas_fea.utilities import network_order
 from compas_fea.utilities import postprocess
 # from compas_fea.utilities import tets_from_vertices_faces
-# from compas_fea.utilities import voxels
+from compas_fea.utilities import plotvoxels
 
 from numpy import array
 from numpy import newaxis
@@ -52,7 +52,7 @@ __all__ = [
     'add_nset_from_objects',
     'plot_data',
     'ordered_network',
-#     'plot_voxels',
+    'plot_voxels',
     'mesh_extrude'
 ]
 
@@ -586,10 +586,10 @@ def plot_data(structure, step, field, layer, scale=1.0, radius=0.05, cbar=[None,
     xdraw_texts(texts)
 
 
-# def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',
-#                 vdx=None, cube_size=[10, 10, 10], mode='', colorbar_size=1):
+def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',
+                vdx=None, cube_size=[10, 10, 10], mode='', colorbar_size=1, plot='vtk'):
 
-#     """Applies a base voxel material and texture to a cuboid for 4D visualisation.
+    """ Applies a base voxel material and texture to a cuboid for 4D visualisation.
 
 #     Parameters
 #     ----------
@@ -628,38 +628,37 @@ def plot_data(structure, step, field, layer, scale=1.0, radius=0.05, cbar=[None,
 #     - Voxel display works best with cube dimensions >= 10.
 #     - The absolute value is plotted, ranged between [0, 1].
 
-#     """
+    """
 
-#     # Node and element data
+    # Node and element data
 
-#     nkeys = sorted(structure.nodes, key=int)
-#     ekeys = sorted(structure.elements, key=int)
-#     nodes = [structure.node_xyz(nkey) for nkey in nkeys]
-#     elements = [structure.elements[ekey].nodes for ekey in ekeys]
+    nodes = structure.nodes_xyz()
+    elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
+    nodal_data = structure.results[step]['nodal']
+    nkeys = sorted(structure.nodes, key=int)
+    ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
+    uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
+    uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
 
-#     nodal_data = structure.results[step]['nodal']
-#     ux = [nodal_data['ux{0}'.format(str(mode))][key] for key in nkeys]
-#     uy = [nodal_data['uy{0}'.format(str(mode))][key] for key in nkeys]
-#     uz = [nodal_data['uz{0}'.format(str(mode))][key] for key in nkeys]
+    try:
+        data = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
+        dtype = 'nodal'
+    except(Exception):
+        data = structure.results[step]['element'][field]
+        dtype = 'element'
 
-#     # Process data
+    # Postprocess
 
-#     try:
-#         data = [nodal_data[field + str(mode)][key] for key in nkeys]
-#         dtype = 'nodal'
-#     except(Exception):
-#         elemental_data = structure.results[step]['element']
-#         data = elemental_data[field]
-#         dtype = 'element'
+    result = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1, iptype, nodal)
 
-#     toc, U, cnodes, fabs, data, _ = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1, iptype, nodal)
-#     U = array(U)
+    try:
+        toc, U, cnodes, fabs, fscaled, celements, eabs = result
+        U = array(U)
+        print('\n***** Data processed : {0:.3f} s *****'.format(toc))
+    except:
+        print('\n***** Error encountered during data processing or plotting *****')
 
-#     print('\n***** Data processed : {0} s *****'.format(toc))
-
-#     # Process data
-
-#     Am = voxels(values=data, vmin=None, U=U, vdx=vdx, plot=None, indexing='ij')
+    Am = plotvoxels(values=fscaled, U=U, vdx=vdx, plot='vtk')
 #     sx, sy, sz = Am.shape
 
 #     # Save bvox data
@@ -702,3 +701,16 @@ def plot_data(structure, step, field, layer, scale=1.0, radius=0.05, cbar=[None,
 #     slot.use_map_density = True
 #     slot.use_map_emission = True
 #     slot.use_map_color_emission = True
+
+
+# ==============================================================================
+# Debugging
+# ==============================================================================
+
+if __name__ == "__main__":
+
+    from compas_fea.structure import Structure
+
+    mdl = Structure.load_from_obj(filename='/home/al/temp/block_deepbeam.obj')
+
+    plot_voxels(mdl, step='step_load', cbar=[0, 2], vdx=0.05, plot='vtk')

@@ -22,24 +22,25 @@ from compas.utilities import geometric_key
 from time import time
 
 try:
-#     from numpy import abs
+    from numpy import abs
     from numpy import arctan2
     from numpy import array
     from numpy import asarray
     from numpy import cos
 #     from numpy import dot
     from numpy import hstack
-#     from numpy import isnan
-#     from numpy import linspace
-#     from numpy import meshgrid
+    from numpy import isnan
+    from numpy import linspace
+    from numpy import meshgrid
     from numpy import mean
     from numpy import min
     from numpy import max
     from numpy import newaxis
     from numpy import pi
     from numpy import sin
-#     from numpy import squeeze
+    from numpy import squeeze
     from numpy import sum
+    from numpy import tile
 #     from numpy import vstack
     from numpy import zeros
 #     from numpy.linalg import inv
@@ -47,17 +48,17 @@ except ImportError:
     pass
 
 try:
-#     from scipy.interpolate import griddata
+    from scipy.interpolate import griddata
     from scipy.sparse import csr_matrix
 #     from scipy.spatial import Delaunay
 #     from scipy.spatial import distance_matrix
 except ImportError:
     pass
 
-# try:
-#     from mayavi import mlab
-# except ImportError:
-#     pass
+try:
+    from compas.viewers import VtkVoxels
+except ImportError:
+    pass
 
 # try:
 #     from meshpy.tet import build
@@ -85,7 +86,7 @@ __all__ = [
     'process_data',
 #     'tets_from_vertices_faces',
     'principal_stresses',
-#     'voxels',
+    'plotvoxels',
 ]
 
 
@@ -593,7 +594,7 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
 
     fscaled, fabs = normalise_data(data=vn, cmin=cbar[0], cmax=cbar[1])
     cnodes = colorbar(fsc=fscaled, input='array', type=ctype)
-    
+
     if dtype == 'element':
         escaled, eabs = normalise_data(data=ve, cmin=cbar[0], cmax=cbar[1])
         celements = colorbar(fsc=escaled, input='array', type=ctype)
@@ -683,53 +684,50 @@ def process_data(data, dtype, iptype, nodal, elements, n):
     return vn, ve
 
 
-# def voxels(values, vmin, U, vdx, plot=None, indexing=None):
+def plotvoxels(values, U, vdx, plot=True, indexing=None):
 
-#     """ Plot normalised [0 1] values as voxel data.
+    """ Plot values as voxel data.
 
-#     Parameters
-#     ----------
-#     values : array
-#         Normalised data at nodes.
-#     vmin : float
-#         Cull values below vmin.
-#     U : array
-#         ist): Nodal co-ordinates.
-#     vdx : float
-#         Spacing of voxel grid.
-#     plot : str
-#         'mayavi'.
-#     indexing : str
-#         Meshgrid indexing type.
+    Parameters
+    ----------
+    values : array
+        Normalised data at nodes.
+    U : array
+        Nodal co-ordinates.
+    vdx : float
+        Representative volume size for a voxel.
+    plot : str
+        Plot voxels using compas VtkVoxels 'vtk'.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     """
-#     U = array(U)
-#     x = U[:, 0]
-#     y = U[:, 1]
-#     z = U[:, 2]
-#     xmin, xmax = min(x), max(x)
-#     ymin, ymax = min(y), max(y)
-#     zmin, zmax = min(z), max(z)
-#     X = linspace(xmin, xmax, (xmax - xmin) / vdx)
-#     Y = linspace(ymin, ymax, (ymax - ymin) / vdx)
-#     Z = linspace(zmin, zmax, (zmax - zmin) / vdx)
-#     if indexing is None:
-#         Xm, Ym, Zm = meshgrid(X, Y, Z)
-#     else:
-#         Zm, Ym, Xm = meshgrid(X, Y, Z, indexing=indexing)
+    """
 
-#     f = abs(asarray(values))
-#     Am = squeeze(griddata(U, f, (Xm, Ym, Zm), method='linear', fill_value=0))
-#     Am[isnan(Am)] = 0
-#     if plot == 'mayavi':
-#         mlab.pipeline.volume(mlab.pipeline.scalar_field(Am), vmin=vmin)
-#         mlab.show()
-#     else:
-#         return Am
+    U = array(U)
+    x = U[:, 0]
+    y = U[:, 1]
+    z = U[:, 2]
+    xmin, xmax = min(x), max(x)
+    ymin, ymax = min(y), max(y)
+    zmin, zmax = min(z), max(z)
+    X = linspace(xmin, xmax, (xmax - xmin) / vdx)
+    Y = linspace(ymin, ymax, (ymax - ymin) / vdx)
+    Z = linspace(zmin, zmax, (zmax - zmin) / vdx)
+    Xm, Ym, Zm = meshgrid(X, Y, Z)
+    # if indexing:
+        # Zm, Ym, Xm = meshgrid(X, Y, Z, indexing=indexing)
+
+    f = abs(asarray(values))
+    Am = squeeze(griddata(U, f, (Xm, Ym, Zm), method='linear', fill_value=0))
+    Am[isnan(Am)] = 0
+
+    if plot == 'vtk':
+        voxels = VtkVoxels(data=Am)
+        voxels.start()
+
+    return Am
 
 
 # def tets_from_vertices_faces(vertices, faces, volume=None):

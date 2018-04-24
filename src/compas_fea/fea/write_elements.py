@@ -296,44 +296,43 @@ def _write_sofistik_rebar(f, properties, sections, sets):
 
 
 def _write_blocks(f, software, selection, elements, material, c):
-    pass
 
-#     for select in selection:
+    for select in selection:
 
-#         element = elements[select]
-#         nodes = element.nodes
-#         n = select + 1
+        element = elements[select]
+        nodes = element.nodes
+        ni = select + 1
 
-#         if software == 'sofistik':
-
+        if software == 'sofistik':
+            pass
 #             if len(nodes) == 8:
 #                 f.write('BRIC NO N1 N2 N3 N4 N5 N6 N7 N8 MNO\n')
 
 #             f.write('{0} {1} {2}\n'.format(n, ' '.join([str(i + 1) for i in nodes]), material.index + 1))
 
-#         elif software == 'opensees':
+        elif software == 'opensees':
 
-#             pass
+            pass
 
-#         elif software == 'ansys':
+        elif software == 'ansys':
 
-#             pass
+            pass
 
-#         elif software == 'abaqus':
+        elif software == 'abaqus':
 
-#             if len(nodes) == 4:
-#                 etype = 'C3D4'
-#             elif len(nodes) == 6:
-#                 etype = 'C3D6'
-#             elif len(nodes) == 8:
-#                 etype = 'C3D8'
+            if len(nodes) == 4:
+                etype = 'C3D4'
+            elif len(nodes) == 6:
+                etype = 'C3D6'
+            elif len(nodes) == 8:
+                etype = 'C3D8'
 
-#             f.write('*ELEMENT, TYPE={0}, ELSET=element_{1}\n'.format(etype, select))
-#             f.write('{0}, {1}\n'.format(n, ','.join([str(i + 1) for i in nodes])))
-#             f.write('*SOLID SECTION, ELSET=element_{0}, MATERIAL={1}\n'.format(select, material.name))
-#             f.write('\n')
+            f.write('*ELEMENT, TYPE={0}, ELSET=element_{1}\n'.format(etype, select))
+            f.write('{0}, {1}\n'.format(ni, ','.join([str(i + 1) for i in nodes])))
+            f.write('*SOLID SECTION, ELSET=element_{0}, MATERIAL={1}\n'.format(select, material.name))
+            f.write('\n')
 
-#         f.write('{0}\n'.format(c))
+        f.write('{0}\n'.format(c))
 
 
 def _write_shells(f, software, selection, elements, geometry, material, materials, reinforcement, c):

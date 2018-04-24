@@ -677,14 +677,6 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
     uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
 
-    nodes = structure.nodes_xyz()
-    elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
-    nodal_data = structure.results[step]['nodal']
-    nkeys = sorted(structure.nodes, key=int)
-    ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
-    uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
-    uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
-
     try:
         data = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
         dtype = 'nodal'
@@ -705,9 +697,9 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
         # Plot meshes
 
-#         mesh_faces = []
+        mesh_faces = []
         line_faces = [[0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]]
-#         block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
+        block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
 #         tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
 
         for element, nodes in enumerate(elements):
@@ -734,25 +726,25 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
                 elif dtype == 'nodal':
                     col1 = cnodes[u]
                     col2 = cnodes[v]
-                rs.MeshVertexColors(guid, [col1]*4 + [col2]*4)
+                rs.MeshVertexColors(guid, [col1] * 4 + [col2] * 4)
 
-#             elif n == 3:
-#                 mesh_faces.append(nodes + [nodes[-1]])
+            elif n == 3:
+                mesh_faces.append(nodes + [nodes[-1]])
 
-#             elif n == 4:
-#                 if structure.elements[element].__name__ in ['ShellElement', 'MembraneElement']:
-#                     mesh_faces.append(nodes)
-#                 else:
-#                     for face in tet_faces:
-#                         mesh_faces.append([nodes[i] for i in face])
+            elif n == 4:
+                if structure.elements[element].__name__ in ['ShellElement', 'MembraneElement']:
+                    mesh_faces.append(nodes)
+                # else:
+                    # for face in tet_faces:
+                        # mesh_faces.append([nodes[i] for i in face])
 
-#             elif n == 8:
-#                 for block in block_faces:
-#                     mesh_faces.append([nodes[i] for i in block])
+            elif n == 8:
+                for block in block_faces:
+                    mesh_faces.append([nodes[i] for i in block])
 
-#         if mesh_faces:
-#             guid = rs.AddMesh(U, mesh_faces)
-#             rs.MeshVertexColors(guid, cnodes)
+        if mesh_faces:
+            guid = rs.AddMesh(U, mesh_faces)
+            rs.MeshVertexColors(guid, cnodes)
 
         # Plot colorbar
 
@@ -780,8 +772,8 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
             yl = ymin + (3.8 - i) * s
             vu = float(+max(eabs, fabs) * (i + 1) / 5.)
             vl = float(-max(eabs, fabs) * (i + 1) / 5.)
-            rs.AddText('{0:.3g}'.format(vu), [x0, yu, 0], height=h)
-            rs.AddText('{0:.3g}'.format(vl), [x0, yl, 0], height=h)
+            rs.AddText('{0:.5g}'.format(vu), [x0, yu, 0], height=h)
+            rs.AddText('{0:.5g}'.format(vl), [x0, yl, 0], height=h)
         rs.AddText('0', [x0, ymin + 4.8 * s, 0], height=h)
         rs.AddText('Step:{0}   Field:{1}'.format(step, field), [xmin, ymin + 12 * s, 0], height=h)
         if mode != '':

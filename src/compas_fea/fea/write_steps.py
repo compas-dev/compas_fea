@@ -46,8 +46,8 @@ footers = {
     'ansys':    '',
 }
 
-dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
-node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
+dofs           = ['x', 'y', 'z', 'xx', 'yy', 'zz']
+node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
 
 
@@ -245,7 +245,7 @@ def _write_gravity_load(f, software, g, com, elset, factor):
 
         pass
 
-    elif software == 'opensees':
+    elif software == 'ansys':
 
         pass
 
@@ -283,6 +283,64 @@ def _write_displacements(f, software, com, nset, factor, sets, ndof):
                 f.write('    NODE {0} TYPE DYY {1}\n'.format(ni, com['yy'] * 1000))
             if com['zz'] is not None:
                 f.write('    NODE {0} TYPE DZZ {1}\n'.format(ni, com['zz'] * 1000))
+
+
+def _write_tributary_load(f, software, com, factor):
+
+    if software == 'abaqus':
+        f.write('*CLOAD\n')
+        f.write('**\n')
+
+    for node in sorted(com, key=int):
+        ni = node + 1
+
+        if software == 'abaqus':
+
+            for ci, dof in enumerate(dofs[:3], 1):
+                if com[node][dof]:
+                    ni = node + 1
+                    dl = com[node][dof] * factor
+                    f.write('{0}, {1}, {2}\n'.format(ni, ci, dl))
+
+        elif software == 'sofistik':
+
+            f.write('    NODE NO {0} TYPE '.format(ni))
+            for ci, dof in enumerate(dofs[:3], 1):
+                if com[node][dof]:
+                    dl = com[node][dof] / 1000.
+                    f.write('P{0}{0}[kN] {1}\n'.format(dof.upper(), dl))
+
+        elif software == 'opensees':
+
+            pass
+
+        elif software == 'ansys':
+
+            pass
+
+
+def _write_prestress_load(f, software, elset, com):
+
+    for k in elset:
+
+        if software == 'abaqus':
+
+            f.write('*INITIAL CONDITIONS, TYPE=STRESS\n')
+            f.write('{0}, '.format(k))
+            if com['sxx']:
+                f.write('{0}\n'.format(com['sxx']))
+
+        elif software == 'sofistik':
+
+            pass
+
+        elif software == 'opensees':
+
+                pass
+
+        elif software == 'ansys':
+
+            pass
 
 
 def write_input_steps(f, software, structure, steps, loads, displacements, sets, fields, ndof=6, properties={}):
@@ -360,34 +418,11 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 elif ltype == 'LineLoad':
                     _write_line_load(f, software, axes, com, 1, elset, sets, structure)
 
-#                         if isinstance(load.nodes, str):
-#                             nodes = sets[load.nodes]['selection']
-#                         elif isinstance(load.nodes, list):
-#                             nodes = load.nodes
+                elif ltype == 'PrestressLoad':
+                    _write_prestress_load(f, software, elset, com)
 
-#                         pass
-#                         # for node in sorted(nodes, key=int):
-#                             # ni = node + 1
-#                             # f.write('    NODE NO {0} TYPE PX\n'.format(ni))
-#                         # for ci, dof in enumerate(dofs[:3], 1):
-#                             # if com[node][dof]:
-#                                 # dl = com[node][dof] / 1000.
-#                                 # f.write('P{0}{0} {1}\n'.format(dof.upper(), dl))
-
-#                 else:
-
-#
-#
-
-#                     if ltype == 'TributaryLoad':
-
-#                         for node in sorted(com, key=int):
-#                             ni = node + 1
-#                             f.write('    NODE NO {0} TYPE '.format(ni))
-#                             for ci, dof in enumerate(dofs[:3], 1):
-#                                 if com[node][dof]:
-#                                     dl = com[node][dof] / 1000.
-#                                     f.write('P{0}{0} {1}\n'.format(dof.upper(), dl))
+                elif ltype == 'TributaryLoad':
+                    _write_tributary_load(f, software, com, 1)
 
                 elif ltype == 'AreaLoad':
                     _write_area_load(f, software, com, axes, elset, sets, 1)
@@ -524,12 +559,9 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
                 # # Pre-stress
 
-                # elif ltype in ['PrestressLoad']:
-
-                #     f.write('*INITIAL CONDITIONS, TYPE=STRESS\n')
-                #     f.write('{0}, '.format(elset))
-                #     if com['sxx']:
-                #         f.write('{0}\n'.format(com['sxx']))
+                elif ltype in ['PrestressLoad']:
+                    if software != 'sofistik':
+                        _write_prestress_load(f, software, elset, com)
 
                 # Line load
 
@@ -543,11 +575,11 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     if software != 'sofistik':
                         _write_area_load(f, software, com, axes, elset, sets, factor)
 
-                # # Body load
+                # Body load
 
-                # elif ltype == 'BodyLoad':
+                elif ltype == 'BodyLoad':
 
-                #     raise NotImplementedError
+                    raise NotImplementedError
 
                 # Gravity load
 
@@ -555,24 +587,11 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     if software != 'sofistik':
                         _write_gravity_load(f, software, load.g, com, elset, factor)
 
-                # # Tributary load
+                # Tributary load
 
-                # elif ltype == 'TributaryLoad':
-
-                #     if software == 'opensees':
-
-                #         pass
-
-                #     elif software == 'abaqus':
-
-                #         f.write('*CLOAD\n')
-                #         f.write('**\n')
-                #         for node in sorted(com, key=int):
-                #             for ci, dof in enumerate(dofs[:3], 1):
-                #                 if com[node][dof]:
-                #                     ni = node + 1
-                #                     dl = com[node][dof] * factor
-                #                     f.write('{0}, {1}, {2}\n'.format(ni, ci, dl))
+                elif ltype == 'TributaryLoad':
+                    if software != 'sofistik':
+                        _write_tributary_load(f, software, com, factor)
 
             # Displacements
 
@@ -646,8 +665,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                         j = 'force'
                         f.write('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, beam_elements, j))
 
-                # if 'spf' in fields:
-                #     elemental['element_spf.out'] = 'basicForces'
+                if 'spf' in fields:
+                    elemental['element_spf.out'] = 'basicForces'
 
                 with open('{0}truss_numbers.json'.format(temp), 'w') as fo:
                     json.dump({'truss_numbers': truss_numbers}, fo)
@@ -670,9 +689,9 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
                 if isinstance(fields, list):
                     fields = structure.fields_dic_from_list(fields)
-                # if 'spf' in fields:
-                #     fields['ctf'] = 'all'
-                #     del fields['spf']
+                if 'spf' in fields:
+                    fields['ctf'] = 'all'
+                    del fields['spf']
 
                 f.write('**\n')
                 f.write('*OUTPUT, FIELD\n')

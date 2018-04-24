@@ -248,6 +248,8 @@ def extract_odb_data(structure, fields, exe):
         for step in info:
             structure.results[step]['info'] = info[step]
 
+        # structure.save_to_obj()
+
         print('***** Saving data to structure.results successful : {0:.3f} s *****\n'.format(time() - tic2))
 
     except:
