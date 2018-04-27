@@ -1,6 +1,5 @@
 
 from compas_fea.cad import blender
-
 from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
@@ -21,61 +20,63 @@ __email__     = 'liew@arch.ethz.ch'
 
 clear_layer(layer=0)
 
-# Create empty Structure object
+# Structure
 
-mdl = Structure(name='block_deepbeam', path='C:/Temp/')
+mdl = Structure(name='block_deepbeam', path='/home/al/temp/')
 
-# Extrude mesh
+# Mesh
 
 ds = 0.05
 Lx = 1
 Ly = 2
+Lz = 1
 bmesh = bmesh=draw_plane(Lx=Lx, Ly=Ly, dx=ds, dy=ds)
-blender.mesh_extrude(mdl, bmesh=bmesh, nz=int(1/ds), dz=ds, setname='elset_blocks')
+blender.mesh_extrude(mdl, bmesh=bmesh, layers=int(Lz/ds), thickness=ds, blocks_name='elset_blocks')
 
-# Add node and element sets
+# Sets
 
 pins = [[ds, ds, 0], [Lx - ds, ds, 0], [Lx - ds, Ly - ds, 0], [ds, Ly - ds, 0]]
 supports = [mdl.check_node_exists(i) for i in pins]
-top = [mdl.check_node_exists([0.5, 1.0, 1.0])]
+top = [mdl.check_node_exists([Lx * 0.5, Ly * 0.5, Lz])]
 mdl.add_set(name='nset_supports', type='node', selection=supports)
 mdl.add_set(name='nset_load', type='node', selection=top)
 
-# Add materials
+# Materials
 
 mdl.add_material(ElasticIsotropic(name='mat_elastic', E=10**10, v=0.3, p=1))
 
-# Add sections
+# Sections
 
 mdl.add_section(SolidSection(name='sec_solid'))
 
-# Add element properties
+# Properties
 
-ep = Properties(name='ep_solid', material='mat_elastic', section='sec_solid', elsets='elset_blocks')
-mdl.add_element_properties(ep)
+mdl.add_element_properties(
+    Properties(name='ep_solid', material='mat_elastic', section='sec_solid', elsets='elset_blocks'))
 
-# Add loads
-
-mdl.add_load(PointLoad(name='load_point', nodes='nset_load', z=-1))
-
-# Add displacements
+# Displacements
 
 mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_supports'))
 
-# Add steps
+# Loads
+
+mdl.add_load(PointLoad(name='load_point', nodes='nset_load', z=-1))
+
+# Steps
 
 mdl.add_step(GeneralStep(name='step_bc', displacements=['disp_pinned']))
 mdl.add_step(GeneralStep(name='step_load', loads=['load_point']))
 mdl.steps_order = ['step_bc', 'step_load']
 
-# Structure summary
+# Summary
 
 mdl.summary()
 
-# Run and extract data
+# Run (Abaqus)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
+exe = '/home/al/abaqus/Commands/abaqus cae '
+mdl.analyse_and_extract(software='abaqus', exe=exe, fields=['u', 's'])
 
-# Plot voxels
+# Plot (VtkVoxels)
 
-blender.plot_voxels(mdl, step='step_load', field='smises', vdx=ds, cbar=[0, 1.5], cube_size=[10, 20, 10], layer=1)
+blender.plot_voxels(mdl, step='step_load', field='smises', vdx=ds, cbar=[0, 1.5], plot='vtk')

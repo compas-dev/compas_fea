@@ -716,8 +716,8 @@ def plotvoxels(values, U, vdx, plot=True, indexing=None):
     Y = linspace(ymin, ymax, (ymax - ymin) / vdx)
     Z = linspace(zmin, zmax, (zmax - zmin) / vdx)
     Xm, Ym, Zm = meshgrid(X, Y, Z)
-    # if indexing:
-        # Zm, Ym, Xm = meshgrid(X, Y, Z, indexing=indexing)
+    if indexing:
+        Zm, Ym, Xm = meshgrid(X, Y, Z, indexing='ij')
 
     f = abs(asarray(values))
     Am = squeeze(griddata(U, f, (Xm, Ym, Zm), method='linear', fill_value=0))

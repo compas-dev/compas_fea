@@ -1462,8 +1462,13 @@ Steps
 
         try:
             print('***** Launching App *****')
+
             from compas_fea.app.app import App
-            App(structure=self)
+
+            app = App(structure=self)
+            app.settings['vertex_size'] = 0.02
+            app.start()
+
         except:
             print('***** Launching App failed *****')
 

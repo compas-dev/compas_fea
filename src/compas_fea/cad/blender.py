@@ -6,8 +6,6 @@ from __future__ import print_function
 from compas_blender.geometry import BlenderMesh
 from compas_blender.helpers import mesh_from_bmesh
 from compas_blender.utilities import clear_layer
-# from compas_blender.utilities import delete_all_materials
-# from compas_blender.utilities import draw_cuboid
 from compas_blender.utilities import draw_pipes
 from compas_blender.utilities import draw_plane
 from compas_blender.utilities import get_objects
@@ -31,10 +29,10 @@ from numpy import newaxis
 
 import json
 
-# try:
-#     import bpy
-# except ImportError:
-#     pass
+try:
+    import bpy
+except ImportError:
+    pass
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -586,47 +584,43 @@ def plot_data(structure, step, field, layer, scale=1.0, radius=0.05, cbar=[None,
     xdraw_texts(texts)
 
 
-def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',
-                vdx=None, cube_size=[10, 10, 10], mode='', colorbar_size=1, plot='vtk'):
+def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean', nodal='mean',
+                vdx=None, mode='', colorbar_size=1, plot='vtk'):
 
-    """ Applies a base voxel material and texture to a cuboid for 4D visualisation.
+    """ Voxel 4D visualisation.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object.
-#     step : str
-#         Name of the Step.
-#     field : str
-#         Field to plot, e.g. 'smises'.
-#     layer : int
-#         Layer to plot the voxel cuboid on.
-#     scale : float
-#         Scale displacements for the deformed plot.
-#     cbar : list
-#         Minimum and maximum limits on the colorbar.
-#     iptype : str
-#         'mean', 'max' or 'min' of an element's integration point data.
-#     nodal : str
-#         'mean', 'max' or 'min' for nodal values.
-#     vdx : float
-#         Voxel spacing.
-#     cube_size : list
-#         x, y, and z lengths of the cube.
-#     mode : int
-#         mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
-#     colorbar_size : float
-#         Scale on the size of the colorbar.
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    field : str
+        Field to plot, e.g. 'smises'.
+    cbar : list
+        Minimum and maximum limits on the colorbar.
+    iptype : str
+        'mean', 'max' or 'min' of an element's integration point data.
+    nodal : str
+        'mean', 'max' or 'min' for nodal values.
+    vdx : float
+        Voxel spacing.
+    mode : int
+        mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
+    colorbar_size : float
+        Scale on the size of the colorbar.
+    plot : str
+        Plot voxels with 'vtk'.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     Notes
-#     -----
-#     - Texture ramping should be done manually in Blender afterwards.
-#     - Voxel display works best with cube dimensions >= 10.
-#     - The absolute value is plotted, ranged between [0, 1].
+    Notes
+    -----
+    - Texture ramping should be done manually in Blender afterwards.
+    - Voxel display works best with cube dimensions >= 10 (Blender).
+    - The absolute value is plotted, ranged between [0, 1].
 
     """
 
@@ -649,7 +643,7 @@ def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None,
 
     # Postprocess
 
-    result = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1, iptype, nodal)
+    result = postprocess(nodes, elements, ux, uy, uz, data, dtype, 1, cbar, 1, iptype, nodal)
 
     try:
         toc, U, cnodes, fabs, fscaled, celements, eabs = result
@@ -658,49 +652,7 @@ def plot_voxels(structure, step, field='smises', layer=0, scale=1.0, cbar=[None,
     except:
         print('\n***** Error encountered during data processing or plotting *****')
 
-    Am = plotvoxels(values=fscaled, U=U, vdx=vdx, plot='vtk')
-#     sx, sy, sz = Am.shape
-
-#     # Save bvox data
-
-#     name = structure.name
-#     path = structure.path
-#     temp = '{0}{1}/'.format(path, name)
-#     header = array([sx, sy, sz, 1])
-#     data = Am.flatten()
-#     fnm_bvox = '{0}{1}-voxels.bvox'.format(temp, name)
-#     with open(fnm_bvox, 'wb') as fnm:
-#         header.astype('<i4').tofile(fnm)
-#         data.astype('<f4').tofile(fnm)
-#     print('***** bvox file created *****')
-
-#     # Create cube with volumetric material
-
-#     clear_layer(layer=layer)
-#     cx, cy, cz = cube_size
-#     cube = draw_cuboid(cx, cy, cz, pos=[0, 0, 0], layer=layer)
-#     delete_all_materials()
-#     material = bpy.data.materials.new('material')
-#     material.type = 'VOLUME'
-#     material.volume.density = 0
-#     material.volume.density_scale = 5
-#     material.volume.scattering = 0.5
-#     cube.data.materials.append(material)
-
-#     # Create base voxel texture
-
-#     texture = bpy.data.textures.new('texture', type='VOXEL_DATA')
-#     texture.voxel_data.file_format = 'BLENDER_VOXEL'
-#     texture.voxel_data.filepath = fnm_bvox
-#     texture.voxel_data.extension = 'EXTEND'
-#     texture.voxel_data.interpolation = 'TRILINEAR'
-#     slot = cube.data.materials['material'].texture_slots.add()
-#     slot.texture = texture
-#     slot.texture_coords = 'ORCO'
-#     slot.mapping = 'FLAT'
-#     slot.use_map_density = True
-#     slot.use_map_emission = True
-#     slot.use_map_color_emission = True
+    plotvoxels(values=fscaled, U=U, vdx=vdx, plot=plot, indexing=1)
 
 
 # ==============================================================================
