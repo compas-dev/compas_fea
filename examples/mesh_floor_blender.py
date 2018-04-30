@@ -65,7 +65,7 @@ mdl.add_displacements([
     RollerDisplacementXY(name='disp_roller', nodes='nset_corners'),
     PinnedDisplacement(name='disp_pinned', nodes='nset_corner1'),
     GeneralDisplacement(name='disp_xdof', nodes='nset_corner2', x=0)])
-
+    
 # Loads
 
 mesh = mesh_from_bmesh(get_objects(layer=2)[0])
@@ -94,4 +94,4 @@ mdl.analyse_and_extract(software='abaqus', exe=exe, fields=['u', 's'])
 blender.plot_data(mdl, step='step_prestress', field='uz', radius=0.02, layer=6, colorbar_size=0.5)
 blender.plot_data(mdl, step='step_loads', field='uz', radius=0.02, layer=7, colorbar_size=0.5)
 blender.plot_data(mdl, step='step_loads', field='smises', radius=0.02, layer=8, colorbar_size=0.5,
-                  iptype='max', nodal='max', cbar=[0, 3*10**6])
+                  iptype='max', nodal='max', cbar=[0, 1*10**6])

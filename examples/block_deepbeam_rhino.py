@@ -17,14 +17,14 @@ __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
 
-# Structure 
+# Structure
 
 mdl = Structure(name='block_deepbeam', path='C:/Temp/')
 
 # Extrude
 
 nz = 20
-rhino.mesh_extrude(mdl, guid=rs.ObjectsByLayer('base_mesh'), layers=nz, thickness=1./nz, 
+rhino.mesh_extrude(mdl, guid=rs.ObjectsByLayer('base_mesh'), layers=nz, thickness=1./nz,
                    blocks_name='elset_blocks')
 
 # Sets
@@ -67,4 +67,4 @@ mdl.summary()
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
 rhino.plot_data(mdl, step='step_load', field='smises', cbar=[0, 2])
-#rhino.plot_voxels(mdl, step='step_load', field='smises', cbar=[0, 2], vmin=0.3, vdx=1./nz)
+rhino.plot_voxels(mdl, step='step_load', field='smises', cbar=[0, 2], vmin=0.3, vdx=1./nz)
