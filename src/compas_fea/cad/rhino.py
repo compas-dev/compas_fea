@@ -7,7 +7,7 @@ from compas.datastructures.mesh import Mesh
 # from compas.datastructures import Network
 from compas.utilities import XFunc
 
-# from compas_rhino.geometry import RhinoMesh
+from compas_rhino.geometry import RhinoMesh
 from compas_rhino.helpers.mesh import mesh_from_guid
 # from compas_rhino.utilities import clear_layer
 # from compas_rhino.utilities import xdraw_mesh
@@ -40,7 +40,7 @@ __email__     = 'liew@arch.ethz.ch'
 
 __all__ = [
     'add_element_set',
-#     'add_tets_from_mesh',
+    'add_tets_from_mesh',
     'add_node_set',
 #     # 'discretise_mesh',
     'add_nodes_elements_from_layers',
@@ -51,7 +51,7 @@ __all__ = [
 #     'plot_axes',
 #     'plot_mode_shapes',
     'plot_data',
-#     'plot_voxels',
+    'plot_voxels',
     'plot_principal_stresses',
 ]
 
@@ -173,70 +173,70 @@ def add_element_set(structure, guids, name):
     structure.add_set(name=name, type='element', selection=elements)
 
 
-# def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, layer='Default', acoustic=False, thermal=False):
+def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, layer='Default', acoustic=False,
+                       thermal=False):
 
-#     """ Adds tetrahedron elements from a Rhino mesh to the Structure object.
+    """ Adds tetrahedron elements from a Rhino mesh to the Structure object.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     name : str
-#         Name for the element set of tetrahedrons.
-#     mesh : ob
-#         The Rhino mesh representing the outer surface.
-#     draw_tets : bool
-#         Draw the generated tetrahedrons.
-#     volume : float
-#         Maximum volume for tets.
-#     layer : str
-#         Layer to draw tetrahedrons if draw_tets=True.
-#     acoustic : bool
-#         Acoustic properties on or off.
-#     thermal : bool
-#         Thermal properties on or off.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    name : str
+        Name for the element set of tetrahedrons.
+    mesh : obj
+        The Rhino mesh representing the outer surface.
+    draw_tets : bool
+        Draw the generated tetrahedrons.
+    volume : float
+        Maximum volume for each tet.
+    layer : str
+        Layer to draw tetrahedrons if draw_tets=True.
+    acoustic : bool
+        Acoustic properties on or off.
+    thermal : bool
+        Thermal properties on or off.
 
-#     Returns
-#     -------
-#     None
-#         Nodes and elements are updated in the Structure object.
+    Returns
+    -------
+    None
+        Nodes and elements are updated in the Structure object.
 
-#     """
+    """
 
-#     rhinomesh = RhinoMesh(mesh)
-#     vertices = rhinomesh.get_vertex_coordinates()
-#     faces = [face[:3] for face in rhinomesh.get_face_vertices()]
+    rhinomesh = RhinoMesh(mesh)
+    vertices = rhinomesh.get_vertex_coordinates()
+    faces = [face[:3] for face in rhinomesh.get_face_vertices()]
 
-#     path = structure.path
-#     basedir = utilities.__file__.split('__init__.py')[0]
-#     xfunc = XFunc('tets', basedir=basedir, tmpdir=path)
-#     xfunc.funcname = 'functions.tets_from_vertices_faces'
+    basedir = utilities.__file__.split('__init__.py')[0]
+    xfunc = XFunc('tets', basedir=basedir, tmpdir=structure.path)
+    xfunc.funcname = 'functions.tets_from_vertices_faces'
 
-#     try:
-#         tets_points, tets_elements = xfunc(vertices=vertices, faces=faces, volume=volume)
+    try:
+        tets_points, tets_elements = xfunc(vertices=vertices, faces=faces, volume=volume)
 
-#         for point in tets_points:
-#             structure.add_node(point)
+        for point in tets_points:
+            structure.add_node(point)
 
-#         ekeys = []
-#         for element in tets_elements:
-#             nodes = [structure.check_node_exists(tets_points[i]) for i in element]
-#             ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', acoustic=acoustic, thermal=thermal)
-#             ekeys.append(ekey)
-#         structure.add_set(name=name, type='element', selection=ekeys)
+        ekeys = []
+        for element in tets_elements:
+            nodes = [structure.check_node_exists(tets_points[i]) for i in element]
+            ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', acoustic=acoustic, thermal=thermal)
+            ekeys.append(ekey)
+        structure.add_set(name=name, type='element', selection=ekeys)
 
-#         if draw_tets:
-#             rs.EnableRedraw(False)
-#             rs.DeleteObjects(rs.ObjectsByLayer(layer))
-#             rs.CurrentLayer(layer)
-#             tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
-#             for i, points in enumerate(tets_elements):
-#                 xyz = [tets_points[j] for j in points]
-#                 rs.AddMesh(vertices=xyz, face_vertices=tet_faces)
-#         rs.EnableRedraw(True)
+        if draw_tets:
+            rs.EnableRedraw(False)
+            rs.DeleteObjects(rs.ObjectsByLayer(layer))
+            rs.CurrentLayer(layer)
+            tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
+            for i, points in enumerate(tets_elements):
+                xyz = [tets_points[j] for j in points]
+                rs.AddMesh(vertices=xyz, face_vertices=tet_faces)
+        rs.EnableRedraw(True)
 
-#     except:
-#         print('***** Error using MeshPy and/or generating Tets *****')
+    except:
+        print('***** Error using MeshPy or drawing Tets *****')
 
 
 def add_node_set(structure, guids, name):
@@ -790,81 +790,77 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         print('\n***** Error encountered during data processing or plotting *****')
 
 
-# def plot_voxels(structure, step, field='smises', scale=1.0, cbar=[None, None], iptype='mean', nodal='mean',
-#                 vmin=0, vdx=None):
+def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean', nodal='mean',
+                vdx=None, mode='', plot='vtk'):
 
-#     """ Plots voxels results for 4D data with mayavi.
+    """ Voxel 4D visualisation.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object.
-#     step : str
-#         Name of the Step.
-#     field : str
-#         Scalar field to plot, e.g. 'smises'.
-#     scale : float
-#         Scale displacements for the deformed plot.
-#     cbar : list
-#         Minimum and maximum limits on the colorbar.
-#     iptype : str
-#         'mean', 'max' or 'min' of an element's integration point data.
-#     nodal : str
-#         'mean', 'max' or 'min' for nodal values.
-#     vmin : float
-#         Plot voxel data, and cull values below value voxel (0 1].
-#     vdx : float
-#         Voxel spacing.
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    field : str
+        Field to plot, e.g. 'smises'.
+    cbar : list
+        Minimum and maximum limits on the colorbar.
+    iptype : str
+        'mean', 'max' or 'min' of an element's integration point data.
+    nodal : str
+        'mean', 'max' or 'min' for nodal values.
+    vdx : float
+        Voxel spacing.
+    mode : int
+        mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
+    plot : str
+        Plot voxels with 'vtk'.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     """
+    """
 
-#     # Node and element data
+    # Node and element data
 
-#     nkeys = sorted(structure.nodes, key=int)
-#     ekeys = sorted(structure.elements, key=int)
-#     nodes = [structure.node_xyz(nkey) for nkey in nkeys]
-#     elements = [structure.elements[ekey].nodes for ekey in ekeys]
+    nodes = structure.nodes_xyz()
+    elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
+    nodal_data = structure.results[step]['nodal']
+    nkeys = sorted(structure.nodes, key=int)
+    ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
+    uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
+    uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
 
-#     mode = ''
-#     nodal_data = structure.results[step]['nodal']
-#     ux = [nodal_data['ux{0}'.format(str(mode))][key] for key in nkeys]
-#     uy = [nodal_data['uy{0}'.format(str(mode))][key] for key in nkeys]
-#     uz = [nodal_data['uz{0}'.format(str(mode))][key] for key in nkeys]
+    try:
+        data = [nodal_data[field + str(mode)][key] for key in nkeys]
+        dtype = 'nodal'
+    except(Exception):
+        data = structure.results[step]['element'][field]
+        dtype = 'element'
 
-#     # Postprocess
+    # Postprocess
 
-#     try:
-#         data = [nodal_data[field + str(mode)][key] for key in nkeys]
-#         dtype = 'nodal'
-#     except(Exception):
-#         elemental_data = structure.results[step]['element']
-#         data = elemental_data[field]
-#         dtype = 'element'
-#     path = structure.path
-#     basedir = utilities.__file__.split('__init__.py')[0]
-#     xfunc = XFunc('post-process', basedir=basedir, tmpdir=path)
-#     xfunc.funcname = 'functions.postprocess'
-#     result = xfunc(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)
+    basedir = utilities.__file__.split('__init__.py')[0]
+    xfunc = XFunc('postprocess', basedir=basedir, tmpdir=structure.path)
+    xfunc.funcname = 'functions.postprocess'
+    result = xfunc(nodes, elements, ux, uy, uz, data, dtype, 1, cbar, 255, iptype, nodal)
 
-#     try:
-#         toc, U, cnodes, fabs, fscaled, celements = result
-#         print('\n***** Data processed : {0} s *****'.format(toc))
+    try:
+        toc, U, cnodes, fabs, fscaled, celements, eabs = result
+        print('\n***** Data processed : {0} s *****'.format(toc))
 
-#     except:
-#         print('\n***** Error post-processing *****')
+    except:
+        print('\n***** Error post-processing *****')
 
-#     try:
-#         xfunc = XFunc('voxels', basedir=basedir, tmpdir=path)
-#         xfunc.funcname = 'functions.voxels'
-#         xfunc(values=fscaled, vmin=vmin, U=U, vdx=vdx, plot='mayavi')
-#         print('\n***** Voxels finished *****')
+    try:
+        xfunc = XFunc('voxels', basedir=basedir, tmpdir=structure.path)
+        xfunc.funcname = 'functions.plotvoxels'
+        xfunc(values=fscaled, U=U, vdx=vdx, plot=plot)
+        print('\n***** Voxels finished *****')
 
-#     except:
-#         print('\n***** Error plotting voxels *****')
+    except:
+        print('\n***** Error plotting voxels *****')
 
 
 def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None):

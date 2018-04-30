@@ -66,5 +66,5 @@ mdl.summary()
 
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
-rhino.plot_data(mdl, step='step_load', field='smises', cbar=[0, 2])
-#rhino.plot_voxels(mdl, step='step_load', field='smises', cbar=[0, 2], vmin=0.3, vdx=1./nz)
+#rhino.plot_data(mdl, step='step_load', field='smises', cbar=[0, 2])
+rhino.plot_voxels(mdl, step='step_load', field='smises', cbar=[0, 2], vdx=1./nz)

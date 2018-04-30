@@ -585,7 +585,7 @@ def plot_data(structure, step, field, layer, scale=1.0, radius=0.05, cbar=[None,
 
 
 def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean', nodal='mean',
-                vdx=None, mode='', colorbar_size=1, plot='vtk'):
+                vdx=None, mode='', plot='vtk'):
 
     """ Voxel 4D visualisation.
 
@@ -607,20 +607,12 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
         Voxel spacing.
     mode : int
         mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
-    colorbar_size : float
-        Scale on the size of the colorbar.
     plot : str
         Plot voxels with 'vtk'.
 
     Returns
     -------
     None
-
-    Notes
-    -----
-    - Texture ramping should be done manually in Blender afterwards.
-    - Voxel display works best with cube dimensions >= 10 (Blender).
-    - The absolute value is plotted, ranged between [0, 1].
 
     """
 
@@ -652,7 +644,7 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
     except:
         print('\n***** Error encountered during data processing or plotting *****')
 
-    plotvoxels(values=fscaled, U=U, vdx=vdx, plot=plot, indexing=1)
+    plotvoxels(values=fscaled, U=U, vdx=vdx, plot=plot)
 
 
 # ==============================================================================

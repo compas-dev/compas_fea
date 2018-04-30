@@ -60,11 +60,11 @@ try:
 except ImportError:
     pass
 
-# try:
-#     from meshpy.tet import build
-#     from meshpy.tet import MeshInfo
-# except ImportError:
-#     pass
+try:
+    from meshpy.tet import build
+    from meshpy.tet import MeshInfo
+except ImportError:
+    pass
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
@@ -84,7 +84,7 @@ __all__ = [
     'normalise_data',
     'postprocess',
     'process_data',
-#     'tets_from_vertices_faces',
+    'tets_from_vertices_faces',
     'principal_stresses',
     'plotvoxels',
 ]
@@ -730,35 +730,38 @@ def plotvoxels(values, U, vdx, plot=True, indexing=None):
     return Am
 
 
-# def tets_from_vertices_faces(vertices, faces, volume=None):
+def tets_from_vertices_faces(vertices, faces, volume=None):
 
-#     """ Generate tetrahedron points and elements with MeshPy (TetGen).
+    """ Generate tetrahedron points and elements with MeshPy (TetGen).
 
-#     Parameters
-#     ----------
-#     vertices : list
-#         List of lists of vertex co-ordinates of input surface mesh.
-#     faces : list
-#         List of lists of face indices of input surface mesh.
-#     volume : float
-#         Volume constraint for each tetrahedron element.
+    Parameters
+    ----------
+    vertices : list
+        List of lists of vertex co-ordinates for input surface mesh.
+    faces : list
+        List of lists of face indices for input surface mesh.
+    volume : float
+        Volume constraint for each tetrahedron element.
 
-#     Returns
-#     -------
-#     list
-#         Points of the tetrahedrons.
-#     list
-#         Indices of points for each tetrahedron element.
+    Returns
+    -------
+    list
+        Points of the tetrahedrons.
+    list
+        Indices of points for each tetrahedron element.
 
-#     """
+    """
 
-#     info = MeshInfo()
-#     info.set_points(vertices)
-#     info.set_facets(faces)
-#     tets = build(info, max_volume=volume)
-#     tets_points = [list(i) for i in list(tets.points)]
-#     tets_elements = [list(i) for i in list(tets.elements)]
-#     return tets_points, tets_elements
+    try:
+        info = MeshInfo()
+        info.set_points(vertices)
+        info.set_facets(faces)
+        tets = build(info, max_volume=volume)
+        tets_points = [list(i) for i in list(tets.points)]
+        tets_elements = [list(i) for i in list(tets.elements)]
+        return tets_points, tets_elements
+    except:
+        print('***** MeshPy failed *****')
 
 
 def principal_stresses(data, ptype, scale, rotate):
