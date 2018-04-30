@@ -1463,10 +1463,17 @@ Steps
         try:
             print('***** Launching App *****')
 
+            xb, yb, zb = self.node_bounds()
+            xm = 0.5 * (xb[0] + xb[1])
+            ym = 0.5 * (yb[0] + yb[1])
+            zm = 0.5 * (zb[0] + zb[1])
+
             from compas_fea.app.app import App
 
             app = App(structure=self)
-            app.settings['vertex_size'] = 0.02
+            app.settings['draw_axes'] = False
+            app.settings['vertex_size'] = 0.01
+            app.settings['camera_focus'] = [xm, ym, zm]
             app.start()
 
         except:

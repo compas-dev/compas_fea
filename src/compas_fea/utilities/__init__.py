@@ -31,7 +31,8 @@ functions
     postprocess
     process_data
     tets_from_vertices_faces
-    voxels
+    principal_stresses
+    plotvoxels
 
 
 """

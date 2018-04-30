@@ -21,18 +21,13 @@ from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
 from compas_fea.utilities import network_order
 from compas_fea.utilities import postprocess
-# from compas_fea.utilities import tets_from_vertices_faces
+from compas_fea.utilities import tets_from_vertices_faces
 from compas_fea.utilities import plotvoxels
 
 from numpy import array
 from numpy import newaxis
 
 import json
-
-try:
-    import bpy
-except ImportError:
-    pass
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -44,14 +39,14 @@ __email__     = 'liew@arch.ethz.ch'
 __all__ = [
     'add_nodes_elements_from_bmesh',
     'add_nodes_elements_from_layers',
-#     'add_tets_from_bmesh',
+    'add_tets_from_bmesh',
     'add_nset_from_bmeshes',
     'add_elset_from_bmeshes',
     'add_nset_from_objects',
     'plot_data',
     'ordered_network',
     'plot_voxels',
-    'mesh_extrude'
+    'mesh_extrude',
 ]
 
 
@@ -203,54 +198,56 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
     return list(created_nodes), list(created_elements)
 
 
-# def add_tets_from_bmesh(structure, name, bmesh, draw_tets=False, volume=None, layer=19, acoustic=False, thermal=False):
+def add_tets_from_bmesh(structure, name, bmesh, draw_tets=False, volume=None, layer=19, acoustic=False, thermal=False):
 
-#     """ Adds tetrahedron elements from a Blender mesh to the Structure object.
+    """ Adds tetrahedron elements from a Blender mesh to the Structure object.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     name : str
-#         Name for the element set of tetrahedrons.
-#     bmesh : ob
-#         The Blender mesh representing the outer surface.
-#     draw_tets : bool
-#         Draw the generated tetrahedrons.
-#     volume : float
-#         Maximum volume for tets.
-#     layer : int
-#         Layer to draw tetrahedrons if draw_tets=True.
-#     acoustic : bool
-#         Acoustic properties on or off.
-#     thermal : bool
-#         Thermal properties on or off.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    name : str
+        Name for the element set of tetrahedrons.
+    bmesh : obj
+        The Blender mesh representing the outer surface.
+    draw_tets : bool
+        Draw the generated tetrahedrons.
+    volume : float
+        Maximum volume for tets.
+    layer : int
+        Layer to draw tetrahedrons if draw_tets=True.
+    acoustic : bool
+        Acoustic properties on or off.
+    thermal : bool
+        Thermal properties on or off.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     """
+    """
 
-#     blendermesh = BlenderMesh(bmesh)
-#     vertices = blendermesh.get_vertex_coordinates()
-#     faces = blendermesh.get_face_vertex_indices()
+    blendermesh = BlenderMesh(bmesh)
+    vertices = blendermesh.get_vertex_coordinates()
+    faces = blendermesh.get_face_vertex_indices()
 
-#     tets_points, tets_elements = tets_from_vertices_faces(vertices=vertices, faces=faces, volume=volume)
-#     for point in tets_points:
-#         structure.add_node(point)
-#     ekeys = []
-#     for element in tets_elements:
-#         nodes = [structure.check_node_exists(tets_points[i]) for i in element]
-#         ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', acoustic=acoustic, thermal=thermal)
-#         ekeys.append(ekey)
-#     structure.add_set(name=name, type='element', selection=ekeys)
+    tets_points, tets_elements = tets_from_vertices_faces(vertices=vertices, faces=faces, volume=volume)
 
-#     if draw_tets:
-#         tet_faces = [[0, 1, 2], [1, 3, 2], [1, 3, 0], [0, 2, 3]]
-#         for i, points in enumerate(tets_elements):
-#             xyz = [tets_points[j] for j in points]
-#             xdraw_mesh(name=str(i), vertices=xyz, faces=tet_faces, layer=layer)
+    for point in tets_points:
+        structure.add_node(point)
+
+    ekeys = []
+    for element in tets_elements:
+        nodes = [structure.check_node_exists(tets_points[i]) for i in element]
+        ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', acoustic=acoustic, thermal=thermal)
+        ekeys.append(ekey)
+    structure.add_set(name=name, type='element', selection=ekeys)
+
+    if draw_tets:
+        tet_faces = [[0, 1, 2], [1, 3, 2], [1, 3, 0], [0, 2, 3]]
+        for i, points in enumerate(tets_elements):
+            xyz = [tets_points[j] for j in points]
+            xdraw_mesh(name=str(i), vertices=xyz, faces=tet_faces, layer=layer)
 
 
 def add_elset_from_bmeshes(structure, name, bmeshes=None, layer=None):
@@ -585,7 +582,7 @@ def plot_data(structure, step, field, layer, scale=1.0, radius=0.05, cbar=[None,
 
 
 def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean', nodal='mean',
-                vdx=None, mode='', colorbar_size=1, plot='vtk'):
+                vdx=None, mode='', plot='vtk'):
 
     """ Voxel 4D visualisation.
 
@@ -607,20 +604,12 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
         Voxel spacing.
     mode : int
         mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
-    colorbar_size : float
-        Scale on the size of the colorbar.
     plot : str
         Plot voxels with 'vtk'.
 
     Returns
     -------
     None
-
-    Notes
-    -----
-    - Texture ramping should be done manually in Blender afterwards.
-    - Voxel display works best with cube dimensions >= 10 (Blender).
-    - The absolute value is plotted, ranged between [0, 1].
 
     """
 
@@ -652,7 +641,7 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
     except:
         print('\n***** Error encountered during data processing or plotting *****')
 
-    plotvoxels(values=fscaled, U=U, vdx=vdx, plot=plot, indexing=1)
+    plotvoxels(values=fscaled, U=U, vdx=vdx, plot=plot)
 
 
 # ==============================================================================

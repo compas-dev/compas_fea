@@ -6,13 +6,13 @@ from __future__ import print_function
 from compas.topology import dijkstra_path
 
 from compas.geometry import add_vectors
-# from compas.geometry import angles_points_xy
-# from compas.geometry import area_polygon_xy
-# from compas.geometry import centroid_points
-# from compas.geometry import circle_from_points_xy
+from compas.geometry import angles_points_xy
+from compas.geometry import area_polygon_xy
+from compas.geometry import centroid_points
+from compas.geometry import circle_from_points_xy
 from compas.geometry import cross_vectors
 from compas.geometry import distance_point_point
-# from compas.geometry import length_vector
+from compas.geometry import length_vector
 from compas.geometry import normalize_vector
 from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
@@ -27,12 +27,11 @@ try:
     from numpy import array
     from numpy import asarray
     from numpy import cos
-#     from numpy import dot
+    from numpy import dot
     from numpy import hstack
     from numpy import isnan
     from numpy import linspace
     from numpy import meshgrid
-    from numpy import mean
     from numpy import min
     from numpy import max
     from numpy import newaxis
@@ -41,17 +40,17 @@ try:
     from numpy import squeeze
     from numpy import sum
     from numpy import tile
-#     from numpy import vstack
+    from numpy import vstack
     from numpy import zeros
-#     from numpy.linalg import inv
+    from numpy.linalg import inv
 except ImportError:
     pass
 
 try:
     from scipy.interpolate import griddata
     from scipy.sparse import csr_matrix
-#     from scipy.spatial import Delaunay
-#     from scipy.spatial import distance_matrix
+    from scipy.spatial import Delaunay
+    from scipy.spatial import distance_matrix
 except ImportError:
     pass
 
@@ -60,11 +59,11 @@ try:
 except ImportError:
     pass
 
-# try:
-#     from meshpy.tet import build
-#     from meshpy.tet import MeshInfo
-# except ImportError:
-#     pass
+try:
+    from meshpy.tet import build
+    from meshpy.tet import MeshInfo
+except ImportError:
+    pass
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
@@ -76,7 +75,7 @@ __email__     = 'liew@arch.ethz.ch'
 __all__ = [
     'colorbar',
     'combine_all_sets',
-#     'discretise_faces',
+    'discretise_faces',
     'extrude_mesh',
     'group_keys_by_attribute',
     'group_keys_by_attributes',
@@ -84,7 +83,7 @@ __all__ = [
     'normalise_data',
     'postprocess',
     'process_data',
-#     'tets_from_vertices_faces',
+    'tets_from_vertices_faces',
     'principal_stresses',
     'plotvoxels',
 ]
@@ -154,143 +153,135 @@ def combine_all_sets(sets_a, sets_b):
     return comb
 
 
-# def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations=100, refine=True):
+def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations=100, refine=True):
 
-#     """ Make an FE mesh from an input coarse mesh data.
+    """ Make an FE mesh from input coarse mesh data.
 
-#     Parameters
-#     ----------
-#     vertices : list
-#         Co-ordinates of coarse mesh vertices.
-#     faces : list
-#         Vertex numbers of each face of the coarse mesh.
-#     target : float
-#         Target length of each triangle.
-#     min_angle : float
-#         Minimum internal angle of triangles.
-#     factor : float
-#         Factor on the maximum area of each triangle.
-#     iterations : int
-#         Number of iterations per face.
-#     refine : bool
-#         Refine beyond Delaunay.
+    Parameters
+    ----------
+    vertices : list
+        Co-ordinates of coarse mesh vertices.
+    faces : list
+        Vertex numbers of each face of the coarse mesh.
+    target : float
+        Target length of each triangle.
+    min_angle : float
+        Minimum internal angle of triangles.
+    factor : float
+        Factor on the maximum area of each triangle.
+    iterations : int
+        Number of iterations per face.
+    refine : bool
+        Refine beyond Delaunay.
 
-#     Returns
-#     -------
-#     list
-#         Vertices of discretised faces.
-#     list
-#         Triangles of discretised faces.
+    Returns
+    -------
+    list
+        Vertices of discretised faces.
+    list
+        Triangles of discretised faces.
 
-#     """
+    """
 
-#     points_all = []
-#     faces_all = []
+    points_all = []
+    faces_all = []
 
-#     Amax = factor * 0.5 * target**2
+    Amax = factor * 0.5 * target**2
 
-#     for count, face in enumerate(faces):
-#         print('Face {0}/{1}'.format(count + 1, len(faces)))
+    for count, face in enumerate(faces):
+        print('Face {0}/{1}'.format(count + 1, len(faces)))
 
-#         # Seed
+        # Seed
 
-#         face.append(face[0])
-#         points = []
-#         for i in range(len(face) - 1):
-#             u = face[i + 0]
-#             v = face[i + 1]
-#             sp = vertices[u]
-#             ep = vertices[v]
-#             vec = subtract_vectors(ep, sp)
-#             l = length_vector(vec)
-#             n = max([1, int(l / target)])
-#             for j in range(n):
-#                 points.append(add_vectors(sp, scale_vector(vec, j / float(n))))
+        face.append(face[0])
+        points = []
+        for u, v in zip(face[:-1], face[1:]):
+            sp = vertices[u]
+            ep = vertices[v]
+            vec = subtract_vectors(ep, sp)
+            l = length_vector(vec)
+            n = max([1, int(l / target)])
+            for j in range(n):
+                points.append(add_vectors(sp, scale_vector(vec, j / n)))
 
-#         # Starting orientation
+        # Starting orientation
 
-#         centroid = centroid_points(points)
-#         vec1 = subtract_vectors(points[1], points[0])
-#         vecc = subtract_vectors(centroid, points[0])
-#         vecn = cross_vectors(vec1, vecc)
+        centroid = centroid_points(points)
+        vec1 = subtract_vectors(points[1], points[0])
+        vecc = subtract_vectors(centroid, points[0])
+        vecn = cross_vectors(vec1, vecc)
 
-#         # Rotate about x
-#         points = array(points).transpose()
-#         phi = -arctan2(vecn[2], vecn[1]) + pi / 2
-#         Rx = array([[1., 0., 0.], [0., cos(phi), -sin(phi)], [0., sin(phi), cos(phi)]])
-#         vecn_x = dot(Rx, array(vecn)[:, newaxis])
-#         points_x = dot(Rx, points)
-#         Rxinv = inv(Rx)
+        # Rotate about x
 
-#         # Rotate about y
+        points = array(points).transpose()
+        phi = -arctan2(vecn[2], vecn[1]) + pi / 2
+        Rx = array([[1., 0., 0.], [0., cos(phi), -sin(phi)], [0., sin(phi), cos(phi)]])
+        vecn_x = dot(Rx, array(vecn)[:, newaxis])
+        points_x = dot(Rx, points)
+        Rxinv = inv(Rx)
 
-#         psi = +arctan2(vecn_x[2, 0], vecn_x[0, 0]) - pi / 2
-#         Ry = array([[cos(psi), 0., sin(psi)], [0., 1., 0.], [-sin(psi), 0., cos(psi)]])
-#         points_y = dot(Ry, points_x)
-#         Ryinv = inv(Ry)
+        # Rotate about y
 
-#         # Store
+        psi = +arctan2(vecn_x[2, 0], vecn_x[0, 0]) - pi / 2
+        Ry = array([[cos(psi), 0., sin(psi)], [0., 1., 0.], [-sin(psi), 0., cos(psi)]])
+        points_y = dot(Ry, points_x)
+        Ryinv = inv(Ry)
 
-#         Vs = points_y.transpose()
-#         DTs = Delaunay(Vs[:, :2], furthest_site=False, incremental=False)
-#         tris = DTs.simplices
-#         points_xs = dot(Ryinv, Vs.transpose())
-#         points_new = [list(i) for i in list(dot(Rxinv, points_xs).transpose())]
-#         faces_new = [[int(i) for i in tri] for tri in list(tris)]
+        # Store
 
-#         # Algorithm
+        Vs = points_y.transpose()
+        DTs = Delaunay(Vs[:, :2], furthest_site=False, incremental=False)
+        tris = DTs.simplices
+        points_xs = dot(Ryinv, Vs.transpose())
+        points_new = [list(i) for i in list(dot(Rxinv, points_xs).transpose())]
+        faces_new = [[int(i) for i in tri] for tri in list(tris)]
 
-#         if refine:
+        # Refine
 
-#             try:
+        if refine:
 
-#                 V = points_y.transpose()
-#                 z = float(V[0, 2])
+            V = points_y.transpose()
+            z = float(V[0, 2])
 
-#                 it = 0
-#                 while it < iterations:
-#                     print('Iteration', it)
-#                     DT = Delaunay(V[:, :2], furthest_site=False, incremental=False)
-#                     if DT:
-#                         tris = DT.simplices
-#                         for u, v, w in tris:
-#                             p1 = [float(i) for i in V[u, :2]]
-#                             p2 = [float(i) for i in V[v, :2]]
-#                             p3 = [float(i) for i in V[w, :2]]
-#                             th1 = angles_points_xy(p1, p2, p3)[0] * 180 / pi
-#                             th2 = angles_points_xy(p2, p1, p3)[0] * 180 / pi
-#                             th3 = angles_points_xy(p3, p1, p2)[0] * 180 / pi
-#                             thm = min([th1, th2, th3])
-#                             res = circle_from_points_xy(p1, p2, p3)
-#                             if res:
-#                                 c, r, _ = res
-#                                 c = list(c)
-#                                 c[2] = z
-#                                 A = area_polygon_xy([p1, p2, p3])
-#                                 if (thm < min_angle) or (A > Amax):
-#                                     dist = distance_matrix(array([c]), V, threshold=10**5)
-#                                     if len(dist[dist <= r]) <= 3:
-#                                         V = vstack([V, array([c])])
-#                                         break
-#                             else:
-#                                 continue
-#                     else:
-#                         break
-#                     it += 1
-#                 print('Iterations for face {0}: {1}'.format(count + 1, it))
+            it = 0
+            while it < iterations:
+                DT = Delaunay(V[:, :2], furthest_site=False, incremental=False)
+                tris = DT.simplices
+                for u, v, w in tris:
+                    p1 = [float(i) for i in V[u, :2]]
+                    p2 = [float(i) for i in V[v, :2]]
+                    p3 = [float(i) for i in V[w, :2]]
+                    # th1 = angles_points_xy(p1, p2, p3)[0] * 180 / pi
+                    # th2 = angles_points_xy(p2, p3, p1)[0] * 180 / pi
+                    # th3 = angles_points_xy(p3, p1, p2)[0] * 180 / pi
+                    # print(th1, th2, th3)  ] leads to some 0 and 180
+                    # thm = min([th1, th2, th3])
+                    res = circle_from_points_xy(p1, p2, p3)
+                    if res:
+                        c, r, _ = res
+                        c[2] = z
+                        A = area_polygon_xy([p1, p2, p3])
+                        # if (thm < min_angle) or (A > Amax):
+                        if A > Amax:
+                            dist = distance_matrix(array([c]), V, threshold=10**5)
+                            ins = len(dist[dist <= r])
+                            if ins <= 3:
+                                V = vstack([V, array([c])])
+                                break
+                    else:
+                        continue
+                it += 1
 
-#                 points_x = dot(Ryinv, V.transpose())
-#                 points_new = [list(i) for i in list(dot(Rxinv, points_x).transpose())]
-#                 faces_new = [[int(i) for i in tri] for tri in list(tris)]
+            print('Iterations {0}'.format(it))
 
-#             except:
+            points_x = dot(Ryinv, V.transpose())
+            points_new = [list(i) for i in list(dot(Rxinv, points_x).transpose())]
+            faces_new = [[int(i) for i in tri] for tri in list(tris)]
 
-#                 print('------------------- Refine failed')
+        points_all.append(points_new)
+        faces_all.append(faces_new)
 
-#         points_all.append(points_new)
-#         faces_all.append(faces_new)
-
-#     return points_all, faces_all
+    return points_all, faces_all
 
 
 def extrude_mesh(structure, mesh, layers, thickness, mesh_name, links_name, blocks_name):
@@ -730,35 +721,38 @@ def plotvoxels(values, U, vdx, plot=True, indexing=None):
     return Am
 
 
-# def tets_from_vertices_faces(vertices, faces, volume=None):
+def tets_from_vertices_faces(vertices, faces, volume=None):
 
-#     """ Generate tetrahedron points and elements with MeshPy (TetGen).
+    """ Generate tetrahedron points and elements with MeshPy (TetGen).
 
-#     Parameters
-#     ----------
-#     vertices : list
-#         List of lists of vertex co-ordinates of input surface mesh.
-#     faces : list
-#         List of lists of face indices of input surface mesh.
-#     volume : float
-#         Volume constraint for each tetrahedron element.
+    Parameters
+    ----------
+    vertices : list
+        List of lists of vertex co-ordinates for input surface mesh.
+    faces : list
+        List of lists of face indices for input surface mesh.
+    volume : float
+        Volume constraint for each tetrahedron element.
 
-#     Returns
-#     -------
-#     list
-#         Points of the tetrahedrons.
-#     list
-#         Indices of points for each tetrahedron element.
+    Returns
+    -------
+    list
+        Points of the tetrahedrons.
+    list
+        Indices of points for each tetrahedron element.
 
-#     """
+    """
 
-#     info = MeshInfo()
-#     info.set_points(vertices)
-#     info.set_facets(faces)
-#     tets = build(info, max_volume=volume)
-#     tets_points = [list(i) for i in list(tets.points)]
-#     tets_elements = [list(i) for i in list(tets.elements)]
-#     return tets_points, tets_elements
+    try:
+        info = MeshInfo()
+        info.set_points(vertices)
+        info.set_facets(faces)
+        tets = build(info, max_volume=volume)
+        tets_points = [list(i) for i in list(tets.points)]
+        tets_elements = [list(i) for i in list(tets.elements)]
+        return tets_points, tets_elements
+    except:
+        print('***** MeshPy failed *****')
 
 
 def principal_stresses(data, ptype, scale, rotate):
