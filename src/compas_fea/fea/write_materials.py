@@ -243,8 +243,6 @@ def _write_density(f, software, p, c):
 
         pass
 
-    f.write('{0}\n'.format(c))
-
 
 def _write_elastic_plastic(f, software, E, v, tension, c):
 

@@ -24,23 +24,23 @@ __all__ = [
 
 
 conversion = {
-    'U1': 'ux', 'U2': 'uy', 'U3': 'uz',
-    'UR1': 'urx', 'UR2': 'ury', 'UR3': 'urz',
-    'RF1': 'rfx', 'RF2': 'rfy', 'RF3': 'rfz',
-    'RM1': 'rmx', 'RM2': 'rmy', 'RM3': 'rmz',
-    'S11': 'sxx', 'S22': 'syy', 'S33': 'szz', 'S12': 'sxy', 'S13': 'sxz', 'S23': 'sxz',
-    'E11': 'exx', 'E22': 'eyy', 'E33': 'ezz', 'E12': 'exy', 'E13': 'exz', 'E23': 'exz',
-    'LE11': 'exx', 'LE22': 'eyy', 'LE33': 'ezz', 'LE12': 'exy', 'LE13': 'exz', 'LE23': 'exz',
-    'PE11': 'pexx', 'PE22': 'peyy', 'PE33': 'pezz', 'PE12': 'pexy', 'PE13': 'pexz', 'PE23': 'pexz',
-    'SF1': 'sfnx', 'SF2': 'sfvy', 'SF3': 'sfvx',
-    'SM1': 'smx', 'SM2': 'smy', 'SM3': 'smz',
-    'SK1': 'skx', 'SK2': 'sky', 'SK3': 'skz',
-    'SE1': 'senx', 'SE2': 'sevy', 'SE3': 'sevx',
-    'CTF1': 'spfx', 'CTF2': 'spfy', 'CTF3': 'spfz',
+    'U1':    'ux',   'U2':   'uy',   'U3':   'uz',
+    'UR1':   'urx',  'UR2':  'ury',  'UR3':  'urz',
+    'RF1':   'rfx',  'RF2':  'rfy',  'RF3':  'rfz',
+    'RM1':   'rmx',  'RM2':  'rmy',  'RM3':  'rmz',
+    'S11':   'sxx',  'S22':  'syy',  'S33':  'szz',  'S12':  'sxy',  'S13':  'sxz',  'S23':  'sxz',
+    'E11':   'exx',  'E22':  'eyy',  'E33':  'ezz',  'E12':  'exy',  'E13':  'exz',  'E23':  'exz',
+    'LE11':  'exx',  'LE22': 'eyy',  'LE33': 'ezz',  'LE12': 'exy',  'LE13': 'exz',  'LE23': 'exz',
+    'PE11':  'pexx', 'PE22': 'peyy', 'PE33': 'pezz', 'PE12': 'pexy', 'PE13': 'pexz', 'PE23': 'pexz',
+    'SF1':   'sfnx', 'SF2':  'sfvy', 'SF3':  'sfvx',
+    'SM1':   'smx',  'SM2':  'smy',  'SM3':  'smz',
+    'SK1':   'skx',  'SK2':  'sky',  'SK3':  'skz',
+    'SE1':   'senx', 'SE2':  'sevy', 'SE3':  'sevx',
+    'CTF1':  'spfx', 'CTF2': 'spfy', 'CTF3': 'spfz',
     'VALUE': 'rbfor',
 }
 
-node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
+node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'spf', 'rbfor']
 
 
@@ -56,8 +56,8 @@ def extract_odb_data(temp, name, fields, steps='all'):
         Name of the Structure object and analysis files.
     fields : list
         Data field requests.
-    steps : list
-        tr): Steps to extract data for, 'all' for all steps.
+    steps : list, str
+        Steps to extract data for, 'all' for all steps.
 
     Returns
     -------
