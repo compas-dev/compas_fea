@@ -87,6 +87,6 @@ rhino.plot_data(mdl, step='step_load', field='uz', radius=1)
 
 # Run (OpenSees)
 
-mdl.analyse_and_extract(software='opensees', fields=['u'])
-
-rhino.plot_data(mdl, step='step_load', field='uz', radius=1)
+#mdl.analyse_and_extract(software='opensees', fields=['u'])
+#
+#rhino.plot_data(mdl, step='step_load', field='uz', radius=1)

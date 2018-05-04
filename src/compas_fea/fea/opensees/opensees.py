@@ -129,6 +129,26 @@ def extract_out_data(structure, fields):
 
                 print('***** No beam element data loaded *****')
 
+            try:
+
+                file = step + '_element_spring_sf'
+
+                with open('{0}{1}.out'.format(temp, file), 'r') as f:
+                    lines = f.readlines()
+                spring_data = [float(i) for i in lines[-1].split(' ')[1:]]
+
+                with open('{0}spring_numbers.json'.format(temp), 'r') as f:
+                    spring_numbers = json.load(f)['spring_numbers']
+
+                element['spfx'] = {}
+                for ekey, spfx in zip(spring_numbers, spring_data):
+                    element['spfx'][ekey] = {}
+                    element['spfx'][ekey]['ip'] = spfx
+
+            except:
+
+                print('***** No spring element data loaded *****')
+
     toc = time() - tic
 
     print('\n***** Data extracted from OpenSees .out file(s) : {0} s *****\n'.format(toc))
