@@ -223,9 +223,11 @@ def write_results_from_rst(structure, fields, steps):
             write_modal_results_from_ansys_rst(structure.name, path, fields, num_modes,
                                                step_index=step_index, step_name=skey)
         elif stype == 'harmonic':
-            pass
+            freq_steps = structure.steps[skey].freq_steps
+            write_harmonic_results_from_ansys_rst(structure.name, structure.path, fields, freq_steps, step_index=0, step_name='step')
+
     ansys_launch_process_extract(path, structure.name)
-    os.remove(path + '/' + filename)
+    # os.remove(path + '/' + filename)
 
 
 def load_to_results(structure, fields, steps):
@@ -263,6 +265,7 @@ def load_to_results(structure, fields, steps):
                 rlist.append(get_principal_stresses_from_result_files(out_path, step))
             if 'ss' in fields or 'all' in fields:
                 rlist.append(get_shear_stresses_from_result_files(out_path, step))
+
         elif structure.steps[step].__name__ == 'ModalStep':
             rlist = []
             if 'u' in fields or 'all' in fields:
@@ -270,6 +273,12 @@ def load_to_results(structure, fields, steps):
             if 'f' in fields or 'all' in fields:
                 fdict = get_modal_freq_from_result_files(out_path)
                 structure.results[step]['frequencies'] = fdict
+
+        elif structure.steps[step].__name__ == 'HarmonicStep':
+            rlist = []
+            if 'u' in fields or 'all' in fields:
+                rlist.append(get_modal_shapes_from_result_files(out_path))
+
         if 'geo' in fields:
             nodes, elements = get_nodes_elements_from_result_files(out_path)
             structure.nodes = nodes

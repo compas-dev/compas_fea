@@ -15,17 +15,6 @@ __email__      = 'mendez@arch.ethz.ch'
 
 
 def write_modal_analysis_request(structure, path, name):
-    # displacements = structure.steps[skey].displacements
-    # ansys_open_post_process(path, filename)
-    # write_all_materials(structure, path, filename)
-    # write_nodes(structure, path, filename)
-    # write_elements(structure, path, filename)
-    # write_constraint_nodes(structure, path, filename, displacements)
-    # write_modal_solve(structure, path, filename, skey)
-    # write_modal_post_process(path, filename)
-    # write_request_element_nodes(path, filename)
-    # write_request_modal_freq(structure, path, filename, skey)
-    # write_request_modal_shapes(structure, path, filename, skey)
 
     filename = name + '.txt'
     ansys_open_pre_process(path, filename)

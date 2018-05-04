@@ -2,7 +2,6 @@
 from compas_fea.cad import rhino
 from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
-from compas_fea.structure import LineLoad
 from compas_fea.structure import PinnedDisplacement
 from compas_fea.structure import PipeSection
 from compas_fea.structure import PointLoad
@@ -54,16 +53,13 @@ mdl.add_displacements([
 mdl.add_loads([
     PointLoad(name='load_h', nodes='nset_load_h', x=4000),
     PointLoad(name='load_v', nodes='nset_load_v', z=-6000),
-    LineLoad(name='load_udl', elements='elset_top', z=-4000, axes='global'),
 ])
-# Note: the OpenSees beam-column element with geomTransf Corotational does'nt support LineLoads
 
 # Steps
 
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements=['disp_pins', 'disp_rollers']),
-#    GeneralStep(name='step_loads', loads=['load_h', 'load_v'], iterations=50)])
-    GeneralStep(name='step_loads', loads=['load_h', 'load_v', 'load_udl'], iterations=50)])
+    GeneralStep(name='step_loads', loads=['load_h', 'load_v'], iterations=50)])
 mdl.steps_order = ['step_bc', 'step_loads']
 
 # Summary
@@ -76,8 +72,8 @@ mdl.write_input_file(software='sofistik')
 
 # Run (Abaqus/OpenSees)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'ur', 'rf'])
-#mdl.analyse_and_extract(software='opensees', fields=['u', 'ur', 'rf'])
+#mdl.analyse_and_extract(software='abaqus', fields=['u', 'ur', 'rf'])
+mdl.analyse_and_extract(software='opensees', fields=['u', 'ur', 'rf'])
 
 rhino.plot_data(mdl, step='step_loads', field='um', scale=50)
 rhino.plot_data(mdl, step='step_loads', field='urm', scale=50)
