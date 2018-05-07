@@ -114,7 +114,7 @@
 </div>
 <div class="section" id="point-loads">
 <h2>Point loads</h2>
-<p>The <strong>PointLoads</strong> object applies different values of concentrated loads (forces in units N for <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code> and/or moments in units Nm for <code class="docutils literal notranslate"><span class="pre">xx</span></code>, <code class="docutils literal notranslate"><span class="pre">yy</span></code>, <code class="docutils literal notranslate"><span class="pre">zz</span></code>) directly to different nodes of the <strong>Structure</strong>. The nodes to apply the loads to are the keys of the <code class="docutils literal notranslate"><span class="pre">components</span></code> dictionary, with the values as the component of each individual point load. The <code class="docutils literal notranslate"><span class="pre">name</span></code> of the <strong>PointLoads</strong> is required for its key. <strong>PointLoads</strong> objects currently only utilise the global co-ordinate system, they do not yet use the local nodal co-ordinate system (<cite>ex</cite>, <cite>ey</cite>, <cite>ez</cite>).</p>
+<p>The <strong>PointLoads</strong> object applies different values of concentrated loads (forces in units N for <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code> and/or moments in units Nm for <code class="docutils literal notranslate"><span class="pre">xx</span></code>, <code class="docutils literal notranslate"><span class="pre">yy</span></code>, <code class="docutils literal notranslate"><span class="pre">zz</span></code>) directly to different nodes of the <strong>Structure</strong>. The nodes to apply the loads to are the keys of the <code class="docutils literal notranslate"><span class="pre">components</span></code> dictionary, with the values as the components of each individual point load. The <code class="docutils literal notranslate"><span class="pre">name</span></code> of the <strong>PointLoads</strong> is required for its own key. <strong>PointLoads</strong> objects currently only utilise the global co-ordinate system, they do not yet use the local nodal co-ordinate system (<cite>ex</cite>, <cite>ey</cite>, <cite>ez</cite>).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PointLoads</span>
 
 <span class="n">components</span> <span class="o">=</span> <span class="p">{</span>
@@ -288,7 +288,7 @@
             
 
             
-                Last updated on Mar 27, 2018.
+                Last updated on May 07, 2018.
             
 
             

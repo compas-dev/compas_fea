@@ -7,10 +7,13 @@ from compas.datastructures.mesh import Mesh
 from compas.datastructures import Network
 from compas.utilities import XFunc
 
-from compas_rhino.geometry import RhinoMesh
-from compas_rhino.helpers.mesh import mesh_from_guid
-# from compas_rhino.utilities import clear_layer
-# from compas_rhino.utilities import xdraw_mesh
+try:
+    from compas_rhino.geometry import RhinoMesh
+    from compas_rhino.helpers.mesh import mesh_from_guid
+    # from compas_rhino.utilities import clear_layer
+    # from compas_rhino.utilities import xdraw_mesh
+except:
+    pass
 
 from compas.geometry import add_vectors
 from compas.geometry import cross_vectors

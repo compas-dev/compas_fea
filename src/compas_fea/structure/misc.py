@@ -39,30 +39,30 @@ class Amplitude(object):
         self.values = values
 
 
-class Temperatures(object):
+# class Temperatures(object):
 
-    """ Define nodal temperatures.
+#     """ Define nodal temperatures.
 
-    Parameters
-    ----------
-    name : str
-        Temperature object name.
-    file : str
-        Path of nodal temperatures file.
-    values : list
-        List of [node, temperature, time] data.
-    time_end : int
-        End time in seconds.
+#     Parameters
+#     ----------
+#     name : str
+#         Temperature object name.
+#     file : str
+#         Path of nodal temperatures file.
+#     values : list
+#         List of [node, temperature, time] data.
+#     time_end : int
+#         End time in seconds.
 
-    Returns
-    -------
-    None
+#     Returns
+#     -------
+#     None
 
-    """
+#     """
 
-    def __init__(self, name, file=None, values=[], time_end=None):
-        self.__name__ = 'Temperatures'
-        self.name = name
-        self.file = file
-        self.values = values
-        self.time_end = time_end
+#     def __init__(self, name, file=None, values=[], time_end=None):
+#         self.__name__ = 'Temperatures'
+#         self.name = name
+#         self.file = file
+#         self.values = values
+#         self.time_end = time_end

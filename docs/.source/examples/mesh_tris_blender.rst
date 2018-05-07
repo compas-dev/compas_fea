@@ -8,4 +8,4 @@ This example works for: **Abaqus**.
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/mesh_triangle_blender.py
+.. literalinclude:: /../../examples/mesh_tris_blender.py

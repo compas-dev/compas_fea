@@ -53,4 +53,7 @@ Blender
 Scripted
 --------
 
-    examples/script_introduction_abaqus
+.. toctree::
+    :maxdepth: 1
+
+    examples/script_introduction

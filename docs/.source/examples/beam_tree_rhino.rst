@@ -8,4 +8,4 @@ This example works for: **Abaqus**.
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/beam_tree_abaqus_rhino.py
+.. literalinclude:: /../../examples/beam_tree_rhino.py
