@@ -5,7 +5,7 @@ __email__      = 'mendez@arch.ethz.ch'
 
 
 def ansys_open_pre_process(path, filename):
-    cFile = open(path + filename, 'w')
+    cFile = open(path + '/' + filename, 'w')
     cFile.write('! Ansys command file writen from compas_fea \n')
     cFile.write('!\n')
     cFile.write('!\n')

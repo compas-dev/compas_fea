@@ -15,19 +15,6 @@ __email__ = 'mendez@arch.ethz.ch'
 
 
 def write_harmonic_analysis_request(structure, path, name, skey):
-    # displacements = structure.steps[skey].displacements
-    # factor = structure.steps[skey].factor
-    # loads = structure.steps[skey].loads
-    # ansys_open_post_process(output_path, filename)
-    # write_all_materials(structure, output_path, filename)
-    # write_nodes(structure, output_path, filename)
-    # write_elements(structure, output_path, filename)
-    # write_constraint_nodes(structure, output_path, filename, displacements)
-    # write_loads(structure, output_path, filename, loads, factor)
-    # write_harmonic_solve(structure, output_path, filename, skey)
-    # write_request_element_nodes(output_path, filename)
-    # write_harmonic_post_process(output_path, filename)
-    # write_request_per_freq_nodal_displacements(structure, output_path, filename, skey)
 
     filename = name + '.txt'
     ansys_open_pre_process(path, filename)

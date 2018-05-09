@@ -36,7 +36,7 @@ def write_elements(structure, output_path, filename):
 
 
 def write_nodes(structure, output_path, filename):
-    cFile = open(output_path + filename, 'a')
+    cFile = open(output_path + '/' + filename, 'a')
     nodes = structure.nodes
     for i in range(len(nodes)):
         node = nodes[i]
