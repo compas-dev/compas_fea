@@ -277,7 +277,7 @@ def load_to_results(structure, fields, steps):
         elif structure.steps[step].__name__ == 'HarmonicStep':
             rlist = []
             if 'u' in fields or 'all' in fields:
-                rlist.append(get_modal_shapes_from_result_files(out_path))
+                rlist.append(get_harmonic_data_from_result_files(out_path))
 
         if 'geo' in fields:
             nodes, elements = get_nodes_elements_from_result_files(out_path)

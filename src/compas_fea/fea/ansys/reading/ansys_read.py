@@ -46,7 +46,7 @@ def get_nodes_elements_from_result_files(path):
 
 
 def get_harmonic_data_from_result_files(path):
-    harmonic_path = path + 'output/harmonic_out'
+    harmonic_path = path + '/harmonic_out'
     files = os.listdir(harmonic_path)
 
     real_files = []
