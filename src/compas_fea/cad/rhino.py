@@ -4,13 +4,16 @@ from __future__ import division
 from __future__ import print_function
 
 from compas.datastructures.mesh import Mesh
-# from compas.datastructures import Network
+from compas.datastructures import Network
 from compas.utilities import XFunc
 
-from compas_rhino.geometry import RhinoMesh
-from compas_rhino.helpers.mesh import mesh_from_guid
-# from compas_rhino.utilities import clear_layer
-# from compas_rhino.utilities import xdraw_mesh
+try:
+    from compas_rhino.geometry import RhinoMesh
+    from compas_rhino.helpers.mesh import mesh_from_guid
+    # from compas_rhino.utilities import clear_layer
+    # from compas_rhino.utilities import xdraw_mesh
+except:
+    pass
 
 from compas.geometry import add_vectors
 from compas.geometry import cross_vectors
@@ -46,10 +49,10 @@ __all__ = [
     'add_nodes_elements_from_layers',
     'add_sets_from_layers',
     'mesh_extrude',
-#     'network_from_lines',
+    'network_from_lines',
     'ordered_network',
-#     'plot_axes',
-#     'plot_mode_shapes',
+    'plot_axes',
+    'plot_mode_shapes',
     'plot_data',
     'plot_voxels',
     'plot_principal_stresses',
@@ -497,28 +500,28 @@ def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name=''
     rs.CurrentLayer(rs.AddLayer('Default'))
 
 
-# def network_from_lines(guids=[], layer=None):
+def network_from_lines(guids=[], layer=None):
 
-#     """ Creates a Network datastructure object from a list of curve guids.
+    """ Creates a Network datastructure object from a list of curve guids.
 
-#     Parameters
-#     ----------
-#     guids : list
-#         guids of the Rhino curves to be made into a Network.
-#     layer : tr
-#         Layer to grab line guids from.
+    Parameters
+    ----------
+    guids : list
+        guids of the Rhino curves to be made into a Network.
+    layer : str
+        Layer to grab line guids from.
 
-#     Returns
-#     -------
-#     obj
-#         Network datastructure object.
+    Returns
+    -------
+    obj
+        Network datastructure object.
 
-#     """
+    """
 
-#     if layer:
-#         guids = rs.ObjectsByLayer(layer)
-#     lines = [[rs.CurveStartPoint(guid), rs.CurveEndPoint(guid)] for guid in guids]
-#     return Network.from_lines(lines)
+    if layer:
+        guids = rs.ObjectsByLayer(layer)
+    lines = [[rs.CurveStartPoint(guid), rs.CurveEndPoint(guid)] for guid in guids]
+    return Network.from_lines(lines)
 
 
 def ordered_network(structure, network, layer):
@@ -555,68 +558,68 @@ def ordered_network(structure, network, layer):
     return network_order(start=start, structure=structure, network=network)
 
 
-# def plot_axes(xyz, e11, e22, e33, layer, sc=1):
+def plot_axes(xyz, e11, e22, e33, layer, sc=1):
 
-#     """ Plots a set of axes.
+    """ Plots a set of axes.
 
-#     Parameters
-#     ----------
-#     xyz : list
-#         Origin of the axes.
-#     e11 : list
-#         First axis component [x1, y1, z1].
-#     e22 : list
-#         Second axis component [x2, y2, z2].
-#     e33 : list
-#         Third axis component [x3, y3, z3].
-#     layer : str
-#         Layer to plot on.
-#     sc : float
-#          Size of the axis lines.
+    Parameters
+    ----------
+    xyz : list
+        Origin of the axes.
+    e11 : list
+        Normalised first axis component [x1, y1, z1].
+    e22 : list
+        Normalised second axis component [x2, y2, z2].
+    e33 : list
+        Normalised third axis component [x3, y3, z3].
+    layer : str
+        Layer to plot on.
+    sc : float
+         Size of the axis lines.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     """
+    """
 
-#     ex = rs.AddLine(xyz, add_vectors(xyz, scale_vector(e11, sc)))
-#     ey = rs.AddLine(xyz, add_vectors(xyz, scale_vector(e22, sc)))
-#     ez = rs.AddLine(xyz, add_vectors(xyz, scale_vector(e33, sc)))
+    ex = rs.AddLine(xyz, add_vectors(xyz, scale_vector(e11, sc)))
+    ey = rs.AddLine(xyz, add_vectors(xyz, scale_vector(e22, sc)))
+    ez = rs.AddLine(xyz, add_vectors(xyz, scale_vector(e33, sc)))
 
-#     rs.ObjectColor(ex, [255, 0, 0])
-#     rs.ObjectColor(ey, [0, 255, 0])
-#     rs.ObjectColor(ez, [0, 0, 255])
-#     rs.ObjectLayer(ex, layer)
-#     rs.ObjectLayer(ey, layer)
-#     rs.ObjectLayer(ez, layer)
+    rs.ObjectColor(ex, [255, 0, 0])
+    rs.ObjectColor(ey, [0, 255, 0])
+    rs.ObjectColor(ez, [0, 0, 255])
+    rs.ObjectLayer(ex, layer)
+    rs.ObjectLayer(ey, layer)
+    rs.ObjectLayer(ez, layer)
 
 
-# def plot_mode_shapes(structure, step, layer=None, scale=1.0):
+def plot_mode_shapes(structure, step, layer=None, scale=1.0):
 
-#     """ Plots modal shapes from structure.results
+    """ Plots modal shapes from structure.results.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object.
-#     step : str
-#         Name of the Step.
-#     layer : str
-#         Each mode will be placed in a layer with this string as its base.
-#     scale : float
-#         Scale displacements for the deformed plot.
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    layer : str
+        Each mode will be placed in a layer with this string as its base.
+    scale : float
+        Scale displacements for the deformed plot.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     """
+    """
 
-#     freq = structure.results[step]['frequencies']
-#     for fk in freq:
-#         layerk = layer + str(fk)
-#         plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=fk)
+    freq = structure.results[step]['frequencies']
+    for fk in freq:
+        layerk = layer + str(fk)
+        plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=fk)
 
 
 def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
@@ -700,7 +703,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         mesh_faces = []
         line_faces = [[0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]]
         block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
-#         tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
+        tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
 
         for element, nodes in enumerate(elements):
             n = len(nodes)
@@ -734,9 +737,9 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
             elif n == 4:
                 if structure.elements[element].__name__ in ['ShellElement', 'MembraneElement']:
                     mesh_faces.append(nodes)
-                # else:
-                    # for face in tet_faces:
-                        # mesh_faces.append([nodes[i] for i in face])
+                else:
+                    for face in tet_faces:
+                        mesh_faces.append([nodes[i] for i in face])
 
             elif n == 8:
                 for block in block_faces:

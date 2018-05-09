@@ -38,7 +38,7 @@ Blender
 
     examples/beam_simple_blender
 
-    .. examples/block_bridge_blender
+    examples/block_bridge_blender
     examples/block_deepbeam_blender
     examples/block_tets_blender
 
@@ -53,4 +53,7 @@ Blender
 Scripted
 --------
 
-    examples/script_introduction_abaqus
+.. toctree::
+    :maxdepth: 1
+
+    examples/script_introduction

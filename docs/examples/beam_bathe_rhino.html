@@ -156,7 +156,7 @@
 <span class="c1"># Note: Sofistik depends on input with correct SI units, model and data must be </span>
 <span class="c1"># converted from lbs and inches.</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">write_input_file</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;sofistik&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">])</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">write_input_file</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;sofistik&#39;</span><span class="p">)</span>
 
 <span class="c1"># Run (Abaqus)</span>
 
@@ -166,9 +166,9 @@
 
 <span class="c1"># Run (OpenSees)</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;opensees&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">])</span>
-
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;uz&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">#mdl.analyse_and_extract(software=&#39;opensees&#39;, fields=[&#39;u&#39;])</span>
+<span class="c1">#</span>
+<span class="c1">#rhino.plot_data(mdl, step=&#39;step_load&#39;, field=&#39;uz&#39;, radius=1)</span>
 </code></pre></div>
 </div>
 </div>
@@ -221,11 +221,13 @@
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_rhino.html">mesh_floor Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_rhino.html">mesh_mould Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_plate_rhino.html">mesh_plate Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_principal_rhino.html">mesh_principal Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_strip_rhino.html">mesh_strip Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="spring_simple_rhino.html">spring_simple Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_bridge_blender.html">block_bridge Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_blender.html">block_deepbeam Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="block_tets_blender.html">block_tets Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_bridge_rhino.html">mesh_bridge Rhino</a></li>
@@ -233,6 +235,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_tris_blender.html">mesh_tris Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_blender.html">truss_tower Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="script_introduction.html">script_introduction</a></li>
 </ul>
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
@@ -269,7 +272,7 @@
             
 
             
-                Last updated on Mar 27, 2018.
+                Last updated on May 07, 2018.
             
 
             

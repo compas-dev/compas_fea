@@ -77,6 +77,110 @@
 <div class="figure">
 <img alt="../_images/mesh_mould_rhino.png" class="figure-img img-fluid" src="../_images/mesh_mould_rhino.png" />
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span>
+<span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">rhino</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Concrete</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">FixedDisplacement</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralStep</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GravityLoad</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PointLoads</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ShellSection</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Steel</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
+
+<span class="kn">import</span> <span class="nn">rhinoscriptsyntax</span> <span class="k">as</span> <span class="nn">rs</span>
+
+
+<span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright 2018, BLOCK Research Group - ETH Zurich&#39;</span>
+<span class="n">__license__</span>   <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
+<span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
+
+
+<span class="c1"># Structure </span>
+
+<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mesh_mould&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;C:/Temp/&#39;</span><span class="p">)</span>
+
+<span class="c1"># Elements</span>
+
+<span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;elset_wall&#39;</span><span class="p">,</span> <span class="s1">&#39;elset_plinth&#39;</span><span class="p">])</span>
+
+<span class="c1"># Sets</span>
+
+<span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;nset_fixed&#39;</span><span class="p">])</span>
+
+<span class="c1"># Materials</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_materials</span><span class="p">([</span>
+    <span class="n">Concrete</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">fck</span><span class="o">=</span><span class="mi">40</span><span class="p">),</span>
+    <span class="n">Steel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_rebar&#39;</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)])</span>
+
+<span class="c1"># Sections</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_sections</span><span class="p">([</span>
+    <span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_wall&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.150</span><span class="p">),</span>
+    <span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_plinth&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.300</span><span class="p">)])</span>
+
+<span class="c1"># Properties</span>
+
+<span class="n">reb_plinth</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;p_u1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="o">+</span><span class="mf">0.130</span><span class="p">,</span> <span class="s1">&#39;spacing&#39;</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">:</span> <span class="s1">&#39;mat_rebar&#39;</span><span class="p">,</span> <span class="s1">&#39;dia&#39;</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+    <span class="s1">&#39;p_u2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="o">+</span><span class="mf">0.120</span><span class="p">,</span> <span class="s1">&#39;spacing&#39;</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">:</span> <span class="s1">&#39;mat_rebar&#39;</span><span class="p">,</span> <span class="s1">&#39;dia&#39;</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="mi">90</span><span class="p">},</span>
+    <span class="s1">&#39;p_l2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.120</span><span class="p">,</span> <span class="s1">&#39;spacing&#39;</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">:</span> <span class="s1">&#39;mat_rebar&#39;</span><span class="p">,</span> <span class="s1">&#39;dia&#39;</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="mi">90</span><span class="p">},</span>
+    <span class="s1">&#39;p_l1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.130</span><span class="p">,</span> <span class="s1">&#39;spacing&#39;</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">:</span> <span class="s1">&#39;mat_rebar&#39;</span><span class="p">,</span> <span class="s1">&#39;dia&#39;</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}}</span>
+
+<span class="n">reb_wall</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;w_u1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="o">+</span><span class="mf">0.055</span><span class="p">,</span> <span class="s1">&#39;spacing&#39;</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">:</span> <span class="s1">&#39;mat_rebar&#39;</span><span class="p">,</span> <span class="s1">&#39;dia&#39;</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+    <span class="s1">&#39;w_u2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="o">+</span><span class="mf">0.045</span><span class="p">,</span> <span class="s1">&#39;spacing&#39;</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">:</span> <span class="s1">&#39;mat_rebar&#39;</span><span class="p">,</span> <span class="s1">&#39;dia&#39;</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="mi">90</span><span class="p">},</span>
+    <span class="s1">&#39;w_l2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.045</span><span class="p">,</span> <span class="s1">&#39;spacing&#39;</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">:</span> <span class="s1">&#39;mat_rebar&#39;</span><span class="p">,</span> <span class="s1">&#39;dia&#39;</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="mi">90</span><span class="p">},</span>
+    <span class="s1">&#39;w_l1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.055</span><span class="p">,</span> <span class="s1">&#39;spacing&#39;</span><span class="p">:</span> <span class="mf">0.100</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">:</span> <span class="s1">&#39;mat_rebar&#39;</span><span class="p">,</span> <span class="s1">&#39;dia&#39;</span><span class="p">:</span> <span class="mf">0.010</span><span class="p">,</span> <span class="s1">&#39;angle&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}}</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">([</span>
+    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_plinth&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_plinth&#39;</span><span class="p">,</span> 
+               <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_plinth&#39;</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="n">reb_plinth</span><span class="p">),</span>
+    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_wall&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_wall&#39;</span><span class="p">,</span>
+               <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_wall&#39;</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="n">reb_wall</span><span class="p">)])</span>
+
+<span class="c1"># Displacements</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacement</span><span class="p">(</span><span class="n">FixedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_fixed&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_fixed&#39;</span><span class="p">))</span>
+
+<span class="c1"># Loads</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">GravityLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;elset_wall&#39;</span><span class="p">,</span> <span class="s1">&#39;elset_plinth&#39;</span><span class="p">]))</span>
+<span class="n">components</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">guid</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">ObjectsByLayer</span><span class="p">(</span><span class="s1">&#39;nset_loads&#39;</span><span class="p">):</span>
+    <span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="n">pz</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">ObjectName</span><span class="p">(</span><span class="n">guid</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="n">components</span><span class="p">[</span><span class="n">mdl</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">PointCoordinates</span><span class="p">(</span><span class="n">guid</span><span class="p">))]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">pz</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">}</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">PointLoads</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_points&#39;</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="n">components</span><span class="p">))</span>
+<span class="n">loads</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="s1">&#39;load_points&#39;</span><span class="p">]</span>
+
+<span class="c1"># Steps</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_steps</span><span class="p">([</span>
+    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="n">nlgeom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_fixed&#39;</span><span class="p">]),</span>
+    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">nlgeom</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="n">loads</span><span class="p">)])</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="s1">&#39;step_loads&#39;</span><span class="p">]</span>
+
+<span class="c1"># Summary</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+
+<span class="c1"># Run (Abaqus)</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;rbfor&#39;</span><span class="p">])</span>
+
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;um&#39;</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;smaxp&#39;</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;sminp&#39;</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;rbfor&#39;</span><span class="p">,</span> <span class="n">iptype</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="n">nodal</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="c1"># Run (Sofistik)</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">write_input_file</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;sofistik&#39;</span><span class="p">)</span>
+</code></pre></div>
+</div>
 </div>
 
                         
@@ -127,11 +231,13 @@
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_rhino.html">mesh_floor Rhino</a></li>
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">mesh_mould Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_plate_rhino.html">mesh_plate Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_principal_rhino.html">mesh_principal Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_strip_rhino.html">mesh_strip Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="spring_simple_rhino.html">spring_simple Rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_bridge_blender.html">block_bridge Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_blender.html">block_deepbeam Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="block_tets_blender.html">block_tets Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_bridge_rhino.html">mesh_bridge Rhino</a></li>
@@ -139,6 +245,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_tris_blender.html">mesh_tris Blender</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_blender.html">truss_tower Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="script_introduction.html">script_introduction</a></li>
 </ul>
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
@@ -175,7 +282,7 @@
             
 
             
-                Last updated on Mar 27, 2018.
+                Last updated on May 07, 2018.
             
 
             

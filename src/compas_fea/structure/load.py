@@ -20,6 +20,7 @@ __all__ = [
     'BodyLoad',
     'GravityLoad',
     'AcousticLoad',
+    'ThermalLoad',
     'TributaryLoad',
     'HarmonicPointLoad'
 ]
@@ -292,6 +293,32 @@ class AcousticLoad(Load):
         self.axes = axes
         self.name = name
         self.elements = elements
+
+
+class ThermalLoad(object):
+
+    """ Thermal load.
+
+    Parameters
+    ----------
+    name : str
+        Name of the ThermalLoad object.
+    elements : str, list
+        Element set or elements the load is applied to.
+    temperature : float
+        Temperature to apply to elements.
+
+    Returns
+    -------
+    None
+
+    """
+
+    def __init__(self, name, elements, temperature):
+        self.__name__ = 'ThermalLoad'
+        self.name = name
+        self.elements = elements
+        self.temperature = temperature
 
 
 class TributaryLoad(Load):

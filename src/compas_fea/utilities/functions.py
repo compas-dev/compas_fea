@@ -598,7 +598,8 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
     cnodes_  = [list(i) for i in list(cnodes)]
     fabs_    = float(fabs)
     fscaled_ = [float(i) for i in list(fscaled)]
-    return toc, U, cnodes_, fabs_, fscaled_, celements_, eabs
+
+    return toc, U, cnodes_, fabs_, fscaled_, celements_, float(eabs)
 
 
 def process_data(data, dtype, iptype, nodal, elements, n):
