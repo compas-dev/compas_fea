@@ -53,21 +53,22 @@ def get_harmonic_data_from_result_files(path):
     imag_files = []
     real_names = []
     imag_names = []
+
     for f in files:
         if f.startswith("node_real"):
             real_names.append(f)
         elif f.startswith("node_imag"):
             imag_names.append(f)
 
+    nkeys = [int(float(n.split('_')[2].split('.')[0])) - 1 for n in real_names]
+
     for i, f in enumerate(real_names):
-        f = 'node_real_' + str(i + 1) + '.txt'
         f = open(os.path.join(harmonic_path, f), 'r')
         dreal = f.readlines()
         real_files.append(dreal)
         f.close()
 
     for i, f in enumerate(imag_names):
-        f = 'node_imag_' + str(i + 1) + '.txt'
         f = open(os.path.join(harmonic_path, f), 'r')
         dimag = f.readlines()
         imag_files.append(dimag)
@@ -78,8 +79,9 @@ def get_harmonic_data_from_result_files(path):
         for i in range(len(real_files)):
             dreal = real_files[i]
             dimag = imag_files[i]
+            nkey = nkeys[i]
 
-            harmonic_disp[i] = {}
+            harmonic_disp[nkey] = {}
             for j in range(len(dreal)):
                 real_string = dreal[j].split(',')
                 imag_string = dimag[j].split(',')
@@ -88,10 +90,10 @@ def get_harmonic_data_from_result_files(path):
                 del imag_string[0]
                 real = map(float, real_string)
                 imag = map(float, imag_string)
-                harmonic_disp[i][f] = {'real': {'x': real[0], 'y': real[1], 'z': real[2]},
-                                       'imag': {'x': imag[0], 'y': imag[1], 'z': imag[2]}}
+                harmonic_disp[nkey][f] = {'real': {'x': real[0], 'y': real[1], 'z': real[2]},
+                                          'imag': {'x': imag[0], 'y': imag[1], 'z': imag[2]}}
 
-    freq_list = sorted(harmonic_disp[i].keys(), key=int)
+    freq_list = sorted(harmonic_disp[nkey].keys(), key=int)
     freq_list = [int(fr) for fr in freq_list]
     return harmonic_disp, freq_list
 
