@@ -1,3 +1,5 @@
+import os
+
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
 __license__    = 'MIT License'
@@ -46,7 +48,7 @@ def write_loads(structure, output_path, filename, loads, factor):
 
 
 def write_combined_point_loads(pload, output_path, filename):
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     # cFile.write('/PREP7 \n')
     axis_dict = {'x': 'X', 'y': 'Y', 'z': 'Z', 'xx': 'MX', 'yy': 'MY', 'zz': 'MZ'}
 
@@ -67,7 +69,7 @@ def write_combined_point_loads(pload, output_path, filename):
 
 
 def write_appply_tributary_load(structure, output_path, filename, lkey, factor):
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     nkeys = structure.loads[lkey].components
     axis_dict = {'x': 'X', 'y': 'Y', 'z': 'Z', 'xx': 'MX', 'yy': 'MY', 'zz': 'MZ'}
     for nkey in nkeys:
@@ -87,7 +89,7 @@ def write_appply_tributary_load(structure, output_path, filename, lkey, factor):
 
 
 def write_apply_nodal_load(structure, output_path, filename, lkey, factor):
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     axis_dict = {'x': 'X', 'y': 'Y', 'z': 'Z', 'xx': 'MX', 'yy': 'MY', 'zz': 'MZ'}
 
     nodes = structure.loads[lkey].nodes
@@ -112,7 +114,7 @@ def write_apply_nodal_load(structure, output_path, filename, lkey, factor):
 
 
 def write_gravity_loading(structure, output_path, filename, gravity, factor):
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     gravity = abs(gravity) * factor
     cFile.write('ACEL,0,0,' + str(gravity) + ',\n')
     cFile.write('!\n')

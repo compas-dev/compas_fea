@@ -97,18 +97,18 @@ def ansys_launch_process(path, name, cpus, license, delete=True):
     Returns:
         None
     """
-    if not os.path.exists(path + name + '_output/'):
-        os.makedirs(path + name + '_output/')
+    if not os.path.exists(os.path.join(path, name + '_output')):
+        os.makedirs(os.path.join(path, name + '_output'))
     elif delete:
         delete_result_files(path, name)
 
     ansys_path = 'MAPDL.exe'
-    inp_path = path + '/' + name + '.txt'
-    work_dir = path + name + '_output/'
+    inp_path = os.path.join(path, name + '.txt')
+    work_dir = os.path.join(path, name + '_output')
 
     if not os.path.exists(work_dir):
         os.makedirs(work_dir)
-    out_path = work_dir + '/' + name + '.out'
+    out_path = os.path.join(work_dir, name + '.out')
 
     if license == 'research':
         lic_str = 'aa_r'
@@ -123,10 +123,6 @@ def ansys_launch_process(path, name, cpus, license, delete=True):
     launch_string += inp_path + ' \" -o \"' + out_path + '\"'
 
     subprocess.call(launch_string)
-    # sp = subprocess.Popen(launch_string)
-    # sp.wait()
-    # sp.terminate()
-    # sp.kill()
 
 
 def ansys_launch_process_extract(path, name, cpus=2, license='research'):
@@ -142,9 +138,9 @@ def ansys_launch_process_extract(path, name, cpus=2, license='research'):
         None
     """
     ansys_path = 'MAPDL.exe'
-    inp_path = path + '/' + name + '_extract.txt'
-    work_dir = path + name + '_output/'
-    out_path = work_dir + '/output_extract.out'
+    inp_path = os.path.join(path, name + '_extract.txt')
+    work_dir = os.path.join(path, name + '_output')
+    out_path = os.path.join(work_dir , 'output_extract.out')
 
     if license == 'research':
         lic_str = 'aa_r'
@@ -158,10 +154,6 @@ def ansys_launch_process_extract(path, name, cpus=2, license='research'):
     launch_string += '\" -j \"' + name + '\" -s read -l en-us -b -i \"'
     launch_string += inp_path + ' \" -o \"' + out_path + '\"'
     subprocess.call(launch_string)
-    # sp = subprocess.Popen(launch_string)
-    # sp.wait()
-    # sp.terminate()
-    # sp.kill()
 
 
 def delete_result_files(path, name):
@@ -174,7 +166,7 @@ def delete_result_files(path, name):
     Returns:
         None
     """
-    out_path = path + '/' + name + '_output/'
+    out_path = os.path.join(path, name + '_output')
     shutil.rmtree(out_path)
 
 
@@ -205,6 +197,7 @@ def write_results_from_rst(structure, fields, steps):
         None
     """
     filename = structure.name + '_extract.txt'
+    name = structure.name
     path = structure.path
     if steps == 'last':
         steps = [structure.steps_order[-1]]
@@ -216,17 +209,17 @@ def write_results_from_rst(structure, fields, steps):
         stype = structure.steps[skey].type
         if stype == 'static':
             set_current_step(path, filename, step_index=step_index)
-            write_static_results_from_ansys_rst(structure.name, path, fields,
+            write_static_results_from_ansys_rst(name, path, fields,
                                                 step_index=step_index, step_name=skey)
         elif stype == 'modal':
             num_modes = structure.steps[skey].modes
-            write_modal_results_from_ansys_rst(structure.name, path, fields, num_modes,
+            write_modal_results_from_ansys_rst(name, path, fields, num_modes,
                                                step_index=step_index, step_name=skey)
         elif stype == 'harmonic':
             freq_steps = structure.steps[skey].freq_steps
-            write_harmonic_results_from_ansys_rst(structure.name, structure.path, fields, freq_steps, step_index=0, step_name='step')
+            write_harmonic_results_from_ansys_rst(name, path, fields, freq_steps, step_index=0, step_name='step')
 
-    ansys_launch_process_extract(path, structure.name)
+    ansys_launch_process_extract(path, name)
     # os.remove(path + '/' + filename)
 
 
@@ -241,7 +234,7 @@ def load_to_results(structure, fields, steps):
     Returns:
         None
     """
-    out_path = structure.path + structure.name + '_output/'
+    out_path = os.path.join(structure.path, structure.name + '_output')
     if steps == 'all':
         steps = structure.steps.keys()
     elif steps == 'last':

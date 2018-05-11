@@ -38,7 +38,7 @@ def write_harmonic_solve(structure, output_path, filename, skey):
     freq_steps = structure.steps[skey].freq_steps
     harmonic_damping = structure.steps[skey].damping
 
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('/SOL \n')
     cFile.write('!\n')
     cFile.write('FINISH \n')
@@ -62,8 +62,8 @@ def write_harmonic_solve(structure, output_path, filename, skey):
 
 def write_harmonic_results_from_ansys_rst(name, path, fields, freq_steps, step_index=0, step_name='step'):
 
-    if not os.path.exists(path + name + '_output/harmonic_out/'):
-        os.makedirs(path + name + '_output/harmonic_out/')
+    if not os.path.exists(os.path.join(path, name + '_output/harmonic_out/')):
+        os.makedirs(os.path.join(path, name + '_output/harmonic_out/'))
 
     # write_harmonic_post_process(path, name)
 
@@ -77,10 +77,10 @@ def write_harmonic_results_from_ansys_rst(name, path, fields, freq_steps, step_i
 
 
 def write_something(path, name):
-    out_path = path + '/' + name + '_output/'
+    out_path = os.path.join(path, name + '_output/')
     filename = name + '_extract.txt'
 
-    cFile = open(path + "/" + filename , 'a')
+    cFile = open(os.path.join(path, filename), 'a')
     cFile.write('!\n')
     cFile.write('/SOL \n')
     cFile.write('*cfopen,' + out_path + 'harmonic_out/something,txt \n')
@@ -93,7 +93,7 @@ def write_something(path, name):
 
 def write_harmonic_post_process(path, name):
     filename = name + '_extract.txt'
-    cFile = open(path + '/' + filename, 'a')
+    cFile = open(os.path.join(path, filename), 'a')
     cFile.write('/POST26 \n')
     cFile.write('PRCPLX, 0 \n')
     cFile.write('!\n')
@@ -103,9 +103,9 @@ def write_harmonic_post_process(path, name):
 
 def write_request_per_freq_nodal_displacements(path, name, freq_steps):
     filename = name + '_extract.txt'
-    harmonic_outpath = path + '/' + name + '_output/harmonic_out/'
+    harmonic_outpath = os.path.join(path, name + '_output/harmonic_out/')
 
-    cFile = open(path + '/' + filename, 'a')
+    cFile = open(os.path.join(path, filename), 'a')
     cFile.write('/POST1 \n')
     cFile.write('Set, FIRST, \n')
     cFile.write('*get,num_n,NODE,0,COUNT ! get number of nodes \n')

@@ -4,15 +4,15 @@ from compas.geometry import length_vector
 
 def get_nodes_elements_from_result_files(path):
     try:
-        node_file    = open(path + 'nodes.txt', 'r')
+        node_file    = open(os.path.join(path, 'nodes.txt'), 'r')
     except(Exception):
         node_file = None
     try:
-        elementFile    = open(path + 'elements.txt', 'r')
+        elementFile    = open(os.path.join(path, 'elements.txt'), 'r')
     except(Exception):
         elementFile = None
 
-    elem_type_dict = {1: 'ShellElement', 2: 'ShellElement', 3: 'BeamElement', 4: 'TieElement', 5: 'SolidElement'}
+    # elem_type_dict = {1: 'ShellElement', 2: 'ShellElement', 3: 'BeamElement', 4: 'TieElement', 5: 'SolidElement'}
     nodes = {}
     elements = {}
     if node_file and elementFile:
@@ -46,7 +46,7 @@ def get_nodes_elements_from_result_files(path):
 
 
 def get_harmonic_data_from_result_files(path):
-    harmonic_path = path + '/harmonic_out'
+    harmonic_path = os.path.join(path, 'harmonic_out')
     files = os.listdir(harmonic_path)
 
     real_files = []
@@ -61,14 +61,14 @@ def get_harmonic_data_from_result_files(path):
 
     for i, f in enumerate(real_names):
         f = 'node_real_' + str(i + 1) + '.txt'
-        f = open(harmonic_path + '/' + f, 'r')
+        f = open(os.path.join(harmonic_path, f), 'r')
         dreal = f.readlines()
         real_files.append(dreal)
         f.close()
 
     for i, f in enumerate(imag_names):
         f = 'node_imag_' + str(i + 1) + '.txt'
-        f = open(harmonic_path + '/' + f, 'r')
+        f = open(os.path.join(harmonic_path, f), 'r')
         dimag = f.readlines()
         imag_files.append(dimag)
         f.close()
@@ -89,7 +89,7 @@ def get_harmonic_data_from_result_files(path):
                 real = map(float, real_string)
                 imag = map(float, imag_string)
                 harmonic_disp[i][f] = {'real': {'x': real[0], 'y': real[1], 'z': real[2]},
-                                                 'imag': {'x': imag[0], 'y': imag[1], 'z': imag[2]}}
+                                       'imag': {'x': imag[0], 'y': imag[1], 'z': imag[2]}}
 
     freq_list = sorted(harmonic_disp[i].keys(), key=int)
     freq_list = [int(fr) for fr in freq_list]
@@ -97,7 +97,7 @@ def get_harmonic_data_from_result_files(path):
 
 
 def get_modal_shapes_from_result_files(out_path):
-    modal_path = out_path + '/modal_out/'
+    modal_path = os.path.join(out_path, 'modal_out')
     try:
         files = os.listdir(modal_path)
     except(Exception):
@@ -105,12 +105,12 @@ def get_modal_shapes_from_result_files(out_path):
         return None, None
     filenames = []
     for f in files:
-        if f.startswith("modal_shape_"):
+        if f.startswith('modal_shape_'):
             filenames.append(f)
     modal_files = []
     for i in range(len(filenames)):
         f = 'modal_shape_' + str(i + 1) + '.txt'
-        modal_files.append(open(modal_path + '/' + f, 'r'))
+        modal_files.append(open(os.path.join(modal_path, f), 'r'))
 
     modes_dict = {}
     for i, f in enumerate(modal_files):
@@ -133,8 +133,9 @@ def get_modal_shapes_from_result_files(out_path):
 
 
 def get_modal_freq_from_result_files(out_path):
-    modal_path = out_path + '/modal_out/'
-    modal_freq_file = open(modal_path + 'modal_freq.txt', 'r')
+    print out_path
+    modal_path = os.path.join(out_path, 'modal_out')
+    modal_freq_file = open(os.path.join(modal_path, 'modal_freq.txt'), 'r')
     if modal_freq_file:
         modal_freqs = {}
         freqs = modal_freq_file.readlines()
@@ -151,7 +152,7 @@ def get_displacements_from_result_files(out_path, step):
     filename = step + '_displacements.txt'
 
     try:
-        dfile = open(out_path + filename, 'r')
+        dfile = open(os.path.join(out_path, filename), 'r')
     except(Exception):
         return None
     displacements = dfile.readlines()
@@ -168,7 +169,7 @@ def get_displacements_from_result_files(out_path, step):
 def get_nodal_stresses_from_result_files(out_path, step):
     filename = step + '_nodal_stresses.txt'
     try:
-        sfile   = open(out_path + filename, 'r')
+        sfile   = open(os.path.join(out_path, filename), 'r')
     except(Exception):
         return None
 
@@ -186,7 +187,7 @@ def get_nodal_stresses_from_result_files(out_path, step):
 def get_principal_stresses_from_result_files(out_path, step):
     filename = step + '_principal_stresses.txt'
     try:
-        psfile   = open(out_path + filename, 'r')
+        psfile   = open(os.path.join(out_path, filename), 'r')
     except(Exception):
         return None
 
@@ -205,7 +206,7 @@ def get_shear_stresses_from_result_files(out_path, step):
 
     filename = step + '_shear_stresses.txt'
     try:
-        psfile = open(out_path + filename, 'r')
+        psfile = open(os.path.join(out_path, filename), 'r')
     except(Exception):
         return None
 
@@ -223,7 +224,7 @@ def get_shear_stresses_from_result_files(out_path, step):
 def get_principal_strains_from_result_files(out_path, step):
     filename = step + '_principal_strains.txt'
     try:
-        efile   = open(out_path + filename, 'r')
+        efile   = open(os.path.join(out_path, filename), 'r')
     except(Exception):
         return None
     pe = efile.readlines()
@@ -240,7 +241,7 @@ def get_principal_strains_from_result_files(out_path, step):
 def get_reactions_from_result_files(out_path, step):
     filename = step + '_reactions.txt'
     try:
-        rfile   = open(out_path + filename, 'r')
+        rfile   = open(os.path.join(out_path, filename), 'r')
     except(Exception):
         return None
     r = rfile.readlines()

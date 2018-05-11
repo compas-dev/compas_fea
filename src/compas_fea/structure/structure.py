@@ -19,6 +19,7 @@ from compas_fea.utilities import group_keys_by_attribute
 from compas_fea.utilities import group_keys_by_attributes
 
 import pickle
+import os
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
@@ -1498,7 +1499,7 @@ Steps
 
         """
 
-        filename = '{0}{1}.obj'.format(self.path, self.name)
+        filename = os.path.join(self.path, self.name + '.obj')
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
         print('***** Structure saved to: {0} *****\n'.format(filename))
