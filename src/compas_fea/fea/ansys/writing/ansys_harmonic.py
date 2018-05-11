@@ -62,8 +62,8 @@ def write_harmonic_solve(structure, output_path, filename, skey):
 
 def write_harmonic_results_from_ansys_rst(name, path, fields, freq_steps, step_index=0, step_name='step'):
 
-    if not os.path.exists(os.path.join(path, name + '_output/harmonic_out/')):
-        os.makedirs(os.path.join(path, name + '_output/harmonic_out/'))
+    if not os.path.exists(os.path.join(path, name + '_output', 'harmonic_out')):
+        os.makedirs(os.path.join(path, name + '_output', 'harmonic_out'))
 
     # write_harmonic_post_process(path, name)
 
@@ -74,21 +74,6 @@ def write_harmonic_results_from_ansys_rst(name, path, fields, freq_steps, step_i
         # write_something(path, name)
     if 'geo' in fields or 'all' in fields:
         write_request_element_nodes(path, name)
-
-
-def write_something(path, name):
-    out_path = os.path.join(path, name + '_output/')
-    filename = name + '_extract.txt'
-
-    cFile = open(os.path.join(path, filename), 'a')
-    cFile.write('!\n')
-    cFile.write('/SOL \n')
-    cFile.write('*cfopen,' + out_path + 'harmonic_out/something,txt \n')
-    cFile.write('*vwrite, \'something\', \'something\', \'dark side...\' \n')
-    cFile.write('(A, A, A,) \n')
-    cFile.write('*cfclose \n')
-    cFile.write('!\n')
-    cFile.close()
 
 
 def write_harmonic_post_process(path, name):
@@ -103,7 +88,7 @@ def write_harmonic_post_process(path, name):
 
 def write_request_per_freq_nodal_displacements(path, name, freq_steps):
     filename = name + '_extract.txt'
-    harmonic_outpath = os.path.join(path, name + '_output/harmonic_out/')
+    harmonic_outpath = os.path.join(path, name + '_output', 'harmonic_out')
 
     cFile = open(os.path.join(path, filename), 'a')
     cFile.write('/POST1 \n')

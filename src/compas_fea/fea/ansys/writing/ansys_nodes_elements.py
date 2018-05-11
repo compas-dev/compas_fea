@@ -254,7 +254,7 @@ def write_circular_section(output_path, filename, radius, sec_index):
 
 
 def write_request_element_nodes(path, name):
-    out_path = os.path.join(path, name + '_output/')
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
 
     cFile = open(os.path.join(path, filename), 'a')
@@ -333,7 +333,7 @@ def write_request_element_nodes(path, name):
 
 
 def write_request_node_displacements(path, name, step_name, mode=None):
-    out_path = os.path.join(path, name + '_output/')
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     if mode:
         fname = 'modal_shape_' + str(mode)
@@ -341,7 +341,7 @@ def write_request_node_displacements(path, name, step_name, mode=None):
         name_x = 'dispX' + str(mode)
         name_y = 'dispY' + str(mode)
         name_z = 'dispZ' + str(mode)
-        out_path += 'modal_out/'
+        out_path = os.path.join(out_path, 'modal_out')
     else:
         fname = str(step_name) + '_' + 'displacements'
         name_ = 'nds_d'

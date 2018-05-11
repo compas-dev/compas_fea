@@ -7,7 +7,7 @@ __email__      = 'mendez@arch.ethz.ch'
 
 
 def write_request_nodal_stresses(path, name, step_name):
-    out_path = os.path.join(path, name + '_output/')
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'nodal_stresses'
     name = 'nds_s'
@@ -52,7 +52,7 @@ def write_request_nodal_stresses(path, name, step_name):
 
 
 def write_request_pricipal_stresses(path, name, step_name):
-    out_path = os.path.join(path, name + '_output/')
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'principal_stresses'
     name = 'nds_p'
@@ -95,7 +95,7 @@ def write_request_pricipal_stresses(path, name, step_name):
 
 
 def write_request_shear_stresses(path, name, step_name):
-    out_path = os.path.join(path, name + '_output/')
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'shear_stresses'
     name = 'nds_sh'
@@ -139,7 +139,7 @@ def write_request_shear_stresses(path, name, step_name):
 
 
 def write_request_principal_strains(path, name, step_name):
-    out_path = os.path.join(path, name + '_output/')
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'principal_strains'
     name = 'nds_ps'
@@ -183,7 +183,7 @@ def write_request_principal_strains(path, name, step_name):
 
 
 def write_request_reactions(path, name, step_name):
-    out_path = os.path.join(path, name + '_output/')
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'reactions'
     name = 'nds_r'
