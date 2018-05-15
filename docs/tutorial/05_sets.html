@@ -92,7 +92,7 @@
 <span class="go">{&#39;type&#39;: &#39;element&#39;, &#39;selection&#39;: [7, 8]}</span>
 </code></pre></div>
 </div>
-<p>From the node and element geometry of the <strong>Structure</strong> object, a surface can be defined by one of two surface set types. The first is by using <code class="docutils literal notranslate"><span class="pre">type='surface_node'</span></code> when creating a set with the <code class="docutils literal notranslate"><span class="pre">.add_set()</span></code> method. This will describe a surface by the nodes given in the <code class="docutils literal notranslate"><span class="pre">selection</span></code> list. This surface type can be created like:</p>
+<p>From the node and element data of the <strong>Structure</strong> object, a surface can be defined by one of two surface set types. The first is by using <code class="docutils literal notranslate"><span class="pre">type='surface_node'</span></code> when creating a set with the <code class="docutils literal notranslate"><span class="pre">.add_set()</span></code> method. This will describe a surface by the nodes given in the <code class="docutils literal notranslate"><span class="pre">selection</span></code> list. This surface type can be created like:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;surf_set&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;surface_node&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
 </code></pre></div>
 </div>
@@ -100,7 +100,7 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;surf_set&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;surface_element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">{</span><span class="mi">4</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;S1&#39;</span><span class="p">,</span> <span class="s1">&#39;S2&#39;</span><span class="p">],</span> <span class="mi">7</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;SPOS&#39;</span><span class="p">]})</span>
 </code></pre></div>
 </div>
-<p>You can find which surface sides correspond to which in the “Elements” topic.</p>
+<p>You can find which surface sides correspond to which, in the <strong>Elements</strong> topic.</p>
 </div>
 </div>
 
@@ -194,7 +194,7 @@
             
 
             
-                Last updated on May 08, 2018.
+                Last updated on May 15, 2018.
             
 
             

@@ -164,7 +164,7 @@
 <h2>Meshing</h2>
 <div class="section" id="id4">
 <h3>2D elements</h3>
-<p>There are two main ways to discretise further coarse meshes into denser ones for an accurate analysis. The first is to use the discritisation and subdivision methods in the core <strong>compas</strong> package. The second is to use the experimental <code class="docutils literal notranslate"><span class="pre">discretise_faces</span></code> function found in <strong>compas_fea.utilities.functions</strong>. This takes the <code class="docutils literal notranslate"><span class="pre">vertices</span></code> and <code class="docutils literal notranslate"><span class="pre">faces</span></code> of the coarse mesh, a <code class="docutils literal notranslate"><span class="pre">target</span></code> element size, and a number of <code class="docutils literal notranslate"><span class="pre">iterations</span></code>. The function will then discretise and return a finer mesh for each of the faces of the input mesh, they will not be welded together to form a single mesh (this is also not needed when adding elements to the <strong>Structure</strong> object). The function call make look like the following, which gives the example result.</p>
+<p>There are two main ways to discretise coarse meshes into denser ones for an accurate finite element analysis. The first is to use the discritisation and subdivision methods in the core <strong>compas</strong> package. The second is to use the experimental <code class="docutils literal notranslate"><span class="pre">discretise_faces</span></code> function found in <strong>compas_fea.utilities.functions</strong>. This takes the <code class="docutils literal notranslate"><span class="pre">vertices</span></code> and <code class="docutils literal notranslate"><span class="pre">faces</span></code> of the coarse mesh, a <code class="docutils literal notranslate"><span class="pre">target</span></code> element size, and a number of <code class="docutils literal notranslate"><span class="pre">iterations</span></code>. The function will then discretise the coarse mesh and return a finer mesh for each of the faces of the input mesh, they will not be welded together to form a single mesh (this is also not needed when adding elements to the <strong>Structure</strong> object). The function call may look like the following, which gives the example result below.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_blender.geometry</span> <span class="kn">import</span> <span class="n">BlenderMesh</span>
 <span class="kn">from</span> <span class="nn">compas_fea.utilities.functions</span> <span class="kn">import</span> <span class="n">discretise_faces</span>
 
@@ -308,7 +308,7 @@
             
 
             
-                Last updated on May 08, 2018.
+                Last updated on May 15, 2018.
             
 
             
