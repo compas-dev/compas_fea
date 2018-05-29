@@ -10,8 +10,6 @@ from compas.utilities import XFunc
 try:
     from compas_rhino.geometry import RhinoMesh
     from compas_rhino.helpers.mesh import mesh_from_guid
-    # from compas_rhino.utilities import clear_layer
-    # from compas_rhino.utilities import xdraw_mesh
 except:
     pass
 
@@ -45,7 +43,7 @@ __all__ = [
     'add_element_set',
     'add_tets_from_mesh',
     'add_node_set',
-#     # 'discretise_mesh',
+    'discretise_mesh',
     'add_nodes_elements_from_layers',
     'add_sets_from_layers',
     'mesh_extrude',
@@ -59,63 +57,63 @@ __all__ = [
 ]
 
 
-# def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iterations=5, refine=True):
+def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iterations=50, refine=True):
 
-#     """ Discretise a mesh from an input coarse mesh guid into small denser meshes.
+    """ Discretise a mesh from an input coarse mesh guid into small denser meshes.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object.
-#     guid : str
-#         guid of the Rhino input mesh.
-#     layer : str
-#         Layer name to plot resulting meshes on.
-#     target : float
-#         Target length of each triangle.
-#     min_angle : float
-#         Minimum internal angle of triangles.
-#     factor : float
-#         Factor on the maximum area of each triangle.
-#     iterations : int
-#         Number of iterations per face.
-#     refine : bool
-#         Refine beyond Delaunay.
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    guid : str
+        guid of the Rhino input mesh.
+    layer : str
+        Layer name to plot resulting meshes on.
+    target : float
+        Target length of each triangle.
+    min_angle : float
+        Minimum internal angle of triangles.
+    factor : float
+        Factor on the maximum area of each triangle.
+    iterations : int
+        Number of iterations per face.
+    refine : bool
+        Refine beyond Delaunay.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     """
+    """
 
-#     rhinomesh = RhinoMesh(guid)
-#     pts = rhinomesh.get_vertex_coordinates()
-#     fcs = [face[:3] for face in rhinomesh.get_face_vertices()]
+    rhinomesh = RhinoMesh(guid)
+    pts = rhinomesh.get_vertex_coordinates()
+    fcs = [face[:3] for face in rhinomesh.get_face_vertices()]
 
-#     path = structure.path
-#     basedir = utilities.__file__.split('__init__.py')[0]
-#     xfunc = XFunc('discretise', basedir=basedir, tmpdir=path)
-#     xfunc.funcname = 'functions.discretise_faces'
+    path = structure.path
+    basedir = utilities.__file__.split('__init__.py')[0]
+    xfunc = XFunc('discretise', basedir=basedir, tmpdir=path)
+    xfunc.funcname = 'functions.discretise_faces'
 
-#     try:
-#         vertices, faces = xfunc(vertices=pts, faces=fcs, target=target, min_angle=min_angle, factor=factor,
-#                                 iterations=iterations, refine=refine)
+    try:
+        vertices, faces = xfunc(vertices=pts, faces=fcs, target=target, min_angle=min_angle, factor=factor,
+                                iterations=iterations, refine=refine)
 
-#         rs.CurrentLayer(rs.AddLayer(layer))
-#         rs.DeleteObjects(rs.ObjectsByLayer(layer))
-#         rs.EnableRedraw(False)
+        rs.CurrentLayer(rs.AddLayer(layer))
+        rs.DeleteObjects(rs.ObjectsByLayer(layer))
+        rs.EnableRedraw(False)
 
-#         for points, face in zip(vertices, faces):
-#             mesh_faces = []
-#             for i in face:
-#                 face_ = i + [i[-1]]
-#                 mesh_faces.append(face_)
-#             rs.AddMesh(points, mesh_faces)
+        for points, face in zip(vertices, faces):
+            mesh_faces = []
+            for i in face:
+                face_ = i + [i[-1]]
+                mesh_faces.append(face_)
+            rs.AddMesh(points, mesh_faces)
 
-#         rs.EnableRedraw(True)
+        rs.EnableRedraw(True)
 
-#     except:
-#         '***** Mesh discretisation failed *****'
+    except:
+        '***** Mesh discretisation failed *****'
 
 
 def add_element_set(structure, guids, name):

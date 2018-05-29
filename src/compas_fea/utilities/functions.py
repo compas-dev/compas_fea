@@ -181,6 +181,10 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
     list
         Triangles of discretised faces.
 
+    Notes
+    -----
+    - An experimental script.
+
     """
 
     points_all = []
