@@ -235,11 +235,10 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
 
         # Refine
 
-        if refine:
+        V = points_y.transpose()
+        z = float(V[0, 2])
 
-            V = points_y.transpose()
-            z = float(V[0, 2])
-
+        try:
             it = 0
             while it < iterations:
                 DT = Delaunay(V[:, :2], furthest_site=False, incremental=False)
@@ -282,12 +281,15 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
 
             print('Iterations {0}'.format(it))
 
-        points_x = dot(Ryinv, V.transpose())
-        points_new = [list(i) for i in list(dot(Rxinv, points_x).transpose())]
-        faces_new = [[int(i) for i in tri] for tri in list(tris)]
+            points_x = dot(Ryinv, V.transpose())
+            points_new = [list(i) for i in list(dot(Rxinv, points_x).transpose())]
+            faces_new = [[int(i) for i in tri] for tri in list(tris)]
 
-        points_all.append(points_new)
-        faces_all.append(faces_new)
+            points_all.append(points_new)
+            faces_all.append(faces_new)
+
+        except:
+            print('***** ERROR *****')
 
     return points_all, faces_all
 
