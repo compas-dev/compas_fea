@@ -196,6 +196,7 @@ Node fields
 +-------------------------------+-----------+-----------+-----------+-----------+
 | Concentrated moments ``'cm'`` | ``'cmx'`` | ``'cmy'`` | ``'cmz'`` | ``'cmm'`` |
 +-------------------------------+-----------+-----------+-----------+-----------+
+
 .. - ``'nt'``: nodal temperatures.
 
 --------------
@@ -235,6 +236,7 @@ For elements such as shell elements, the local element axes can be accessed thro
 +-----------------------------+---------------------------+---------------------------+---------------------------+
 | Strain (derived) ``'e'``  ) | Max principal ``'emaxp'`` | Min principal ``'eminp'`` |                           |
 +-----------------------------+---------------------------+---------------------------+---------------------------+
+
 .. | Plastic strain ``'pe'`` (beams)             | Axial ``'pexx'``          | Axial ``'peyy'``          | Axial ``'pezz'`` | Shear ``'pexy'`` | Shear ``'pexz'`` | Shear ``'peyz'`` |
 
 .. .. - ``'pe'`` derived (shells and beams): max principal plastc strain ``'pemaxp'`` and min principal plastic strain ``'peminp'``.

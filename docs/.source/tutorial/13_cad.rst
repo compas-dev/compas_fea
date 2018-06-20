@@ -111,7 +111,8 @@ For Rhino, the meshes will be plotted in either the given ``layer`` name string,
 A typical Rhino environment after plotting data would look like:
 
 .. image:: /_images/mesh_floor_rhino.png
-   :scale: 30 %
+   :scale: 27 %
+
 
 The Blender function works in exactly the same way, with ``layer`` being now the integer layer number:
 
@@ -122,7 +123,8 @@ The Blender function works in exactly the same way, with ``layer`` being now the
 A typical Blender environment after plotting data would look like:
 
 .. image:: /_images/mesh_floor_blender.png
-   :scale: 32 %
+   :scale: 29 %
+
 
 To plot voxel data for solid element results, use the ``.plot_voxels()`` function from **compas_fea.utilities.functions**. This function uses the voxel viewer from the main **compas** package and requires that the user has the visualisation toolkit (Vtk) installed. This function requires the following arguments: the ``structure`` object to extract data from, the ``step`` of interest, the ``field`` to plot, the ``iptype`` and ``nodal`` strings for element data, a ``cbar`` list to trim data, and an approximate voxel size ``vdx`` for interpolating data in space. The call and output from this function would look similar to:
 
@@ -182,4 +184,4 @@ As stress is a tensor, any point in the structure has a local axes orientation w
    rhino.plot_principal_stresses(structure=mdl, step='step_loads', ptype='smaxp', scale=0.2)
 
 .. image:: /_images/principals.png
-   :scale: 70 %
+   :scale: 60 %

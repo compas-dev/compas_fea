@@ -1,0 +1,466 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>compas -- additonal packages</title>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+        <meta name="author" content="Tom Van Mele" />
+        <meta name="description" content="compas is a computational framework for research in architecture and structures." />
+
+        <link rel="shortcut icon" href="/_static/images/compas.ico" type="image/x-icon">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+        <link rel="stylesheet" type="text/css" href="/_static/css/github.css" />
+        <link rel="stylesheet" type="text/css" href="/_static/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="/_static/css/compas-reference.css" />
+
+        
+            <link rel="next" title="write_input_heading" href="generated/compas_fea.fea.write_heading.write_input_heading.html" />
+        
+        
+        
+            <link rel="prev" title="plot_principal_stresses" href="generated/compas_fea.cad.rhino.plot_principal_stresses.html" />
+        
+
+        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    </head>
+    <body data-spy="scroll" data-target="#compas-localnav">
+
+        <header class="navbar navbar-expand compas-navbar">
+            <a class="navbar-brand" href="/">
+                <img src="/_static/images/compas_icon.png" width="36px" height="36px" alt="compas" />
+            </a>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item ">
+                        <a class="nav-link " href="/main/">Main library</a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link " href="/packages/">Additional Packages</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://forum.compas-framework.org">Forum</a>
+                    </li>
+                </ul>
+        </header>
+        
+        <div class="container-fluid compas-container">
+            <div class="row flex-xl-nowrap">
+
+                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+
+                    
+
+                        <!-- 
+    <nav class="breadcrumb">
+        <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
+        <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">additional packages</a>
+        
+            
+                <a class="breadcrumb-item" href="../reference.html" >reference</a>
+            
+                <a class="breadcrumb-item" href="compas_fea.html" accesskey="U">compas_fea</a>
+            
+        
+    </nav>
+ -->
+
+                        
+
+                        <span class="target" id="module-compas_fea.fea"></span><div class="section" id="module-compas_fea.fea">
+<span id="fea"></span><span id="compas-fea-fea"></span><h1>fea</h1>
+<p>The compas_fea package supports Abaqus, Ansys, Sofistik and OpenSees as analysis backends.</p>
+<div class="section" id="write-heading">
+<h2>write_heading</h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.fea.write_heading</span></code></p>
+<table class="longtable docutils">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.write_heading.write_input_heading.html#compas_fea.fea.write_heading.write_input_heading" title="compas_fea.fea.write_heading.write_input_heading"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_input_heading</span></code></a>(f, software[, ndof])</p></td>
+<td><p>Creates the input file heading.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="write-constraints">
+<h2>write_constraints</h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.fea.write_constraints</span></code></p>
+<table class="longtable docutils">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.write_constraints.write_input_constraints.html#compas_fea.fea.write_constraints.write_input_constraints" title="compas_fea.fea.write_constraints.write_input_constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_input_constraints</span></code></a>(f, software, constraints)</p></td>
+<td><p>Writes the constraints information to the input file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="write-steps">
+<h2>write_steps</h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.fea.write_steps</span></code></p>
+<table class="longtable docutils">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.write_steps.write_input_steps.html#compas_fea.fea.write_steps.write_input_steps" title="compas_fea.fea.write_steps.write_input_steps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_input_steps</span></code></a>(f, software, structure, …)</p></td>
+<td><p>Writes the Steps information to the input file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="write-elements">
+<h2>write_elements</h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.fea.write_elements</span></code></p>
+<table class="longtable docutils">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.write_elements.write_input_elements.html#compas_fea.fea.write_elements.write_input_elements" title="compas_fea.fea.write_elements.write_input_elements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_input_elements</span></code></a>(f, software, sections, …)</p></td>
+<td><p>Writes the element and section information to the input file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="write-nodes">
+<h2>write_nodes</h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.fea.write_nodes</span></code></p>
+<table class="longtable docutils">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.write_nodes.write_input_nodes.html#compas_fea.fea.write_nodes.write_input_nodes" title="compas_fea.fea.write_nodes.write_input_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_input_nodes</span></code></a>(f, software, nodes[, sets])</p></td>
+<td><p>Writes the nodal co-ordinates information to the input file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="write-bcs">
+<h2>write_bcs</h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.fea.write_bcs</span></code></p>
+<table class="longtable docutils">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.write_bcs.write_input_bcs.html#compas_fea.fea.write_bcs.write_input_bcs" title="compas_fea.fea.write_bcs.write_input_bcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_input_bcs</span></code></a>(f, software, structure, …)</p></td>
+<td><p>Writes boundary condition information to the input file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="write-materials">
+<h2>write_materials</h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.fea.write_materials</span></code></p>
+<table class="longtable docutils">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.write_materials.write_input_materials.html#compas_fea.fea.write_materials.write_input_materials" title="compas_fea.fea.write_materials.write_input_materials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_input_materials</span></code></a>(f, software, materials)</p></td>
+<td><p>Writes materials to the input file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="write-misc">
+<h2>write_misc</h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.fea.write_misc</span></code></p>
+<table class="longtable docutils">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.write_misc.write_input_misc.html#compas_fea.fea.write_misc.write_input_misc" title="compas_fea.fea.write_misc.write_input_misc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_input_misc</span></code></a>(f, software, miscs)</p></td>
+<td><p>Writes Misc info to the input file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="abaq">
+<h2>abaq</h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.fea.abaq</span></code></p>
+<table class="longtable docutils">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.abaqus_launch_process.html#compas_fea.fea.abaq.abaqus_launch_process" title="compas_fea.fea.abaq.abaqus_launch_process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abaqus_launch_process</span></code></a>(structure, exe, cpus)</p></td>
+<td><p>Runs the analysis through Abaqus.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.extract_odb_data.html#compas_fea.fea.abaq.extract_odb_data" title="compas_fea.fea.abaq.extract_odb_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_odb_data</span></code></a>(structure, fields, exe)</p></td>
+<td><p>Extract data from the Abaqus .</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.input_generate.html#compas_fea.fea.abaq.input_generate" title="compas_fea.fea.abaq.input_generate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_generate</span></code></a>(structure, fields)</p></td>
+<td><p>Creates the Abaqus .</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ansys">
+<h2>ansys</h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.fea.ansys</span></code></p>
+<table class="longtable docutils">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.input_generate.html#compas_fea.fea.ansys.input_generate" title="compas_fea.fea.ansys.input_generate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_generate</span></code></a>(structure)</p></td>
+<td><p>Generates Ansys input file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_static.html#compas_fea.fea.ansys.make_command_file_static" title="compas_fea.fea.ansys.make_command_file_static"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_command_file_static</span></code></a>(structure, path, name)</p></td>
+<td><p>Generates Ansys input file for static analysis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_modal.html#compas_fea.fea.ansys.make_command_file_modal" title="compas_fea.fea.ansys.make_command_file_modal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_command_file_modal</span></code></a>(structure, path, name)</p></td>
+<td><p>Generates Ansys input file for modal analysis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_harmonic.html#compas_fea.fea.ansys.make_command_file_harmonic" title="compas_fea.fea.ansys.make_command_file_harmonic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_command_file_harmonic</span></code></a>(structure, …)</p></td>
+<td><p>Generates Ansys input file for harmonic analysis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.ansys_launch_process.html#compas_fea.fea.ansys.ansys_launch_process" title="compas_fea.fea.ansys.ansys_launch_process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ansys_launch_process</span></code></a>(path, name, cpus, license)</p></td>
+<td><p>Launches an analysis using Ansys.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.ansys_launch_process_extract.html#compas_fea.fea.ansys.ansys_launch_process_extract" title="compas_fea.fea.ansys.ansys_launch_process_extract"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ansys_launch_process_extract</span></code></a>(path, name[, …])</p></td>
+<td><p>Calls an extraction of results from Ansys.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.delete_result_files.html#compas_fea.fea.ansys.delete_result_files" title="compas_fea.fea.ansys.delete_result_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_result_files</span></code></a>(path, name)</p></td>
+<td><p>Deletes Ansys result files.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.extract_rst_data.html#compas_fea.fea.ansys.extract_rst_data" title="compas_fea.fea.ansys.extract_rst_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_rst_data</span></code></a>(structure[, fields, steps])</p></td>
+<td><p>Extracts results from Ansys rst file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.write_results_from_rst.html#compas_fea.fea.ansys.write_results_from_rst" title="compas_fea.fea.ansys.write_results_from_rst"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_results_from_rst</span></code></a>(structure, fields, steps)</p></td>
+<td><p>Writes results request file from Ansys.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.load_to_results.html#compas_fea.fea.ansys.load_to_results" title="compas_fea.fea.ansys.load_to_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_to_results</span></code></a>(structure, fields, steps)</p></td>
+<td><p>Loads results from Ansys txt files to Structure object.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="opensees">
+<h2>opensees</h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.fea.opensees</span></code></p>
+<table class="longtable docutils">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.opensees.input_generate.html#compas_fea.fea.opensees.input_generate" title="compas_fea.fea.opensees.input_generate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_generate</span></code></a>(structure, fields)</p></td>
+<td><p>Creates the OpenSees .</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.opensees.opensees_launch_process.html#compas_fea.fea.opensees.opensees_launch_process" title="compas_fea.fea.opensees.opensees_launch_process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">opensees_launch_process</span></code></a>(structure, exe)</p></td>
+<td><p>Runs the analysis through OpenSees.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sofistik">
+<h2>sofistik</h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.fea.sofistik</span></code></p>
+<table class="longtable docutils">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.sofistik.input_generate.html#compas_fea.fea.sofistik.input_generate" title="compas_fea.fea.sofistik.input_generate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_generate</span></code></a>(structure[, fields])</p></td>
+<td><p>Creates the Sofistik .</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+                        
+                        <!-- <nav class="compas-sideways">
+                            
+                                <a href="generated/compas_fea.cad.rhino.plot_principal_stresses.html" class="btn btn-primary compas-prev" role="button">plot_principal_stresses</a>
+                            
+
+                            
+                                <a href="generated/compas_fea.fea.write_heading.write_input_heading.html" class="btn btn-primary compas-next" role="button">write_input_heading</a>
+                            
+                        </nav> -->
+
+                    
+
+                </main>
+
+                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
+                    <div class="navbar-light">
+
+                        <form id="" class="d-flex compas-searchbox" action="../search.html" method="get">
+                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
+                            <input type="hidden" name="check_keywords" value="yes" />
+                            <input type="hidden" name="area" value="default" />
+
+                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                        </form>
+
+                        
+                        
+
+                            <div class="navbar-expand-md">
+                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
+
+                                <ul class="nav flex-column active">
+<li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
+<li class="nav-item active"><a class="nav-link reference internal" href="../reference.html">Reference</a><ul class="nav active">
+<li class="nav-item active"><a class="nav-link reference internal" href="compas_fea.html">compas_fea</a></li>
+</ul>
+</li>
+<li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
+</ul>
+
+
+                                </div>
+                            </div>
+
+                        
+
+                    </div>
+                </div>
+                
+                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+
+                    
+
+                    <ul class="nav flex-column" id="compas-localnav">
+<li class="nav-item"><a class="nav-link reference internal" href="#">fea</a><ul class="nav">
+<li class="nav-item"><a class="nav-link reference internal" href="#write-heading">write_heading</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#write-constraints">write_constraints</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#write-steps">write_steps</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#write-elements">write_elements</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#write-nodes">write_nodes</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#write-bcs">write_bcs</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#write-materials">write_materials</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#write-misc">write_misc</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#abaq">abaq</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#ansys">ansys</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#opensees">opensees</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#sofistik">sofistik</a></li>
+</ul>
+</li>
+</ul>
+
+
+                </div>
+            </div>
+        </div>
+
+        <footer class="compas-footer">
+            
+                
+                    &#169; Copyright 2017, Block Research Group - ETH Zurich.
+                
+            
+
+            
+                Last updated on Jun 20, 2018.
+            
+
+            
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+            
+        </footer>
+
+        
+
+            <script type="text/javascript">
+var DOCUMENTATION_OPTIONS = {
+    URL_ROOT          : '',
+    VERSION           : '0.1.0',
+    COLLAPSE_INDEX    : false,
+    FILE_SUFFIX       : '.html',
+    HAS_SOURCE        : false,
+    SOURCELINK_SUFFIX : '.txt'
+};
+            </script>
+
+            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+            
+            <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+
+            <script src="/_static/underscore.js"></script>
+            <script src="/_static/doctools.js"></script>
+            <script src="/_static/js/searchtools_.js"></script>
+
+            <script>
+hljs.initHighlightingOnLoad();
+anchors.add();
+
+var pre = document.getElementsByTagName('pre');
+
+for (var i = 0; i < pre.length; i++) {
+
+    var is_code = pre[i].children[0].className.indexOf('language-python');
+
+    if (is_code === 0) {
+
+        var button = document.createElement('button');
+
+        button.className = 'btn btn-secondary copy-code mt-4';
+        button.textContent = 'Copy code';
+        button.type = 'button';
+
+        pre[i].appendChild(button);
+    }
+}
+
+var copy_code = new Clipboard('.copy-code', {
+    target: function(trigger) {
+        return trigger.previousElementSibling;
+    }
+});
+
+copy_code.on('success', function(event) {
+    event.clearSelection();
+    event.trigger.textContent = 'Copied!';
+    window.setTimeout(function() {
+        event.trigger.textContent = 'Copy code';
+    }, 2000);
+});
+
+copy_code.on('error', function(event) { 
+    event.trigger.textContent = 'Press "Ctrl + C" to copy...';
+    window.setTimeout(function() {
+        event.trigger.textContent = 'Copy code';
+    }, 2000);
+});
+            </script>
+
+        
+    </body>
+</html>
