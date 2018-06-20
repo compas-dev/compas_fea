@@ -509,12 +509,37 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         nlgeom = 'YES' if getattr(step, 'nlgeom', None) else 'NO'
         nlmat = 'YES' if getattr(step, 'nlmat', None) else 'NO'
 
-        if isinstance(step.loads, str):
-            step.loads = [step.loads]
+        if getattr(step, 'loads', None):
+            if isinstance(step.loads, str):
+                step.loads = [step.loads]
+
+        # Modal
+
+        if stype == 'ModalStep':
+
+            f.write('{0} {1}\n'.format(c, key))
+            f.write('{0} '.format(c) + '-' * len(key) + '\n')
+            f.write('{0}\n'.format(c))
+
+            if software == 'abaqus':
+
+                f.write('*STEP, NAME={0}\n'.format(key))
+                f.write('*FREQUENCY, EIGENSOLVER=LANCZOS, NORMALIZATION=MASS\n')
+                f.write('{0}\n'.format(modes))
+                f.write('**\n')
+                f.write('**\n')
+                f.write('*OUTPUT, FIELD\n')
+                f.write('**\n')
+                f.write('*NODE OUTPUT\n')
+                f.write('**\n')
+                f.write('U\n')
+                f.write('**\n')
+                f.write('**\n')
+                f.write('*END STEP\n')
 
         # Mechanical
 
-        if stype in ['GeneralStep', 'BucklingStep']:
+        elif stype in ['GeneralStep', 'BucklingStep']:
 
             if headers[software]:
                 f.write(headers[software])

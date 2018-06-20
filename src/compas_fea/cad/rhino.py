@@ -663,7 +663,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     # Create and clear Rhino layer
 
     if not layer:
-        layer = '{0}-{1}'.format(step, field)
+        layer = '{0}-{1}{2}'.format(step, field, mode)
     rs.CurrentLayer(rs.AddLayer(layer))
     rs.DeleteObjects(rs.ObjectsByLayer(layer))
     rs.EnableRedraw(False)
@@ -778,8 +778,11 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         rs.AddText('0', [x0, ymin + 4.8 * s, 0], height=h)
         rs.AddText('Step:{0}   Field:{1}'.format(step, field), [xmin, ymin + 12 * s, 0], height=h)
         if mode != '':
-            freq = str(round(structure.results[step]['frequencies'][mode], 3))
-            rs.AddText('Mode:{0}   Freq:{1}Hz'.format(mode, freq), [xmin, ymin - 1.5 * s, 0], height=h)
+            try:
+                freq = str(round(structure.results[step]['frequencies'][mode], 3))
+                rs.AddText('Mode:{0}   Freq:{1}Hz'.format(mode, freq), [xmin, ymin - 1.5 * s, 0], height=h)
+            except:
+                pass
 
         # Return to Default layer
 
