@@ -154,7 +154,7 @@ There are two main ways to discretise coarse meshes into denser ones for an accu
     pts = blendermesh.get_vertex_coordinates()
     fcs = blendermesh.get_face_vertex_indices()
 
-    vertices, faces = discretise_faces(vertices=pts, faces=fcs, target=0.1, iterations=50
+    vertices, faces = discretise_faces(vertices=pts, faces=fcs, target=0.1, iterations=50)
 
 .. image:: /_images/mesh_triangle_blender.png
    :scale: 35 %
