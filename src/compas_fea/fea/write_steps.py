@@ -524,7 +524,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
             if software == 'abaqus':
 
                 f.write('*STEP, NAME={0}\n'.format(key))
-                f.write('*FREQUENCY, EIGENSOLVER=LANCZOS, NORMALIZATION=MASS\n')
+                f.write('*FREQUENCY, EIGENSOLVER=LANCZOS, NORMALIZATION=DISPLACEMENT\n')
                 f.write('{0}\n'.format(modes))
                 f.write('**\n')
                 f.write('**\n')

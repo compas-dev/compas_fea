@@ -307,11 +307,12 @@
         <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Saving step: </span><span class="si">{0}</span><span class="s1"> *****&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">]:</span>
-                <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">]:</span>
-                    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-                    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">][</span><span class="n">field</span><span class="p">]:</span>
-                        <span class="n">data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
-                    <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">][</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+                <span class="k">if</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;nodal&#39;</span><span class="p">,</span> <span class="s1">&#39;element&#39;</span><span class="p">]:</span>
+                    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">]:</span>
+                        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+                        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">][</span><span class="n">field</span><span class="p">]:</span>
+                            <span class="n">data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+                        <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">][</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
 
         <span class="n">structure</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">results</span>
 
@@ -390,7 +391,7 @@
             
 
             
-                Last updated on Jun 20, 2018.
+                Last updated on Jun 21, 2018.
             
 
             

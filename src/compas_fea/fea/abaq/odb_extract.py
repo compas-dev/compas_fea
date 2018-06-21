@@ -107,6 +107,14 @@ def extract_odb_data(temp, name, fields, steps='all'):
 
                 counter += 1
 
+            try:
+                frequencies = odb.steps[step].historyRegions['Assembly Assembly-1'].historyOutputs['EIGFREQ'].data
+                results[step]['frequencies'] = frequencies
+                masses = odb.steps[step].historyRegions['Assembly Assembly-1'].historyOutputs['GM'].data
+                results[step]['masses'] = masses
+            except:
+                pass
+
         else:
 
             frame = odb.steps[step].frames[-1]

@@ -61,5 +61,7 @@ mdl.summary()
 mdl.analyse_and_extract(software='abaqus')
 
 for i in range(1, 6):
-    rhino.plot_data(mdl, step='step_modal', field='um', mode=i)
-    print(mdl.results['step_modal']['info']['description'].keys())
+    rhino.plot_data(mdl, step='step_modal', field='um', mode=i, scale=1)
+
+print(mdl.results['step_modal']['frequencies'])
+print(mdl.results['step_modal']['masses'])
