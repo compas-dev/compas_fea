@@ -275,8 +275,9 @@ def load_to_results(structure, fields, steps):
         elif structure.steps[step].__name__ == 'HarmonicStep':
             rlist = []
             if 'u' in fields or 'all' in fields:
-                rlist.append(get_harmonic_data_from_result_files(out_path))
-
+                harmonic_disp, frequencies = get_harmonic_data_from_result_files(out_path)
+                structure.results[step]['frequencies'] = frequencies
+                rlist.append(harmonic_disp)
         if 'geo' in fields:
             nodes, elements = get_nodes_elements_from_result_files(out_path)
             structure.nodes = nodes

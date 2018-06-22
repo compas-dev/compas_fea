@@ -42,6 +42,8 @@ def write_loads(structure, output_path, filename, loads, factor):
         elif load.__name__ == 'TributaryLoad':
             # write_appply_tributary_load(structure, output_path, filename, lkey, factor)
             pload = add_load_to_ploads(structure, pload, load, factor)
+        elif load.__name__ == 'AreaLoad':
+            write_apply_area_load(structure, output_path, filename, lkey, factor)
         else:
             raise ValueError(load.__name__ + ' Type of load is not yet implemented for Ansys')
     write_combined_point_loads(pload, output_path, filename)
@@ -120,3 +122,13 @@ def write_gravity_loading(structure, output_path, filename, gravity, factor):
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()
+
+
+def write_apply_area_load(structure, output_path, filename, lkey, factor):
+    cFile = open(os.path.join(output_path, filename), 'a')
+
+    cFile.write('SFE, ')
+    cFile.write('!\n')
+    cFile.write('!\n')
+    cFile.close()
+
