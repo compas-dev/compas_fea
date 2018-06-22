@@ -42,7 +42,7 @@ def write_loads(structure, output_path, filename, loads, factor):
         elif load.__name__ == 'TributaryLoad':
             # write_appply_tributary_load(structure, output_path, filename, lkey, factor)
             pload = add_load_to_ploads(structure, pload, load, factor)
-        elif load.__name__ == 'AreaLoad':
+        elif load.__name__ == 'AreaLoad' or 'HarmonicAreaLoad':
             write_apply_area_load(structure, output_path, filename, lkey, factor)
         else:
             raise ValueError(load.__name__ + ' Type of load is not yet implemented for Ansys')
@@ -125,10 +125,22 @@ def write_gravity_loading(structure, output_path, filename, gravity, factor):
 
 
 def write_apply_area_load(structure, output_path, filename, lkey, factor):
-    cFile = open(os.path.join(output_path, filename), 'a')
+    # TODO, diferenciate netween harmonic and area loads, phase of not, possibly already at the write loads function above
 
-    cFile.write('SFE, ')
+    load_elements = structure.loads[lkey].elements
+    if type(load_elements) != list:
+        load_elements = [load_elements]
+    elements = []
+    for element in load_elements:
+        if type(element) == str:
+            elements.extend(structure.sets[element]['selection'])
+        else:
+            elements.append(element)
+
+    cFile = open(os.path.join(output_path, filename), 'a')
+    for ekey in elements:
+        string = 'SFE, {0}, \n'.format(ekey + 1)  # must be finished to include components, phase, etc
+        cFile.write(string)
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()
-

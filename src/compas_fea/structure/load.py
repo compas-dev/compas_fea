@@ -22,7 +22,8 @@ __all__ = [
     'AcousticLoad',
     'ThermalLoad',
     'TributaryLoad',
-    'HarmonicPointLoad'
+    'HarmonicPointLoad',
+    'HarmonicAreaLoad'
 ]
 
 
@@ -183,7 +184,7 @@ class AreaLoad(Load):
     name : str
         Name of the AreaLoad object.
     elements : str, list
-        Element set or elements the load is applied to.
+        Elements set or elements the load is applied to.
     x : float
         x component of pressure.
     y : float
@@ -398,3 +399,35 @@ class HarmonicPointLoad(Load):
         Load.__init__(self, name=name, nodes=nodes, axes='global')
         self.__name__ = 'HarmonicPointLoad'
         self.components = {'x': x, 'y': y, 'z': z, 'xx': xx, 'yy': yy, 'zz': zz}
+
+
+class HarmonicAreaLoad(Load):
+
+    """ Harmonic concentrated forces and moments [units:N, Nm] applied to node(s).
+
+    Parameters
+    ----------
+    name : str
+        Name of the HarmonicPointLoad object.
+    elements : str, list
+        Elements set or elements the load is applied to.
+    x : float
+        x component of force.
+    y : float
+        y component of force.
+    z : float
+        z component of force.
+    phase : float
+        phase angle in radians.
+
+
+    Returns
+    -------
+    None
+
+    """
+
+    def __init__(self, name, elements, x=0, y=0, z=0, phase=0):
+        Load.__init__(self, name=name, elements=elements, axes='global')
+        self.__name__ = 'HarmonicAreaLoad'
+        self.components = {'x': x, 'y': y, 'z': z, 'phase': phase}
