@@ -1,3 +1,5 @@
+import os
+
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
 __license__    = 'MIT License'
@@ -25,7 +27,7 @@ def write_elastic_material(structure, material, index, output_path, filename):
     therm_exp = None  # material['therm_exp']
     ref_temp = None  # material['ref_temp']
 
-    cFile = open(output_path + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('MPTEMP,,,,,,,, \n')
     cFile.write('MPTEMP,1,0  \n')
     string = 'MPDATA,EX,' + str(material_index) + ',,' + str(E) + '\n'
@@ -66,7 +68,7 @@ def write_concrete_microplane_material(structure, material, index, output_path, 
     k4 = 0.9
     k5 = 100
 
-    cFile = open(output_path + '/' + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('PRED,OFF\n')
 
     cFile.write('tb,mplane,' + str(material_index) + ',,6, ! TB,lab,mat,ntemp,NPTS  \n')

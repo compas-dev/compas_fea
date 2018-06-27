@@ -30,7 +30,7 @@ def write_static_analysis_request(structure, path, name):
 
 
 def write_static_solve(structure, path, filename, skey):
-    cFile = open(path + filename, 'a')
+    cFile = open(os.path.join(path, filename), 'a')
     cFile.write('! \n')
     cFile.write('/SOLU ! \n')
     cFile.write('ANTYPE,0\n')

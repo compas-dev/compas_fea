@@ -32,17 +32,11 @@ def write_modal_analysis_request(structure, path, name):
 
 def write_modal_solve(structure, path, filename, skey):
     num_modes = structure.steps[skey].modes
-    cFile = open(path + "/" + filename, 'a')
+    cFile = open(os.path.join(path, filename), 'a')
     cFile.write('/SOL \n')
     cFile.write('!\n')
     cFile.write('ANTYPE,2 \n')
-    # cFile.write('MODOPT,SUBSP,' + str(num_modes) + '\n')
-    # cFile.write('EQSLV,FRONT \n')
-    # cFile.write('MXPAND,' + str(num_modes) + ',,,YES \n')
-    # cFile.write('!\n')
-    # cFile.write('!\n')
 
-    # cFile.write('MODOPT,LANB,30,-1,300, ,OFF \n')
     cFile.write('MODOPT,LANB,' + str(num_modes) + ' \n')
     cFile.write('EQSLV,SPAR \n')
     cFile.write('MXPAND,' + str(num_modes) + ', , ,1 \n')
@@ -64,7 +58,7 @@ def write_modal_solve(structure, path, filename, skey):
 
 def write_modal_post_process(path, name, step_index):
     filename = name + '_extract.txt'
-    cFile = open(path + "/" + filename, 'a')
+    cFile = open(os.path.join(path, filename), 'a')
     cFile.write('/POST1 \n')
     cFile.write('SET,' + str(step_index + 1) + '\n')
     cFile.write('!\n')
@@ -73,10 +67,10 @@ def write_modal_post_process(path, name, step_index):
 
 
 def write_request_modal_freq(path, name, skey, num_modes, step_index):
-    out_path = path + '/' + name + '_output/'
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
 
-    cFile = open(path + "/" + filename , 'a')
+    cFile = open(os.path.join(path, filename), 'a')
     cFile.write('!\n')
     cFile.write('/POST1 \n')
     cFile.write('*set,n_freq, \n')
@@ -90,9 +84,9 @@ def write_request_modal_freq(path, name, skey, num_modes, step_index):
     cFile.write('!\n')
     cFile.write('*dim,nds,,' + str(num_modes) + ',1 \n')
     cFile.write('*vfill,nds(1),ramp,1,1 \n')
-    cFile.write('*cfopen,' + out_path + 'modal_out/modal_freq,txt \n')
+    cFile.write('*cfopen,' + os.path.join(out_path, 'modal_out', 'modal_freq') + ',txt \n')
     cFile.write('*vwrite, nds(1) , \',\'  , n_freq(1) \n')
-    cFile.write('(          F8.0,       A,       ES) \n')
+    cFile.write('(F8.0, A, ES) \n')
     cFile.write('*cfclose \n')
     cFile.write('!\n')
     cFile.write('!\n')
@@ -102,11 +96,11 @@ def write_request_modal_freq(path, name, skey, num_modes, step_index):
 def write_request_modal_shapes(path, name, step_name, num_modes, step_index):
     filename = name + '_extract.txt'
 
-    cFile = open(path + "/" + filename, 'a')
+    cFile = open(os.path.join(path, filename), 'a')
     cFile.write('/POST1 \n')
     cFile.close()
     for i in range(num_modes):
-        cFile = open(path + "/" + filename, 'a')
+        cFile = open(os.path.join(path, filename), 'a')
         # cFile.write('SET,' + str(step_index + 1) + ' \n')
         cFile.write('SET,' + str(step_index + 1) + ',' + str(i + 1) + '\n')
         cFile.write('! Mode ' + str(i + 1) + ' \n \n \n')
@@ -116,8 +110,8 @@ def write_request_modal_shapes(path, name, step_name, num_modes, step_index):
 
 def write_modal_results_from_ansys_rst(name, path, fields, num_modes, step_index=0, step_name='step'):
 
-    if not os.path.exists(path + name + '_output/modal_out/'):
-        os.makedirs(path + name + '_output/modal_out/')
+    if not os.path.exists(os.path.join(path, name + '_output', 'modal_out')):
+        os.makedirs(os.path.join(path, name + '_output', 'modal_out'))
 
     # write_modal_post_process(path, name, step_index)
     if type(fields) == str:

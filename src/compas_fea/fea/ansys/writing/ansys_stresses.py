@@ -1,3 +1,5 @@
+import os
+
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
 __license__    = 'MIT License'
@@ -5,12 +7,12 @@ __email__      = 'mendez@arch.ethz.ch'
 
 
 def write_request_nodal_stresses(path, name, step_name):
-    out_path = path + '/' + name + '_output/'
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'nodal_stresses'
     name = 'nds_s'
 
-    cFile = open(path + "/" + filename, 'a')
+    cFile = open(os.path.join(path, filename), 'a')
     # cFile.write('SET,'+skey+' \n')
     cFile.write('SHELL,TOP  \n')
     cFile.write('*get,numNodes,node,,count \n')
@@ -50,11 +52,11 @@ def write_request_nodal_stresses(path, name, step_name):
 
 
 def write_request_pricipal_stresses(path, name, step_name):
-    out_path = path + '/' + name + '_output/'
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'principal_stresses'
     name = 'nds_p'
-    cFile = open(path + "/" + filename, 'a')
+    cFile = open(os.path.join(path, filename), 'a')
     cFile.write('SHELL,TOP  \n')
     cFile.write('*get,numNodes,node,,count \n')
     cFile.write('*set,S1top, \n')
@@ -93,12 +95,12 @@ def write_request_pricipal_stresses(path, name, step_name):
 
 
 def write_request_shear_stresses(path, name, step_name):
-    out_path = path + '/' + name + '_output/'
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'shear_stresses'
     name = 'nds_sh'
 
-    cFile = open(path + "/" + filename, 'a')
+    cFile = open(os.path.join(path, filename), 'a')
     cFile.write('SHELL,TOP  \n')
     cFile.write('*get,numNodes,node,,count \n')
     cFile.write('*set,S1top, \n')
@@ -137,12 +139,12 @@ def write_request_shear_stresses(path, name, step_name):
 
 
 def write_request_principal_strains(path, name, step_name):
-    out_path = path + '/' + name + '_output/'
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'principal_strains'
     name = 'nds_ps'
 
-    cFile = open(path + "/" + filename, 'a')
+    cFile = open(os.path.join(path, filename), 'a')
     cFile.write('SHELL,TOP  \n')
     cFile.write('*get,numNodes,node,,count \n')
     cFile.write('*set,S1top, \n')
@@ -181,12 +183,12 @@ def write_request_principal_strains(path, name, step_name):
 
 
 def write_request_reactions(path, name, step_name):
-    out_path = path + '/' + name + '_output/'
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'reactions'
     name = 'nds_r'
 
-    cFile = open(path + "/" + filename, 'a')
+    cFile = open(os.path.join(path, filename), 'a')
     cFile.write('*get,numNodes,node,,count \n')
     cFile.write('*set,RFX, \n')
     cFile.write('*dim,RFX,array,numNodes,1 \n')

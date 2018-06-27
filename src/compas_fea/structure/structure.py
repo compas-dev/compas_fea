@@ -19,6 +19,7 @@ from compas_fea.utilities import group_keys_by_attribute
 from compas_fea.utilities import group_keys_by_attributes
 
 import pickle
+import os
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
@@ -1286,7 +1287,7 @@ Steps
         elif software == 'opensees':
             opensees.opensees_launch_process(self, exe)
 
-    def extract_data(self, software, fields='u', steps='last', exe=None):
+    def extract_data(self, software, fields='u', steps='last', exe=None, sets=None):
 
         """ Extracts data from the FE software's output.
 
@@ -1311,7 +1312,7 @@ Steps
             abaq.extract_odb_data(self, fields=fields, exe=exe)
 
         elif software == 'ansys':
-            ansys.extract_rst_data(self, fields=fields, steps=steps)
+            ansys.extract_rst_data(self, fields=fields, steps=steps, sets=sets)
 
         elif software == 'opensees':
             opensees.extract_out_data(self, fields=fields)
@@ -1498,7 +1499,7 @@ Steps
 
         """
 
-        filename = '{0}{1}.obj'.format(self.path, self.name)
+        filename = os.path.join(self.path, self.name + '.obj')
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
         print('***** Structure saved to: {0} *****\n'.format(filename))

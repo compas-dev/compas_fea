@@ -36,7 +36,7 @@ def write_elements(structure, output_path, filename):
 
 
 def write_nodes(structure, output_path, filename):
-    cFile = open(output_path + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     nodes = structure.nodes
     for i in range(len(nodes)):
         node = nodes[i]
@@ -48,7 +48,7 @@ def write_nodes(structure, output_path, filename):
 
 
 def write_set_element_material(output_path, filename, mat_index, elem_type, elem_type_index):
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('ET,' + str(elem_type_index) + ',' + str(elem_type) + ' \n')
     cFile.write('TYPE,' + str(elem_type_index) + '\n')
     cFile.write('MAT,' + str(mat_index + 1) + '\n')
@@ -70,7 +70,7 @@ def write_shell4_elements(structure, output_path, filename, ekeys, section, mate
     thickness = structure.sections[section].geometry['t']
     write_shell_thickness(output_path, filename, thickness, sec_index, mat_index)
 
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     for ekey in ekeys:
         element = structure.elements[ekey]
         element = element.nodes
@@ -87,7 +87,7 @@ def write_shell4_elements(structure, output_path, filename, ekeys, section, mate
 
 
 def write_shell_thickness(output_path, filename, thickness, sec_index, mat_index):
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('SECTYPE,' + str(sec_index + 1) + ',SHELL,, \n')
     cFile.write('SECDATA, ' + str(thickness) + ',' + str(mat_index) + ',0.0,3\n')
     cFile.write('SECOFFSET,MID\n')
@@ -131,7 +131,7 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
 
     orient = structure.sections[section].orientation
 
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     for ekey in ekeys:
         element = structure.elements[ekey].nodes
         if orient:
@@ -154,7 +154,7 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
 
 
 def write_i_section(output_path, filename, height, base, thickness_w, thickness_f, sec_index):
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('SECTYPE, ' + str(sec_index + 1) + ', BEAM, I, , 0 \n')
     cFile.write('SECOFFSET, CENT \n')
     cFile.write('SECDATA,' + str(base) + ',' + str(base) + ',' + str(height) + ',')
@@ -166,7 +166,7 @@ def write_i_section(output_path, filename, height, base, thickness_w, thickness_
 
 
 def write_angle_section(output_path, filename, height, base, thickness, sec_index):
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('SECTYPE, ' + str(sec_index + 1) + ', BEAM, L, , 0 \n')
     cFile.write('SECOFFSET, CENT \n')
     cFile.write('SECDATA,' + str(base) + ',' + str(height) + ',' + str(thickness) + ',' + str(thickness) + '\n')
@@ -177,7 +177,7 @@ def write_angle_section(output_path, filename, height, base, thickness, sec_inde
 
 
 def write_rectangular_beam_section(output_path, filename, height, base, sec_index):
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('SECTYPE, ' + str(sec_index + 1) + ', BEAM, RECT, , 0 \n')
     cFile.write('SECOFFSET, CENT \n')
     cFile.write('SECDATA,' + str(height) + ',' + str(base) + '\n')
@@ -188,7 +188,7 @@ def write_rectangular_beam_section(output_path, filename, height, base, sec_inde
 
 
 def write_pipe_section(output_path, filename, in_radius, thickness, sec_index):
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('SECTYPE, ' + str(sec_index + 1) + ', BEAM, CTUBE, , 0 \n')
     cFile.write('SECOFFSET, CENT \n')
     cFile.write('SECDATA,' + str(in_radius) + ',' + str(in_radius + thickness) + ',8\n')
@@ -218,7 +218,7 @@ def write_tie_elements(structure, output_path, filename, ekeys, section, materia
         sec_area = structure.sections[section].geometry['A']
         write_tie_section(output_path, filename, sec_area, sec_index, axial_force=0)
 
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     for ekey in ekeys:
         element = structure.elements[ekey].nodes
         string = 'E,'
@@ -234,7 +234,7 @@ def write_tie_elements(structure, output_path, filename, ekeys, section, materia
 
 
 def write_tie_section(output_path, filename, sec_area, sec_index, axial_force):
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('R,' + str(sec_index + 1) + ',' + str(sec_area) + ', ,1  \n')
     cFile.write('REAL,' + str(sec_index + 1) + '\n')
     cFile.write('!\n')
@@ -243,7 +243,7 @@ def write_tie_section(output_path, filename, sec_area, sec_index, axial_force):
 
 
 def write_circular_section(output_path, filename, radius, sec_index):
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('SECTYPE, ' + str(sec_index + 1) + ', BEAM, CSOLID , 0 \n')
     cFile.write('SECOFFSET, CENT \n')
     cFile.write('SECDATA,' + str(radius) + ',8\n')
@@ -254,10 +254,10 @@ def write_circular_section(output_path, filename, radius, sec_index):
 
 
 def write_request_element_nodes(path, name):
-    out_path = path + '/' + name + '_output/'
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
 
-    cFile = open(path + filename, 'a')
+    cFile = open(os.path.join(path, filename), 'a')
     cFile.write('/POST1 \n')
     cFile.write('!\n')
     cFile.write('!\n')
@@ -333,7 +333,7 @@ def write_request_element_nodes(path, name):
 
 
 def write_request_node_displacements(path, name, step_name, mode=None):
-    out_path = path + '/' + name + '_output/'
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     if mode:
         fname = 'modal_shape_' + str(mode)
@@ -341,7 +341,7 @@ def write_request_node_displacements(path, name, step_name, mode=None):
         name_x = 'dispX' + str(mode)
         name_y = 'dispY' + str(mode)
         name_z = 'dispZ' + str(mode)
-        out_path += 'modal_out/'
+        out_path = os.path.join(out_path, 'modal_out')
     else:
         fname = str(step_name) + '_' + 'displacements'
         name_ = 'nds_d'
@@ -349,7 +349,7 @@ def write_request_node_displacements(path, name, step_name, mode=None):
         name_y = 'dispY'
         name_z = 'dispZ'
 
-    cFile = open(path + filename, 'a')
+    cFile = open(os.path.join(path, filename), 'a')
     cFile.write('/POST1 \n')
     cFile.write('!\n')
     cFile.write('*get,numNodes,node,,count \n')
@@ -375,7 +375,7 @@ def write_request_node_displacements(path, name, step_name, mode=None):
 
 
 def write_constraint_nodes(structure, output_path, filename, displacements):
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
 
     for dkey in displacements:
         components = structure.displacements[dkey].components
@@ -422,7 +422,7 @@ def write_areas(structure, output_path, filename):
     areas = structure.areas
     areas_keys = sorted(areas.keys(), key=int)
 
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
 
     for akey in areas_keys:
         area = areas[akey]
@@ -439,7 +439,7 @@ def write_areas(structure, output_path, filename):
 
 
 def write_nodes_as_keypoints(structure, output_path, filename):
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     nodes = structure.nodes
     for i in range(len(nodes)):
         node = nodes[i]
@@ -461,7 +461,7 @@ def write_request_mesh_areas(structure, output_path, filename, size=None, smart_
     # This function uses ansys meshing algorithm to mesh all areas present in the model
     # and writes "nodes.txt" with the new nodes and "elements.txt" with the resulting elements.
 
-    cFile = open(output_path + "/" + filename, 'a')
+    cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('ET,1,SHELL281 \n')
     cFile.write('!\n')
     cFile.write('!\n')
@@ -489,7 +489,7 @@ def write_request_mesh_areas(structure, output_path, filename, size=None, smart_
 def write_spring_elements_nodal(structure, out_path, filename, ekeys, section):
     axis_dict = {'x': 1, 'y': 2, 'z': 3, 'xx': 4, 'yy': 5, 'zz': 6}
     kdict = section.stiffness
-    fh = open(out_path + "/" + filename, 'a')
+    fh = open(os.path.join(out_path, filename), 'a')
     for axis in kdict:
         etkey = et_dict.setdefault('COMBIN14_' + axis, len(et_dict) + 1)
         fh.write('ET, {0}, COMBIN14 \n'.format(etkey))
