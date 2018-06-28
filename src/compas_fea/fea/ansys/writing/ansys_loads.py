@@ -143,6 +143,8 @@ def write_apply_harmonic_pressure_load(structure, output_path, filename, lkey, f
     cFile = open(os.path.join(output_path, filename), 'a')
     string = 'SFE, {0}, {1}, PRES, {2}, {3} \n'
     for ekey in elements:
+
+        ekey += structure.element_count() ######################################### this must be generalised for non virtual elements as well.
         string_ = string.format(ekey + 1, index + 1, 1, pressure)
         cFile.write(string_)
         if phase:

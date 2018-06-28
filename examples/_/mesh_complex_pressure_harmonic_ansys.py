@@ -76,8 +76,8 @@ if __name__ == '__main__':
     mesh = Mesh.from_data(data['mesh'])
     pts = data['pts']
 
-    freq_range = (50, 55)
-    freq_steps = 5
+    freq_range = (0, 1000)
+    freq_steps = 1000
     thick = 0.02
     damping = 0.003
 
