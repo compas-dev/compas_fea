@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
     from compas_fea.structure import Structure
 
-    fnm = '/home/al/temp/truss_tower.obj'
+    fnm = '/home/al/temp/mesh_roof.obj'
     # fnm = '/home/al/temp/mesh_floor.obj'
 
     mdl = Structure.load_from_obj(fnm)

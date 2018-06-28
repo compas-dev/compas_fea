@@ -237,11 +237,12 @@ def extract_odb_data(structure, fields, exe):
         for step in results:
             print('***** Saving step: {0} *****'.format(step))
             for dtype in results[step]:
-                for field in results[step][dtype]:
-                    data = {}
-                    for key in results[step][dtype][field]:
-                        data[int(key)] = results[step][dtype][field][key]
-                    results[step][dtype][field] = data
+                if dtype in ['nodal', 'element']:
+                    for field in results[step][dtype]:
+                        data = {}
+                        for key in results[step][dtype][field]:
+                            data[int(key)] = results[step][dtype][field][key]
+                        results[step][dtype][field] = data
 
         structure.results = results
 

@@ -504,15 +504,42 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         tolerance  = getattr(step, 'tolerance', None)
         iterations = getattr(step, 'iterations', None)
         method     = getattr(step, 'type', None)
+        scopy      = getattr(step, 'step', None)
+        modes      = getattr(step, 'modes', None)
         nlgeom = 'YES' if getattr(step, 'nlgeom', None) else 'NO'
         nlmat = 'YES' if getattr(step, 'nlmat', None) else 'NO'
 
-        if isinstance(step.loads, str):
-            step.loads = [step.loads]
+        if getattr(step, 'loads', None):
+            if isinstance(step.loads, str):
+                step.loads = [step.loads]
+
+        # Modal
+
+        if stype == 'ModalStep':
+
+            f.write('{0} {1}\n'.format(c, key))
+            f.write('{0} '.format(c) + '-' * len(key) + '\n')
+            f.write('{0}\n'.format(c))
+
+            if software == 'abaqus':
+
+                f.write('*STEP, NAME={0}\n'.format(key))
+                f.write('*FREQUENCY, EIGENSOLVER=LANCZOS, NORMALIZATION=DISPLACEMENT\n')
+                f.write('{0}\n'.format(modes))
+                f.write('**\n')
+                f.write('**\n')
+                f.write('*OUTPUT, FIELD\n')
+                f.write('**\n')
+                f.write('*NODE OUTPUT\n')
+                f.write('**\n')
+                f.write('U\n')
+                f.write('**\n')
+                f.write('**\n')
+                f.write('*END STEP\n')
 
         # Mechanical
 
-        if stype in ['GeneralStep', 'BucklingStep']:
+        elif stype in ['GeneralStep', 'BucklingStep']:
 
             if headers[software]:
                 f.write(headers[software])
@@ -530,7 +557,6 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 f.write('**\n')
 
                 if stype == 'BucklingStep':
-                    modes = step.modes
                     f.write('{0}, {1}, {2}, {3}\n'.format(modes, modes, 2 * modes, increments))
 
                 f.write('**\n')
@@ -543,7 +569,17 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
             elif software == 'sofistik':
 
-                f.write("LC 1{0:0>2}0 TITL '{1}' DLZ 0.0\n".format(step_index, key))
+                if stype != 'BucklingStep':
+                    f.write("LC 1{0:0>2}00 TITL '{1}' DLZ 0.0\n".format(step_index, key))
+                else:
+                    scopy_index = steps[scopy].index
+                    f.write('HEAD BUCKLING LC {0}\n'.format(scopy))
+                    f.write('$\n')
+                    f.write('SYST PLC 2{0:0>2}0\n'.format(scopy_index))
+                    f.write('EIGE {0} ETYP BUCK LMIN AUTO LC 2{1:0>2}1\n'.format(modes, scopy_index))
+                    f.write('$\n')
+                    f.write('$\n')
+                    f.write('END\n')
 
             # Loads
 
@@ -646,7 +682,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     _write_displacements(f, software, com, nset, fact, sets, ndof)
 
                 else:
-                    f.write('    LCC {0} $ {1}\n'.format(displacement_index, k))
+                    if stype != 'BucklingStep':
+                        f.write('    LCC {0} $ {1}\n'.format(displacement_index, k))
 
             # Output
 
@@ -775,126 +812,131 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
         if software == 'sofistik':
 
-            is_rebar = False
-            for property in properties.values():
-                if property.reinforcement:
-                    is_rebar = True
+            if stype != 'BucklingStep':
 
-            if is_rebar:
+                is_rebar = False
+                for property in properties.values():
+                    if property.reinforcement:
+                        is_rebar = True
 
-                f.write('+PROG BEMESS\n')
-                f.write("HEAD REBAR {0} LC 1{1:0>2}0\n".format(state.upper(), step_index))
+                if is_rebar:
+
+                    f.write('+PROG BEMESS\n')
+                    f.write("HEAD REBAR {0} LC 1{1:0>2}00\n".format(state.upper(), step_index))
+                    f.write('$\n')
+                    f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
+                    # f.write('CTRL WARN 496 $ Possible non-constant longitudinal reinforcement.\n')
+                    # f.write('CTRL WARN 254 $ Vertical shear reinforcement not allowed for slab thickness smaller 20 cm.\n')
+                    f.write('CTRL PFAI 2\n')
+                    if state == 'sls':
+                        # f.write('CTRL SERV GALF 1.45\n')
+                        f.write('CTRL SLS\n')
+                        f.write('CRAC WK PARA\n')
+                    else:
+                        f.write('CTRL ULTI\n')
+                    f.write('CTRL LCR {0}\n'.format(step_index))
+                    f.write('LC 1{0:0>2}00\n'.format(step_index))  # can put many LC here LC301,302 etc
+                    f.write('$\n')
+                    f.write('$\n')
+                    f.write('END\n')
+                    f.write('$\n')
+                    f.write('$\n')
+
+                    # if state == 'uls':
+
+                    #     f.write('+PROG BEMESS\n')
+                    #     f.write("HEAD REBAR {0} LC 1{1:0>2}0 COMBINED\n".format(state.upper(), step_index))
+                    #     f.write('$\n')
+                    #     f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
+                    #     f.write('CTRL PFAI 2\n')
+                    #     f.write('CTRL LCRI {0}\n'.format(step_index))
+                    #     f.write('CTRL LCR 1{0:0>2}\n'.format(step_index))
+                    #     f.write('$\n')
+                    #     f.write('$\n')
+                    #     f.write('END\n')
+                    #     f.write('$\n')
+                    #     f.write('$\n')
+
+                f.write('+PROG ASE\n')
+                f.write("HEAD SOLVE {0} LC 2{1:0>2}00 {2}\n".format(state.upper(), step_index, key))
                 f.write('$\n')
-                f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
-                # f.write('CTRL WARN 496 $ Possible non-constant longitudinal reinforcement.\n')
-                # f.write('CTRL WARN 254 $ Vertical shear reinforcement not allowed for slab thickness smaller 20 cm.\n')
-                f.write('CTRL PFAI 2\n')
+                f.write('CTRL SOLV 1\n')
+                f.write('CTRL CONC\n')
+
                 if state == 'sls':
-                    # f.write('CTRL SERV GALF 1.45\n')
-                    f.write('CTRL SLS\n')
-                    f.write('CRAC WK PARA\n')
-                else:
-                    f.write('CTRL ULTI\n')
-                f.write('CTRL LCR {0}\n'.format(step_index))
-                f.write('LC 1{0:0>2}0\n'.format(step_index))  # can put many LC here LC301,302 etc
+                    pass
+                    # f.write('NSTR KMOD S1 KSV SLD\n')
+                elif state == 'uls':
+                    # f.write('NSTR KMOD S1 KSV ULD\n')
+                    f.write('ULTI 30 FAK1 0.1 DFAK 0.1 PRO 1.5 FAKE 1.5\n')
+                if nlgeom == 'YES':
+                    f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2}\n'.format(increments, tolerance, nlmat))
+                    # f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2} PLC 1{3:0>2}00\n'.format(increments, tolerance, nlmat, step_index))
+
+                # if state == 'uls':
+                    # f.write('REIQ LCR 1{0:0>2}\n'.format(step_index))
+                # else:
+                    # f.write('REIQ LCR {0}\n'.format(step_index))
+
+                f.write('REIQ LCR {0}\n'.format(step_index))
                 f.write('$\n')
+
+                DLX, DLY, DLZ = 0, 0, 0
+                for load in loads.values():
+                    if load.__name__ == 'GravityLoad':
+                        com = load.components
+                        DLX = com['x'] if com['x'] else 0
+                        DLY = com['y'] if com['y'] else 0
+                        DLZ = com['z'] if com['z'] else 0
+                        break
+
+                if isinstance(factor, dict):
+                    fact = factor.get('g', 1.0)
+                else:
+                    fact = factor
+
+                f.write('$\n')
+                f.write("LC 2{0:0>2}00 TITL '{1}'".format(step_index, key))
+                f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * fact, DLY * fact, DLZ * fact))
+                f.write('    LCC 1{0:0>2}00\n'.format(step_index))
+
                 f.write('$\n')
                 f.write('END\n')
                 f.write('$\n')
                 f.write('$\n')
 
-                # if state == 'uls':
+                f.write('+PROG ASE\n')
+                f.write("HEAD CREEP {0} LC 3{1:0>2}00 {2}\n".format(state.upper(), step_index, key))
+                f.write('$\n')
+                f.write('CTRL SOLV 1\n')
+                f.write('CTRL CONC\n')
+                f.write('CREP NCRE 10\n')
 
-                #     f.write('+PROG BEMESS\n')
-                #     f.write("HEAD REBAR {0} LC 1{1:0>2}0 COMBINED\n".format(state.upper(), step_index))
-                #     f.write('$\n')
-                #     f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
-                #     f.write('CTRL PFAI 2\n')
-                #     f.write('CTRL LCRI {0}\n'.format(step_index))
-                #     f.write('CTRL LCR 1{0:0>2}\n'.format(step_index))
-                #     f.write('$\n')
-                #     f.write('$\n')
-                #     f.write('END\n')
-                #     f.write('$\n')
-                #     f.write('$\n')
+                if nlgeom == 'YES':
+                    f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2} PLC 2{3:0>2}00\n'.format(increments, tolerance, nlmat, step_index))
+                f.write('GRP ALL FACS 1.00 PHI 1.00 PHIF 0 EPS -0.0005\n')
 
-            f.write('+PROG ASE\n')
-            f.write("HEAD SOLVE {0} LC 2{1:0>2}0 {2}\n".format(state.upper(), step_index, key))
-            f.write('$\n')
-            f.write('CTRL SOLV 1\n')
-            f.write('CTRL CONC\n')
+                f.write('REIQ LCR {0}\n'.format(step_index))
+                f.write('$\n')
 
-            if state == 'sls':
-                f.write('NSTR KMOD S1 KSV SLD\n')
-            elif state == 'uls':
-                f.write('NSTR KMOD S1 KSV ULD\n')
-            if nlgeom == 'YES':
-                f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2}\n'.format(increments, tolerance, nlmat))
+                DLX, DLY, DLZ = 0, 0, 0
+                for load in loads.values():
+                    if load.__name__ == 'GravityLoad':
+                        com = load.components
+                        DLX = com['x'] if com['x'] else 0
+                        DLY = com['y'] if com['y'] else 0
+                        DLZ = com['z'] if com['z'] else 0
+                        break
 
-            # if state == 'uls':
-                # f.write('REIQ LCR 1{0:0>2}\n'.format(step_index))
-            # else:
-                # f.write('REIQ LCR {0}\n'.format(step_index))
+                f.write('$\n')
+                f.write("LC 3{0:0>2}00 TITL '{1} CREEP'".format(step_index, key))
+                f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * fact, DLY * fact, DLZ * fact))
+                f.write('    LCC 2{0:0>2}00 PLC YES\n'.format(step_index))
 
-            f.write('REIQ LCR {0}\n'.format(step_index))
-            f.write('$\n')
-
-            DLX, DLY, DLZ = 0, 0, 0
-            for load in loads.values():
-                if load.__name__ == 'GravityLoad':
-                    com = load.components
-                    DLX = com['x'] if com['x'] else 0
-                    DLY = com['y'] if com['y'] else 0
-                    DLZ = com['z'] if com['z'] else 0
-                    break
-
-            if isinstance(factor, dict):
-                pass
-            else:
-                fact = factor
-
-            f.write('$\n')
-            f.write("LC 2{0:0>2}0 TITL '{1}'".format(step_index, key))
-            f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * fact, DLY * factor, DLZ * fact))
-            f.write('    LCC 1{0:0>2}0\n'.format(step_index))
-
-            f.write('$\n')
-            f.write('END\n')
-            f.write('$\n')
-            f.write('$\n')
-
-            # f.write('+PROG ASE\n')
-            # f.write("HEAD CREEP {0} LC 3{1:0>2}0 {2}\n".format(state.upper(), step_index, key))
-            # f.write('$\n')
-            # f.write('CTRL SOLV 1\n')
-            # f.write('CTRL CONC\n')
-            # f.write('CREP NCRE 10\n')
-
-            # if nlgeom == 'YES':
-            #     f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2} PLC 2{3:0>2}0\n'.format(increments, tolerance, nlmat, step_index))
-            # f.write('GRP ALL FACS 1.00 PHI 1.00 PHIF 0 EPS -0.0005\n')
-
-            # f.write('REIQ LCR {0}\n'.format(step_index))
-            # f.write('$\n')
-
-            # DLX, DLY, DLZ = 0, 0, 0
-            # for load in loads.values():
-            #     if load.__name__ == 'GravityLoad':
-            #         com = load.components
-            #         DLX = com['x'] if com['x'] else 0
-            #         DLY = com['y'] if com['y'] else 0
-            #         DLZ = com['z'] if com['z'] else 0
-            #         break
-
-            # f.write('$\n')
-            # f.write("LC 3{0:0>2}0 TITL '{1} CREEP'".format(step_index, key))
-            # f.write(' DLX {0} DLY {1} DLZ {2} FACT {3}\n'.format(DLX * factor, DLY * factor, DLZ * factor, factor))
-            # f.write('    LCC 2{0:0>2}0 PLC YES\n'.format(step_index))
-
-            # f.write('$\n')
-            # f.write('END\n')
-            # f.write('$\n')
-            # f.write('$\n')
+                f.write('$\n')
+                f.write('END\n')
+                f.write('$\n')
+                f.write('$\n')
 
 
 # Thermal

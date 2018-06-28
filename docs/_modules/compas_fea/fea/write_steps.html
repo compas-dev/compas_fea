@@ -1,0 +1,1213 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>compas -- additonal packages</title>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+        <meta name="author" content="Tom Van Mele" />
+        <meta name="description" content="compas is a computational framework for research in architecture and structures." />
+
+        <link rel="shortcut icon" href="/_static/images/compas.ico" type="image/x-icon">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+        <link rel="stylesheet" type="text/css" href="/_static/css/github.css" />
+        <link rel="stylesheet" type="text/css" href="/_static/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="/_static/css/compas-reference.css" />
+
+        
+        
+        
+
+        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    </head>
+    <body data-spy="scroll" data-target="#compas-localnav">
+
+        <header class="navbar navbar-expand compas-navbar">
+            <a class="navbar-brand" href="/">
+                <img src="/_static/images/compas_icon.png" width="36px" height="36px" alt="compas" />
+            </a>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item ">
+                        <a class="nav-link " href="/main/">Main library</a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link " href="/packages/">Additional Packages</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://forum.compas-framework.org">Forum</a>
+                    </li>
+                </ul>
+        </header>
+        
+        <div class="container-fluid compas-container">
+            <div class="row flex-xl-nowrap">
+
+                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+
+                    
+
+                        <!-- 
+    <nav class="breadcrumb">
+        <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
+        <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">additional packages</a>
+        
+            
+                <a class="breadcrumb-item" href="../../index.html" accesskey="U">module code</a>
+            
+        
+    </nav>
+ -->
+
+                        
+
+                        <h1>Source code for compas_fea.fea.write_steps</h1><div class="highlight"><pre><code class="language-python border rounded">
+<span></span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+
+<span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright 2018, BLOCK Research Group - ETH Zurich&#39;</span>
+<span class="n">__license__</span>   <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
+<span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;write_input_steps&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="n">comments</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>   <span class="s1">&#39;**&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;opensees&#39;</span><span class="p">:</span> <span class="s1">&#39;#&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span> <span class="s1">&#39;$&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>    <span class="s1">&#39;!&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">middle</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>   <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;opensees&#39;</span><span class="p">:</span> <span class="s1">&#39;}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>    <span class="s1">&#39;&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>   <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;opensees&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span> <span class="s1">&#39;+PROG ASE</span><span class="se">\n</span><span class="s1">$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>    <span class="s1">&#39;&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">footers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>   <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;opensees&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span> <span class="s1">&#39;END</span><span class="se">\n</span><span class="s1">$</span><span class="se">\n</span><span class="s1">$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>    <span class="s1">&#39;&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">dofs</span>           <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;xx&#39;</span><span class="p">,</span> <span class="s1">&#39;yy&#39;</span><span class="p">,</span> <span class="s1">&#39;zz&#39;</span><span class="p">]</span>
+<span class="n">node_fields</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;rf&#39;</span><span class="p">,</span> <span class="s1">&#39;rm&#39;</span><span class="p">,</span> <span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;ur&#39;</span><span class="p">,</span> <span class="s1">&#39;cf&#39;</span><span class="p">,</span> <span class="s1">&#39;cm&#39;</span><span class="p">]</span>
+<span class="n">element_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sf&#39;</span><span class="p">,</span> <span class="s1">&#39;sm&#39;</span><span class="p">,</span> <span class="s1">&#39;sk&#39;</span><span class="p">,</span> <span class="s1">&#39;se&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;pe&#39;</span><span class="p">,</span> <span class="s1">&#39;rbfor&#39;</span><span class="p">,</span> <span class="s1">&#39;ctf&#39;</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_write_point_loads</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*CLOAD</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">coms</span> <span class="ow">in</span> <span class="n">com</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">ni</span> <span class="o">=</span> <span class="n">node</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">ci</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">coms</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="n">dofs</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">ci</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span> <span class="o">*</span> <span class="n">factor</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">coms</span> <span class="ow">in</span> <span class="n">com</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">ni</span> <span class="o">=</span> <span class="n">node</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">ci</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">coms</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">ci</span> <span class="ow">in</span> <span class="s1">&#39;xyz&#39;</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    NODE NO </span><span class="si">{0}</span><span class="s1"> TYPE P</span><span class="si">{1}{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="s1">[kN]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">ci</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">value</span> <span class="o">*</span> <span class="mf">0.001</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    NODE NO </span><span class="si">{0}</span><span class="s1"> TYPE M</span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="s1">[kNm]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">ci</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">value</span> <span class="o">*</span> <span class="mf">0.001</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+
+        <span class="k">pass</span>
+    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>
+
+        <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">_write_point_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">ndof</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*CLOAD</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">ni</span> <span class="o">=</span> <span class="n">node</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ni</span> <span class="o">=</span> <span class="n">node</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">ci</span><span class="p">,</span> <span class="n">dof</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dofs</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">]:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">ci</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span> <span class="o">*</span> <span class="n">factor</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">selection</span> <span class="o">=</span> <span class="n">sets</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;selection&#39;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
+                    <span class="n">ni</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="k">for</span> <span class="n">ci</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">com</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">ci</span> <span class="ow">in</span> <span class="s1">&#39;xyz&#39;</span><span class="p">:</span>
+                                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    NODE NO </span><span class="si">{0}</span><span class="s1"> TYPE P</span><span class="si">{1}{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">ci</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">value</span> <span class="o">*</span> <span class="mf">0.001</span><span class="p">))</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    NODE NO </span><span class="si">{0}</span><span class="s1"> TYPE M</span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">ci</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">value</span> <span class="o">*</span> <span class="mf">0.001</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+
+        <span class="n">coms</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">])</span> <span class="k">for</span> <span class="n">dof</span> <span class="ow">in</span> <span class="n">dofs</span><span class="p">[:</span><span class="n">ndof</span><span class="p">]])</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">selection</span> <span class="o">=</span> <span class="n">sets</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="s1">&#39;selection&#39;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
+                    <span class="n">ni</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;load </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">coms</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ni</span> <span class="o">=</span> <span class="n">node</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;load </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">coms</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+
+        <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">_write_line_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">factor</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">structure</span><span class="p">):</span>
+
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">elset</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*DLOAD</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">&#39;global&#39;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">dof</span> <span class="ow">in</span> <span class="n">dofs</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">]:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, P</span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">dof</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">factor</span> <span class="o">*</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, P1, </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">factor</span> <span class="o">*</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, P2, </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">factor</span> <span class="o">*</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">&#39;global&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+            <span class="k">elif</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
+                <span class="n">elements</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sets</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;selection&#39;</span><span class="p">]])</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;eleLoad -ele </span><span class="si">{0}</span><span class="s1"> -type -beamUniform </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="o">-</span><span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="o">-</span><span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]))</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sets</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;selection&#39;</span><span class="p">]:</span>
+                <span class="n">ni</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">sofistik_mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">&#39;global&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    BEAM </span><span class="si">{0}</span><span class="s1"> TYPE PXX </span><span class="si">{1}</span><span class="s1">[kN/m]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.001</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    BEAM </span><span class="si">{0}</span><span class="s1"> TYPE PYY </span><span class="si">{1}</span><span class="s1">[kN/m]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.001</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    BEAM </span><span class="si">{0}</span><span class="s1"> TYPE PZZ </span><span class="si">{1}</span><span class="s1">[kN/m]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.001</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    BEAM </span><span class="si">{0}</span><span class="s1"> TYPE PX </span><span class="si">{1}</span><span class="s1">[kN/m]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.001</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    BEAM </span><span class="si">{0}</span><span class="s1"> TYPE PY </span><span class="si">{1}</span><span class="s1">[kN/m]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.001</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    BEAM </span><span class="si">{0}</span><span class="s1"> TYPE PZ </span><span class="si">{1}</span><span class="s1">[kN/m]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.001</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>
+
+            <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">_write_area_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+
+        <span class="k">pass</span>
+
+    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">&#39;global&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+        <span class="k">elif</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
+            <span class="c1"># x COMPONENT</span>
+            <span class="c1"># y COMPONENT</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*DLOAD</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, P, </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">elset</span><span class="p">,</span> <span class="n">factor</span> <span class="o">*</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+        <span class="n">components</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="s1">&#39;xyz&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
+                    <span class="n">components</span> <span class="o">+=</span> <span class="s1">&#39; P</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1">[kN/m2]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="mf">0.001</span> <span class="o">*</span> <span class="n">com</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">axes</span> <span class="o">==</span> <span class="s1">&#39;global&#39;</span><span class="p">:</span>
+                    <span class="n">components</span> <span class="o">+=</span> <span class="s1">&#39; P</span><span class="si">{0}{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1">[kN/m2]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="mf">0.001</span> <span class="o">*</span> <span class="n">com</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">elset</span><span class="p">:</span>
+            <span class="n">set_index</span> <span class="o">=</span> <span class="n">sets</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    QUAD GRP </span><span class="si">{0}</span><span class="s1"> TYPE</span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">set_index</span><span class="p">,</span> <span class="n">components</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>
+
+        <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">_write_gravity_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+
+    <span class="n">gx</span> <span class="o">=</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">gy</span> <span class="o">=</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">gz</span> <span class="o">=</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">elset</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*DLOAD</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, GRAV, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">, </span><span class="si">{3}</span><span class="s1">, </span><span class="si">{4}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">g</span> <span class="o">*</span> <span class="n">factor</span><span class="p">,</span> <span class="n">gx</span><span class="p">,</span> <span class="n">gy</span><span class="p">,</span> <span class="n">gz</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+        <span class="k">pass</span>
+
+    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+
+        <span class="k">pass</span>
+
+    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>
+
+        <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">_write_displacements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">nset</span><span class="p">,</span> <span class="n">factor</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">ndof</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*BOUNDARY</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ci</span><span class="p">,</span> <span class="n">dof</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dofs</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nset</span><span class="p">,</span> <span class="n">ci</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span> <span class="o">*</span> <span class="n">factor</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">ci</span><span class="p">,</span> <span class="n">dof</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dofs</span><span class="p">[:</span><span class="n">ndof</span><span class="p">],</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">sets</span><span class="p">[</span><span class="n">nset</span><span class="p">][</span><span class="s1">&#39;selection&#39;</span><span class="p">]:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;sp </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ci</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="n">dof</span><span class="p">]))</span>
+
+    <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sets</span><span class="p">[</span><span class="n">nset</span><span class="p">][</span><span class="s1">&#39;selection&#39;</span><span class="p">]:</span>
+            <span class="n">ni</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    NODE </span><span class="si">{0}</span><span class="s1"> TYPE WXX </span><span class="si">{1}</span><span class="s1">[mm]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    NODE </span><span class="si">{0}</span><span class="s1"> TYPE WYY </span><span class="si">{1}</span><span class="s1">[mm]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    NODE </span><span class="si">{0}</span><span class="s1"> TYPE WZZ </span><span class="si">{1}</span><span class="s1">[mm]</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;xx&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    NODE </span><span class="si">{0}</span><span class="s1"> TYPE DXX </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;xx&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;yy&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    NODE </span><span class="si">{0}</span><span class="s1"> TYPE DYY </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;yy&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;zz&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    NODE </span><span class="si">{0}</span><span class="s1"> TYPE DZZ </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;zz&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_write_tributary_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*CLOAD</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">com</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>
+        <span class="n">ni</span> <span class="o">=</span> <span class="n">node</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">ci</span><span class="p">,</span> <span class="n">dof</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dofs</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">dof</span><span class="p">]:</span>
+                    <span class="n">ni</span> <span class="o">=</span> <span class="n">node</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">dl</span> <span class="o">=</span> <span class="n">com</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">dof</span><span class="p">]</span> <span class="o">*</span> <span class="n">factor</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">,</span> <span class="n">ci</span><span class="p">,</span> <span class="n">dl</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    NODE NO </span><span class="si">{0}</span><span class="s1"> TYPE &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ni</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">ci</span><span class="p">,</span> <span class="n">dof</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dofs</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">dof</span><span class="p">]:</span>
+                    <span class="n">dl</span> <span class="o">=</span> <span class="n">com</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">dof</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1000.</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;P</span><span class="si">{0}{0}</span><span class="s1">[kN] </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dof</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">dl</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+
+            <span class="k">pass</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>
+
+            <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">_write_prestress_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">com</span><span class="p">):</span>
+
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">elset</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*INITIAL CONDITIONS, TYPE=STRESS</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;sxx&#39;</span><span class="p">]:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">com</span><span class="p">[</span><span class="s1">&#39;sxx&#39;</span><span class="p">]))</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+            <span class="k">pass</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+
+                <span class="k">pass</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>
+
+            <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">_write_thermal_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">elset</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+
+            <span class="k">pass</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">elset</span><span class="p">:</span>
+                <span class="n">set_index</span> <span class="o">=</span> <span class="n">sets</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    QUAD GRP </span><span class="si">{0}</span><span class="s1"> TYPE </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">set_index</span><span class="p">,</span> <span class="s1">&#39;DTXY&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+
+                <span class="k">pass</span>
+
+        <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>
+
+            <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="write_input_steps"><a class="viewcode-back" href="../../../reference/generated/compas_fea.fea.write_steps.write_input_steps.html#compas_fea.fea.write_steps.write_input_steps">[docs]</a><span class="k">def</span> <span class="nf">write_input_steps</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">ndof</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">{}):</span>
+
+    <span class="sd">&quot;&quot;&quot; Writes the Steps information to the input file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    f : obj</span>
+<span class="sd">        The open file object for the .tcl file.</span>
+<span class="sd">    software : str</span>
+<span class="sd">        Analysis software or library to use, &#39;abaqus&#39;, &#39;opensees&#39;, &#39;sofistik&#39; or &#39;ansys&#39;.</span>
+<span class="sd">    structure : obj</span>
+<span class="sd">        The Structure object to read from.</span>
+<span class="sd">    steps : dic</span>
+<span class="sd">        Step objects from structure.steps.</span>
+<span class="sd">    loads : dic</span>
+<span class="sd">        Load objects from structure.loads.</span>
+<span class="sd">    displacements : dic</span>
+<span class="sd">        Displacement objects from structure.displacements.</span>
+<span class="sd">    sets : dic</span>
+<span class="sd">        Sets from structures.sets.</span>
+<span class="sd">    fields : list</span>
+<span class="sd">        Requested fields output.</span>
+<span class="sd">    ndof : int</span>
+<span class="sd">        Number of degrees-of-freedom per node.</span>
+<span class="sd">    properties : dic</span>
+<span class="sd">        ElementProperties objects from structure.element_properties</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">c</span> <span class="o">=</span> <span class="n">comments</span><span class="p">[</span><span class="n">software</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> ----------------------------------------------------------------------- Loads</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;+PROG SOFILOAD</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">loads</span><span class="p">):</span>
+
+            <span class="n">load</span> <span class="o">=</span> <span class="n">loads</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="n">load_index</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">ltype</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="n">com</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="s1">&#39;components&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="s1">&#39;axes&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">temperature</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">nodes</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="s1">&#39;nodes&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">elset</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="s1">&#39;elements&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">nodes</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elset</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">elset</span> <span class="o">=</span> <span class="p">[</span><span class="n">elset</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">ltype</span> <span class="o">!=</span> <span class="s1">&#39;GravityLoad&#39;</span><span class="p">:</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$ </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$ &#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;LC </span><span class="si">{0}</span><span class="s2"> TITL &#39;</span><span class="si">{1}</span><span class="s2">&#39;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">load_index</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;PointLoad&#39;</span><span class="p">:</span>
+                    <span class="n">_write_point_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">ndof</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;PointLoads&#39;</span><span class="p">:</span>
+                    <span class="n">_write_point_loads</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;LineLoad&#39;</span><span class="p">:</span>
+                    <span class="n">_write_line_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;PrestressLoad&#39;</span><span class="p">:</span>
+                    <span class="n">_write_prestress_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">com</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;TributaryLoad&#39;</span><span class="p">:</span>
+                    <span class="n">_write_tributary_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;AreaLoad&#39;</span><span class="p">:</span>
+                    <span class="n">_write_area_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;ThermalLoad&#39;</span><span class="p">:</span>
+                    <span class="n">_write_thermal_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span>  <span class="mi">1</span><span class="p">)</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">displacements</span><span class="p">):</span>
+
+            <span class="n">bc_disps</span> <span class="o">=</span> <span class="n">steps</span><span class="p">[</span><span class="n">structure</span><span class="o">.</span><span class="n">steps_order</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">displacements</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bc_disps</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">bc_disps</span> <span class="o">=</span> <span class="p">[</span><span class="n">bc_disps</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bc_disps</span><span class="p">:</span>
+
+                <span class="n">displacement</span> <span class="o">=</span> <span class="n">displacements</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">displacement_index</span> <span class="o">=</span> <span class="n">displacement</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span>
+                <span class="n">com</span> <span class="o">=</span> <span class="n">displacement</span><span class="o">.</span><span class="n">components</span>
+                <span class="n">nset</span> <span class="o">=</span> <span class="n">displacement</span><span class="o">.</span><span class="n">nodes</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;LC </span><span class="si">{0}</span><span class="s2"> TITL &#39;</span><span class="si">{1}</span><span class="s2">&#39;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">displacement_index</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+
+                <span class="n">_write_displacements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">nset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">ndof</span><span class="p">)</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;END</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> -----------------------------------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> ----------------------------------------------------------------------- Steps</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">steps_order</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+    <span class="n">temp</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+
+        <span class="n">step</span>       <span class="o">=</span> <span class="n">steps</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="n">stype</span>      <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">step_index</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">index</span>
+        <span class="n">state</span>      <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">factor</span>     <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;factor&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">increments</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;increments&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">tolerance</span>  <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;tolerance&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">iterations</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;iterations&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">method</span>     <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">scopy</span>      <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;step&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">modes</span>      <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;modes&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">nlgeom</span> <span class="o">=</span> <span class="s1">&#39;YES&#39;</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;nlgeom&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;NO&#39;</span>
+        <span class="n">nlmat</span> <span class="o">=</span> <span class="s1">&#39;YES&#39;</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;nlmat&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;NO&#39;</span>
+
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="s1">&#39;loads&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">loads</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">step</span><span class="o">.</span><span class="n">loads</span> <span class="o">=</span> <span class="p">[</span><span class="n">step</span><span class="o">.</span><span class="n">loads</span><span class="p">]</span>
+
+        <span class="c1"># Modal</span>
+
+        <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">&#39;ModalStep&#39;</span><span class="p">:</span>
+
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*STEP, NAME=</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*FREQUENCY, EIGENSOLVER=LANCZOS, NORMALIZATION=DISPLACEMENT</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">modes</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*OUTPUT, FIELD</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*NODE OUTPUT</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;U</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*END STEP</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Mechanical</span>
+
+        <span class="k">elif</span> <span class="n">stype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;GeneralStep&#39;</span><span class="p">,</span> <span class="s1">&#39;BucklingStep&#39;</span><span class="p">]:</span>
+
+            <span class="k">if</span> <span class="n">headers</span><span class="p">[</span><span class="n">software</span><span class="p">]:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">headers</span><span class="p">[</span><span class="n">software</span><span class="p">])</span>
+
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+
+                <span class="n">perturbation</span> <span class="o">=</span> <span class="s1">&#39;, PERTURBATION&#39;</span> <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">&#39;BucklingStep&#39;</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*STEP, NLGEOM=</span><span class="si">{0}</span><span class="s1">, NAME=</span><span class="si">{1}{2}</span><span class="s1">, INC=</span><span class="si">{3}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nlgeom</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">perturbation</span><span class="p">,</span> <span class="n">increments</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">upper</span><span class="p">()))</span>
+                <span class="c1"># f.write(&#39;, {0}\n&#39;.format(factor))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">&#39;BucklingStep&#39;</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">, </span><span class="si">{3}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">modes</span><span class="p">,</span> <span class="n">modes</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">modes</span><span class="p">,</span> <span class="n">increments</span><span class="p">))</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;timeSeries Constant </span><span class="si">{0}</span><span class="s1"> -factor 1.0</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;pattern Plain </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{0}</span><span class="s1"> -fact </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">,</span> <span class="n">factor</span><span class="p">,</span> <span class="s1">&#39;{&#39;</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">stype</span> <span class="o">!=</span> <span class="s1">&#39;BucklingStep&#39;</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;LC 1</span><span class="si">{0:0&gt;2}</span><span class="s2">00 TITL &#39;</span><span class="si">{1}</span><span class="s2">&#39; DLZ 0.0</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">scopy_index</span> <span class="o">=</span> <span class="n">steps</span><span class="p">[</span><span class="n">scopy</span><span class="p">]</span><span class="o">.</span><span class="n">index</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;HEAD BUCKLING LC </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scopy</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;SYST PLC 2</span><span class="si">{0:0&gt;2}</span><span class="s1">0</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scopy_index</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;EIGE </span><span class="si">{0}</span><span class="s1"> ETYP BUCK LMIN AUTO LC 2</span><span class="si">{1:0&gt;2}</span><span class="s1">1</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">modes</span><span class="p">,</span> <span class="n">scopy_index</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;END</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Loads</span>
+
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">loads</span><span class="p">:</span>
+
+                <span class="n">load</span> <span class="o">=</span> <span class="n">loads</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">load_index</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">ltype</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="n">com</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="s1">&#39;components&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">axes</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="s1">&#39;axes&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">nodes</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="s1">&#39;nodes&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">fact</span> <span class="o">=</span> <span class="n">factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">fact</span> <span class="o">=</span> <span class="n">factor</span>
+
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">nodes</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">load</span><span class="o">.</span><span class="n">elements</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="n">elset</span> <span class="o">=</span> <span class="p">[</span><span class="n">load</span><span class="o">.</span><span class="n">elements</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">elset</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">elements</span>
+
+                <span class="k">if</span> <span class="n">software</span> <span class="o">!=</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ltype</span> <span class="o">!=</span> <span class="s1">&#39;GravityLoad&#39;</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    LCC </span><span class="si">{0}</span><span class="s1"> FACT </span><span class="si">{1}</span><span class="s1"> $ </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">load_index</span><span class="p">,</span> <span class="n">fact</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+
+                <span class="c1"># Point load</span>
+
+                <span class="k">if</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;PointLoad&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">software</span> <span class="o">!=</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+                        <span class="n">_write_point_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">ndof</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">fact</span><span class="p">)</span>
+
+                <span class="c1"># Point loads</span>
+
+                <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;PointLoads&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">software</span> <span class="o">!=</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+                        <span class="n">_write_point_loads</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">fact</span><span class="p">)</span>
+
+                <span class="c1"># # Pre-stress</span>
+
+                <span class="k">elif</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;PrestressLoad&#39;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">software</span> <span class="o">!=</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+                        <span class="n">_write_prestress_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">com</span><span class="p">)</span>
+
+                <span class="c1"># Line load</span>
+
+                <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;LineLoad&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">software</span> <span class="o">!=</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+                        <span class="n">_write_line_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">fact</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span>
+
+                <span class="c1"># Area load</span>
+
+                <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;AreaLoad&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">software</span> <span class="o">!=</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+                        <span class="n">_write_area_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">fact</span><span class="p">)</span>
+
+                <span class="c1"># Body load</span>
+
+                <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;BodyLoad&#39;</span><span class="p">:</span>
+
+                    <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+                <span class="c1"># Gravity load</span>
+
+                <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;GravityLoad&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">software</span> <span class="o">!=</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+                        <span class="n">_write_gravity_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">load</span><span class="o">.</span><span class="n">g</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">fact</span><span class="p">)</span>
+
+                <span class="c1"># Tributary load</span>
+
+                <span class="k">elif</span> <span class="n">ltype</span> <span class="o">==</span> <span class="s1">&#39;TributaryLoad&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">software</span> <span class="o">!=</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+                        <span class="n">_write_tributary_load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">fact</span><span class="p">)</span>
+
+            <span class="c1"># Displacements</span>
+
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">displacements</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">fact</span> <span class="o">=</span> <span class="n">factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">fact</span> <span class="o">=</span> <span class="n">factor</span>
+
+                <span class="n">displacement</span> <span class="o">=</span> <span class="n">displacements</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">displacement_index</span> <span class="o">=</span> <span class="n">displacement</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">loads</span><span class="p">)</span>
+                <span class="n">com</span> <span class="o">=</span> <span class="n">displacement</span><span class="o">.</span><span class="n">components</span>
+                <span class="n">nset</span> <span class="o">=</span> <span class="n">displacement</span><span class="o">.</span><span class="n">nodes</span>
+
+                <span class="k">if</span> <span class="n">software</span> <span class="o">!=</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+                    <span class="n">_write_displacements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">software</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">nset</span><span class="p">,</span> <span class="n">fact</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">ndof</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">stype</span> <span class="o">!=</span> <span class="s1">&#39;BucklingStep&#39;</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    LCC </span><span class="si">{0}</span><span class="s1"> $ </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">displacement_index</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+
+            <span class="c1"># Output</span>
+
+            <span class="k">if</span> <span class="n">middle</span><span class="p">[</span><span class="n">software</span><span class="p">]:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">middle</span><span class="p">[</span><span class="n">software</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;opensees&#39;</span><span class="p">:</span>
+
+                <span class="n">nodal</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">node_range</span> <span class="o">=</span> <span class="s1">&#39;1 </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">node_count</span><span class="p">())</span>
+
+                <span class="k">if</span> <span class="s1">&#39;u&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                    <span class="n">nodal</span><span class="p">[</span><span class="s1">&#39;node_u.out&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1 2 3 disp&#39;</span>
+                <span class="k">if</span> <span class="s1">&#39;rf&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                    <span class="n">nodal</span><span class="p">[</span><span class="s1">&#39;node_rf.out&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1 2 3 reaction&#39;</span>
+                <span class="k">if</span> <span class="n">ndof</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s1">&#39;ur&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                        <span class="n">nodal</span><span class="p">[</span><span class="s1">&#39;node_ur.out&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;4 5 6 disp&#39;</span>
+                    <span class="k">if</span> <span class="s1">&#39;rm&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                        <span class="n">nodal</span><span class="p">[</span><span class="s1">&#39;node_rm.out&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;4 5 6 reaction&#39;</span>
+
+                <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;recorder Node -file </span><span class="si">{0}{1}</span><span class="s1">_&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">nodal</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1"> -time -nodeRange </span><span class="si">{2}</span><span class="s1"> -dof </span><span class="si">{3}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">node_range</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+
+                <span class="n">truss_elements</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="n">beam_elements</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="n">spring_elements</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="n">truss_numbers</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">beam_numbers</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">spring_numbers</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">for</span> <span class="n">ekey</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">structure</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">etype</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="vm">__name__</span>
+
+                    <span class="k">if</span> <span class="n">etype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;TrussElement&#39;</span><span class="p">,</span> <span class="s1">&#39;StrutElement&#39;</span><span class="p">,</span> <span class="s1">&#39;TieElement&#39;</span><span class="p">]:</span>
+                        <span class="n">truss_elements</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ekey</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                        <span class="n">truss_numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ekey</span><span class="p">)</span>
+
+                    <span class="k">elif</span> <span class="n">etype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;BeamElement&#39;</span><span class="p">]:</span>
+                        <span class="n">beam_elements</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ekey</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                        <span class="n">beam_numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ekey</span><span class="p">)</span>
+
+                    <span class="k">elif</span> <span class="n">etype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;SpringElement&#39;</span><span class="p">]:</span>
+                        <span class="n">spring_elements</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ekey</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                        <span class="n">spring_numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ekey</span><span class="p">)</span>
+
+                <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;recorder Element -file </span><span class="si">{0}{1}</span><span class="s1">_&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="s1">&#39;sf&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+
+                    <span class="k">if</span> <span class="n">truss_elements</span><span class="p">:</span>
+                        <span class="n">k</span> <span class="o">=</span> <span class="s1">&#39;element_truss_sf.out&#39;</span>
+                        <span class="n">j</span> <span class="o">=</span> <span class="s1">&#39;axialForce&#39;</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1"> -time -ele </span><span class="si">{2}{3}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">truss_elements</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+
+                    <span class="k">if</span> <span class="n">beam_elements</span><span class="p">:</span>
+                        <span class="n">k</span> <span class="o">=</span> <span class="s1">&#39;element_beam_sf.out&#39;</span>
+                        <span class="n">j</span> <span class="o">=</span> <span class="s1">&#39;force&#39;</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1"> -time -ele </span><span class="si">{2}{3}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">beam_elements</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="s1">&#39;spf&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+
+                    <span class="k">if</span> <span class="n">spring_elements</span><span class="p">:</span>
+                        <span class="n">k</span> <span class="o">=</span> <span class="s1">&#39;element_spring_sf.out&#39;</span>
+                        <span class="n">j</span> <span class="o">=</span> <span class="s1">&#39;basicForces&#39;</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1"> -time -ele </span><span class="si">{2}{3}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">spring_elements</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">truss_numbers.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fo</span><span class="p">:</span>
+                    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s1">&#39;truss_numbers&#39;</span><span class="p">:</span> <span class="n">truss_numbers</span><span class="p">},</span> <span class="n">fo</span><span class="p">)</span>
+
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">beam_numbers.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fo</span><span class="p">:</span>
+                    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s1">&#39;beam_numbers&#39;</span><span class="p">:</span> <span class="n">beam_numbers</span><span class="p">},</span> <span class="n">fo</span><span class="p">)</span>
+
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">spring_numbers.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fo</span><span class="p">:</span>
+                    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s1">&#39;spring_numbers&#39;</span><span class="p">:</span> <span class="n">spring_numbers</span><span class="p">},</span> <span class="n">fo</span><span class="p">)</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="c1"># f.write(&#39;constraints Plain\n&#39;)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;constraints Transformation</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;numberer RCM</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;system ProfileSPD</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;test NormUnbalance </span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> 5</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tolerance</span><span class="p">,</span> <span class="n">iterations</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;algorithm NewtonLineSearch</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;integrator LoadControl </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">increments</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;analysis Static</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;analyze </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">increments</span><span class="p">))</span>
+
+            <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">fields</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">fields_dic_from_list</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s1">&#39;spf&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                    <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;ctf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span>
+                    <span class="k">del</span> <span class="n">fields</span><span class="p">[</span><span class="s1">&#39;spf&#39;</span><span class="p">]</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*OUTPUT, FIELD</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*NODE OUTPUT</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">node_fields</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*ELEMENT OUTPUT</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">element_fields</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="ow">in</span> <span class="n">fields</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">!=</span> <span class="s1">&#39;rbfor&#39;</span><span class="p">)])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s1">&#39;rbfor&#39;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*ELEMENT OUTPUT, REBAR</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;RBFOR</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;*END STEP</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+                <span class="k">pass</span>
+
+            <span class="k">elif</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;ansys&#39;</span><span class="p">:</span>
+
+                <span class="k">pass</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">footers</span><span class="p">[</span><span class="n">software</span><span class="p">]:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">footers</span><span class="p">[</span><span class="n">software</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">software</span> <span class="o">==</span> <span class="s1">&#39;sofistik&#39;</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">stype</span> <span class="o">!=</span> <span class="s1">&#39;BucklingStep&#39;</span><span class="p">:</span>
+
+                <span class="n">is_rebar</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">for</span> <span class="nb">property</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">property</span><span class="o">.</span><span class="n">reinforcement</span><span class="p">:</span>
+                        <span class="n">is_rebar</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">if</span> <span class="n">is_rebar</span><span class="p">:</span>
+
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;+PROG BEMESS</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;HEAD REBAR </span><span class="si">{0}</span><span class="s2"> LC 1</span><span class="si">{1:0&gt;2}</span><span class="s2">00</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">step_index</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL WARN 471 $ Element thickness too thin and not allowed for a design.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="c1"># f.write(&#39;CTRL WARN 496 $ Possible non-constant longitudinal reinforcement.\n&#39;)</span>
+                    <span class="c1"># f.write(&#39;CTRL WARN 254 $ Vertical shear reinforcement not allowed for slab thickness smaller 20 cm.\n&#39;)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL PFAI 2</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="s1">&#39;sls&#39;</span><span class="p">:</span>
+                        <span class="c1"># f.write(&#39;CTRL SERV GALF 1.45\n&#39;)</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL SLS</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CRAC WK PARA</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL ULTI</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL LCR </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;LC 1</span><span class="si">{0:0&gt;2}</span><span class="s1">00</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">))</span>  <span class="c1"># can put many LC here LC301,302 etc</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;END</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                    <span class="c1"># if state == &#39;uls&#39;:</span>
+
+                    <span class="c1">#     f.write(&#39;+PROG BEMESS\n&#39;)</span>
+                    <span class="c1">#     f.write(&quot;HEAD REBAR {0} LC 1{1:0&gt;2}0 COMBINED\n&quot;.format(state.upper(), step_index))</span>
+                    <span class="c1">#     f.write(&#39;$\n&#39;)</span>
+                    <span class="c1">#     f.write(&#39;CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n&#39;)</span>
+                    <span class="c1">#     f.write(&#39;CTRL PFAI 2\n&#39;)</span>
+                    <span class="c1">#     f.write(&#39;CTRL LCRI {0}\n&#39;.format(step_index))</span>
+                    <span class="c1">#     f.write(&#39;CTRL LCR 1{0:0&gt;2}\n&#39;.format(step_index))</span>
+                    <span class="c1">#     f.write(&#39;$\n&#39;)</span>
+                    <span class="c1">#     f.write(&#39;$\n&#39;)</span>
+                    <span class="c1">#     f.write(&#39;END\n&#39;)</span>
+                    <span class="c1">#     f.write(&#39;$\n&#39;)</span>
+                    <span class="c1">#     f.write(&#39;$\n&#39;)</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;+PROG ASE</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;HEAD SOLVE </span><span class="si">{0}</span><span class="s2"> LC 2</span><span class="si">{1:0&gt;2}</span><span class="s2">00 </span><span class="si">{2}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">step_index</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL SOLV 1</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL CONC</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="s1">&#39;sls&#39;</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="c1"># f.write(&#39;NSTR KMOD S1 KSV SLD\n&#39;)</span>
+                <span class="k">elif</span> <span class="n">state</span> <span class="o">==</span> <span class="s1">&#39;uls&#39;</span><span class="p">:</span>
+                    <span class="c1"># f.write(&#39;NSTR KMOD S1 KSV ULD\n&#39;)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;ULTI 30 FAK1 0.1 DFAK 0.1 PRO 1.5 FAKE 1.5</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">nlgeom</span> <span class="o">==</span> <span class="s1">&#39;YES&#39;</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;SYST PROB TH3 ITER </span><span class="si">{0}</span><span class="s1"> TOL </span><span class="si">{1}</span><span class="s1"> NMAT </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">increments</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">nlmat</span><span class="p">))</span>
+                    <span class="c1"># f.write(&#39;SYST PROB TH3 ITER {0} TOL {1} NMAT {2} PLC 1{3:0&gt;2}00\n&#39;.format(increments, tolerance, nlmat, step_index))</span>
+
+                <span class="c1"># if state == &#39;uls&#39;:</span>
+                    <span class="c1"># f.write(&#39;REIQ LCR 1{0:0&gt;2}\n&#39;.format(step_index))</span>
+                <span class="c1"># else:</span>
+                    <span class="c1"># f.write(&#39;REIQ LCR {0}\n&#39;.format(step_index))</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;REIQ LCR </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="n">DLX</span><span class="p">,</span> <span class="n">DLY</span><span class="p">,</span> <span class="n">DLZ</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="n">loads</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">load</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;GravityLoad&#39;</span><span class="p">:</span>
+                        <span class="n">com</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">components</span>
+                        <span class="n">DLX</span> <span class="o">=</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+                        <span class="n">DLY</span> <span class="o">=</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+                        <span class="n">DLZ</span> <span class="o">=</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+                        <span class="k">break</span>
+
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">fact</span> <span class="o">=</span> <span class="n">factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">fact</span> <span class="o">=</span> <span class="n">factor</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;LC 2</span><span class="si">{0:0&gt;2}</span><span class="s2">00 TITL &#39;</span><span class="si">{1}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39; DLX </span><span class="si">{0}</span><span class="s1"> DLY </span><span class="si">{1}</span><span class="s1"> DLZ </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DLX</span> <span class="o">*</span> <span class="n">fact</span><span class="p">,</span> <span class="n">DLY</span> <span class="o">*</span> <span class="n">fact</span><span class="p">,</span> <span class="n">DLZ</span> <span class="o">*</span> <span class="n">fact</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    LCC 1</span><span class="si">{0:0&gt;2}</span><span class="s1">00</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">))</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;END</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;+PROG ASE</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;HEAD CREEP </span><span class="si">{0}</span><span class="s2"> LC 3</span><span class="si">{1:0&gt;2}</span><span class="s2">00 </span><span class="si">{2}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">step_index</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL SOLV 1</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CTRL CONC</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;CREP NCRE 10</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">nlgeom</span> <span class="o">==</span> <span class="s1">&#39;YES&#39;</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;SYST PROB TH3 ITER </span><span class="si">{0}</span><span class="s1"> TOL </span><span class="si">{1}</span><span class="s1"> NMAT </span><span class="si">{2}</span><span class="s1"> PLC 2</span><span class="si">{3:0&gt;2}</span><span class="s1">00</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">increments</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">nlmat</span><span class="p">,</span> <span class="n">step_index</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;GRP ALL FACS 1.00 PHI 1.00 PHIF 0 EPS -0.0005</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;REIQ LCR </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="n">DLX</span><span class="p">,</span> <span class="n">DLY</span><span class="p">,</span> <span class="n">DLZ</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">load</span> <span class="ow">in</span> <span class="n">loads</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">load</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;GravityLoad&#39;</span><span class="p">:</span>
+                        <span class="n">com</span> <span class="o">=</span> <span class="n">load</span><span class="o">.</span><span class="n">components</span>
+                        <span class="n">DLX</span> <span class="o">=</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+                        <span class="n">DLY</span> <span class="o">=</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+                        <span class="n">DLZ</span> <span class="o">=</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">com</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+                        <span class="k">break</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;LC 3</span><span class="si">{0:0&gt;2}</span><span class="s2">00 TITL &#39;</span><span class="si">{1}</span><span class="s2"> CREEP&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39; DLX </span><span class="si">{0}</span><span class="s1"> DLY </span><span class="si">{1}</span><span class="s1"> DLZ </span><span class="si">{2}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">DLX</span> <span class="o">*</span> <span class="n">fact</span><span class="p">,</span> <span class="n">DLY</span> <span class="o">*</span> <span class="n">fact</span><span class="p">,</span> <span class="n">DLZ</span> <span class="o">*</span> <span class="n">fact</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;    LCC 2</span><span class="si">{0:0&gt;2}</span><span class="s1">00 PLC YES</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step_index</span><span class="p">))</span>
+
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;END</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># Thermal</span>
+
+<span class="c1"># try:</span>
+<span class="c1">#     duration = step.duration</span>
+<span class="c1"># except:</span>
+<span class="c1">#     duration = 1</span>
+<span class="c1">#     temperatures = steps[key].temperatures</span>
+<span class="c1">#     if temperatures:</span>
+<span class="c1">#         file = misc[temperatures].file</span>
+<span class="c1">#         einc = str(misc[temperatures].einc)</span>
+<span class="c1">#         f.write(&#39;**\n&#39;)</span>
+<span class="c1">#         f.write(&#39;*TEMPERATURE, FILE={0}, BSTEP=1, BINC=1, ESTEP=1, EINC={1}, INTERPOLATE\n&#39;.format(file, einc))</span>
+
+<span class="c1"># elif stype == &#39;HeatStep&#39;:</span>
+
+<span class="c1">#     temp0 = step.temp0</span>
+<span class="c1">#     duration = step.duration</span>
+<span class="c1">#     deltmx = steps[key].deltmx</span>
+<span class="c1">#     interaction = interactions[step.interaction]</span>
+<span class="c1">#     amplitude = interaction.amplitude</span>
+<span class="c1">#     interface = interaction.interface</span>
+<span class="c1">#     sink_t = interaction.sink_t</span>
+<span class="c1">#     film_c = interaction.film_c</span>
+<span class="c1">#     ambient_t = interaction.ambient_t</span>
+<span class="c1">#     emissivity = interaction.emissivity</span>
+
+<span class="c1">#     # Initial T</span>
+
+<span class="c1">#     f.write(&#39;*INITIAL CONDITIONS, TYPE=TEMPERATURE\n&#39;)</span>
+<span class="c1">#     f.write(&#39;NSET_ALL, {0}\n&#39;.format(temp0))</span>
+<span class="c1">#     f.write(&#39;**\n&#39;)</span>
+
+<span class="c1">#     # Interface</span>
+
+<span class="c1">#     f.write(&#39;*STEP, NAME={0}, INC={1}\n&#39;.format(sname, increments))</span>
+<span class="c1">#     f.write(&#39;*{0}, END=PERIOD, DELTMX={1}\n&#39;.format(method, deltmx))</span>
+<span class="c1">#     f.write(&#39;1, {0}, 5.4e-05, {0}\n&#39;.format(duration))</span>
+<span class="c1">#     f.write(&#39;**\n&#39;)</span>
+<span class="c1">#     f.write(&#39;*SFILM, AMPLITUDE={0}\n&#39;.format(amplitude))</span>
+<span class="c1">#     f.write(&#39;{0}, F, {1}, {2}\n&#39;.format(interface, sink_t, film_c))</span>
+<span class="c1">#     f.write(&#39;**\n&#39;)</span>
+<span class="c1">#     f.write(&#39;*SRADIATE, AMPLITUDE={0}\n&#39;.format(amplitude))</span>
+<span class="c1">#     f.write(&#39;{0}, R, {1}, {2}\n&#39;.format(interface, ambient_t, emissivity))</span>
+
+<span class="c1">#     # fieldOutputs</span>
+
+<span class="c1">#     f.write(&#39;**\n&#39;)</span>
+<span class="c1">#     f.write(&#39;** OUTPUT\n&#39;)</span>
+<span class="c1">#     f.write(&#39;** ------\n&#39;)</span>
+<span class="c1">#     f.write(&#39;*OUTPUT, FIELD\n&#39;)</span>
+<span class="c1">#     f.write(&#39;**\n&#39;)</span>
+<span class="c1">#     f.write(&#39;*NODE OUTPUT\n&#39;)</span>
+<span class="c1">#     f.write(&#39;NT\n&#39;)</span>
+<span class="c1">#     f.write(&#39;**\n&#39;)</span>
+<span class="c1">#     f.write(&#39;*END STEP\n&#39;)</span>
+</code></pre></div>
+                        
+                        <!-- <nav class="compas-sideways">
+                            
+
+                            
+                        </nav> -->
+
+                    
+
+                </main>
+
+                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
+                    <div class="navbar-light">
+
+                        <form id="" class="d-flex compas-searchbox" action="../../../search.html" method="get">
+                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
+                            <input type="hidden" name="check_keywords" value="yes" />
+                            <input type="hidden" name="area" value="default" />
+
+                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                        </form>
+
+                        
+                        
+
+                            <div class="navbar-expand-md">
+                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
+
+                                <ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../tutorial.html">Tutorial</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../examples.html">Examples</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../reference.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../license.html">License</a></li>
+</ul>
+
+
+                                </div>
+                            </div>
+
+                        
+
+                    </div>
+                </div>
+                
+                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+
+                    
+
+                    
+
+                </div>
+            </div>
+        </div>
+
+        <footer class="compas-footer">
+            
+                
+                    &#169; Copyright 2017, Block Research Group - ETH Zurich.
+                
+            
+
+            
+                Last updated on Jun 27, 2018.
+            
+
+            
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+            
+        </footer>
+
+        
+
+            <script type="text/javascript">
+var DOCUMENTATION_OPTIONS = {
+    URL_ROOT          : '',
+    VERSION           : '0.1.0',
+    COLLAPSE_INDEX    : false,
+    FILE_SUFFIX       : '.html',
+    HAS_SOURCE        : false,
+    SOURCELINK_SUFFIX : '.txt'
+};
+            </script>
+
+            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+            
+            <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+
+            <script src="/_static/underscore.js"></script>
+            <script src="/_static/doctools.js"></script>
+            <script src="/_static/js/searchtools_.js"></script>
+
+            <script>
+hljs.initHighlightingOnLoad();
+anchors.add();
+
+var pre = document.getElementsByTagName('pre');
+
+for (var i = 0; i < pre.length; i++) {
+
+    var is_code = pre[i].children[0].className.indexOf('language-python');
+
+    if (is_code === 0) {
+
+        var button = document.createElement('button');
+
+        button.className = 'btn btn-secondary copy-code mt-4';
+        button.textContent = 'Copy code';
+        button.type = 'button';
+
+        pre[i].appendChild(button);
+    }
+}
+
+var copy_code = new Clipboard('.copy-code', {
+    target: function(trigger) {
+        return trigger.previousElementSibling;
+    }
+});
+
+copy_code.on('success', function(event) {
+    event.clearSelection();
+    event.trigger.textContent = 'Copied!';
+    window.setTimeout(function() {
+        event.trigger.textContent = 'Copy code';
+    }, 2000);
+});
+
+copy_code.on('error', function(event) { 
+    event.trigger.textContent = 'Press "Ctrl + C" to copy...';
+    window.setTimeout(function() {
+        event.trigger.textContent = 'Copy code';
+    }, 2000);
+});
+            </script>
+
+        
+    </body>
+</html>
