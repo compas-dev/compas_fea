@@ -30,7 +30,12 @@ def write_elements(structure, output_path, filename):
             write_tie_elements(structure, output_path, filename, ekeys, section, material, etype)
         if etype == 'SpringElement':
             write_spring_elements_nodal(structure, output_path, filename, ekeys, section)
+    write_virtual_elements(structure, output_path, filename)
 
+
+def write_virtual_elements(structure, output_path, filename):
+
+    pass
 
 def write_nodes(structure, output_path, filename):
     cFile = open(os.path.join(output_path, filename), 'a')

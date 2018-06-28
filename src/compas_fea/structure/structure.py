@@ -114,7 +114,7 @@ class Structure(object):
         self.tol = '3'
         self.virtual_nodes = {}
         self.virtual_elements = {}
-        self.virtual_elements_index = {}
+        self.virtual_element_index = {}
 
     def __str__(self):
         n = self.node_count()
@@ -735,9 +735,9 @@ Steps
             self.add_element_to_element_index(ekey, nodes)
 
             if 'virtual_elements' in self.sets:
-                self.sets['virtual_elements'].append(ekey)
+                self.sets['virtual_elements']['selection'].append(ekey)
             else:
-                self.sets['virtual_elements'] = [ekey]
+                self.sets['virtual_elements'] = {'type': 'element', 'selection': [ekey], 'index': len(self.sets)}
 
         return ekey
 # ==============================================================================

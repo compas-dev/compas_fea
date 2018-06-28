@@ -21,6 +21,13 @@ def harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping):
     s.add_nodes_elements_from_mesh(mesh, element_type='ShellElement')
     s.add_set(name='all_elements', type='element', selection=s.elements.keys())
 
+    # add virtual elements -----------------------------------------------------
+
+    for fkey in list(mesh.faces()):
+        face = [s.check_node_exists(mesh.vertex_coordinates(i)) for i in mesh.face[fkey]]
+        s.add_virtual_element(nodes=face, type='ShellElement')
+
+
     # add displacements --------------------------------------------------------
     nkeys = []
     for pt in pts:
@@ -38,9 +45,12 @@ def harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping):
     prop = ElementProperties(name='shell_props', material='MAT_CONCRETE', section='SEC_CONCRETE', elsets=['all_elements'])
     s.add_element_properties(prop)
 
+    # prop = ElementProperties(name='virtual_props', material=None, section=None, elsets=['virtual_elements'])
+    # s.add_element_properties(prop)
+    
     # add loads ----------------------------------------------------------------
 
-    load = HarmonicPressureLoad(name='pressureload', elements=['all_elements'], pressure=3., phase=math.pi / 2.)
+    load = HarmonicPressureLoad(name='pressureload', elements=['virtual_elements'], pressure=3., phase=math.pi / 2.)
     s.add_load(load)
 
     # add modal step -----------------------------------------------------------
@@ -54,7 +64,6 @@ def harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping):
     s.name = name
     fields = ['all']
     s.write_input_file('ansys', fields=fields)
-
     s.analyse(software='ansys', cpus=4)
     return s
 
