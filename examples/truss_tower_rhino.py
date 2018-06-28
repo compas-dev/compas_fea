@@ -3,7 +3,7 @@
 #from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ElementProperties as Properties
 #from compas_fea.structure import GeneralStep
-#from compas_fea.structure import PinnedDisplacement
+from compas_fea.structure import PinnedDisplacement
 #from compas_fea.structure import PointLoad
 from compas_fea.structure import Structure
 #from compas_fea.structure import TrussSection
@@ -40,10 +40,10 @@ mdl = Structure(name='truss_tower', path='C:/Temp/')
 ep = Properties(name='ep_strut', material='mat_elastic', section='sec_truss', elsets='elset_struts')
 mdl.add_element_properties(ep)
 
-## Displacements
-#
-#mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
-#
+# Displacements
+
+mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
+
 ## Loads
 #
 #mdl.add_load(PointLoad(name='load_top', nodes='nset_top', z=-100000))
@@ -89,4 +89,4 @@ mdl.add_element_properties(ep)
 #
 #mdl.save_to_obj()
 
-print(mdl.element_properties['ep_strut'])
+print(mdl.displacements['disp_pinned'])

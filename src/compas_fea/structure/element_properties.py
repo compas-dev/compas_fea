@@ -46,6 +46,7 @@ class ElementProperties(object):
 
     def __init__(self, name, material=None, section=None, elsets=None, elements=None, reinforcement={}):
 
+        self.__name__      = 'ElementProperties'
         self.name          = name
         self.material      = material
         self.section       = section
@@ -58,8 +59,9 @@ class ElementProperties(object):
 
     def __str__(self):
 
-        print('compas_fea ElementProperties object')
-        print('-----------------------------------')
+        print('compas_fea {0} object'.format(self.__name__))
+        print('-' * (len(self.__name__) + 18))
+
         for attr in ['name', 'material', 'section', 'elsets', 'elements', 'reinforcement']:
             print('{0:<13} : {1}'.format(attr, getattr(self, attr)))
 
