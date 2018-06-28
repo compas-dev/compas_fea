@@ -27,12 +27,12 @@ class ElementProperties(object):
         Name of the Material object to assign.
     section : str
         Name of the Section object to assign.
-    elsets : list, str
-        Element sets the properties are assigned to.
+    elsets : list
+        Element set names assignment.
     elements : list
-        Elements the properties are assigned to.
-    reinforcement : dic
-        Reinforcement data for the elements.
+        Element keys assignment.
+    reinforcement : dict
+        Reinforcement layer data.
 
     Returns
     -------
@@ -45,11 +45,22 @@ class ElementProperties(object):
     """
 
     def __init__(self, name, material=None, section=None, elsets=None, elements=None, reinforcement={}):
-        self.name = name
-        self.material = material
-        self.section = section
-        self.elsets = elsets
-        self.elements = elements
+
+        self.name          = name
+        self.material      = material
+        self.section       = section
+        self.elsets        = elsets
+        self.elements      = elements
         self.reinforcement = reinforcement
+
         if (not elsets) and (not elements):
-            raise NameError('Element properties require elements or element sets')
+            raise NameError('***** ElementProperties objects require elements or element sets *****')
+
+    def __str__(self):
+
+        print('compas_fea ElementProperties object')
+        print('-----------------------------------')
+        for attr in ['name', 'material', 'section', 'elsets', 'elements', 'reinforcement']:
+            print('{0:<13} : {1}'.format(attr, getattr(self, attr)))
+
+        return ''
