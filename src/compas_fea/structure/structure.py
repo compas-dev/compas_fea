@@ -85,6 +85,7 @@ class Structure(object):
     tol : str
         Geometric key tolerance.
 
+
     Returns
     -------
     None
@@ -112,6 +113,8 @@ class Structure(object):
         self.steps_order = []
         self.tol = '3'
         self.virtual_nodes = {}
+        self.virtual_elements = {}
+        self.virtual_elements_index = {}
 
     def __str__(self):
         n = self.node_count()
@@ -516,7 +519,7 @@ Steps
         return [self.add_element(nodes=nodes, type=type, acoustic=acoustic, thermal=thermal, axes=axes)
                 for nodes in elements]
 
-    def add_element_to_element_index(self, key, nodes):
+    def add_element_to_element_index(self, key, nodes, virtual=False):
 
         """ Adds the element to the element_index dictionary.
 
@@ -526,6 +529,8 @@ Steps
             Prescribed element key.
         nodes : list
             Node numbers the element is connected to.
+        virtual: bool
+            If true, adds element to the virtual_element_index dictionary.
 
         Returns
         -------
@@ -535,9 +540,12 @@ Steps
 
         centroid = centroid_points([self.node_xyz(node) for node in nodes])
         gkey = geometric_key(centroid, '{0}f'.format(self.tol))
-        self.element_index[gkey] = key
+        if virtual:
+            self.virtual_element_index[gkey] = key
+        else:
+            self.element_index[gkey] = key
 
-    def check_element_exists(self, nodes, xyz=None):
+    def check_element_exists(self, nodes, xyz=None, virtual=False):
 
         """ Check if an element already exists based on the nodes it connects to or its centroid.
 
@@ -547,6 +555,8 @@ Steps
             Node numbers the element is connected to.
         xyz : list
             Direct co-ordinates of the element centroid to check.
+        virtual: bool
+            Is the element to be checked a virtual element.
 
         Returns
         -------
@@ -562,18 +572,22 @@ Steps
         if not xyz:
             xyz = centroid_points([self.node_xyz(node) for node in nodes])
         gkey = geometric_key(xyz, '{0}f'.format(self.tol))
-        return self.element_index.get(gkey, None)
+        if virtual:
+            return self.virtual_element_index.get(gkey, None)
+        else:
+            return self.element_index.get(gkey, None)
 
     def edit_element(self):
         raise NotImplementedError
 
-    def element_count(self):
+    def element_count(self, virtual=False):
 
         """ Return the number of elements in structure.elements.
 
         Parameters
         ----------
-        None
+        virtual: bool
+            If true, returns the number of vurtual elements.
 
         Returns
         -------
@@ -581,8 +595,10 @@ Steps
             Number of elements stored in the Structure object.
 
         """
-
-        return len(self.elements)
+        if virtual:
+            return len(self.virtual_elements)
+        else:
+            return len(self.elements)
 
     def make_element_index_dic(self):
 
@@ -670,7 +686,60 @@ Steps
         self.elements[ekey] = element
         return ekey
 
+    def add_virtual_element(self, nodes, type, thermal=False, axes={}):
 
+        """ Adds a virtual element to structure.elements. Virtual elements are
+        added to an element set called 'virtual_elements'.
+
+        Parameters
+        ----------
+        nodes : list
+            Nodes the element is connected to.
+        type : str
+            Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
+
+        Returns
+        -------
+        int
+            Key of the added virtual element.
+
+        Notes
+        -----
+        - Virtual elements are numbered sequentially starting from 0.
+
+        """
+
+        func_dic = {
+            'BeamElement':        BeamElement,
+            'SpringElement':      SpringElement,
+            'TrussElement':       TrussElement,
+            'StrutElement':       StrutElement,
+            'TieElement':         TieElement,
+            'ShellElement':       ShellElement,
+            'MembraneElement':    MembraneElement,
+            'SolidElement':       SolidElement,
+            'TetrahedronElement': TetrahedronElement,
+            'PentahedronElement': PentahedronElement,
+            'HexahedronElement':  HexahedronElement,
+        }
+
+        ekey = self.check_element_exists(nodes, virtual=True)
+        if ekey is None:
+            ekey = self.element_count(virtual=True)
+            element = func_dic[type]()
+            element.axes = axes
+            element.nodes = nodes
+            element.number = ekey
+            element.thermal = thermal
+            self.virtual_elements[ekey] = element
+            self.add_element_to_element_index(ekey, nodes)
+
+            if 'virtual_elements' in self.sets:
+                self.sets['virtual_elements'].append(ekey)
+            else:
+                self.sets['virtual_elements'] = [ekey]
+
+        return ekey
 # ==============================================================================
 # sets
 # ==============================================================================

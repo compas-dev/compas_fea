@@ -5,7 +5,7 @@ from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ShellSection
 from compas_fea.structure import ElementProperties
 from compas_fea.structure import HarmonicStep
-from compas_fea.structure import HarmonicAreaLoad
+from compas_fea.structure import HarmonicPressureLoad
 from compas.datastructures.mesh.mesh import Mesh
 import math
 
@@ -40,7 +40,7 @@ def harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping):
 
     # add loads ----------------------------------------------------------------
 
-    load = HarmonicAreaLoad(name='pressureload', elements=['all_elements'], normal=3., phase=math.pi / 2.)
+    load = HarmonicPressureLoad(name='pressureload', elements=['all_elements'], pressure=3., phase=math.pi / 2.)
     s.add_load(load)
 
     # add modal step -----------------------------------------------------------
@@ -55,8 +55,8 @@ def harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping):
     fields = ['all']
     s.write_input_file('ansys', fields=fields)
 
-    # s.analyse(path=path, name='harmonic.inp', temp=None, software='ansys')
-    # return s
+    s.analyse(software='ansys', cpus=4)
+    return s
 
 
 if __name__ == '__main__':
