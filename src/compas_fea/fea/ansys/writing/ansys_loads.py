@@ -31,7 +31,7 @@ def add_load_to_ploads(structure, pload, load, factor):
 def write_loads(structure, output_path, filename, loads, factor):
     # TODO: Implement all load types
     pload = {}
-    for lkey in loads:
+    for index, lkey in enumerate(loads):
         load = structure.loads[lkey]
         if load.__name__ == 'GravityLoad':
             gravity = load.g
@@ -42,8 +42,8 @@ def write_loads(structure, output_path, filename, loads, factor):
         elif load.__name__ == 'TributaryLoad':
             # write_appply_tributary_load(structure, output_path, filename, lkey, factor)
             pload = add_load_to_ploads(structure, pload, load, factor)
-        elif load.__name__ == 'AreaLoad' or 'HarmonicAreaLoad':
-            write_apply_area_load(structure, output_path, filename, lkey, factor)
+        elif load.__name__ == 'HarmonicAreaLoad':
+            write_apply_harmonic_area_load(structure, output_path, filename, lkey, factor, index)
         else:
             raise ValueError(load.__name__ + ' Type of load is not yet implemented for Ansys')
     write_combined_point_loads(pload, output_path, filename)
@@ -124,7 +124,7 @@ def write_gravity_loading(structure, output_path, filename, gravity, factor):
     cFile.close()
 
 
-def write_apply_area_load(structure, output_path, filename, lkey, factor):
+def write_apply_harmonic_area_load(structure, output_path, filename, lkey, factor, index):
     # TODO, diferenciate netween harmonic and area loads, phase of not, possibly already at the write loads function above
 
     load_elements = structure.loads[lkey].elements
@@ -137,10 +137,20 @@ def write_apply_area_load(structure, output_path, filename, lkey, factor):
         else:
             elements.append(element)
 
+    # x = structure.loads[lkey].components['x']
+    # y = structure.loads[lkey].components['y']
+    # z = structure.loads[lkey].components['z']
+    normal = structure.loads[lkey].components['normal']
+    phase = structure.loads[lkey].components['phase']
+
     cFile = open(os.path.join(output_path, filename), 'a')
+    string = 'SFE, {0}, {1}, PRES, {2}, {3} \n'
     for ekey in elements:
-        string = 'SFE, {0}, \n'.format(ekey + 1)  # must be finished to include components, phase, etc
-        cFile.write(string)
+        string_ = string.format(ekey + 1, index + 1, 1, normal)
+        cFile.write(string_)
+        if phase:
+            string_ = string.format(ekey + 1, index + 1, 2, phase)
+            cFile.write(string_)
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()
