@@ -15,6 +15,7 @@ Interfaces to Finite Element Analysis software built on COMPAS.
     :maxdepth: 1
     :titlesonly:
 
+    compas_fea.app
     compas_fea.cad
     compas_fea.fea
     compas_fea.structure
@@ -26,15 +27,13 @@ Interfaces to Finite Element Analysis software built on COMPAS.
 import os
 
 
-__author__     = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'mendez@arch.ethz.ch'
-__all__ = []
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
 
 
 HERE = os.path.dirname(__file__)
-
 HOME = os.path.abspath(os.path.join(HERE, '../../'))
 DATA = os.path.abspath(os.path.join(HOME, 'data'))
 DOCS = os.path.abspath(os.path.join(HOME, 'docs'))
