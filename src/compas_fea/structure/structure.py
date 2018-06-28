@@ -717,6 +717,7 @@ Steps
             'TieElement':         TieElement,
             'ShellElement':       ShellElement,
             'MembraneElement':    MembraneElement,
+            'FaceElement':        FaceElement,
             'SolidElement':       SolidElement,
             'TetrahedronElement': TetrahedronElement,
             'PentahedronElement': PentahedronElement,

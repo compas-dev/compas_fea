@@ -25,8 +25,7 @@ def harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping):
 
     for fkey in list(mesh.faces()):
         face = [s.check_node_exists(mesh.vertex_coordinates(i)) for i in mesh.face[fkey]]
-        s.add_virtual_element(nodes=face, type='ShellElement')
-
+        s.add_virtual_element(nodes=face, type='FaceElement')
 
     # add displacements --------------------------------------------------------
     nkeys = []
@@ -47,7 +46,7 @@ def harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping):
 
     # prop = ElementProperties(name='virtual_props', material=None, section=None, elsets=['virtual_elements'])
     # s.add_element_properties(prop)
-    
+
     # add loads ----------------------------------------------------------------
 
     load = HarmonicPressureLoad(name='pressureload', elements=['virtual_elements'], pressure=3., phase=math.pi / 2.)
