@@ -18,10 +18,7 @@ def write_elements(structure, output_path, filename):
         ekeys = []
         if elsets:
             for elset in elsets:
-                if elset == 'ELSET_ALL':
-                    ekeys.extend(structure.elements)
-                else:
-                    ekeys.extend(structure.sets[elset]['selection'])
+                ekeys.extend(structure.sets[elset]['selection'])
         if ep[key].elements:
             ekeys.extend(ep[key].elements)
         etype = structure.elements[ekeys[0]].__name__

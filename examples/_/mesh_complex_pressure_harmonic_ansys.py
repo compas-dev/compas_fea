@@ -40,7 +40,7 @@ def harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping):
 
     # add loads ----------------------------------------------------------------
 
-    load = HarmonicAreaLoad(name='pressureload', elements=['all_elements'], x=0, y=0, z=1, phase=math.pi)
+    load = HarmonicAreaLoad(name='pressureload', elements=['all_elements'], normal=3., phase=math.pi / 2.)
     s.add_load(load)
 
     # add modal step -----------------------------------------------------------
