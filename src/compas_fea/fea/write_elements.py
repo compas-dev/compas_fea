@@ -476,9 +476,8 @@ def _write_trusses(f, selection, software, elements, section, material, elset):
 
         f.write('TRUS NO NA NE NCS')
         if material.__name__ in ['Steel']:
-            Ny = None
-            # Ny = A * material.fy / 1000.
-            # f.write(' YIEL')
+            Ny = A * material.fy / 1000.
+            f.write(' YIEL')
         else:
             Ny = None
         f.write('\n$\n')

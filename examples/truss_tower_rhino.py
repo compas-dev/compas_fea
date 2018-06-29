@@ -52,7 +52,7 @@ mdl.add_load(PointLoad(name='load_top', nodes='nset_top', z=-100*10**3))
 
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements='disp_pinned'),
-    GeneralStep(name='step_load', loads='load_top', nlmat=False)])
+    GeneralStep(name='step_load', loads='load_top')])
 mdl.steps_order = ['step_bc', 'step_load']
 
 # Summary
@@ -61,7 +61,7 @@ mdl.summary()
 
 # Run (Sofistik)
 
-#mdl.write_input_file(software='sofistik')
+mdl.write_input_file(software='sofistik')
 
 # Run (OpenSees)
 
