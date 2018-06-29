@@ -37,7 +37,7 @@ def write_elements(structure, output_path, filename):
 
 
 def write_virtual_elements(structure, output_path, filename):
-
+    # TODO: this function only works for surface elements, they are they only virtual elements at the moment.
     ekeys = structure.sets['virtual_elements']['selection']
     etypes = {'ShellElement': [], 'BeamElement': [], 'TieElement': [], 'StrutElement': [],
               'TrussElement': [], 'FaceElement': []}

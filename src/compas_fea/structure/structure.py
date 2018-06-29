@@ -738,7 +738,7 @@ Steps
             if 'virtual_elements' in self.sets:
                 self.sets['virtual_elements']['selection'].append(ekey)
             else:
-                self.sets['virtual_elements'] = {'type': 'element', 'selection': [ekey], 'index': len(self.sets)}
+                self.sets['virtual_elements'] = {'type': 'virtual_element', 'selection': [ekey], 'index': len(self.sets)}
 
         return ekey
 # ==============================================================================
