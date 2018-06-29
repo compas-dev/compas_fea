@@ -8,7 +8,7 @@ This page shows how **Load** objects are added to the **Structure** object, here
 Adding loads
 ============
 
-Loads can be applied directly to nodes or distributed (currently only uniformly) across elements. For this, a variety of **Load** classes can be imported from **compas_fea.structure.load** including types such as **PrestressLoad**, **PointLoad**, **LineLoad**, **AreaLoad**, **GravityLoad** and **TributaryLoad**. The **Load** objects are instantiated with these classes and stored within the ``.loads`` dictionary of the **Structure** object with the ``.add_load()`` method, and using ``name`` as the string key. An example of applying concentrated loads in the ``x`` and ``z`` directions directly to nodes, is shown with the **PointLoad** example below. The **PointLoad** class requires the components of the load and the ``nodes`` to apply the point loads to, taken as the string name of the node set (``'nset_top'`` in this case).
+Loads can be applied directly to nodes or distributed (currently only uniformly) across elements. To do this, a variety of **Load** classes can be imported from **compas_fea.structure.load** including types such as **PrestressLoad**, **PointLoad**, **LineLoad**, **AreaLoad**, **GravityLoad** and **TributaryLoad**. The **Load** objects are instantiated with these classes and stored within the ``.loads`` dictionary of the **Structure** object with the ``.add_load()`` method, and using ``name`` as the string key. An example of applying concentrated loads in the ``x`` and ``z`` directions directly to nodes in a node set, is shown with the **PointLoad** example below. The **PointLoad** class requires the components of the load and the ``nodes`` to apply the point loads to, taken as the string name of the node set (``'nset_top'`` in this case).
 
 .. code-block:: python
 
@@ -17,11 +17,11 @@ Loads can be applied directly to nodes or distributed (currently only uniformly)
     mdl.add_load(PointLoad(name='load_point', nodes='nset_top', x=10000, z=-10000))
 
 
-===============
-Accessing loads
-===============
+===========================
+Accessing and editing loads
+===========================
 
-The **Load** objects can be inspected and edited at any time via their string keys and attributes, showing both the input data given at the time of instantiation and any default zero component values. If no non-zero components are given at the time of creating the object, effectively the **Load** object doesn't do anything, as all components are zero. In the example below are the input components of the load ``x=10000`` and ``z=-10000`` (both are forces with units N) with the ``y`` component and concentrated moments (units Nm) ``xx``, ``yy`` and ``zz`` all at the default of zero.
+The **Load** objects can be inspected and edited at any time via their string keys and attributes, and will show both the input data given at the time of instantiation and any default zero component values. If no non-zero components are given at the time of creating the object, effectively the **Load** object doesn't do anything, as all components are zero. In the example below are the input components of the load ``x=10000`` and ``z=-10000`` (both are forces with units N) with the ``y`` component and concentrated moments (units Nm) ``xx``, ``yy`` and ``zz`` all at the default value of zero.
 
 .. code-block:: python
 
@@ -36,7 +36,7 @@ The **Load** objects can be inspected and edited at any time via their string ke
 Prestress load
 ==============
 
-A **PrestressLoad** is currently used to add an axial pre-stress, other components of stress will be added at a later date. It is created with the string ``name`` of the object, the ``elements`` (as an element set) that it applies to, and the ``sxx`` (axial) stress component in Pa which acts along the local `x` axis for shells and along the length for beams and trusses. This object can be added as follows:
+A **PrestressLoad** is currently used to add an axial pre-stress, other components of stress will be added at a later date. It is created with the string ``name`` of the object, the ``elements`` (as an element set) that it applies to, and the ``sxx`` (axial) stress component in Pa, which acts along the local `x` axis for shells and along the length for beams and trusses. This object can be created and added as follows:
 
 .. code-block:: python
 
@@ -79,7 +79,7 @@ The **PointLoads** object applies different values of concentrated loads (forces
 Line load
 =========
 
-The **LineLoad** object applies distributed loads per unit length (forces in units of N/m in ``x``, ``y``, ``z``) uniformly along line elements such as beams. The ``elements`` to apply the load to is given as either the string name of the element set or a list of elements. The ``name`` of the **LineLoad** is also required as ist key. If ``axis='global'``, the ``x``, ``y`` and ``z`` components will be in-line with the global co-ordinate system, while ``axis='local'`` takes ``x`` and ``y`` as the local cross-section axes `ex` and `ey`, i.e. positive ``y`` would be away from the centroid, not towards it.
+The **LineLoad** object applies distributed loads per unit length (forces in units of N/m in ``x``, ``y``, ``z``) uniformly along line elements such as beams. The ``elements`` to apply the load to is given as either the string name of the element set or a list of elements. The ``name`` of the **LineLoad** is also required as is key. If ``axis='global'``, the ``x``, ``y`` and ``z`` components will be in-line with the global co-ordinate system, while ``axis='local'`` takes ``x`` and ``y`` as the local cross-section axes `ex` and `ey`, i.e. positive ``y`` would be away from the centroid of the cross-section, not towards it.
 
 .. code-block:: python
 
@@ -92,7 +92,7 @@ The **LineLoad** object applies distributed loads per unit length (forces in uni
 Area load
 =========
 
-The **AreaLoad** object applies distributed loads per unit area (pressures ``x``, ``y``, ``z`` in units of Pa) on elements such as **ShelElement** objects. The ``elements`` to apply the load to is given as either the string name of the element set or a list of elements, and the ``name`` of the **AreaLoad** is required for its key. Only ``axis='local'`` is currently supported, whereby ``x`` and ``y`` are local surface shears and ``z`` is the local normal pressure.
+The **AreaLoad** object applies distributed loads per unit area (pressures ``x``, ``y``, ``z`` in units of Pa) on elements such as **ShelElement** objects. The ``elements`` to apply the load to is given as either the string name of the element set or a list of elements, and the ``name`` of the **AreaLoad** is required for its key. Only ``axis='local'`` is currently supported for Abaqus, whereby ``x`` and ``y`` are local surface shears and ``z`` is the local normal pressure. The global axis can be used for Sofistik.
 
 .. code-block:: python
 

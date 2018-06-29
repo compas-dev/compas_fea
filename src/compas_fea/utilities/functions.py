@@ -181,6 +181,10 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
     list
         Triangles of discretised faces.
 
+    Notes
+    -----
+    - An experimental script.
+
     """
 
     points_all = []
@@ -203,6 +207,8 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
             n = max([1, int(l / target)])
             for j in range(n):
                 points.append(add_vectors(sp, scale_vector(vec, j / n)))
+        if len(points) > 3:
+            points.append(centroid_points(points))
 
         # Starting orientation
 
@@ -227,26 +233,28 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
         points_y = dot(Ry, points_x)
         Ryinv = inv(Ry)
 
-        # Store
-
-        Vs = points_y.transpose()
-        DTs = Delaunay(Vs[:, :2], furthest_site=False, incremental=False)
-        tris = DTs.simplices
-        points_xs = dot(Ryinv, Vs.transpose())
-        points_new = [list(i) for i in list(dot(Rxinv, points_xs).transpose())]
-        faces_new = [[int(i) for i in tri] for tri in list(tris)]
-
         # Refine
 
-        if refine:
+        V = points_y.transpose()
+        z = float(V[0, 2])
 
-            V = points_y.transpose()
-            z = float(V[0, 2])
-
+        try:
             it = 0
             while it < iterations:
                 DT = Delaunay(V[:, :2], furthest_site=False, incremental=False)
-                tris = DT.simplices
+                tris_ = DT.simplices
+                tris = []
+                for tri in tris_:
+                    if len(set(tri)) == 3:
+                        u, v, w = tri
+                        p1 = [float(i) for i in V[u, :2]]
+                        p2 = [float(i) for i in V[v, :2]]
+                        p3 = [float(i) for i in V[w, :2]]
+                        th1 = angles_points_xy(p1, p2, p3)[0] * 180 / pi
+                        th2 = angles_points_xy(p2, p3, p1)[0] * 180 / pi
+                        th3 = angles_points_xy(p3, p1, p2)[0] * 180 / pi
+                        if (th1 > 0.1) and (th2 > 0.1) and (th3 > 0.1):
+                            tris.append(tri)
                 for u, v, w in tris:
                     p1 = [float(i) for i in V[u, :2]]
                     p2 = [float(i) for i in V[v, :2]]
@@ -254,7 +262,6 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
                     # th1 = angles_points_xy(p1, p2, p3)[0] * 180 / pi
                     # th2 = angles_points_xy(p2, p3, p1)[0] * 180 / pi
                     # th3 = angles_points_xy(p3, p1, p2)[0] * 180 / pi
-                    # print(th1, th2, th3)  ] leads to some 0 and 180
                     # thm = min([th1, th2, th3])
                     res = circle_from_points_xy(p1, p2, p3)
                     if res:
@@ -278,8 +285,11 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
             points_new = [list(i) for i in list(dot(Rxinv, points_x).transpose())]
             faces_new = [[int(i) for i in tri] for tri in list(tris)]
 
-        points_all.append(points_new)
-        faces_all.append(faces_new)
+            points_all.append(points_new)
+            faces_all.append(faces_new)
+
+        except:
+            print('***** ERROR *****')
 
     return points_all, faces_all
 

@@ -1,5 +1,5 @@
 
-#from compas_fea.cad import rhino
+from compas_fea.cad import rhino
 #from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ElementProperties as Properties
 #from compas_fea.structure import GeneralStep
@@ -19,14 +19,14 @@ __email__     = 'liew@arch.ethz.ch'
 
 mdl = Structure(name='truss_tower', path='C:/Temp/')
 
-## Elements
-#
-#rhino.add_nodes_elements_from_layers(mdl, line_type='TrussElement', layers='elset_struts')
-#
-## Sets
-#
+# Elements
+
+rhino.add_nodes_elements_from_layers(mdl, line_type='TrussElement', layers='elset_struts')
+
+# Sets
+
 #rhino.add_sets_from_layers(mdl, layers=['nset_pins', 'nset_top'])
-#
+
 ## Materials
 #
 #mdl.add_material(ElasticIsotropic(name='mat_elastic', E=200*10**9, v=0.3, p=7850))
@@ -54,11 +54,11 @@ mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
 #    GeneralStep(name='step_bc', displacements='disp_pinned'),
 #    GeneralStep(name='step_load', loads='load_top')])
 #mdl.steps_order = ['step_bc', 'step_load']
-#
-## Summary
-#
-#mdl.summary()
-#
+
+# Summary
+
+mdl.summary()
+
 ## Run (Sofistik)
 #
 #mdl.write_input_file(software='sofistik')
@@ -88,5 +88,6 @@ mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
 ## Save
 #
 #mdl.save_to_obj()
+
 
 print(mdl.displacements['disp_pinned'])

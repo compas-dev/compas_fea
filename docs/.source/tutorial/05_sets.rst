@@ -28,7 +28,7 @@ If the ``selection`` is not given as a list, but instead as a single integer (to
     >>> mdl.sets['elset_shell']
     {'type': 'element', 'selection': [7, 8]}
 
-From the node and element geometry of the **Structure** object, a surface can be defined by one of two surface set types. The first is by using ``type='surface_node'`` when creating a set with the ``.add_set()`` method. This will describe a surface by the nodes given in the ``selection`` list. This surface type can be created like:
+From the node and element data of the **Structure** object, a surface can be defined by one of two surface set types. The first is by using ``type='surface_node'`` when creating a set with the ``.add_set()`` method. This will describe a surface by the nodes given in the ``selection`` list. This surface type can be created like:
 
 .. code-block:: python
 
@@ -40,4 +40,4 @@ The second way to define a surface set is with ``type='surface_element'``, where
 
     mdl.add_set(name='surf_set', type='surface_element', selection={4: ['S1', 'S2'], 7: ['SPOS']})
 
-You can find which surface sides correspond to which in the "Elements" topic.
+You can find which surface sides correspond to which, in the **Elements** topic.

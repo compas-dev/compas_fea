@@ -2,13 +2,13 @@
 Nodes
 ********************************************************************************
 
-This page shows how nodes are added, viewed and edited within the **Structure** object, here given as object with handle ``mdl``. Node data is fundamental to the structure, and is stored in the ``.nodes`` attribute as a dictionary of data.
+This page shows how nodes are added, viewed and edited within the **Structure** object, here given as object with handle ``mdl``. Node data is fundamental to the **Structure**, and is stored in the ``.nodes`` attribute as a dictionary of data.
 
 ============
 Adding nodes
 ============
 
-Nodes can be added manually at prescribed spatial co-ordinates with the ``.add_node()`` and ``.add_nodes()`` methods, where ``xyz`` is a list of co-ordinates for a single node in the former method, and ``nodes`` a list of lists for multiple node co-ordinates for the latter method. If integer values for co-ordinates are given, they are converted to floats before adding to the **Structure** object.
+Nodes can be added manually at prescribed spatial co-ordinates with the ``.add_node()`` and ``.add_nodes()`` methods, where ``xyz`` is given as a list of co-ordinates for a single node in ``.add_node()``, and ``nodes`` as a list of lists for multiple node co-ordinates for ``.add_nodes()``. If integer values for co-ordinates are given, they are converted to floats before adding to the **Structure** object.
 
 .. code-block:: python
 
@@ -33,7 +33,7 @@ The nodes data are stored in the ``.nodes`` dictionary, and are added with integ
 Editing nodes
 =============
 
-To edit the data of a node use the ``.edit_node()`` method, which will change both the data of the node and update the ``.node_index`` dictionary if the co-ordinates were changed during editing.
+To edit the data of a node use the ``.edit_node()`` method, which will change both the data of the node and update the ``.node_index`` dictionary (explained later) if the co-ordinates were changed during editing.
 
 .. code-block:: python
 
@@ -50,7 +50,7 @@ To edit the data of a node use the ``.edit_node()`` method, which will change bo
 Methods
 =======
 
-The co-ordinates of a given node, many nodes, and the total number of nodes in the **Structure**, may be evaluated with the ``.node_xyz()``, ``.nodes_xyz()`` and ``.node_count()`` methods:
+The co-ordinates of a given node or many nodes, and the total number of nodes in the **Structure**, may be evaluated with the ``.node_xyz()``, ``.nodes_xyz()`` and ``.node_count()`` methods:
 
 .. code-block:: python
 
@@ -61,6 +61,8 @@ The co-ordinates of a given node, many nodes, and the total number of nodes in t
 
    >>> mdl.nodes_xyz(nodes=[3, 4])
    [[-5.0, 5.0, 0.0], [5.0, 0.0, 2.0]]
+
+If ``nodes`` is not given for ``.nodes_xyz()``, all nodes will be assumed.
 
 .. code-block:: python
 
@@ -84,14 +86,14 @@ It can be checked if a node is present in the **Structure** object by a query wi
    >>> mdl.check_node_exists([5, 5, -1])
    None
 
-**Note**: no more than one node can exist for the same co-ordinates, i.e. no overlapping nodes are allowed, this ensures a unique entry in the node index dictionary (see below).
+**Note**: no more than one node can exist for the same co-ordinates, i.e. no overlapping nodes are allowed, this ensures a unique entry in the node index dictionary (see below) and is currently important for many operations in **compas_fea**.
 
 
 ==========
 Node index
 ==========
 
-The **Structure** object's node index is a geometric key to integer key dictionary accessed through ``.node_index``. The geometric key is the string representation of the node's co-ordinates to a prescribed (default 3) float precision, while the integer key is the node's number. The node index can be used to quickly see what node number corresponds to a spatial co-ordinate (if any).
+The **Structure** object's node index is a geometric key to integer key dictionary accessed through ``.node_index``. The geometric key is the string representation of the node's co-ordinates to a prescribed (default 3) float precision, while the integer key is the node's number. The node index can be used to quickly see what node number corresponds to a nodal spatial location.
 
 .. code-block:: python
 

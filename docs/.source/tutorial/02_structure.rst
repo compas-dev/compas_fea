@@ -2,13 +2,13 @@
 Structure
 ********************************************************************************
 
-The following page shows some of the fundamentals of importing **compas_fea** classes and usage of the main **Structure** object, including some of the **Structure** object's most important methods and attributes.
+The following page shows some of the fundamentals of importing **compas_fea** classes and how to use the main **Structure** object, including some of the **Structure** object's most important methods and attributes.
 
 =============================
 Importing modules and classes
 =============================
 
-A Python **.py** file is created for every **compas_fea** model and analysis, which is where an empty **Structure** object is first instantiated and then populated with the components needed for the model. To import these components and use other helper functions from the core **compas** or **compas_fea** packages, ``import`` statements are needed in the first few lines of the Python file. For example, if the user wishes to use a CAD environment for extracting geometry or visualising analysis results, either of the following lines below could be written to use Rhinoceros or Blender. These imports will make a variety of functions available from the **compas_fea.cad.blender** and **compas_fea.cad.rhino** modules.
+A Python **.py** file is created for every **compas_fea** model and analysis, which is where an empty **Structure** object is first instantiated and then populated with the components needed for the model. To import these components and to also use other helper functions from the core **compas** or **compas_fea** packages, ``import`` statements are needed in the first few lines of the Python file. For example, if the user wishes to use a CAD environment for extracting geometry or visualising analysis results, either of the following lines below could be written to use Rhinoceros or Blender. These imports will make a variety of functions available from the **compas_fea.cad.blender** and **compas_fea.cad.rhino** modules.
 
 .. code-block:: python
 
@@ -23,17 +23,16 @@ It is useful to use packages, modules and functions from the core **compas** lib
 .. code-block:: python
 
     from compas.datastructures import Mesh
-
     from compas.geometry import distance_point_point
 
-There are also many functions from the core **compas** CAD packages that can be helpful for creating, editing or deleting objects and layers:
+There are also many functions from the core **compas** CAD packages that can be helpful for creating, editing or deleting objects and layers in the CAD workspace:
 
 .. code-block:: python
 
     from compas_blender.utilities import clear_layers
     from compas_blender.utilities import delete_objects
 
-The most important imports will be for retrieving classes from **compas_fea.structure**, including the main **Structure** class itself. Imports, like with the main **compas** library, are always available from the second level, with embedded modules pulled up to enable this. This is particularly useful for all of the classes found in **compas_fea.structure**. These special classes make important objects for the model and will be described in more detail throughout the various tutorial topics.
+The most important imports will be for retrieving classes from **compas_fea.structure**, including the main **Structure** class itself. Imports, like with the main **compas** library, are always available from the second level, with embedded modules on the third level onwards, pulled up to the second level enable this. This is particularly useful for all of the classes found in **compas_fea.structure**, as you do not need to know the package structure beyond this level. These special classes in **compas_fea.structure** make important objects for the model and will be described in more detail throughout the various tutorial topics.
 
 .. code-block:: python
 
@@ -41,7 +40,7 @@ The most important imports will be for retrieving classes from **compas_fea.stru
     from compas_fea.structure import PointLoad
     from compas_fea.structure import Structure
 
-The top of the **.py** file might look something like:
+Bringing all of the import considerations together, the top of the **.py** file might look something like:
 
 .. code-block:: python
 
@@ -68,7 +67,7 @@ The top of the **.py** file might look something like:
 Structure object
 ================
 
-The container for all model and analysis data is the **Structure** object, created from the **Structure** class. All of the attributes and methods of this class can be found at **compas_fea.structure.structure**, with the most important methods demonstrated here and throughout the other topics of the tutorial, so see the various topics on the left-hand-side to understand how to add all the various data and objects to the **Structure** object. The following code creates an empty **Structure** object named ``mdl`` (used in the tutorial and examples as a short-cut handle).
+The central container for all model and analysis data is the **Structure** object, created from the **Structure** class. All of the attributes and methods of this class can be found at **compas_fea.structure.structure**, with the most important methods demonstrated here and throughout the other topics of the tutorial. So please see the various topics on the left-hand-side to understand how to add all the various data and objects to the **Structure** object. The following code creates an empty **Structure** object named ``mdl`` (used in all of the tutorials and examples as a short-cut handle).
 
 .. code-block:: python
 
@@ -76,21 +75,21 @@ The container for all model and analysis data is the **Structure** object, creat
 
     mdl = Structure(name='simple-truss', path='/home/al/Temp/')
 
-The files that are generated when using the **compas_fea** package, will all be saved in a folder named ``path``, with many temporary files stored within this location under another folder called ``path/name``. These arguments can be passed when instantiating the **Structure** object like above, or by changing the attributes directly at a later time.
+The files that are generated when using the **compas_fea** package will all be saved in a folder named ``path``, with many temporary files stored within this location under another folder called ``path/name``. These arguments can be passed when instantiating the **Structure** object like above, or by changing the attributes directly at a later time.
 
 .. code-block:: python
 
     mdl.name = 'new-truss'
     mdl.path = '/home/al/Folder/'
 
-The above pairing will produce files such as **/home/al/Folder/new-truss.inp** (an Abaqus input file) and **/home/al/Folder/new-truss.obj**. Additional temporary files, including output **.json** data and analysis output databases such as an Abaqus **.odb** file will be stored in **/home/al/Folder/new-truss/**, this is to keep things organised as an analysis will often generate hundreds of output files.
+The above pairing will produce files such as **/home/al/Folder/new-truss.inp** (an Abaqus input file) and **/home/al/Folder/new-truss.obj**. Additional temporary files, including output **.json** data and analysis output databases such as an Abaqus **.odb** file will be stored in **/home/al/Folder/new-truss/**, this is to keep things organised as an analysis will often generate many output files.
 
 
 =======
 Summary
 =======
 
-Once constructed, a top-down summary of the **Structure** object can be printed with method ``.summary()`` or by printing the object ``print(mdl)``. This will print information to the terminal such as the number of nodes and elements, the name of sets and how many items in their selection, and the name and type of added objects such as **Materials**, **Sections**, **Loads**, **Displacements** and **Steps**. This summary is useful for checking that nodes, elements and objects have been added correctly before any analysis is performed. If no objects of a particular type are present in that attribute of the **Structure**, then **n/a** is printed.
+Once constructed, a top-down summary of the **Structure** object can be printed with the method ``.summary()`` or by printing the object with ``print(mdl)``. This will print information to the terminal such as the number of nodes and elements, the name of sets and how many items in their selection, and the name and type of added objects such as **Materials**, **Sections**, **Loads**, **Displacements** and **Steps**. This summary is useful for checking that nodes, elements and objects have been added correctly before any analysis is performed. If no objects of a particular type are present in that attribute of the **Structure**, then **n/a** is printed. The summary of a populated **Structure** could look like:
 
 .. code-block:: python
 
@@ -159,7 +158,7 @@ Once constructed, a top-down summary of the **Structure** object can be printed 
 Loading and saving
 ==================
 
-The methods to save and load a **Structure** object are ``.save_to_obj()`` and ``.load_from_obj()``. Saving the **Structure** will use the ``.path`` and ``.name`` attribute strings for creating the file name, whilst the file name string ``filename`` must be given for loading an existing **.obj**. These operations will save or load data as a pickled object using Pickle, containing all populated dictionaries and objects. A confirmation message will be displayed upon each save and load call.
+The methods to save and load a **Structure** object are ``.save_to_obj()`` and ``.load_from_obj()``. Saving the **Structure** will use the ``.path`` and ``.name`` attribute strings for creating the file name. The file name string ``filename`` must be given for loading an existing **.obj**. These operations will save or load data as a pickled object using the Python ``Pickle`` module, containing all of the populated dictionaries, objects and analysis results (if any). A confirmation message will be displayed in the Python terminal upon each save and load call.
 
 .. code-block:: python
 

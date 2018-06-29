@@ -202,6 +202,8 @@ class BucklingStep(object):
         Load object names.
     type : str
         'buckle'.
+    step : str
+        Step to copy loads and displacements from.
 
     Returns
     -------
@@ -209,7 +211,7 @@ class BucklingStep(object):
 
     """
 
-    def __init__(self, name, modes=10, increments=100, factor=1.0, displacements=[], loads=[], type='buckle'):
+    def __init__(self, name, modes=10, increments=100, factor=1.0, displacements=[], loads=[], type='buckle', step=None):
         self.__name__ = 'BucklingStep'
         self.name = name
         self.modes = modes
@@ -218,3 +220,4 @@ class BucklingStep(object):
         self.displacements = displacements
         self.loads = loads
         self.type = type
+        self.step = step

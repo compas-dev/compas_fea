@@ -10,8 +10,6 @@ from compas.utilities import XFunc
 try:
     from compas_rhino.geometry import RhinoMesh
     from compas_rhino.helpers.mesh import mesh_from_guid
-    # from compas_rhino.utilities import clear_layer
-    # from compas_rhino.utilities import xdraw_mesh
 except:
     pass
 
@@ -45,7 +43,7 @@ __all__ = [
     'add_element_set',
     'add_tets_from_mesh',
     'add_node_set',
-#     # 'discretise_mesh',
+    'discretise_mesh',
     'add_nodes_elements_from_layers',
     'add_sets_from_layers',
     'mesh_extrude',
@@ -59,63 +57,197 @@ __all__ = [
 ]
 
 
-# def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iterations=5, refine=True):
+def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, thermal=False):
 
-#     """ Discretise a mesh from an input coarse mesh guid into small denser meshes.
+    """ Adds node and element data from Rhino layers to the Structure object.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object.
-#     guid : str
-#         guid of the Rhino input mesh.
-#     layer : str
-#         Layer name to plot resulting meshes on.
-#     target : float
-#         Target length of each triangle.
-#     min_angle : float
-#         Minimum internal angle of triangles.
-#     factor : float
-#         Factor on the maximum area of each triangle.
-#     iterations : int
-#         Number of iterations per face.
-#     refine : bool
-#         Refine beyond Delaunay.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    layers : list
+        Layer string names to extract nodes and elements.
+    line_type : str
+        Element type for line objects.
+    mesh_type : str
+        Element type for mesh objects.
+    thermal : bool
+        Thermal properties on or off.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    list
+        Node keys that were added to the Structure.
+    list
+        Element keys that were added to the Structure.
 
-#     """
+    """
 
-#     rhinomesh = RhinoMesh(guid)
-#     pts = rhinomesh.get_vertex_coordinates()
-#     fcs = [face[:3] for face in rhinomesh.get_face_vertices()]
+    if isinstance(layers, str):
+        layers = [layers]
 
-#     path = structure.path
-#     basedir = utilities.__file__.split('__init__.py')[0]
-#     xfunc = XFunc('discretise', basedir=basedir, tmpdir=path)
-#     xfunc.funcname = 'functions.discretise_faces'
+    added_nodes    = set()
+    added_elements = set()
 
-#     try:
-#         vertices, faces = xfunc(vertices=pts, faces=fcs, target=target, min_angle=min_angle, factor=factor,
-#                                 iterations=iterations, refine=refine)
+    for layer in layers:
 
-#         rs.CurrentLayer(rs.AddLayer(layer))
-#         rs.DeleteObjects(rs.ObjectsByLayer(layer))
-#         rs.EnableRedraw(False)
+        elset = set()
 
-#         for points, face in zip(vertices, faces):
-#             mesh_faces = []
-#             for i in face:
-#                 face_ = i + [i[-1]]
-#                 mesh_faces.append(face_)
-#             rs.AddMesh(points, mesh_faces)
+        for guid in rs.ObjectsByLayer(layer):
 
-#         rs.EnableRedraw(True)
+            if line_type and rs.IsCurve(guid):
 
-#     except:
-#         '***** Mesh discretisation failed *****'
+                sp_xyz = rs.CurveStartPoint(guid)
+                ep_xyz = rs.CurveEndPoint(guid)
+                sp = structure.add_node(sp_xyz)
+                ep = structure.add_node(ep_xyz)
+                added_nodes.add(sp)
+                added_nodes.add(ep)
+
+                ez = subtract_vectors(ep_xyz, sp_xyz)
+                try:
+                    dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
+                    ex  = dic.get('ex', None)
+                    ey  = dic.get('ey', None)
+                    if ex and not ey:
+                        ey = cross_vectors(ex, ez)
+                except:
+                    ex = None
+                    ey = None
+                axes = {'ex': ex, 'ey': ey, 'ez': ez}
+
+                ekey = structure.add_element(nodes=[sp, ep], type=line_type, thermal=thermal, axes=axes)
+                if ekey is not None:
+                    added_elements.add(ekey)
+                    elset.add(ekey)
+
+            elif mesh_type and rs.IsMesh(guid):
+
+                vertices = rs.MeshVertices(guid)
+                nodes = [structure.add_node(vertex) for vertex in vertices]
+                added_nodes.update(nodes)
+
+                if mesh_type in ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']:
+                    ekey = structure.add_element(nodes=nodes, type=mesh_type, thermal=thermal)
+                    if ekey is not None:
+                        added_elements.add(ekey)
+                        elset.add(ekey)
+
+                else:
+                    try:
+                        dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
+                        ex  = dic.get('ex', None)
+                        ey  = dic.get('ey', None)
+                        ez  = dic.get('ez', None)
+                        if (ex and ey) and (not ez):
+                            ez = cross_vectors(ex, ey)
+                    except:
+                        ex = None
+                        ey = None
+                        ez = None
+                    axes = {'ex': ex, 'ey': ey, 'ez': ez}
+
+                    for face in rs.MeshFaceVertices(guid):
+                        nodes = [structure.check_node_exists(vertices[i]) for i in face]
+                        if nodes[-1] == nodes[-2]:
+                            del nodes[-1]
+                        ekey = structure.add_element(nodes=nodes, type=mesh_type, thermal=thermal, axes=axes)
+                        if ekey is not None:
+                            added_elements.add(ekey)
+                            elset.add(ekey)
+
+        structure.add_set(name=layer, type='element', selection=list(elset))
+
+    return list(added_nodes), list(added_elements)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iterations=50, refine=True):
+
+    """ Discretise a mesh from an input coarse mesh guid into small denser meshes.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    guid : str
+        guid of the Rhino input mesh.
+    layer : str
+        Layer name to plot resulting meshes on.
+    target : float
+        Target length of each triangle.
+    min_angle : float
+        Minimum internal angle of triangles.
+    factor : float
+        Factor on the maximum area of each triangle.
+    iterations : int
+        Number of iterations per face.
+    refine : bool
+        Refine beyond Delaunay.
+
+    Returns
+    -------
+    None
+
+    """
+
+    rhinomesh = RhinoMesh(guid)
+    pts = rhinomesh.get_vertex_coordinates()
+    fcs = [face[:3] for face in rhinomesh.get_face_vertices()]
+
+    path = structure.path
+    basedir = utilities.__file__.split('__init__.py')[0]
+    xfunc = XFunc('discretise', basedir=basedir, tmpdir=path)
+    xfunc.funcname = 'functions.discretise_faces'
+
+    try:
+        vertices, faces = xfunc(vertices=pts, faces=fcs, target=target, min_angle=min_angle, factor=factor,
+                                iterations=iterations, refine=refine)
+
+        rs.CurrentLayer(rs.AddLayer(layer))
+        rs.DeleteObjects(rs.ObjectsByLayer(layer))
+        rs.EnableRedraw(False)
+
+        for points, face in zip(vertices, faces):
+            mesh_faces = []
+            for i in face:
+                face_ = i + [i[-1]]
+                mesh_faces.append(face_)
+            rs.AddMesh(points, mesh_faces)
+
+        rs.EnableRedraw(True)
+
+    except:
+        '***** Mesh discretisation failed *****'
 
 
 def add_element_set(structure, guids, name):
@@ -269,111 +401,7 @@ def add_node_set(structure, guids, name):
     structure.add_set(name=name, type='node', selection=nodes)
 
 
-def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, acoustic=False, thermal=False):
 
-    """ Adds node and element data from Rhino layers to Structure object.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object to update.
-    layers : list
-        Layers to extract nodes and elements.
-    line_type : str
-        Element type for lines.
-    mesh_type : str
-        Element type for meshes.
-    acoustic : bool
-        Acoustic properties on or off.
-    thermal : bool
-        Thermal properties on or off.
-
-    Returns
-    -------
-    list
-        Node keys that were added to the Structure.
-    list
-        Element keys that were added to the Structure.
-
-    """
-
-    if isinstance(layers, str):
-        layers = [layers]
-
-    created_nodes = set()
-    created_elements = set()
-
-    for layer in layers:
-        elset = set()
-        for guid in rs.ObjectsByLayer(layer):
-
-            if line_type and rs.IsCurve(guid):
-
-                sp_xyz = rs.CurveStartPoint(guid)
-                ep_xyz = rs.CurveEndPoint(guid)
-                sp = structure.add_node(sp_xyz)
-                ep = structure.add_node(ep_xyz)
-                sp_ep = [sp, ep]
-                created_nodes.add(sp)
-                created_nodes.add(ep)
-                ez = subtract_vectors(ep_xyz, sp_xyz)
-
-                try:
-                    dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
-                    ex = dic.get('ex', None)
-                    ey = dic.get('ey', None)
-                    if ex and not ey:
-                        ey = cross_vectors(ex, ez)
-                except:
-                    ex = None
-                    ey = None
-                axes = {'ex': ex, 'ey': ey, 'ez': ez}
-
-                e = structure.add_element(nodes=sp_ep, type=line_type, acoustic=acoustic, thermal=thermal, axes=axes)
-                if e is not None:
-                    created_elements.add(e)
-                    elset.add(e)
-
-            elif mesh_type and rs.IsMesh(guid):
-
-                vertices = rs.MeshVertices(guid)
-                nodes = [structure.add_node(vertex) for vertex in vertices]
-                created_nodes.update(nodes)
-
-                if mesh_type in ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']:
-                    e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
-                    if e is not None:
-                        created_elements.add(e)
-                        elset.add(e)
-
-                else:
-                    try:
-                        dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
-                        ex = dic.get('ex', None)
-                        ey = dic.get('ey', None)
-                        if ex and ey:
-                            ez = cross_vectors(ex, ey)
-                        else:
-                            ez = None
-                    except:
-                        ex = None
-                        ey = None
-                        ez = None
-                    axes = {'ex': ex, 'ey': ey, 'ez': ez}
-
-                    for face in rs.MeshFaceVertices(guid):
-                        nodes = [structure.check_node_exists(vertices[i]) for i in face]
-                        if nodes[-1] == nodes[-2]:
-                            del nodes[-1]
-                        e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal,
-                                                  axes=axes)
-                        if e is not None:
-                            created_elements.add(e)
-                            elset.add(e)
-
-        structure.add_set(name=layer, type='element', selection=list(elset))
-
-    return list(created_nodes), list(created_elements)
 
 
 def add_sets_from_layers(structure, layers):
@@ -665,7 +693,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     # Create and clear Rhino layer
 
     if not layer:
-        layer = '{0}-{1}'.format(step, field)
+        layer = '{0}-{1}{2}'.format(step, field, mode)
     rs.CurrentLayer(rs.AddLayer(layer))
     rs.DeleteObjects(rs.ObjectsByLayer(layer))
     rs.EnableRedraw(False)
@@ -780,8 +808,11 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         rs.AddText('0', [x0, ymin + 4.8 * s, 0], height=h)
         rs.AddText('Step:{0}   Field:{1}'.format(step, field), [xmin, ymin + 12 * s, 0], height=h)
         if mode != '':
-            freq = str(round(structure.results[step]['frequencies'][mode], 3))
-            rs.AddText('Mode:{0}   Freq:{1}Hz'.format(mode, freq), [xmin, ymin - 1.5 * s, 0], height=h)
+            try:
+                freq = str(round(structure.results[step]['frequencies'][mode], 3))
+                rs.AddText('Mode:{0}   Freq:{1}Hz'.format(mode, freq), [xmin, ymin - 1.5 * s, 0], height=h)
+            except:
+                pass
 
         # Return to Default layer
 
