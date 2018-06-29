@@ -42,8 +42,8 @@ def write_loads(structure, output_path, filename, loads, factor):
         elif load.__name__ == 'TributaryLoad':
             # write_appply_tributary_load(structure, output_path, filename, lkey, factor)
             pload = add_load_to_ploads(structure, pload, load, factor)
-        elif load.__name__ == 'HarmonicAreaLoad':
-            write_apply_harmonic_area_load(structure, output_path, filename, lkey, factor, index)
+        elif load.__name__ == 'HarmonicPressureLoad':
+            write_apply_harmonic_pressure_load(structure, output_path, filename, lkey, factor, index)
         else:
             raise ValueError(load.__name__ + ' Type of load is not yet implemented for Ansys')
     write_combined_point_loads(pload, output_path, filename)
@@ -124,7 +124,7 @@ def write_gravity_loading(structure, output_path, filename, gravity, factor):
     cFile.close()
 
 
-def write_apply_harmonic_area_load(structure, output_path, filename, lkey, factor, index):
+def write_apply_harmonic_pressure_load(structure, output_path, filename, lkey, factor, index):
     # TODO, diferenciate netween harmonic and area loads, phase of not, possibly already at the write loads function above
 
     load_elements = structure.loads[lkey].elements
@@ -137,16 +137,15 @@ def write_apply_harmonic_area_load(structure, output_path, filename, lkey, facto
         else:
             elements.append(element)
 
-    # x = structure.loads[lkey].components['x']
-    # y = structure.loads[lkey].components['y']
-    # z = structure.loads[lkey].components['z']
-    normal = structure.loads[lkey].components['normal']
+    pressure = structure.loads[lkey].components['pressure']
     phase = structure.loads[lkey].components['phase']
 
     cFile = open(os.path.join(output_path, filename), 'a')
     string = 'SFE, {0}, {1}, PRES, {2}, {3} \n'
     for ekey in elements:
-        string_ = string.format(ekey + 1, index + 1, 1, normal)
+
+        ekey += structure.element_count() ######################################### this must be generalised for non virtual elements as well.
+        string_ = string.format(ekey + 1, index + 1, 1, pressure)
         cFile.write(string_)
         if phase:
             string_ = string.format(ekey + 1, index + 1, 2, phase)

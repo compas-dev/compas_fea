@@ -21,6 +21,7 @@ def write_elements(structure, output_path, filename):
                 ekeys.extend(structure.sets[elset]['selection'])
         if ep[key].elements:
             ekeys.extend(ep[key].elements)
+
         etype = structure.elements[ekeys[0]].__name__
         if etype == 'ShellElement':
             write_shell4_elements(structure, output_path, filename, ekeys, section, material)
@@ -30,6 +31,31 @@ def write_elements(structure, output_path, filename):
             write_tie_elements(structure, output_path, filename, ekeys, section, material, etype)
         if etype == 'SpringElement':
             write_spring_elements_nodal(structure, output_path, filename, ekeys, section)
+
+    if 'virtual_elements' in structure.sets:
+        write_virtual_elements(structure, output_path, filename)
+
+
+def write_virtual_elements(structure, output_path, filename):
+
+    ekeys = structure.sets['virtual_elements']['selection']
+    etypes = {'ShellElement': [], 'BeamElement': [], 'TieElement': [], 'StrutElement': [],
+              'TrussElement': [], 'FaceElement': []}
+    func_dict = {'ShellElement': write_shell4_elements,
+                 'BeamElement': write_beam_elements,
+                 'TieElement' : write_tie_elements,
+                 'StrutElement': write_tie_elements,
+                 'TrussElement': write_tie_elements,
+                 'SpringElement': write_spring_elements_nodal,
+                 'FaceElement': write_surface_elements}
+
+    for ekey in ekeys:
+        etypes[structure.virtual_elements[ekey].__name__].append(ekey)
+
+    for etype in etypes:
+        ekeys = etypes[etype]
+        if ekeys:
+            func_dict[etype](structure, output_path, filename, ekeys, None, None)
 
 
 def write_nodes(structure, output_path, filename):
@@ -48,7 +74,8 @@ def write_set_element_material(output_path, filename, mat_index, elem_type, elem
     cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('ET,' + str(elem_type_index) + ',' + str(elem_type) + ' \n')
     cFile.write('TYPE,' + str(elem_type_index) + '\n')
-    cFile.write('MAT,' + str(mat_index + 1) + '\n')
+    if mat_index:
+        cFile.write('MAT,' + str(mat_index + 1) + '\n')
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()
@@ -66,6 +93,30 @@ def write_shell4_elements(structure, output_path, filename, ekeys, section, mate
 
     thickness = structure.sections[section].geometry['t']
     write_shell_thickness(output_path, filename, thickness, sec_index, mat_index)
+
+    cFile = open(os.path.join(output_path, filename), 'a')
+    for ekey in ekeys:
+        element = structure.elements[ekey]
+        element = element.nodes
+        string = 'E,'
+        for i in range(len(element)):
+            string += str(int(element[i]) + 1)
+            if i < len(element) - 1:
+                string += ','
+        string += '\n'
+        cFile.write(string)
+
+    cFile.write('!\n')
+    cFile.close()
+
+
+def write_surface_elements(structure, output_path, filename, ekeys, section, material):
+    """ This function creates ANSYS shell 181 elements
+    in a given ansys input file. These shell elements require 4 nodes.
+    """
+    ekeys = sorted(ekeys, key=int)
+    etkey = et_dict.setdefault('SURF154', len(et_dict) + 1)
+    write_set_element_material(output_path, filename, None, 'SURF154', etkey)
 
     cFile = open(os.path.join(output_path, filename), 'a')
     for ekey in ekeys:
@@ -504,19 +555,3 @@ def write_spring_elements_nodal(structure, out_path, filename, ekeys, section):
         fh.write('! \n')
     fh.write('! \n')
     fh.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

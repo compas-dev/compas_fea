@@ -19,6 +19,7 @@ __all__ = [
     'TieElement',
     'ShellElement',
     'MembraneElement',
+    'FaceElement',
     'SolidElement',
     'PentahedronElement',
     'TetrahedronElement',
@@ -181,6 +182,25 @@ class ShellElement(Element):
     def __init__(self):
         Element.__init__(self)
         self.__name__ = 'ShellElement'
+
+
+class FaceElement(Element):
+
+    """ A 2D Face element used for special loading cases.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+
+    """
+
+    def __init__(self):
+        Element.__init__(self)
+        self.__name__ = 'FaceElement'
 
 
 class MembraneElement(ShellElement):

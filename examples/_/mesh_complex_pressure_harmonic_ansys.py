@@ -5,7 +5,7 @@ from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ShellSection
 from compas_fea.structure import ElementProperties
 from compas_fea.structure import HarmonicStep
-from compas_fea.structure import HarmonicAreaLoad
+from compas_fea.structure import HarmonicPressureLoad
 from compas.datastructures.mesh.mesh import Mesh
 import math
 
@@ -20,6 +20,12 @@ def harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping):
     s = structure.Structure()
     s.add_nodes_elements_from_mesh(mesh, element_type='ShellElement')
     s.add_set(name='all_elements', type='element', selection=s.elements.keys())
+
+    # add virtual elements -----------------------------------------------------
+
+    for fkey in list(mesh.faces()):
+        face = [s.check_node_exists(mesh.vertex_coordinates(i)) for i in mesh.face[fkey]]
+        s.add_virtual_element(nodes=face, type='FaceElement')
 
     # add displacements --------------------------------------------------------
     nkeys = []
@@ -38,9 +44,12 @@ def harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping):
     prop = ElementProperties(name='shell_props', material='MAT_CONCRETE', section='SEC_CONCRETE', elsets=['all_elements'])
     s.add_element_properties(prop)
 
+    # prop = ElementProperties(name='virtual_props', material=None, section=None, elsets=['virtual_elements'])
+    # s.add_element_properties(prop)
+
     # add loads ----------------------------------------------------------------
 
-    load = HarmonicAreaLoad(name='pressureload', elements=['all_elements'], normal=3., phase=math.pi / 2.)
+    load = HarmonicPressureLoad(name='pressureload', elements=['virtual_elements'], pressure=3., phase=math.pi / 2.)
     s.add_load(load)
 
     # add modal step -----------------------------------------------------------
@@ -54,9 +63,8 @@ def harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping):
     s.name = name
     fields = ['all']
     s.write_input_file('ansys', fields=fields)
-
-    # s.analyse(path=path, name='harmonic.inp', temp=None, software='ansys')
-    # return s
+    s.analyse(software='ansys', cpus=4)
+    return s
 
 
 if __name__ == '__main__':
@@ -68,8 +76,8 @@ if __name__ == '__main__':
     mesh = Mesh.from_data(data['mesh'])
     pts = data['pts']
 
-    freq_range = (50, 55)
-    freq_steps = 5
+    freq_range = (0, 1000)
+    freq_steps = 1000
     thick = 0.02
     damping = 0.003
 
