@@ -103,7 +103,6 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                 elsets = [elsets]
 
         if not (stype == 'SpringSection' and property.elsets.startswith('element_')):
-            f.write('{0}\n'.format(c))
             f.write('{0} Property: {1}\n'.format(c, key))
             f.write('{0} ----------'.format(c) + '-' * (len(key)) + '\n')
             f.write('{0}\n'.format(c))
