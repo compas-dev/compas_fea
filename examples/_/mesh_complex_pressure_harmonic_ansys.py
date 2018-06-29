@@ -64,6 +64,7 @@ def harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping):
     fields = ['all']
     s.write_input_file('ansys', fields=fields)
     s.analyse(software='ansys', cpus=4)
+    s.extract_data(software='ansys', fields=fields, steps='last')
     return s
 
 
