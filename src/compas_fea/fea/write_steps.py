@@ -194,16 +194,17 @@ def _write_area_load(f, software, com, axes, elset, sets, factor):
 
     elif software == 'abaqus':
 
-        if axes == 'global':
-            raise NotImplementedError
+        for k in elset:
+            if axes == 'global':
+                raise NotImplementedError
 
-        elif axes == 'local':
-            # x COMPONENT
-            # y COMPONENT
-            f.write('*DLOAD\n')
-            f.write('**\n')
-            if com['z']:
-                f.write('{0}, P, {1}'.format(elset, factor * com['z']) + '\n')
+            elif axes == 'local':
+                # x COMPONENT
+                # y COMPONENT
+                f.write('*DLOAD\n')
+                f.write('**\n')
+                if com['z']:
+                    f.write('{0}, P, {1}'.format(k, factor * com['z']) + '\n')
 
     elif software == 'sofistik':
 
