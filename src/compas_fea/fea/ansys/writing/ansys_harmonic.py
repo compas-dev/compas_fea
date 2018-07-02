@@ -55,8 +55,8 @@ def write_harmonic_solve(structure, output_path, filename, skey):
 
     # cFile.write('SOLVE \n')
     # cFile.write('FINISH \n')
-    # cFile.write('!\n')
-    # cFile.write('!\n')
+    cFile.write('!\n')
+    cFile.write('!\n')
     cFile.close()
 
 

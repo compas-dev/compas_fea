@@ -132,8 +132,10 @@ def write_apply_harmonic_pressure_load(structure, output_path, filename, lkey, f
     for element in load_elements:
         if type(element) == str:
             elements.extend(structure.sets[element]['selection'])
+            add = structure.element_count()
         else:
             elements.append(element)
+            add = 0
 
     pressure = structure.loads[lkey].components['pressure']
     phase = structure.loads[lkey].components['phase']
@@ -141,11 +143,11 @@ def write_apply_harmonic_pressure_load(structure, output_path, filename, lkey, f
     cFile = open(os.path.join(output_path, filename), 'a')
     string = 'SFE, {0}, {1}, PRES, {2}, {3} \n'
     for ekey in elements:
-        ekey += structure.element_count()
-        string_ = string.format(ekey + 1, index + 1, 1, pressure)
+        ekey += add
+        string_ = string.format(ekey + 1, '', 1, pressure)
         cFile.write(string_)
         if phase:
-            string_ = string.format(ekey + 1, index + 1, 2, phase)
+            string_ = string.format(ekey + 1, '', 2, phase)
             cFile.write(string_)
     cFile.write('!\n')
     cFile.write('!\n')
