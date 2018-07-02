@@ -103,7 +103,6 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                 elsets = [elsets]
 
         if not (stype == 'SpringSection' and property.elsets.startswith('element_')):
-            f.write('{0}\n'.format(c))
             f.write('{0} Property: {1}\n'.format(c, key))
             f.write('{0} ----------'.format(c) + '-' * (len(key)) + '\n')
             f.write('{0}\n'.format(c))
@@ -477,9 +476,8 @@ def _write_trusses(f, selection, software, elements, section, material, elset):
 
         f.write('TRUS NO NA NE NCS')
         if material.__name__ in ['Steel']:
-            Ny = None
-            # Ny = A * material.fy / 1000.
-            # f.write(' YIEL')
+            Ny = A * material.fy / 1000.
+            f.write(' YIEL')
         else:
             Ny = None
         f.write('\n$\n')

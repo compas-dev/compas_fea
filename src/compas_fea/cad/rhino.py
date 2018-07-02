@@ -57,6 +57,95 @@ __all__ = [
 ]
 
 
+def add_element_set(structure, guids, name):
+
+    """ Adds element set information from Rhino curve and mesh guids.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    guids : list
+        Rhino curve and Rhino mesh guids.
+    name : str
+        Name of the new element set.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    - Meshes representing solids must have 'solid' in their name.
+
+    """
+
+    elements = []
+
+    for guid in guids:
+
+        if rs.IsCurve(guid):
+
+            sp = structure.check_node_exists(rs.CurveStartPoint(guid))
+            ep = structure.check_node_exists(rs.CurveEndPoint(guid))
+            element = structure.check_element_exists([sp, ep])
+            if element is not None:
+                elements.append(element)
+
+        elif rs.IsMesh(guid):
+
+            vertices = rs.MeshVertices(guid)
+            faces    = rs.MeshFaceVertices(guid)
+
+            if 'solid' in rs.ObjectName(guid):
+                nodes   = [structure.check_node_exists(i) for i in vertices]
+                element = structure.check_element_exists(nodes)
+                if element is not None:
+                    elements.append(element)
+            else:
+                for face in faces:
+                    nodes = [structure.check_node_exists(vertices[i]) for i in face]
+                    if nodes[2] == nodes[3]:
+                        del nodes[-1]
+                    element = structure.check_element_exists(nodes)
+                    if element is not None:
+                        elements.append(element)
+
+    structure.add_set(name=name, type='element', selection=elements)
+
+
+def add_node_set(structure, guids, name):
+
+    """ Adds node set information from Rhino point guids.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    guids : list
+        Rhino point guids.
+    name : str
+        Name of the new node set.
+
+    Returns
+    -------
+    None
+
+    """
+
+    nodes = []
+
+    for guid in guids:
+
+        if rs.IsPoint(guid):
+
+            node = structure.check_node_exists(rs.PointCoordinates(guid))
+            if node is not None:
+                nodes.append(node)
+
+    structure.add_set(name=name, type='node', selection=nodes)
+
+
 def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, thermal=False):
 
     """ Adds node and element data from Rhino layers to the Structure object.
@@ -161,7 +250,45 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
     return list(added_nodes), list(added_elements)
 
 
+def add_sets_from_layers(structure, layers):
 
+    """ Add node and element sets to the Structure object from Rhino layers.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    layers : list
+        List of layer string names to take objects from.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    - Layers should exclusively contain nodes or elements.
+    - Mixed elements, e.g. lines and meshes, are allowed on a layer.
+    - Sets will inherit the layer names as their set name.
+
+    """
+
+    if isinstance(layers, str):
+        layers = [layers]
+
+    for layer in layers:
+        guids = rs.ObjectsByLayer(layer)
+
+        if guids:
+            name = layer.split('::')[-1] if '::' in layer else layer
+            check_points = [rs.IsPoint(guid) for guid in guids]
+
+            if all(check_points):
+                add_node_set(structure=structure, guids=guids, name=name)
+            elif not any(check_points):
+                add_element_set(structure=structure, guids=guids, name=name)
+            else:
+                print('***** Layer {0} contained a mixture of points and elements, set not created *****'.format(name))
 
 
 
@@ -250,64 +377,6 @@ def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iter
         '***** Mesh discretisation failed *****'
 
 
-def add_element_set(structure, guids, name):
-
-    """ Adds element set information from Rhino curve and mesh guids.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object to update.
-    guids : list
-        Rhino curve and Rhino mesh guids.
-    name : str
-        Name of the new element set.
-
-    Returns
-    -------
-    None
-
-    Notes
-    -----
-    - Meshes representing solids must have 'solid' in their name.
-
-    """
-
-    elements = []
-
-    for guid in guids:
-
-        if rs.IsCurve(guid):
-
-            sp = structure.check_node_exists(rs.CurveStartPoint(guid))
-            ep = structure.check_node_exists(rs.CurveEndPoint(guid))
-            element = structure.check_element_exists([sp, ep])
-            if element is not None:
-                elements.append(element)
-
-        if rs.IsMesh(guid):
-
-            vertices = rs.MeshVertices(guid)
-            faces = rs.MeshFaceVertices(guid)
-
-            if 'solid' in rs.ObjectName(guid):
-                nodes = [structure.check_node_exists(i) for i in vertices]
-                element = structure.check_element_exists(nodes)
-                if element is not None:
-                    elements.append(element)
-
-            else:
-                for face in faces:
-                    nodes = [structure.check_node_exists(vertices[i]) for i in face]
-                    if nodes[2] == nodes[3]:
-                        nodes = nodes[:-1]
-                    element = structure.check_element_exists(nodes)
-                    if element is not None:
-                        elements.append(element)
-
-    structure.add_set(name=name, type='element', selection=elements)
-
-
 def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, layer='Default', acoustic=False,
                        thermal=False):
 
@@ -372,76 +441,6 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
 
     except:
         print('***** Error using MeshPy or drawing Tets *****')
-
-
-def add_node_set(structure, guids, name):
-
-    """ Adds node set information from Rhino point guids.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object to update.
-    guids : list
-        Rhino point guids.
-    name : str
-        Name of the new node set.
-
-    Returns
-    -------
-    None
-
-    """
-
-    nodes = []
-    for guid in guids:
-        node = structure.check_node_exists(rs.PointCoordinates(guid))
-        if node is not None:
-            nodes.append(node)
-    structure.add_set(name=name, type='node', selection=nodes)
-
-
-
-
-
-def add_sets_from_layers(structure, layers):
-
-    """ Add node and element sets to the Structure object from Rhino layers.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object to update.
-    layers : list
-        List of layer names to take objects from.
-
-    Returns
-    -------
-    None
-
-    Notes
-    -----
-    - Layers should exclusively contain nodes or elements.
-    - Sets will inherit the layer names as their keys.
-
-    """
-
-    if isinstance(layers, str):
-        layers = [layers]
-
-    for layer in layers:
-        guids = rs.ObjectsByLayer(layer)
-
-        if guids:
-            name = layer.split('::')[-1] if '::' in layer else layer
-            check_points = [rs.IsPoint(guid) for guid in guids]
-
-            if all(check_points):
-                add_node_set(structure=structure, guids=guids, name=name)
-            elif not any(check_points):
-                add_element_set(structure=structure, guids=guids, name=name)
-            else:
-                print('***** Layer {0} contained a mixture of points and elements, set not created *****'.format(name))
 
 
 def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name='', blocks_name='',
@@ -796,7 +795,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         colors = [colorbar(2 * (yi - ymin - 0.5 * yn) / yn, input='float', type=255) for yi in y]
         rs.MeshVertexColors(id, colors)
 
-        h = 0.6 * s
+        h = 0.4 * s
         for i in range(5):
             x0 = xmin + 1.2 * s
             yu = ymin + (5.8 + i) * s

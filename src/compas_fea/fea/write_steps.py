@@ -108,9 +108,9 @@ def _write_point_load(f, software, com, nodes, ndof, sets, factor):
                     for ci, value in com.items():
                         if value:
                             if ci in 'xyz':
-                                f.write('    NODE NO {0} TYPE P{1}{1} {2}\n'.format(ni, ci.upper(), value * 0.001))
+                                f.write('    NODE NO {0} TYPE P{1}{1} {2}[kN]\n'.format(ni, ci.upper(), value * 0.001))
                             else:
-                                f.write('    NODE NO {0} TYPE M{1} {2}\n'.format(ni, ci.upper(), value * 0.001))
+                                f.write('    NODE NO {0} TYPE M{1} {2}[kN]\n'.format(ni, ci.upper(), value * 0.001))
             else:
                 pass
 
@@ -194,16 +194,17 @@ def _write_area_load(f, software, com, axes, elset, sets, factor):
 
     elif software == 'abaqus':
 
-        if axes == 'global':
-            raise NotImplementedError
+        for k in elset:
+            if axes == 'global':
+                raise NotImplementedError
 
-        elif axes == 'local':
-            # x COMPONENT
-            # y COMPONENT
-            f.write('*DLOAD\n')
-            f.write('**\n')
-            if com['z']:
-                f.write('{0}, P, {1}'.format(elset, factor * com['z']) + '\n')
+            elif axes == 'local':
+                # x COMPONENT
+                # y COMPONENT
+                f.write('*DLOAD\n')
+                f.write('**\n')
+                if com['z']:
+                    f.write('{0}, P, {1}'.format(k, factor * com['z']) + '\n')
 
     elif software == 'sofistik':
 
@@ -508,6 +509,11 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         modes      = getattr(step, 'modes', None)
         nlgeom = 'YES' if getattr(step, 'nlgeom', None) else 'NO'
         nlmat = 'YES' if getattr(step, 'nlmat', None) else 'NO'
+
+        has_concrete = False
+        for material in structure.materials.values():
+            if material.__name__ in ['Concrete', 'ConcreteSmearedCrack', 'ConcreteDamagedPlasticity']:
+                has_concrete = True
 
         if getattr(step, 'loads', None):
             if isinstance(step.loads, str):
@@ -861,7 +867,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 f.write("HEAD SOLVE {0} LC 2{1:0>2}00 {2}\n".format(state.upper(), step_index, key))
                 f.write('$\n')
                 f.write('CTRL SOLV 1\n')
-                f.write('CTRL CONC\n')
+                if has_concrete:
+                    f.write('CTRL CONC\n')
 
                 if state == 'sls':
                     pass
@@ -870,7 +877,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     # f.write('NSTR KMOD S1 KSV ULD\n')
                     f.write('ULTI 30 FAK1 0.1 DFAK 0.1 PRO 1.5 FAKE 1.5\n')
                 if nlgeom == 'YES':
-                    f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2}\n'.format(increments, tolerance, nlmat))
+                    f.write('SYST PROB TH3 ITER {0} TOL {1}\n'.format(increments, tolerance))
+                    # f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2}\n'.format(increments, tolerance, nlmat))
                     # f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2} PLC 1{3:0>2}00\n'.format(increments, tolerance, nlmat, step_index))
 
                 # if state == 'uls':
@@ -905,38 +913,40 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 f.write('$\n')
                 f.write('$\n')
 
-                f.write('+PROG ASE\n')
-                f.write("HEAD CREEP {0} LC 3{1:0>2}00 {2}\n".format(state.upper(), step_index, key))
-                f.write('$\n')
-                f.write('CTRL SOLV 1\n')
-                f.write('CTRL CONC\n')
-                f.write('CREP NCRE 10\n')
+                if has_concrete:
 
-                if nlgeom == 'YES':
-                    f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2} PLC 2{3:0>2}00\n'.format(increments, tolerance, nlmat, step_index))
-                f.write('GRP ALL FACS 1.00 PHI 1.00 PHIF 0 EPS -0.0005\n')
+                    f.write('+PROG ASE\n')
+                    f.write("HEAD CREEP {0} LC 3{1:0>2}00 {2}\n".format(state.upper(), step_index, key))
+                    f.write('$\n')
+                    f.write('CTRL SOLV 1\n')
+                    f.write('CTRL CONC\n')
+                    f.write('CREP NCRE 10\n')
 
-                f.write('REIQ LCR {0}\n'.format(step_index))
-                f.write('$\n')
+                    if nlgeom == 'YES':
+                        f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2} PLC 2{3:0>2}00\n'.format(increments, tolerance, nlmat, step_index))
+                    f.write('GRP ALL FACS 1.00 PHI 1.00 PHIF 0 EPS -0.0005\n')
 
-                DLX, DLY, DLZ = 0, 0, 0
-                for load in loads.values():
-                    if load.__name__ == 'GravityLoad':
-                        com = load.components
-                        DLX = com['x'] if com['x'] else 0
-                        DLY = com['y'] if com['y'] else 0
-                        DLZ = com['z'] if com['z'] else 0
-                        break
+                    f.write('REIQ LCR {0}\n'.format(step_index))
+                    f.write('$\n')
 
-                f.write('$\n')
-                f.write("LC 3{0:0>2}00 TITL '{1} CREEP'".format(step_index, key))
-                f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * fact, DLY * fact, DLZ * fact))
-                f.write('    LCC 2{0:0>2}00 PLC YES\n'.format(step_index))
+                    DLX, DLY, DLZ = 0, 0, 0
+                    for load in loads.values():
+                        if load.__name__ == 'GravityLoad':
+                            com = load.components
+                            DLX = com['x'] if com['x'] else 0
+                            DLY = com['y'] if com['y'] else 0
+                            DLZ = com['z'] if com['z'] else 0
+                            break
 
-                f.write('$\n')
-                f.write('END\n')
-                f.write('$\n')
-                f.write('$\n')
+                    f.write('$\n')
+                    f.write("LC 3{0:0>2}00 TITL '{1} CREEP'".format(step_index, key))
+                    f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * fact, DLY * fact, DLZ * fact))
+                    f.write('    LCC 2{0:0>2}00 PLC YES\n'.format(step_index))
+
+                    f.write('$\n')
+                    f.write('END\n')
+                    f.write('$\n')
+                    f.write('$\n')
 
 
 # Thermal

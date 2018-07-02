@@ -51,11 +51,23 @@ class Load(object):
     """
 
     def __init__(self, name, axes='global', components={}, nodes=[], elements=[]):
+
+        self.__name__ = 'LoadObject'
         self.name = name
         self.axes = axes
         self.components = components
         self.nodes = nodes
         self.elements = elements
+
+    def __str__(self):
+
+        print('compas_fea {0} object'.format(self.__name__))
+        print('-' * (len(self.__name__) + 10))
+
+        for attr in ['name', 'axes', 'components', 'nodes', 'elements']:
+            print('{0:<10} : {1}'.format(attr, getattr(self, attr)))
+
+        return ''
 
 
 class PrestressLoad(Load):
