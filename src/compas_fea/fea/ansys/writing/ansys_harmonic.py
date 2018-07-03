@@ -38,14 +38,19 @@ def write_harmonic_solve(structure, output_path, filename, skey):
     freq_steps = structure.steps[skey].freq_steps
     harmonic_damping = structure.steps[skey].damping
 
+    freq_list = [50,51,52,53,60]
+
     cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('/SOL \n')
     cFile.write('!\n')
     cFile.write('FINISH \n')
     cFile.write('/SOLU \n')
     cFile.write('ANTYPE,3            ! Harmonic analysis \n')
-    cFile.write('HARFRQ,' + str(freq_range[0]) + ',' + str(freq_range[1]) + ',           ! Frequency range \n')
-    cFile.write('NSUBST,' + str(freq_steps) + ',             ! Number of frequency steps \n')
+    cFile.write('*dim, freq_list, array, ' + str(len(freq_list)) + '\n')
+    cFile.write('freq_list(1) = ' + ', '.join([str(f) for f in freq_list]) + '\n')
+    cFile.write('HARFRQ, , , , , %freq_list%, , ! Frequency range / list \n')
+    # cFile.write('HARFRQ,' + str(freq_range[0] - 1) + ',' + str(freq_range[1] - 1) + ',           ! Frequency range \n')
+    # cFile.write('NSUBST,' + str(freq_steps) + ',             ! Number of frequency steps \n')
     cFile.write('KBC,1                ! Stepped loads \n')
 
     if harmonic_damping:

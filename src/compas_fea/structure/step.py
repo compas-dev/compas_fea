@@ -148,10 +148,8 @@ class HarmonicStep(object):
     ----------
     name : str
         Name of the HarmonicStep.
-    freq_range : list
-        First and last frequencies to analyse.
-    freq_steps : int
-        The number of equally spaced frequency steps.
+    freq_list : list
+        List of frequencies to analyse.
     displacements : list
         Displacement object names.
     loads : list
@@ -169,12 +167,11 @@ class HarmonicStep(object):
 
     """
 
-    def __init__(self, name, freq_range, freq_steps, displacements=[], loads=[], factor=1.0, damping=None,
+    def __init__(self, name, freq_list, displacements=[], loads=[], factor=1.0, damping=None,
                  type='harmonic'):
         self.__name__ = 'HarmonicStep'
         self.name = name
-        self.freq_range = freq_range
-        self.freq_steps = freq_steps
+        self.freq_list = freq_list
         self.displacements = displacements
         self.loads = loads
         self.factor = factor
