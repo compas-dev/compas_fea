@@ -15,7 +15,7 @@ __license__    = 'MIT License'
 __email__      = 'mendez@arch.ethz.ch'
 
 
-def harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping):
+def harmonic_pressure(mesh, pts, freq_list, path, name, damping):
     # add shell elements from mesh ---------------------------------------------
     s = structure.Structure()
     s.add_nodes_elements_from_mesh(mesh, element_type='ShellElement')
@@ -44,9 +44,6 @@ def harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping):
     prop = ElementProperties(name='shell_props', material='MAT_CONCRETE', section='SEC_CONCRETE', elsets=['all_elements'])
     s.add_element_properties(prop)
 
-    # prop = ElementProperties(name='virtual_props', material=None, section=None, elsets=['virtual_elements'])
-    # s.add_element_properties(prop)
-
     # add loads ----------------------------------------------------------------
 
     load = HarmonicPressureLoad(name='pressureload', elements=['virtual_elements'], pressure=3., phase=math.pi / 2.)
@@ -54,7 +51,7 @@ def harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping):
 
     # add modal step -----------------------------------------------------------
     step = HarmonicStep(name='harmonic_analysis', displacements=['supports'], loads=['pressureload'],
-                        freq_range=freq_range, freq_steps=freq_steps, damping=damping)
+                        freq_list=freq_list, damping=damping)
     s.add_step(step)
     s.set_steps_order(['harmonic_analysis'])
 
@@ -77,12 +74,11 @@ if __name__ == '__main__':
     mesh = Mesh.from_data(data['mesh'])
     pts = data['pts']
 
-    freq_range = (50, 55)
-    freq_steps = 5
+    freq_list = [50, 51, 52, 55]
     thick = 0.02
     damping = 0.003
 
     path = compas_fea.TEMP
     name = 'harmonic_pressure'
 
-    harmonic_pressure(mesh, pts, freq_range, freq_steps, path, name, damping=damping)
+    harmonic_pressure(mesh, pts, freq_list, path, name, damping=damping)
