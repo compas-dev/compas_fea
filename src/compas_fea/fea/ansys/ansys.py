@@ -216,13 +216,13 @@ def write_results_from_rst(structure, fields, steps, sets=None):
             write_modal_results_from_ansys_rst(name, path, fields, num_modes,
                                                step_index=step_index, step_name=skey)
         elif stype == 'harmonic':
-            freq_steps = structure.steps[skey].freq_steps
+            freq_list = structure.steps[skey].freq_list
             if sets:
                 nodes = []
                 [nodes.extend(structure.sets[s]['selection']) for s in sets]
             else:
                 nodes = None
-            write_harmonic_results_from_ansys_rst(name, path, fields, freq_steps, step_index=0, step_name='step', sets=nodes)
+            write_harmonic_results_from_ansys_rst(name, path, fields, freq_list, step_index=0, step_name='step', sets=nodes)
 
     ansys_launch_process_extract(path, name)
     # os.remove(path + '/' + filename)

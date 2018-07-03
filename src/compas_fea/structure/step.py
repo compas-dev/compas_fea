@@ -149,7 +149,7 @@ class HarmonicStep(object):
     name : str
         Name of the HarmonicStep.
     freq_list : list
-        List of frequencies to analyse.
+        Sorted list of frequencies to analyse.
     displacements : list
         Displacement object names.
     loads : list

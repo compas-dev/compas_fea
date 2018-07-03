@@ -34,11 +34,11 @@ def write_harmonic_analysis_request(structure, path, name, skey):
 
 
 def write_harmonic_solve(structure, output_path, filename, skey):
-    freq_range = structure.steps[skey].freq_range
-    freq_steps = structure.steps[skey].freq_steps
+    freq_list = structure.steps[skey].freq_list
     harmonic_damping = structure.steps[skey].damping
 
-    freq_list = [50,51,52,53,60]
+    n = 10
+    freq_list_ = [freq_list[i:i + n] for i in range(0, len(freq_list), n)]
 
     cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('/SOL \n')
@@ -47,10 +47,9 @@ def write_harmonic_solve(structure, output_path, filename, skey):
     cFile.write('/SOLU \n')
     cFile.write('ANTYPE,3            ! Harmonic analysis \n')
     cFile.write('*dim, freq_list, array, ' + str(len(freq_list)) + '\n')
-    cFile.write('freq_list(1) = ' + ', '.join([str(f) for f in freq_list]) + '\n')
+    for i, freq in enumerate(freq_list_):
+        cFile.write('freq_list(' + str(i * n + 1) + ') = ' + ', '.join([str(f) for f in freq]) + '\n')
     cFile.write('HARFRQ, , , , , %freq_list%, , ! Frequency range / list \n')
-    # cFile.write('HARFRQ,' + str(freq_range[0] - 1) + ',' + str(freq_range[1] - 1) + ',           ! Frequency range \n')
-    # cFile.write('NSUBST,' + str(freq_steps) + ',             ! Number of frequency steps \n')
     cFile.write('KBC,1                ! Stepped loads \n')
 
     if harmonic_damping:
@@ -58,14 +57,12 @@ def write_harmonic_solve(structure, output_path, filename, skey):
         cFile.write('BETAD,' + str(harmonic_damping) + '   ! stiffness matrix multiplier for damping \n')
         # cFile.write('DMPRAT,' + str(harmonic_damping) + '   ! constant modal damping ratio \n')
 
-    # cFile.write('SOLVE \n')
-    # cFile.write('FINISH \n')
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()
 
 
-def write_harmonic_results_from_ansys_rst(name, path, fields, freq_steps, step_index=0, step_name='step', sets=None):
+def write_harmonic_results_from_ansys_rst(name, path, fields, freq_list, step_index=0, step_name='step', sets=None):
 
     if not os.path.exists(os.path.join(path, name + '_output', 'harmonic_out')):
         os.makedirs(os.path.join(path, name + '_output', 'harmonic_out'))
@@ -75,7 +72,7 @@ def write_harmonic_results_from_ansys_rst(name, path, fields, freq_steps, step_i
     if type(fields) == str:
         fields = [fields]
     if 'u' in fields or 'all' in fields:
-        write_request_per_freq_nodal_displacements(path, name, freq_steps, sets)
+        write_request_per_freq_nodal_displacements(path, name, freq_list, sets)
         # write_something(path, name)
     if 'geo' in fields or 'all' in fields:
         write_request_element_nodes(path, name)
@@ -91,7 +88,7 @@ def write_harmonic_post_process(path, name):
     cFile.close()
 
 
-def write_request_per_freq_nodal_displacements(path, name, freq_steps, sets=None):
+def write_request_per_freq_nodal_displacements(path, name, freq_list, sets=None):
     filename = name + '_extract.txt'
     harmonic_outpath = os.path.join(path, name + '_output', 'harmonic_out')
 
@@ -111,7 +108,7 @@ def write_request_per_freq_nodal_displacements(path, name, freq_steps, sets=None
             cFile.write('nsol,3,curr_n,u,y ! output UY \n')
             cFile.write('nsol,4,curr_n,u,z ! output UZ \n')
 
-            cFile.write('*dim,N%curr_n%_output,array,' + str(freq_steps) + ',7 \n')
+            cFile.write('*dim,N%curr_n%_output,array,' + str(len(freq_list)) + ',7 \n')
 
             cFile.write('vget,N%curr_n%_output(1,1),1 ! put time in array \n')
             cFile.write('vget,N%curr_n%_output(1,2),2,,0 ! put UX in array \n')
@@ -155,7 +152,7 @@ def write_request_per_freq_nodal_displacements(path, name, freq_steps, sets=None
         cFile.write('nsol,3,curr_n,u,y ! output UY \n')
         cFile.write('nsol,4,curr_n,u,z ! output UZ \n')
 
-        cFile.write('*dim,N%curr_n%_output,array,' + str(freq_steps) + ',7 \n')
+        cFile.write('*dim,N%curr_n%_output,array,' + str(len(freq_list)) + ',7 \n')
 
         cFile.write('vget,N%curr_n%_output(1,1),1 ! put time in array \n')
         cFile.write('vget,N%curr_n%_output(1,2),2,,0 ! put UX in array \n')
