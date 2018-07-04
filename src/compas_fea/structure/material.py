@@ -17,6 +17,7 @@ __all__ = [
     'ConcreteSmearedCrack',
     'ConcreteDamagedPlasticity',
     'ElasticIsotropic',
+    'Stiff',
     'ElasticOrthotropic',
     'ElasticPlastic',
     # 'ThermalMaterial',
@@ -62,6 +63,26 @@ class ElasticIsotropic(object):
         self.p = p
         self.tension = tension
         self.compression = compression
+
+
+class Stiff(ElasticIsotropic):
+
+    """ Elastic and very stiff massless material.
+
+    Parameters
+    ----------
+    name : str
+        Material name.
+
+    Returns
+    -------
+    None
+
+    """
+
+    def __init__(self, name):
+        ElasticIsotropic.__init__(self, name=name, E=10**12, v=0.3, p=10**(-1))
+        self.__name__ = 'Stiff'
 
 
 class ElasticOrthotropic(object):

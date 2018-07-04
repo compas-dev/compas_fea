@@ -22,12 +22,11 @@ mdl = Structure(name='beam_frame', path='C:/Temp/')
 
 # Elements
 
-rhino.add_nodes_elements_from_layers(mdl, line_type='BeamElement', layers='elset_lines')
+rhino.add_nodes_elements_from_layers(mdl, line_type='BeamElement', layers='elset_beams')
 
 # Sets
 
-layers = ['nset_pins', 'nset_load_v', 'nset_load_h', 'nset_rollers', 'elset_top']
-rhino.add_sets_from_layers(mdl, layers=layers)
+rhino.add_sets_from_layers(mdl, layers=['nset_pins', 'nset_load_v', 'nset_load_h', 'nset_rollers'])
 
 # Materials
 
@@ -39,7 +38,7 @@ mdl.add_section(PipeSection(name='sec_pipe', r=0.100, t=0.005))
 
 # Properties
 
-ep = Properties(name='ep', material='mat_steel', section='sec_pipe', elsets='elset_lines')
+ep = Properties(name='ep_beams', material='mat_steel', section='sec_pipe', elsets='elset_beams')
 mdl.add_element_properties(ep)
 
 # Displacements
@@ -51,9 +50,8 @@ mdl.add_displacements([
 # Loads
 
 mdl.add_loads([
-    PointLoad(name='load_h', nodes='nset_load_h', x=4000),
-    PointLoad(name='load_v', nodes='nset_load_v', z=-6000),
-])
+    PointLoad(name='load_h', nodes='nset_load_h', x=+4000),
+    PointLoad(name='load_v', nodes='nset_load_v', z=-6000)])
 
 # Steps
 
@@ -72,11 +70,9 @@ mdl.write_input_file(software='sofistik')
 
 # Run (Abaqus/OpenSees)
 
-#mdl.analyse_and_extract(software='abaqus', fields=['u', 'ur', 'rf'])
-mdl.analyse_and_extract(software='opensees', fields=['u', 'ur', 'rf'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf'])
+mdl.analyse_and_extract(software='opensees', fields=['u', 'rf'])
 
 rhino.plot_data(mdl, step='step_loads', field='um', scale=50)
-rhino.plot_data(mdl, step='step_loads', field='urm', scale=50)
 
-print(mdl.get_nodal_results(step='step_loads', field='rfx', nodes='nset_pins'))
-print(mdl.get_nodal_results(step='step_loads', field='rfz', nodes='nset_pins'))
+print(mdl.get_nodal_results(step='step_loads', field='rfm', nodes='nset_pins'))

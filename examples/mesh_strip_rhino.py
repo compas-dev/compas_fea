@@ -47,7 +47,6 @@ mdl.add_element_properties(ep)
 mdl.add_displacements([
     PinnedDisplacement(name='disp_left', nodes='nset_left'),
     RollerDisplacementX(name='disp_right', nodes='nset_right'),
-    GeneralDisplacement(name='disp_stability', nodes='nset_stability', y=0),
     GeneralDisplacement(name='disp_middle', nodes='nset_middle', z=0.200)])
 
 # Loads
@@ -70,4 +69,4 @@ mdl.summary()
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
 rhino.plot_data(mdl, step='step_load', field='um')
-rhino.plot_data(mdl, step='step_load', field='smises')  # Abaqus results only
+rhino.plot_data(mdl, step='step_load', field='smises')

@@ -195,7 +195,10 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 
                 ez = subtract_vectors(ep_xyz, sp_xyz)
                 try:
-                    dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
+                    name = rs.ObjectName(guid).replace("'", '"')
+                    if name[0] in ['_', '^']:
+                        name = name[1:]
+                    dic = json.loads(name)
                     ex  = dic.get('ex', None)
                     ey  = dic.get('ey', None)
                     if ex and not ey:
@@ -224,7 +227,10 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 
                 else:
                     try:
-                        dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
+                        name = rs.ObjectName(guid).replace("'", '"')
+                        if name[0] in ['_', '^']:
+                            name = name[1:]
+                        dic = json.loads(name)
                         ex  = dic.get('ex', None)
                         ey  = dic.get('ey', None)
                         ez  = dic.get('ez', None)
@@ -289,6 +295,66 @@ def add_sets_from_layers(structure, layers):
                 add_element_set(structure=structure, guids=guids, name=name)
             else:
                 print('***** Layer {0} contained a mixture of points and elements, set not created *****'.format(name))
+
+
+def network_from_lines(guids=[], layer=None):
+
+    """ Creates a Network datastructure object from a list of Rhino curve guids.
+
+    Parameters
+    ----------
+    guids : list
+        guids of the Rhino curves to be made into a Network.
+    layer : str
+        Layer to grab line guids from.
+
+    Returns
+    -------
+    obj
+        Network datastructure object.
+
+    """
+
+    if layer:
+        guids = rs.ObjectsByLayer(layer)
+    lines = [[rs.CurveStartPoint(guid), rs.CurveEndPoint(guid)] for guid in guids if rs.IsCurve(guid)]
+
+    return Network.from_lines(lines)
+
+
+def ordered_network(structure, network, layer):
+
+    """ Extract vertex and edge orders from a Network for a given start-point.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    network : obj
+        Network Datastructure object.
+    layer : str
+        Layer to extract start-point (Rhino point).
+
+    Returns
+    -------
+    list
+        Ordered nodes for the Structure.
+    list
+        Ordered elements for the Structure.
+    list
+        Cumulative length at element mid-points.
+    float
+        Total length.
+
+    Notes
+    -----
+    - This function is for a Network representing a single structural element, i.e. with two end-points (leaves).
+
+    """
+
+    start = rs.PointCoordinates(rs.ObjectsByLayer(layer)[0])
+    return network_order(start=start, structure=structure, network=network)
+
 
 
 
@@ -525,64 +591,6 @@ def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name=''
 
     rs.EnableRedraw(True)
     rs.CurrentLayer(rs.AddLayer('Default'))
-
-
-def network_from_lines(guids=[], layer=None):
-
-    """ Creates a Network datastructure object from a list of curve guids.
-
-    Parameters
-    ----------
-    guids : list
-        guids of the Rhino curves to be made into a Network.
-    layer : str
-        Layer to grab line guids from.
-
-    Returns
-    -------
-    obj
-        Network datastructure object.
-
-    """
-
-    if layer:
-        guids = rs.ObjectsByLayer(layer)
-    lines = [[rs.CurveStartPoint(guid), rs.CurveEndPoint(guid)] for guid in guids]
-    return Network.from_lines(lines)
-
-
-def ordered_network(structure, network, layer):
-
-    """ Extract node and element orders from a Network for a given start-point.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object.
-    network : obj
-        Network object.
-    layer : str
-        Layer to extract start-point (Rhino point).
-
-    Returns
-    -------
-    list
-        Ordered nodes.
-    list
-        Ordered elements.
-    list
-        Cumulative lengths at element mid-points.
-    float
-        Total length.
-
-    Notes
-    -----
-    - Function is for a Network representing a single structural element.
-
-    """
-
-    start = rs.PointCoordinates(rs.ObjectsByLayer(layer)[0])
-    return network_order(start=start, structure=structure, network=network)
 
 
 def plot_axes(xyz, e11, e22, e33, layer, sc=1):

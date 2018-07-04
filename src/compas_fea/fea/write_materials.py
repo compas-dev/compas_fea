@@ -99,6 +99,11 @@ def write_input_materials(f, software, materials, sections=None, properties=None
         if mtype == 'ElasticIsotropic':
             _write_elastic(f, software, E, G, v, p, compression, tension, c, material_index)
 
+        # Stiff
+
+        elif mtype == 'Stiff':
+            _write_elastic(f, software, E, G, v, p, compression, tension, c, material_index)
+
         # ElasticOrthotropic
 
         elif mtype == 'ElasticOrthotropic':

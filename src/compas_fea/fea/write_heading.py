@@ -29,20 +29,12 @@ names = {
     'ansys':    'Ansys',
 }
 
-units = {
-    'abaqus':   '[N, m, kg, s]',
-    'opensees': '[N, m, kg, s]',
-    'sofistik': '[kN, m, kg, s]',
-    'ansys':    '',
-}
-
 authors = {
     'abaqus':   'Dr Andrew Liew - liew@arch.ethz.ch',
     'opensees': 'Dr Andrew Liew - liew@arch.ethz.ch',
     'sofistik': 'Dr Andrew Liew - liew@arch.ethz.ch',
     'ansys':    'Dr Tomas Mendez - mendez@arch.ethz.ch',
 }
-
 
 
 def write_input_heading(f, software, ndof=6):
@@ -56,7 +48,7 @@ def write_input_heading(f, software, ndof=6):
     software : str
         Analysis software or library to use: 'abaqus', 'opensees', 'sofistik' or 'ansys'.
     ndof : float
-        Numbers of degrees-of-freedom per node.
+        Numbers of degrees-of-freedom per node (for OpenSees).
 
     Returns
     -------
@@ -70,8 +62,7 @@ def write_input_heading(f, software, ndof=6):
     f.write('{0} --------------------------------------------------------------------- Heading\n'.format(c))
     f.write('{0}\n'.format(c))
     f.write('{0} {1} input file\n'.format(c, names[software]))
-    f.write('{0} Units: {1}\n'.format(c, units[software]))
-    f.write('{0} compas_fea package: {1}\n'.format(c, authors[software]))
+    f.write('{0} compas_fea contact: {1}\n'.format(c, authors[software]))
     f.write('{0}\n'.format(c))
     f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
 
