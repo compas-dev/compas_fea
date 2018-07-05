@@ -309,7 +309,7 @@ def write_request_element_nodes(path, name):
     cFile.write('/POST1 \n')
     cFile.write('!\n')
     cFile.write('!\n')
-    cFile.write('SET,FIRST \n')
+    cFile.write('SET, FIRST \n')
 
     cFile.write('!\n')
     cFile.write('*get,num_nodes,node,,count \n')

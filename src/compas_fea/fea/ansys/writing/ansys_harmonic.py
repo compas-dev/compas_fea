@@ -36,6 +36,7 @@ def write_harmonic_analysis_request(structure, path, name, skey):
 def write_harmonic_solve(structure, output_path, filename, skey):
     freq_list = structure.steps[skey].freq_list
     harmonic_damping = structure.steps[skey].damping
+    sind = structure.steps_order.index(skey)
 
     n = 10
     freq_list_ = [freq_list[i:i + n] for i in range(0, len(freq_list), n)]
@@ -46,10 +47,10 @@ def write_harmonic_solve(structure, output_path, filename, skey):
     cFile.write('FINISH \n')
     cFile.write('/SOLU \n')
     cFile.write('ANTYPE,3            ! Harmonic analysis \n')
-    cFile.write('*dim, freq_list, array, ' + str(len(freq_list)) + '\n')
+    cFile.write('*dim, freq_list{0}, array, {1} \n'.format(sind, len(freq_list)))
     for i, freq in enumerate(freq_list_):
-        cFile.write('freq_list(' + str(i * n + 1) + ') = ' + ', '.join([str(f) for f in freq]) + '\n')
-    cFile.write('HARFRQ, , , , , %freq_list%, , ! Frequency range / list \n')
+        cFile.write('freq_list{0}('.format(sind) + str(i * n + 1) + ') = ' + ', '.join([str(f) for f in freq]) + '\n')
+    cFile.write('HARFRQ, , , , , %freq_list{0}%, , ! Frequency range / list \n'.format(sind))
     cFile.write('KBC,1                ! Stepped loads \n')
 
     if harmonic_damping:
@@ -64,15 +65,16 @@ def write_harmonic_solve(structure, output_path, filename, skey):
 
 def write_harmonic_results_from_ansys_rst(name, path, fields, freq_list, step_index=0, step_name='step', sets=None):
 
-    if not os.path.exists(os.path.join(path, name + '_output', 'harmonic_out')):
-        os.makedirs(os.path.join(path, name + '_output', 'harmonic_out'))
+    step_folder = 'harmonic_out_{0}'.format(step_index)
+    if not os.path.exists(os.path.join(path, name + '_output', step_folder)):
+        os.makedirs(os.path.join(path, name + '_output', step_folder))
 
     # write_harmonic_post_process(path, name)
 
     if type(fields) == str:
         fields = [fields]
     if 'u' in fields or 'all' in fields:
-        write_request_per_freq_nodal_displacements(path, name, freq_list, sets)
+        write_request_per_freq_nodal_displacements(path, name, freq_list, step_index, sets)
         # write_something(path, name)
     if 'geo' in fields or 'all' in fields:
         write_request_element_nodes(path, name)
@@ -88,15 +90,17 @@ def write_harmonic_post_process(path, name):
     cFile.close()
 
 
-def write_request_per_freq_nodal_displacements(path, name, freq_list, sets=None):
+def write_request_per_freq_nodal_displacements(path, name, freq_list, step_index, sets=None):
+
+    step_folder = 'harmonic_out_{0}'.format(step_index)
     filename = name + '_extract.txt'
-    harmonic_outpath = os.path.join(path, name + '_output', 'harmonic_out')
+    harmonic_outpath = os.path.join(path, name + '_output', step_folder)
 
     cFile = open(os.path.join(path, filename), 'a')
 
     if sets:
         cFile.write('/POST1 \n')
-        cFile.write('Set, FIRST, \n')
+        cFile.write('SET, {}, \n'.format(step_index + 1))
         cFile.write('/POST26 \n')
         cFile.write('PRCPLX, 0 \n')
         cFile.write('!\n')
@@ -137,7 +141,7 @@ def write_request_per_freq_nodal_displacements(path, name, freq_list, sets=None)
 
     else:
         cFile.write('/POST1 \n')
-        cFile.write('Set, FIRST, \n')
+        cFile.write('SET, {}, \n'.format(step_index + 1))
         cFile.write('*get,num_n,NODE,0,COUNT ! get number of nodes \n')
         cFile.write('*get,n_min,NODE,0,NUM,MIN ! get min node number \n')
 
@@ -177,4 +181,6 @@ def write_request_per_freq_nodal_displacements(path, name, freq_list, sets=None)
 
         cFile.write('*get,n_min,NODE,curr_n,NXTH \n')
         cFile.write('*enddo \n')
+        cFile.write('!\n')
+        cFile.write('!\n')
     cFile.close()
