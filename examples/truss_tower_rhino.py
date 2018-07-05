@@ -70,19 +70,19 @@ mdl.analyse_and_extract(software='opensees', fields=['u', 'rf', 'sf'])
 rhino.plot_data(mdl, step='step_load', field='um')
 print(mdl.get_nodal_results(step='step_load', field='um', nodes='nset_top'))
 
-rhino.plot_data(mdl, step='step_load', field='sfx')
-print(mdl.get_element_results(step='step_load', field='sfx', elements=[10, 12]))
+rhino.plot_data(mdl, step='step_load', field='sf1')
+print(mdl.get_element_results(step='step_load', field='sf1', elements=[10, 12]))
 
 # Run (Abaqus)
-
-#mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 's'])
 # Note: Abaqus returns stress data 'sxx' for truss elements, not section forces 'sfx'.
 
-#rhino.plot_data(mdl, step='step_load', field='sxx')
-#print(mdl.get_element_results(step='step_load', field='sxx', elements=[10, 12]))
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 's'])
 
-#rhino.plot_data(mdl, step='step_load', field='rfm')
-#print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))
+rhino.plot_data(mdl, step='step_load', field='sxx')
+print(mdl.get_element_results(step='step_load', field='sxx', elements=[10, 12]))
+
+rhino.plot_data(mdl, step='step_load', field='rfm')
+print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))
 
 # Save
 

@@ -32,7 +32,7 @@ conversion = {
     'E11':   'exx',  'E22':  'eyy',  'E33':  'ezz',  'E12':  'exy',  'E13':  'exz',  'E23':  'exz',
     'LE11':  'exx',  'LE22': 'eyy',  'LE33': 'ezz',  'LE12': 'exy',  'LE13': 'exz',  'LE23': 'exz',
     'PE11':  'pexx', 'PE22': 'peyy', 'PE33': 'pezz', 'PE12': 'pexy', 'PE13': 'pexz', 'PE23': 'pexz',
-    'SF1':   'sfnx', 'SF2':  'sfvy', 'SF3':  'sfvx',
+    'SF1':   'sf1',  'SF2':  'sf2',  'SF3':  'sf3',  'SF4':  'sf4',  'SF5':  'sf5',  'SF6':  'sf6',
     'SM1':   'smx',  'SM2':  'smy',  'SM3':  'smz',
     'SK1':   'skx',  'SK2':  'sky',  'SK3':  'skz',
     'SE1':   'senx', 'SE2':  'sevy', 'SE3':  'sevx',
@@ -109,8 +109,10 @@ def extract_odb_data(temp, name, fields, steps='all'):
 
             try:
                 frequencies = odb.steps[step].historyRegions['Assembly Assembly-1'].historyOutputs['EIGFREQ'].data
+                frequencies = [i[1] for i in frequencies]
                 results[step]['frequencies'] = frequencies
                 masses = odb.steps[step].historyRegions['Assembly Assembly-1'].historyOutputs['GM'].data
+                masses = [i[1] for i in masses]
                 results[step]['masses'] = masses
             except:
                 pass

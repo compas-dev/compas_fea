@@ -84,4 +84,4 @@ mdl.summary()
 mdl.analyse_and_extract(software='abaqus', fields=['u', 'sf'])
 
 rhino.plot_data(mdl, step='step_loads', field='um', radius=0.05, colorbar_size=0.5)
-rhino.plot_data(mdl, step='step_loads', field='sfnx', radius=0.05, colorbar_size=0.5)
+rhino.plot_data(mdl, step='step_loads', field='sf1', radius=0.05, colorbar_size=0.5)

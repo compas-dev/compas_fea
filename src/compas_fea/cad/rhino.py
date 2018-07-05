@@ -97,7 +97,7 @@ def add_element_set(structure, guids, name):
             vertices = rs.MeshVertices(guid)
             faces    = rs.MeshFaceVertices(guid)
 
-            if 'solid' in rs.ObjectName(guid):
+            if rs.ObjectName(guid) and ('solid' in rs.ObjectName(guid)):
                 nodes   = [structure.check_node_exists(i) for i in vertices]
                 element = structure.check_element_exists(nodes)
                 if element is not None:
@@ -652,9 +652,9 @@ def plot_mode_shapes(structure, step, layer=None, scale=1.0):
     """
 
     freq = structure.results[step]['frequencies']
-    for fk in freq:
-        layerk = layer + str(fk)
-        plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=fk)
+    for c, fk in enumerate(freq, 1):
+        layerk = layer + str(c)
+        plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=c)
 
 
 def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
@@ -816,7 +816,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         rs.AddText('Step:{0}   Field:{1}'.format(step, field), [xmin, ymin + 12 * s, 0], height=h)
         if mode != '':
             try:
-                freq = str(round(structure.results[step]['frequencies'][mode], 3))
+                freq = str(round(structure.results[step]['frequencies'][mode - 1], 3))
                 rs.AddText('Mode:{0}   Freq:{1}Hz'.format(mode, freq), [xmin, ymin - 1.5 * s, 0], height=h)
             except:
                 pass

@@ -2,7 +2,6 @@
 from compas_fea.cad import rhino
 from compas_fea.structure import Concrete
 from compas_fea.structure import ElementProperties as Properties
-from compas_fea.structure import GeneralDisplacement
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import ModalStep
 from compas_fea.structure import PinnedDisplacement
@@ -58,10 +57,9 @@ mdl.summary()
 
 # Run (Abaqus)
 
-mdl.analyse_and_extract(software='abaqus')
+mdl.analyse_and_extract(software='abaqus', fields=['u'])
 
-for i in range(1, 6):
-    rhino.plot_data(mdl, step='step_modal', field='um', mode=i, scale=1)
+rhino.plot_mode_shapes(mdl, step='step_modal', layer='mode-')
 
 print(mdl.results['step_modal']['frequencies'])
 print(mdl.results['step_modal']['masses'])

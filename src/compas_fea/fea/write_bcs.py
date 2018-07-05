@@ -67,6 +67,9 @@ def write_input_bcs(f, software, structure, steps, displacements, sets, ndof=6):
         f.write('{0} {1}\n'.format(c, key))
         f.write('{0} '.format(c) + '-' * len(key) + '\n')
 
+        if isinstance(step.displacements, str):
+            step.displacements = [step.displacements]
+
         for k in step.displacements:
 
             displacement = displacements[k]

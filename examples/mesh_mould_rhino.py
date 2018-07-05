@@ -1,4 +1,8 @@
 
+from compas.geometry import cross_vectors
+from compas.geometry import normalize_vector
+from compas.geometry import vector_from_points
+
 from compas_fea.cad import rhino
 from compas_fea.structure import Concrete
 from compas_fea.structure import ElementProperties as Properties
@@ -27,9 +31,21 @@ mdl = Structure(name='mesh_mould', path='C:/Temp/')
 
 rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers=['elset_wall', 'elset_plinth'])
 
+#for guid in rs.ObjectsByLayer('elset_wall') + rs.ObjectsByLayer('elset_plinth'):
+#    vertices = rs.MeshVertices(guid)
+#    faces = rs.MeshFaceVertices(guid)
+#    normals = rs.MeshFaceNormals(guid)
+#    centroids = rs.MeshFaceCenters(guid)
+#    for c, face in enumerate(faces):
+#        ex = normalize_vector(vector_from_points(vertices[face[0]], centroids[c]))
+#        ez = normals[c]
+#        ey = cross_vectors(ex, ez)
+#        nodes = mdl.add_nodes([vertices[i] for i in face])
+#        mdl.add_element(nodes=nodes, type='ShellElement', axes={'ex': ex, 'ey': ey, 'ez': ez})
+        
 # Sets
 
-rhino.add_sets_from_layers(mdl, layers=['nset_fixed'])
+rhino.add_sets_from_layers(mdl, layers=['nset_fixed', 'elset_wall', 'elset_plinth'])
 
 # Materials
 
@@ -46,22 +62,20 @@ mdl.add_sections([
 # Properties
 
 reb_plinth = {
-    'p_u1': {'pos': +0.130, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010, 'angle': 0},
-    'p_u2': {'pos': +0.120, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010, 'angle': 90},
-    'p_l2': {'pos': -0.120, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010, 'angle': 90},
-    'p_l1': {'pos': -0.130, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010, 'angle': 0}}
+    'p_u1': {'pos': +0.130, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 0},
+    'p_u2': {'pos': +0.120, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 90},
+    'p_l2': {'pos': -0.120, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 90},
+    'p_l1': {'pos': -0.130, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 0}}
 
 reb_wall = {
-    'w_u1': {'pos': +0.055, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010, 'angle': 0},
-    'w_u2': {'pos': +0.045, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010, 'angle': 90},
-    'w_l2': {'pos': -0.045, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010, 'angle': 90},
-    'w_l1': {'pos': -0.055, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.010, 'angle': 0}}
+    'w_u1': {'pos': +0.055, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 0},
+    'w_u2': {'pos': +0.045, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 90},
+    'w_l2': {'pos': -0.045, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 90},
+    'w_l1': {'pos': -0.055, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 0}}
 
 mdl.add_element_properties([
-    Properties(name='ep_plinth', material='mat_concrete', section='sec_plinth', 
-               elsets='elset_plinth', reinforcement=reb_plinth),
-    Properties(name='ep_wall', material='mat_concrete', section='sec_wall',
-               elsets='elset_wall', reinforcement=reb_wall)])
+    Properties(name='ep_plinth', material='mat_concrete', section='sec_plinth', elsets='elset_plinth', reinforcement=reb_plinth),
+    Properties(name='ep_wall', material='mat_concrete', section='sec_wall', elsets='elset_wall', reinforcement=reb_wall)])
 
 # Displacements
 
@@ -70,18 +84,18 @@ mdl.add_displacement(FixedDisplacement(name='disp_fixed', nodes='nset_fixed'))
 # Loads
 
 mdl.add_load(GravityLoad(name='load_gravity', elements=['elset_wall', 'elset_plinth']))
-components = {}
-for guid in rs.ObjectsByLayer('nset_loads'):
-    px, py, pz = rs.ObjectName(guid).split(' ')
-    components[mdl.check_node_exists(rs.PointCoordinates(guid))] = {'z': float(pz)*100}
-mdl.add_load(PointLoads(name='load_points', components=components))
-loads = ['load_gravity', 'load_points']
+#components = {}
+#for guid in rs.ObjectsByLayer('nset_loads'):
+#    px, py, pz = rs.ObjectName(guid).split(' ')
+#    components[mdl.check_node_exists(rs.PointCoordinates(guid))] = {'z': float(pz)*100}
+#mdl.add_load(PointLoads(name='load_points', components=components))
+#loads = ['load_gravity', 'load_points']
 
 # Steps
 
 mdl.add_steps([
     GeneralStep(name='step_bc', nlgeom=False, displacements=['disp_fixed']),
-    GeneralStep(name='step_loads', nlgeom=False, loads=loads)])
+    GeneralStep(name='step_loads', nlgeom=False, loads=['load_gravity'])])
 mdl.steps_order = ['step_bc', 'step_loads']
 
 # Summary
@@ -90,13 +104,26 @@ mdl.summary()
 
 # Run (Abaqus)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'rbfor'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'sf', 'rbfor'])
 
 rhino.plot_data(mdl, step='step_loads', field='um', colorbar_size=0.3)
-rhino.plot_data(mdl, step='step_loads', field='smaxp', colorbar_size=0.3)
-rhino.plot_data(mdl, step='step_loads', field='sminp', colorbar_size=0.3)
+rhino.plot_data(mdl, step='step_loads', field='sf1', colorbar_size=0.3)
+rhino.plot_data(mdl, step='step_loads', field='sf2', colorbar_size=0.3)
 rhino.plot_data(mdl, step='step_loads', field='rbfor', iptype='max', nodal='max', colorbar_size=0.3)
+rhino.plot_principal_stresses(mdl, step='step_loads', ptype='max', scale=5)
+rhino.plot_principal_stresses(mdl, step='step_loads', ptype='min', scale=5)
 
 # Run (Sofistik)
 
-mdl.write_input_file(software='sofistik')
+#mdl.write_input_file(software='sofistik')
+
+# Plot local axes
+
+rs.EnableRedraw(False)
+
+for ekey, axes in mdl.results['step_loads']['element']['axes'].items():
+    ex, ey, ez = axes
+    centroid = mdl.element_centroid(ekey)
+    rhino.plot_axes(centroid, e11=ex, e22=ey, e33=ez, layer='Default', sc=0.1)
+
+rs.EnableRedraw(True)

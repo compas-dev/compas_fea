@@ -363,7 +363,9 @@ def _write_shells(f, software, selection, elements, geometry, material, material
             f.write('*SHELL SECTION, ELSET={0}, MATERIAL={1}'.format(e1, material.name))
             if ori:
                 f.write(', ORIENTATION={0}\n'.format(ori))
-            f.write('\n{0}\n'.format(t))
+            else:
+                f.write('\n'.format(t))
+            f.write('{0}\n'.format(t))
 
             if reinforcement:
                 f.write('*REBAR LAYER\n')

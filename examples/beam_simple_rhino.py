@@ -82,14 +82,14 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 'ur', 'sf', 'sm'])
 
 rhino.plot_data(mdl, step='step_load', field='um', radius=0.01, colorbar_size=0.3)
 rhino.plot_data(mdl, step='step_load', field='ury', radius=0.01, colorbar_size=0.3)
-rhino.plot_data(mdl, step='step_load', field='sfnx', radius=0.01, colorbar_size=0.3)
-rhino.plot_data(mdl, step='step_load', field='sfvy', radius=0.01, colorbar_size=0.3)
+rhino.plot_data(mdl, step='step_load', field='sf1', radius=0.01, colorbar_size=0.3)
+rhino.plot_data(mdl, step='step_load', field='sf2', radius=0.01, colorbar_size=0.3)
 rhino.plot_data(mdl, step='step_load', field='smx', radius=0.01, colorbar_size=0.3)
 
 # Run (OpenSees)
 # Note: 'u' and 'ur' fields are plotable, 'sf' currently is not.
 
-mdl.analyse_and_extract(software='opensees', fields=['u', 'ur', 'sf'])
+mdl.analyse_and_extract(software='opensees', fields=['u', 'ur'])
 
 rhino.plot_data(mdl, step='step_load', field='um', radius=0.01, colorbar_size=0.3)
 rhino.plot_data(mdl, step='step_load', field='ury', radius=0.01, colorbar_size=0.3)
