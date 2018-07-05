@@ -37,16 +37,14 @@ class Element(object):
 
     Parameters
     ----------
-    axes : list
-        The local element axes.
     nodes : list
-        Nodes the element connects to.
+        Node keys the element connects to.
     number : int
         Number of the element.
-    acoustic : bool
-        Acoustic properties on or off.
     thermal : bool
         Thermal properties on or off.
+    axes : dict
+        The local element axes.
 
     Returns
     -------
@@ -54,12 +52,23 @@ class Element(object):
 
     """
 
-    def __init__(self, axes={}, nodes=None, number=None, acoustic=None, thermal=None):
-        self.axes = axes
-        self.nodes = nodes
-        self.number = number
-        self.acoustic = acoustic
-        self.thermal = thermal
+    def __init__(self, nodes=[], number=None, thermal=None, axes={}):
+
+        self.__name__ = 'Element'
+        self.nodes    = nodes
+        self.number   = number
+        self.thermal  = thermal
+        self.axes     = axes
+
+    def __str__(self):
+
+        print('compas_fea {0} object'.format(self.__name__))
+        print('-' * (len(self.__name__) + 18))
+
+        for attr in ['nodes', 'number', 'thermal', 'axes']:
+            print('{0:<10} : {1}'.format(attr, getattr(self, attr)))
+
+        return ''
 
 
 # ==============================================================================
@@ -68,7 +77,7 @@ class Element(object):
 
 class BeamElement(Element):
 
-    """ A 1D element that takes axial, shear, bending and torsion.
+    """ A 1D element that resists axial, shear, bending and torsion.
 
     Parameters
     ----------
@@ -82,6 +91,7 @@ class BeamElement(Element):
 
     def __init__(self):
         Element.__init__(self)
+
         self.__name__ = 'BeamElement'
 
 
@@ -101,12 +111,13 @@ class SpringElement(Element):
 
     def __init__(self):
         Element.__init__(self)
+
         self.__name__ = 'SpringElement'
 
 
 class TrussElement(Element):
 
-    """ A 1D element that takes axial loads.
+    """ A 1D element that resists axial loads.
 
     Parameters
     ----------
@@ -120,12 +131,13 @@ class TrussElement(Element):
 
     def __init__(self):
         Element.__init__(self)
+
         self.__name__ = 'TrussElement'
 
 
 class StrutElement(TrussElement):
 
-    """ A truss element that takes axial compressive loads.
+    """ A truss element that resists axial compressive loads.
 
     Parameters
     ----------
@@ -139,12 +151,13 @@ class StrutElement(TrussElement):
 
     def __init__(self):
         TrussElement.__init__(self)
+
         self.__name__ = 'StrutElement'
 
 
 class TieElement(TrussElement):
 
-    """ A truss element that takes axial tensile loads.
+    """ A truss element that resists axial tensile loads.
 
     Parameters
     ----------
@@ -158,6 +171,7 @@ class TieElement(TrussElement):
 
     def __init__(self):
         TrussElement.__init__(self)
+
         self.__name__ = 'TieElement'
 
 
@@ -167,7 +181,7 @@ class TieElement(TrussElement):
 
 class ShellElement(Element):
 
-    """ A 2D element that takes axial, shear, bending and torsion.
+    """ A 2D element that resists axial, shear, bending and torsion.
 
     Parameters
     ----------
@@ -181,6 +195,7 @@ class ShellElement(Element):
 
     def __init__(self):
         Element.__init__(self)
+
         self.__name__ = 'ShellElement'
 
 
@@ -200,12 +215,13 @@ class FaceElement(Element):
 
     def __init__(self):
         Element.__init__(self)
+
         self.__name__ = 'FaceElement'
 
 
 class MembraneElement(ShellElement):
 
-    """ A shell element that takes only axial loads.
+    """ A shell element that resists only axial loads.
 
     Parameters
     ----------
@@ -219,6 +235,7 @@ class MembraneElement(ShellElement):
 
     def __init__(self):
         ShellElement.__init__(self)
+
         self.__name__ = 'MembraneElement'
 
 
@@ -228,7 +245,7 @@ class MembraneElement(ShellElement):
 
 class SolidElement(Element):
 
-    """ A 3D element that takes axial, shear, bending and torsion.
+    """ A 3D element that resists axial, shear, bending and torsion.
 
     Parameters
     ----------
@@ -242,6 +259,7 @@ class SolidElement(Element):
 
     def __init__(self):
         Element.__init__(self)
+
         self.__name__ = 'SolidElement'
 
 
@@ -261,6 +279,7 @@ class PentahedronElement(SolidElement):
 
     def __init__(self):
         SolidElement.__init__(self)
+
         self.__name__ = 'PentahedronElement'
 
 
@@ -280,6 +299,7 @@ class TetrahedronElement(SolidElement):
 
     def __init__(self):
         SolidElement.__init__(self)
+
         self.__name__ = 'TetrahedronElement'
 
 
@@ -299,4 +319,5 @@ class HexahedronElement(SolidElement):
 
     def __init__(self):
         SolidElement.__init__(self)
+
         self.__name__ = 'HexahedronElement'

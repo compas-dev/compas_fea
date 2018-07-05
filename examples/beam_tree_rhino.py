@@ -42,6 +42,7 @@ mdl.add_sections([
 
 fm = [i * 10000 for i in [5, 9, 12, 14, 16, 18, 19, 20, 21, 22]]
 em = [0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09]
+
 mdl.add_materials([
     ElasticIsotropic(name='mat_bamboo', E=20*10**9, v=0.35, p=1100),
     ElasticPlastic(name='mat_mushroom', E=5*10**6, v=0.30, p=350, f=fm, e=em)])
@@ -51,6 +52,7 @@ mdl.add_materials([
 s1 = ['struts_mushroom', 'joints_mushroom']
 s2 = ['struts_bamboo', 'joints_bamboo']
 s3 = ['joints_grid']
+
 mdl.add_element_properties([
     Properties(name='ep_mushroom', material='mat_mushroom', section='sec_mushroom', elsets=s1),
     Properties(name='ep_bamboo', material='mat_bamboo', section='sec_bamboo', elsets=s2),
@@ -82,4 +84,4 @@ mdl.summary()
 mdl.analyse_and_extract(software='abaqus', fields=['u', 'sf'])
 
 rhino.plot_data(mdl, step='step_loads', field='um', radius=0.05, colorbar_size=0.5)
-rhino.plot_data(mdl, step='step_loads', field='sfnx', radius=0.05, colorbar_size=0.5)
+rhino.plot_data(mdl, step='step_loads', field='sf1', radius=0.05, colorbar_size=0.5)

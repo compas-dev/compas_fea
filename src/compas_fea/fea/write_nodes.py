@@ -47,10 +47,10 @@ def write_input_nodes(f, software, nodes, sets={}):
         The open file object for the input file.
     software : str
         Analysis software or library to use: 'abaqus', 'opensees', 'sofistik' or 'ansys'.
-    nodes : dic
+    nodes : dict
         Node dictionary from structure.nodes.
-    sets : dic
-        Set dictionary from structure.sets (for Abaqus).
+    sets : dict
+        Set dictionary from structure.sets.
 
     Returns
     -------
@@ -63,6 +63,8 @@ def write_input_nodes(f, software, nodes, sets={}):
     f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
     f.write('{0} ----------------------------------------------------------------------- Nodes\n'.format(c))
     f.write('{0}\n'.format(c))
+
+    # Header
 
     if software == 'sofistik':
 
@@ -87,20 +89,22 @@ def write_input_nodes(f, software, nodes, sets={}):
 
         pass
 
+    # Nodes
+
     f.write('{0} No. x[m] y[m] z[m]\n'.format(c))
     f.write('{0}\n'.format(c))
 
     for key in sorted(nodes, key=int):
-        xyz = [str(nodes[key][i]) for i in 'xyz']
-        data = spacer[software].join([str(key + 1)] + xyz)
+        data = spacer[software].join([str(key + 1)] + [str(nodes[key][i]) for i in 'xyz'])
         f.write('{0}{1}\n'.format(prefix[software], data))
+
+    # Sets
 
     if software == 'abaqus':
 
-        cm = 9
-        for key, s in sets.items():
+        for key, item in sets.items():
 
-            if s['type'] == 'node':
+            if item['type'] == 'node':
 
                 f.write('**\n')
                 f.write('** {0}\n'.format(key))
@@ -109,18 +113,30 @@ def write_input_nodes(f, software, nodes, sets={}):
                 f.write('*NSET, NSET={0}\n'.format(key))
                 f.write('**\n')
 
-                selection = [i + 1 for i in s['selection']]
+                selection = [i + 1 for i in item['selection']]
                 cnt = 0
-                for j in selection:
-                    f.write(str(j))
-                    if (cnt < cm) and (j != selection[-1]):
+                for i in selection:
+                    f.write(str(i))
+                    if (cnt < 9) and (i != selection[-1]):
                         f.write(',')
                         cnt += 1
-                    elif cnt >= cm:
+                    elif cnt >= 9:
                         f.write('\n')
                         cnt = 0
                     else:
                         f.write('\n')
+
+    elif software == 'opensees':
+
+        pass
+
+    elif software == 'ansys':
+
+        pass
+
+    elif software == 'sofistik':
+
+        pass
 
     f.write('{0}\n'.format(c))
     f.write('{0}\n'.format(c))

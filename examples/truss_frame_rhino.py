@@ -83,7 +83,7 @@ rhino.plot_data(mdl, step='step_loads', field='smises', iptype='max', nodal='max
 
 # Run (OpenSees)
 
-#mdl.analyse_and_extract(software='opensees', fields=['u', 'sf'])
+mdl.analyse_and_extract(software='opensees', fields=['u', 'sf'])
 
-#rhino.plot_data(mdl, step='step_loads', field='um', radius=0.1, scale=10, colorbar_size=0.3)
-#rhino.plot_data(mdl, step='step_loads', field='sfx', radius=0.1, colorbar_size=0.3)
+rhino.plot_data(mdl, step='step_loads', field='um', radius=0.1, scale=10, colorbar_size=0.3)
+rhino.plot_data(mdl, step='step_loads', field='sf1', radius=0.1, colorbar_size=0.3)

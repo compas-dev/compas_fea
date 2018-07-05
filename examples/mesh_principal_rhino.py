@@ -25,15 +25,15 @@ rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers='else
 
 # Sets
 
-rhino.add_sets_from_layers(mdl, layers=['nset_corners'])
+rhino.add_sets_from_layers(mdl, layers=['nset_pins'])
 
 # Materials
 
-mdl.add_material(ElasticIsotropic(name='mat_elastic', E=100*10**9, v=0.3, p=1000))
+mdl.add_material(ElasticIsotropic(name='mat_elastic', E=10**12, v=0.3, p=1000))
 
 # Sections
 
-mdl.add_section(ShellSection(name='sec_plate', t=0.010))
+mdl.add_section(ShellSection(name='sec_plate', t=1))
 
 # Properties
 
@@ -42,7 +42,7 @@ mdl.add_element_properties(ep)
 
 # Displacements
 
-mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_corners'))
+mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
 
 # Loads
 
@@ -63,7 +63,5 @@ mdl.summary()
 
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
-rhino.plot_principal_stresses(mdl, step='step_load', ptype='max', scale=10)
-rhino.plot_principal_stresses(mdl, step='step_load', ptype='min', scale=10)
-
-
+rhino.plot_principal_stresses(mdl, step='step_load', ptype='max', scale=3)
+rhino.plot_principal_stresses(mdl, step='step_load', ptype='min', scale=3)

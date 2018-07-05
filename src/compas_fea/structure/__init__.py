@@ -131,6 +131,7 @@ material
     Concrete
     ConcreteSmearedCrack
     ConcreteDamagedPlasticity
+    Stiff
     ElasticIsotropic
     ElasticOrthotropic
     ElasticPlastic

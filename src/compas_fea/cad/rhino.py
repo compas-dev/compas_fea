@@ -97,7 +97,7 @@ def add_element_set(structure, guids, name):
             vertices = rs.MeshVertices(guid)
             faces    = rs.MeshFaceVertices(guid)
 
-            if 'solid' in rs.ObjectName(guid):
+            if rs.ObjectName(guid) and ('solid' in rs.ObjectName(guid)):
                 nodes   = [structure.check_node_exists(i) for i in vertices]
                 element = structure.check_element_exists(nodes)
                 if element is not None:
@@ -195,7 +195,10 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 
                 ez = subtract_vectors(ep_xyz, sp_xyz)
                 try:
-                    dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
+                    name = rs.ObjectName(guid).replace("'", '"')
+                    if name[0] in ['_', '^']:
+                        name = name[1:]
+                    dic = json.loads(name)
                     ex  = dic.get('ex', None)
                     ey  = dic.get('ey', None)
                     if ex and not ey:
@@ -224,7 +227,10 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 
                 else:
                     try:
-                        dic = json.loads(rs.ObjectName(guid).replace("'", '"'))
+                        name = rs.ObjectName(guid).replace("'", '"')
+                        if name[0] in ['_', '^']:
+                            name = name[1:]
+                        dic = json.loads(name)
                         ex  = dic.get('ex', None)
                         ey  = dic.get('ey', None)
                         ez  = dic.get('ez', None)
@@ -289,6 +295,66 @@ def add_sets_from_layers(structure, layers):
                 add_element_set(structure=structure, guids=guids, name=name)
             else:
                 print('***** Layer {0} contained a mixture of points and elements, set not created *****'.format(name))
+
+
+def network_from_lines(guids=[], layer=None):
+
+    """ Creates a Network datastructure object from a list of Rhino curve guids.
+
+    Parameters
+    ----------
+    guids : list
+        guids of the Rhino curves to be made into a Network.
+    layer : str
+        Layer to grab line guids from.
+
+    Returns
+    -------
+    obj
+        Network datastructure object.
+
+    """
+
+    if layer:
+        guids = rs.ObjectsByLayer(layer)
+    lines = [[rs.CurveStartPoint(guid), rs.CurveEndPoint(guid)] for guid in guids if rs.IsCurve(guid)]
+
+    return Network.from_lines(lines)
+
+
+def ordered_network(structure, network, layer):
+
+    """ Extract vertex and edge orders from a Network for a given start-point.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    network : obj
+        Network Datastructure object.
+    layer : str
+        Layer to extract start-point (Rhino point).
+
+    Returns
+    -------
+    list
+        Ordered nodes for the Structure.
+    list
+        Ordered elements for the Structure.
+    list
+        Cumulative length at element mid-points.
+    float
+        Total length.
+
+    Notes
+    -----
+    - This function is for a Network representing a single structural element, i.e. with two end-points (leaves).
+
+    """
+
+    start = rs.PointCoordinates(rs.ObjectsByLayer(layer)[0])
+    return network_order(start=start, structure=structure, network=network)
+
 
 
 
@@ -527,64 +593,6 @@ def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name=''
     rs.CurrentLayer(rs.AddLayer('Default'))
 
 
-def network_from_lines(guids=[], layer=None):
-
-    """ Creates a Network datastructure object from a list of curve guids.
-
-    Parameters
-    ----------
-    guids : list
-        guids of the Rhino curves to be made into a Network.
-    layer : str
-        Layer to grab line guids from.
-
-    Returns
-    -------
-    obj
-        Network datastructure object.
-
-    """
-
-    if layer:
-        guids = rs.ObjectsByLayer(layer)
-    lines = [[rs.CurveStartPoint(guid), rs.CurveEndPoint(guid)] for guid in guids]
-    return Network.from_lines(lines)
-
-
-def ordered_network(structure, network, layer):
-
-    """ Extract node and element orders from a Network for a given start-point.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object.
-    network : obj
-        Network object.
-    layer : str
-        Layer to extract start-point (Rhino point).
-
-    Returns
-    -------
-    list
-        Ordered nodes.
-    list
-        Ordered elements.
-    list
-        Cumulative lengths at element mid-points.
-    float
-        Total length.
-
-    Notes
-    -----
-    - Function is for a Network representing a single structural element.
-
-    """
-
-    start = rs.PointCoordinates(rs.ObjectsByLayer(layer)[0])
-    return network_order(start=start, structure=structure, network=network)
-
-
 def plot_axes(xyz, e11, e22, e33, layer, sc=1):
 
     """ Plots a set of axes.
@@ -644,9 +652,9 @@ def plot_mode_shapes(structure, step, layer=None, scale=1.0):
     """
 
     freq = structure.results[step]['frequencies']
-    for fk in freq:
-        layerk = layer + str(fk)
-        plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=fk)
+    for c, fk in enumerate(freq, 1):
+        layerk = layer + str(c)
+        plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=c)
 
 
 def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
@@ -808,7 +816,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         rs.AddText('Step:{0}   Field:{1}'.format(step, field), [xmin, ymin + 12 * s, 0], height=h)
         if mode != '':
             try:
-                freq = str(round(structure.results[step]['frequencies'][mode], 3))
+                freq = str(round(structure.results[step]['frequencies'][mode - 1], 3))
                 rs.AddText('Mode:{0}   Freq:{1}Hz'.format(mode, freq), [xmin, ymin - 1.5 * s, 0], height=h)
             except:
                 pass

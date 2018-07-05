@@ -38,7 +38,7 @@ mdl.add_section(ShellSection(name='sec_plate', t=0.020))
 
 # Properties
 
-ep = Properties(name='ep', material='mat_linear', section='sec_plate', elsets='elset_mesh')
+ep = Properties(name='ep_plate', material='mat_linear', section='sec_plate', elsets='elset_mesh')
 mdl.add_element_properties(ep)
 
 # Displacements

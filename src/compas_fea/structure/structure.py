@@ -92,7 +92,7 @@ class Structure(object):
 
     """
 
-    def __init__(self, name='compas_fea-Structure', path=None):
+    def __init__(self, path, name='compas_fea-Structure'):
         self.constraints = {}
         self.displacements = {}
         self.elements = {}

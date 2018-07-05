@@ -103,10 +103,10 @@ def extract_out_data(structure, fields):
                 with open('{0}truss_numbers.json'.format(temp), 'r') as f:
                     truss_numbers = json.load(f)['truss_numbers']
 
-                element['sfx'] = {}
-                for ekey, sfx in zip(truss_numbers, truss_data):
-                    element['sfx'][ekey] = {}
-                    element['sfx'][ekey]['ip'] = sfx
+                element['sf1'] = {}
+                for ekey, sf1 in zip(truss_numbers, truss_data):
+                    element['sf1'][ekey] = {}
+                    element['sf1'][ekey]['ip'] = sf1
 
             except:
 

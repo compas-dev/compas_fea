@@ -22,6 +22,7 @@ write_heading
 
     write_input_heading
 
+
 write_constraints
 =================
 
@@ -33,6 +34,7 @@ write_constraints
     :toctree: generated/
 
     write_input_constraints
+
 
 write_steps
 ===========
