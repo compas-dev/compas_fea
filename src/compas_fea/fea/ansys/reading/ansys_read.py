@@ -45,7 +45,7 @@ def get_nodes_elements_from_result_files(path):
     return nodes, elements
 
 
-def get_harmonic_data_from_result_files(path):
+def _get_harmonic_data_from_result_files(path): #  this function works with multiple freqs per step (the old way?)
     harmonic_path = os.path.join(path, 'harmonic_out')
     files = os.listdir(harmonic_path)
 
@@ -96,6 +96,37 @@ def get_harmonic_data_from_result_files(path):
     freq_list = sorted(harmonic_disp[nkey].keys(), key=int)
     freq_list = [int(fr) for fr in freq_list]
     return harmonic_disp, freq_list
+
+
+def get_harmonic_data_from_result_files(structure, path, step):
+
+    freq = structure.steps[step].freq_list[0]
+    harmonic_path = os.path.join(path, 'harmonic_out')
+    filename  = 'harmonic_disp_real_{0}_Hz.txt'.format(freq)
+    filename_ = 'harmonic_disp_imag_{0}_Hz.txt'.format(freq)
+
+    fh = open(os.path.join(harmonic_path, filename), 'r')
+    dreal = fh.readlines()
+    fh.close()
+
+    fh = open(os.path.join(harmonic_path, filename_), 'r')
+    dimag = fh.readlines()
+    fh.close()
+
+    harmonic_disp = {}
+    for j in range(len(dreal)):
+        real_string = dreal[j].split(',')
+        imag_string = dimag[j].split(',')
+        nkey = int(float(real_string[0]) - 1)
+        del real_string[0]
+        del imag_string[0]
+        harmonic_disp[nkey] = {}
+        real = map(float, real_string)
+        imag = map(float, imag_string)
+        harmonic_disp[nkey][freq] = {'real': {'x': real[0], 'y': real[1], 'z': real[2]},
+                                     'imag': {'x': imag[0], 'y': imag[1], 'z': imag[2]}}
+
+    return harmonic_disp, structure.steps[step].freq_list
 
 
 def get_modal_shapes_from_result_files(out_path):

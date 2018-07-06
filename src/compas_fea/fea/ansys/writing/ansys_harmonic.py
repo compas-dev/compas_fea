@@ -65,7 +65,7 @@ def write_harmonic_solve(structure, output_path, filename, skey):
 
 def write_harmonic_results_from_ansys_rst(name, path, fields, freq_list, step_index=0, step_name='step', sets=None):
 
-    step_folder = 'harmonic_out_{0}'.format(step_index)
+    step_folder = 'harmonic_out'
     if not os.path.exists(os.path.join(path, name + '_output', step_folder)):
         os.makedirs(os.path.join(path, name + '_output', step_folder))
 
@@ -74,7 +74,11 @@ def write_harmonic_results_from_ansys_rst(name, path, fields, freq_list, step_in
     if type(fields) == str:
         fields = [fields]
     if 'u' in fields or 'all' in fields:
-        write_request_per_freq_nodal_displacements(path, name, freq_list, step_index, sets)
+        if len(freq_list) == 1:
+            freq = freq_list[0]
+            write_request_complex_displacements(path, name, freq, step_index)
+        else:
+            write_request_per_freq_nodal_displacements(path, name, freq_list, step_index, sets)
         # write_something(path, name)
     if 'geo' in fields or 'all' in fields:
         write_request_element_nodes(path, name)
@@ -92,7 +96,7 @@ def write_harmonic_post_process(path, name):
 
 def write_request_per_freq_nodal_displacements(path, name, freq_list, step_index, sets=None):
 
-    step_folder = 'harmonic_out_{0}'.format(step_index)
+    step_folder = 'harmonic_out'.format(step_index)
     filename = name + '_extract.txt'
     harmonic_outpath = os.path.join(path, name + '_output', step_folder)
 
@@ -183,4 +187,68 @@ def write_request_per_freq_nodal_displacements(path, name, freq_list, step_index
         cFile.write('*enddo \n')
         cFile.write('!\n')
         cFile.write('!\n')
+    cFile.close()
+
+
+def write_request_complex_displacements(path, name, freq, step_index):
+
+    step_folder = 'harmonic_out'.format(step_index)
+    filename = name + '_extract.txt'
+    harmonic_outpath = os.path.join(path, name + '_output', step_folder)
+
+    fname_real = 'harmonic_disp_real_{0}_Hz'.format(freq)
+    fname_imag = 'harmonic_disp_imag_{0}_Hz'.format(freq)
+    name_ = 'nds_d' + str(freq)
+    name_x = 'dispX' + str(freq)
+    name_y = 'dispY' + str(freq)
+    name_z = 'dispZ' + str(freq)
+
+    cFile = open(os.path.join(path, filename), 'a')
+    cFile.write('/POST1 \n')
+    cFile.write('!\n')
+    cFile.write('SET, {0}, , , 0!\n'.format(step_index + 1))
+    cFile.write('*get,numNodes,node,,count \n')
+    cFile.write('*set,' + name_x + ', \n')
+    cFile.write('*dim,' + name_x + ',array,numNodes,1 \n')
+    cFile.write('*set,' + name_y + ', \n')
+    cFile.write('*dim,' + name_y + ',array,numNodes,1 \n')
+    cFile.write('*set,' + name_z + ', \n')
+    cFile.write('*dim,' + name_z + ',array,numNodes,1 \n')
+    cFile.write('*dim,' + name_ + ', ,numNodes \n')
+    cFile.write('*VGET, ' + name_x + ', node, all, u, X,,,2 \n')
+    cFile.write('*VGET, ' + name_y + ', node, all, u, Y,,,2 \n')
+    cFile.write('*VGET, ' + name_z + ', node, all, u, Z,,,2 \n')
+    cFile.write('*vfill,' + name_ + '(1),ramp,1,1 \n')
+    cFile.write('*cfopen,' + harmonic_outpath + '/' + fname_real + ',txt \n')
+    cFile.write('*vwrite, ' + name_ + '(1) , \',\'  , ' + name_x + '(1) , \',\' , ')
+    cFile.write(name_y + '(1) , \',\' ,' + name_z + '(1) \n')
+    cFile.write('(          F9.0,       A,       ES,           A,          ES,          A,      ES) \n')
+    cFile.write('*cfclose \n')
+    cFile.write('!\n')
+    cFile.write('!\n')
+    cFile.close()
+
+    cFile = open(os.path.join(path, filename), 'a')
+    cFile.write('/POST1 \n')
+    cFile.write('!\n')
+    cFile.write('SET, {0}, , , 1!\n'.format(step_index + 1))
+    cFile.write('*get,numNodes,node,,count \n')
+    cFile.write('*set,' + name_x + ', \n')
+    cFile.write('*dim,' + name_x + ',array,numNodes,1 \n')
+    cFile.write('*set,' + name_y + ', \n')
+    cFile.write('*dim,' + name_y + ',array,numNodes,1 \n')
+    cFile.write('*set,' + name_z + ', \n')
+    cFile.write('*dim,' + name_z + ',array,numNodes,1 \n')
+    cFile.write('*dim,' + name_ + ', ,numNodes \n')
+    cFile.write('*VGET, ' + name_x + ', node, all, u, X,,,2 \n')
+    cFile.write('*VGET, ' + name_y + ', node, all, u, Y,,,2 \n')
+    cFile.write('*VGET, ' + name_z + ', node, all, u, Z,,,2 \n')
+    cFile.write('*vfill,' + name_ + '(1),ramp,1,1 \n')
+    cFile.write('*cfopen,' + harmonic_outpath + '/' + fname_imag + ',txt \n')
+    cFile.write('*vwrite, ' + name_ + '(1) , \',\'  , ' + name_x + '(1) , \',\' , ')
+    cFile.write(name_y + '(1) , \',\' ,' + name_z + '(1) \n')
+    cFile.write('(          F9.0,       A,       ES,           A,          ES,          A,      ES) \n')
+    cFile.write('*cfclose \n')
+    cFile.write('!\n')
+    cFile.write('!\n')
     cFile.close()
