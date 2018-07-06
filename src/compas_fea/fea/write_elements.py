@@ -284,7 +284,7 @@ def _write_sofistik_rebar(f, properties, sections, sets):
                 f.write('PARA NOG - WKU 0.1[mm] WKL 0.1[mm]\n')
                 for elset in elsets:
                     set_index = sets[elset]['index'] + 1
-                    f.write('PARA NOG {0}\n{1}\n'.format(set_index, data))
+                    f.write('PARA NOG {0}\n{1}'.format(set_index, data))
 
                 f.write('$\n')
                 f.write('$\n')
