@@ -651,8 +651,8 @@ def plot_mode_shapes(structure, step, layer=None, scale=1.0):
 
     """
 
-    freq = structure.results[step]['frequencies']
-    for c, fk in enumerate(freq, 1):
+    iter = structure.results[step]['frequencies']
+    for c, fk in enumerate(iter, 1):
         layerk = layer + str(c)
         plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=c)
 

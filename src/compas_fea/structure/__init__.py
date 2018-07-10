@@ -111,9 +111,7 @@ load
     PointLoads
     LineLoad
     AreaLoad
-    BodyLoad
     GravityLoad
-    AcousticLoad
     TributaryLoad
     HarmonicPointLoad
 

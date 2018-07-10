@@ -877,8 +877,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     # f.write('NSTR KMOD S1 KSV ULD\n')
                     f.write('ULTI 30 FAK1 0.1 DFAK 0.1 PRO 1.5 FAKE 1.5\n')
                 if nlgeom == 'YES':
-                    f.write('SYST PROB TH3 ITER {0} TOL {1}\n'.format(increments, tolerance))
-                    # f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2}\n'.format(increments, tolerance, nlmat))
+                    # f.write('SYST PROB TH3 ITER {0} TOL {1}\n'.format(increments, tolerance))
+                    f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2}\n'.format(increments, tolerance, nlmat))
                     # f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2} PLC 1{3:0>2}00\n'.format(increments, tolerance, nlmat, step_index))
 
                 # if state == 'uls':
