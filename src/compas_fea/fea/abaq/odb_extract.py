@@ -46,18 +46,18 @@ element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'spf', 'rbfor']
 
 def extract_odb_data(temp, name, fields, steps='all'):
 
-    """ Extracts data from the .odb file for requested steps.
+    """ Extracts data from the .odb file for the requested steps and fields.
 
     Parameters
     ----------
     temp : str
-        Folder containing the analysis .odb file.
+        Folder path containing the analysis .odb file.
     name : str
-        Name of the Structure object and analysis files.
+        Name of the Structure object.
     fields : list
         Data field requests.
     steps : list, str
-        Steps to extract data for, 'all' for all steps.
+        Step names to extract data for, or 'all' for all steps.
 
     Returns
     -------
