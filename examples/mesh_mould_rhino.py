@@ -1,15 +1,11 @@
 
-from compas.geometry import cross_vectors
-from compas.geometry import normalize_vector
-from compas.geometry import vector_from_points
-
 from compas_fea.cad import rhino
 from compas_fea.structure import Concrete
 from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import FixedDisplacement
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import GravityLoad
-from compas_fea.structure import PointLoads
+from compas_fea.structure import PointLoad
 from compas_fea.structure import ShellSection
 from compas_fea.structure import Steel
 from compas_fea.structure import Structure
@@ -30,22 +26,10 @@ mdl = Structure(name='mesh_mould', path='C:/Temp/')
 # Elements
 
 rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers=['elset_wall', 'elset_plinth'])
-
-#for guid in rs.ObjectsByLayer('elset_wall') + rs.ObjectsByLayer('elset_plinth'):
-#    vertices = rs.MeshVertices(guid)
-#    faces = rs.MeshFaceVertices(guid)
-#    normals = rs.MeshFaceNormals(guid)
-#    centroids = rs.MeshFaceCenters(guid)
-#    for c, face in enumerate(faces):
-#        ex = normalize_vector(vector_from_points(vertices[face[0]], centroids[c]))
-#        ez = normals[c]
-#        ey = cross_vectors(ex, ez)
-#        nodes = mdl.add_nodes([vertices[i] for i in face])
-#        mdl.add_element(nodes=nodes, type='ShellElement', axes={'ex': ex, 'ey': ey, 'ez': ez})
         
 # Sets
 
-rhino.add_sets_from_layers(mdl, layers=['nset_fixed', 'elset_wall', 'elset_plinth'])
+rhino.add_sets_from_layers(mdl, layers=['nset_fixed', 'nset_loads', 'elset_wall', 'elset_plinth'])
 
 # Materials
 
@@ -84,18 +68,13 @@ mdl.add_displacement(FixedDisplacement(name='disp_fixed', nodes='nset_fixed'))
 # Loads
 
 mdl.add_load(GravityLoad(name='load_gravity', elements=['elset_wall', 'elset_plinth']))
-#components = {}
-#for guid in rs.ObjectsByLayer('nset_loads'):
-#    px, py, pz = rs.ObjectName(guid).split(' ')
-#    components[mdl.check_node_exists(rs.PointCoordinates(guid))] = {'z': float(pz)*100}
-#mdl.add_load(PointLoads(name='load_points', components=components))
-#loads = ['load_gravity', 'load_points']
+mdl.add_load(PointLoad(name='load_points', nodes=['nset_loads'], z=-20*10**3))
 
 # Steps
 
 mdl.add_steps([
     GeneralStep(name='step_bc', nlgeom=False, displacements=['disp_fixed']),
-    GeneralStep(name='step_loads', nlgeom=False, loads=['load_gravity'])])
+    GeneralStep(name='step_loads', nlgeom=False, loads=['load_gravity', 'load_points'])])
 mdl.steps_order = ['step_bc', 'step_loads']
 
 # Summary
@@ -111,11 +90,11 @@ rhino.plot_data(mdl, step='step_loads', field='sf1', colorbar_size=0.3)
 rhino.plot_data(mdl, step='step_loads', field='sf2', colorbar_size=0.3)
 rhino.plot_data(mdl, step='step_loads', field='rbfor', iptype='max', nodal='max', colorbar_size=0.3)
 rhino.plot_principal_stresses(mdl, step='step_loads', ptype='max', scale=5)
-rhino.plot_principal_stresses(mdl, step='step_loads', ptype='min', scale=5)
+rhino.plot_principal_stresses(mdl, step='step_loads', ptype='min', scale=2)
 
 # Run (Sofistik)
 
-#mdl.write_input_file(software='sofistik')
+mdl.write_input_file(software='sofistik')
 
 # Plot local axes
 
