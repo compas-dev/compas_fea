@@ -256,7 +256,7 @@ def _write_sofistik_rebar(f, properties, sections, sets):
 
                 if len(pos_u) == 1:
                     geom += ' HA {0}[mm]'.format((0.5 * t - pos_u[0]) * 1000)
-                    data += ' DU {0}[mm] ASU {1}[cm2/m] BSU {2}[cm2/m]'.format(dia_u[0] * 1000, A_u[0], A_u[0])
+                    data += '     DU {0}[mm] ASU {1}[cm2/m] BSU {2}[cm2/m]\n'.format(dia_u[0] * 1000, A_u[0], A_u[0])
 
                 elif len(pos_u) == 2:
                     no = [0, 1] if pos_u[0] > pos_u[1] else [1, 0]
@@ -268,7 +268,7 @@ def _write_sofistik_rebar(f, properties, sections, sets):
 
                 if len(pos_l) == 1:
                     geom += ' HB {0}[mm]'.format((0.5 * t + pos_l[0]) * 1000)
-                    data += ' DL {0}[mm] ASL {1}[cm2/m] BSL {2}[cm2/m]'.format(dia_l[0] * 1000, A_l[0], A_l[0])
+                    data += '     DL {0}[mm] ASL {1}[cm2/m] BSL {2}[cm2/m]\n'.format(dia_l[0] * 1000, A_l[0], A_l[0])
 
                 elif len(pos_l) == 2:
                     no = [0, 1] if pos_l[0] < pos_l[1] else [1, 0]

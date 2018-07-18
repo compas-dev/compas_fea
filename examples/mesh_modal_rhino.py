@@ -33,7 +33,7 @@ mdl.add_material(Concrete(name='mat_concrete', fck=40))
 
 # Sections
 
-mdl.add_section(ShellSection(name='sec_concrete', t=1))
+mdl.add_section(ShellSection(name='sec_concrete', t=0.250))
 
 # Properties
 
