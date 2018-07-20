@@ -31,6 +31,7 @@ constraint
 .. autosummary::
     :toctree: generated/
 
+    Constraint
     TieConstraint
 
 

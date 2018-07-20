@@ -166,7 +166,7 @@ def get_modal_shapes_from_result_files(out_path):
 
 
 def get_modal_freq_from_result_files(out_path):
-    print out_path
+    print(out_path)
     modal_path = os.path.join(out_path, 'modal_out')
     modal_freq_file = open(os.path.join(modal_path, 'modal_freq.txt'), 'r')
     if modal_freq_file:

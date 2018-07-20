@@ -33,7 +33,7 @@ def write_input_constraints(f, software, constraints):
         The open file object for the input file.
     software : str
         Analysis software or library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
-    constraints : dic
+    constraints : dict
         Constraint dictionary from structure.constraints.
 
     Returns
@@ -56,7 +56,7 @@ def write_input_constraints(f, software, constraints):
         f.write('{0} '.format(c) + '-' * len(key) + '\n')
         f.write('{0}\n'.format(c))
 
-        # Tie constraint
+        # TieConstraint
 
         if ctype == 'TieConstraint':
 
@@ -72,15 +72,15 @@ def write_input_constraints(f, software, constraints):
 
             elif software == 'opensees':
 
-                pass
+                raise NotImplementedError
 
             elif software == 'sofistik':
 
-                pass
+                raise NotImplementedError
 
             elif software == 'ansys':
 
-                pass
+                raise NotImplementedError
 
         f.write('{0}\n'.format(c))
 
