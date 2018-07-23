@@ -23,16 +23,16 @@ mdl = Structure(name='block_tets', path='C:/Temp/')
 
 # Tetrahedrons
 
-mesh = rs.ObjectsByLayer('mesh')[0]
-rhino.add_tets_from_mesh(mdl, name='elset_tets', mesh=mesh, draw_tets=0, layer='tets', volume=None)
+mesh = rs.ObjectsByLayer('base_mesh')[0]
+rhino.add_tets_from_mesh(mdl, name='elset_tets', mesh=mesh, draw_tets=False, layer='tets', volume=10**(-4))
 
 # Sets
 
-rhino.add_sets_from_layers(mdl, layers=['base', 'top'])
+rhino.add_sets_from_layers(mdl, layers=['nset_base', 'nset_top'])
 
 # Materials
 
-mdl.add_material(ElasticIsotropic(name='mat_elastic', E=100*10**9, v=0.3, p=1))
+mdl.add_material(ElasticIsotropic(name='mat_elastic', E=10*10**9, v=0.3, p=1))
 
 # Sections
 
@@ -45,11 +45,11 @@ mdl.add_element_properties(
 
 # Displacementss
 
-mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='base'))
+mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_base'))
 
 # Loads
 
-mdl.add_load(PointLoad(name='load_top', nodes='top', y=100, z=100))
+mdl.add_load(PointLoad(name='load_top', nodes='nset_top', y=100, z=100))
 
 # Steps
 
@@ -65,4 +65,6 @@ mdl.summary()
 # Run (Abaqus)
 
 mdl.analyse_and_extract(software='abaqus', fields=['u'])
+
+rhino.plot_data(mdl, step='step_load', field='um')
 rhino.plot_voxels(mdl, step='step_load', field='um', vdx=0.05)
