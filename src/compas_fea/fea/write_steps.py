@@ -581,8 +581,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     scopy_index = steps[scopy].index
                     f.write('HEAD BUCKLING LC {0}\n'.format(scopy))
                     f.write('$\n')
-                    f.write('SYST PLC 2{0:0>2}0\n'.format(scopy_index))
-                    f.write('EIGE {0} ETYP BUCK LMIN AUTO LC 2{1:0>2}1\n'.format(modes, scopy_index))
+                    f.write('SYST PLC 2{0:0>2}00\n'.format(scopy_index))
+                    f.write('EIGE {0} ETYP BUCK LMIN AUTO LC 2{1:0>2}01\n'.format(modes, scopy_index))
                     f.write('$\n')
                     f.write('$\n')
                     f.write('END\n')
@@ -906,7 +906,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 f.write('$\n')
                 f.write("LC 2{0:0>2}00 TITL '{1}'".format(step_index, key))
                 f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * fact, DLY * fact, DLZ * fact))
-                f.write('    LCC 1{0:0>2}00\n'.format(step_index))
+                f.write('    LCC 1{0:0>2}00 PLC YES\n'.format(step_index))
 
                 f.write('$\n')
                 f.write('END\n')
