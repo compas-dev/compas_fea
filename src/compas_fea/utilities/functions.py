@@ -56,7 +56,7 @@ except ImportError:
 
 try:
     from compas.viewers import VtkVoxels
-except ImportError:
+except:
     pass
 
 try:
