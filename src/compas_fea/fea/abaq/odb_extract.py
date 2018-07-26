@@ -24,6 +24,8 @@ __all__ = [
 
 
 conversion = {
+    'CF1':   'cfx',  'CF2':  'cfy',  'CF3':  'cfz',
+    'CM1':   'cmx',  'CM2':  'cmy',  'CM3':  'cmz',
     'U1':    'ux',   'U2':   'uy',   'U3':   'uz',
     'UR1':   'urx',  'UR2':  'ury',  'UR3':  'urz',
     'RF1':   'rfx',  'RF2':  'rfy',  'RF3':  'rfz',

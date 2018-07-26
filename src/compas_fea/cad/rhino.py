@@ -941,7 +941,7 @@ def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None)
     result = xfunc(data, ptype, scale, rotate)
 
     try:
-        vec1, vec5, pr1, pr5 = result
+        vec1, vec5, pr1, pr5, pmax = result
 
         if not layer:
             layer = '{0}_principal_{1}'.format(step, ptype)
@@ -956,8 +956,8 @@ def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None)
             v5 = vec5[c]
             id1 = rs.AddLine(add_vectors(centroid, scale_vector(v1, -1)), add_vectors(centroid, v1))
             id5 = rs.AddLine(add_vectors(centroid, scale_vector(v5, -1)), add_vectors(centroid, v5))
-            col1 = [255, 0, 0] if pr1[c] > 0 else [0, 0, 255]
-            col5 = [255, 0, 0] if pr5[c] > 0 else [0, 0, 255]
+            col1 = colorbar(pr1[c] / pmax, input='float', type=255)
+            col5 = colorbar(pr5[c] / pmax, input='float', type=255)
             rs.ObjectColor(id1, col1)
             rs.ObjectColor(id5, col5)
 

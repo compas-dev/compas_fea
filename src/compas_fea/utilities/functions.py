@@ -791,6 +791,8 @@ def principal_stresses(data, ptype, scale, rotate):
         Principal stresses for section point 1.
     array
         Principal stresses for section point 5.
+    float
+        Maxium stress magnitude.
 
     """
 
@@ -832,8 +834,9 @@ def principal_stresses(data, ptype, scale, rotate):
     er5 = e11 * cos(th5) + e22 * sin(th5)
     vec1 = er1 * (tile(spr_sp1[:, newaxis], (1, 3)) * scale / 10**7 + 0.0001)
     vec5 = er5 * (tile(spr_sp5[:, newaxis], (1, 3)) * scale / 10**7 + 0.0001)
+    pmax = max([max(abs(spr_sp1)), max(abs(spr_sp5))])
 
-    return vec1, vec5, spr_sp1, spr_sp5
+    return vec1, vec5, spr_sp1, spr_sp5, pmax
 
 
 # ==============================================================================

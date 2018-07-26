@@ -21,6 +21,7 @@ Rhino
     examples/mesh_modal_rhino
     examples/mesh_mould_rhino
     examples/mesh_plate_rhino
+    examples/mesh_planar_rhino
     examples/mesh_principal_rhino
     examples/mesh_strip_rhino
 
