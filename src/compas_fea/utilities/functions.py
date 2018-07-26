@@ -817,16 +817,19 @@ def principal_stresses(data, ptype, scale, rotate):
 
     for ekey in ekeys:
         i = int(ekey)
-        e11[i, :] = axes[ekey][0]
-        e22[i, :] = axes[ekey][1]
-        s11_sp1[i] = s11[ekey]['ip1_sp1']
-        s22_sp1[i] = s22[ekey]['ip1_sp1']
-        s12_sp1[i] = s12[ekey]['ip1_sp1']
-        spr_sp1[i] = spr[ekey]['ip1_sp1']
-        s11_sp5[i] = s11[ekey]['ip1_sp5']
-        s22_sp5[i] = s22[ekey]['ip1_sp5']
-        s12_sp5[i] = s12[ekey]['ip1_sp5']
-        spr_sp5[i] = spr[ekey]['ip1_sp5']
+        try:
+            e11[i, :] = axes[ekey][0]
+            e22[i, :] = axes[ekey][1]
+            s11_sp1[i] = s11[ekey]['ip1_sp1']
+            s22_sp1[i] = s22[ekey]['ip1_sp1']
+            s12_sp1[i] = s12[ekey]['ip1_sp1']
+            spr_sp1[i] = spr[ekey]['ip1_sp1']
+            s11_sp5[i] = s11[ekey]['ip1_sp5']
+            s22_sp5[i] = s22[ekey]['ip1_sp5']
+            s12_sp5[i] = s12[ekey]['ip1_sp5']
+            spr_sp5[i] = spr[ekey]['ip1_sp5']
+        except:
+            pass
 
     th1 = tile((0.5 * arctan2(s12_sp1, 0.5 * (s11_sp1 - s22_sp1)) + 0.5 * pi * rotate)[:, newaxis], (1, 3))
     th5 = tile((0.5 * arctan2(s12_sp5, 0.5 * (s11_sp5 - s22_sp5)) + 0.5 * pi * rotate)[:, newaxis], (1, 3))
