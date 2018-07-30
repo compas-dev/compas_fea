@@ -147,7 +147,9 @@ misc
 .. autosummary::
     :toctree: generated/
 
+    Misc
     Amplitude
+    Temperatures
 
 
 section

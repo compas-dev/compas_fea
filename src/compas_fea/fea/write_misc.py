@@ -25,7 +25,7 @@ comments = {
 
 def write_input_misc(f, software, miscs):
 
-    """ Writes Misc info to the input file.
+    """ Writes Misc data objects to the input file.
 
     Parameters
     ----------
@@ -33,7 +33,7 @@ def write_input_misc(f, software, miscs):
         The open file object for the input file.
     software : str
         Analysis software or library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
-    miscs : dic
+    miscs : dict
         Misc objects from structure.misc.
 
     Returns
@@ -60,13 +60,13 @@ def write_input_misc(f, software, miscs):
 
                 f.write('*AMPLITUDE, NAME={0}\n'.format(key))
                 f.write('**\n')
+
                 for i, j in misc.values:
                     f.write('{0}, {1}\n'.format(i, j))
 
-
             elif software == 'opensees':
 
-                    pass
+                pass
 
             elif software == 'sofistik':
 

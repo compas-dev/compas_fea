@@ -7,6 +7,7 @@ from compas_fea.fea import write_input_bcs
 from compas_fea.fea import write_input_elements
 from compas_fea.fea import write_input_heading
 from compas_fea.fea import write_input_materials
+from compas_fea.fea import write_input_misc
 from compas_fea.fea import write_input_nodes
 from compas_fea.fea import write_input_steps
 
@@ -168,6 +169,7 @@ def input_generate(structure, fields):
         write_input_nodes(f, 'abaqus', nodes, sets)
         write_input_bcs(f, 'abaqus', structure, steps, displacements, sets)
         write_input_materials(f, 'abaqus', materials)
+        write_input_misc(f, 'abaqus', misc)
         write_input_elements(f, 'abaqus', sections, properties, elements, structure, materials)
         write_input_steps(f, 'abaqus', structure, steps, loads, displacements, sets, fields)
 
