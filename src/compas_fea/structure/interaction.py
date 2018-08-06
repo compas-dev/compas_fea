@@ -11,11 +11,44 @@ __email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
-    # 'HeatTransfer',
+    'Interaction',
+    'HeatTransfer',
 ]
 
 
-class HeatTransfer(object):
+class Interaction(object):
+
+    """ Initialises base Interaction object.
+
+    Parameters
+    ----------
+    name : str
+        Interaction object name.
+
+    Returns
+    -------
+    None
+
+    """
+
+    def __init__(self, name):
+
+        self.__name__  = 'Interaction'
+        self.name      = name
+        self.attr_list = ['name']
+
+    def __str__(self):
+
+        print('compas_fea {0} object'.format(self.__name__))
+        print('-' * (len(self.__name__) + 18))
+
+        for attr in self.attr_list:
+            print('{0:<12} : {1}'.format(attr, getattr(self, attr)))
+
+        return ''
+
+
+class HeatTransfer(Interaction):
 
     """ Heat transfer across an interface.
 
@@ -43,6 +76,8 @@ class HeatTransfer(object):
     """
 
     def __init__(self, name, amplitude, interface, sink_temp, film_coef, ambient_temp, emissivity):
+        Interaction.__init__(self, name=name)
+
         self.__name__ = 'HeatTransfer'
         self.name = name
         self.amplitude = amplitude
@@ -51,3 +86,4 @@ class HeatTransfer(object):
         self.film_coef = film_coef
         self.ambient_temp = ambient_temp
         self.emissivity = emissivity
+        self.attr_list.extend(['amplitude', 'interface', 'sink_temp', 'film_coef', 'ambient_temp', 'emissivity'])

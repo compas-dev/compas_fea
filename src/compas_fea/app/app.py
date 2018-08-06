@@ -3,7 +3,14 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from compas_fea.utilities import postprocess
+
 from compas.viewers import VtkViewer
+
+try:
+    from vtk import vtkUnsignedCharArray
+except ImportError:
+    pass
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -65,6 +72,8 @@ class App(VtkViewer):
         self.vertex_size = 1
         self.edge_width = 1
         self.structure = structure
+        self.nodes = structure.nodes_xyz()
+        self.elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
 
         self.setup()
 
@@ -78,10 +87,10 @@ class App(VtkViewer):
             if structure.results.keys():
 
                 self.add_label(name='label_fields_nodal', text='Fields (nodal)')
-                self.add_listbox(name='listbox_fields_nodal', items=[], callback=self.null)
+                self.add_listbox(name='listbox_fields_nodal', items=[], callback=self.nodal_plot)
 
                 self.add_label(name='label_fields_element', text='Fields (element)')
-                self.add_listbox(name='listbox_fields_element', items=[], callback=self.null)
+                self.add_listbox(name='listbox_fields_element', items=[], callback=self.element_plot)
 
 
     def update_fields(self):
@@ -106,9 +115,44 @@ class App(VtkViewer):
             pass
 
 
-    def null(self):
+    def nodal_plot(self):
 
-        pass
+        try:
+            step  = self.listboxes['listbox_steps'].currentText()
+            field = self.listboxes['listbox_fields_nodal'].currentText()
+
+            mode = ''
+            scale = 1
+            cbar = [None, None]
+
+            nodal_data = self.structure.results[step]['nodal']
+            nkeys = sorted(self.structure.nodes, key=int)
+            ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
+            uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
+            uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
+
+            data = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
+            dtype = 'nodal'
+
+            result = postprocess(self.nodes, self.elements, ux, uy, uz, data, dtype, scale, cbar, 255, None, None)
+            toc, U, cnodes, fabs, fscaled, _, _ = result
+
+            self.vertex_colors = vtkUnsignedCharArray()
+            self.vertex_colors.SetNumberOfComponents(3)
+            for colour in cnodes:
+                self.vertex_colors.InsertNextTypedTuple([int(round(i)) for i in colour])
+            self.polydata.GetPointData().SetScalars(self.vertex_colors)
+            self.main.window.Render()
+
+            print('\n***** Data processed : {0:.3f} s *****'.format(toc))
+
+        except:
+            print('\n***** Error encountered during data processing or plotting *****')
+
+
+    def element_plot(self):
+
+        print('Not Implemented')
 
 
 # ==============================================================================
