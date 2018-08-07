@@ -7,6 +7,7 @@ from compas_fea.fea import write_input_bcs
 from compas_fea.fea import write_input_elements
 from compas_fea.fea import write_input_heading
 from compas_fea.fea import write_input_materials
+from compas_fea.fea import write_input_misc
 from compas_fea.fea import write_input_nodes
 from compas_fea.fea import write_input_steps
 
@@ -26,13 +27,97 @@ __email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
-    'extract_out_data',
-    'opensees_launch_process',
     'input_generate',
+    'extract_data',
+    'launch_process',
 ]
 
 
-def extract_out_data(structure, fields):
+def input_generate(structure, fields):
+
+    """ Creates the OpenSees .tcl file from the Structure object.
+
+    Parameters
+    ----------
+    structure : obj
+        The Structure object to read from.
+    fields : list
+        Data field requests.
+
+    Returns
+    -------
+    None
+
+    """
+
+    filename = '{0}{1}.tcl'.format(structure.path, structure.name)
+
+    with open(filename, 'w') as f:
+
+        constraints   = structure.constraints
+        displacements = structure.displacements
+        elements      = structure.elements
+        interactions  = structure.interactions
+        loads         = structure.loads
+        materials     = structure.materials
+        misc          = structure.misc
+        nodes         = structure.nodes
+        properties    = structure.element_properties
+        sections      = structure.sections
+        sets          = structure.sets
+        steps         = structure.steps
+
+        ndof = 3
+        for element in elements.values():
+            if element.__name__ not in ['TrussElement', 'TieElement', 'StrutElement', 'SpringElement']:
+                ndof = 6
+                break
+
+        write_input_heading(f, 'opensees', ndof)
+        write_input_nodes(f, 'opensees', nodes)
+        write_input_bcs(f, 'opensees', structure, steps, displacements, sets, ndof)
+        write_input_materials(f, 'opensees', materials)
+        write_input_elements(f, 'opensees', sections, properties, elements, structure, materials)
+        write_input_steps(f, 'opensees', structure, steps, loads, displacements, sets, fields, ndof)
+
+    print('***** OpenSees input file generated: {0} *****\n'.format(filename))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def extract_data(structure, fields):
 
     """ Extract data from the OpenSees .out files.
 
@@ -154,7 +239,7 @@ def extract_out_data(structure, fields):
     print('\n***** Data extracted from OpenSees .out file(s) : {0} s *****\n'.format(toc))
 
 
-def opensees_launch_process(structure, exe):
+def launch_process(structure, exe):
 
     """ Runs the analysis through OpenSees.
 
@@ -202,53 +287,3 @@ def opensees_launch_process(structure, exe):
     except:
 
         print('\n***** OpenSees analysis failed')
-
-
-def input_generate(structure, fields):
-
-    """ Creates the OpenSees .tcl file from the Structure object.
-
-    Parameters
-    ----------
-    structure : obj
-        The Structure object to read from.
-    fields : list
-        Data field requests.
-
-    Returns
-    -------
-    None
-
-    """
-
-    filename = '{0}{1}.tcl'.format(structure.path, structure.name)
-
-    with open(filename, 'w') as f:
-
-        constraints   = structure.constraints
-        displacements = structure.displacements
-        elements      = structure.elements
-        interactions  = structure.interactions
-        loads         = structure.loads
-        materials     = structure.materials
-        misc          = structure.misc
-        nodes         = structure.nodes
-        properties    = structure.element_properties
-        sections      = structure.sections
-        sets          = structure.sets
-        steps         = structure.steps
-
-        ndof = 3
-        for element in elements.values():
-            if element.__name__ not in ['TrussElement', 'TieElement', 'StrutElement', 'SpringElement']:
-                ndof = 6
-                break
-
-        write_input_heading(f, 'opensees', ndof)
-        write_input_nodes(f, 'opensees', nodes)
-        write_input_bcs(f, 'opensees', structure, steps, displacements, sets, ndof)
-        write_input_materials(f, 'opensees', materials)
-        write_input_elements(f, 'opensees', sections, properties, elements, structure, materials)
-        write_input_steps(f, 'opensees', structure, steps, loads, displacements, sets, fields, ndof)
-
-    print('***** OpenSees input file generated: {0} *****\n'.format(filename))

@@ -1349,13 +1349,13 @@ Steps
         """
 
         if software == 'abaqus':
-            abaq.abaqus_launch_process(self, exe, cpus)
+            abaq.launch_process(self, exe, cpus)
 
         elif software == 'ansys':
             ansys.ansys_launch_process(self.path, self.name, cpus, license, delete=delete)
 
         elif software == 'opensees':
-            opensees.opensees_launch_process(self, exe)
+            opensees.launch_process(self, exe)
 
     def extract_data(self, software, fields='u', steps='last', exe=None, sets=None):
 
@@ -1379,13 +1379,13 @@ Steps
         """
 
         if software == 'abaqus':
-            abaq.extract_odb_data(self, fields=fields, exe=exe)
+            abaq.extract_data(self, fields=fields, exe=exe)
 
         elif software == 'ansys':
             ansys.extract_rst_data(self, fields=fields, steps=steps, sets=sets)
 
         elif software == 'opensees':
-            opensees.extract_out_data(self, fields=fields)
+            opensees.extract_data(self, fields=fields)
 
     def analyse_and_extract(self, software, fields='u', exe=None, cpus=1, license='research'):
 

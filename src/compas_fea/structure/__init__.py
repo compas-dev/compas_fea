@@ -162,6 +162,7 @@ section
 .. autosummary::
     :toctree: generated/
 
+    Section
     AngleSection
     BoxSection
     CircularSection

@@ -13,6 +13,7 @@ __email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
+    'Section',
     'AngleSection',
     'BoxSection',
     'CircularSection',
@@ -30,11 +31,45 @@ __all__ = [
 ]
 
 
+class Section(object):
+
+    """ Initialises base Section object.
+
+    Parameters
+    ----------
+    name : str
+        Section object name.
+
+    Returns
+    -------
+    None
+
+    """
+
+    def __init__(self, name):
+
+        self.__name__ = 'Section'
+        self.name     = name
+        self.geometry = {}
+
+    def __str__(self):
+
+        print('compas_fea {0} object'.format(self.__name__))
+        print('-' * (len(self.__name__) + 18))
+
+        print('name  : {0}'.format(self.name))
+
+        for i, j in self.geometry.items():
+            print('{0:<5} : {1}'.format(i, j))
+
+        return ''
+
+
 # ==============================================================================
 # 1D
 # ==============================================================================
 
-class AngleSection(object):
+class AngleSection(Section):
 
     """ Uniform thickness angle cross-section for beam elements.
 
@@ -60,19 +95,22 @@ class AngleSection(object):
     """
 
     def __init__(self, name, b, h, t):
-        p = 2. * (b + h - t)
-        xc = (b**2 + h * t - t**2) / p
-        yc = (h**2 + b * t - t**2) / p
-        A = t * (b + h - t)
+        Section.__init__(self, name=name)
+
+        p   = 2. * (b + h - t)
+        xc  = (b**2 + h * t - t**2) / p
+        yc  = (h**2 + b * t - t**2) / p
+        A   = t * (b + h - t)
         Ixx = (1. / 3) * (b * h**3 - (b - t) * (h - t)**3) - A * (h - yc)**2
         Iyy = (1. / 3) * (h * b**3 - (h - t) * (b - t)**3) - A * (b - xc)**2
-        J = (1. / 3) * (h + b - t) * t**3
+        J   = (1. / 3) * (h + b - t) * t**3
+
         self.__name__ = 'AngleSection'
-        self.geometry = {'b': b, 'h': h, 't': t, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 'NA'}
-        self.name = name
+        self.name     = name
+        self.geometry = {'b': b, 'h': h, 't': t, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': None}
 
 
-class BoxSection(object):
+class BoxSection(Section):
 
     """ Hollow rectangular box cross-section for beam elements.
 
@@ -96,18 +134,21 @@ class BoxSection(object):
     """
 
     def __init__(self, name, b, h, tw, tf):
-        A = b * h - (b - 2 * tw) * (h - 2 * tf)
+        Section.__init__(self, name=name)
+
+        A   = b * h - (b - 2 * tw) * (h - 2 * tf)
+        Ap  = (h - tf) * (b - tw)
         Ixx = (b * h**3) / 12. - ((b - 2 * tw) * (h - 2 * tf)**3) / 12.
         Iyy = (h * b**3) / 12. - ((h - 2 * tf) * (b - 2 * tw)**3) / 12.
-        Ap = (h - tf) * (b - tw)
-        p = 2 * ((h - tf) / tw + (b - tw) / tf)
-        J = 4 * (Ap**2) / p
+        p   = 2 * ((h - tf) / tw + (b - tw) / tf)
+        J   = 4 * (Ap**2) / p
+
         self.__name__ = 'BoxSection'
+        self.name     = name
         self.geometry = {'b': b, 'h': h, 'tw': tw, 'tf': tf, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
-        self.name = name
 
 
-class CircularSection(object):
+class CircularSection(Section):
 
     """ Solid circular cross-section for beam elements.
 
@@ -125,16 +166,19 @@ class CircularSection(object):
     """
 
     def __init__(self, name, r):
-        D = 2 * r
-        A = 0.25 * pi * D**2
+        Section.__init__(self, name=name)
+
+        D   = 2 * r
+        A   = 0.25 * pi * D**2
         Ixx = Iyy = (pi * D**4) / 64.
-        J = (pi * D**4) / 32
+        J   = (pi * D**4) / 32
+
         self.__name__ = 'CircularSection'
+        self.name     = name
         self.geometry = {'r': r, 'D': D, 'A': A, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0, 'J': J}
-        self.name = name
 
 
-class GeneralSection(object):
+class GeneralSection(Section):
 
     """ General cross-section for beam elements.
 
@@ -164,12 +208,14 @@ class GeneralSection(object):
     """
 
     def __init__(self, name, A, Ixx, Ixy, Iyy, J, g0, gw):
+        Section.__init__(self, name=name)
+
         self.__name__ = 'GeneralSection'
+        self.name     = name
         self.geometry = {'A': A, 'Ixx': Ixx, 'Ixy': Ixy, 'Iyy': Iyy, 'J': J, 'g0': g0, 'gw': gw}
-        self.name = name
 
 
-class ISection(object):
+class ISection(Section):
 
     """ Equal flanged I-section for beam elements.
 
@@ -193,17 +239,19 @@ class ISection(object):
     """
 
     def __init__(self, name, b, h, tw, tf):
-        A = 2 * b * tf + (h - 2 * tf) * tw
+        Section.__init__(self, name=name)
+
+        A   = 2 * b * tf + (h - 2 * tf) * tw
         Ixx = (tw * (h - 2 * tf)**3) / 12. + 2 * ((tf**3) * b / 12. + b * tf * (h / 2. - tf / 2.)**2)
         Iyy = ((h - 2 * tf) * tw**3) / 12. + 2 * ((b**3) * tf / 12.)
-        J = (1. / 3) * (2 * b * tf**3 + (h - tf) * tw**3)
+        J   = (1. / 3) * (2 * b * tf**3 + (h - tf) * tw**3)
+
         self.__name__ = 'ISection'
-        self.geometry = {
-            'b': b, 'h': h, 'tw': tw, 'tf': tf, 'c': h / 2., 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
-        self.name = name
+        self.name     = name
+        self.geometry = {'b': b, 'h': h, 'tw': tw, 'tf': tf, 'c': h/2., 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
 
 
-class PipeSection(object):
+class PipeSection(Section):
 
     """ Hollow circular cross-section for beam elements.
 
@@ -223,16 +271,19 @@ class PipeSection(object):
     """
 
     def __init__(self, name, r, t):
-        D = 2 * r
-        A = 0.25 * pi * (D**2 - (D - 2 * t)**2)
+        Section.__init__(self, name=name)
+
+        D   = 2 * r
+        A   = 0.25 * pi * (D**2 - (D - 2 * t)**2)
         Ixx = Iyy = 0.25 * pi * (r**4 - (r - t)**4)
-        J = (2. / 3) * pi * (r + 0.5 * t) * t**3
+        J   = (2. / 3) * pi * (r + 0.5 * t) * t**3
+
         self.__name__ = 'PipeSection'
+        self.name     = name
         self.geometry = {'r': r, 't': t, 'D': D, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
-        self.name = name
 
 
-class RectangularSection(object):
+class RectangularSection(Section):
 
     """ Solid rectangular cross-section for beam elements.
 
@@ -252,20 +303,23 @@ class RectangularSection(object):
     """
 
     def __init__(self, name, b, h):
-        A = b * h
+        Section.__init__(self, name=name)
+
+        A   = b * h
         Ixx = (1 / 12.) * b * h**3
         Iyy = (1 / 12.) * h * b**3
-        l1 = max([b, h])
-        l2 = min([b, h])
+        l1  = max([b, h])
+        l2  = min([b, h])
         # Avy = 0.833 * A
         # Avx = 0.833 * A
-        J = (l1 * l2**3) * (0.33333 - 0.21 * (l2 / l1) * (1 - (l2**4) / (12 * l1**4)))
+        J   = (l1 * l2**3) * (0.33333 - 0.21 * (l2 / l1) * (1 - (l2**4) / (12 * l1**4)))
+
         self.__name__ = 'RectangularSection'
+        self.name     = name
         self.geometry = {'b': b, 'h': h, 'A': A, 'J': J, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0}
-        self.name = name
 
 
-class TrapezoidalSection(object):
+class TrapezoidalSection(Section):
 
     """ Solid trapezoidal cross-section for beam elements.
 
@@ -291,16 +345,19 @@ class TrapezoidalSection(object):
     """
 
     def __init__(self, name, b1, b2, h):
-        c = (h * (2 * b2 + b1)) / (3. * (b1 + b2))
-        A = 0.5 * (b1 + b2) * h
+        Section.__init__(self, name=name)
+
+        c   = (h * (2 * b2 + b1)) / (3. * (b1 + b2))
+        A   = 0.5 * (b1 + b2) * h
         Ixx = (1 / 12.) * (3 * b2 + b1) * h**3
         Iyy = (1 / 48.) * h * (b1 + b2) * (b2**2 + 7 * b1**2)
+
         self.__name__ = 'TrapezoidalSection'
-        self.geometry = {'b1': b1, 'b2': b2, 'h': h, 'A': A, 'c': c, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0, 'J': 'NA'}
-        self.name = name
+        self.name     = name
+        self.geometry = {'b1': b1, 'b2': b2, 'h': h, 'A': A, 'c': c, 'Ixx': Ixx, 'Iyy': Iyy, 'Ixy': 0, 'J': None}
 
 
-class TrussSection(object):
+class TrussSection(Section):
 
     """ For use with truss elements.
 
@@ -318,9 +375,11 @@ class TrussSection(object):
     """
 
     def __init__(self, name, A):
+        Section.__init__(self, name=name)
+
         self.__name__ = 'TrussSection'
+        self.name     = name
         self.geometry = {'A': A, 'Ixx': 0, 'Iyy': 0, 'Ixy': 0, 'J': 0}
-        self.name = name
 
 
 class StrutSection(TrussSection):
@@ -342,6 +401,7 @@ class StrutSection(TrussSection):
 
     def __init__(self, name, A):
         TrussSection.__init__(self, name=name, A=A)
+
         self.__name__ = 'StrutSection'
 
 
@@ -364,10 +424,11 @@ class TieSection(TrussSection):
 
     def __init__(self, name, A):
         TrussSection.__init__(self, name=name, A=A)
+
         self.__name__ = 'TieSection'
 
 
-class SpringSection(object):
+class SpringSection(Section):
 
     """ For use with spring elements.
 
@@ -375,11 +436,11 @@ class SpringSection(object):
     ----------
     name : str
         Section name.
-    forces : dic
+    forces : dict
         Forces data for non-linear springs.
-    displacements : dic
+    displacements : dict
         Displacements data for non-linear springs.
-    stiffness : dic
+    stiffness : dict
         Elastic stiffness for linear springs.
 
     Returns
@@ -389,25 +450,27 @@ class SpringSection(object):
     Notes
     -----
     - Force and displacement data should range from negative to positive values.
-    - Requires either a stiffness dictonary for linear springs, or forces and displacement lists for non-linear springs.
+    - Requires either a stiffness dict for linear springs, or forces and displacement lists for non-linear springs.
     - Directions are 'axial', 'lateral', 'rotation'.
 
     """
 
     def __init__(self, name, forces={}, displacements={}, stiffness={}):
-        self.__name__ = 'SpringSection'
-        self.name = name
-        self.geometry = None
-        self.forces = forces
+        Section.__init__(self, name=name)
+
+        self.__name__      = 'SpringSection'
+        self.name          = name
+        self.geometry      = None
+        self.forces        = forces
         self.displacements = displacements
-        self.stiffness = stiffness
+        self.stiffness     = stiffness
 
 
 # ==============================================================================
 # 2D
 # ==============================================================================
 
-class ShellSection(object):
+class ShellSection(Section):
 
     """ Section for shell and membrane elements.
 
@@ -425,16 +488,18 @@ class ShellSection(object):
     """
 
     def __init__(self, name, t):
+        Section.__init__(self, name=name)
+
         self.__name__ = 'ShellSection'
+        self.name     = name
         self.geometry = {'t': t}
-        self.name = name
 
 
 # ==============================================================================
 # 3D
 # ==============================================================================
 
-class SolidSection(object):
+class SolidSection(Section):
 
     """ Section for solid elements.
 
@@ -450,6 +515,8 @@ class SolidSection(object):
     """
 
     def __init__(self, name):
+        Section.__init__(self, name=name)
+
         self.__name__ = 'SolidSection'
+        self.name     = name
         self.geometry = None
-        self.name = name

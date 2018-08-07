@@ -7,6 +7,7 @@ from compas_fea.fea import write_input_bcs
 from compas_fea.fea import write_input_elements
 from compas_fea.fea import write_input_heading
 from compas_fea.fea import write_input_materials
+from compas_fea.fea import write_input_misc
 from compas_fea.fea import write_input_nodes
 from compas_fea.fea import write_input_steps
 

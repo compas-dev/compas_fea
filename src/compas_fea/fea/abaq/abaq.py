@@ -30,9 +30,9 @@ __email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
-    'abaqus_launch_process',
-    'extract_odb_data',
     'input_generate',
+    'extract_data',
+    'launch_process',
 ]
 
 
@@ -40,7 +40,96 @@ node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
 
 
-def abaqus_launch_process(structure, exe, cpus):
+def input_generate(structure, fields):
+
+    """ Creates the Abaqus .inp file from the Structure object.
+
+    Parameters
+    ----------
+    structure : obj
+        The Structure object to read from.
+    fields : list
+        Data field requests.
+
+    Returns
+    -------
+    None
+
+    """
+
+    filename = '{0}{1}.inp'.format(structure.path, structure.name)
+
+    if isinstance(fields, str):
+        fields = [fields]
+
+    with open(filename, 'w') as f:
+
+        constraints   = structure.constraints
+        displacements = structure.displacements
+        elements      = structure.elements
+        interactions  = structure.interactions
+        loads         = structure.loads
+        materials     = structure.materials
+        misc          = structure.misc
+        nodes         = structure.nodes
+        properties    = structure.element_properties
+        sections      = structure.sections
+        sets          = structure.sets
+        steps         = structure.steps
+
+        write_input_heading(f, 'abaqus')
+        write_input_nodes(f, 'abaqus', nodes, sets)
+        write_input_bcs(f, 'abaqus', structure, steps, displacements, sets)
+        write_input_materials(f, 'abaqus', materials)
+        write_input_misc(f, 'abaqus', misc)
+        write_input_elements(f, 'abaqus', sections, properties, elements, structure, materials)
+        write_input_steps(f, 'abaqus', structure, steps, loads, displacements, sets, fields)
+
+    print('***** Abaqus input file generated: {0} *****\n'.format(filename))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def launch_process(structure, exe, cpus):
 
     """ Runs the analysis through Abaqus.
 
@@ -128,55 +217,10 @@ def abaqus_launch_process(structure, exe, cpus):
             pass
 
 
-def input_generate(structure, fields):
-
-    """ Creates the Abaqus .inp file from the Structure object.
-
-    Parameters
-    ----------
-    structure : obj
-        The Structure object to read from.
-    fields : list
-        Data field requests.
-
-    Returns
-    -------
-    None
-
-    """
-
-    filename = '{0}{1}.inp'.format(structure.path, structure.name)
-
-    if isinstance(fields, str):
-        fields = [fields]
-
-    with open(filename, 'w') as f:
-
-        constraints   = structure.constraints
-        displacements = structure.displacements
-        elements      = structure.elements
-        interactions  = structure.interactions
-        loads         = structure.loads
-        materials     = structure.materials
-        misc          = structure.misc
-        nodes         = structure.nodes
-        properties    = structure.element_properties
-        sections      = structure.sections
-        sets          = structure.sets
-        steps         = structure.steps
-
-        write_input_heading(f, 'abaqus')
-        write_input_nodes(f, 'abaqus', nodes, sets)
-        write_input_bcs(f, 'abaqus', structure, steps, displacements, sets)
-        write_input_materials(f, 'abaqus', materials)
-        write_input_misc(f, 'abaqus', misc)
-        write_input_elements(f, 'abaqus', sections, properties, elements, structure, materials)
-        write_input_steps(f, 'abaqus', structure, steps, loads, displacements, sets, fields)
-
-    print('***** Abaqus input file generated: {0} *****\n'.format(filename))
 
 
-def extract_odb_data(structure, fields, exe):
+
+def extract_data(structure, fields, exe):
 
     """ Extract data from the Abaqus .odb file.
 
