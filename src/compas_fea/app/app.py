@@ -7,6 +7,11 @@ from compas_fea.utilities import postprocess
 
 from compas.viewers import VtkViewer
 
+from numpy import array
+from numpy import hstack
+from numpy import newaxis
+from numpy import zeros
+
 try:
     from vtk import vtkUnsignedCharArray
 except ImportError:
@@ -70,14 +75,19 @@ class App(VtkViewer):
 
         self.camera_target = [xm, ym, zm]
         self.vertex_size = 1
-        self.edge_width = 1
+        self.edge_width = 0
         self.structure = structure
         self.nodes = structure.nodes_xyz()
+        self.nkeys = sorted(structure.nodes, key=int)
+        self.xyz = array(self.nodes)
+        self.U = zeros(self.xyz.shape)
         self.elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
 
         self.setup()
 
-        self.add_splitter()
+        self.add_label(name='label_scale', text='Scale: {0}'.format(1))
+        self.add_slider(name='slider_scale', value=1, minimum=0, maximum=1000, interval=100,
+                        callback=self.scale_callback)
 
         if structure.steps_order:
 
@@ -93,6 +103,14 @@ class App(VtkViewer):
                 self.add_listbox(name='listbox_fields_element', items=[], callback=self.element_plot)
 
 
+    def scale_callback(self):
+
+        value = self.sliders['slider_scale'].value()
+        X = self.xyz + self.U * value
+        self.labels['label_scale'].setText('Scale: {0}'.format(value))
+        self.update_vertices_coordinates({i: X[i, :] for i in range(X.shape[0])})
+
+
     def update_fields(self):
 
         step = self.listboxes['listbox_steps'].currentText()
@@ -104,10 +122,19 @@ class App(VtkViewer):
             keys = list(self.structure.results[step].keys())
 
             if 'nodal' in keys:
+
                 node_fields = sorted(list(self.structure.results[step]['nodal'].keys()))
                 self.listboxes['listbox_fields_nodal'].addItems(node_fields)
 
+                mode = ''
+                nodal_data = self.structure.results[step]['nodal']
+                self.ux = [nodal_data['ux{0}'.format(mode)][i] for i in self.nkeys]
+                self.uy = [nodal_data['uy{0}'.format(mode)][i] for i in self.nkeys]
+                self.uz = [nodal_data['uz{0}'.format(mode)][i] for i in self.nkeys]
+                self.U = hstack([array(self.ux)[:, newaxis], array(self.uy)[:, newaxis], array(self.uz)[:, newaxis]])
+
             if 'element' in keys:
+
                 element_fields = sorted(list(self.structure.results[step]['element'].keys()))
                 self.listboxes['listbox_fields_element'].addItems(element_fields)
 
@@ -121,38 +148,50 @@ class App(VtkViewer):
             step  = self.listboxes['listbox_steps'].currentText()
             field = self.listboxes['listbox_fields_nodal'].currentText()
 
-            mode = ''
-            scale = 1
             cbar = [None, None]
 
             nodal_data = self.structure.results[step]['nodal']
-            nkeys = sorted(self.structure.nodes, key=int)
-            ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
-            uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
-            uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
-
-            data = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
+            data = [nodal_data['{0}{1}'.format(field, '')][i] for i in self.nkeys]
             dtype = 'nodal'
 
-            result = postprocess(self.nodes, self.elements, ux, uy, uz, data, dtype, scale, cbar, 255, None, None)
-            toc, U, cnodes, fabs, fscaled, _, _ = result
+            result = postprocess(self.nodes, self.elements, self.ux, self.uy, self.uz, data, dtype, 1, cbar, 255,
+                                 None, None)
+            toc, _, cnodes, fabs, fscaled, _, _ = result
 
-            self.vertex_colors = vtkUnsignedCharArray()
-            self.vertex_colors.SetNumberOfComponents(3)
-            for colour in cnodes:
-                self.vertex_colors.InsertNextTypedTuple([int(round(i)) for i in colour])
-            self.polydata.GetPointData().SetScalars(self.vertex_colors)
-            self.main.window.Render()
+            self.update_vertices_colors({i: j for i, j in enumerate(cnodes)})
 
             print('\n***** Data processed : {0:.3f} s *****'.format(toc))
 
         except:
-            print('\n***** Error encountered during data processing or plotting *****')
+            pass
 
 
     def element_plot(self):
 
-        print('Not Implemented')
+        try:
+            step  = self.listboxes['listbox_steps'].currentText()
+            field = self.listboxes['listbox_fields_element'].currentText()
+
+            if field != 'axes':
+
+                iptype = 'mean'
+                nodal  = 'mean'
+
+                cbar = [None, None]
+
+                data = self.structure.results[step]['element'][field]
+                dtype = 'element'
+
+                result = postprocess(self.nodes, self.elements, self.ux, self.uy, self.uz, data, dtype, 1, cbar, 255,
+                                     iptype, nodal)
+                toc, _, cnodes, fabs, fscaled, _, _ = result
+
+                self.update_vertices_colors({i: j for i, j in enumerate(cnodes)})
+
+            print('\n***** Data processed : {0:.3f} s *****'.format(toc))
+
+        except:
+            pass
 
 
 # ==============================================================================
