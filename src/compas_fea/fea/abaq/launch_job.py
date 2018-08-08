@@ -25,6 +25,6 @@ if __name__ == "__main__":
         job = mdb.JobFromInputFile(name=name, inputFileName=inp)
     else:
         job = mdb.JobFromInputFile(name=name, inputFileName=inp, numCpus=cpus, numDomains=cpus,
-                                   multiprocessingMode=DEFAULT, parallelizationMethodExplicit=DOMAIN)
+                                   multiprocessingMode=MPI, parallelizationMethodExplicit=DOMAIN)
     job.submit()
     job.waitForCompletion()

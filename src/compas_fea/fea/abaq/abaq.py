@@ -88,47 +88,6 @@ def input_generate(structure, fields):
     print('***** Abaqus input file generated: {0} *****\n'.format(filename))
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def launch_process(structure, exe, cpus):
 
     """ Runs the analysis through Abaqus.
@@ -138,7 +97,7 @@ def launch_process(structure, exe, cpus):
     structure : obj
         Structure object.
     exe : str
-        Full terminal command to bypass subprocess defaults.
+        Abaqus exe path to bypass defaults.
     cpus : int
         Number of CPU cores to use.
 
@@ -148,8 +107,6 @@ def launch_process(structure, exe, cpus):
 
     """
 
-    # Create temp folder
-
     name = structure.name
     path = structure.path
     temp = '{0}{1}/'.format(path, name)
@@ -157,8 +114,6 @@ def launch_process(structure, exe, cpus):
         os.stat(temp)
     except:
         os.mkdir(temp)
-
-    # Run subprocess file
 
     tic = time()
 
@@ -169,6 +124,7 @@ def launch_process(structure, exe, cpus):
 
         args = ['abaqus', 'cae', subprocess, '--', str(cpus), path, name]
         p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+
         while True:
             line = p.stdout.readline()
             if not line:
@@ -177,22 +133,22 @@ def launch_process(structure, exe, cpus):
             print(line)
             if 'COMPLETED' in line:
                 success = True
+
         stdout, stderr = p.communicate()
         print(stdout)
         print(stderr)
 
     else:
 
-        try:
-            args = '{0} -- {1} {2} {3}'.format(subprocess, cpus, path, name)
-            os.chdir(temp)
-            os.system('{0}{1}'.format(exe, args))
-            success = True
-        except:
-            pass
+        args = '{0} -- {1} {2} {3}'.format(subprocess, cpus, path, name)
+        os.chdir(temp)
+        os.system('{0}{1}'.format(exe, args))
+        success = True
+
+    toc = time() - tic
 
     if success:
-        print('***** Analysis successful: analysis time : {0} s *****'.format(time() - tic))
+        print('***** Analysis successful - analysis time : {0} s *****'.format(toc))
 
     else:
         print('***** Analysis failed: attempting to read error logs *****')
@@ -200,6 +156,7 @@ def launch_process(structure, exe, cpus):
         try:
             with open('{0}{1}.msg'.format(temp, name)) as f:
                 lines = f.readlines()
+
                 for c, line in enumerate(lines):
                     if (' ***ERROR' in line) or (' ***WARNING' in line):
                         print(lines[c][:-2])
@@ -210,14 +167,12 @@ def launch_process(structure, exe, cpus):
         try:
             with open('{0}abaqus.rpy'.format(temp)) as f:
                 lines = f.readlines()
+
                 for c, line in enumerate(lines):
                     if '#: ' in line:
                         print(lines[c])
         except:
             pass
-
-
-
 
 
 def extract_data(structure, fields, exe):
@@ -231,7 +186,7 @@ def extract_data(structure, fields, exe):
     fields : list
         Data field requests.
     exe : str
-        Full terminal command to bypass subprocess defaults.
+        Abaqus exe path to bypass defaults.
 
     Returns
     -------
@@ -239,41 +194,52 @@ def extract_data(structure, fields, exe):
 
     """
 
+    #  Extract
+
     name = structure.name
     path = structure.path
     temp = '{0}{1}/'.format(path, name)
 
     if isinstance(fields, str):
         fields = [fields]
-    fields = ','.join(list(structure.fields_dic_from_list(fields).keys()))
+    fields = ','.join(list(structure.fields_dict_from_list(fields).keys()))
 
     tic1 = time()
 
     subprocess = 'noGUI={0}'.format(odb_extract.__file__.replace('\\', '/'))
 
     if not exe:
+
         args = ['abaqus', 'cae', subprocess, '--', fields, name, temp]
         p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+
         while True:
             line = p.stdout.readline()
             if not line:
                 break
             line = str(line.strip())
             print(line)
+
         stdout, stderr = p.communicate()
         print(stdout)
         print(stderr)
 
     else:
+
         args = '{0} -- {1} {2} {3}'.format(subprocess, fields, name, temp)
         os.chdir(temp)
         os.system('{0}{1}'.format(exe, args))
 
-    print('\n***** Data extracted from Abaqus .odb file : {0:.3f} s *****\n'.format(time() - tic1))
+    toc1 = time() - tic1
 
-    tic2 = time()
+    print('\n***** Data extracted from Abaqus .odb file : {0:.3f} s *****\n'.format(toc1))
+
+    # Save results to Structure
 
     try:
+
+        tic2 = time()
+
         with open('{0}{1}-results.json'.format(temp, name), 'r') as f:
             results = json.load(f)
 
@@ -295,9 +261,10 @@ def extract_data(structure, fields, exe):
         for step in info:
             structure.results[step]['info'] = info[step]
 
-        # structure.save_to_obj()
+        toc2 = time() - tic2
 
-        print('***** Saving data to structure.results successful : {0:.3f} s *****\n'.format(time() - tic2))
+        print('***** Saving data to structure.results successful : {0:.3f} s *****\n'.format(toc2))
 
     except:
+
         print('***** Saving data to structure.results unsuccessful *****')

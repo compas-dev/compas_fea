@@ -18,6 +18,7 @@ from time import time
 from math import sqrt
 
 import json
+import os
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -81,6 +82,64 @@ def input_generate(structure, fields):
         write_input_steps(f, 'opensees', structure, steps, loads, displacements, sets, fields, ndof)
 
     print('***** OpenSees input file generated: {0} *****\n'.format(filename))
+
+
+def launch_process(structure, exe):
+
+    """ Runs the analysis through OpenSees.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    exe : str
+        OpenSees exe path to bypass defaults.
+
+    Returns
+    -------
+    None
+
+    """
+
+    try:
+
+        name = structure.name
+        path = structure.path
+        temp = '{0}{1}/'.format(path, name)
+        try:
+            os.stat(temp)
+        except:
+            os.mkdir(temp)
+
+        tic = time()
+
+        if not exe:
+            exe = 'C:/OpenSees.exe'
+
+        command = '{0} {1}{2}.tcl'.format(exe, path, name)
+        print(command)
+        p = Popen(command, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+
+        while True:
+            line = p.stdout.readline()
+            if not line:
+                break
+            line = str(line.strip())
+            print(line)
+
+        stdout, stderr = p.communicate()
+        print(stdout)
+        print(stderr)
+
+        toc = time() - tic
+
+        print('\n***** OpenSees analysis time : {0} s *****'.format(toc))
+
+    except:
+
+        print('\n***** OpenSees analysis failed')
+
+
 
 
 
@@ -237,53 +296,3 @@ def extract_data(structure, fields):
     toc = time() - tic
 
     print('\n***** Data extracted from OpenSees .out file(s) : {0} s *****\n'.format(toc))
-
-
-def launch_process(structure, exe):
-
-    """ Runs the analysis through OpenSees.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object.
-    exe : str
-        Full terminal command to bypass subprocess defaults.
-
-    Returns
-    -------
-    None
-
-    """
-
-    try:
-
-        name = structure.name
-        path = structure.path
-        temp = '{0}{1}/'.format(path, name)
-
-        tic = time()
-
-        if not exe:
-            exe = 'C:/OpenSees.exe'
-
-        command = '{0} {1}{2}.tcl'.format(exe, path, name)
-        print(command)
-        p = Popen(command, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
-        while True:
-            line = p.stdout.readline()
-            if not line:
-                break
-            line = str(line.strip())
-            print(line)
-        stdout, stderr = p.communicate()
-        print(stdout)
-        print(stderr)
-
-        toc = time() - tic
-
-        print('\n***** OpenSees analysis time : {0} s *****'.format(toc))
-
-    except:
-
-        print('\n***** OpenSees analysis failed')

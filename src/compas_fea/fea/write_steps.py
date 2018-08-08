@@ -781,7 +781,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
             elif software == 'abaqus':
 
                 if isinstance(fields, list):
-                    fields = structure.fields_dic_from_list(fields)
+                    fields = structure.fields_dict_from_list(fields)
                 if 'spf' in fields:
                     fields['ctf'] = 'all'
                     del fields['spf']

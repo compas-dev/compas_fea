@@ -1269,7 +1269,7 @@ Steps
 # analysis
 # ==============================================================================
 
-    def fields_dic_from_list(self, fields_list):
+    def fields_dict_from_list(self, fields_list):
 
         """ Creates a fields dictionary from a fields list.
 
@@ -1288,13 +1288,13 @@ Steps
         node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
         element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'spf']
 
-        fields_dic = {}
+        fields_dict = {}
 
         for field in node_fields + element_fields:
             if field in fields_list:
-                fields_dic[field] = 'all'
+                fields_dict[field] = 'all'
 
-        return fields_dic
+        return fields_dict
 
     def write_input_file(self, software, fields='u'):
 
@@ -1327,7 +1327,7 @@ Steps
         elif software == 'sofistik':
             sofistik.input_generate(self, fields=fields)
 
-    def analyse(self, software, exe=None, cpus=1, license='research', delete=True):
+    def analyse(self, software, exe=None, cpus=4, license='research', delete=True):
 
         """ Runs the analysis through the chosen FEA software/library.
 
@@ -1387,7 +1387,7 @@ Steps
         elif software == 'opensees':
             opensees.extract_data(self, fields=fields)
 
-    def analyse_and_extract(self, software, fields='u', exe=None, cpus=1, license='research'):
+    def analyse_and_extract(self, software, fields='u', exe=None, cpus=4, license='research'):
 
         """ Runs the analysis through the chosen FEA software/library and extracts data.
 
