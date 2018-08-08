@@ -4,6 +4,7 @@ from __future__ import division
 from __future__ import print_function
 
 from math import pi
+from math import sqrt
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -37,6 +38,47 @@ abaqus_data = {
     'SolidSection':       {'name': None,          'geometry': None},
     'TrussSection':       {'name': None,          'geometry': ['A']},
 }
+
+
+def _write_sofistik_sections(f, properties, materials, sections):
+
+    f.write('$\n')
+    f.write('$ -----------------------------------------------------------------------------\n')
+    f.write('$ -------------------------------------------------------------------- Sections\n')
+    f.write('$\n')
+
+    for key, property in properties.items():
+
+        section = sections[property.section]
+        section_index = section.index + 1
+        mindex = materials[property.material].index + 1 if property.material else None
+        stype = section.__name__
+        geometry = section.geometry
+
+        if stype not in ['SolidSection', 'ShellSection', 'SpringSection']:
+
+            f.write('$ {0}\n'.format(section.name))
+            f.write('$ ' + '-' * len(section.name) + '\n')
+            f.write('$\n')
+
+            if stype in ['PipeSection', 'CircularSection']:
+
+                D = geometry['D'] * 1000
+                t = geometry['t'] * 1000 if stype == 'PipeSection' else 0
+                f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, t, mindex))
+
+            elif stype == 'RectangularSection':
+
+                b = geometry['b'] * 1000
+                h = geometry['h'] * 1000
+                f.write('SREC NO {0} H {1}[mm] B {2}[mm] MNO {3}\n'.format(section_index, h, b, mindex))
+
+            elif stype in ['TrussSection', 'StrutSection', 'TieSection']:
+
+                D = sqrt(geometry['A'] * 4 / pi) * 1000
+                f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, 0, mindex))
+
+            f.write('$\n')
 
 
 def write_input_elements(f, software, sections, properties, elements, structure, materials):
