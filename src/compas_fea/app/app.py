@@ -12,11 +12,6 @@ from numpy import hstack
 from numpy import newaxis
 from numpy import zeros
 
-try:
-    from vtk import vtkUnsignedCharArray
-except ImportError:
-    pass
-
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
 __copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
@@ -199,6 +194,7 @@ class App(VtkViewer):
 # ==============================================================================
 
 if __name__ == "__main__":
+
 
     from compas_fea.structure import Structure
 

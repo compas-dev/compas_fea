@@ -3,8 +3,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from compas.topology import dijkstra_path
-
 from compas.geometry import add_vectors
 from compas.geometry import angles_points_xy
 from compas.geometry import area_polygon_xy
@@ -17,9 +15,16 @@ from compas.geometry import normalize_vector
 from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
 
+from compas.topology import dijkstra_path
+
 from compas.utilities import geometric_key
 
 from time import time
+
+try:
+    from compas.viewers import VtkViewer
+except:
+    pass
 
 try:
     from numpy import abs
@@ -28,12 +33,15 @@ try:
     from numpy import asarray
     from numpy import cos
     from numpy import dot
+    from numpy import float64
     from numpy import hstack
     from numpy import isnan
+    from numpy import int64
     from numpy import linspace
     from numpy import meshgrid
-    from numpy import min
     from numpy import max
+    from numpy import mean
+    from numpy import min
     from numpy import newaxis
     from numpy import pi
     from numpy import sin
@@ -55,18 +63,13 @@ except ImportError:
     pass
 
 try:
-    from compas.viewers import VtkVoxels
-except:
-    pass
-
-try:
     from meshpy.tet import build
     from meshpy.tet import MeshInfo
 except ImportError:
     pass
 
 
-__author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
 __copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
 __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
@@ -87,6 +90,157 @@ __all__ = [
     'principal_stresses',
     'plotvoxels',
 ]
+
+
+def process_data(data, dtype, iptype, nodal, elements, n):
+
+    """ Process the raw data.
+
+    Parameters
+    ----------
+    data : dict
+        Unprocessed analysis results data.
+    dtype : str
+        'nodal' or 'element'.
+    iptype : str
+        'mean', 'max' or 'min' of an element's integration point data.
+    nodal : str
+        'mean', 'max' or 'min' for nodal data conversion.
+    elements : list
+        Node numbers for each element.
+    n : int
+        Number of nodes.
+
+    Returns
+    -------
+    array
+        Data values for each node.
+    array
+        Data values for each element.
+
+    """
+
+    if dtype == 'nodal':
+
+        vn = array(data)[:, newaxis]
+        ve = None
+
+    elif dtype == 'element':
+
+        m          = len(elements)
+        lengths    = zeros(m, dtype=int64)
+        data_array = zeros((m, 20), dtype=float64)
+
+        iptypes = {'max': 0, 'min': 1, 'mean': 2}
+
+        for ekey, item in data.items():
+            fdata = list(item.values())
+            j = int(ekey)
+
+            if None in fdata:
+                fdata = [i for i in fdata if i is not None]
+
+            if fdata:
+                length = len(fdata)
+                lengths[j] = length
+                data_array[j, :length] = fdata
+
+        rows, cols = [], []
+
+        for ekey, nodes in enumerate(elements):
+            rows.extend([ekey] * len(nodes))
+            cols.extend(nodes)
+        vals = [1] * len(rows)
+
+        A  = csr_matrix((vals, (rows, cols)), shape=(m, n))
+        AT = A.transpose()
+
+
+        def _process(data_array, lengths, iptype):
+
+            m  = len(lengths)
+            ve = zeros((m, 1))
+
+            for i in range(m):
+
+                if iptype == 0:
+                    ve[i]  = max(data_array[i, :lengths[i]])
+
+                elif iptype == 1:
+                    ve[i]  = min(data_array[i, :lengths[i]])
+
+                elif iptype == 2:
+                    ve[i]  = mean(data_array[i, :lengths[i]])
+
+            return ve
+
+
+        def _nodal(rows, cols, nodal, ve, n):
+
+            vn = zeros((n, 1))
+
+            for i in range(len(rows)):
+
+                node    = cols[i]
+                element = rows[i]
+
+                if nodal == 0:
+                    if ve[element] > vn[node]:
+                        vn[node] = ve[element]
+
+                elif nodal == 1:
+                    if ve[element] < vn[node]:
+                        vn[node] = ve[element]
+
+            return vn
+
+
+        ve = _process(data_array, lengths, iptypes[iptype])
+
+        if nodal == 'mean':
+            vsum = asarray(AT.dot(ve))
+            vn = vsum / sum(AT, 1)
+
+        else:
+            vn = _nodal(rows, cols, 0 if nodal == 'max' else 1, ve, n)
+
+    return vn, ve
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def colorbar(fsc, input='array', type=255):
@@ -610,80 +764,6 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
     fscaled_ = [float(i) for i in list(fscaled)]
 
     return toc, U, cnodes_, fabs_, fscaled_, celements_, float(eabs)
-
-
-def process_data(data, dtype, iptype, nodal, elements, n):
-
-    """ Process the raw data.
-
-    Parameters
-    ----------
-    data : dic
-        Unprocessed data.
-    dtype : str
-        'nodal' or 'element'.
-    iptype : str
-        'mean', 'max' or 'min' of an element's integration point data.
-    nodal : str
-        'mean', 'max' or 'min' for nodal values.
-    elements : list
-        Node numbers that each element connects.
-    n : int
-        Number of nodes.
-
-    Returns
-    -------
-    array
-        Data values for each node.
-    array
-        Data values for each element.
-
-    """
-
-    if dtype == 'nodal':
-        vn = array(data)[:, newaxis]
-        ve = None
-
-    elif dtype == 'element':
-        m  = len(elements)
-        ve = zeros((m, 1))
-
-        for ekey, item in data.items():
-            fdata = [i for i in item.values() if i is not None]
-            if not fdata:
-                fdata = [0]
-            if iptype == 'max':
-                v = max(fdata)
-            elif iptype == 'min':
-                v = min(fdata)
-            elif iptype == 'mean':
-                v = sum(fdata) / len(fdata)
-            ve[int(ekey)] = v
-
-        rows, cols = [], []
-        for c, i in enumerate(elements):
-            rows.extend([c] * len(i))
-            cols.extend(i)
-        sdata = [1] * len(rows)
-        A = csr_matrix((sdata, (rows, cols)), shape=(m, n))
-        AT = A.transpose()
-
-        if nodal == 'mean':
-            vsum = asarray(AT.dot(ve))
-            vn = vsum / sum(AT, 1)
-        else:
-            vn = zeros((n, 1))
-            ATa = AT.todense()
-            for i in range(n):
-                row = ATa[i, :].transpose()
-                col = (row == 1)
-                val = ve[col]
-                if nodal == 'max':
-                    vn[i] = max(val)
-                elif nodal == 'min':
-                    vn[i] = min(val)
-
-    return vn, ve
 
 
 def plotvoxels(values, U, vdx, plot=True, indexing=None):
