@@ -136,4 +136,4 @@ def write_input_bcs(f, software, structure, steps, displacements, sets, ndof=6):
 
     except:
 
-        print('***** No boundary condition Step present *****')
+        print('***** Error writing boundary conditions *****')

@@ -384,6 +384,19 @@ def ordered_network(structure, network, layer):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iterations=50, refine=True):
 
     """ Discretise a mesh from an input coarse mesh guid into small denser meshes.
@@ -509,8 +522,8 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
         print('***** Error using MeshPy or drawing Tets *****')
 
 
-def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name='', blocks_name='',
-                 plot_blocks=False, plot_mesh=False, plot_links=False):
+def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name='', blocks_name='', points_name='',
+                 plot_blocks=False, plot_mesh=False, plot_links=False, plot_points=False):
 
     """ Extrudes a Rhino mesh and adds/creates elements.
 
@@ -524,18 +537,22 @@ def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name=''
         Number of layers.
     thickness : float
         Layer thickness.
-    blocks_name : str
-        Name of set for solid elements.
     mesh_name : str
         Name of set for mesh on final surface.
     links_name : str
         Name of set for adding links along extrusion.
+    blocks_name : str
+        Name of set for solid elements.
+    points_name : str
+        Name of aded points.
     plot_blocks : bool
         Plot blocks.
     plot_mesh : bool
         Plot outer mesh.
     plot_links : bool
         Plot links.
+    plot_points : bool
+        Plot end points.
 
     Returns
     -------
@@ -583,11 +600,19 @@ def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name=''
 
         rs.CurrentLayer(rs.AddLayer(links_name))
         rs.DeleteObjects(rs.ObjectsByLayer(links_name))
+        if plot_points:
+            rs.CurrentLayer(rs.AddLayer(points_name))
+            rs.DeleteObjects(rs.ObjectsByLayer(points_name))
 
         for i in structure.sets[links_name]['selection']:
             nodes = structure.elements[i].nodes
             xyz = structure.nodes_xyz(nodes)
+            rs.CurrentLayer(links_name)
             rs.AddLine(xyz[0], xyz[1])
+            if plot_points:
+                rs.CurrentLayer(points_name)
+                rs.AddPoint(xyz[1])
+
 
     rs.EnableRedraw(True)
     rs.CurrentLayer(rs.AddLayer('Default'))

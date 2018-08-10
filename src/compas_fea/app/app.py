@@ -154,8 +154,7 @@ class App(VtkViewer):
             toc, _, cnodes, fabs, fscaled, _, _ = result
 
             self.update_vertices_colors({i: j for i, j in enumerate(cnodes)})
-
-            print('\n***** Data processed : {0:.3f} s *****'.format(toc))
+            self.update_statusbar('Plotting: {0:.3f} s'.format(toc))
 
         except:
             pass
@@ -182,8 +181,7 @@ class App(VtkViewer):
                 toc, _, cnodes, fabs, fscaled, _, _ = result
 
                 self.update_vertices_colors({i: j for i, j in enumerate(cnodes)})
-
-            print('\n***** Data processed : {0:.3f} s *****'.format(toc))
+                self.update_statusbar('Plotting: {0:.3f} s'.format(toc))
 
         except:
             pass
