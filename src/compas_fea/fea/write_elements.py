@@ -572,10 +572,10 @@ def _write_springs(f, software, selection, elements, section, written_springs):
             if section.stiffness:
                 f.write('*CONNECTOR ELASTICITY, COMPONENT=1\n')
                 f.write('{0}\n'.format(kx))
-            # else:
-                # f.write('*CONNECTOR ELASTICITY, COMPONENT=1, NONLINEAR\n')
-                # for i, j in zip(section.forces['axial'], section.displacements['axial']):
-                    # f.write('{0}, {1}\n'.format(i, j))
+            else:
+                f.write('*CONNECTOR ELASTICITY, COMPONENT=1, NONLINEAR\n')
+                for i, j in zip(section.forces['axial'], section.displacements['axial']):
+                    f.write('{0}, {1}\n'.format(i, j))
             written_springs.append(b1)
             f.write('**\n')
 
