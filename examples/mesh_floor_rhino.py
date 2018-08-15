@@ -81,7 +81,7 @@ mdl.add_displacements([
 mesh = mesh_from_guid(Mesh(), rs.ObjectsByLayer('load_mesh')[0])
 mdl.add_loads([
     GravityLoad(name='load_gravity', elements=['elset_ribs', 'elset_vault']),
-    PrestressLoad(name='load_prestress', elements='elset_ties', sxx=50*10**6),
+    PrestressLoad(name='load_prestress', elements='elset_ties', sxx=10*10**6),
     TributaryLoad(mdl, name='load_tributary', mesh=mesh, z=-2000)])
 
 # Steps
@@ -89,9 +89,7 @@ mdl.add_loads([
 factors = {'load_gravity': 1.35, 'load_tributary': 1.50}
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements=['disp_edges', 'disp_pinned', 'disp_xdof']),
-#    GeneralStep(name='step_prestress', loads=['load_prestress']),
     GeneralStep(name='step_loads', loads=['load_gravity', 'load_tributary'], factor=factors)])
-#mdl.steps_order = ['step_bc', 'step_prestress', 'step_loads']
 mdl.steps_order = ['step_bc', 'step_loads']
 
 # Summary
@@ -102,7 +100,6 @@ mdl.summary()
 
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
-#rhino.plot_data(mdl, step='step_prestress', field='uz', radius=0.02, colorbar_size=0.5)
 rhino.plot_data(mdl, step='step_loads', field='uz', radius=0.02, colorbar_size=0.5)
 rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.02, colorbar_size=0.5,
                 cbar=[0, 5*10**6], nodal='max', iptype='max')
