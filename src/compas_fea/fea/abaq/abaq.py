@@ -62,6 +62,9 @@ def input_generate(structure, fields):
     if isinstance(fields, str):
         fields = [fields]
 
+    if 'u' not in fields:
+        fields.append('u')
+
     with open(filename, 'w') as f:
 
         constraints   = structure.constraints
