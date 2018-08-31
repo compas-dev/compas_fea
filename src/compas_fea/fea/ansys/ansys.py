@@ -44,6 +44,8 @@ def input_generate(structure):
         make_command_file_modal(structure, path, name)
     elif 'harmonic' in stypes:
         make_command_file_harmonic(structure, path, name, skey)
+    elif 'acoustic' in stypes:
+        make_command_file_acoustic(structure, path, name, skey)
     else:
         raise ValueError('This analysis type has not yet been implemented for Compas Ansys')
 
@@ -82,6 +84,18 @@ def make_command_file_harmonic(structure, output_path, filename, skey):
         None
     """
     write_harmonic_analysis_request(structure, output_path, filename, skey)
+
+
+def make_command_file_acoustic(structure, output_path, filename, skey):
+    """ Generates Ansys input file for acoustic analysis.
+
+    Parameters:
+        structure (obj): Structure object.
+
+    Returns:
+        None
+    """
+    write_acoustic_analysis_request(structure, output_path, filename, skey)
 
 
 def ansys_launch_process(path, name, cpus, license, delete=True):

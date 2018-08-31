@@ -733,7 +733,7 @@ Steps
             element.number = ekey
             element.thermal = thermal
             self.virtual_elements[ekey] = element
-            self.add_element_to_element_index(ekey, nodes)
+            self.add_element_to_element_index(ekey, nodes, virtual=True)
 
             if 'virtual_elements' in self.sets:
                 self.sets['virtual_elements']['selection'].append(ekey)

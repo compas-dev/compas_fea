@@ -15,7 +15,8 @@ __all__ = [
     # 'HeatStep',
     'ModalStep',
     'HarmonicStep',
-    'BucklingStep'
+    'BucklingStep',
+    'AcousticStep'
 ]
 
 
@@ -218,3 +219,48 @@ class BucklingStep(object):
         self.loads = loads
         self.type = type
         self.step = step
+
+
+class AcousticStep(object):
+
+    """ Initialises AcousticStep object for use in a acoustic analysis.
+
+    Parameters
+    ----------
+    name : str
+        Name of the AcousticStep.
+    freq_list : list
+        Sorted list of frequencies to analyse.
+    displacements : list
+        Displacement object names.
+    loads : list
+        Load object names.
+    sources : list
+        List of source elements or element sets radiating sound.
+    samples : int
+        Number of samples for acoustic analysis.
+    factor : float
+        Proportionality factor on the loads and displacements.
+    damping : float
+        Constant harmonic damping ratio.
+    type : str
+        'acoustic'.
+
+    Returns
+    -------
+    None
+
+    """
+
+    def __init__(self, name, freq_list, displacements=[], loads=[], sources=[], samples=5, factor=1.0, damping=None,
+                 type='acoustic'):
+        self.__name__ = 'AcousticStep'
+        self.name = name
+        self.freq_list = freq_list
+        self.displacements = displacements
+        self.sources = sources
+        self.samples = samples
+        self.loads = loads
+        self.factor = factor
+        self.damping = damping
+        self.type = type

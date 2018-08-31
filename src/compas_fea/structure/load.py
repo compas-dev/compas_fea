@@ -21,7 +21,8 @@ __all__ = [
     'ThermalLoad',
     'TributaryLoad',
     'HarmonicPointLoad',
-    'HarmonicPressureLoad'
+    'HarmonicPressureLoad',
+    'AcousticDiffuseFieldLoad'
 ]
 
 
@@ -390,3 +391,34 @@ class HarmonicPressureLoad(Load):
 
         self.__name__ = 'HarmonicPressureLoad'
         self.components = {'pressure': pressure, 'phase': phase}
+
+
+class AcousticDiffuseFieldLoad(Load):
+    """ Acoustic Diffuse field loads applied to elements.
+
+    Parameters
+    ----------
+    name : str
+        Name of the HarmonicPressureLoad object.
+    elements : str, list
+        Elements set or element keys the load is applied to.
+    air_density : float
+        Density of the acoustic fluid (defaults to air at 20 degrees).
+    sound_speed : float
+        Speed of sound (defaults to air at 20 degrees)
+    max_inc_angle: float
+        Maximum angle with the positive z axis for the randon incident plane waves
+
+    Returns
+    -------
+    None
+
+    """
+
+    def __init__(self, name, elements, air_density=1.225, sound_speed=340, max_inc_angle=90):
+        Load.__init__(self, name=name, elements=elements, axes='global')
+
+        self.__name__ = 'AcousticDiffuseFieldLoad'
+        self.components = {'air_density': air_density,
+                           'sound_speed': sound_speed,
+                           'max_inc_angle': max_inc_angle}
