@@ -21,6 +21,9 @@ from compas.utilities import geometric_key
 
 from time import time
 
+from operator import itemgetter
+from itertools import groupby
+
 try:
     from compas.viewers import VtkViewer
 except:
@@ -89,6 +92,7 @@ __all__ = [
     'tets_from_vertices_faces',
     'principal_stresses',
     'plotvoxels',
+    'identify_ranges',
 ]
 
 
@@ -205,42 +209,6 @@ def process_data(data, dtype, iptype, nodal, elements, n):
             vn = _nodal(rows, cols, 0 if nodal == 'max' else 1, ve, n)
 
     return vn, ve
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def colorbar(fsc, input='array', type=255):
@@ -922,10 +890,36 @@ def principal_stresses(data, ptype, scale, rotate):
     return vec1, vec5, spr_sp1, spr_sp5, pmax
 
 
+def identify_ranges(data):
+    """ Identifies continuous interger series in from list and returns a list of ranges.
+
+    Parameters
+    ----------
+    data : list
+        The list of intergers to process.
+
+    Returns
+    -------
+    list
+        A list of identified ranges.
+
+    """
+    data.sort()
+    data = set(data)
+    ranges = []
+    for k, g in groupby(enumerate(data), lambda (i, x): i - x):
+        group = map(itemgetter(1), g)
+        if group[0] != group[-1]:
+            ranges.append((group[0], group[-1]))
+        else:
+            ranges.append(group[0])
+    return ranges
+
 # ==============================================================================
 # Debugging
 # ==============================================================================
 
 if __name__ == "__main__":
 
-    pass
+    data = [1,2,3,4,6,15,7,8,11,12,13,9,10,55,89,56,56]
+    print (identify_ranges(data))

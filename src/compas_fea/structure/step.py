@@ -229,8 +229,10 @@ class AcousticStep(object):
     ----------
     name : str
         Name of the AcousticStep.
-    freq_list : list
-        Sorted list of frequencies to analyse.
+    freq_range : list
+        Range of frequencies to analyse.
+    freq_step : int
+        Step size for frequency range.
     displacements : list
         Displacement object names.
     loads : list
@@ -252,11 +254,12 @@ class AcousticStep(object):
 
     """
 
-    def __init__(self, name, freq_list, displacements=[], loads=[], sources=[], samples=5, factor=1.0, damping=None,
+    def __init__(self, name, freq_range, freq_step, displacements=[], loads=[], sources=[], samples=5, factor=1.0, damping=None,
                  type='acoustic'):
         self.__name__ = 'AcousticStep'
         self.name = name
-        self.freq_list = freq_list
+        self.freq_range = freq_range
+        self.freq_step = freq_step
         self.displacements = displacements
         self.sources = sources
         self.samples = samples

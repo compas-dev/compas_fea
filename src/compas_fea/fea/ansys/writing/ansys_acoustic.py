@@ -7,6 +7,7 @@ from .ansys_loads import write_loads
 from compas_fea.fea.ansys.writing.ansys_process import *
 from compas_fea.fea.ansys.writing.ansys_steps import *
 from compas_fea.fea.ansys.writing.ansys_nodes_elements import *
+from compas_fea.utilities import identify_ranges
 
 __author__ = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__ = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
@@ -33,43 +34,41 @@ def write_acoustic_analysis_request(structure, path, name, skey):
 
 
 def write_radiating_elements(structure, output_path, filename, skey):
-    rad_list = structure.steps[skey].sources
+
+    rad_elements = structure.steps[skey].sources
+    nodes = []
+    for ek in rad_elements:
+        nodes.extend(structure.elements[ek].nodes)
+
+    ranges = identify_ranges(nodes)
+
     cFile = open(os.path.join(output_path, filename), 'a')
-    strings = []
-    for rad in rad_list:
-        if type(rad) == int:
-            rad = str(rad + 1)
-            strings.append('SF, {0}, MXWF,           ! Radiating surfaces \n'.format(rad))
-        elif type(rad) == str:
-            rads = structure.sets[rad]['selection']
-            for rad in rads:
-                strings.append('SF, {0}, MXWF,           ! Radiating surfaces \n'.format(rad))
-    for string in strings:
+
+    for i, r in enumerate(ranges):
+        string = 'NSEL, S, NODE, , {0}, {1}, 1,           !  \n'.format(r[0] + 1, r[1] + 1)
         cFile.write(string)
-    cFile.write('!\n')
+        string = 'CM, nds_cmp_{0}, NODE           !  \n'.format(i)
+        cFile.write(string)
+        string = 'SF, nds_cmp_{0}, MXWF,           ! Radiating nodes \n'.format(i)
+        cFile.write(string)
+        cFile.write('!\n')
+
     cFile.write('!\n')
     cFile.close()
 
 
 def write_acoustic_solve(structure, output_path, filename, skey):
-    freq_list = structure.steps[skey].freq_list
+    freq_range = structure.steps[skey].freq_range
+    freq_step = structure.steps[skey].freq_step
     harmonic_damping = structure.steps[skey].damping
-    sind = structure.steps_order.index(skey)
     samples = structure.steps[skey].samples
-
-    n = 10
-    freq_list_ = [freq_list[i:i + n] for i in range(0, len(freq_list), n)]
 
     cFile = open(os.path.join(output_path, filename), 'a')
 
     cFile.write('/SOL \n')
     cFile.write('ANTYPE,3            ! Harmonic analysis \n')
-
-    cFile.write('*dim, freq_list{0}, array, {1} \n'.format(sind, len(freq_list)))
-    for i, freq in enumerate(freq_list_):
-        cFile.write('freq_list{0}('.format(sind) + str(i * n + 1) + ') = ' + ', '.join([str(f) for f in freq]) + '\n')
-    cFile.write('HARFRQ, , , , , %freq_list{0}%, , ! Frequency range / list \n'.format(sind))
-    cFile.write('KBC,1                ! Stepped loads \n')
+    cFile.write('HARFRQ, {0}, {1}, , , , , ! Frequency range / list \n'.format(freq_range[0], freq_range[1]))
+    cFile.write('NSUBST, {0} ! number of steps  \n'.format(freq_step))
 
     if harmonic_damping:
         # cFile.write('ALPHAD,'+ str(harmonic_damping)+'   ! mass matrix multiplier for damping \n')
