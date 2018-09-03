@@ -237,6 +237,8 @@ def write_results_from_rst(structure, fields, steps, sets=None):
             else:
                 nodes = None
             write_harmonic_results_from_ansys_rst(name, path, fields, freq_list, step_index=step_index, step_name='step', sets=nodes)
+        elif stype == 'acoustic':
+            pass
 
     ansys_launch_process_extract(path, name)
     # os.remove(path + '/' + filename)
@@ -292,6 +294,11 @@ def load_to_results(structure, fields, steps):
                 harmonic_disp, frequencies = get_harmonic_data_from_result_files(structure, out_path, step)
                 structure.results[step]['frequencies'] = frequencies
                 rlist.append(harmonic_disp)
+        elif structure.steps[step].__name__ == 'AcousticStep':
+            rlist = None
+            tl_data = get_acoustic_radiation_from_results_files(out_path, step)
+            structure.results[step]['frequency'] = tl_data
+
         if 'geo' in fields:
             nodes, elements = get_nodes_elements_from_result_files(out_path)
             structure.nodes = nodes

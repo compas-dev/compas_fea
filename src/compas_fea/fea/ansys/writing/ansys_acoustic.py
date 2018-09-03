@@ -79,8 +79,10 @@ def write_acoustic_solve(structure, output_path, filename, skey):
     cFile.write(string)
     cFile.write('FINISH \n')
     cFile.write('!\n')
+
+    # request tl results file ----------------------------
     cFile.write('/POST1 \n')
-    cFile.write('PLST, tl_results, txt, dfst, 0 \n')
+    cFile.write('PLST, {0}_tl_results, txt, dfst, 0 \n'.format(skey))
     cFile.write('FINISH \n')
     cFile.write('!\n')
     cFile.write('!\n')

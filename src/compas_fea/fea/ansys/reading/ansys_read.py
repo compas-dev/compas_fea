@@ -1,4 +1,5 @@
 import os
+import re
 from compas.geometry import length_vector
 
 
@@ -287,6 +288,21 @@ def get_reactions_from_result_files(out_path, step):
             react_dict[key] = {'rxx': reaction[3], 'ryy': reaction[4], 'rzz': reaction[5],
                                'rx': reaction[0], 'ry': reaction[1], 'rz': reaction[2]}
     return react_dict
+
+
+def get_acoustic_radiation_from_results_files(out_path, step):
+    filename = '{0}_tl_results.txt'.format(step)
+    fh = open(os.path.join(out_path, filename), 'r')
+    lines = fh.readlines()
+    del lines[:3]
+    del lines[-1]
+    tl_data = {}
+    for i, line in enumerate(lines):
+        line = line.strip()
+        line = re.sub(' +', ' ', line)
+        data = line.split(' ')
+        tl_data[i] = {'freq': float(data[0]), 'tl': float(data[1]), 'rad': float(data[2]), 'inc': float(data[3])}
+    return tl_data
 
 
 if __name__ == '__main__':

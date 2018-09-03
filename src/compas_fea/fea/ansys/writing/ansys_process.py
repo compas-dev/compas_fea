@@ -23,7 +23,5 @@ def ansys_open_post_process(path, filename):
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.write('/POST1 \n')
-    # cFile.write('SET,FIRST \n')
-    # cFile.write('RAPPND,1, \n')
     cFile.write('!\n')
     cFile.close()
