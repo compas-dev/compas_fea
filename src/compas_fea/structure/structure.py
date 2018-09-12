@@ -1327,7 +1327,7 @@ Steps
         elif software == 'sofistik':
             sofistik.input_generate(self, fields=fields)
 
-    def analyse(self, software, exe=None, cpus=4, license='research', delete=True):
+    def analyse(self, software, exe=None, cpus=4, license='student', delete=True):
 
         """ Runs the analysis through the chosen FEA software/library.
 
@@ -1357,7 +1357,7 @@ Steps
         elif software == 'opensees':
             opensees.launch_process(self, exe)
 
-    def extract_data(self, software, fields='u', steps='last', exe=None, sets=None):
+    def extract_data(self, software, fields='u', steps='last', exe=None, sets=None, license='student'):
 
         """ Extracts data from the FE software's output.
 
@@ -1382,12 +1382,12 @@ Steps
             abaq.extract_data(self, fields=fields, exe=exe)
 
         elif software == 'ansys':
-            ansys.extract_rst_data(self, fields=fields, steps=steps, sets=sets)
+            ansys.extract_rst_data(self, fields=fields, steps=steps, sets=sets, license=license)
 
         elif software == 'opensees':
             opensees.extract_data(self, fields=fields)
 
-    def analyse_and_extract(self, software, fields='u', exe=None, cpus=4, license='research'):
+    def analyse_and_extract(self, software, fields='u', exe=None, cpus=4, license='student'):
 
         """ Runs the analysis through the chosen FEA software/library and extracts data.
 
@@ -1412,7 +1412,7 @@ Steps
 
         self.write_input_file(software=software, fields=fields)
         self.analyse(software=software, exe=exe, cpus=cpus, license=license)
-        self.extract_data(software=software, fields=fields, exe=exe)
+        self.extract_data(software=software, fields=fields, exe=exe, license=license)
 
 
 # ==============================================================================
