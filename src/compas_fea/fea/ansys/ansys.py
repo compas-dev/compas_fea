@@ -135,7 +135,7 @@ def ansys_launch_process(path, name, cpus, license, delete=True):
     launch_string += ' -dir \"' + work_dir
     launch_string += '\" -j \"' + name + '\" -s read -l en-us -b -i \"'
     launch_string += inp_path + ' \" -o \"' + out_path + '\"'
-
+    # print(launch_string)
     subprocess.call(launch_string)
 
 
@@ -265,7 +265,7 @@ def load_to_results(structure, fields, steps):
 
     for step in steps:
         structure.results[step] = {}
-        if structure.steps[step].__name__ == 'StaticStep':
+        if structure.steps[step].__name__ == 'GeneralStep':
             rlist = []
             if 'u' in fields or 'all' in fields:
                 rlist.append(get_displacements_from_result_files(out_path, step))
@@ -304,9 +304,16 @@ def load_to_results(structure, fields, steps):
             structure.nodes = nodes
             for ekey in elements:
                 structure.add_element(elements[ekey]['nodes'], elements[ekey]['type'])
+
+        # if rlist:
+        #     structure.results[step].setdefault('nodal', rlist[0])
+        #     if len(rlist) >= 1:
+        #         for d in rlist[1:]:
+        #             for key, att in structure.results[step]['nodal'].items():
+        #                 att.update(d[key])
+
         if rlist:
-            structure.results[step].setdefault('nodal', rlist[0])
-            if len(rlist) >= 1:
-                for d in rlist[1:]:
-                    for key, att in structure.results[step]['nodal'].items():
-                        att.update(d[key])
+            structure.results[step]['nodal'] = {}
+            for rdict in rlist:
+                for key in rdict:
+                    structure.results[step]['nodal'][key] = rdict[key]

@@ -56,15 +56,15 @@ def write_static_results_from_ansys_rst(name, path, fields, step_index=0, step_n
 
     if type(fields) == str:
         fields = [fields]
-    if 'U' in fields or 'all' in fields:
+    if 'u' in fields or 'all' in fields:
         write_request_node_displacements(path, name, step_name)
-    if 'S' in fields or 'all' in fields:
+    if 's' in fields or 'all' in fields:
         write_request_nodal_stresses(path, name, step_name)
-    if 'SP' in fields or 'all' in fields:
+    if 'sp' in fields or 'all' in fields:
         write_request_pricipal_stresses(path, name, step_name)
-    if 'SS' in fields or 'all' in fields:
+    if 'ss' in fields or 'all' in fields:
         write_request_shear_stresses(path, name, step_name)
-    if 'E' in fields or 'all' in fields:
+    if 'e' in fields or 'all' in fields:
         write_request_principal_strains(path, name, step_name)
-    if 'R' in fields or 'all' in fields:
+    if 'r' in fields or 'all' in fields:
         write_request_reactions(path, name, step_name)

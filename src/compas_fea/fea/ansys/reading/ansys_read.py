@@ -190,13 +190,21 @@ def get_displacements_from_result_files(out_path, step):
     except(Exception):
         return None
     displacements = dfile.readlines()
-    disp_dict = {}
+    # disp_dict = {}
+    # for i in range(len(displacements)):
+    #     dstring = displacements[i].split(',')
+    #     disp = map(float, dstring)
+    #     key = int(disp[0]) - 1
+    #     disp_dict[key] = {'ux': disp[1], 'uy': disp[2], 'uz': disp[3]}
+
+    disp_dict = {'ux': {}, 'uy': {}, 'uz': {}}
     for i in range(len(displacements)):
         dstring = displacements[i].split(',')
         disp = map(float, dstring)
         key = int(disp[0]) - 1
-        disp_dict[key] = {'ux': disp[1], 'uy': disp[2], 'uz': disp[3]}
-
+        disp_dict['ux'][key] = float(disp[1])
+        disp_dict['uy'][key] = float(disp[2])
+        disp_dict['uz'][key] = float(disp[3])
     return disp_dict
 
 
@@ -208,13 +216,26 @@ def get_nodal_stresses_from_result_files(out_path, step):
         return None
 
     s = sfile.readlines()
-    stress_dict = {}
+    # stress_dict = {}
+    # for i in range(len(s)):
+    #     s_string = s[i].split(',')
+    #     stress = map(float, s_string)
+    #     key = int(stress[0]) - 1
+    #     stress_dict[key] = {'sxt': stress[4], 'syt': stress[5], 'szt': stress[6],
+    #                         'sxb': stress[1], 'syb': stress[2], 'szb': stress[3]}
+
+    stress_dict = {'sxt': {}, 'syt': {}, 'szt': {}, 'sxb': {}, 'syb': {}, 'szb': {}}
     for i in range(len(s)):
         s_string = s[i].split(',')
         stress = map(float, s_string)
         key = int(stress[0]) - 1
-        stress_dict[key] = {'sxt': stress[4], 'syt': stress[5], 'szt': stress[6],
-                            'sxb': stress[1], 'syb': stress[2], 'szb': stress[3]}
+        stress_dict['sxt'][key] = float(stress[4])
+        stress_dict['syt'][key] = float(stress[5])
+        stress_dict['szt'][key] = float(stress[6])
+        stress_dict['sxb'][key] = float(stress[1])
+        stress_dict['syb'][key] = float(stress[2])
+        stress_dict['szb'][key] = float(stress[3])
+
     return stress_dict
 
 
@@ -226,13 +247,26 @@ def get_principal_stresses_from_result_files(out_path, step):
         return None
 
     ps = psfile.readlines()
-    p_stress_dict = {}
+    # p_stress_dict = {}
+    # for i in range(len(ps)):
+    #     psstring = ps[i].split(',')
+    #     p_stress = map(float, psstring)
+    #     key = int(p_stress[0]) - 1
+    #     p_stress_dict[key] = {'ps1t': p_stress[3], 'ps2t': p_stress[4], 'ps3t': p_stress[5],
+    #                           'ps1b': p_stress[0], 'ps2b': p_stress[1], 'ps3b': p_stress[2]}
+
+    p_stress_dict = {'ps1t': {}, 'ps2t': {}, 'ps3t': {}, 'ps1b': {}, 'ps2b': {}, 'ps3b': {}}
     for i in range(len(ps)):
         psstring = ps[i].split(',')
         p_stress = map(float, psstring)
         key = int(p_stress[0]) - 1
-        p_stress_dict[key] = {'ps1t': p_stress[3], 'ps2t': p_stress[4], 'ps3t': p_stress[5],
-                              'ps1b': p_stress[0], 'ps2b': p_stress[1], 'ps3b': p_stress[2]}
+        p_stress_dict['ps1t'][key] = float(p_stress[4])
+        p_stress_dict['ps2t'][key] = float(p_stress[5])
+        p_stress_dict['ps3t'][key] = float(p_stress[6])
+        p_stress_dict['ps1b'][key] = float(p_stress[1])
+        p_stress_dict['ps2b'][key] = float(p_stress[2])
+        p_stress_dict['ps3b'][key] = float(p_stress[3])
+
     return p_stress_dict
 
 
@@ -245,13 +279,26 @@ def get_shear_stresses_from_result_files(out_path, step):
         return None
 
     ss = psfile.readlines()
-    ss_dict = {}
+    # ss_dict = {}
+    # for i in range(len(ss)):
+    #     ss_string = ss[i].split(',')
+    #     ss_stress = map(float, ss_string)
+    #     key = int(ss_stress[0]) - 1
+    #     ss_dict[key] = {'sxyt': ss_stress[3], 'syzt': ss_stress[4], 'sxzt': ss_stress[5],
+    #                     'sxyb': ss_stress[0], 'syzb': ss_stress[1], 'sxzb': ss_stress[2]}
+
+    ss_dict = {'sxyt': {}, 'syzt': {}, 'sxzt': {}, 'sxyb': {}, 'syzb': {}, 'sxzb': {}}
     for i in range(len(ss)):
         ss_string = ss[i].split(',')
         ss_stress = map(float, ss_string)
         key = int(ss_stress[0]) - 1
-        ss_dict[key] = {'sxyt': ss_stress[3], 'syzt': ss_stress[4], 'sxzt': ss_stress[5],
-                        'sxyb': ss_stress[0], 'syzb': ss_stress[1], 'sxzb': ss_stress[2]}
+        ss_dict['sxyt'][key] = float(ss_stress[4])
+        ss_dict['syzt'][key] = float(ss_stress[5])
+        ss_dict['sxzt'][key] = float(ss_stress[6])
+        ss_dict['sxyb'][key] = float(ss_stress[1])
+        ss_dict['syzb'][key] = float(ss_stress[2])
+        ss_dict['sxzb'][key] = float(ss_stress[3])
+
     return ss_dict
 
 
@@ -262,13 +309,26 @@ def get_principal_strains_from_result_files(out_path, step):
     except(Exception):
         return None
     pe = efile.readlines()
-    pe_dict = {}
+    # pe_dict = {}
+    # for i in range(len(pe)):
+    #     estring = pe[i].split(',')
+    #     p_strain = map(float, estring)
+    #     key = int(p_strain[0]) - 1
+    #     pe_dict[key] = {'e1t': p_strain[4], 'e2t': p_strain[5], 'e3t': p_strain[6],
+    #                     'e1b': p_strain[1], 'e2b': p_strain[2], 'e3b': p_strain[3]}
+
+    pe_dict = {'e1t': {}, 'e2t': {}, 'e3t': {}, 'e1b': {}, 'e2b': {}, 'e3b': {}}
     for i in range(len(pe)):
         estring = pe[i].split(',')
         p_strain = map(float, estring)
         key = int(p_strain[0]) - 1
-        pe_dict[key] = {'e1t': p_strain[4], 'e2t': p_strain[5], 'e3t': p_strain[6],
-                        'e1b': p_strain[1], 'e2b': p_strain[2], 'e3b': p_strain[3]}
+        pe_dict['e1t'][key] = float(p_strain[4])
+        pe_dict['e2t'][key] = float(p_strain[5])
+        pe_dict['e3t'][key] = float(p_strain[6])
+        pe_dict['e1b'][key] = float(p_strain[1])
+        pe_dict['e2b'][key] = float(p_strain[2])
+        pe_dict['e3b'][key] = float(p_strain[3])
+
     return pe_dict
 
 
@@ -279,14 +339,28 @@ def get_reactions_from_result_files(out_path, step):
     except(Exception):
         return None
     r = rfile.readlines()
-    react_dict = {}
+    # react_dict = {}
+    # for i in range(len(r)):
+    #     r_string = r[i].split(',')
+    #     reaction = map(float, r_string)
+    #     key = int(reaction[0]) - 1
+    #     if all(v == 0.0 for v in reaction) is False:
+    #         react_dict[key] = {'rxx': reaction[3], 'ryy': reaction[4], 'rzz': reaction[5],
+    #                            'rx': reaction[0], 'ry': reaction[1], 'rz': reaction[2]}
+
+    react_dict = {'rmx': {}, 'rmy': {}, 'rmz': {}, 'rfx': {}, 'rfy': {}, 'rfz': {}}
     for i in range(len(r)):
         r_string = r[i].split(',')
         reaction = map(float, r_string)
         key = int(reaction[0]) - 1
         if all(v == 0.0 for v in reaction) is False:
-            react_dict[key] = {'rxx': reaction[3], 'ryy': reaction[4], 'rzz': reaction[5],
-                               'rx': reaction[0], 'ry': reaction[1], 'rz': reaction[2]}
+            react_dict['rmx'][key] = float(reaction[4])
+            react_dict['rmy'][key] = float(reaction[5])
+            react_dict['rmz'][key] = float(reaction[6])
+            react_dict['rfx'][key] = float(reaction[1])
+            react_dict['rfy'][key] = float(reaction[2])
+            react_dict['rfz'][key] = float(reaction[3])
+
     return react_dict
 
 

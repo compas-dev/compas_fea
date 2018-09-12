@@ -394,7 +394,53 @@ def ordered_network(structure, network, layer):
 
 
 
+def plot_reaction_forces(structure, step, layer=None, scale=1.0):
+    """ Plots reaction forces of the Structure.
 
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    layer : str
+        Layer name for plotting.
+    scale : float
+        Scale on displacements for the deformed plot.
+
+    Returns
+    -------
+    None
+
+    """
+    if not layer:
+        layer = '{0}-{1}'.format(step, 'reactions')
+    rs.CurrentLayer(rs.AddLayer(layer))
+    rs.DeleteObjects(rs.ObjectsByLayer(layer))
+    rs.EnableRedraw(False)
+
+    rfx = structure.results[step]['nodal']['rfx']
+    rfy = structure.results[step]['nodal']['rfy']
+    rfz = structure.results[step]['nodal']['rfz']
+
+    nkeys = structure.results[step]['nodal']['rfx'].keys()
+    v = [scale_vector([rfx[i], rfy[i], rfz[i]], -scale) for i in nkeys]
+    nodes = structure.nodes_xyz(nkeys)
+
+    # try:
+    for i in range(len(v)):
+        if nodes[i] != add_vectors(nodes[i], v[i]):
+            l = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
+            rs.CurveArrows(l, 1)
+
+    # Return to Default layer
+
+    rs.CurrentLayer(rs.AddLayer('Default'))
+    rs.LayerVisible(layer, False)
+    rs.EnableRedraw(True)
+
+    # except:
+    #     print('\n***** Error encountered during data processing or plotting *****')
 
 
 def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iterations=50, refine=True):

@@ -72,8 +72,8 @@ def write_acoustic_solve(structure, output_path, filename, skey):
 
     if harmonic_damping:
         # cFile.write('ALPHAD,'+ str(harmonic_damping)+'   ! mass matrix multiplier for damping \n')
-        cFile.write('BETAD,' + str(harmonic_damping) + '   ! stiffness matrix multiplier for damping \n')
-        # cFile.write('DMPRAT,' + str(harmonic_damping) + '   ! constant modal damping ratio \n')
+        # cFile.write('BETAD,' + str(harmonic_damping) + '   ! stiffness matrix multiplier for damping \n')
+        cFile.write('DMPRAT,' + str(harmonic_damping) + '   ! constant modal damping ratio \n')
 
     string = 'MSOLVE, {0}, , ,\n'.format(samples)
     cFile.write(string)
