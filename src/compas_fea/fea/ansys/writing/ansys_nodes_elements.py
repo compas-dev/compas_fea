@@ -110,6 +110,14 @@ def write_shell4_elements(structure, output_path, filename, ekeys, section, mate
     cFile.close()
 
 
+def write_set_srf_realconstant(output_path, filename, rkey):
+    cFile = open(os.path.join(output_path, filename), 'a')
+    cFile.write('R,' + str(rkey + 1) + ', , , , , , , , , ,\n')
+    cFile.write('REAL,' + str(rkey + 1) + '\n')
+    cFile.write('!\n')
+    cFile.close()
+
+
 def write_surface_elements(structure, output_path, filename, ekeys, section, material):
     """ This function creates ANSYS shell 181 elements
     in a given ansys input file. These shell elements require 4 nodes.
@@ -117,6 +125,7 @@ def write_surface_elements(structure, output_path, filename, ekeys, section, mat
     ekeys = sorted(ekeys, key=int)
     etkey = et_dict.setdefault('SURF154', len(et_dict) + 1)
     write_set_element_material(output_path, filename, None, 'SURF154', etkey)
+    write_set_srf_realconstant(output_path, filename, etkey)
 
     cFile = open(os.path.join(output_path, filename), 'a')
     for ekey in ekeys:
