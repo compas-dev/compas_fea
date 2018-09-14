@@ -96,8 +96,7 @@ def write_shell4_elements(structure, output_path, filename, ekeys, section, mate
 
     cFile = open(os.path.join(output_path, filename), 'a')
     for ekey in ekeys:
-        element = structure.elements[ekey]
-        element = element.nodes
+        element = structure.elements[ekey].nodes
         string = 'E,'
         for i in range(len(element)):
             string += str(int(element[i]) + 1)
@@ -129,9 +128,10 @@ def write_surface_elements(structure, output_path, filename, ekeys, section, mat
 
     cFile = open(os.path.join(output_path, filename), 'a')
     for ekey in ekeys:
-        element = structure.elements[ekey]
-        element = element.nodes
+        element = structure.elements[ekey].nodes
         string = 'E,'
+        if len(element) == 3:
+            element.append(element[-1])
         for i in range(len(element)):
             string += str(int(element[i]) + 1)
             if i < len(element) - 1:

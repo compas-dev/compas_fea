@@ -98,7 +98,7 @@ def make_command_file_acoustic(structure, output_path, filename, skey):
     write_acoustic_analysis_request(structure, output_path, filename, skey)
 
 
-def ansys_launch_process(path, name, cpus, license='student', delete=True):
+def ansys_launch_process(path, name, cpus, license='teaching', delete=True):
     """ Launches an analysis using Ansys.
 
     Parameters:
@@ -126,8 +126,10 @@ def ansys_launch_process(path, name, cpus, license='student', delete=True):
 
     if license == 'research':
         lic_str = 'aa_r'
-    elif license == 'student':
+    elif license == 'teaching':
         lic_str = 'aa_t_a'
+    elif license == 'introductory':
+        lic_str = 'aa_t_i'
     else:
         lic_str = 'aa_t_a'  # temporary default.
 
@@ -139,7 +141,7 @@ def ansys_launch_process(path, name, cpus, license='student', delete=True):
     subprocess.call(launch_string)
 
 
-def ansys_launch_process_extract(path, name, cpus=2, license='student'):
+def ansys_launch_process_extract(path, name, cpus=2, license='teaching'):
     """ Calls an extraction of results from Ansys.
 
     Parameters:
@@ -158,8 +160,10 @@ def ansys_launch_process_extract(path, name, cpus=2, license='student'):
 
     if license == 'research':
         lic_str = 'aa_r'
-    elif license == 'student':
+    elif license == 'teaching':
         lic_str = 'aa_t_a'
+    elif license == 'introductory':
+        lic_str = 'aa_t_i'
     else:
         lic_str = 'aa_t_a'  # temporary default.
 
@@ -184,7 +188,7 @@ def delete_result_files(path, name):
     shutil.rmtree(out_path)
 
 
-def extract_rst_data(structure, fields='all', steps='last', sets=None, license='student'):
+def extract_rst_data(structure, fields='all', steps='last', sets=None, license='teaching'):
     """ Extracts results from Ansys rst file.
 
     Parameters:
@@ -199,7 +203,7 @@ def extract_rst_data(structure, fields='all', steps='last', sets=None, license='
     load_to_results(structure, fields, steps)
 
 
-def write_results_from_rst(structure, fields, steps, license='student', sets=None):
+def write_results_from_rst(structure, fields, steps, license='teaching', sets=None):
     """ Writes results request file from Ansys.
 
     Parameters:
