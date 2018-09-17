@@ -64,7 +64,7 @@ mdl.summary()
 # Run (Abaqus)
 
 exe = '/home/al/abaqus/Commands/abaqus cae '
-mdl.analyse_and_extract(software='abaqus', exe=exe, fields=['u', 'rf', 's'])
+mdl.analyse_and_extract(software='abaqus', exe=exe, fields=['u', 'rf', 's'], license='research')
 
 blender.plot_data(mdl, step='step_load', field='um', layer=3)
 print(mdl.get_nodal_results(step='step_load', field='um', nodes='nset_top'))

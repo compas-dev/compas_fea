@@ -103,7 +103,7 @@ mdl.summary()
 
 # Run (Abaqus)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 's'], license='research')
 
 rhino.plot_data(mdl, step='step_loads', field='uz', radius=0.01, colorbar_size=0.5)
 rhino.plot_data(mdl, step='step_loads', field='smaxp', cbar=[0, 1.5*10**6], nodal='max', iptype='max',

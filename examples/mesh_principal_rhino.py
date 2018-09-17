@@ -61,7 +61,7 @@ mdl.summary()
 
 # Run (Abaqus)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 's'], license='research')
 
 rhino.plot_principal_stresses(mdl, step='step_load', ptype='max', scale=3)
 rhino.plot_principal_stresses(mdl, step='step_load', ptype='min', scale=3)

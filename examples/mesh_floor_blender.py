@@ -89,7 +89,7 @@ mdl.summary()
 # Run (Abaqus)
 
 exe = '/home/al/abaqus/Commands/abaqus cae '
-mdl.analyse_and_extract(software='abaqus', exe=exe, fields=['u', 's'])
+mdl.analyse_and_extract(software='abaqus', exe=exe, fields=['u', 's'], license='research')
 
 blender.plot_data(mdl, step='step_prestress', field='uz', radius=0.02, layer=6, colorbar_size=0.5)
 blender.plot_data(mdl, step='step_loads', field='uz', radius=0.02, layer=7, colorbar_size=0.5)

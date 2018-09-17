@@ -65,5 +65,5 @@ mdl.summary()
 # Run (Abaqus)
 
 exe = '/home/al/abaqus/Commands/abaqus cae '
-mdl.analyse_and_extract(software='abaqus', exe=exe, fields=['u'])
+mdl.analyse_and_extract(software='abaqus', exe=exe, fields=['u'], license='research')
 blender.plot_voxels(mdl, step='step_load', field='ux', vdx=0.01)

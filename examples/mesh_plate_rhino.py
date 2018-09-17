@@ -68,7 +68,7 @@ mdl.write_input_file(software='sofistik')
 
 # Run (Abaqus)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u'])
+mdl.analyse_and_extract(software='abaqus', fields=['u'], license='research')
 
 # Run (OpenSees)
 
