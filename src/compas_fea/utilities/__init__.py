@@ -33,6 +33,7 @@ functions
     tets_from_vertices_faces
     principal_stresses
     plotvoxels
+    identify_ranges
 
 
 """

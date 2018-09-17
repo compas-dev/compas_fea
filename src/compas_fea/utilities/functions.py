@@ -211,6 +211,62 @@ def process_data(data, dtype, iptype, nodal, elements, n):
     return vn, ve
 
 
+def identify_ranges(data):
+
+    """ Identifies continuous interger series from a list and returns a list of ranges.
+
+    Parameters
+    ----------
+    data : list
+        The list of intergers to process.
+
+    Returns
+    -------
+    list
+        A list of identified ranges.
+
+    """
+
+    data.sort()
+    data = set(data)
+    ranges = []
+
+    for k, g in groupby(enumerate(data), lambda (i, x): i - x):
+        group = map(itemgetter(1), g)
+        if group[0] != group[-1]:
+            ranges.append((group[0], group[-1]))
+        else:
+            ranges.append(group[0])
+
+    return ranges
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def colorbar(fsc, input='array', type=255):
 
     """ Creates RGB color information from -1 to 1 scaled values.
@@ -889,31 +945,6 @@ def principal_stresses(data, ptype, scale, rotate):
 
     return vec1, vec5, spr_sp1, spr_sp5, pmax
 
-
-def identify_ranges(data):
-    """ Identifies continuous interger series in from list and returns a list of ranges.
-
-    Parameters
-    ----------
-    data : list
-        The list of intergers to process.
-
-    Returns
-    -------
-    list
-        A list of identified ranges.
-
-    """
-    data.sort()
-    data = set(data)
-    ranges = []
-    for k, g in groupby(enumerate(data), lambda (i, x): i - x):
-        group = map(itemgetter(1), g)
-        if group[0] != group[-1]:
-            ranges.append((group[0], group[-1]))
-        else:
-            ranges.append(group[0])
-    return ranges
 
 # ==============================================================================
 # Debugging

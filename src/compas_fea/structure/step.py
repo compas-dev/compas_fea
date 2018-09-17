@@ -269,7 +269,7 @@ class BucklingStep(Step):
         self.attr_list.extend(['modes', 'increments', 'factor', 'displacements', 'loads', 'type', 'step'])
 
 
-class AcousticStep(object):
+class AcousticStep(Step):
 
     """ Initialises AcousticStep object for use in a acoustic analysis.
 
@@ -302,16 +302,20 @@ class AcousticStep(object):
 
     """
 
-    def __init__(self, name, freq_range, freq_step, displacements=[], loads=[], sources=[], samples=5, factor=1.0, damping=None,
-                 type='acoustic'):
-        self.__name__ = 'AcousticStep'
-        self.name = name
-        self.freq_range = freq_range
-        self.freq_step = freq_step
+    def __init__(self, name, freq_range, freq_step, displacements=[], loads=[], sources=[], samples=5, factor=1.0,
+                 damping=None, type='acoustic'):
+        Step.__init__(self, name=name)
+
+        self.__name__      = 'AcousticStep'
+        self.name          = name
+        self.freq_range    = freq_range
+        self.freq_step     = freq_step
         self.displacements = displacements
-        self.sources = sources
-        self.samples = samples
-        self.loads = loads
-        self.factor = factor
-        self.damping = damping
-        self.type = type
+        self.sources       = sources
+        self.samples       = samples
+        self.loads         = loads
+        self.factor        = factor
+        self.damping       = damping
+        self.type          = type
+        self.attr_list.extend(['freq_range', 'freq_step', 'displacements', 'sources', 'samples', 'loads', 'factor',
+                               'damping', 'type'])
