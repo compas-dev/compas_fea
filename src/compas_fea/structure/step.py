@@ -11,6 +11,7 @@ __email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
+    'Step',
     'GeneralStep',
     # 'HeatStep',
     'ModalStep',
@@ -20,7 +21,39 @@ __all__ = [
 ]
 
 
-class GeneralStep(object):
+class Step(object):
+
+    """ Initialises base Step object.
+
+    Parameters
+    ----------
+    name : str
+        Name of the Step object.
+
+    Returns
+    -------
+    None
+
+    """
+
+    def __init__(self, name):
+
+        self.__name__ = 'StepObject'
+        self.name = name
+        self.attr_list = ['name']
+
+    def __str__(self):
+
+        print('compas_fea {0} object'.format(self.__name__))
+        print('-' * (len(self.__name__) + 10))
+
+        for attr in self.attr_list:
+            print('{0:<13} : {1}'.format(attr, getattr(self, attr)))
+
+        return ''
+
+
+class GeneralStep(Step):
 
     """ Initialises GeneralStep object for use in a static analysis.
 
@@ -57,21 +90,25 @@ class GeneralStep(object):
 
     def __init__(self, name, increments=100, iterations=100, factor=1.0, nlgeom=True, nlmat=True, displacements=[],
                  loads=[], type='static', tolerance=0.01, state='sls'):
-        self.__name__ = 'GeneralStep'
-        self.name = name
-        self.increments = increments
-        self.iterations = iterations
-        self.factor = factor
-        self.nlgeom = nlgeom
-        self.nlmat = nlmat
+        Step.__init__(self, name=name)
+
+        self.__name__      = 'GeneralStep'
+        self.name          = name
+        self.increments    = increments
+        self.iterations    = iterations
+        self.factor        = factor
+        self.nlgeom        = nlgeom
+        self.nlmat         = nlmat
         self.displacements = displacements
-        self.loads = loads
-        self.type = type
-        self.tolerance = tolerance
-        self.state = state
+        self.loads         = loads
+        self.type          = type
+        self.tolerance     = tolerance
+        self.state         = state
+        self.attr_list.extend(['increments', 'iterations', 'factor', 'nlgeom', 'nlmat', 'displacements', 'loads',
+                               'type', 'tolerance', 'state'])
 
 
-class HeatStep(object):
+class HeatStep(Step):
 
     """ Initialises HeatStep object for use in a thermal analysis.
 
@@ -99,17 +136,20 @@ class HeatStep(object):
     """
 
     def __init__(self, name, interaction, increments=100, temp0=20, dTmax=1, type='heat transfer', duration=1):
-        self.__name__ = 'HeatStep'
-        self.name = name
+        Step.__init__(self, name=name)
+
+        self.__name__    = 'HeatStep'
+        self.name        = name
         self.interaction = interaction
-        self.increments = increments
-        self.temp0 = temp0
-        self.dTmax = dTmax
-        self.type = type
-        self.duration = duration
+        self.increments  = increments
+        self.temp0       = temp0
+        self.dTmax       = dTmax
+        self.type        = type
+        self.duration    = duration
+        self.attr_list.extend(['interaction', 'increments', 'temp0', 'dTmax', 'type', 'duration'])
 
 
-class ModalStep(object):
+class ModalStep(Step):
 
     """ Initialises ModalStep object for use in a modal analysis.
 
@@ -133,15 +173,18 @@ class ModalStep(object):
     """
 
     def __init__(self, name, modes=10, increments=100, displacements=[], type='modal'):
-        self.__name__ = 'ModalStep'
-        self.name = name
-        self.modes = modes
-        self.increments = increments
+        Step.__init__(self, name=name)
+
+        self.__name__      = 'ModalStep'
+        self.name          = name
+        self.modes         = modes
+        self.increments    = increments
         self.displacements = displacements
-        self.type = type
+        self.type          = type
+        self.attr_list.extend(['modes', 'increments', 'displacements', 'type'])
 
 
-class HarmonicStep(object):
+class HarmonicStep(Step):
 
     """ Initialises HarmonicStep object for use in a harmonic analysis.
 
@@ -168,19 +211,21 @@ class HarmonicStep(object):
 
     """
 
-    def __init__(self, name, freq_list, displacements=[], loads=[], factor=1.0, damping=None,
-                 type='harmonic'):
-        self.__name__ = 'HarmonicStep'
-        self.name = name
-        self.freq_list = freq_list
+    def __init__(self, name, freq_list, displacements=[], loads=[], factor=1.0, damping=None, type='harmonic'):
+        Step.__init__(self, name=name)
+
+        self.__name__      = 'HarmonicStep'
+        self.name          = name
+        self.freq_list     = freq_list
         self.displacements = displacements
-        self.loads = loads
-        self.factor = factor
-        self.damping = damping
-        self.type = type
+        self.loads         = loads
+        self.factor        = factor
+        self.damping       = damping
+        self.type          = type
+        self.attr_list.extend(['freq_list', 'displacements', 'loads', 'factor', 'damping', 'type'])
 
 
-class BucklingStep(object):
+class BucklingStep(Step):
 
     """ Initialises BucklingStep object for use in a buckling analysis.
 
@@ -209,16 +254,19 @@ class BucklingStep(object):
 
     """
 
-    def __init__(self, name, modes=10, increments=100, factor=1.0, displacements=[], loads=[], type='buckle', step=None):
-        self.__name__ = 'BucklingStep'
-        self.name = name
-        self.modes = modes
-        self.increments = increments
-        self.factor = factor
+    def __init__(self, name, modes=5, increments=100, factor=1., displacements=[], loads=[], type='buckle', step=None):
+        Step.__init__(self, name=name)
+
+        self.__name__      = 'BucklingStep'
+        self.name          = name
+        self.modes         = modes
+        self.increments    = increments
+        self.factor        = factor
         self.displacements = displacements
-        self.loads = loads
-        self.type = type
-        self.step = step
+        self.loads         = loads
+        self.type          = type
+        self.step          = step
+        self.attr_list.extend(['modes', 'increments', 'factor', 'displacements', 'loads', 'type', 'step'])
 
 
 class AcousticStep(object):

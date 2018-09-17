@@ -774,7 +774,7 @@ def plotvoxels(values, U, vdx, plot=True, indexing=None):
     Am[isnan(Am)] = 0
 
     if plot == 'vtk':
-        voxels = VtkVoxels(data=Am)
+        voxels = VtkViewer(data={'voxels': Am})
         voxels.start()
 
     return Am
