@@ -19,6 +19,8 @@ from compas.topology import dijkstra_path
 
 from compas.utilities import geometric_key
 
+from compas.datastructures import Mesh
+
 from time import time
 
 from operator import itemgetter
