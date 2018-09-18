@@ -19,8 +19,6 @@ from compas.topology import dijkstra_path
 
 from compas.utilities import geometric_key
 
-from compas.datastructures import Mesh
-
 from time import time
 
 from operator import itemgetter
@@ -95,7 +93,6 @@ __all__ = [
     'principal_stresses',
     'plotvoxels',
     'identify_ranges',
-    'mesh_from_shell_elements'
 ]
 
 
@@ -212,6 +209,62 @@ def process_data(data, dtype, iptype, nodal, elements, n):
             vn = _nodal(rows, cols, 0 if nodal == 'max' else 1, ve, n)
 
     return vn, ve
+
+
+def identify_ranges(data):
+
+    """ Identifies continuous interger series from a list and returns a list of ranges.
+
+    Parameters
+    ----------
+    data : list
+        The list of intergers to process.
+
+    Returns
+    -------
+    list
+        A list of identified ranges.
+
+    """
+
+    data.sort()
+    data = set(data)
+    ranges = []
+
+    for k, g in groupby(enumerate(data), lambda (i, x): i - x):
+        group = map(itemgetter(1), g)
+        if group[0] != group[-1]:
+            ranges.append((group[0], group[-1]))
+        else:
+            ranges.append(group[0])
+
+    return ranges
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def colorbar(fsc, input='array', type=255):
@@ -777,7 +830,7 @@ def plotvoxels(values, U, vdx, plot=True, indexing=None):
     Am[isnan(Am)] = 0
 
     if plot == 'vtk':
-        voxels = VtkVoxels(data=Am)
+        voxels = VtkViewer(data={'voxels': Am})
         voxels.start()
 
     return Am
@@ -893,75 +946,11 @@ def principal_stresses(data, ptype, scale, rotate):
     return vec1, vec5, spr_sp1, spr_sp5, pmax
 
 
-def identify_ranges(data):
-    """ Identifies continuous interger series in from list and returns a list of ranges.
-
-    Parameters
-    ----------
-    data : list
-        The list of intergers to process.
-
-    Returns
-    -------
-    list
-        A list of identified ranges.
-
-    """
-    data.sort()
-    data = set(data)
-    ranges = []
-    for k, g in groupby(enumerate(data), lambda (i, x): i - x):
-        group = map(itemgetter(1), g)
-        if group[0] != group[-1]:
-            ranges.append((group[0], group[-1]))
-        else:
-            ranges.append(group[0])
-    return ranges
-
-
-def mesh_from_shell_elements(structure):
-    """ Returns a mesh object from the shell elements in a structure.
-
-    Parameters
-    ----------
-    structure: obj
-        The structure to extract a mesh from.
-
-    Returns
-    -------
-    obj
-        A mesh object.
-    """
-    ekeys = [ek for ek in structure.elements if structure.elements[ek].__name__ == 'ShellElement']
-    nkeys = {nk for ek in ekeys for nk in structure.elements[ek].nodes}
-    mesh = Mesh()
-    for nk in nkeys:
-        x, y, z = structure.node_xyz(nk)
-        mesh.add_vertex(key=nk, x=x, y=y, z=z)
-
-    for ek in ekeys:
-        mesh.add_face(structure.elements[ek].nodes, key=ek)
-
-    return mesh
-
-
 # ==============================================================================
 # Debugging
 # ==============================================================================
 
 if __name__ == "__main__":
 
-    pass
-
-
-
-
-
-
-
-
-
-
-
-
-
+    data = [1,2,3,4,6,15,7,8,11,12,13,9,10,55,89,56,56]
+    print (identify_ranges(data))

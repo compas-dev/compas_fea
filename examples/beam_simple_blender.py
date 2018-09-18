@@ -102,7 +102,7 @@ mdl.summary()
 # Run (Abaqus)
 
 exe = '/home/al/abaqus/Commands/abaqus cae '
-mdl.analyse_and_extract(software='abaqus', exe=exe, fields=['u', 'ur', 'sf', 'sm'])
+mdl.analyse_and_extract(software='abaqus', exe=exe, fields=['u', 'ur', 'sf', 'sm'], license='research')
 
 blender.plot_data(mdl, step='step_load', field='um', radius=0.01, colorbar_size=0.3, layer=4)
 blender.plot_data(mdl, step='step_load', field='ury', radius=0.01, colorbar_size=0.3, layer=5)

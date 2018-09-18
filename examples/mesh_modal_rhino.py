@@ -57,7 +57,7 @@ mdl.summary()
 
 # Run (Abaqus)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u'])
+mdl.analyse_and_extract(software='abaqus', fields=['u'], license='research')
 
 rhino.plot_mode_shapes(mdl, step='step_modal', layer='mode-')
 

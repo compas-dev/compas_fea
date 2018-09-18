@@ -64,7 +64,7 @@ mdl.summary()
 
 # Run (Abaqus)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u'])
+mdl.analyse_and_extract(software='abaqus', fields=['u'], license='research')
 
 rhino.plot_data(mdl, step='step_load', field='um')
 rhino.plot_voxels(mdl, step='step_load', field='um', vdx=0.05)

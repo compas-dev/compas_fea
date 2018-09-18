@@ -25,6 +25,36 @@ comments = {
     'ansys':    '!',
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 middle = {
     'abaqus':   '',
     'opensees': '}\n',

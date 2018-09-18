@@ -1340,7 +1340,7 @@ Steps
         cpus : int
             Number of CPU cores to use.
         license : str
-            FE software license type (if required): 'research', 'student'.
+            FE software license type: 'research', 'student'.
 
         Returns
         -------
@@ -1349,6 +1349,8 @@ Steps
         """
 
         if software == 'abaqus':
+            if license == 'student':
+                cpus = 1
             abaq.launch_process(self, exe, cpus)
 
         elif software == 'ansys':
@@ -1371,6 +1373,8 @@ Steps
             Loads steps to extract from.
         exe : str
             Full terminal command to bypass subprocess defaults.
+        license : str
+            FE software license type: 'research', 'student'.
 
         Returns
         -------
@@ -1402,7 +1406,7 @@ Steps
         cpus : int
             Number of CPU cores to use.
         license : str
-            FE software license type (if required): 'research', 'student'.
+            FE software license type: 'research', 'student'.
 
         Returns
         -------

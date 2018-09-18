@@ -80,7 +80,7 @@ mdl.summary()
 
 # Run (Abaqus)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'cf', 's', 'rf'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'cf', 's', 'rf'], license='research')
 
 rhino.plot_data(mdl, step='step_load', field='um', radius=0.01)
 rhino.plot_data(mdl, step='step_prestress', field='smaxp', iptype='max', nodal='max', cbar=[0, 1*10**6], radius=0.01)

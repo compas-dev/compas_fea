@@ -78,7 +78,7 @@ mdl.write_input_file(software='sofistik')
 
 # Run (Abaqus)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'ur', 'sf', 'sm'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'ur', 'sf', 'sm'], license='research')
 
 rhino.plot_data(mdl, step='step_load', field='um', radius=0.01, colorbar_size=0.3)
 rhino.plot_data(mdl, step='step_load', field='ury', radius=0.01, colorbar_size=0.3)

@@ -189,6 +189,7 @@ step
 .. autosummary::
     :toctree: generated/
 
+    Step
     GeneralStep
     ModalStep
     HarmonicStep

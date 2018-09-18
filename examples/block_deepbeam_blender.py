@@ -75,7 +75,7 @@ mdl.summary()
 # Run (Abaqus)
 
 exe = '/home/al/abaqus/Commands/abaqus cae '
-mdl.analyse_and_extract(software='abaqus', exe=exe, fields=['u', 's'])
+mdl.analyse_and_extract(software='abaqus', exe=exe, fields=['u', 's'], license='research')
 
 # Plot (VtkVoxels)
 

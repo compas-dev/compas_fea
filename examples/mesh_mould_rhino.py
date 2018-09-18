@@ -83,7 +83,7 @@ mdl.summary()
 
 # Run (Abaqus)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'sf', 'rbfor'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'sf', 'rbfor'], license='research')
 
 rhino.plot_data(mdl, step='step_loads', field='um', colorbar_size=0.3)
 rhino.plot_data(mdl, step='step_loads', field='sf1', colorbar_size=0.3)

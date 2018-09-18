@@ -70,7 +70,7 @@ mdl.write_input_file(software='sofistik')
 
 # Run (Abaqus/OpenSees)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf'], license='research')
 mdl.analyse_and_extract(software='opensees', fields=['u', 'rf'])
 
 rhino.plot_data(mdl, step='step_loads', field='um', scale=50)

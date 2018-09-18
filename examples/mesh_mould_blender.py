@@ -93,7 +93,7 @@ mdl.summary()
 # Run (Abaqus)
 
 exe = '/home/al/abaqus/Commands/abaqus cae '
-mdl.analyse_and_extract(software='abaqus', exe=exe, fields=['u', 's', 'rbfor'])
+mdl.analyse_and_extract(software='abaqus', exe=exe, fields=['u', 's', 'rbfor'], license='research')
 
 blender.plot_data(mdl, step='step_loads', field='um', layer=4, colorbar_size=0.3)
 blender.plot_data(mdl, step='step_loads', field='smaxp', layer=5, colorbar_size=0.3)
