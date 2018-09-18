@@ -93,6 +93,7 @@ __all__ = [
     'principal_stresses',
     'plotvoxels',
     'identify_ranges',
+    'mesh_from_shell_elements'
 ]
 
 
@@ -944,6 +945,32 @@ def principal_stresses(data, ptype, scale, rotate):
     pmax = max([max(abs(spr_sp1)), max(abs(spr_sp5))])
 
     return vec1, vec5, spr_sp1, spr_sp5, pmax
+
+
+def mesh_from_shell_elements(structure):
+    """ Returns a mesh object from the shell elements in a structure.
+
+    Parameters
+    ----------
+    structure: obj
+        The structure to extract a mesh from.
+
+    Returns
+    -------
+    obj
+        A mesh object.
+    """
+    ekeys = [ek for ek in structure.elements if structure.elements[ek].__name__ == 'ShellElement']
+    nkeys = {nk for ek in ekeys for nk in structure.elements[ek].nodes}
+    mesh = Mesh()
+    for nk in nkeys:
+        x, y, z = structure.node_xyz(nk)
+        mesh.add_vertex(key=nk, x=x, y=y, z=z)
+
+    for ek in ekeys:
+        mesh.add_face(structure.elements[ek].nodes, key=ek)
+
+    return mesh
 
 
 # ==============================================================================
