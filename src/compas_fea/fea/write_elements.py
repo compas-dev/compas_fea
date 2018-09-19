@@ -64,7 +64,6 @@ def write_input_elements(f, software, sections, properties, elements, structure,
     f.write('{0}\n'.format(c))
 
     written_springs = []
-    written_elsets  = []
     structure.sofistik_mapping = {}
 
     for key in sorted(properties):
@@ -79,6 +78,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
         stype         = section.__name__
         geometry      = section.geometry
         material      = materials.get(property.material)
+        sets          = structure.sets
 
         # Make elsets list
 
@@ -102,30 +102,19 @@ def write_input_elements(f, software, sections, properties, elements, structure,
             if elset.startswith('element_'):
                 selection = [int(elset.strip('element_'))]
             else:
-                selection = structure.sets[elset]['selection']
+                selection = sets[elset]['selection']
 
             # Sofistik groups from sets
 
-            if (software == 'sofistik') and (elset in structure.sets):
+            if (software == 'sofistik') and (elset in sets):
 
-                set_index = structure.sets[elset]['index'] + 1
+                set_index = sets[elset]['index'] + 1
                 for i in selection:
                     entry = int(100000 * set_index + i + 1)
                     structure.sofistik_mapping[i] = entry
 
                 f.write('GRP {0} BASE {0}00000\n'.format(set_index))
                 f.write('$\n')
-
-
-
-
-
-
-
-
-
-
-
 
             # Springs
 
@@ -155,6 +144,8 @@ def write_input_elements(f, software, sections, properties, elements, structure,
             if stype != 'SpringSection':
                 f.write('{0}\n'.format(c))
 
+    # Sofistik
+
     if software == 'sofistik':
 
         f.write('END\n')
@@ -162,17 +153,16 @@ def write_input_elements(f, software, sections, properties, elements, structure,
         f.write('$\n')
 
         if reinforcement:
-            _write_sofistik_rebar(f, properties, sections, structure.sets)
+            _write_sofistik_rebar(f, properties, sections, sets)
+
+    # Abaqus
 
     elif software == 'abaqus':
 
-        cm = 9
-        for key, set in structure.sets.items():
-            stype = set['type']
+        for key, eset in sets.items():
+            stype = eset['type']
 
-            if (key not in written_elsets) and (stype != 'node'):
-
-                written_elsets.append(key)
+            if stype != 'node':
 
                 f.write('** {0}\n'.format(key))
                 f.write('** ' + '-' * len(key) + '\n')
@@ -188,16 +178,20 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                         f.write('*SURFACE, TYPE=NODE, NAME={0}\n'.format(key))
                         f.write('**\n')
 
-                    selection = [i + 1 for i in set['selection']]
                     cnt = 0
+                    selection = [i + 1 for i in eset['selection']]
+
                     for j in selection:
                         f.write(str(j))
-                        if (cnt < cm) and (j != selection[-1]):
+
+                        if (cnt < 9) and (j != selection[-1]):
                             f.write(',')
                             cnt += 1
-                        elif cnt >= cm:
+
+                        elif cnt >= 9:
                             f.write('\n')
                             cnt = 0
+
                         else:
                             f.write('\n')
 
@@ -206,14 +200,115 @@ def write_input_elements(f, software, sections, properties, elements, structure,
                     f.write('*SURFACE, TYPE=ELEMENT, NAME={0}\n'.format(key))
                     f.write('** ELEMENT, SIDE\n')
 
-                    selection = set['selection']
-                    for element, sides in selection.items():
+                    for element, sides in eset['selection'].items():
                         for side in sides:
                             f.write('{0}, {1}'.format(element + 1, side))
                             f.write('\n')
 
                 f.write('**\n')
                 f.write('**\n')
+
+    # OpenSees
+
+    elif software == 'opensees':
+
+        pass
+
+    # Ansys
+
+    elif software == 'ansys':
+
+        pass
+
+
+def _write_trusses(f, selection, software, elements, section, material, elset):
+
+    A = section.geometry['A']
+
+    # Write headings
+
+    if software == 'abaqus':
+
+        f.write('*SOLID SECTION, ELSET={0}, MATERIAL={1}\n'.format(elset, material.name))
+        f.write('{0}\n'.format(A))
+        f.write('**\n')
+        f.write('*ELEMENT, TYPE=T3D2, ELSET={0}\n'.format(elset))
+        f.write('**\n')
+
+    elif software == 'sofistik':
+
+        if material.__name__ in ['Steel']:  # add other materials that yield
+            Ny = A * material.fy / 1000.
+            tag = 'YIEL'
+        else:
+            Ny = tag = ''
+
+        f.write('TRUS NO NA NE NCS {0}'.format(tag))
+        f.write('\n$\n')
+
+    elif software == 'opensees':
+
+        pass
+
+    elif software == 'ansys':
+
+        pass
+
+    # Write elements
+
+    for select in selection:
+
+        n = select + 1
+        sp, ep = elements[select].nodes
+        i = sp + 1
+        j = ep + 1
+
+        if software == 'abaqus':
+
+            f.write('{0}, {1},{2}\n'.format(n, i, j))
+
+        elif software == 'sofistik':
+
+            f.write('{0} {1} {2} {3} {4}\n'.format(n, i, j, section.index + 1, Ny))
+
+        elif software == 'opensees':
+
+            f.write('element corotTruss {0} {1} {2} {3} {4}\n'.format(n, i, j, A, material.index + 1))
+
+        elif software == 'ansys':
+
+            pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 abaqus_data = {
@@ -512,60 +607,6 @@ def _write_beams(f, software, elements, selection, geometry, material, section_i
         elif software == 'sofistik':
 
             f.write('BEAM NO {0} NA {1} NE {2} NCS {3}\n'.format(n, i, j, section_index))
-
-        elif software == 'ansys':
-
-            pass
-
-
-def _write_trusses(f, selection, software, elements, section, material, elset):
-
-
-    A = section.geometry['A']
-
-    if software == 'abaqus':
-
-        f.write('*SOLID SECTION, ELSET={0}, MATERIAL={1}\n'.format(elset, material.name))
-        f.write('{0}\n'.format(A))
-        f.write('**\n')
-        f.write('*ELEMENT, TYPE=T3D2, ELSET={0}\n'.format(elset))
-        f.write('**\n')
-
-    elif software == 'sofistik':
-
-        f.write('TRUS NO NA NE NCS')
-        if material.__name__ in ['Steel']:
-            Ny = A * material.fy / 1000.
-            f.write(' YIEL')
-        else:
-            Ny = None
-        f.write('\n$\n')
-
-    elif software == 'opensees':
-
-        pass
-
-    for select in selection:
-
-        sp, ep = elements[select].nodes
-        n = select + 1
-        i = sp + 1
-        j = ep + 1
-
-        if software == 'abaqus':
-
-            f.write('{0}, {1},{2}\n'.format(n, i, j))
-
-        elif software == 'sofistik':
-
-            if Ny:
-                f.write('{0} {1} {2} {3} {4}\n'.format(n, i, j, section.index + 1, Ny))
-            else:
-                f.write('{0} {1} {2} {3}\n'.format(n, i, j, section.index + 1))
-
-        elif software == 'opensees':
-
-            f.write('element corotTruss {0} {1} {2} {3} {4}\n'.format(n, i, j, A, material.index + 1))
 
         elif software == 'ansys':
 

@@ -244,32 +244,6 @@ def identify_ranges(data):
     return ranges
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def colorbar(fsc, input='array', type=255):
 
     """ Creates RGB color information from -1 to 1 scaled values.
@@ -295,16 +269,46 @@ def colorbar(fsc, input='array', type=255):
     b = -(fsc - 0.25) * 2
 
     if input == 'array':
+
         rgb = hstack([r, g, b])
         rgb[rgb > 1] = 1
         rgb[rgb < 0] = 0
+
         return rgb * type
 
     elif input == 'float':
+
         r = max([0, min([1, r])])
         g = max([0, min([1, g])])
         b = max([0, min([1, b])])
+
         return [i * type for i in [r, g, b]]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def combine_all_sets(sets_a, sets_b):

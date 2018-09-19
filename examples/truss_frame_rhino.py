@@ -63,8 +63,10 @@ mdl.add_loads([
 
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements=['disp_pinned']),
-    GeneralStep(name='step_loads', loads=['load_v', 'load_h', 'load_gravity'], factor=1.5, increments=300)])
+    GeneralStep(name='step_loads', loads=['load_v', 'load_h', 'load_gravity'], factor=1.5, increments=300, nlmat=False)])
 mdl.steps_order = ['step_bc', 'step_loads']
+
+# Note: nlmat=False is needed/used only for Sofistik
 
 # Summary
 
@@ -76,10 +78,12 @@ mdl.write_input_file(software='sofistik')
 
 # Run (Abaqus)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 's'], license='research')
+mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'cf', 'rf'], license='research')
 
 rhino.plot_data(mdl, step='step_loads', field='um', radius=0.1, scale=10, colorbar_size=0.3)
 rhino.plot_data(mdl, step='step_loads', field='smises', iptype='max', nodal='max', radius=0.1, colorbar_size=0.3)
+rhino.plot_reaction_forces(mdl, step='step_loads', scale=0.05)
+rhino.plot_concentrated_forces(mdl, step='step_loads', scale=0.05)
 
 # Run (OpenSees)
 

@@ -56,6 +56,7 @@ rhino
     plot_voxels
     plot_principal_stresses
     plot_reaction_forces
+    plot_concentrated_forces
 
 
 """

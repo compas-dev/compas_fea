@@ -46,7 +46,7 @@ mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
 
 # Loads
 
-mdl.add_load(PointLoad(name='load_top', nodes='nset_top', z=-100*10**3))
+mdl.add_load(PointLoad(name='load_top', nodes='nset_top', x=2000, y=1000, z=-100000))
 
 # Steps
 
@@ -76,7 +76,7 @@ print(mdl.get_element_results(step='step_load', field='sf1', elements=[10, 12]))
 # Run (Abaqus)
 # Note: Abaqus returns stress data 'sxx' for truss elements, not section forces 'sfx'.
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 's'], license='research')
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 's', 'cf'], license='research')
 
 rhino.plot_data(mdl, step='step_load', field='sxx')
 print(mdl.get_element_results(step='step_load', field='sxx', elements=[10, 12]))
@@ -84,7 +84,9 @@ print(mdl.get_element_results(step='step_load', field='sxx', elements=[10, 12]))
 rhino.plot_data(mdl, step='step_load', field='rfm')
 print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))
 
-rhino.plot_reaction_forces(mdl, step='step_load', scale=0.1)
+rhino.plot_reaction_forces(mdl, step='step_load', scale=0.05)
+
+rhino.plot_concentrated_forces(mdl, step='step_load', scale=0.05)
 
 # Save
 

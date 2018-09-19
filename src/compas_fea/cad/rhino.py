@@ -56,6 +56,7 @@ __all__ = [
     'plot_voxels',
     'plot_principal_stresses',
     'plot_reaction_forces',
+    'plot_concentrated_forces',
 ]
 
 
@@ -371,13 +372,14 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
     layer : str
         Layer name for plotting.
     scale : float
-        Scale on displacements for the deformed plot.
+        Scale of the arrows.
 
     Returns
     -------
     None
 
     """
+
     if not layer:
         layer = '{0}-{1}'.format(step, 'reactions')
     rs.CurrentLayer(rs.AddLayer(layer))
@@ -390,19 +392,69 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
 
     nkeys = rfx.keys()
     v = [scale_vector([rfx[i], rfy[i], rfz[i]], -scale * 0.001) for i in nkeys]
+    rm = [length_vector(i) for i in v]
+    rmax = max(rm)
     nodes = structure.nodes_xyz(nkeys)
 
     for i in nkeys:
-        if length_vector(v[i]):
+        if rm[i]:
             l = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
             rs.CurveArrows(l, 1)
+            col = [int(j) for j in colorbar(rm[i] / rmax, input='float', type=255)]
+            rs.ObjectColor(l, col)
 
     rs.CurrentLayer(rs.AddLayer('Default'))
     rs.LayerVisible(layer, False)
     rs.EnableRedraw(True)
 
 
+def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
 
+    """ Plots concentrated forces forces for the Structure analysis results.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    layer : str
+        Layer name for plotting.
+    scale : float
+        Scale of the arrows.
+
+    Returns
+    -------
+    None
+
+    """
+
+    if not layer:
+        layer = '{0}-{1}'.format(step, 'forces')
+    rs.CurrentLayer(rs.AddLayer(layer))
+    rs.DeleteObjects(rs.ObjectsByLayer(layer))
+    rs.EnableRedraw(False)
+
+    cfx = structure.results[step]['nodal']['cfx']
+    cfy = structure.results[step]['nodal']['cfy']
+    cfz = structure.results[step]['nodal']['cfz']
+
+    nkeys = cfx.keys()
+    v = [scale_vector([cfx[i], cfy[i], cfz[i]], -scale * 0.001) for i in nkeys]
+    rm = [length_vector(i) for i in v]
+    rmax = max(rm)
+    nodes = structure.nodes_xyz(nkeys)
+
+    for i in nkeys:
+        if rm[i]:
+            l = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
+            rs.CurveArrows(l, 1)
+            col = [int(j) for j in colorbar(rm[i] / rmax, input='float', type=255)]
+            rs.ObjectColor(l, col)
+
+    rs.CurrentLayer(rs.AddLayer('Default'))
+    rs.LayerVisible(layer, False)
+    rs.EnableRedraw(True)
 
 
 
