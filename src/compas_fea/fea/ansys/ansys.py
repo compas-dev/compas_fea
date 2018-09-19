@@ -98,7 +98,7 @@ def make_command_file_acoustic(structure, output_path, filename, skey):
     write_acoustic_analysis_request(structure, output_path, filename, skey)
 
 
-def ansys_launch_process(path, name, cpus, license='teaching', delete=True):
+def ansys_launch_process(path, name, cpus=2, license='teaching', delete=True):
     """ Launches an analysis using Ansys.
 
     Parameters:
