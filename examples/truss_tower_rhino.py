@@ -84,6 +84,8 @@ print(mdl.get_element_results(step='step_load', field='sxx', elements=[10, 12]))
 rhino.plot_data(mdl, step='step_load', field='rfm')
 print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))
 
+rhino.plot_reaction_forces(mdl, step='step_load', scale=0.1)
+
 # Save
 
 mdl.save_to_obj()

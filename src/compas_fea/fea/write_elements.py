@@ -25,6 +25,197 @@ comments = {
     'ansys':    '!',
 }
 
+
+def write_input_elements(f, software, sections, properties, elements, structure, materials):
+
+    """ Writes the element and section information to the input file.
+
+    Parameters
+    ----------
+    f : obj
+        The open file object for the input file.
+    software : str
+        Analysis software or library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
+    sections : dict
+        Section objects from structure.sections.
+    properties : dict
+        ElementProperties objects from structure.element_properties.
+    elements : dict
+        Element objects from structure.elements.
+    structure : obj
+        The Structure object.
+    materials : dic
+        Material objects from structure.materials.
+
+    Returns
+    -------
+    None
+
+    """
+
+    c = comments[software]
+
+    shells  = ['ShellSection']
+    solids  = ['SolidSection']
+    trusses = ['TrussSection', 'StrutSection', 'TieSection']
+
+    f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
+    f.write('{0} -------------------------------------------------------------------- Elements\n'.format(c))
+    f.write('{0}\n'.format(c))
+
+    written_springs = []
+    written_elsets  = []
+    structure.sofistik_mapping = {}
+
+    for key in sorted(properties):
+
+        # Extract key data
+
+        property      = properties[key]
+        reinforcement = property.reinforcement
+        elsets        = property.elsets
+        section       = sections[property.section]
+        section_index = section.index + 1
+        stype         = section.__name__
+        geometry      = section.geometry
+        material      = materials.get(property.material)
+
+        # Make elsets list
+
+        if property.elements:
+            elset  = 'elset_{0}'.format(key)
+            elsets = [elset]
+            structure.add_set(name=elset, type='element', selection=property.elements)
+        else:
+            if isinstance(elsets, str):
+                elsets = [elsets]
+
+        # if not (stype == 'SpringSection' and property.elsets.startswith('element_')):
+        #     f.write('{0} Property: {1}\n'.format(c, key))
+        #     f.write('{0} ----------'.format(c) + '-' * (len(key)) + '\n')
+        #     f.write('{0}\n'.format(c))
+
+        for elset in elsets:
+
+            # Extract selection
+
+            if elset.startswith('element_'):
+                selection = [int(elset.strip('element_'))]
+            else:
+                selection = structure.sets[elset]['selection']
+
+            # Sofistik groups from sets
+
+            if (software == 'sofistik') and (elset in structure.sets):
+
+                set_index = structure.sets[elset]['index'] + 1
+                for i in selection:
+                    entry = int(100000 * set_index + i + 1)
+                    structure.sofistik_mapping[i] = entry
+
+                f.write('GRP {0} BASE {0}00000\n'.format(set_index))
+                f.write('$\n')
+
+
+
+
+
+
+
+
+
+
+
+
+            # Springs
+
+            if stype == 'SpringSection':
+                _write_springs(f, software, selection, elements, section, written_springs)
+
+            # Beam sections
+
+            elif stype not in shells + solids + trusses:
+                _write_beams(f, software, elements, selection, geometry, material, section_index, stype, elset)
+
+            # Truss sections
+
+            elif stype in trusses:
+                _write_trusses(f, selection, software, elements, section, material, elset)
+
+            # Shell sections
+
+            elif stype in shells:
+                _write_shells(f, software, selection, elements, geometry, material, materials, reinforcement, c)
+
+            # Solid sections
+
+            elif stype in solids:
+                _write_blocks(f, software, selection, elements, material, c)
+
+            if stype != 'SpringSection':
+                f.write('{0}\n'.format(c))
+
+    if software == 'sofistik':
+
+        f.write('END\n')
+        f.write('$\n')
+        f.write('$\n')
+
+        if reinforcement:
+            _write_sofistik_rebar(f, properties, sections, structure.sets)
+
+    elif software == 'abaqus':
+
+        cm = 9
+        for key, set in structure.sets.items():
+            stype = set['type']
+
+            if (key not in written_elsets) and (stype != 'node'):
+
+                written_elsets.append(key)
+
+                f.write('** {0}\n'.format(key))
+                f.write('** ' + '-' * len(key) + '\n')
+                f.write('**\n')
+
+                if stype in ['element', 'surface_node']:
+
+                    if stype == 'element':
+                        f.write('*ELSET, ELSET={0}\n'.format(key))
+                        f.write('**\n')
+
+                    elif stype == 'surface_node':
+                        f.write('*SURFACE, TYPE=NODE, NAME={0}\n'.format(key))
+                        f.write('**\n')
+
+                    selection = [i + 1 for i in set['selection']]
+                    cnt = 0
+                    for j in selection:
+                        f.write(str(j))
+                        if (cnt < cm) and (j != selection[-1]):
+                            f.write(',')
+                            cnt += 1
+                        elif cnt >= cm:
+                            f.write('\n')
+                            cnt = 0
+                        else:
+                            f.write('\n')
+
+                if stype == 'surface_element':
+
+                    f.write('*SURFACE, TYPE=ELEMENT, NAME={0}\n'.format(key))
+                    f.write('** ELEMENT, SIDE\n')
+
+                    selection = set['selection']
+                    for element, sides in selection.items():
+                        for side in sides:
+                            f.write('{0}, {1}'.format(element + 1, side))
+                            f.write('\n')
+
+                f.write('**\n')
+                f.write('**\n')
+
+
 abaqus_data = {
     'AngleSection':       {'name': 'L',           'geometry': ['b', 'h', 't', 't']},
     'BoxSection':         {'name': 'BOX',         'geometry': ['b', 'h', 'tw', 'tf', 'tw', 'tf']},
@@ -79,182 +270,6 @@ def _write_sofistik_sections(f, properties, materials, sections):
                 f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, 0, mindex))
 
             f.write('$\n')
-
-
-def write_input_elements(f, software, sections, properties, elements, structure, materials):
-
-    """ Writes the element and section information to the input file.
-
-    Parameters
-    ----------
-    f : obj
-        The open file object for the input file.
-    software : str
-        Analysis software or library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
-    sections : dic
-        Section objects from structure.sections.
-    properties : dic
-        ElementProperties objects from structure.element_properties.
-    elements : dic
-        Element objects from structure.elements.
-    structure : obj
-        The Structure object.
-    materials : dic
-        Material objects from structure.materials.
-
-    Returns
-    -------
-    None
-
-    """
-
-    c = comments[software]
-
-    shells = ['ShellSection']
-    solids = ['SolidSection']
-    trusses = ['TrussSection', 'StrutSection', 'TieSection']
-
-    f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
-    f.write('{0} -------------------------------------------------------------------- Elements\n'.format(c))
-    f.write('{0}\n'.format(c))
-
-    is_rebar = False
-    written_springs = []
-    written_elsets = []
-    structure.sofistik_mapping = {}
-
-    for key in sorted(properties):
-        property = properties[key]
-
-        section = sections[property.section]
-        section_index = section.index + 1
-        stype = section.__name__
-        geometry = section.geometry
-        material = materials.get(property.material, None)
-        reinforcement = property.reinforcement
-        if reinforcement:
-            is_rebar = True
-
-        if property.elements:
-            elset = 'elset_{0}'.format(key)
-            elsets = [elset]
-            structure.add_set(name=elset, type='element', selection=property.elements)
-        else:
-            elsets = property.elsets
-            if isinstance(elsets, str):
-                elsets = [elsets]
-
-        if not (stype == 'SpringSection' and property.elsets.startswith('element_')):
-            f.write('{0} Property: {1}\n'.format(c, key))
-            f.write('{0} ----------'.format(c) + '-' * (len(key)) + '\n')
-            f.write('{0}\n'.format(c))
-
-        for elset in elsets:
-
-            if property.elements:
-                selection = property.elements
-            else:
-                if elset.startswith('element_'):
-                    selection = [int(elset.strip('element_'))]
-                else:
-                    selection = structure.sets[elset]['selection']
-
-            if software == 'sofistik':
-                if elset in structure.sets:
-                    set_index = structure.sets[elset]['index'] + 1
-                    for i in selection:
-                        entry = int(100000 * set_index + i + 1)
-                        structure.sofistik_mapping[i] = entry
-                    f.write('GRP {0} BASE {0}00000\n'.format(set_index))
-                    f.write('$\n')
-
-            # Springs
-
-            if stype == 'SpringSection':
-                _write_springs(f, software, selection, elements, section, written_springs)
-
-            # Beam sections
-
-            elif stype not in shells + solids + trusses:
-                _write_beams(f, software, elements, selection, geometry, material, section_index, stype, elset)
-
-            # Truss sections
-
-            elif stype in trusses:
-                _write_trusses(f, selection, software, elements, section, material, elset)
-
-            # Shell sections
-
-            elif stype in shells:
-                _write_shells(f, software, selection, elements, geometry, material, materials, reinforcement, c)
-
-            # Solid sections
-
-            elif stype in solids:
-                _write_blocks(f, software, selection, elements, material, c)
-
-            if stype != 'SpringSection':
-                f.write('{0}\n'.format(c))
-
-    if software == 'sofistik':
-
-        f.write('END\n')
-        f.write('$\n')
-        f.write('$\n')
-
-        if is_rebar:
-            _write_sofistik_rebar(f, properties, sections, structure.sets)
-
-    elif software == 'abaqus':
-
-        cm = 9
-        for key, set in structure.sets.items():
-            stype = set['type']
-
-            if (key not in written_elsets) and (stype != 'node'):
-
-                written_elsets.append(key)
-
-                f.write('** {0}\n'.format(key))
-                f.write('** ' + '-' * len(key) + '\n')
-                f.write('**\n')
-
-                if stype in ['element', 'surface_node']:
-
-                    if stype == 'element':
-                        f.write('*ELSET, ELSET={0}\n'.format(key))
-                        f.write('**\n')
-
-                    elif stype == 'surface_node':
-                        f.write('*SURFACE, TYPE=NODE, NAME={0}\n'.format(key))
-                        f.write('**\n')
-
-                    selection = [i + 1 for i in set['selection']]
-                    cnt = 0
-                    for j in selection:
-                        f.write(str(j))
-                        if (cnt < cm) and (j != selection[-1]):
-                            f.write(',')
-                            cnt += 1
-                        elif cnt >= cm:
-                            f.write('\n')
-                            cnt = 0
-                        else:
-                            f.write('\n')
-
-                if stype == 'surface_element':
-
-                    f.write('*SURFACE, TYPE=ELEMENT, NAME={0}\n'.format(key))
-                    f.write('** ELEMENT, SIDE\n')
-
-                    selection = set['selection']
-                    for element, sides in selection.items():
-                        for side in sides:
-                            f.write('{0}, {1}'.format(element + 1, side))
-                            f.write('\n')
-
-                f.write('**\n')
-                f.write('**\n')
 
 
 def _write_sofistik_rebar(f, properties, sections, sets):

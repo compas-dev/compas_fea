@@ -15,6 +15,7 @@ except:
 
 from compas.geometry import add_vectors
 from compas.geometry import cross_vectors
+from compas.geometry import length_vector
 from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
 
@@ -54,6 +55,7 @@ __all__ = [
     'plot_data',
     'plot_voxels',
     'plot_principal_stresses',
+    'plot_reaction_forces',
 ]
 
 
@@ -356,46 +358,9 @@ def ordered_network(structure, network, layer):
     return network_order(start=start, structure=structure, network=network)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def plot_reaction_forces(structure, step, layer=None, scale=1.0):
-    """ Plots reaction forces of the Structure.
+
+    """ Plots reaction forces for the Structure analysis results.
 
     Parameters
     ----------
@@ -423,24 +388,56 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
     rfy = structure.results[step]['nodal']['rfy']
     rfz = structure.results[step]['nodal']['rfz']
 
-    nkeys = structure.results[step]['nodal']['rfx'].keys()
-    v = [scale_vector([rfx[i], rfy[i], rfz[i]], -scale) for i in nkeys]
+    nkeys = rfx.keys()
+    v = [scale_vector([rfx[i], rfy[i], rfz[i]], -scale * 0.001) for i in nkeys]
     nodes = structure.nodes_xyz(nkeys)
 
-    # try:
-    for i in range(len(v)):
-        if nodes[i] != add_vectors(nodes[i], v[i]):
+    for i in nkeys:
+        if length_vector(v[i]):
             l = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
             rs.CurveArrows(l, 1)
-
-    # Return to Default layer
 
     rs.CurrentLayer(rs.AddLayer('Default'))
     rs.LayerVisible(layer, False)
     rs.EnableRedraw(True)
 
-    # except:
-    #     print('\n***** Error encountered during data processing or plotting *****')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iterations=50, refine=True):
