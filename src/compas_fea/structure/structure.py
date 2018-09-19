@@ -752,7 +752,7 @@ Steps
             elements = element_property.elements
 
         for element in elements:
-            self.elements[element].element_property = element_property.index
+            self.elements[element].element_property = element_property.name
 
 # ==============================================================================
 # sets
