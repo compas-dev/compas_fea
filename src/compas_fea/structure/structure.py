@@ -741,6 +741,19 @@ Steps
                 self.sets['virtual_elements'] = {'type': 'virtual_element', 'selection': [ekey], 'index': len(self.sets)}
 
         return ekey
+
+    def assign_element_property(self, element_property):
+
+        if element_property.elsets:
+            elements = []
+            for elset in element_property.elsets:
+                elements.extend(self.sets[elset]['selection'])
+        else:
+            elements = element_property.elements
+
+        for element in elements:
+            self.elements[element].element_property = element_property.index
+
 # ==============================================================================
 # sets
 # ==============================================================================
@@ -1058,9 +1071,11 @@ Steps
             for element_property in element_properties:
                 element_property.index = len(self.element_properties)
                 self.element_properties[element_property.name] = element_property
+                self.assign_element_property(element_property)
         else:
             element_properties.index = len(self.element_properties)
             self.element_properties[element_properties.name] = element_properties
+            self.assign_element_property(element_properties)
 
     def add_interaction(self, interaction):
 

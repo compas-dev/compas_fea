@@ -54,18 +54,19 @@ class Element(object):
 
     def __init__(self, nodes=[], number=None, thermal=None, axes={}):
 
-        self.__name__ = 'Element'
-        self.nodes    = nodes
-        self.number   = number
-        self.thermal  = thermal
-        self.axes     = axes
+        self.__name__         = 'Element'
+        self.nodes            = nodes
+        self.number           = number
+        self.thermal          = thermal
+        self.axes             = axes
+        self.element_property = None
 
     def __str__(self):
 
         print('compas_fea {0} object'.format(self.__name__))
         print('-' * (len(self.__name__) + 18))
 
-        for attr in ['nodes', 'number', 'thermal', 'axes']:
+        for attr in ['nodes', 'number', 'thermal', 'axes', 'element_property']:
             print('{0:<10} : {1}'.format(attr, getattr(self, attr)))
 
         return ''
