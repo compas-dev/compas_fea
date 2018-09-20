@@ -70,9 +70,11 @@ mdl.write_input_file(software='sofistik')
 
 # Run (Abaqus/OpenSees)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf'], license='research')
 mdl.analyse_and_extract(software='opensees', fields=['u', 'rf'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 'cf'], license='research')
 
 rhino.plot_data(mdl, step='step_loads', field='um', scale=50)
+rhino.plot_reaction_forces(mdl, step='step_loads', scale=0.1)
+rhino.plot_concentrated_forces(mdl, step='step_loads', scale=0.1)
 
 print(mdl.get_nodal_results(step='step_loads', field='rfm', nodes='nset_pins'))

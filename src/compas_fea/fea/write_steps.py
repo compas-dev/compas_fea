@@ -916,7 +916,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                 # else:
                     # f.write('REIQ LCR {0}\n'.format(step_index))
 
-                f.write('REIQ LCR {0}\n'.format(step_index))
+                if has_concrete:
+                    f.write('REIQ LCR {0}\n'.format(step_index))
                 f.write('$\n')
 
                 DLX, DLY, DLZ = 0, 0, 0

@@ -25,6 +25,20 @@ comments = {
     'ansys':    '!',
 }
 
+abaqus_data = {
+    'AngleSection':       {'name': 'L',           'geometry': ['b', 'h', 't', 't']},
+    'BoxSection':         {'name': 'BOX',         'geometry': ['b', 'h', 'tw', 'tf', 'tw', 'tf']},
+    'CircularSection':    {'name': 'CIRC',        'geometry': ['r']},
+    'ISection':           {'name': 'I',           'geometry': ['c', 'h', 'b', 'b', 'tf', 'tf', 'tw']},
+    'PipeSection':        {'name': 'PIPE',        'geometry': ['r', 't']},
+    'RectangularSection': {'name': 'RECTANGULAR', 'geometry': ['b', 'h']},
+    'TrapezoidalSection': {'name': 'TRAPEZOID',   'geometry': ['b1', 'h', 'b2', 'c']},
+    'GeneralSection':     {'name': 'GENERAL',     'geometry': ['A', 'I11', 'I12', 'I22', 'J', 'g0', 'gw']},
+    'ShellSection':       {'name': None,          'geometry': ['t']},
+    'SolidSection':       {'name': None,          'geometry': None},
+    'TrussSection':       {'name': None,          'geometry': ['A']},
+}
+
 
 def write_input_elements(f, software, sections, properties, elements, structure, materials):
 
@@ -124,7 +138,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
             # Beam sections
 
             elif stype not in shells + solids + trusses:
-                _write_beams(f, software, elements, selection, geometry, material, section_index, stype, elset)
+                _write_beams(f, software, elements, selection, geometry, material, section_index, stype)
 
             # Truss sections
 
@@ -134,7 +148,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
             # Shell sections
 
             elif stype in shells:
-                _write_shells(f, software, selection, elements, geometry, material, materials, reinforcement, c)
+                _write_shells(f, software, selection, elements, geometry, material, materials, reinforcement)
 
             # Solid sections
 
@@ -221,6 +235,52 @@ def write_input_elements(f, software, sections, properties, elements, structure,
         pass
 
 
+def _write_beams(f, software, elements, selection, geometry, material, section_index, stype):
+
+    for select in selection:
+
+        element = elements[select]
+        sp, ep = element.nodes
+        n  = select + 1
+        i  = sp + 1
+        j  = ep + 1
+        ex = element.axes.get('ex', None)
+
+        if software == 'abaqus':
+
+            e1 = 'element_{0}'.format(select)
+            f.write('*ELEMENT, TYPE=B31, ELSET={0}\n'.format(e1))
+            f.write('{0}, {1},{2}\n'.format(n, i, j))
+            f.write('*BEAM GENERAL SECTION' if stype == 'GeneralSection' else '*BEAM SECTION')
+            f.write(', SECTION={0}, ELSET={1}, MATERIAL={2}\n'.format(abaqus_data[stype]['name'], e1, material.name))
+            f.write(', '.join([str(geometry[k]) for k in abaqus_data[stype]['geometry']]) + '\n')
+            if ex:
+                f.write(', '.join([str(k) for k in ex]) + '\n')
+            f.write('**\n')
+
+        elif software == 'opensees':
+
+            A   = geometry['A']
+            E   = material.E['E']
+            G   = material.G['G']
+            J   = geometry['J']
+            Ixx = geometry['Ixx']
+            Iyy = geometry['Iyy']
+            et  = 'element elasticBeamColumn'
+
+            f.write('geomTransf Corotational {0} {1} {2} {3}\n'.format(n, ex[0], ex[1], ex[2]))
+            f.write('{} {} {} {} {} {} {} {} {} {} {}\n'.format(et, n, i, j, A, E, G, J, Ixx, Iyy, n))
+            f.write('#\n')
+
+        elif software == 'sofistik':
+
+            f.write('BEAM NO {0} NA {1} NE {2} NCS {3}\n'.format(n, i, j, section_index))
+
+        elif software == 'ansys':
+
+            pass
+
+
 def _write_trusses(f, selection, software, elements, section, material, elset):
 
     A = section.geometry['A']
@@ -280,6 +340,74 @@ def _write_trusses(f, selection, software, elements, section, material, elset):
             pass
 
 
+def _write_shells(f, software, selection, elements, geometry, material, materials, reinforcement):
+
+    for select in selection:
+
+        element = elements[select]
+        nodes   = element.nodes
+        n  = select + 1
+        t  = geometry['t']
+        ex = element.axes.get('ex', None)
+        ey = element.axes.get('ey', None)
+
+        if software == 'abaqus':
+
+            e1 = 'element_{0}'.format(select)
+            f.write('*ELEMENT, TYPE={0}, ELSET={1}\n'.format('S3' if len(nodes) == 3 else 'S4', e1))
+            f.write('{0}, {1}\n'.format(n, ','.join([str(i + 1) for i in nodes])))
+
+            if ex and ey:
+                ori = 'ORI_element_{0}'.format(select)
+                f.write('*ORIENTATION, NAME={0}\n'.format(ori))
+                f.write(', '.join([str(j) for j in ex]) + ', ')
+                f.write(', '.join([str(j) for j in ey]) + '\n')
+                f.write('**\n')
+            else:
+                ori = None
+
+            f.write('*SHELL SECTION, ELSET={0}, MATERIAL={1}'.format(e1, material.name))
+            if ori:
+                f.write(', ORIENTATION={0}\n'.format(ori))
+            else:
+                f.write('\n'.format(t))
+            f.write('{0}\n'.format(t))
+
+            if reinforcement:
+                f.write('*REBAR LAYER\n')
+                for name, rebar in reinforcement.items():
+                    pos     = rebar['pos']
+                    spacing = rebar['spacing']
+                    rmat    = rebar['material']
+                    angle   = rebar['angle']
+                    dia     = rebar['dia']
+                    area    = 0.25 * pi * dia**2
+                    f.write('{0}, {1}, {2}, {3}, {4}, {5}\n'.format(name, area, spacing, pos, rmat, angle))
+
+        elif software == 'opensees':
+
+            f.write('section PlateFiber {0} {1} {2}\n'.format(n, material.index + 101, t))
+            shell = 'ShellNLDKGT' if len(nodes) == 3 else 'ShellNLDKGQ'
+            f.write('element {0} {1} {2} {1}\n'.format(shell, n, ' '.join([str(i + 1) for i in nodes])))
+
+        elif software == 'sofistik':
+
+            nn = len(nodes)
+            if nn == 3:
+                raise NotImplementedError
+            elif nn == 4:
+                f.write('QUAD NO N1 N2 N3 N4 MNO T1 T2 T3 T4 {0}\n'.format('MRF' if reinforcement else ''))
+
+            data = [str(n)] + [str(i + 1) for i in nodes] + [str(material.index + 1)] + ['{0}[m]'.format(t)] * nn
+            if reinforcement:
+                data.append(str(materials[list(reinforcement.values())[0]['material']].index + 1))
+            f.write('{0}\n'.format(' '.join(data)))
+
+        elif software == 'ansys':
+
+            pass
+
+        f.write('{0}\n'.format(comments[software]))
 
 
 
@@ -311,19 +439,7 @@ def _write_trusses(f, selection, software, elements, section, material, elset):
 
 
 
-abaqus_data = {
-    'AngleSection':       {'name': 'L',           'geometry': ['b', 'h', 't', 't']},
-    'BoxSection':         {'name': 'BOX',         'geometry': ['b', 'h', 'tw', 'tf', 'tw', 'tf']},
-    'CircularSection':    {'name': 'CIRC',        'geometry': ['r']},
-    'ISection':           {'name': 'I',           'geometry': ['c', 'h', 'b', 'b', 'tf', 'tf', 'tw']},
-    'PipeSection':        {'name': 'PIPE',        'geometry': ['r', 't']},
-    'RectangularSection': {'name': 'RECTANGULAR', 'geometry': ['b', 'h']},
-    'TrapezoidalSection': {'name': 'TRAPEZOID',   'geometry': ['b1', 'h', 'b2', 'c']},
-    'GeneralSection':     {'name': 'GENERAL',     'geometry': ['A', 'I11', 'I12', 'I22', 'J', 'g0', 'gw']},
-    'ShellSection':       {'name': None,          'geometry': ['t']},
-    'SolidSection':       {'name': None,          'geometry': None},
-    'TrussSection':       {'name': None,          'geometry': ['A']},
-}
+
 
 
 def _write_sofistik_sections(f, properties, materials, sections):
@@ -485,132 +601,10 @@ def _write_blocks(f, software, selection, elements, material, c):
         f.write('{0}\n'.format(c))
 
 
-def _write_shells(f, software, selection, elements, geometry, material, materials, reinforcement, c):
-
-    for select in selection:
-
-        element = elements[select]
-        nodes = element.nodes
-        ni = select + 1
-        t = geometry['t']
-        ex = element.axes.get('ex', None)
-        ey = element.axes.get('ey', None)
-
-        if software == 'abaqus':
-
-            etype = 'S3' if len(nodes) == 3 else 'S4'
-            e1 = 'element_{0}'.format(select)
-            f.write('*ELEMENT, TYPE={0}, ELSET={1}\n'.format(etype, e1))
-            f.write('{0}, {1}\n'.format(ni, ','.join([str(i + 1) for i in nodes])))
-
-            if ex and ey:
-                ori = 'ORI_element_{0}'.format(select)
-                f.write('*ORIENTATION, NAME={0}\n'.format(ori))
-                f.write(', '.join([str(j) for j in ex]) + ', ')
-                f.write(', '.join([str(j) for j in ey]) + '\n')
-                f.write('**\n')
-            else:
-                ori = None
-
-            f.write('*SHELL SECTION, ELSET={0}, MATERIAL={1}'.format(e1, material.name))
-            if ori:
-                f.write(', ORIENTATION={0}\n'.format(ori))
-            else:
-                f.write('\n'.format(t))
-            f.write('{0}\n'.format(t))
-
-            if reinforcement:
-                f.write('*REBAR LAYER\n')
-                for name, rebar in reinforcement.items():
-                    pos     = rebar['pos']
-                    spacing = rebar['spacing']
-                    rmat    = rebar['material']
-                    angle   = rebar['angle']
-                    dia     = rebar['dia']
-                    area    = 0.25 * pi * dia**2
-                    f.write('{0}, {1}, {2}, {3}, {4}, {5}\n'.format(name, area, spacing, pos, rmat, angle))
-
-        elif software == 'opensees':
-
-            f.write('section PlateFiber {0} {1} {2}\n'.format(ni, material.index + 101, t))
-            if len(nodes) == 3:
-                f.write('element ShellNLDKGT {0} {1} {0}\n'.format(ni, ' '.join([str(i + 1) for i in nodes])))
-            elif len(nodes) == 4:
-                f.write('element ShellNLDKGQ {0} {1} {0}\n'.format(ni, ' '.join([str(i + 1) for i in nodes])))
-
-        elif software == 'sofistik':
-
-            if len(nodes) == 3:
-                raise NotImplementedError
-            elif len(nodes) == 4:
-                f.write('QUAD NO N1 N2 N3 N4 MNO T1 T2 T3 T4')
-
-            if reinforcement:
-                rebar_index = materials[list(reinforcement.values())[0]['material']].index + 1
-                f.write(' MRF')
-            else:
-                rebar_index = None
-            f.write('\n')
-
-            data = [str(ni)] + [str(i + 1) for i in nodes] + [str(material.index + 1)] + ['{0}[m]'.format(t)] * len(nodes)
-            if rebar_index:
-                data.append(str(rebar_index))
-            f.write('{0}\n'.format(' '.join(data)))
-
-        elif software == 'ansys':
-
-            pass
-
-        f.write('{0}\n'.format(c))
 
 
-def _write_beams(f, software, elements, selection, geometry, material, section_index, stype, elset):
 
-    for select in selection:
 
-        element = elements[select]
-        sp, ep = element.nodes
-        n = select + 1
-        i = sp + 1
-        j = ep + 1
-        ex = element.axes.get('ex', None)
-
-        if software == 'abaqus':
-
-            e1 = 'element_{0}'.format(select)
-            f.write('*ELEMENT, TYPE=B31, ELSET={0}\n'.format(e1))
-            f.write('{0}, {1},{2}\n'.format(n, i, j))
-
-            data = abaqus_data[stype]
-            f.write('*BEAM GENERAL SECTION' if stype == 'GeneralSection' else '*BEAM SECTION')
-            f.write(', SECTION={0}, ELSET={1}, MATERIAL={2}\n'.format(data['name'], e1, material.name))
-            f.write(', '.join([str(geometry[k]) for k in data['geometry']]) + '\n')
-            if ex:
-                f.write(', '.join([str(k) for k in ex]) + '\n')
-            f.write('**\n')
-
-        elif software == 'opensees':
-
-            A   = geometry['A']
-            E   = material.E['E']
-            G   = material.G['G']
-            J   = geometry['J']
-            Ixx = geometry['Ixx']
-            Iyy = geometry['Iyy']
-
-            ex = ' '.join([str(k) for k in element.axes['ex']])
-            et = 'element elasticBeamColumn'
-            f.write('geomTransf Corotational {0} {1}\n'.format(select + 1, ex))
-            f.write('{} {} {} {} {} {} {} {} {} {} {}\n'.format(et, n, i, j, A, E, G, J, Ixx, Iyy, n))
-            f.write('#\n')
-
-        elif software == 'sofistik':
-
-            f.write('BEAM NO {0} NA {1} NE {2} NCS {3}\n'.format(n, i, j, section_index))
-
-        elif software == 'ansys':
-
-            pass
 
 
 def _write_springs(f, software, selection, elements, section, written_springs):

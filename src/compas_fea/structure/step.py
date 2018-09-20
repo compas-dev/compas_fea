@@ -88,7 +88,7 @@ class GeneralStep(Step):
 
     """
 
-    def __init__(self, name, increments=100, iterations=100, factor=1.0, nlgeom=True, nlmat=True, displacements=[],
+    def __init__(self, name, increments=100, iterations=100, factor=1.0, nlgeom=True, nlmat=False, displacements=[],
                  loads=[], type='static', tolerance=0.01, state='sls'):
         Step.__init__(self, name=name)
 
