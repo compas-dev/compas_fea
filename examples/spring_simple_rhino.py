@@ -1,4 +1,4 @@
-
+import compas_fea
 from compas_fea.cad import rhino
 from compas_fea.structure import Structure
 from compas_fea.structure import ElementProperties as Properties
@@ -14,6 +14,8 @@ __copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
 __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
+
+for i in range(50): print ''
 
 # Structure 
 
@@ -64,7 +66,7 @@ mdl.summary()
 
 # Run (Sofistik)
 
-mdl.write_input_file(software='sofistik')
+mdl.write_input_file(software='abaqus')
 
 # Run (Abaqus/OpenSees)
 

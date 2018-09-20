@@ -744,7 +744,11 @@ Steps
 
         if element_property.elsets:
             elements = []
-            for elset in element_property.elsets:
+            if type(element_property.elsets) == str:
+                elsets = [element_property.elsets]
+            else:
+                elsets = element_property.elsets
+            for elset in elsets:
                 elements.extend(self.sets[elset]['selection'])
         else:
             elements = element_property.elements
@@ -933,7 +937,6 @@ Steps
         if elset:
             self.add_set(name=elset, type='element', selection=ekeys)
         return ekeys
-
 
 # ==============================================================================
 # modifiers

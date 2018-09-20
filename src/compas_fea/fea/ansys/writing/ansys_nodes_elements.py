@@ -9,33 +9,6 @@ __email__      = 'mendez@arch.ethz.ch'
 et_dict = {}
 
 
-# def write_elementsOLD(structure, output_path, filename):
-#     ep = structure.element_properties
-#     for key in ep:
-#         section = ep[key].section
-#         material = ep[key].material
-#         elsets = ep[key].elsets
-#         ekeys = []
-#         if elsets:
-#             for elset in elsets:
-#                 ekeys.extend(structure.sets[elset]['selection'])
-#         if ep[key].elements:
-#             ekeys.extend(ep[key].elements)
-
-#         etype = structure.elements[ekeys[0]].__name__
-#         if etype == 'ShellElement':
-#             write_shell4_elements(structure, output_path, filename, ekeys, section, material)
-#         if etype == 'BeamElement':
-#             write_beam_elements(structure, output_path, filename, ekeys, section, material)
-#         if etype == 'TieElement' or etype == 'StrutElement' or etype == 'TrussElement':
-#             write_tie_elements(structure, output_path, filename, ekeys, section, material, etype)
-#         if etype == 'SpringElement':
-#             write_spring_elements_nodal(structure, output_path, filename, ekeys, section)
-
-#     if 'virtual_elements' in structure.sets:
-#         write_virtual_elements(structure, output_path, filename)
-
-
 def write_elements(structure, output_path, filename):
 
     # combine elementa and virtual elements ------------------------------------
