@@ -580,7 +580,7 @@ Steps
     def edit_element(self):
         raise NotImplementedError
 
-    def element_count(self, virtual=False):
+    def element_count(self):
 
         """ Return the number of elements in structure.elements.
 
@@ -595,10 +595,8 @@ Steps
             Number of elements stored in the Structure object.
 
         """
-        if virtual:
-            return len(self.virtual_elements)
-        else:
-            return len(self.elements)
+
+        return len(self.elements) + len(self.virtual_elements)
 
     def make_element_index_dic(self):
 
@@ -726,7 +724,7 @@ Steps
 
         ekey = self.check_element_exists(nodes, virtual=True)
         if ekey is None:
-            ekey = self.element_count(virtual=True)
+            ekey = self.element_count()
             element = func_dic[type]()
             element.axes = axes
             element.nodes = nodes

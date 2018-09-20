@@ -9,20 +9,66 @@ __email__      = 'mendez@arch.ethz.ch'
 et_dict = {}
 
 
-def write_elements(structure, output_path, filename):
-    ep = structure.element_properties
-    for key in ep:
-        section = ep[key].section
-        material = ep[key].material
-        elsets = ep[key].elsets
-        ekeys = []
-        if elsets:
-            for elset in elsets:
-                ekeys.extend(structure.sets[elset]['selection'])
-        if ep[key].elements:
-            ekeys.extend(ep[key].elements)
+# def write_elementsOLD(structure, output_path, filename):
+#     ep = structure.element_properties
+#     for key in ep:
+#         section = ep[key].section
+#         material = ep[key].material
+#         elsets = ep[key].elsets
+#         ekeys = []
+#         if elsets:
+#             for elset in elsets:
+#                 ekeys.extend(structure.sets[elset]['selection'])
+#         if ep[key].elements:
+#             ekeys.extend(ep[key].elements)
 
-        etype = structure.elements[ekeys[0]].__name__
+#         etype = structure.elements[ekeys[0]].__name__
+#         if etype == 'ShellElement':
+#             write_shell4_elements(structure, output_path, filename, ekeys, section, material)
+#         if etype == 'BeamElement':
+#             write_beam_elements(structure, output_path, filename, ekeys, section, material)
+#         if etype == 'TieElement' or etype == 'StrutElement' or etype == 'TrussElement':
+#             write_tie_elements(structure, output_path, filename, ekeys, section, material, etype)
+#         if etype == 'SpringElement':
+#             write_spring_elements_nodal(structure, output_path, filename, ekeys, section)
+
+#     if 'virtual_elements' in structure.sets:
+#         write_virtual_elements(structure, output_path, filename)
+
+
+def write_elements(structure, output_path, filename):
+
+    # combine elementa and virtual elements ------------------------------------
+    elements = {}
+    elements.update(structure.elements)
+    elements.update(structure.virtual_elements)
+
+    # group sorted elements by type and properties -----------------------------
+    ekeys = sorted(elements.keys(), key=int)
+    et = elements[ekeys[0]].__name__
+    ep = elements[ekeys[0]].element_property
+    count = 0
+    ekey_lists = [[]]
+    for ekey in ekeys:
+        if elements[ekey].__name__ == et and elements[ekey].element_property == ep:
+            ekey_lists[count].append(ekey)
+        else:
+            et = elements[ekey].__name__
+            ep = elements[ekey].element_property
+            ekey_lists.append([ekey])
+            count += 1
+
+    # write sorted elements ----------------------------------------------------
+    for ekeys in ekey_lists:
+        etype = elements[ekeys[0]].__name__
+        ep = elements[ekeys[0]].element_property
+
+        if ep:
+            ep = structure.element_properties[elements[ekeys[0]].element_property]
+        if ep:
+            section = ep.section
+            material = ep.material
+
         if etype == 'ShellElement':
             write_shell4_elements(structure, output_path, filename, ekeys, section, material)
         if etype == 'BeamElement':
@@ -31,12 +77,12 @@ def write_elements(structure, output_path, filename):
             write_tie_elements(structure, output_path, filename, ekeys, section, material, etype)
         if etype == 'SpringElement':
             write_spring_elements_nodal(structure, output_path, filename, ekeys, section)
-
-    if 'virtual_elements' in structure.sets:
-        write_virtual_elements(structure, output_path, filename)
+        if etype == 'FaceElement':
+            write_surface_elements(structure, output_path, filename, ekeys)
 
 
 def write_virtual_elements(structure, output_path, filename):
+    # TODO: DELETE THIS FUNCTION???
     # TODO: this function only works for surface elements, they are they only virtual elements at the moment.
     ekeys = structure.sets['virtual_elements']['selection']
     etypes = {'ShellElement': [], 'BeamElement': [], 'TieElement': [], 'StrutElement': [],
@@ -111,13 +157,13 @@ def write_shell4_elements(structure, output_path, filename, ekeys, section, mate
 
 def write_set_srf_realconstant(output_path, filename, rkey):
     cFile = open(os.path.join(output_path, filename), 'a')
-    cFile.write('R,' + str(rkey + 1) + ', , , , , , , , , ,\n')
-    cFile.write('REAL,' + str(rkey + 1) + '\n')
+    cFile.write('R,' + str(rkey) + ', , , , , , , , , ,\n')
+    cFile.write('REAL,' + str(rkey) + '\n')
     cFile.write('!\n')
     cFile.close()
 
 
-def write_surface_elements(structure, output_path, filename, ekeys, section, material):
+def write_surface_elements(structure, output_path, filename, ekeys):
     """ This function creates ANSYS shell 181 elements
     in a given ansys input file. These shell elements require 4 nodes.
     """
@@ -128,7 +174,7 @@ def write_surface_elements(structure, output_path, filename, ekeys, section, mat
 
     cFile = open(os.path.join(output_path, filename), 'a')
     for ekey in ekeys:
-        element = structure.elements[ekey].nodes
+        element = structure.virtual_elements[ekey].nodes
         string = 'E,'
         if len(element) == 3:
             element.append(element[-1])
