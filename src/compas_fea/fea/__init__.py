@@ -124,9 +124,9 @@ abaq
 .. autosummary::
     :toctree: generated/
 
-    abaqus_launch_process
-    extract_odb_data
     input_generate
+    extract_data
+    launch_process
 
 
 ansys
@@ -162,7 +162,8 @@ opensees
     :toctree: generated/
 
     input_generate
-    opensees_launch_process
+    extract_data
+    launch_process
 
 
 sofistik

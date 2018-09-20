@@ -85,7 +85,6 @@ rhino.plot_data(mdl, step='step_load', field='rfm')
 print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))
 
 rhino.plot_reaction_forces(mdl, step='step_load', scale=0.05)
-
 rhino.plot_concentrated_forces(mdl, step='step_load', scale=0.05)
 
 # Save

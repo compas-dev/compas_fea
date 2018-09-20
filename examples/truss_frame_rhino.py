@@ -63,10 +63,8 @@ mdl.add_loads([
 
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements=['disp_pinned']),
-    GeneralStep(name='step_loads', loads=['load_v', 'load_h', 'load_gravity'], factor=1.5, increments=300, nlmat=False)])
+    GeneralStep(name='step_loads', loads=['load_v', 'load_h', 'load_gravity'], factor=1.5, increments=300)])
 mdl.steps_order = ['step_bc', 'step_loads']
-
-# Note: nlmat=False is needed/used only for Sofistik
 
 # Summary
 

@@ -54,7 +54,7 @@ mdl.add_load(PointLoad(name='load_top', nodes='nset_top', z=-100000))
 
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements='disp_pinned'),
-    GeneralStep(name='step_load', loads='load_top', nlmat=False)])
+    GeneralStep(name='step_load', loads='load_top')])
 mdl.steps_order = ['step_bc', 'step_load']
 
 # Summary
