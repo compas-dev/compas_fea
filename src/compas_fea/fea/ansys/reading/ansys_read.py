@@ -36,6 +36,8 @@ def get_nodes_elements_from_result_files(path):
             attr = map(float, attr)
             elem_type, mat_index, sec_index = map(int, attr)
 
+            # this has to be updated!!!!
+            # should use the element type number printed on the ansys file to id type or element property
             if len(topology) == 2:
                 elem_type = 'TieElement'
             else:

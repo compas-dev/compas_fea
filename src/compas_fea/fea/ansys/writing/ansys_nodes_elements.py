@@ -527,6 +527,14 @@ def write_nodes_as_keypoints(structure, output_path, filename):
     cFile.close()
 
 
+def write_volume_areas(output_path, filename):
+    cFile = open(os.path.join(output_path, filename), 'a')
+    string = 'VA,ALL \n'
+    cFile.write(string)
+    cFile.write('!\n')
+    cFile.close()
+
+
 def write_request_mesh_areas(structure, output_path, name, size=None, smart_size=None, div=None):
 
     filename = name + '.txt'
@@ -559,6 +567,115 @@ def write_request_mesh_areas(structure, output_path, name, size=None, smart_size
     # cFile.write('SMRTSIZE,4 \n')
     # cFile.write('SMRTSIZE,,0.2,1.5,2 \n')
     cFile.write('AMESH,all,, \n')
+    cFile.write('!\n')
+    cFile.write('!\n')
+
+    out_path = os.path.join(output_path, name + '_output')
+
+    cFile.write('/POST1 \n')
+    cFile.write('!\n')
+    cFile.write('!\n')
+    cFile.write('!\n')
+    cFile.write('*get,num_nodes,node,,count \n')
+    cFile.write('*set,nodeX, \n')
+    cFile.write('*dim,nodeX,array,num_nodes,1 \n')
+    cFile.write('*set,nodeY, \n')
+    cFile.write('*dim,nodeY,array,num_nodes,1 \n')
+    cFile.write('*set,nodeZ, \n')
+    cFile.write('*dim,nodeZ,array,num_nodes,1 \n')
+    cFile.write('*dim,nds, ,num_nodes \n')
+    cFile.write('*VGET, nodeX, node, all, loc, X,,,2 \n')
+    cFile.write('*VGET, nodeY, node, all, loc, Y,,,2 \n')
+    cFile.write('*VGET, nodeZ, node, all, loc, Z,,,2 \n')
+    cFile.write('*vfill,nds(1),ramp,1,1 \n')
+    cFile.write('*cfopen,' + out_path + '/nodes,txt \n')
+    cFile.write('*vwrite, nds(1) , \',\'  , nodeX(1) ,   \',\' ,   nodeY(1) ,   \',\' ,  nodeZ(1) \n')
+    cFile.write('(F8.0, A, ES, A, ES, A, ES) \n')
+    cFile.write('*cfclose \n')
+    cFile.write('!\n')
+    cFile.write('!\n')
+
+    cFile.write('*get,numElem,elem,,count \n')
+    cFile.write('*set,elem1, \n')
+    cFile.write('*dim,elem1,array,numElem,1 \n')
+    cFile.write('*set,elem2, \n')
+    cFile.write('*dim,elem2,array,numElem,1 \n')
+    cFile.write('*set,elem3, \n')
+    cFile.write('*dim,elem3,array,numElem,1 \n')
+    cFile.write('*set,elem4, \n')
+    cFile.write('*dim,elem4,array,numElem,1 \n')
+    cFile.write('*set,elem5, \n')
+    cFile.write('*dim,elem5,array,numElem,1 \n')
+    cFile.write('*set,elem6, \n')
+    cFile.write('*dim,elem6,array,numElem,1 \n')
+    cFile.write('*set,elem7, \n')
+    cFile.write('*dim,elem7,array,numElem,1 \n')
+    cFile.write('*set,elem8, \n')
+    cFile.write('*dim,elem8,array,numElem,1 \n')
+    cFile.write('*set,elemType, \n')
+    cFile.write('*dim,elemType,array,numElem,1 \n')
+    cFile.write('*set,elemMat, \n')
+    cFile.write('*dim,elemMat,array,numElem,1 \n')
+    cFile.write('*set,elemSec, \n')
+    cFile.write('*dim,elemSec,array,numElem,1 \n')
+
+    cFile.write('*VGET, elem1, elem, all, node, 1,,,2 \n')
+    cFile.write('*VGET, elem2, elem, all, node, 2,,,2 \n')
+    cFile.write('*VGET, elem3, elem, all, node, 3,,,2 \n')
+    cFile.write('*VGET, elem4, elem, all, node, 4,,,2 \n')
+    cFile.write('*VGET, elem5, elem, all, node, 5,,,2 \n')
+    cFile.write('*VGET, elem6, elem, all, node, 6,,,2 \n')
+    cFile.write('*VGET, elem7, elem, all, node, 7,,,2 \n')
+    cFile.write('*VGET, elem8, elem, all, node, 8,,,2 \n')
+    cFile.write('*VGET, elemType, elem, all,attr,TYPE,,,2 \n')
+    cFile.write('*VGET, elemMat, elem, all,attr,mat,,,2 \n')
+    cFile.write('*VGET, elemSec, elem, all,attr,secn,,,2 \n')
+
+    cFile.write('*cfopen,' + out_path + '/elements,txt \n')
+    cFile.write('*vwrite,  elem1(1),elem2(1),elem3(1),elem4(1),elem5(1),elem6(1)')
+    cFile.write(',elem7(1),elem8(1), \',\',elemType(1),elemMat(1),elemSec(1) \n')
+    cFile.write('(F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ',')
+    cFile.write('F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ',A,F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ') \n')
+
+    cFile.write('*cfclose \n')
+    cFile.write('!\n')
+    cFile.write('!\n')
+
+    cFile.close()
+
+
+def write_request_mesh_volume(structure, output_path, name, size=1, hex=True, div=None):
+
+    filename = name + '.txt'
+
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+
+    write_nodes_as_keypoints(structure, output_path, filename)
+    write_areas(structure, output_path, filename)
+    write_volume_areas(output_path, filename)
+
+    # This function uses ansys meshing algorithm to mesh all volumes present
+    # in the model and writes "nodes.txt" with the new nodes and "elements.txt"
+    # with the resulting elements.
+
+    if hex:
+        shape = 0
+        et = 'SOLID185'
+        size_str = 'ESIZE,0,{0} \n'.format(div)
+    else:
+        shape = 1
+        et = 'SOLID185'
+        size_str = 'SMRTSIZE, {0} \n'.format(size)
+
+    cFile = open(os.path.join(output_path, filename), 'a')
+    cFile.write('ET, 1, {0} \n'.format(et)) # shold the element type key be taken from somewhere?
+    cFile.write('!\n')
+    cFile.write('!\n')
+    cFile.write('MSHAPE, {0}, 3D \n'.format(shape))
+    cFile.write(size_str)
+    # cFile.write('SMRTSIZE,,2,2,2,40,40,2,OFF,OFF,4,OFF \n')
+    cFile.write('VMESH, all,, \n')
     cFile.write('!\n')
     cFile.write('!\n')
 

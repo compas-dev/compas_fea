@@ -15,8 +15,6 @@ __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
 
-for i in range(50): print ''
-
 # Structure 
 
 mdl = Structure(name='spring_simple', path='C:/Temp/')

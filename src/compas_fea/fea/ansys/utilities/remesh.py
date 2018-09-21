@@ -1,11 +1,14 @@
 import os
 
-from compas.datastructures.mesh.mesh import Mesh
+from compas.datastructures import Mesh
+from compas.datastructures import VolMesh
 
 from compas_fea.structure import Structure
 
 from compas_fea.fea.ansys.writing.ansys_process import ansys_open_pre_process
+
 from compas_fea.fea.ansys.writing.ansys_nodes_elements import write_request_mesh_areas
+from compas_fea.fea.ansys.writing.ansys_nodes_elements import write_request_mesh_volume
 
 from compas_fea.fea.ansys.reading import get_nodes_elements_from_result_files
 
@@ -37,7 +40,33 @@ def mesh_from_ansys_results(output_path, name):
     return mesh
 
 
-def ansys_remesh(mesh, output_path, name, size=None):
+def volmesh_from_ansys_results(output_path, name):
+    output_path = os.path.join(output_path, name + '_output')
+    nodes, elements = get_nodes_elements_from_result_files(output_path)
+    nkeys = sorted(nodes.keys(), key=int)
+    vertices = [[nodes[k]['x'], nodes[k]['y'], nodes[k]['z']] for k in nkeys]
+    ckeys = sorted(elements.keys(), key=int)
+    cells = []
+    for ck in ckeys:
+        i, j, k, l, m, n, o, p = elements[ck]['nodes']
+        if k == l:
+            cells.append([[i, j, k],
+                          [i, j, m],
+                          [j, k, m],
+                          [k, i, m]])
+        else:
+            cells.append([[i, j, k, l],
+                          [i, j, n, m],
+                          [j, k, o, n],
+                          [k, l, p, o],
+                          [l, i, m, p],
+                          [m, n, o, p]])
+
+    mesh = VolMesh.from_vertices_and_cells(vertices, cells)
+    return mesh
+
+
+def ansys_remesh_2d(mesh, output_path, name, size=None):
     s = Structure(output_path, name=name)
 
     s.add_nodes_elements_from_mesh(mesh, 'ShellElement')
@@ -51,10 +80,26 @@ def ansys_remesh(mesh, output_path, name, size=None):
     return mesh
 
 
+def ansys_remesh_3d(mesh, output_path, name, size=None, hex=False, div=None):
+
+    s = Structure(output_path, name=name)
+
+    s.add_nodes_elements_from_mesh(mesh, 'ShellElement')
+    s = areas_from_mesh(s, mesh)
+    filename = name + '.txt.'
+    ansys_open_pre_process(output_path, filename)
+    write_request_mesh_volume(s, output_path, name, size=1, hex=hex, div=div)
+    ansys_launch_process(output_path, name, cpus=4, license='teaching', delete=True)
+    mesh = volmesh_from_ansys_results(output_path, name)
+    return mesh
+
+
 if __name__ == '__main__':
 
     path = '/Users/mtomas/Documents/ETH/01_research/01_vibro/02_num_exp/181100_floor_comparison/geometry/remeshing'
 
     name = 'remesh'
-    mesh = mesh_from_ansys_results(path, name)
-    print mesh
+    mesh = volmesh_from_ansys_results(path, name)
+    here = os.path.dirname(os.path.realpath(__file__))
+    filepath = os.path.join(here, 'volmesh.json')
+    mesh.to_json(filepath)
