@@ -88,7 +88,7 @@ def ansys_remesh_3d(mesh, output_path, name, size=None, hex=False, div=None):
     s = areas_from_mesh(s, mesh)
     filename = name + '.txt.'
     ansys_open_pre_process(output_path, filename)
-    write_request_mesh_volume(s, output_path, name, size=1, hex=hex, div=div)
+    write_request_mesh_volume(s, output_path, name, size=size, hex=hex, div=div)
     ansys_launch_process(output_path, name, cpus=4, license='teaching', delete=True)
     mesh = volmesh_from_ansys_results(output_path, name)
     return mesh

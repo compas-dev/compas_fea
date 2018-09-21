@@ -11,6 +11,12 @@ from compas_fea.structure import ElementProperties
 from compas_fea.structure import GravityLoad
 from compas_fea.structure import GeneralStep
 
+
+__author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
+__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
+__license__    = 'MIT License'
+__email__      = 'mendez@arch.ethz.ch'
+
 # get mesh from json file ------------------------------------------------------
 
 mesh = Mesh.from_json(compas_fea.get('flat20x20.json'))

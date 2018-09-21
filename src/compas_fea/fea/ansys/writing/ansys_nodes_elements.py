@@ -52,6 +52,8 @@ def write_elements(structure, output_path, filename):
             write_spring_elements_nodal(structure, output_path, filename, ekeys, section)
         if etype == 'FaceElement':
             write_surface_elements(structure, output_path, filename, ekeys)
+        if etype == 'SolidElement':
+            write_solid_elements(structure, output_path, filename, ekeys, material)
 
 
 def write_virtual_elements(structure, output_path, filename):
@@ -127,6 +129,26 @@ def write_shell4_elements(structure, output_path, filename, ekeys, section, mate
     cFile.write('!\n')
     cFile.close()
 
+
+def write_solid_elements(structure, output_path, filename, ekeys, material):
+    ekeys = sorted(ekeys, key=int)
+    mat_index = structure.materials[material].index
+    etkey = et_dict.setdefault('SOLID185', len(et_dict) + 1)
+    write_set_element_material(output_path, filename, mat_index, 'SOLID185', etkey)
+
+    cFile = open(os.path.join(output_path, filename), 'a')
+    for ekey in ekeys:
+        element = structure.elements[ekey].nodes
+        string = 'E,'
+        for i in range(len(element)):
+            string += str(int(element[i]) + 1)
+            if i < len(element) - 1:
+                string += ','
+        string += '\n'
+        cFile.write(string)
+
+    cFile.write('!\n')
+    cFile.close()
 
 def write_set_srf_realconstant(output_path, filename, rkey):
     cFile = open(os.path.join(output_path, filename), 'a')

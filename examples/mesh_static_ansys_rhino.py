@@ -16,6 +16,12 @@ from compas_fea.structure import GeneralStep
 
 from compas_rhino.helpers import mesh_from_guid
 
+__author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
+__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
+__license__    = 'MIT License'
+__email__      = 'mendez@arch.ethz.ch'
+
+
 # get mesh from rhino layer ----------------------------------------------------
 
 mesh = mesh_from_guid(Mesh, rs.ObjectsByLayer('mesh')[0])

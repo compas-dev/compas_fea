@@ -863,7 +863,7 @@ Steps
         return structure
 
     @classmethod
-    def from_network(self, network):
+    def from_network(cls, network):
         pass
 
     def add_nodes_elements_from_mesh(self, mesh, element_type, acoustic=False, thermal=False, elset=None):
@@ -937,6 +937,43 @@ Steps
         if elset:
             self.add_set(name=elset, type='element', selection=ekeys)
         return ekeys
+
+    def add_nodes_elements_from_volmesh(self, volmesh, element_type='SolidElement', acoustic=False, thermal=False, elset=None, axes={}):
+        """ Adds the nodes and cells of a VolMesh to the Structure object.
+
+        Parameters
+        ----------
+        volmesh : obj
+            VolMesh datastructure object.
+        element_type : str
+            Element type: 'SolidElement' or ....
+        acoustic : bool
+            Acoustic properties on or off.
+        thermal : bool
+            Thermal properties on or off.
+        elset : str
+            Name of element set to create.
+        axes : dic
+            The local element axes 'ex', 'ey' and 'ez' for all elements.
+
+        Returns
+        -------
+        list
+            Keys of the created elements.
+        """
+
+        for key in sorted(list(volmesh.vertices()), key=int):
+            self.add_node(volmesh.vertex_coordinates(key))
+        ekeys = []
+        for ckey in volmesh.cell:
+            cell_vertices = volmesh.cell_vertices(ckey)
+            nkeys = [self.check_node_exists(volmesh.vertex_coordinates(nk)) for nk in cell_vertices]
+            ekeys.append(self.add_element(nodes=nkeys, type=element_type, acoustic=acoustic, thermal=thermal,
+                                          axes=axes))
+        if elset:
+            self.add_set(name=elset, type='element', selection=ekeys)
+        return ekeys
+
 
 # ==============================================================================
 # modifiers
