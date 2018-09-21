@@ -285,8 +285,44 @@ def colorbar(fsc, input='array', type=255):
         return [i * type for i in [r, g, b]]
 
 
+def mesh_from_shell_elements(structure):
+
+    """ Returns a Mesh datastructure object from a Structure's ShellElement objects.
+
+    Parameters
+    ----------
+    structure: obj
+        The structure to extract a Mesh from.
+
+    Returns
+    -------
+    obj
+        Mesh datastructure object.
+
+    """
+
+    ekeys = [ekey for ekey in structure.elements if structure.elements[ekey].__name__ == 'ShellElement']
+    nkeys = {nkey for ekey in ekeys for nkey in structure.elements[ekey].nodes}
+
+    mesh = Mesh()
+    for nkey in nkeys:
+        x, y, z = structure.node_xyz(nkey)
+        mesh.add_vertex(key=nkey, x=x, y=y, z=z)
+
+    for ekey in ekeys:
+        mesh.add_face(structure.elements[ekey].nodes, key=ekey)
+
+    return mesh
 
 
+def volmesh_from_solid_elements(structure):
+
+    raise NotImplementedError
+
+
+def network_from_line_elements(structure):
+
+    raise NotImplementedError
 
 
 
@@ -951,32 +987,6 @@ def principal_stresses(data, ptype, scale, rotate):
     pmax = max([max(abs(spr_sp1)), max(abs(spr_sp5))])
 
     return vec1, vec5, spr_sp1, spr_sp5, pmax
-
-
-def mesh_from_shell_elements(structure):
-    """ Returns a mesh object from the shell elements in a structure.
-
-    Parameters
-    ----------
-    structure: obj
-        The structure to extract a mesh from.
-
-    Returns
-    -------
-    obj
-        A mesh object.
-    """
-    ekeys = [ek for ek in structure.elements if structure.elements[ek].__name__ == 'ShellElement']
-    nkeys = {nk for ek in ekeys for nk in structure.elements[ek].nodes}
-    mesh = Mesh()
-    for nk in nkeys:
-        x, y, z = structure.node_xyz(nk)
-        mesh.add_vertex(key=nk, x=x, y=y, z=z)
-
-    for ek in ekeys:
-        mesh.add_face(structure.elements[ek].nodes, key=ek)
-
-    return mesh
 
 
 # ==============================================================================

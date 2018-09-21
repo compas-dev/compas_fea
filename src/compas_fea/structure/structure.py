@@ -742,6 +742,19 @@ Steps
 
     def assign_element_property(self, element_property):
 
+        """ Assign the ElementProperties object name to associated Elements.
+
+        Parameters
+        ----------
+        element_property : str
+            Name of the ElementProperties object.
+
+        Returns
+        -------
+        None
+
+        """
+
         if element_property.elsets:
             elements = []
             if type(element_property.elsets) == str:
@@ -755,6 +768,7 @@ Steps
 
         for element in elements:
             self.elements[element].element_property = element_property.name
+
 
 # ==============================================================================
 # sets
