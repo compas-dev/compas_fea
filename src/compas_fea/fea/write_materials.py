@@ -252,7 +252,7 @@ def _write_steel(f, software, E, v, p, tension, c, mindex, material):
         eyp = 1000 * fy / E
         eup = 1000 * material.eu
 
-        f.write('STEE {0} {1} ES {2}[MPa] GAM {3} FY {4}[MPa] FT {5}[MPa] FP {4}[MPa] SCM {6} EPSY {7} EPST {8} MUE {9}\n$\n'.format(mindex, it, E * MPa, p * 0.01, fy * MPa, fu * MPa, sf, eyp, eup, v))
+        f.write('STEE {0} {1} ES {2} GAM {3} FY {4} FT {5} FP {4} SCM {6} EPSY {7} EPST {8} MUE {9}\n$\n'.format(mindex, it, E * MPa, p * 0.01, fy * MPa, fu * MPa, sf, eyp, eup, v))
 
     elif software == 'ansys':
 
@@ -324,7 +324,7 @@ def _write_concrete(f, software, E, v, p, compression, tension, mindex, material
 
     elif software == 'sofistik':
 
-        f.write('CONC {0} TYPE C FCN {1}[MPa] MUE {2} GAM {3} TYPR C SCM {4}\n'.format(
+        f.write('CONC {0} TYPE C FCN {1} MUE {2} GAM {3} TYPR C SCM {4}\n'.format(
                 mindex, material.fck * MPa, v, p * 0.01, material.sf))
         f.write('$\n')
 
