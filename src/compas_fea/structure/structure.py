@@ -3,20 +3,19 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from compas.geometry import centroid_points
-
-from compas.utilities import geometric_key
-
 from compas_fea.fea.abaq import abaq
 from compas_fea.fea.ansys import ansys
 from compas_fea.fea.opensees import opensees
 from compas_fea.fea.sofistik import sofistik
 
-from compas_fea.structure import *
-
 from compas_fea.utilities import combine_all_sets
 from compas_fea.utilities import group_keys_by_attribute
 from compas_fea.utilities import group_keys_by_attributes
+
+from compas_fea.structure.mixins.nodemixins import NodeMixins
+from compas_fea.structure.mixins.elementmixins import ElementMixins
+from compas_fea.structure.mixins.objectmixins import ObjectMixins
+from compas_fea.structure.displacement import *
 
 import pickle
 import os
@@ -33,7 +32,7 @@ __all__ = [
 ]
 
 
-class Structure(object):
+class Structure(ObjectMixins, ElementMixins, NodeMixins):
 
     """ Initialises empty Structure object for use in finite element analysis.
 
@@ -192,585 +191,6 @@ Steps
 
 
 # ==============================================================================
-# nodes
-# ==============================================================================
-
-    def add_node(self, xyz, ex=[1, 0, 0], ey=[0, 1, 0], ez=[0, 0, 1]):
-
-        """ Adds a node to structure.nodes at co-ordinates xyz with local frame [ex, ey, ez].
-
-        Parameters
-        ----------
-        xyz : list
-            [x, y, z] co-ordinates of the node.
-        ex : list
-            Node's local x axis.
-        ey : list
-            Node's local y axis.
-        ez : list
-            Node's local z axis.
-
-        Returns
-        -------
-        int
-            Key of the added or pre-existing node.
-
-        Notes
-        -----
-        - Nodes are numbered sequentially starting from 0.
-
-        """
-
-        xyz = [float(i) for i in xyz]
-        key = self.check_node_exists(xyz)
-        if key is None:
-            key = self.node_count()
-            self.nodes[key] = {'x': xyz[0], 'y': xyz[1], 'z': xyz[2], 'ex': ex, 'ey': ey, 'ez': ez}
-            self.add_node_to_node_index(key=key, xyz=xyz)
-        return key
-
-    def add_nodes(self, nodes, ex=[1, 0, 0], ey=[0, 1, 0], ez=[0, 0, 1]):
-
-        """ Adds a list of nodes to structure.nodes at given co-ordinates all with local frame [ex, ey, ez].
-
-        Parameters
-        ----------
-        nodes : list
-            [[x, y, z], ..] co-ordinates for each node.
-        ex : list
-            Nodes' local x axis.
-        ey : list
-            Nodes' local y axis.
-        ez : list
-            Nodes' local z axis.
-
-        Returns
-        -------
-        list
-            Keys of the added or pre-existing nodes.
-
-        Notes
-        -----
-        - Nodes are numbered sequentially starting from 0.
-
-        """
-
-        return [self.add_node(xyz=node, ex=ex, ey=ey, ez=ez) for node in nodes]
-
-    def add_node_to_node_index(self, key, xyz):
-
-        """ Adds the node to the node_index dictionary.
-
-        Parameters
-        ----------
-        key : int
-            Prescribed node key.
-        xyz : list
-            [x, y, z] co-ordinates of the node.
-
-        Returns
-        -------
-        None
-
-        """
-
-        gkey = geometric_key(xyz, '{0}f'.format(self.tol))
-        self.node_index[gkey] = key
-
-    def check_node_exists(self, xyz):
-
-        """ Check if a node already exists at given x, y, z co-ordinates.
-
-        Parameters
-        ----------
-        xyz : list
-            [x, y, z] co-ordinates of node to check.
-
-        Returns
-        -------
-        int
-            The node index if the node already exists, None if not.
-
-        Notes
-        -----
-        - Geometric key check is made according to self.tol [m] tolerance.
-
-        """
-
-        gkey = geometric_key(xyz, '{0}f'.format(self.tol))
-        return self.node_index.get(gkey, None)
-
-    def edit_node(self, key, attr_dic):
-
-        """ Edit a node's data.
-
-        Parameters
-        ----------
-        key : int
-            Key of the node to edit.
-        attr_dic : dic
-            Atribute dictionary of data to edit.
-
-        Returns
-        -------
-        None
-
-        """
-
-        gkey = geometric_key(self.node_xyz(key), '{0}f'.format(self.tol))
-        del self.node_index[gkey]
-        for attr, item in attr_dic.items():
-            self.nodes[key][attr] = item
-        self.add_node_to_node_index(key, self.node_xyz(key))
-
-    def make_node_index_dic(self):
-
-        """ Makes a node_index dictionary from existing structure.nodes.
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        None
-
-        """
-
-        for key in self.nodes:
-            gkey = geometric_key(self.node_xyz(key), '{0}f'.format(self.tol))
-            self.node_index[gkey] = key
-
-    def node_bounds(self):
-
-        """ Return the bounds formed by the Structure's nodal co-ordinates.
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        list
-            [xmin, xmax].
-        list
-            [ymin, ymax].
-        list
-            [zmin, zmax].
-
-        """
-
-        n = self.node_count()
-        x = [0] * n
-        y = [0] * n
-        z = [0] * n
-        for c, node in self.nodes.items():
-            x[c] = node['x']
-            y[c] = node['y']
-            z[c] = node['z']
-        xmin, xmax = min(x), max(x)
-        ymin, ymax = min(y), max(y)
-        zmin, zmax = min(z), max(z)
-        return [xmin, xmax], [ymin, ymax], [zmin, zmax]
-
-    def node_count(self):
-
-        """ Return the number of nodes in structure.nodes.
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        int
-            Number of nodes stored in the Structure object.
-
-        """
-
-        return len(self.nodes)
-
-    def node_xyz(self, node):
-
-        """ Return the xyz co-ordinates of a node.
-
-        Parameters
-        ----------
-        node : int
-            Node number.
-
-        Returns
-        -------
-        list
-            [x, y, z] co-ordinates.
-
-        """
-
-        return [self.nodes[node][i] for i in 'xyz']
-
-    def nodes_xyz(self, nodes=[]):
-
-        """ Return the xyz co-ordinates of given or all nodes.
-
-        Parameters
-        ----------
-        nodes : list
-            Node numbers, else all will be given.
-
-        Returns
-        -------
-        list
-            [[x, y, z] ...] co-ordinates.
-
-        """
-
-        if not nodes:
-            nodes = sorted(self.nodes, key=int)
-        return [self.node_xyz(node=node) for node in nodes]
-
-
-# ==============================================================================
-# elements
-# ==============================================================================
-
-    def add_element(self, nodes, type, acoustic=False, thermal=False, axes={}):
-
-        """ Adds an element to structure.elements with centroid geometric key.
-
-        Parameters
-        ----------
-        nodes : list
-            Nodes the element is connected to.
-        type : str
-            Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
-        acoustic : bool
-            Acoustic properties on or off.
-        thermal : bool
-            Thermal properties on or off.
-        axes : dic
-            The local element axes 'ex', 'ey' and 'ez'.
-
-        Returns
-        -------
-        int
-            Key of the added or existing element.
-
-        Notes
-        -----
-        - Elements are numbered sequentially starting from 0.
-
-        """
-
-        func_dic = {
-            'BeamElement':        BeamElement,
-            'SpringElement':      SpringElement,
-            'TrussElement':       TrussElement,
-            'StrutElement':       StrutElement,
-            'TieElement':         TieElement,
-            'ShellElement':       ShellElement,
-            'MembraneElement':    MembraneElement,
-            'SolidElement':       SolidElement,
-            'TetrahedronElement': TetrahedronElement,
-            'PentahedronElement': PentahedronElement,
-            'HexahedronElement':  HexahedronElement,
-        }
-
-        ekey = self.check_element_exists(nodes)
-        if ekey is None:
-            ekey = self.element_count()
-            element = func_dic[type]()
-            element.axes = axes
-            element.nodes = nodes
-            element.number = ekey
-            element.acoustic = acoustic
-            element.thermal = thermal
-            self.elements[ekey] = element
-            self.add_element_to_element_index(ekey, nodes)
-        return ekey
-
-    def add_elements(self, elements, type, acoustic=False, thermal=False, axes={}):
-
-        """ Adds multiple elements of the same type to structure.elements.
-
-        Parameters
-        ----------
-        elements : list
-            List of lists of the nodes the elements are connected to.
-        type : str
-            Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
-        acoustic : bool
-            Acoustic properties on or off.
-        thermal : bool
-            Thermal properties on or off.
-        axes : dic
-            The local element axes 'ex', 'ey' and 'ez' for all elements.
-
-        Returns
-        -------
-        list
-            Keys of the added or existing elements.
-
-        Notes
-        -----
-        - Elements are numbered sequentially starting from 0.
-
-        """
-
-        return [self.add_element(nodes=nodes, type=type, acoustic=acoustic, thermal=thermal, axes=axes)
-                for nodes in elements]
-
-    def add_element_to_element_index(self, key, nodes, virtual=False):
-
-        """ Adds the element to the element_index dictionary.
-
-        Parameters
-        ----------
-        key : int
-            Prescribed element key.
-        nodes : list
-            Node numbers the element is connected to.
-        virtual: bool
-            If true, adds element to the virtual_element_index dictionary.
-
-        Returns
-        -------
-        None
-
-        """
-
-        centroid = centroid_points([self.node_xyz(node) for node in nodes])
-        gkey = geometric_key(centroid, '{0}f'.format(self.tol))
-        if virtual:
-            self.virtual_element_index[gkey] = key
-        else:
-            self.element_index[gkey] = key
-
-    def check_element_exists(self, nodes, xyz=None, virtual=False):
-
-        """ Check if an element already exists based on the nodes it connects to or its centroid.
-
-        Parameters
-        ----------
-        nodes : list
-            Node numbers the element is connected to.
-        xyz : list
-            Direct co-ordinates of the element centroid to check.
-        virtual: bool
-            Is the element to be checked a virtual element.
-
-        Returns
-        -------
-        int
-            The element index if the element already exists, None if not.
-
-        Notes
-        -----
-        - Geometric key check is made according to self.tol [m] tolerance.
-
-        """
-
-        if not xyz:
-            xyz = centroid_points([self.node_xyz(node) for node in nodes])
-        gkey = geometric_key(xyz, '{0}f'.format(self.tol))
-        if virtual:
-            return self.virtual_element_index.get(gkey, None)
-        else:
-            return self.element_index.get(gkey, None)
-
-    def edit_element(self):
-        raise NotImplementedError
-
-    def element_count(self):
-
-        """ Return the number of elements in structure.elements.
-
-        Parameters
-        ----------
-        virtual: bool
-            If true, returns the number of vurtual elements.
-
-        Returns
-        -------
-        int
-            Number of elements stored in the Structure object.
-
-        """
-
-        return len(self.elements) + len(self.virtual_elements)
-
-    def make_element_index_dic(self):
-
-        """ Makes an element_index dictionary from existing structure.elements.
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        None
-
-        """
-
-        for key, element in self.elements.items():
-            self.add_element_to_element_index(key=key, nodes=element.nodes)
-
-    def element_centroid(self, element):
-
-        """ Return the centroid of an element.
-
-        Parameters
-        ----------
-        element : int
-            Number of the element.
-
-        Returns
-        -------
-        list
-            Co-ordinates of the element centroid.
-
-        """
-
-        nodes = self.elements[element].nodes
-        return centroid_points([self.node_xyz(node) for node in nodes])
-
-    def add_nodal_element(self, node, type, virtual_node=False):
-
-        """ Adds a nodal element to structure.elements with the possibility of
-        adding a coincident virtual node. Virtual nodes are added to a node
-        set called 'virtual_nodes'.
-
-        Parameters
-        ----------
-        node : int
-            Node number the element is connected to.
-        type : str
-            Element type: 'SpringElement'.
-        virtual_node : bool
-            Create a virtual node or not.
-
-        Returns
-        -------
-        int
-            Key of the added element.
-
-        Notes
-        -----
-        - Elements are numbered sequentially starting from 0.
-
-        """
-
-        if virtual_node:
-            xyz = self.node_xyz(node)
-            key = self.virtual_nodes.setdefault(node, self.node_count())
-            self.nodes[key] = {'x': xyz[0], 'y': xyz[1], 'z': xyz[2],
-                               'ex': [1, 0, 0], 'ey': [0, 1, 0], 'ez': [0, 0, 1], 'virtual': True}
-            if 'virtual_nodes' in self.sets:
-                self.sets['virtual_nodes']['selection'].append(key)
-            else:
-                self.sets['virtual_nodes'] = {'type': 'node', 'selection': [key], 'explode': False}
-            nodes = [node, key]
-        else:
-            nodes = [node]
-
-        func_dic = {
-            'SpringElement': SpringElement,
-        }
-
-        ekey = self.element_count()
-        element = func_dic[type]()
-        element.nodes = nodes
-        element.number = ekey
-        self.elements[ekey] = element
-        return ekey
-
-    def add_virtual_element(self, nodes, type, thermal=False, axes={}):
-
-        """ Adds a virtual element to structure.elements. Virtual elements are
-        added to an element set called 'virtual_elements'.
-
-        Parameters
-        ----------
-        nodes : list
-            Nodes the element is connected to.
-        type : str
-            Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
-
-        Returns
-        -------
-        int
-            Key of the added virtual element.
-
-        Notes
-        -----
-        - Virtual elements are numbered sequentially starting from 0.
-
-        """
-
-        func_dic = {
-            'BeamElement':        BeamElement,
-            'SpringElement':      SpringElement,
-            'TrussElement':       TrussElement,
-            'StrutElement':       StrutElement,
-            'TieElement':         TieElement,
-            'ShellElement':       ShellElement,
-            'MembraneElement':    MembraneElement,
-            'FaceElement':        FaceElement,
-            'SolidElement':       SolidElement,
-            'TetrahedronElement': TetrahedronElement,
-            'PentahedronElement': PentahedronElement,
-            'HexahedronElement':  HexahedronElement,
-        }
-
-        ekey = self.check_element_exists(nodes, virtual=True)
-        if ekey is None:
-            ekey = self.element_count()
-            element = func_dic[type]()
-            element.axes = axes
-            element.nodes = nodes
-            element.number = ekey
-            element.thermal = thermal
-            self.virtual_elements[ekey] = element
-            self.add_element_to_element_index(ekey, nodes, virtual=True)
-
-            if 'virtual_elements' in self.sets:
-                self.sets['virtual_elements']['selection'].append(ekey)
-            else:
-                self.sets['virtual_elements'] = {'type': 'virtual_element', 'selection': [ekey], 'index': len(self.sets)}
-
-        return ekey
-
-    def assign_element_property(self, element_property):
-
-        """ Assign the ElementProperties object name to associated Elements.
-
-        Parameters
-        ----------
-        element_property : str
-            Name of the ElementProperties object.
-
-        Returns
-        -------
-        None
-
-        """
-
-        if element_property.elsets:
-            elements = []
-            if type(element_property.elsets) == str:
-                elsets = [element_property.elsets]
-            else:
-                elsets = element_property.elsets
-            for elset in elsets:
-                elements.extend(self.sets[elset]['selection'])
-        else:
-            elements = element_property.elements
-
-        for element in elements:
-            self.elements[element].element_property = element_property.name
-
-
-# ==============================================================================
 # sets
 # ==============================================================================
 
@@ -880,7 +300,11 @@ Steps
     def from_network(cls, network):
         pass
 
-    def add_nodes_elements_from_mesh(self, mesh, element_type, acoustic=False, thermal=False, elset=None):
+    @classmethod
+    def from_volmesh(cls, network):
+        pass
+
+    def add_nodes_elements_from_mesh(self, mesh, element_type, thermal=False, elset=None):
 
         """ Adds the nodes and faces of a Mesh to the Structure object.
 
@@ -890,8 +314,6 @@ Steps
             Mesh datastructure object.
         element_type : str
             Element type: 'ShellElement', 'MembraneElement' etc.
-        acoustic : bool
-            Acoustic properties on or off.
         thermal : bool
             Thermal properties on or off.
         elset : str
@@ -914,7 +336,7 @@ Steps
             self.add_set(name=elset, type='element', selection=ekeys)
         return ekeys
 
-    def add_nodes_elements_from_network(self, network, element_type, acoustic=False, thermal=False, elset=None, axes={}):
+    def add_nodes_elements_from_network(self, network, element_type, thermal=False, elset=None, axes={}):
 
         """ Adds the nodes and edges of a Network to the Structure object.
 
@@ -924,13 +346,11 @@ Steps
             Network datastructure object.
         element_type : str
             Element type: 'BeamElement', 'TrussElement' etc.
-        acoustic : bool
-            Acoustic properties on or off.
         thermal : bool
             Thermal properties on or off.
         elset : str
             Name of element set to create.
-        axes : dic
+        axes : dict
             The local element axes 'ex', 'ey' and 'ez' for all elements.
 
         Returns
@@ -952,7 +372,8 @@ Steps
             self.add_set(name=elset, type='element', selection=ekeys)
         return ekeys
 
-    def add_nodes_elements_from_volmesh(self, volmesh, element_type='SolidElement', acoustic=False, thermal=False, elset=None, axes={}):
+    def add_nodes_elements_from_volmesh(self, volmesh, element_type='SolidElement', thermal=False, elset=None, axes={}):
+
         """ Adds the nodes and cells of a VolMesh to the Structure object.
 
         Parameters
@@ -961,19 +382,18 @@ Steps
             VolMesh datastructure object.
         element_type : str
             Element type: 'SolidElement' or ....
-        acoustic : bool
-            Acoustic properties on or off.
         thermal : bool
             Thermal properties on or off.
         elset : str
             Name of element set to create.
-        axes : dic
+        axes : dict
             The local element axes 'ex', 'ey' and 'ez' for all elements.
 
         Returns
         -------
         list
             Keys of the created elements.
+
         """
 
         for key in sorted(list(volmesh.vertices()), key=int):
@@ -1044,270 +464,6 @@ Steps
                     load.components[lkey] *= factor
             loads_dic[key] = load
         return loads_dic
-
-
-# ==============================================================================
-# add objects
-# ==============================================================================
-
-    def add_constraint(self, constraint):
-
-        """ Adds a Constraint object to structure.constraints.
-
-        Parameters
-        ----------
-        constraint : obj
-            The Constraint object.
-
-        Returns
-        -------
-        None
-
-        """
-
-        constraint.index = len(self.constraints)
-        self.constraints[constraint.name] = constraint
-
-    def add_displacement(self, displacement):
-
-        """ Adds a Displacement object to structure.displacements.
-
-        Parameters
-        ----------
-        displacement : obj
-            The Displacement object.
-
-        Returns
-        -------
-        None
-
-        """
-
-        displacement.index = len(self.displacements)
-        self.displacements[displacement.name] = displacement
-
-    def add_displacements(self, displacements):
-
-        """ Adds Displacement objects to structure.displacements.
-
-        Parameters
-        ----------
-        displacements : list
-            The Displacement objects.
-
-        Returns
-        -------
-        None
-
-        """
-
-        for displacement in displacements:
-            self.add_displacement(displacement)
-
-    def add_element_properties(self, element_properties):
-
-        """ Adds ElementProperties object(s) to structure.element_properties.
-
-        Parameters
-        ----------
-        element_properties : obj, list
-            The ElementProperties object(s).
-
-        Returns
-        -------
-        None
-
-        """
-
-        if isinstance(element_properties, list):
-            for element_property in element_properties:
-                element_property.index = len(self.element_properties)
-                self.element_properties[element_property.name] = element_property
-                self.assign_element_property(element_property)
-        else:
-            element_properties.index = len(self.element_properties)
-            self.element_properties[element_properties.name] = element_properties
-            self.assign_element_property(element_properties)
-
-    def add_interaction(self, interaction):
-
-        """ Adds an Interaction object to structure.interactions.
-
-        Parameters
-        ----------
-        interaction : obj
-            The Interaction object.
-
-        Returns
-        -------
-        None
-
-        """
-
-        interaction.index = len(self.interactions)
-        self.interactions[interaction.name] = interaction
-
-    def add_load(self, load):
-
-        """ Adds a Load object to structure.loads.
-
-        Parameters
-        ----------
-        load : obj
-            The Load object.
-
-        Returns
-        -------
-        None
-
-        """
-
-        load.index = len(self.loads)
-        self.loads[load.name] = load
-
-    def add_loads(self, loads):
-
-        """ Adds Load objects to structure.loads.
-
-        Parameters
-        ----------
-        loads : list
-            The Load objects.
-
-        Returns
-        -------
-        None
-
-        """
-
-        for load in loads:
-            self.add_load(load)
-
-    def add_material(self, material):
-
-        """ Adds a Material object to structure.materials.
-
-        Parameters
-        ----------
-        material : obj
-            The Material object.
-
-        Returns
-        -------
-        None
-
-        """
-
-        material.index = len(self.materials)
-        self.materials[material.name] = material
-
-    def add_materials(self, materials):
-
-        """ Adds Material objects to structure.materials.
-
-        Parameters
-        ----------
-        materials : list
-            The Material objects.
-
-        Returns
-        -------
-        None
-
-        """
-
-        for material in materials:
-            self.add_material(material)
-
-    def add_misc(self, misc):
-
-        """ Adds a Misc object to structure.misc.
-
-        Parameters
-        ----------
-        misc : obj
-            The Misc object.
-
-        Returns
-        -------
-        None
-
-        """
-
-        misc.index = len(self.misc)
-        self.misc[misc.name] = misc
-
-    def add_section(self, section):
-
-        """ Adds a Section object to structure.sections.
-
-        Parameters
-        ----------
-        section : obj
-            The Section object.
-
-        Returns
-        -------
-        None
-
-        """
-
-        section.index = len(self.sections)
-        self.sections[section.name] = section
-
-    def add_sections(self, sections):
-
-        """ Adds Section objects to structure.sections.
-
-        Parameters
-        ----------
-        sections : list
-            The Section objects.
-
-        Returns
-        -------
-        None
-
-        """
-
-        for section in sections:
-            self.add_section(section)
-
-    def add_step(self, step):
-
-        """ Adds a Step object to structure.steps.
-
-        Parameters
-        ----------
-        step : obj
-            The Step object.
-
-        Returns
-        -------
-        None
-
-        """
-
-        step.index = len(self.steps)
-        self.steps[step.name] = step
-
-    def add_steps(self, steps):
-
-        """ Adds Step objects to structure.steps.
-
-        Parameters
-        ----------
-        steps : list
-            The Step objects.
-
-        Returns
-        -------
-        None
-
-        """
-
-        for step in steps:
-            self.add_step(step)
 
 
 # ==============================================================================

@@ -861,8 +861,8 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                     f.write("HEAD REBAR {0} LC 1{1:0>2}00\n".format(state.upper(), step_index))
                     f.write('$\n')
                     f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
-                    # f.write('CTRL WARN 496 $ Possible non-constant longitudinal reinforcement.\n')
-                    # f.write('CTRL WARN 254 $ Vertical shear reinforcement not allowed for slab thickness smaller 20 cm.\n')
+                    f.write('CTRL WARN 496 $ Possible non-constant longitudinal reinforcement.\n')
+                    f.write('CTRL WARN 254 $ Vertical shear reinforcement not allowed for slab thickness smaller 20 cm.\n')
                     f.write('CTRL PFAI 2\n')
                     if state == 'sls':
                         # f.write('CTRL SERV GALF 1.45\n')
