@@ -34,12 +34,10 @@ def write_acoustic_analysis_request(structure, path, name, skey):
 
 
 def write_radiating_elements(structure, output_path, filename, skey):
-
     rad_elements = structure.steps[skey].sources
     nodes = []
     for ek in rad_elements:
         nodes.extend(structure.elements[ek].nodes)
-
     ranges = identify_ranges(nodes)
 
     cFile = open(os.path.join(output_path, filename), 'a')

@@ -234,12 +234,12 @@ def identify_ranges(data):
     data = set(data)
     ranges = []
 
-    # for k, g in groupby(enumerate(data), lambda (i, x): i - x):
-    #     group = map(itemgetter(1), g)
-    #     if group[0] != group[-1]:
-    #         ranges.append((group[0], group[-1]))
-    #     else:
-    #         ranges.append(group[0])
+    for k, g in groupby(enumerate(data), lambda x: x[0] - x[1]):
+        group = list(map(itemgetter(1), g))
+        if group[0] != group[-1]:
+            ranges.append((group[0], group[-1]))
+        else:
+            ranges.append(group[0])
 
     return ranges
 
