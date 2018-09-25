@@ -79,6 +79,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 
     written_springs = []
     structure.sofistik_mapping = {}
+    has_rebar = False
 
     for key in sorted(properties):
 
@@ -94,6 +95,11 @@ def write_input_elements(f, software, sections, properties, elements, structure,
         material      = materials.get(property.material)
         sets          = structure.sets
 
+        # Check rebar
+
+        if reinforcement:
+            has_rebar = True
+
         # Make elsets list
 
         if property.elements:
@@ -104,10 +110,10 @@ def write_input_elements(f, software, sections, properties, elements, structure,
             if isinstance(elsets, str):
                 elsets = [elsets]
 
-        # if not (stype == 'SpringSection' and property.elsets.startswith('element_')):
-        #     f.write('{0} Property: {1}\n'.format(c, key))
-        #     f.write('{0} ----------'.format(c) + '-' * (len(key)) + '\n')
-        #     f.write('{0}\n'.format(c))
+        if not (stype == 'SpringSection'):
+            f.write('{0} Property: {1}\n'.format(c, key))
+            f.write('{0} ----------'.format(c) + '-' * (len(key)) + '\n')
+            f.write('{0}\n'.format(c))
 
         for elset in elsets:
 
@@ -121,14 +127,15 @@ def write_input_elements(f, software, sections, properties, elements, structure,
             # Sofistik groups from sets
 
             if (software == 'sofistik') and (elset in sets):
+                if not stype == 'SpringSection':
 
-                set_index = sets[elset]['index'] + 1
-                for i in selection:
-                    entry = int(100000 * set_index + i + 1)
-                    structure.sofistik_mapping[i] = entry
+                    set_index = sets[elset]['index'] + 1
+                    for i in selection:
+                        entry = int(100000 * set_index + i + 1)
+                        structure.sofistik_mapping[i] = entry
 
-                f.write('GRP {0} BASE {0}00000\n'.format(set_index))
-                f.write('$\n')
+                    f.write('GRP {0} BASE {0}00000\n'.format(set_index))
+                    f.write('$\n')
 
             # Springs
 
@@ -166,7 +173,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
         f.write('$\n')
         f.write('$\n')
 
-        if reinforcement:
+        if has_rebar:
             _write_sofistik_rebar(f, properties, sections, sets)
 
     # Abaqus
