@@ -50,6 +50,7 @@ def write_radiating_elements(structure, output_path, filename, skey):
         string = 'SF, nds_cmp_{0}, MXWF,           ! Radiating nodes \n'.format(i)
         cFile.write(string)
         cFile.write('!\n')
+        cFile.write('NSEL, ALL \n')
 
     cFile.write('!\n')
     cFile.close()
