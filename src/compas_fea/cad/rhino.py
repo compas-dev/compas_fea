@@ -1085,3 +1085,27 @@ def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None)
 
     except:
         print('\n***** Error calculating/plotting principal stresses *****')
+
+
+def draw_volmesh(volmesh, layer=None, draw_cells=True):
+
+    if layer:
+        rs.CurrentLayer(layer)
+
+    vkeys = sorted(list(volmesh.vertices()), key=int)
+    vertices = [volmesh.vertex_coordinates(vk) for vk in vkeys]
+
+    if draw_cells:
+        meshes = []
+        for ckey in volmesh.cell:
+            faces = [volmesh.halfface_vertices(fk, ordered=True) for fk in volmesh.cell_halffaces(ckey)]
+            meshes.append(rs.AddMesh(vertices, faces))
+        return meshes
+
+    else:
+        faces = []
+        for fk in volmesh.halfface:
+            face = volmesh.halfface_vertices(fk, ordered=True)
+            faces.append(face)
+        mesh = rs.AddMesh(vertices, faces)
+        return mesh
