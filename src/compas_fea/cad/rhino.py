@@ -457,6 +457,104 @@ def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
     rs.EnableRedraw(True)
 
 
+def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name='', blocks_name='', points_name='',
+                 plot_mesh=False, plot_links=False, plot_blocks=False, plot_points=False):
+
+    """ Extrudes a Rhino mesh and adds/creates elements.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    guid : guid
+        Rhino mesh guid.
+    layers : int
+        Number of layers.
+    thickness : float
+        Layer thickness.
+    mesh_name : str
+        Name of set for mesh on final surface.
+    links_name : str
+        Name of set for adding links along extrusion.
+    blocks_name : str
+        Name of set for solid elements.
+    points_name : str
+        Name of aded points.
+    plot_mesh : bool
+        Plot outer mesh.
+    plot_links : bool
+        Plot links.
+    plot_blocks : bool
+        Plot blocks.
+    plot_points : bool
+        Plot end points.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    - Extrusion is along the mesh vertex normals.
+
+    """
+
+    mesh = mesh_from_guid(Mesh(), guid)
+    extrude_mesh(structure=structure, mesh=mesh, layers=layers, thickness=thickness, mesh_name=mesh_name,
+                 links_name=links_name, blocks_name=blocks_name)
+
+    block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
+    xyz = structure.nodes_xyz()
+
+    rs.EnableRedraw(False)
+
+    if plot_blocks:
+
+        rs.CurrentLayer(rs.AddLayer(blocks_name))
+        rs.DeleteObjects(rs.ObjectsByLayer(blocks_name))
+
+        for i in structure.sets[blocks_name]['selection']:
+            nodes = structure.elements[i].nodes
+            xyz   = structure.nodes_xyz(nodes)
+            rs.AddMesh(xyz, block_faces)
+
+    if plot_mesh:
+
+        rs.CurrentLayer(rs.AddLayer(mesh_name))
+        rs.DeleteObjects(rs.ObjectsByLayer(mesh_name))
+
+        faces = []
+        for i in structure.sets[mesh_name]['selection']:
+            enodes = structure.elements[i].nodes
+            if len(enodes) == 3:
+                enodes.append(enodes[-1])
+            faces.append(enodes)
+        rs.AddMesh(xyz, faces)
+
+    if plot_links:
+
+        rs.CurrentLayer(rs.AddLayer(links_name))
+        rs.DeleteObjects(rs.ObjectsByLayer(links_name))
+
+        if plot_points:
+            rs.CurrentLayer(rs.AddLayer(points_name))
+            rs.DeleteObjects(rs.ObjectsByLayer(points_name))
+
+        for i in structure.sets[links_name]['selection']:
+
+            nodes = structure.elements[i].nodes
+            xyz = structure.nodes_xyz(nodes)
+            rs.CurrentLayer(links_name)
+            rs.AddLine(xyz[0], xyz[1])
+
+            if plot_points:
+                rs.CurrentLayer(points_name)
+                rs.AddPoint(xyz[1])
+
+    rs.EnableRedraw(True)
+    rs.CurrentLayer(rs.AddLayer('Default'))
+
+
 
 
 
@@ -615,102 +713,6 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
 
     except:
         print('***** Error using MeshPy or drawing Tets *****')
-
-
-def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name='', blocks_name='', points_name='',
-                 plot_blocks=False, plot_mesh=False, plot_links=False, plot_points=False):
-
-    """ Extrudes a Rhino mesh and adds/creates elements.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object to update.
-    guid : guid
-        Rhino mesh guid.
-    layers : int
-        Number of layers.
-    thickness : float
-        Layer thickness.
-    mesh_name : str
-        Name of set for mesh on final surface.
-    links_name : str
-        Name of set for adding links along extrusion.
-    blocks_name : str
-        Name of set for solid elements.
-    points_name : str
-        Name of aded points.
-    plot_blocks : bool
-        Plot blocks.
-    plot_mesh : bool
-        Plot outer mesh.
-    plot_links : bool
-        Plot links.
-    plot_points : bool
-        Plot end points.
-
-    Returns
-    -------
-    None
-
-    Notes
-    -----
-    - Extrusion is along the vertex normals.
-
-    """
-
-    mesh = mesh_from_guid(Mesh(), guid)
-    extrude_mesh(structure=structure, mesh=mesh, layers=layers, thickness=thickness, mesh_name=mesh_name,
-                 links_name=links_name, blocks_name=blocks_name)
-
-    block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
-    xyz = structure.nodes_xyz()
-
-    rs.EnableRedraw(False)
-
-    if plot_blocks:
-
-        rs.CurrentLayer(rs.AddLayer(blocks_name))
-        rs.DeleteObjects(rs.ObjectsByLayer(blocks_name))
-
-        for i in structure.sets[blocks_name]['selection']:
-            nodes = structure.elements[i].nodes
-            xyz = structure.nodes_xyz(nodes)
-            rs.AddMesh(xyz, block_faces)
-
-    if plot_mesh:
-
-        rs.CurrentLayer(rs.AddLayer(mesh_name))
-        rs.DeleteObjects(rs.ObjectsByLayer(mesh_name))
-
-        faces = []
-        for i in structure.sets[mesh_name]['selection']:
-            enodes = structure.elements[i].nodes
-            if len(enodes) == 3:
-                enodes.append(enodes[-1])
-            faces.append(enodes)
-        rs.AddMesh(xyz, faces)
-
-    if plot_links:
-
-        rs.CurrentLayer(rs.AddLayer(links_name))
-        rs.DeleteObjects(rs.ObjectsByLayer(links_name))
-        if plot_points:
-            rs.CurrentLayer(rs.AddLayer(points_name))
-            rs.DeleteObjects(rs.ObjectsByLayer(points_name))
-
-        for i in structure.sets[links_name]['selection']:
-            nodes = structure.elements[i].nodes
-            xyz = structure.nodes_xyz(nodes)
-            rs.CurrentLayer(links_name)
-            rs.AddLine(xyz[0], xyz[1])
-            if plot_points:
-                rs.CurrentLayer(points_name)
-                rs.AddPoint(xyz[1])
-
-
-    rs.EnableRedraw(True)
-    rs.CurrentLayer(rs.AddLayer('Default'))
 
 
 def plot_axes(xyz, e11, e22, e33, layer, sc=1):

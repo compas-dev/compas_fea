@@ -325,6 +325,123 @@ def network_from_line_elements(structure):
     raise NotImplementedError
 
 
+def extrude_mesh(structure, mesh, layers, thickness, mesh_name, links_name, blocks_name):
+
+    """ Extrudes a Mesh and adds/creates elements to a Structure.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    mesh : obj
+        Mesh datastructure
+    layers : int
+        Number of layers.
+    thickness : float
+        Layer thickness.
+    mesh_name : str
+        Name of set for mesh on final surface.
+    links_name : str
+        Name of set for adding links along extrusion.
+    blocks_name : str
+        Name of set for solid elements.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    - Extrusion is along the Mesh vertex normals.
+
+    """
+
+    ki     = {}
+    faces  = []
+    links  = []
+    blocks = []
+    slices = {i: [] for i in range(layers)}
+
+    for key in mesh.vertices():
+
+        normal = normalize_vector(mesh.vertex_normal(key))
+        xyz    = mesh.vertex_coordinates(key)
+        ki['{0}_0'.format(key)] = structure.add_node(xyz)
+
+        for i in range(layers):
+
+            xyzi = add_vectors(xyz, scale_vector(normal, (i + 1) * thickness))
+            ki['{0}_{1}'.format(key, i + 1)] = structure.add_node(xyzi)
+
+            if links_name:
+
+                node1 = ki['{0}_{1}'.format(key, i + 0)]
+                node2 = ki['{0}_{1}'.format(key, i + 1)]
+                L  = subtract_vectors(xyzi, xyz)
+                ez = normalize_vector(L)
+                try:
+                    ey = cross_vectors(ez, [1, 0, 0])
+                except:
+                    pass
+                axes = {'ez': ez, 'ey': ey}
+
+                ekey = structure.add_element(nodes=[node1, node2], type='SpringElement', thermal=False, axes=axes)
+                structure.elements[ekey].A = mesh.vertex_area(key)
+                structure.elements[ekey].L = L
+                links.append(ekey)
+
+    for face in mesh.faces():
+
+        vs = mesh.face_vertices(face)
+
+        for i in range(layers):
+
+            bot = ['{0}_{1}'.format(j, i + 0) for j in vs]
+            top = ['{0}_{1}'.format(j, i + 1) for j in vs]
+
+            if blocks_name:
+
+                etype  = 'PentahedronElement' if len(vs) == 3 else 'HexahedronElement'
+                nodes  = [ki[j] for j in bot + top]
+                ekey   = structure.add_element(nodes=nodes, type=etype, thermal=False)
+                blocks.append(ekey)
+                slices[i].append(ekey)
+
+            if (i == layers - 1) and mesh_name:
+                nodes = [ki[j] for j in top]
+                ekey = structure.add_element(nodes=nodes, type='ShellElement', acoustic=False, thermal=False)
+                faces.append(ekey)
+
+    if blocks_name:
+        structure.add_set(name=blocks_name, type='element', selection=blocks)
+        for i in range(layers):
+            structure.add_set(name='{0}_layer_{1}'.format(blocks_name, i), type='element', selection=slices[i])
+
+    if mesh_name:
+        structure.add_set(name=mesh_name, type='element', selection=faces)
+
+    if links:
+        structure.add_set(name=links_name, type='element', selection=links)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -515,93 +632,7 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
     return points_all, faces_all
 
 
-def extrude_mesh(structure, mesh, layers, thickness, mesh_name, links_name, blocks_name):
 
-    """ Extrudes a Mesh and adds/creates elements to a Structure.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object to update.
-    mesh : obj
-        Mesh datastructure
-    layers : int
-        Number of layers.
-    thickness : float
-        Layer thickness.
-    mesh_name : str
-        Name of set for mesh on final surface.
-    links_name : str
-        Name of set for adding links along extrusion.
-    blocks_name : str
-        Name of set for solid elements.
-
-    Returns
-    -------
-    None
-
-    Notes
-    -----
-    - Extrusion is along the Mesh vertex normals.
-
-    """
-
-    ki = {}
-    blocks = []
-    mesh_faces = []
-    links = []
-
-    for key in mesh.vertices():
-
-        normal = normalize_vector(mesh.vertex_normal(key))
-        xyz = mesh.vertex_coordinates(key)
-        ki['{0}_0'.format(key)] = structure.add_node(xyz)
-
-        for i in range(layers):
-            xyzi = add_vectors(xyz, scale_vector(normal, (i + 1) * thickness))
-            ki['{0}_{1}'.format(key, i + 1)] = structure.add_node(xyzi)
-
-            if links_name:
-                node1 = ki['{0}_0'.format(key)]
-                node2 = ki['{0}_{1}'.format(key, i + 1)]
-                ez = normalize_vector(subtract_vectors(xyzi, xyz))
-                try:  # check
-                    ey = cross_vectors(ez, [1, 0, 0])
-                except:
-                    pass
-                ekey = structure.add_element(nodes=[node1, node2], type='SpringElement', acoustic=False, thermal=False,
-                                             axes={'ez': ez, 'ey': ey})
-                structure.elements[ekey].A = mesh.vertex_area(key)
-                links.append(ekey)
-
-    for face in mesh.faces():
-
-        vs = mesh.face_vertices(face)
-
-        for i in range(layers):
-            bot = ['{0}_{1}'.format(j, i + 0) for j in vs]
-            top = ['{0}_{1}'.format(j, i + 1) for j in vs]
-
-            if blocks_name:
-                if len(vs) == 3:
-                    etype = 'PentahedronElement'
-                elif len(vs) == 4:
-                    etype = 'HexahedronElement'
-                nodes = [ki[j] for j in bot + top]
-                ekey = structure.add_element(nodes=nodes, type=etype, acoustic=False, thermal=False)
-                blocks.append(ekey)
-
-            if (i == layers - 1) and mesh_name:
-                nodes = [ki[j] for j in top]
-                ekey = structure.add_element(nodes=nodes, type='ShellElement', acoustic=False, thermal=False)
-                mesh_faces.append(ekey)
-
-    if blocks_name:
-        structure.add_set(name=blocks_name, type='element', selection=blocks)
-    if mesh_name:
-        structure.add_set(name=mesh_name, type='element', selection=mesh_faces)
-    if links:
-        structure.add_set(name=links_name, type='element', selection=links)
 
 
 def group_keys_by_attribute(adict, name, tol='3f'):
