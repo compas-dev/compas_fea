@@ -425,124 +425,243 @@ def _write_sofistik_loads_displacements(f, sets, displacements, loads, steps, st
             _write_displacements(f, 'sofistik', com, nodes, 1, sets, 6)
 
 
-# def _write_line_load(f, software, axes, com, factor, elset, sets, structure):
+def _write_line_load(f, software, axes, com, factor, elset, sets, structure):
 
-#     for k in elset:
+    for k in elset:
+
+        if software == 'abaqus':
+
+            f.write('*DLOAD\n')
+            f.write('**\n')
+
+            if axes == 'global':
+                for dof in dofs[:3]:
+                    if com[dof]:
+                        f.write('{0}, P{1}, {2}'.format(k, dof.upper(), factor * com[dof]) + '\n')
+
+            elif axes == 'local':
+                if com['x']:
+                    f.write('{0}, P1, {1}'.format(k, factor * com['x']) + '\n')
+                if com['y']:
+                    f.write('{0}, P2, {1}'.format(k, factor * com['y']) + '\n')
+
+        elif software == 'opensees':
+
+            if axes == 'global':
+                raise NotImplementedError
+
+            elif axes == 'local':
+                elements = ' '.join([str(i + 1) for i in sets[k]['selection']])
+                f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, -com['y'], -com['x']))
+
+        elif software == 'sofistik':
+
+            for i in sets[k]['selection']:
+                ni = structure.sofistik_mapping[i]
+
+                if axes == 'global':
+                    for j in 'xyz':
+                        if com[j]:
+                            f.write('    BEAM {0} TYPE P{1}{1} {2}[kN/m]\n'.format(ni, j.upper(), com['x'] * 0.001))
+
+                elif axes == 'local':
+                    for j, jj in zip('xyz', 'zxy'):
+                        if com[jj]:
+                            f.write('    BEAM {0} TYPE P{1} {2}[kN/m]\n'.format(ni, j.upper(), com[jj] * 0.001))
+
+        elif software == 'ansys':
+
+            pass
+
+
+def _write_area_load(f, software, com, axes, elset, sets, factor):
+
+    if software == 'abaqus':
+
+        for k in elset:
+
+            if axes == 'global':
+
+                raise NotImplementedError
+
+            elif axes == 'local':
+                # x COMPONENT
+                # y COMPONENT
+                f.write('*DLOAD\n')
+                f.write('**\n')
+
+                if com['z']:
+                    f.write('{0}, P, {1}'.format(k, factor * com['z']) + '\n')
+
+    elif software == 'opensees':
+
+        pass
+
+    elif software == 'sofistik':
+
+        components = ''
+
+        for i in 'xyz':
+            if com[i]:
+
+                if axes == 'local':
+                    components += ' P{0} {1}[kN/m2]'.format(i.upper(), 0.001 * com[i])
+
+                elif axes == 'global':
+                    components += ' P{0}{0} {1}[kN/m2]'.format(i.upper(), 0.001 * com[i])
+
+        for k in elset:
+
+            set_index = sets[k]['index'] + 1
+            f.write('    QUAD GRP {0} TYPE{1}\n'.format(set_index, components))
+
+    elif software == 'ansys':
+
+        pass
+
+
+def _write_gravity_load(f, software, g, com, elset, factor):
+
+    gx = com.get('x', 0)
+    gy = com.get('y', 0)
+    gz = com.get('z', 0)
+
+    if software == 'abaqus':
+
+        for k in elset:
+
+            f.write('*DLOAD\n')
+            f.write('**\n')
+            f.write('{0}, GRAV, {1}, {2}, {3}, {4}\n'.format(k, g * factor, gx, gy, gz))
+            f.write('**\n')
+
+    elif software == 'sofistik':
+
+        pass
+
+    elif software == 'opensees':
+
+        pass
+
+    elif software == 'ansys':
+
+        pass
+
+
+# def _write_displacements(f, software, com, nset, factor, sets, ndof):
+
+#     if software == 'abaqus':
+
+#         f.write('*BOUNDARY\n')
+#         f.write('**\n')
+#         for ci, dof in enumerate(dofs, 1):
+#             if com[dof] is not None:
+#                 f.write('{0}, {1}, {1}, {2}\n'.format(nset, ci, com[dof] * factor))
+
+#     elif software == 'opensees':
+
+#         for ci, dof in enumerate(dofs[:ndof], 1):
+#             if com[dof] is not None:
+#                 for node in sets[nset]['selection']:
+#                     f.write('sp {0} {1} {2}\n'.format(node + 1, ci, com[dof]))
+
+#     elif software == 'sofistik':
+
+#         for i in sets[nset]['selection']:
+#             ni = i + 1
+#             if com['x'] is not None:
+#                 f.write('    NODE {0} TYPE WXX {1}[mm]\n'.format(ni, com['x'] * 1000))
+#             if com['y'] is not None:
+#                 f.write('    NODE {0} TYPE WYY {1}[mm]\n'.format(ni, com['y'] * 1000))
+#             if com['z'] is not None:
+#                 f.write('    NODE {0} TYPE WZZ {1}[mm]\n'.format(ni, com['z'] * 1000))
+#             if com['xx'] is not None:
+#                 f.write('    NODE {0} TYPE DXX {1}\n'.format(ni, com['xx'] * 1000))
+#             if com['yy'] is not None:
+#                 f.write('    NODE {0} TYPE DYY {1}\n'.format(ni, com['yy'] * 1000))
+#             if com['zz'] is not None:
+#                 f.write('    NODE {0} TYPE DZZ {1}\n'.format(ni, com['zz'] * 1000))
+
+
+# def _write_tributary_load(f, software, com, factor):
+
+#     if software == 'abaqus':
+#         f.write('*CLOAD\n')
+#         f.write('**\n')
+
+#     for node in sorted(com, key=int):
+#         ni = node + 1
 
 #         if software == 'abaqus':
 
-#             f.write('*DLOAD\n')
-#             f.write('**\n')
-
-#             if axes == 'global':
-#                 for dof in dofs[:3]:
-#                     if com[dof]:
-#                         f.write('{0}, P{1}, {2}'.format(k, dof.upper(), factor * com[dof]) + '\n')
-
-#             elif axes == 'local':
-#                 if com['x']:
-#                     f.write('{0}, P1, {1}'.format(k, factor * com['x']) + '\n')
-#                 if com['y']:
-#                     f.write('{0}, P2, {1}'.format(k, factor * com['y']) + '\n')
-
-#         elif software == 'opensees':
-
-#             if axes == 'global':
-#                 raise NotImplementedError
-
-#             elif axes == 'local':
-#                 elements = ' '.join([str(i + 1) for i in sets[k]['selection']])
-#                 f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, -com['y'], -com['x']))
+#             for ci, dof in enumerate(dofs[:3], 1):
+#                 if com[node][dof]:
+#                     ni = node + 1
+#                     dl = com[node][dof] * factor
+#                     f.write('{0}, {1}, {2}\n'.format(ni, ci, dl))
 
 #         elif software == 'sofistik':
 
-#             for i in sets[k]['selection']:
-#                 ni = structure.sofistik_mapping[i]
-#                 if axes == 'global':
-#                     if com['x']:
-#                         f.write('    BEAM {0} TYPE PXX {1}[kN/m]\n'.format(ni, com['x'] * 0.001))
-#                     if com['y']:
-#                         f.write('    BEAM {0} TYPE PYY {1}[kN/m]\n'.format(ni, com['y'] * 0.001))
-#                     if com['z']:
-#                         f.write('    BEAM {0} TYPE PZZ {1}[kN/m]\n'.format(ni, com['z'] * 0.001))
-#                 elif axes == 'local':
-#                     if com['z']:
-#                         f.write('    BEAM {0} TYPE PX {1}[kN/m]\n'.format(ni, com['z'] * 0.001))
-#                     if com['x']:
-#                         f.write('    BEAM {0} TYPE PY {1}[kN/m]\n'.format(ni, com['x'] * 0.001))
-#                     if com['y']:
-#                         f.write('    BEAM {0} TYPE PZ {1}[kN/m]\n'.format(ni, com['y'] * 0.001))
+#             f.write('    NODE NO {0} TYPE '.format(ni))
+#             for ci, dof in enumerate(dofs[:3], 1):
+#                 if com[node][dof]:
+#                     dl = com[node][dof] / 1000.
+#                     f.write('P{0}{0}[kN] {1}\n'.format(dof.upper(), dl))
+
+#         elif software == 'opensees':
+
+#             pass
 
 #         elif software == 'ansys':
 
 #             pass
 
 
-# def _write_area_load(f, software, com, axes, elset, sets, factor):
+# def _write_prestress_load(f, software, elset, com):
 
-#     if software == 'opensees':
+#     for k in elset:
 
-#         pass
+#         if software == 'abaqus':
 
-#     elif software == 'abaqus':
+#             f.write('*INITIAL CONDITIONS, TYPE=STRESS\n')
+#             f.write('{0}, '.format(k))
+#             if com['sxx']:
+#                 f.write('{0}\n'.format(com['sxx']))
 
-#         for k in elset:
-#             if axes == 'global':
-#                 raise NotImplementedError
+#         elif software == 'sofistik':
 
-#             elif axes == 'local':
-#                 # x COMPONENT
-#                 # y COMPONENT
-#                 f.write('*DLOAD\n')
-#                 f.write('**\n')
-#                 if com['z']:
-#                     f.write('{0}, P, {1}'.format(k, factor * com['z']) + '\n')
+#             pass
 
-#     elif software == 'sofistik':
+#         elif software == 'opensees':
 
-#         components = ''
-#         for i in 'xyz':
-#             if com[i]:
-#                 if axes == 'local':
-#                     components += ' P{0} {1}[kN/m2]'.format(i.upper(), 0.001 * com[i])
-#                 elif axes == 'global':
-#                     components += ' P{0}{0} {1}[kN/m2]'.format(i.upper(), 0.001 * com[i])
-#         for k in elset:
-#             set_index = sets[k]['index'] + 1
-#             f.write('    QUAD GRP {0} TYPE{1}\n'.format(set_index, components))
+#                 pass
 
-#     elif software == 'ansys':
+#         elif software == 'ansys':
 
-#         pass
+#             pass
 
 
-# def _write_gravity_load(f, software, g, com, elset, factor):
+# def _write_thermal_load(f, software, elset, temperature, sets, factor):
 
-#     gx = com['x'] if com['x'] else 0
-#     gy = com['y'] if com['y'] else 0
-#     gz = com['z'] if com['z'] else 0
+#     for k in elset:
 
-#     if software == 'abaqus':
+#         if software == 'abaqus':
 
-#         for k in elset:
-#             f.write('*DLOAD\n')
-#             f.write('**\n')
-#             f.write('{0}, GRAV, {1}, {2}, {3}, {4}\n'.format(k, g * factor, gx, gy, gz))
-#             f.write('**\n')
+#             pass
 
-#     elif software == 'sofistik':
+#         elif software == 'sofistik':
 
-#         pass
+#             for k in elset:
+#                 set_index = sets[k]['index'] + 1
+#                 f.write('    QUAD GRP {0} TYPE {1} {2}\n'.format(set_index, 'DTXY', temperature))
 
-#     elif software == 'opensees':
+#         elif software == 'opensees':
 
-#         pass
+#                 pass
 
-#     elif software == 'ansys':
+#         elif software == 'ansys':
 
-#         pass
-
-
+#             pass
 
 
 
@@ -869,120 +988,7 @@ def _write_sofistik_loads_displacements(f, sets, displacements, loads, steps, st
 
 
 
-# def _write_displacements(f, software, com, nset, factor, sets, ndof):
 
-#     if software == 'abaqus':
-
-#         f.write('*BOUNDARY\n')
-#         f.write('**\n')
-#         for ci, dof in enumerate(dofs, 1):
-#             if com[dof] is not None:
-#                 f.write('{0}, {1}, {1}, {2}\n'.format(nset, ci, com[dof] * factor))
-
-#     elif software == 'opensees':
-
-#         for ci, dof in enumerate(dofs[:ndof], 1):
-#             if com[dof] is not None:
-#                 for node in sets[nset]['selection']:
-#                     f.write('sp {0} {1} {2}\n'.format(node + 1, ci, com[dof]))
-
-#     elif software == 'sofistik':
-
-#         for i in sets[nset]['selection']:
-#             ni = i + 1
-#             if com['x'] is not None:
-#                 f.write('    NODE {0} TYPE WXX {1}[mm]\n'.format(ni, com['x'] * 1000))
-#             if com['y'] is not None:
-#                 f.write('    NODE {0} TYPE WYY {1}[mm]\n'.format(ni, com['y'] * 1000))
-#             if com['z'] is not None:
-#                 f.write('    NODE {0} TYPE WZZ {1}[mm]\n'.format(ni, com['z'] * 1000))
-#             if com['xx'] is not None:
-#                 f.write('    NODE {0} TYPE DXX {1}\n'.format(ni, com['xx'] * 1000))
-#             if com['yy'] is not None:
-#                 f.write('    NODE {0} TYPE DYY {1}\n'.format(ni, com['yy'] * 1000))
-#             if com['zz'] is not None:
-#                 f.write('    NODE {0} TYPE DZZ {1}\n'.format(ni, com['zz'] * 1000))
-
-
-# def _write_tributary_load(f, software, com, factor):
-
-#     if software == 'abaqus':
-#         f.write('*CLOAD\n')
-#         f.write('**\n')
-
-#     for node in sorted(com, key=int):
-#         ni = node + 1
-
-#         if software == 'abaqus':
-
-#             for ci, dof in enumerate(dofs[:3], 1):
-#                 if com[node][dof]:
-#                     ni = node + 1
-#                     dl = com[node][dof] * factor
-#                     f.write('{0}, {1}, {2}\n'.format(ni, ci, dl))
-
-#         elif software == 'sofistik':
-
-#             f.write('    NODE NO {0} TYPE '.format(ni))
-#             for ci, dof in enumerate(dofs[:3], 1):
-#                 if com[node][dof]:
-#                     dl = com[node][dof] / 1000.
-#                     f.write('P{0}{0}[kN] {1}\n'.format(dof.upper(), dl))
-
-#         elif software == 'opensees':
-
-#             pass
-
-#         elif software == 'ansys':
-
-#             pass
-
-
-# def _write_prestress_load(f, software, elset, com):
-
-#     for k in elset:
-
-#         if software == 'abaqus':
-
-#             f.write('*INITIAL CONDITIONS, TYPE=STRESS\n')
-#             f.write('{0}, '.format(k))
-#             if com['sxx']:
-#                 f.write('{0}\n'.format(com['sxx']))
-
-#         elif software == 'sofistik':
-
-#             pass
-
-#         elif software == 'opensees':
-
-#                 pass
-
-#         elif software == 'ansys':
-
-#             pass
-
-
-# def _write_thermal_load(f, software, elset, temperature, sets, factor):
-
-#     for k in elset:
-
-#         if software == 'abaqus':
-
-#             pass
-
-#         elif software == 'sofistik':
-
-#             for k in elset:
-#                 set_index = sets[k]['index'] + 1
-#                 f.write('    QUAD GRP {0} TYPE {1} {2}\n'.format(set_index, 'DTXY', temperature))
-
-#         elif software == 'opensees':
-
-#                 pass
-
-#         elif software == 'ansys':
-
-#             pass
 
 
 
