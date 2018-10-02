@@ -20,6 +20,7 @@ Rhino
     examples/mesh_floor_rhino
     examples/mesh_modal_rhino
     examples/mesh_mould_rhino
+    examples/mesh_bridge_rhino
     examples/mesh_plate_rhino
     examples/mesh_planar_rhino
     examples/mesh_principal_rhino
@@ -42,8 +43,7 @@ Blender
     examples/block_bridge_blender
     examples/block_deepbeam_blender
     examples/block_tets_blender
-
-    examples/mesh_bridge_rhino
+    
     examples/mesh_floor_blender
     examples/mesh_mould_blender
     examples/mesh_tris_blender

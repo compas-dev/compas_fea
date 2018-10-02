@@ -26,8 +26,6 @@ comments = {
 }
 
 dofs           = ['x', 'y', 'z', 'xx', 'yy', 'zz']
-# node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
-# element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
 
 
 def write_input_steps(f, software, structure, steps, loads, displacements, sets, fields, ndof=6, properties={}):
@@ -69,6 +67,10 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
         _write_sofistik_loads_displacements(f, sets, displacements, loads, steps, structure)
 
+        f.write('END\n')
+        f.write('$\n')
+        f.write('$\n')
+
     f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
     f.write('{0} ----------------------------------------------------------------------- Steps\n'.format(c))
     f.write('{0}\n'.format(c))
@@ -88,16 +90,16 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         step       = steps[key]
         stype      = step.__name__
         step_index = step.index
-#         state      = getattr(step, 'state', None)
+        state      = getattr(step, 'state', None)
         factor     = getattr(step, 'factor', 1)
-        increments = getattr(step, 'increments')
-#         tolerance  = getattr(step, 'tolerance', None)
-#         iterations = getattr(step, 'iterations', None)
+        increments = getattr(step, 'increments', 100)
+        tolerance  = getattr(step, 'tolerance', None)
+        iterations = getattr(step, 'iterations', None)
         method     = getattr(step, 'type')
 #         scopy      = getattr(step, 'step', None)
-        modes      = getattr(step, 'modes')
-        nlgeom = 'YES' if getattr(step, 'nlgeom') else 'NO'
-#         nlmat = 'YES' if getattr(step, 'nlmat', None) else 'NO'
+        modes      = getattr(step, 'modes', None)
+        nlgeom = 'YES' if getattr(step, 'nlgeom', None) else 'NO'
+        nlmat  = 'YES' if getattr(step, 'nlmat', None) else 'NO'
 
 #         has_concrete = False
 #         for material in structure.materials.values():
@@ -263,6 +265,29 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
                         f.write('    LCC {0} $ {1}\n'.format(displacement_index, k))
 
 
+        # Output requests
+
+        if software == 'abaqus':
+
+            _write_abaqus_output(f, fields, structure)
+
+        elif software == 'sofistik':
+
+            _write_sofistik_output(f, stype, properties, state, step_index, key, nlgeom, increments, tolerance, nlmat,
+                                   loads, factor)
+
+        elif software == 'opensees':
+
+            _write_opensees_output(f, fields, ndof, temp, key, structure, tolerance, iterations, increments)
+
+        elif software == 'ansys':
+
+            pass
+
+        f.write('{0}\n'.format(c))
+        f.write('{0}\n'.format(c))
+
+
 def _write_point_loads(f, software, com, factor):
 
     if software == 'abaqus':
@@ -361,11 +386,11 @@ def _write_sofistik_loads_displacements(f, sets, displacements, loads, steps, st
 
         load  = loads[k]
         ltype = load.__name__
-        com   = getattr(load, 'components')
-        axes  = getattr(load, 'axes')
-        temp  = getattr(load, 'temperature')
-        nodes = getattr(load, 'nodes')
-        elset = getattr(load, 'elements')
+        com   = getattr(load, 'components', None)
+        axes  = getattr(load, 'axes', None)
+        temp  = getattr(load, 'temperature', None)
+        nodes = getattr(load, 'nodes', None)
+        elset = getattr(load, 'elements', None)
 
         if isinstance(nodes, str):
             nodes = [nodes]
@@ -423,6 +448,8 @@ def _write_sofistik_loads_displacements(f, sets, displacements, loads, steps, st
             f.write("LC {0} TITL '{1}'\n".format(displacement_index, k))
 
             _write_displacements(f, 'sofistik', com, nodes, 1, sets, 6)
+
+            f.write('$\n')
 
 
 def _write_line_load(f, software, axes, com, factor, elset, sets, structure):
@@ -548,443 +575,410 @@ def _write_gravity_load(f, software, g, com, elset, factor):
         pass
 
 
-# def _write_displacements(f, software, com, nset, factor, sets, ndof):
+def _write_displacements(f, software, com, nset, factor, sets, ndof):
 
-#     if software == 'abaqus':
+    if software == 'abaqus':
 
-#         f.write('*BOUNDARY\n')
-#         f.write('**\n')
-#         for ci, dof in enumerate(dofs, 1):
-#             if com[dof] is not None:
-#                 f.write('{0}, {1}, {1}, {2}\n'.format(nset, ci, com[dof] * factor))
+        f.write('*BOUNDARY\n')
+        f.write('**\n')
 
-#     elif software == 'opensees':
+        for ci, dof in enumerate(dofs, 1):
+            if com[dof] is not None:
+                f.write('{0}, {1}, {1}, {2}\n'.format(nset, ci, com[dof] * factor))
 
-#         for ci, dof in enumerate(dofs[:ndof], 1):
-#             if com[dof] is not None:
-#                 for node in sets[nset]['selection']:
-#                     f.write('sp {0} {1} {2}\n'.format(node + 1, ci, com[dof]))
+    elif software == 'opensees':
 
-#     elif software == 'sofistik':
+        for ci, dof in enumerate(dofs[:ndof], 1):
+            if com[dof] is not None:
+                for node in sets[nset]['selection']:
+                    f.write('sp {0} {1} {2}\n'.format(node + 1, ci, com[dof]))
 
-#         for i in sets[nset]['selection']:
-#             ni = i + 1
-#             if com['x'] is not None:
-#                 f.write('    NODE {0} TYPE WXX {1}[mm]\n'.format(ni, com['x'] * 1000))
-#             if com['y'] is not None:
-#                 f.write('    NODE {0} TYPE WYY {1}[mm]\n'.format(ni, com['y'] * 1000))
-#             if com['z'] is not None:
-#                 f.write('    NODE {0} TYPE WZZ {1}[mm]\n'.format(ni, com['z'] * 1000))
-#             if com['xx'] is not None:
-#                 f.write('    NODE {0} TYPE DXX {1}\n'.format(ni, com['xx'] * 1000))
-#             if com['yy'] is not None:
-#                 f.write('    NODE {0} TYPE DYY {1}\n'.format(ni, com['yy'] * 1000))
-#             if com['zz'] is not None:
-#                 f.write('    NODE {0} TYPE DZZ {1}\n'.format(ni, com['zz'] * 1000))
+    elif software == 'sofistik':
 
+        for i in sets[nset]['selection']:
+            ni = i + 1
+            if com['x'] is not None:
+                f.write('    NODE {0} TYPE WXX {1}[mm]\n'.format(ni, com['x'] * 1000))
+            if com['y'] is not None:
+                f.write('    NODE {0} TYPE WYY {1}[mm]\n'.format(ni, com['y'] * 1000))
+            if com['z'] is not None:
+                f.write('    NODE {0} TYPE WZZ {1}[mm]\n'.format(ni, com['z'] * 1000))
+            if com['xx'] is not None:
+                f.write('    NODE {0} TYPE DXX {1}\n'.format(ni, com['xx'] * 1000))
+            if com['yy'] is not None:
+                f.write('    NODE {0} TYPE DYY {1}\n'.format(ni, com['yy'] * 1000))
+            if com['zz'] is not None:
+                f.write('    NODE {0} TYPE DZZ {1}\n'.format(ni, com['zz'] * 1000))
 
-# def _write_tributary_load(f, software, com, factor):
 
-#     if software == 'abaqus':
-#         f.write('*CLOAD\n')
-#         f.write('**\n')
+def _write_tributary_load(f, software, com, factor):
 
-#     for node in sorted(com, key=int):
-#         ni = node + 1
+    if software == 'abaqus':
 
-#         if software == 'abaqus':
+        f.write('*CLOAD\n')
+        f.write('**\n')
 
-#             for ci, dof in enumerate(dofs[:3], 1):
-#                 if com[node][dof]:
-#                     ni = node + 1
-#                     dl = com[node][dof] * factor
-#                     f.write('{0}, {1}, {2}\n'.format(ni, ci, dl))
+    elif software == 'sofistik':
 
-#         elif software == 'sofistik':
+        pass
 
-#             f.write('    NODE NO {0} TYPE '.format(ni))
-#             for ci, dof in enumerate(dofs[:3], 1):
-#                 if com[node][dof]:
-#                     dl = com[node][dof] / 1000.
-#                     f.write('P{0}{0}[kN] {1}\n'.format(dof.upper(), dl))
+    elif software == 'opensees':
 
-#         elif software == 'opensees':
+        pass
 
-#             pass
+    elif software == 'ansys':
 
-#         elif software == 'ansys':
+        pass
 
-#             pass
+    for node in sorted(com, key=int):
+        ni = node + 1
 
+        if software == 'abaqus':
 
-# def _write_prestress_load(f, software, elset, com):
+            for ci, dof in enumerate(dofs[:3], 1):
+                if com[node][dof]:
+                    dl = com[node][dof] * factor
+                    f.write('{0}, {1}, {2}\n'.format(ni, ci, dl))
 
-#     for k in elset:
+        elif software == 'sofistik':
 
-#         if software == 'abaqus':
+            f.write('    NODE NO {0} TYPE '.format(ni))
 
-#             f.write('*INITIAL CONDITIONS, TYPE=STRESS\n')
-#             f.write('{0}, '.format(k))
-#             if com['sxx']:
-#                 f.write('{0}\n'.format(com['sxx']))
+            for ci, dof in enumerate(dofs[:3], 1):
+                if com[node][dof]:
+                    dl = com[node][dof] / 1000.
+                    f.write('P{0}{0}[kN] {1}\n'.format(dof.upper(), dl))
 
-#         elif software == 'sofistik':
+        elif software == 'opensees':
 
-#             pass
+            pass
 
-#         elif software == 'opensees':
+        elif software == 'ansys':
 
-#                 pass
+            pass
 
-#         elif software == 'ansys':
 
-#             pass
+def _write_prestress_load(f, software, elset, com):
 
+    for k in elset:
 
-# def _write_thermal_load(f, software, elset, temperature, sets, factor):
+        if software == 'abaqus':
 
-#     for k in elset:
+            f.write('*INITIAL CONDITIONS, TYPE=STRESS\n')
+            f.write('{0}, '.format(k))
 
-#         if software == 'abaqus':
+            if com['sxx']:
+                f.write('{0}\n'.format(com['sxx']))
 
-#             pass
+        elif software == 'sofistik':
 
-#         elif software == 'sofistik':
+            pass
 
-#             for k in elset:
-#                 set_index = sets[k]['index'] + 1
-#                 f.write('    QUAD GRP {0} TYPE {1} {2}\n'.format(set_index, 'DTXY', temperature))
+        elif software == 'opensees':
 
-#         elif software == 'opensees':
+                pass
 
-#                 pass
+        elif software == 'ansys':
 
-#         elif software == 'ansys':
+            pass
 
-#             pass
 
+def _write_thermal_load(f, software, elset, temperature, sets, factor):
 
+    for k in elset:
 
+        if software == 'abaqus':
 
+            pass
 
+        elif software == 'sofistik':
 
+            for k in elset:
+                set_index = sets[k]['index'] + 1
+                f.write('    QUAD GRP {0} TYPE {1} {2}\n'.format(set_index, 'DTXY', temperature))
 
+        elif software == 'opensees':
 
+                pass
 
+        elif software == 'ansys':
 
+            pass
 
 
+def _write_opensees_output(f, fields, ndof, temp, key, structure, tolerance, iterations, increments):
 
+    f.write('}\n')
 
+    # Node recorders
 
+    output = {}
 
+    if 'u' in fields:
+        output['u.out'] = '1 2 3 disp'
 
+    if 'rf' in fields:
+        output['rf.out'] = '1 2 3 reaction'
 
+    if ndof == 6:
 
+        if 'ur' in fields:
+            output['ur.out'] = '4 5 6 disp'
 
+        if 'rm' in fields:
+            output['rm.out'] = '4 5 6 reaction'
 
+    prefix = 'recorder Node -file {0}{1}_'.format(temp, key)
+    for k, j in output.items():
+        f.write('{0}{1} -time -nodeRange {2} -dof {3}\n'.format(prefix, k, '1 {0}'.format(structure.node_count()), j))
 
 
+    # Sort elements
 
+    truss_elements = ''
+    truss_ekeys    = []
+    # beam_elements = ''
+    # spring_elements = ''
+    # beam_numbers = []
+    # spring_numbers = []
 
+    for ekey, element in structure.elements.items():
+        etype = element.__name__
 
+        if etype in ['TrussElement', 'StrutElement', 'TieElement']:
+            truss_elements += '{0} '.format(ekey + 1)
+            truss_ekeys.append(ekey)
 
+    #     elif etype in ['BeamElement']:
+    #         beam_elements += '{0} '.format(ekey + 1)
+    #         beam_numbers.append(ekey)
 
+    #     elif etype in ['SpringElement']:
+    #         spring_elements += '{0} '.format(ekey + 1)
+    #         spring_numbers.append(ekey)
 
 
+    # Element recorders
 
+    prefix = 'recorder Element -file {0}{1}_'.format(temp, key)
 
+    if 'sf' in fields:
 
+        if truss_elements:
+            f.write('{0}{1} -time -ele {2}{3}\n'.format(prefix, 'sf_truss.out', truss_elements, 'axialForce'))
 
+    #     if beam_elements:
+    #         k = 'element_beam_sf.out'
+    #         j = 'force'
+    #         f.write('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, beam_elements, j))
 
+    # if 'spf' in fields:
 
+    #     if spring_elements:
+    #         k = 'element_spring_sf.out'
+    #         j = 'basicForces'
+    #         f.write('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, spring_elements, j))
 
-#             # Output
 
-#             if middle[software]:
-#                 f.write(middle[software])
+    # ekeys
 
-#             if software == 'opensees':
+    with open('{0}truss_ekeys.json'.format(temp), 'w') as fo:
+        json.dump({'truss_ekeys': truss_ekeys}, fo)
 
-#                 nodal = {}
-#                 node_range = '1 {0}'.format(structure.node_count())
+    # with open('{0}beam_numbers.json'.format(temp), 'w') as fo:
+    #     json.dump({'beam_numbers': beam_numbers}, fo)
 
-#                 if 'u' in fields:
-#                     nodal['node_u.out'] = '1 2 3 disp'
-#                 if 'rf' in fields:
-#                     nodal['node_rf.out'] = '1 2 3 reaction'
-#                 if ndof == 6:
-#                     if 'ur' in fields:
-#                         nodal['node_ur.out'] = '4 5 6 disp'
-#                     if 'rm' in fields:
-#                         nodal['node_rm.out'] = '4 5 6 reaction'
+    # with open('{0}spring_numbers.json'.format(temp), 'w') as fo:
+    #     json.dump({'spring_numbers': spring_numbers}, fo)
 
-#                 prefix = 'recorder Node -file {0}{1}_'.format(temp, key)
-#                 for k, j in nodal.items():
-#                     f.write('{0}{1} -time -nodeRange {2} -dof {3}\n'.format(prefix, k, node_range, j))
 
-#                 truss_elements = ''
-#                 beam_elements = ''
-#                 spring_elements = ''
-#                 truss_numbers = []
-#                 beam_numbers = []
-#                 spring_numbers = []
+    # Solver
 
-#                 for ekey, element in structure.elements.items():
-#                     etype = element.__name__
+    f.write('#\n')
+    # # f.write('constraints Plain\n')
+    f.write('constraints Transformation\n')
+    f.write('numberer RCM\n')
+    f.write('system ProfileSPD\n')
+    f.write('test NormUnbalance {0} {1} 5\n'.format(tolerance, iterations))
+    f.write('algorithm NewtonLineSearch\n')
+    f.write('integrator LoadControl {0}\n'.format(1./increments))
+    f.write('analysis Static\n')
+    f.write('analyze {0}\n'.format(increments))
 
-#                     if etype in ['TrussElement', 'StrutElement', 'TieElement']:
-#                         truss_elements += '{0} '.format(ekey + 1)
-#                         truss_numbers.append(ekey)
 
-#                     elif etype in ['BeamElement']:
-#                         beam_elements += '{0} '.format(ekey + 1)
-#                         beam_numbers.append(ekey)
+def _write_abaqus_output(f, fields, structure):
 
-#                     elif etype in ['SpringElement']:
-#                         spring_elements += '{0} '.format(ekey + 1)
-#                         spring_numbers.append(ekey)
+    if isinstance(fields, list):
+        fields = structure.fields_dict_from_list(fields)
 
-#                 prefix = 'recorder Element -file {0}{1}_'.format(temp, key)
+    if 'spf' in fields:
+        fields['ctf'] = 'all'
+        del fields['spf']
 
-#                 if 'sf' in fields:
+    f.write('**\n')
+    f.write('*OUTPUT, FIELD\n')
+    f.write('**\n')
 
-#                     if truss_elements:
-#                         k = 'element_truss_sf.out'
-#                         j = 'axialForce'
-#                         f.write('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, truss_elements, j))
+    f.write('*NODE OUTPUT\n')
+    f.write('**\n')
+    f.write(', '.join([i.upper() for i in ['rf', 'rm', 'u', 'ur', 'cf', 'cm'] if i in fields]) + '\n')
+    f.write('**\n')
 
-#                     if beam_elements:
-#                         k = 'element_beam_sf.out'
-#                         j = 'force'
-#                         f.write('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, beam_elements, j))
+    f.write('*ELEMENT OUTPUT\n')
+    f.write('**\n')
+    f.write(', '.join([i.upper() for i in ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
+                       if (i in fields and i != 'rbfor')]) + '\n')
 
-#                 if 'spf' in fields:
+    if 'rbfor' in fields:
+        f.write('*ELEMENT OUTPUT, REBAR\n')
+        f.write('RBFOR\n')
 
-#                     if spring_elements:
-#                         k = 'element_spring_sf.out'
-#                         j = 'basicForces'
-#                         f.write('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, spring_elements, j))
+    f.write('**\n')
+    f.write('*END STEP\n')
 
-#                 with open('{0}truss_numbers.json'.format(temp), 'w') as fo:
-#                     json.dump({'truss_numbers': truss_numbers}, fo)
 
-#                 with open('{0}beam_numbers.json'.format(temp), 'w') as fo:
-#                     json.dump({'beam_numbers': beam_numbers}, fo)
+def _write_sofistik_output(f, stype, properties, state, step_index, key, nlgeom, increments, tolerance, nlmat, loads,
+                           factor):
 
-#                 with open('{0}spring_numbers.json'.format(temp), 'w') as fo:
-#                     json.dump({'spring_numbers': spring_numbers}, fo)
+    f.write('END\n$\n$\n')
 
-#                 f.write('#\n')
-#                 # f.write('constraints Plain\n')
-#                 f.write('constraints Transformation\n')
-#                 f.write('numberer RCM\n')
-#                 f.write('system ProfileSPD\n')
-#                 f.write('test NormUnbalance {0} {1} 5\n'.format(tolerance, iterations))
-#                 f.write('algorithm NewtonLineSearch\n')
-#                 f.write('integrator LoadControl {0}\n'.format(1./increments))
-#                 f.write('analysis Static\n')
-#                 f.write('analyze {0}\n'.format(increments))
+    if stype != 'BucklingStep':
 
-#             elif software == 'abaqus':
+        # Rebar
 
-#                 if isinstance(fields, list):
-#                     fields = structure.fields_dict_from_list(fields)
-#                 if 'spf' in fields:
-#                     fields['ctf'] = 'all'
-#                     del fields['spf']
+        has_rebar = False
+        for property in properties.values():
+            if property.reinforcement:
+                has_rebar = True
+                break
 
-#                 f.write('**\n')
-#                 f.write('*OUTPUT, FIELD\n')
-#                 f.write('**\n')
-#                 f.write('*NODE OUTPUT\n')
-#                 f.write('**\n')
-#                 f.write(', '.join([i.upper() for i in node_fields if i in fields]) + '\n')
-#                 f.write('**\n')
-#                 f.write('*ELEMENT OUTPUT\n')
-#                 f.write('**\n')
-#                 f.write(', '.join([i.upper() for i in element_fields if (i in fields and i != 'rbfor')]) + '\n')
-#                 if 'rbfor' in fields:
-#                     f.write('*ELEMENT OUTPUT, REBAR\n')
-#                     f.write('RBFOR\n')
-#                 f.write('**\n')
-#                 f.write('*END STEP\n')
+    #     if has_rebar:
 
-#             elif software == 'sofistik':
+    #         f.write('+PROG BEMESS\n')
+    #         f.write("HEAD REBAR {0} LC 1{1:0>2}00\n".format(state.upper(), step_index))
+    #         f.write('$\n')
+    #         f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
+    #         f.write('CTRL WARN 496 $ Possible non-constant longitudinal reinforcement.\n')
+    #         f.write('CTRL WARN 254 $ Vertical shear reinforcement not allowed for slab thickness smaller 20 cm.\n')
+    #         f.write('CTRL PFAI 2\n')
+    #         if state == 'sls':
+    #             # f.write('CTRL SERV GALF 1.45\n')
+    #             f.write('CTRL SLS\n')
+    #             f.write('CRAC WK PARA\n')
+    #         else:
+    #             f.write('CTRL ULTI\n')
+    #         f.write('CTRL LCR {0}\n'.format(step_index))
+    #         f.write('LC 1{0:0>2}00\n'.format(step_index))  # can put many LC here LC301,302 etc
+    #         f.write('$\n')
+    #         f.write('$\n')
+    #         f.write('END\n')
+    #         f.write('$\n')
+    #         f.write('$\n')
 
-#                 pass
+    #         # if state == 'uls':
 
-#             elif software == 'ansys':
+    #         #     f.write('+PROG BEMESS\n')
+    #         #     f.write("HEAD REBAR {0} LC 1{1:0>2}0 COMBINED\n".format(state.upper(), step_index))
+    #         #     f.write('$\n')
+    #         #     f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
+    #         #     f.write('CTRL PFAI 2\n')
+    #         #     f.write('CTRL LCRI {0}\n'.format(step_index))
+    #         #     f.write('CTRL LCR 1{0:0>2}\n'.format(step_index))
+    #         #     f.write('$\n')
+    #         #     f.write('$\n')
+    #         #     f.write('END\n')
+    #         #     f.write('$\n')
+    #         #     f.write('$\n')
 
-#                 pass
 
-#         f.write('{0}\n'.format(c))
-#         f.write('{0}\n'.format(c))
+        # Primary analysis
 
-#         if footers[software]:
-#             f.write(footers[software])
+        f.write('+PROG ASE\n')
+        f.write("HEAD SOLVE {0} LC 2{1:0>2}00 {2}\n".format(state.upper(), step_index, key))
+        f.write('$\n')
+        f.write('CTRL SOLV 1\n')
 
-#         if software == 'sofistik':
+    #     if has_concrete:
+    #         f.write('CTRL CONC\n')
 
-#             if stype != 'BucklingStep':
+        # if state == 'sls':
+        #     pass
+        #     # f.write('NSTR KMOD S1 KSV SLD\n')
+        # elif state == 'uls':
+        #     # f.write('NSTR KMOD S1 KSV ULD\n')
+        #     f.write('ULTI 30 FAK1 0.1 DFAK 0.1 PRO 1.5 FAKE 1.5\n')
 
-#                 is_rebar = False
-#                 for property in properties.values():
-#                     if property.reinforcement:
-#                         is_rebar = True
+        if nlgeom == 'YES':
+            f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2}\n'.format(increments, tolerance, nlmat))
+            # f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2} PLC 1{3:0>2}00\n'.format(increments, tolerance, nlmat, step_index))
 
-#                 if is_rebar:
+        # # if state == 'uls':
+        #     # f.write('REIQ LCR 1{0:0>2}\n'.format(step_index))
+        # # else:
+        #     # f.write('REIQ LCR {0}\n'.format(step_index))
 
-#                     f.write('+PROG BEMESS\n')
-#                     f.write("HEAD REBAR {0} LC 1{1:0>2}00\n".format(state.upper(), step_index))
-#                     f.write('$\n')
-#                     f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
-#                     f.write('CTRL WARN 496 $ Possible non-constant longitudinal reinforcement.\n')
-#                     f.write('CTRL WARN 254 $ Vertical shear reinforcement not allowed for slab thickness smaller 20 cm.\n')
-#                     f.write('CTRL PFAI 2\n')
-#                     if state == 'sls':
-#                         # f.write('CTRL SERV GALF 1.45\n')
-#                         f.write('CTRL SLS\n')
-#                         f.write('CRAC WK PARA\n')
-#                     else:
-#                         f.write('CTRL ULTI\n')
-#                     f.write('CTRL LCR {0}\n'.format(step_index))
-#                     f.write('LC 1{0:0>2}00\n'.format(step_index))  # can put many LC here LC301,302 etc
-#                     f.write('$\n')
-#                     f.write('$\n')
-#                     f.write('END\n')
-#                     f.write('$\n')
-#                     f.write('$\n')
+        # if has_concrete:
+        #     f.write('REIQ LCR {0}\n'.format(step_index))
+        # f.write('$\n')
 
-#                     # if state == 'uls':
+        DLX, DLY, DLZ = 0, 0, 0
+        for load in loads.values():
+            if load.__name__ == 'GravityLoad':
+                com = load.components
+                DLX = com.get('x', 0)
+                DLY = com.get('y', 0)
+                DLZ = com.get('z', 0)
+                break
 
-#                     #     f.write('+PROG BEMESS\n')
-#                     #     f.write("HEAD REBAR {0} LC 1{1:0>2}0 COMBINED\n".format(state.upper(), step_index))
-#                     #     f.write('$\n')
-#                     #     f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
-#                     #     f.write('CTRL PFAI 2\n')
-#                     #     f.write('CTRL LCRI {0}\n'.format(step_index))
-#                     #     f.write('CTRL LCR 1{0:0>2}\n'.format(step_index))
-#                     #     f.write('$\n')
-#                     #     f.write('$\n')
-#                     #     f.write('END\n')
-#                     #     f.write('$\n')
-#                     #     f.write('$\n')
+        if isinstance(factor, dict):
+            fact = factor.get('g', 1.0)
+        else:
+            fact = factor
 
-#                 f.write('+PROG ASE\n')
-#                 f.write("HEAD SOLVE {0} LC 2{1:0>2}00 {2}\n".format(state.upper(), step_index, key))
-#                 f.write('$\n')
-#                 f.write('CTRL SOLV 1\n')
-#                 if has_concrete:
-#                     f.write('CTRL CONC\n')
+        f.write('$\n')
+        f.write("LC 2{0:0>2}00 TITL '{1}'".format(step_index, key))
+        f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * fact, DLY * fact, DLZ * fact))
+        f.write('    LCC 1{0:0>2}00 PLC YES\n'.format(step_index))
 
-#                 if state == 'sls':
-#                     pass
-#                     # f.write('NSTR KMOD S1 KSV SLD\n')
-#                 elif state == 'uls':
-#                     # f.write('NSTR KMOD S1 KSV ULD\n')
-#                     f.write('ULTI 30 FAK1 0.1 DFAK 0.1 PRO 1.5 FAKE 1.5\n')
-#                 if nlgeom == 'YES':
-#                     # f.write('SYST PROB TH3 ITER {0} TOL {1}\n'.format(increments, tolerance))
-#                     f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2}\n'.format(increments, tolerance, nlmat))
-#                     # f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2} PLC 1{3:0>2}00\n'.format(increments, tolerance, nlmat, step_index))
+        f.write('$\n')
+        f.write('END\n')
+        f.write('$\n')
+        f.write('$\n')
 
-#                 # if state == 'uls':
-#                     # f.write('REIQ LCR 1{0:0>2}\n'.format(step_index))
-#                 # else:
-#                     # f.write('REIQ LCR {0}\n'.format(step_index))
+        # if has_concrete:
 
-#                 if has_concrete:
-#                     f.write('REIQ LCR {0}\n'.format(step_index))
-#                 f.write('$\n')
+        #     f.write('+PROG ASE\n')
+        #     f.write("HEAD CREEP {0} LC 3{1:0>2}00 {2}\n".format(state.upper(), step_index, key))
+        #     f.write('$\n')
+        #     f.write('CTRL SOLV 1\n')
+        #     f.write('CTRL CONC\n')
+        #     f.write('CREP NCRE 10\n')
 
-#                 DLX, DLY, DLZ = 0, 0, 0
-#                 for load in loads.values():
-#                     if load.__name__ == 'GravityLoad':
-#                         com = load.components
-#                         DLX = com['x'] if com['x'] else 0
-#                         DLY = com['y'] if com['y'] else 0
-#                         DLZ = com['z'] if com['z'] else 0
-#                         break
+        #     if nlgeom == 'YES':
+        #         f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2} PLC 2{3:0>2}00\n'.format(increments, tolerance, nlmat, step_index))
+        #     f.write('GRP ALL FACS 1.00 PHI 1.00 PHIF 0 EPS -0.0005\n')
 
-#                 if isinstance(factor, dict):
-#                     fact = factor.get('g', 1.0)
-#                 else:
-#                     fact = factor
+        #     f.write('REIQ LCR {0}\n'.format(step_index))
+        #     f.write('$\n')
 
-#                 f.write('$\n')
-#                 f.write("LC 2{0:0>2}00 TITL '{1}'".format(step_index, key))
-#                 f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * fact, DLY * fact, DLZ * fact))
-#                 f.write('    LCC 1{0:0>2}00 PLC YES\n'.format(step_index))
+        #     DLX, DLY, DLZ = 0, 0, 0
+        #     for load in loads.values():
+        #         if load.__name__ == 'GravityLoad':
+        #             com = load.components
+        #             DLX = com['x'] if com['x'] else 0
+        #             DLY = com['y'] if com['y'] else 0
+        #             DLZ = com['z'] if com['z'] else 0
+        #             break
 
-#                 f.write('$\n')
-#                 f.write('END\n')
-#                 f.write('$\n')
-#                 f.write('$\n')
+        #     f.write('$\n')
+        #     f.write("LC 3{0:0>2}00 TITL '{1} CREEP'".format(step_index, key))
+        #     f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * fact, DLY * fact, DLZ * fact))
+        #     f.write('    LCC 2{0:0>2}00 PLC YES\n'.format(step_index))
 
-#                 if has_concrete:
-
-#                     f.write('+PROG ASE\n')
-#                     f.write("HEAD CREEP {0} LC 3{1:0>2}00 {2}\n".format(state.upper(), step_index, key))
-#                     f.write('$\n')
-#                     f.write('CTRL SOLV 1\n')
-#                     f.write('CTRL CONC\n')
-#                     f.write('CREP NCRE 10\n')
-
-#                     if nlgeom == 'YES':
-#                         f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2} PLC 2{3:0>2}00\n'.format(increments, tolerance, nlmat, step_index))
-#                     f.write('GRP ALL FACS 1.00 PHI 1.00 PHIF 0 EPS -0.0005\n')
-
-#                     f.write('REIQ LCR {0}\n'.format(step_index))
-#                     f.write('$\n')
-
-#                     DLX, DLY, DLZ = 0, 0, 0
-#                     for load in loads.values():
-#                         if load.__name__ == 'GravityLoad':
-#                             com = load.components
-#                             DLX = com['x'] if com['x'] else 0
-#                             DLY = com['y'] if com['y'] else 0
-#                             DLZ = com['z'] if com['z'] else 0
-#                             break
-
-#                     f.write('$\n')
-#                     f.write("LC 3{0:0>2}00 TITL '{1} CREEP'".format(step_index, key))
-#                     f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * fact, DLY * fact, DLZ * fact))
-#                     f.write('    LCC 2{0:0>2}00 PLC YES\n'.format(step_index))
-
-#                     f.write('$\n')
-#                     f.write('END\n')
-#                     f.write('$\n')
-#                     f.write('$\n')
-
-#     f.write('$\n')
-#     f.write('END\n')
-#     f.write('$\n')
-#     f.write('$\n')
-
-
-# middle = {
-#     'abaqus':   '',
-#     'opensees': '}\n',
-#     'sofistik': '',
-#     'ansys':    '',
-# }
-
-
-
-# footers = {
-#     'abaqus':   '',
-#     'opensees': '',
-#     'sofistik': 'END\n$\n$\n',
-#     'ansys':    '',
-# }
-
-
-
-
-
-
-
+        #     f.write('$\n')
+        #     f.write('END\n')
+        #     f.write('$\n')
+        #     f.write('$\n')
 
 
 
