@@ -25,7 +25,7 @@ comments = {
     'ansys':    '!',
 }
 
-dofs           = ['x', 'y', 'z', 'xx', 'yy', 'zz']
+dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 
 
 def write_input_steps(f, software, structure, steps, loads, displacements, sets, fields, ndof=6, properties={}):
@@ -96,15 +96,10 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
         tolerance  = getattr(step, 'tolerance', None)
         iterations = getattr(step, 'iterations', None)
         method     = getattr(step, 'type')
-#         scopy      = getattr(step, 'step', None)
+        # scopy      = getattr(step, 'step', None)
         modes      = getattr(step, 'modes', None)
         nlgeom = 'YES' if getattr(step, 'nlgeom', None) else 'NO'
         nlmat  = 'YES' if getattr(step, 'nlmat', None) else 'NO'
-
-#         has_concrete = False
-#         for material in structure.materials.values():
-#             if material.__name__ in ['Concrete', 'ConcreteSmearedCrack', 'ConcreteDamagedPlasticity']:
-#                 has_concrete = True
 
 
         # Write heading
@@ -568,7 +563,7 @@ def _write_gravity_load(f, software, g, com, elset, factor):
 
     elif software == 'opensees':
 
-        pass
+        f.write('# GravityLoad not yet implemented for OpenSees')
 
     elif software == 'ansys':
 
@@ -728,6 +723,11 @@ def _write_opensees_output(f, fields, ndof, temp, key, structure, tolerance, ite
         if 'rm' in fields:
             output['rm.out'] = '4 5 6 reaction'
 
+    f.write('#\n')
+    f.write('# Node recorders\n')
+    f.write('# --------------\n')
+    f.write('#\n')
+
     prefix = 'recorder Node -file {0}{1}_'.format(temp, key)
     for k, j in output.items():
         f.write('{0}{1} -time -nodeRange {2} -dof {3}\n'.format(prefix, k, '1 {0}'.format(structure.node_count()), j))
@@ -759,6 +759,10 @@ def _write_opensees_output(f, fields, ndof, temp, key, structure, tolerance, ite
 
 
     # Element recorders
+
+    f.write('#\n')
+    f.write('# Element recorders\n')
+    f.write('# -----------------\n')
 
     prefix = 'recorder Element -file {0}{1}_'.format(temp, key)
 
@@ -795,6 +799,10 @@ def _write_opensees_output(f, fields, ndof, temp, key, structure, tolerance, ite
     # Solver
 
     f.write('#\n')
+    f.write('# Solver\n')
+    f.write('# ------\n')
+    f.write('#\n')
+
     # # f.write('constraints Plain\n')
     f.write('constraints Transformation\n')
     f.write('numberer RCM\n')
@@ -841,6 +849,11 @@ def _write_sofistik_output(f, stype, properties, state, step_index, key, nlgeom,
                            factor):
 
     f.write('END\n$\n$\n')
+
+    # has_concrete = False
+    # for material in structure.materials.values():
+        # if material.__name__ in ['Concrete', 'ConcreteSmearedCrack', 'ConcreteDamagedPlasticity']:
+            # has_concrete = True
 
     if stype != 'BucklingStep':
 

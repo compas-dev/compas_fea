@@ -194,27 +194,27 @@ def extract_data(structure, fields):
             except:
                 print('***** {0}.out data not loaded/saved'.format(file))
 
-    #     else:
+        elif field in ['sf']:
 
-    #         try:
+            # Truss data
 
-    #             file = step + '_element_truss_sf'
+            try:
+                with open('{0}{1}_truss.out'.format(temp, file), 'r') as f:
+                    lines = f.readlines()
+                data = [float(i) for i in lines[-1].split(' ')[1:]]
 
-    #             with open('{0}{1}.out'.format(temp, file), 'r') as f:
-    #                 lines = f.readlines()
-    #             truss_data = [float(i) for i in lines[-1].split(' ')[1:]]
+                with open('{0}truss_ekeys.json'.format(temp), 'r') as f:
+                    truss_ekeys = json.load(f)['truss_ekeys']
 
-    #             with open('{0}truss_numbers.json'.format(temp), 'r') as f:
-    #                 truss_numbers = json.load(f)['truss_numbers']
+                element['sf1'] = {}
+                for ekey, sf1 in zip(truss_ekeys, data):
+                    element['sf1'][ekey] = {}
+                    element['sf1'][ekey]['ip'] = sf1
 
-    #             element['sf1'] = {}
-    #             for ekey, sf1 in zip(truss_numbers, truss_data):
-    #                 element['sf1'][ekey] = {}
-    #                 element['sf1'][ekey]['ip'] = sf1
+                print('***** {0}.out data loaded *****'.format(file))
 
-    #         except:
-
-    #             print('***** No truss element data loaded *****')
+            except:
+                print('***** No truss element data loaded')
 
     #         try:
 

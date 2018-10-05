@@ -561,7 +561,47 @@ def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name=''
     rs.CurrentLayer(rs.AddLayer('Default'))
 
 
+def plot_mode_shapes(structure, step, layer=None, scale=1.0, radius=1):
 
+    """ Plots modal shapes from structure.results.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    layer : str
+        Each mode will be placed in a layer with this string prefix.
+    scale : float
+        Scale displacements for the deformed plot.
+    radius : float
+        Radius of the pipe visualisation meshes.
+
+    Returns
+    -------
+    None
+
+    """
+
+    if not layer:
+        layer = step + '_mode_'
+
+    try:
+        iter = structure.results[step]['frequencies']
+    except:
+        iter = structure.results[step]['info']['description']
+
+    if isinstance(iter, list):
+        for c, fk in enumerate(iter, 1):
+            layerk = layer + str(c)
+            plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=c, radius=radius)
+
+    elif isinstance(iter, dict):
+        for mode in iter:
+            print(mode)
+            layerk = layer + str(mode)
+            plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=mode, radius=radius)
 
 
 
@@ -758,33 +798,6 @@ def plot_axes(xyz, e11, e22, e33, layer, sc=1):
     rs.ObjectLayer(ez, layer)
 
 
-def plot_mode_shapes(structure, step, layer=None, scale=1.0):
-
-    """ Plots modal shapes from structure.results.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object.
-    step : str
-        Name of the Step.
-    layer : str
-        Each mode will be placed in a layer with this string as its base.
-    scale : float
-        Scale displacements for the deformed plot.
-
-    Returns
-    -------
-    None
-
-    """
-
-    iter = structure.results[step]['frequencies']
-    for c, fk in enumerate(iter, 1):
-        layerk = layer + str(c)
-        plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=c)
-
-
 def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
               nodal='mean', mode='', colorbar_size=1):
 
@@ -824,6 +837,14 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     - Pipe visualisation of line elements is not based on the element section.
 
     """
+
+    if field in ['smaxp', 'smises']:
+        nodal  = 'max'
+        iptype = 'max'
+
+    elif field in ['sminp']:
+        nodal  = 'min'
+        iptype = 'min'
 
     # Create and clear Rhino layer
 

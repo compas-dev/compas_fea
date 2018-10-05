@@ -146,6 +146,8 @@ def write_input_materials(f, software, materials, sections=None, properties=None
 
         _write_density(f, software, p, c)
 
+    f.write('{0}\n'.format(c))
+
     if software == 'sofistik':
         _write_sofistik_sections(f, properties, materials, sections)
 
@@ -448,5 +450,3 @@ def _write_density(f, software, p, c):
     elif software == 'ansys':
 
         pass
-
-    f.write('{0}\n'.format(c))

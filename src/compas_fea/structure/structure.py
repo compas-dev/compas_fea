@@ -366,8 +366,7 @@ Steps
         for u, v in list(network.edges()):
             sp = self.check_node_exists(network.vertex_coordinates(u))
             ep = self.check_node_exists(network.vertex_coordinates(v))
-            ekeys.append(self.add_element(nodes=[sp, ep], type=element_type, acoustic=acoustic, thermal=thermal,
-                                          axes=axes))
+            ekeys.append(self.add_element(nodes=[sp, ep], type=element_type, thermal=thermal, axes=axes))
         if elset:
             self.add_set(name=elset, type='element', selection=ekeys)
         return ekeys
