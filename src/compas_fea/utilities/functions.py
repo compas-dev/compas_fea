@@ -33,6 +33,7 @@ except:
 
 try:
     from numpy import abs
+    from numpy import arccos
     from numpy import arctan2
     from numpy import array
     from numpy import asarray
@@ -51,6 +52,7 @@ try:
     from numpy import pi
     from numpy import sin
     from numpy import squeeze
+    from numpy import sqrt
     from numpy import sum
     from numpy import tile
     from numpy import vstack
@@ -61,6 +63,7 @@ except ImportError:
 
 try:
     from scipy.interpolate import griddata
+    from scipy.linalg import det
     from scipy.sparse import csr_matrix
     from scipy.spatial import Delaunay
     from scipy.spatial import distance_matrix
@@ -424,6 +427,192 @@ def extrude_mesh(structure, mesh, layers, thickness, mesh_name, links_name, bloc
         structure.add_set(name=links_name, type='element', selection=links)
 
 
+def _angle(A, B, C):
+
+    AB = B - A
+    BC = C - B
+    th = arccos(sum(AB * BC) / (sqrt(sum(AB**2)) * sqrt(sum(BC**2)))) * 180 / pi
+    return th
+
+
+def _centre(p1, p2, p3):
+
+    ax, ay = p1[0], p1[1]
+    bx, by = p2[0], p2[1]
+    cx, cy = p3[0], p3[1]
+    a = bx - ax
+    b = by - ay
+    c = cx - ax
+    d = cy - ay
+    e = a * (ax + bx) + b * (ay + by)
+    f = c * (ax + cx) + d * (ay + cy)
+    g = 2 * (a * (cy - by) - b * (cx - bx))
+    centerx = (d * e - b * f) / g
+    centery = (a * f - c * e) / g
+    r = sqrt((ax - centerx)**2 + (ay - centery)**2)
+
+    return [centerx, centery, 0], r
+
+
+def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations=100):
+
+    """ Make discretised triangles from input coarse triangles data.
+
+    Parameters
+    ----------
+    vertices : list
+        Co-ordinates of coarse vertices.
+    faces : list
+        Vertex numbers of each face of the coarse triangles.
+    target : float
+        Target edge length of each triangle.
+    min_angle : float
+        Minimum internal angle of triangles.
+    factor : float
+        Factor on the maximum area of each triangle.
+    iterations : int
+        Number of iterations per face.
+
+    Returns
+    -------
+    list
+        Vertices of the discretised trianlges.
+    list
+        Vertex numbers of the discretised trianlges.
+
+    Notes
+    -----
+    - An experimental script.
+
+    """
+
+    points_all = []
+    faces_all  = []
+
+    Amax = factor * 0.5 * target**2
+
+    for count, face in enumerate(faces):
+
+        # Seed
+
+        face.append(face[0])
+        points = []
+        for u, v in zip(face[:-1], face[1:]):
+            sp  = vertices[u]
+            ep  = vertices[v]
+            vec = subtract_vectors(ep, sp)
+            l   = length_vector(vec)
+            div = l / target
+            n   = max([1, int(div)])
+            for j in range(n):
+                points.append(add_vectors(sp, scale_vector(vec, j / n)))
+        if len(points) > 3:
+            points.append(centroid_points(points))
+
+        # Starting orientation
+
+        cent = centroid_points(points)
+        vec1 = subtract_vectors(points[1], points[0])
+        vec2 = subtract_vectors(cent, points[0])
+        vecn = cross_vectors(vec1, vec2)
+
+        # Rotate about x
+
+        points   = array(points).transpose()
+        phi      = -arctan2(vecn[2], vecn[1]) + 0.5 * pi
+        Rx       = array([[1, 0, 0], [0, cos(phi), -sin(phi)], [0, sin(phi), cos(phi)]])
+        vecn_x   = dot(Rx, array(vecn)[:, newaxis])
+        points_x = dot(Rx, points)
+        Rx_inv   = inv(Rx)
+
+        # Rotate about y
+
+        psi      = +arctan2(vecn_x[2, 0], vecn_x[0, 0]) - 0.5 * pi
+        Ry       = array([[cos(psi), 0, sin(psi)], [0, 1, 0], [-sin(psi), 0, cos(psi)]])
+        points_y = dot(Ry, points_x)
+        Ry_inv   = inv(Ry)
+
+        V = points_y.transpose()
+
+        try:
+            it = 0
+            while it < iterations:
+
+                # Delaunay
+
+                DT    = Delaunay(V[:, :2], furthest_site=False, incremental=False)
+                tris_ = DT.simplices
+                tris  = []
+
+                # Filter
+
+                for u, v, w in tris_:
+
+                    p1 = V[u, :2]
+                    p2 = V[v, :2]
+                    p3 = V[w, :2]
+                    t1 = _angle(p1, p2, p3)
+                    t2 = _angle(p2, p3, p1)
+                    t3 = _angle(p3, p1, p2)
+
+                    if not any(array([t1, t2, t3]) < 1):
+                        # mat = array([[p1[0], p2[0], p3[0]], [p1[1], p2[1], p3[1]], [1, 1, 1]])
+                        # A = 0.5 * abs(det(mat))
+                        # if A < 100 * Amax:
+                        tris.append([u, v, w])
+
+                # Area
+
+                checked = True
+
+                for u, v, w in tris:
+
+                    p1 = V[u, :2]
+                    p2 = V[v, :2]
+                    p3 = V[w, :2]
+                    t1 = _angle(p1, p2, p3)
+                    t2 = _angle(p2, p3, p1)
+                    t3 = _angle(p3, p1, p2)
+                    tm = min([t1, t2, t3])
+
+                    c, r  = _centre(p1, p2, p3)
+                    c[2] = V[0, 2]
+                    mat = array([[p1[0], p2[0], p3[0]], [p1[1], p2[1], p3[1]], [1, 1, 1]])
+                    A = 0.5 * abs(det(mat))
+                    # if (tm < min_angle) or (A > Amax):
+                    if A > Amax:
+                        checked = False
+                        dist = distance_matrix(array([c]), V, threshold=10**5)
+                        if len(dist[dist <= r]) <= 3:
+                            V = vstack([V, array([c])])
+                            break
+
+                if checked:
+                    break
+
+                it += 1
+
+            print('Discretising face {0}/{1}: {2} iterations'.format(count + 1, len(faces), it))
+
+            points = dot(Ry_inv, V.transpose())
+            points_all.append([list(i) for i in list(dot(Rx_inv, points).transpose())])
+            faces_all.append([[int(i) for i in tri] for tri in list(tris)])
+
+        except:
+            print('***** ERROR discretising face {0} *****'.format(count))
+
+
+    return points_all, faces_all
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -489,150 +678,6 @@ def combine_all_sets(sets_a, sets_b):
                 if x in sets_b[j]:
                     comb.setdefault(str(i) + ',' + str(j), []).append(x)
     return comb
-
-
-def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations=100, refine=True):
-
-    """ Make an FE mesh from input coarse mesh data.
-
-    Parameters
-    ----------
-    vertices : list
-        Co-ordinates of coarse mesh vertices.
-    faces : list
-        Vertex numbers of each face of the coarse mesh.
-    target : float
-        Target length of each triangle.
-    min_angle : float
-        Minimum internal angle of triangles.
-    factor : float
-        Factor on the maximum area of each triangle.
-    iterations : int
-        Number of iterations per face.
-    refine : bool
-        Refine beyond Delaunay.
-
-    Returns
-    -------
-    list
-        Vertices of discretised faces.
-    list
-        Triangles of discretised faces.
-
-    Notes
-    -----
-    - An experimental script.
-
-    """
-
-    points_all = []
-    faces_all = []
-
-    Amax = factor * 0.5 * target**2
-
-    for count, face in enumerate(faces):
-        print('Face {0}/{1}'.format(count + 1, len(faces)))
-
-        # Seed
-
-        face.append(face[0])
-        points = []
-        for u, v in zip(face[:-1], face[1:]):
-            sp = vertices[u]
-            ep = vertices[v]
-            vec = subtract_vectors(ep, sp)
-            l = length_vector(vec)
-            n = max([1, int(l / target)])
-            for j in range(n):
-                points.append(add_vectors(sp, scale_vector(vec, j / n)))
-        if len(points) > 3:
-            points.append(centroid_points(points))
-
-        # Starting orientation
-
-        centroid = centroid_points(points)
-        vec1 = subtract_vectors(points[1], points[0])
-        vecc = subtract_vectors(centroid, points[0])
-        vecn = cross_vectors(vec1, vecc)
-
-        # Rotate about x
-
-        points = array(points).transpose()
-        phi = -arctan2(vecn[2], vecn[1]) + pi / 2
-        Rx = array([[1., 0., 0.], [0., cos(phi), -sin(phi)], [0., sin(phi), cos(phi)]])
-        vecn_x = dot(Rx, array(vecn)[:, newaxis])
-        points_x = dot(Rx, points)
-        Rxinv = inv(Rx)
-
-        # Rotate about y
-
-        psi = +arctan2(vecn_x[2, 0], vecn_x[0, 0]) - pi / 2
-        Ry = array([[cos(psi), 0., sin(psi)], [0., 1., 0.], [-sin(psi), 0., cos(psi)]])
-        points_y = dot(Ry, points_x)
-        Ryinv = inv(Ry)
-
-        # Refine
-
-        V = points_y.transpose()
-        z = float(V[0, 2])
-
-        try:
-            it = 0
-            while it < iterations:
-                DT = Delaunay(V[:, :2], furthest_site=False, incremental=False)
-                tris_ = DT.simplices
-                tris = []
-                for tri in tris_:
-                    if len(set(tri)) == 3:
-                        u, v, w = tri
-                        p1 = [float(i) for i in V[u, :2]]
-                        p2 = [float(i) for i in V[v, :2]]
-                        p3 = [float(i) for i in V[w, :2]]
-                        th1 = angles_points_xy(p1, p2, p3)[0] * 180 / pi
-                        th2 = angles_points_xy(p2, p3, p1)[0] * 180 / pi
-                        th3 = angles_points_xy(p3, p1, p2)[0] * 180 / pi
-                        if (th1 > 0.1) and (th2 > 0.1) and (th3 > 0.1):
-                            tris.append(tri)
-                for u, v, w in tris:
-                    p1 = [float(i) for i in V[u, :2]]
-                    p2 = [float(i) for i in V[v, :2]]
-                    p3 = [float(i) for i in V[w, :2]]
-                    # th1 = angles_points_xy(p1, p2, p3)[0] * 180 / pi
-                    # th2 = angles_points_xy(p2, p3, p1)[0] * 180 / pi
-                    # th3 = angles_points_xy(p3, p1, p2)[0] * 180 / pi
-                    # thm = min([th1, th2, th3])
-                    res = circle_from_points_xy(p1, p2, p3)
-                    if res:
-                        c, r, _ = res
-                        c[2] = z
-                        A = area_polygon_xy([p1, p2, p3])
-                        # if (thm < min_angle) or (A > Amax):
-                        if A > Amax:
-                            dist = distance_matrix(array([c]), V, threshold=10**5)
-                            ins = len(dist[dist <= r])
-                            if ins <= 3:
-                                V = vstack([V, array([c])])
-                                break
-                    else:
-                        continue
-                it += 1
-
-            print('Iterations {0}'.format(it))
-
-            points_x = dot(Ryinv, V.transpose())
-            points_new = [list(i) for i in list(dot(Rxinv, points_x).transpose())]
-            faces_new = [[int(i) for i in tri] for tri in list(tris)]
-
-            points_all.append(points_new)
-            faces_all.append(faces_new)
-
-        except:
-            print('***** ERROR *****')
-
-    return points_all, faces_all
-
-
-
 
 
 def group_keys_by_attribute(adict, name, tol='3f'):

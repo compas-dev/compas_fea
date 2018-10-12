@@ -604,50 +604,18 @@ def plot_mode_shapes(structure, step, layer=None, scale=1.0, radius=1):
             plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=mode, radius=radius)
 
 
+def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iterations=50):
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iterations=50, refine=True):
-
-    """ Discretise a mesh from an input coarse mesh guid into small denser meshes.
+    """ Discretise a mesh from an input triangulated coarse mesh guid into small denser meshes.
 
     Parameters
     ----------
     structure : obj
         Structure object.
-    guid : str
+    guid : guid
         guid of the Rhino input mesh.
     layer : str
-        Layer name to plot resulting meshes on.
+        Layer name to draw results.
     target : float
         Target length of each triangle.
     min_angle : float
@@ -656,8 +624,6 @@ def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iter
         Factor on the maximum area of each triangle.
     iterations : int
         Number of iterations per face.
-    refine : bool
-        Refine beyond Delaunay.
 
     Returns
     -------
@@ -669,14 +635,13 @@ def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iter
     pts = rhinomesh.get_vertex_coordinates()
     fcs = [face[:3] for face in rhinomesh.get_face_vertices()]
 
-    path = structure.path
     basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc('discretise', basedir=basedir, tmpdir=path)
+    xfunc = XFunc('discretise', basedir=basedir, tmpdir=structure.path)
     xfunc.funcname = 'functions.discretise_faces'
 
     try:
         vertices, faces = xfunc(vertices=pts, faces=fcs, target=target, min_angle=min_angle, factor=factor,
-                                iterations=iterations, refine=refine)
+                                iterations=iterations)
 
         rs.CurrentLayer(rs.AddLayer(layer))
         rs.DeleteObjects(rs.ObjectsByLayer(layer))
@@ -693,6 +658,38 @@ def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iter
 
     except:
         '***** Mesh discretisation failed *****'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, layer='Default', acoustic=False,
