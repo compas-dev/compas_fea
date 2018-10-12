@@ -25,7 +25,7 @@ mdl = Structure(name='beam_simple', path='C:/Temp/')
 # Elements
 
 network = rhino.network_from_lines(layer='elset_lines')
-mdl.add_nodes_elements_from_network(network=network, element_type='BeamElement', 
+mdl.add_nodes_elements_from_network(network=network, element_type='BeamElement',
                                     elset='elset_lines', axes={'ex': [0, -1, 0]})
 
 # Sets
@@ -73,7 +73,7 @@ mdl.summary()
 
 # Run (Sofistik)
 
-mdl.write_input_file(software='abaqus')
+mdl.write_input_file(software='sofistik')
 
 # Run (Abaqus)
 
@@ -86,7 +86,7 @@ rhino.plot_data(mdl, step='step_load', field='smx', radius=0.01, colorbar_size=0
 # Run (OpenSees)
 # Note: 'u' and 'ur' fields are plotable, 'sf' currently is not.
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'ur'])
+mdl.analyse_and_extract(software='opensees', fields=['u', 'ur'])
 
 rhino.plot_data(mdl, step='step_load', field='um', radius=0.01, colorbar_size=0.3)
 rhino.plot_data(mdl, step='step_load', field='ury', radius=0.01, colorbar_size=0.3)
