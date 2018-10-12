@@ -74,7 +74,7 @@ mdl.summary()
 
 # Run (Sofistik)
 
-mdl.write_input_file(software='sofistik')
+mdl.write_input_file(software='abaqus')
 
 # Run (Abaqus)
 
@@ -89,7 +89,7 @@ rhino.plot_data(mdl, step='step_load', field='smx', radius=0.01, colorbar_size=0
 # Run (OpenSees)
 # Note: 'u' and 'ur' fields are plotable, 'sf' currently is not.
 
-mdl.analyse_and_extract(software='opensees', fields=['u', 'ur'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'ur'])
 
 rhino.plot_data(mdl, step='step_load', field='um', radius=0.01, colorbar_size=0.3)
 rhino.plot_data(mdl, step='step_load', field='ury', radius=0.01, colorbar_size=0.3)

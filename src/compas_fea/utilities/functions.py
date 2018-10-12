@@ -735,7 +735,7 @@ def network_order(start, structure, network):
     leaves.remove(start)
     end = leaves[0]
 
-    adjacency = {i: network.vertex_neighbours(i) for i in network.vertices()}
+    adjacency = {i: network.vertex_neighbors(i) for i in network.vertices()}
     weight = {(u, v): 1 for u, v in network.edges()}
     weight.update({(v, u): weight[(u, v)] for u, v in network.edges()})
     path = dijkstra_path(adjacency, weight, start, end)

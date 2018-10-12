@@ -336,7 +336,7 @@ Steps
             self.add_set(name=elset, type='element', selection=ekeys)
         return ekeys
 
-    def add_nodes_elements_from_network(self, network, element_type, thermal=False, elset=None, axes={}):
+    def add_nodes_elements_from_network(self, network, element_type, acoustic=False, thermal=False, elset=None, axes={}):
 
         """ Adds the nodes and edges of a Network to the Structure object.
 
