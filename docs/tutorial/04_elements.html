@@ -1,10 +1,8 @@
 
-
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>compas -- additonal packages</title>
+        <title>COMPAS</title>
 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -12,12 +10,13 @@
         <meta name="author" content="Tom Van Mele" />
         <meta name="description" content="compas is a computational framework for research in architecture and structures." />
 
-        <link rel="shortcut icon" href="/_static/images/compas.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="../_static/images/compas.ico" type="image/x-icon">
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/github.css" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/compas.css" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/compas-reference.css" />
+
+        <link rel="stylesheet" type="text/css" href="../_static/css/prism.css" />
+        <link rel="stylesheet" type="text/css" href="../_static/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
 
         
             <link rel="next" title="Sets" href="05_sets.html" />
@@ -34,40 +33,37 @@
 
         <header class="navbar navbar-expand compas-navbar">
             <a class="navbar-brand" href="/">
-                <img src="/_static/images/compas_icon.png" width="36px" height="36px" alt="compas" />
+                <img src="/_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
             </a>
 
-                <ul class="navbar-nav">
-                    <li class="nav-item ">
-                        <a class="nav-link " href="/main/">Main library</a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link " href="/packages/">Additional Packages</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="http://forum.compas-framework.org">Forum</a>
-                    </li>
-                </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item ">
+                    <a class="nav-link " href="/">Home</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link " href="/main/">Main library</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link " href="/packages/">Additional Packages</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" target="_blank" href="http://forum.compas-framework.org">Forum</a>
+                </li>
+            </ul>
         </header>
         
         <div class="container-fluid compas-container">
             <div class="row flex-xl-nowrap">
 
-                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+                <!-- main content -->
+
+                
+
+                <main class="col-12 col-md-9 col-xl-8 mx-auto compas-content" role="main">
+
+                
 
                     
-
-                        <!-- 
-    <nav class="breadcrumb">
-        <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
-        <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">additional packages</a>
-        
-            
-                <a class="breadcrumb-item" href="../tutorial.html" accesskey="U">tutorial</a>
-            
-        
-    </nav>
- -->
 
                         
 
@@ -78,7 +74,7 @@
 <h2>Adding elements</h2>
 <p><strong>Element</strong> objects are added to the <strong>Structure</strong> object with the <code class="docutils literal notranslate"><span class="pre">.add_element()</span></code> and <code class="docutils literal notranslate"><span class="pre">.add_elements()</span></code> methods, by giving the list(s) of nodes that the element(s) connect to, as well as the element type as a string. The <strong>Element</strong> objects are added to the <code class="docutils literal notranslate"><span class="pre">.elements</span></code> dictionary of the <strong>Structure</strong>, from the classes found in module <strong>compas_fea.structure.element</strong>, where the class names match the string entered for the element type <code class="docutils literal notranslate"><span class="pre">type</span></code>. The element types include, amongst others, 1D elements: <strong>SpringElement</strong>, <strong>BeamElement</strong>, <strong>TrussElement</strong>, 2D elements: <strong>ShellElement</strong>, <strong>MembraneElement</strong>, and 3D elements: <strong>PentahedronElement</strong>, <strong>TetrahedronElement</strong>, <strong>HexahedronElement</strong>. <strong>Note</strong>: to date, not all elements types are consistently available across all FE solvers, Abaqus, Sofistik, OpenSees and Ansys.</p>
 <p>As with nodes, the elements will be added with integer keys numbered sequentially starting from 0. <strong>Note</strong>: currently no more than one element can exist for the same collection of nodes, i.e. no overlapping elements are allowed. If you use <code class="docutils literal notranslate"><span class="pre">.add_element()</span></code> and an element already exists, nothing else will be added.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_elements</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;BeamElement&#39;</span><span class="p">)</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_elements</span><span class="p">(</span><span class="n">elements</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;BeamElement&#39;</span><span class="p">)</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">)</span>
 </code></pre></div>
@@ -88,7 +84,7 @@
 <div class="section" id="viewing-elements">
 <h2>Viewing elements</h2>
 <p>The <strong>Element</strong> objects can be viewed through their integer key and their attributes <code class="docutils literal notranslate"><span class="pre">.__name__</span></code>, <code class="docutils literal notranslate"><span class="pre">.axes</span></code>, <code class="docutils literal notranslate"><span class="pre">.nodes</span></code>, <code class="docutils literal notranslate"><span class="pre">.number</span></code>, <code class="docutils literal notranslate"><span class="pre">.acoustic</span></code>, <code class="docutils literal notranslate"><span class="pre">.thermal</span></code> (acoustic and thermal boolean attributes are placeholders for later functionality).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span> <span class="o">&gt;&gt;&gt;</span> <span class="n">mdl</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span> <span class="o">&gt;&gt;&gt;</span> <span class="n">mdl</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>
  <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
 
  <span class="o">&gt;&gt;&gt;</span> <span class="n">mdl</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span>
@@ -102,7 +98,7 @@
 <div class="section" id="element-index">
 <h2>Element index</h2>
 <p>A geometric key to integer key index dictionary is accessed through <code class="docutils literal notranslate"><span class="pre">.element_index</span></code>, where the geometric key is taken as the element centroid and the key is the number of the element. The <code class="docutils literal notranslate"><span class="pre">.element_index</span></code> dictionary is similar in function to the <code class="docutils literal notranslate"><span class="pre">.node_index</span></code> dictionary, and is useful for checking if an element exists (see methods below).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_index</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_index</span>
 <span class="go">{&#39;-2.500,-2.500,2.500&#39;: 0, &#39;2.500,-2.500,2.500&#39;: 1, &#39;2.500,2.500,2.500&#39;: 2, &#39;-2.500,2.500,2.500&#39;:  3}</span>
 </code></pre></div>
 </div>
@@ -110,7 +106,7 @@
 <div class="section" id="methods">
 <h2>Methods</h2>
 <p>It can be checked if an element is already present in the <strong>Structure</strong> object (via <code class="docutils literal notranslate"><span class="pre">.element_index</span></code>), by a query with the method <code class="docutils literal notranslate"><span class="pre">.check_element_exists()</span></code> and giving either the list of <code class="docutils literal notranslate"><span class="pre">nodes</span></code> the element would be connected to, or the location <code class="docutils literal notranslate"><span class="pre">xyz</span></code> of where its centroid would be. As the check is based on the centroid of the element, it does not matter the order that the nodes are given in the list <code class="docutils literal notranslate"><span class="pre">nodes</span></code>. If an element exists, the method will return the integer key, if not, <code class="docutils literal notranslate"><span class="pre">None</span></code> will be returned.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
 <span class="go">1</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
@@ -121,12 +117,12 @@
 </code></pre></div>
 </div>
 <p>The number of elements in the <strong>Structure</strong> can be returned with the method <code class="docutils literal notranslate"><span class="pre">.element_count()</span></code>, which essentially takes the length of the dictionary keys in <code class="docutils literal notranslate"><span class="pre">structure.elements</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_count</span><span class="p">()</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_count</span><span class="p">()</span>
 <span class="go">5</span>
 </code></pre></div>
 </div>
 <p>An element centroid can be determined by the method <code class="docutils literal notranslate"><span class="pre">.element_centroid()</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_centroid</span><span class="p">(</span><span class="n">element</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_centroid</span><span class="p">(</span><span class="n">element</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="go">(-2.5, 2.5, 2.5)</span>
 </code></pre></div>
 </div>
@@ -135,10 +131,10 @@
 <h2>Axes</h2>
 <p>Giving a dictionary for the argument <code class="docutils literal notranslate"><span class="pre">axes</span></code> when adding the element will store <code class="docutils literal notranslate"><span class="pre">{'ex':</span> <span class="pre">[],</span> <span class="pre">'ey':</span> <span class="pre">[],</span> <span class="pre">'ez':</span> <span class="pre">[]}</span></code> in the <strong>Element</strong> object’s <code class="docutils literal notranslate"><span class="pre">.axes</span></code> attribute. The <code class="docutils literal notranslate"><span class="pre">'ex'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ey'</span></code> and <code class="docutils literal notranslate"><span class="pre">'ez'</span></code> lists are the element’s local <cite>x</cite>, <cite>y</cite> and <cite>z</cite> axes, and are used for example, when orientating cross-sections, using anisotropic materials, or for aligning rebar in concrete shells. If no <code class="docutils literal notranslate"><span class="pre">axes</span></code> data are given, it is left up to the finite element solver to determine default local axes values. This default alignment, if supported by the software, is often based on the global axes of the model, thus it is important to understand if these defaults are suitable, especially for an element geometry that does not align well with the global <cite>x</cite>, <cite>y</cite>, <cite>z</cite> directions. If for example you create a <strong>BeamElement</strong> for Abaqus that is perfectly vertical, you will get an error from Abaqus that it was not able to work out a local orientation. OpenSees demands explicitly a local orientation for beams, so this step of defining the local axes cannot be skipped.</p>
 <p>To add the local axes for a line element such as a beam, the <code class="docutils literal notranslate"><span class="pre">'ex'</span></code> axis represents the cross-section’s major axis, <code class="docutils literal notranslate"><span class="pre">'ey'</span></code> the cross-section’s minor axis, and <code class="docutils literal notranslate"><span class="pre">'ez'</span></code> the axis along the element. For surface elements, the <code class="docutils literal notranslate"><span class="pre">'ex'</span></code> and <code class="docutils literal notranslate"><span class="pre">'ey'</span></code> axes represent the in-plane local axes, with <code class="docutils literal notranslate"><span class="pre">'ez'</span></code> then representing the positive normal vector. The CAD functions (described in the CAD topic) that add elements to the <strong>Structure</strong> from geometry in the workspace, will automate some of these axis definitions/tasks.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;BeamElement&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ex&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]})</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;BeamElement&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ex&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]})</span>
 </code></pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ex&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;ey&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;ez&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]})</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ex&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;ey&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;ez&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]})</span>
 </code></pre></div>
 </div>
 </div>
@@ -165,7 +161,7 @@
 <div class="section" id="id4">
 <h3>2D elements</h3>
 <p>There are two main ways to discretise coarse meshes into denser ones for an accurate finite element analysis. The first is to use the discritisation and subdivision methods in the core <strong>compas</strong> package. The second is to use the experimental <code class="docutils literal notranslate"><span class="pre">discretise_faces</span></code> function found in <strong>compas_fea.utilities.functions</strong>. This takes the <code class="docutils literal notranslate"><span class="pre">vertices</span></code> and <code class="docutils literal notranslate"><span class="pre">faces</span></code> of the coarse mesh, a <code class="docutils literal notranslate"><span class="pre">target</span></code> element size, and a number of <code class="docutils literal notranslate"><span class="pre">iterations</span></code>. The function will then discretise the coarse mesh and return a finer mesh for each of the faces of the input mesh, they will not be welded together to form a single mesh (this is also not needed when adding elements to the <strong>Structure</strong> object). The function call may look like the following, which gives the example result below.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_blender.geometry</span> <span class="kn">import</span> <span class="n">BlenderMesh</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_blender.geometry</span> <span class="kn">import</span> <span class="n">BlenderMesh</span>
 <span class="kn">from</span> <span class="nn">compas_fea.utilities.functions</span> <span class="kn">import</span> <span class="n">discretise_faces</span>
 
 <span class="n">blendermesh</span> <span class="o">=</span> <span class="n">BlenderMesh</span><span class="p">(</span><span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
@@ -181,7 +177,7 @@
 <h3>3D elements</h3>
 <p>When discretising a solid volume into finite elements, the first step is usually to create a mesh that represents the outer-surface of the solid. This mesh can be represented as a triangulated mesh with somewhat equally sized triangles, as there are many algorithms for creating tetrahedron elements from this surface and adding them across the internal volume. The <strong>compas_fea</strong> package supports the use of <a class="reference external" href="http://wias-berlin.de/software/index.jsp?id=TetGen&amp;lang=1">TetGen</a> via the Python wrapper <a class="reference external" href="https://mathema.tician.de/software/meshpy/">MeshPy</a>, and is independent of any CAD environment. <strong>MeshPy</strong> can easily be installed via <code class="docutils literal notranslate"><span class="pre">pip</span></code> on Linux systems, while a <code class="docutils literal notranslate"><span class="pre">.whl</span></code> file is recommended for Windows from the excellent resource page <a class="reference external" href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#meshpy">here</a> .</p>
 <p>A function has been set-up to facilitate converting a collection of triangles and vertices data representing the outer-surface, into tetrahedron elements. This is the function <code class="docutils literal notranslate"><span class="pre">tets_from_vertices_faces()</span></code>, found in <strong>compas_fea.utilities.functions</strong>, where the <code class="docutils literal notranslate"><span class="pre">vertices</span></code> co-ordinates, the triangle <code class="docutils literal notranslate"><span class="pre">faces</span></code>, and a <code class="docutils literal notranslate"><span class="pre">volume</span></code> constraint (optional) are given. The outputs of using the function are the points and indices of the tetrahedron corners. If you are in a CAD environment, you can use a previously constructed triangulated outer-surface mesh to create and automatically add tetrahedron elements to your <strong>Structure</strong> object. In Rhino, use <strong>compas_fea.cad.rhino.add_tets_from_mesh()</strong>, and in Blender, use <strong>compas_fea.cad.blender.add_tets_from_mesh()</strong>. These functions effectively wrap around <code class="docutils literal notranslate"><span class="pre">tets_from_vertices_faces()</span></code> and add the elements to the <strong>Structure</strong> object for you. These function calls could look like:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">rhino</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">rhino</span>
 
 <span class="kn">import</span> <span class="nn">rhinoscriptsyntax</span> <span class="kn">as</span> <span class="nn">rs</span>
 
@@ -190,7 +186,7 @@
 <span class="n">rhino</span><span class="o">.</span><span class="n">add_tets_from_mesh</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;elset_tets&#39;</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">draw_tets</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;tets&#39;</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 </code></pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">blender</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">blender</span>
 
 <span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="kn">import</span> <span class="n">get_objects</span>
 
@@ -204,100 +200,18 @@
 </div>
 
                         
-                        <!-- <nav class="compas-sideways">
-                            
-                                <a href="03_nodes.html" class="btn btn-primary compas-prev" role="button">Nodes</a>
-                            
-
-                            
-                                <a href="05_sets.html" class="btn btn-primary compas-next" role="button">Sets</a>
-                            
-                        </nav> -->
-
                     
 
                 </main>
 
-                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
-                    <div class="navbar-light">
+                <!-- site navigation sidebar -->
 
-                        <form id="" class="d-flex compas-searchbox" action="../search.html" method="get">
-                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
-                            <input type="hidden" name="check_keywords" value="yes" />
-                            <input type="hidden" name="area" value="default" />
-
-                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                        </form>
-
-                        
-                        
-
-                            <div class="navbar-expand-md">
-                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
-
-                                <ul class="nav flex-column active">
-<li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
-<li class="nav-item active"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a><ul class="nav active">
-<li class="nav-item"><a class="nav-link reference internal" href="01_setup.html">Setup</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="02_structure.html">Structure</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="03_nodes.html">Nodes</a></li>
-<li class="nav-item active"><a class="nav-link active current reference internal" href="#">Elements</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="05_sets.html">Sets</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="06_sections.html">Sections</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="07_material.html">Materials</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="08_properties.html">Properties</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="09_loads.html">Loads</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="10_displacements.html">Displacements</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="11_steps.html">Steps</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="12_analysis.html">Analysis</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="13_cad.html">CAD</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="14_app.html">App</a></li>
-</ul>
-</li>
-<li class="nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
-</ul>
-
-
-                                </div>
-                            </div>
-
-                        
-
-                    </div>
-                </div>
                 
-                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
 
-                    
+                <!-- table of contents of main content -->
+                
+                
 
-                    <ul class="nav flex-column" id="compas-localnav">
-<li class="nav-item"><a class="nav-link reference internal" href="#">Elements</a><ul class="nav">
-<li class="nav-item"><a class="nav-link reference internal" href="#adding-elements">Adding elements</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#viewing-elements">Viewing elements</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#element-index">Element index</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#methods">Methods</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#axes">Axes</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#id1">Elements</a><ul class="nav">
-<li class="nav-item"><a class="nav-link reference internal" href="#d-elements">1D elements</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#id2">2D elements</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#id3">3D elements</a></li>
-</ul>
-</li>
-<li class="nav-item"><a class="nav-link reference internal" href="#meshing">Meshing</a><ul class="nav">
-<li class="nav-item"><a class="nav-link reference internal" href="#id4">2D elements</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#id5">3D elements</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-
-                </div>
             </div>
         </div>
 
@@ -309,7 +223,7 @@
             
 
             
-                Last updated on Jun 27, 2018.
+                Last updated on Oct 15, 2018.
             
 
             
@@ -325,7 +239,7 @@ var DOCUMENTATION_OPTIONS = {
     VERSION           : '0.1.0',
     COLLAPSE_INDEX    : false,
     FILE_SUFFIX       : '.html',
-    HAS_SOURCE        : false,
+    HAS_SOURCE        : 'false',
     SOURCELINK_SUFFIX : '.txt'
 };
             </script>
@@ -335,55 +249,50 @@ var DOCUMENTATION_OPTIONS = {
 
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
             
-            <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
 
-            <script src="/_static/underscore.js"></script>
-            <script src="/_static/doctools.js"></script>
-            <script src="/_static/js/searchtools_.js"></script>
+            <script src="../_static/underscore.js"></script>
+            <script src="../_static/doctools.js"></script>
+            <script src="../_static/js/searchtools_.js"></script>
+            <script src="../_static/js/prism.js"></script>
 
             <script>
-hljs.initHighlightingOnLoad();
-anchors.add();
+$(document).ready(function() {
 
-var pre = document.getElementsByTagName('pre');
+    // $(".language-default pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-for (var i = 0; i < pre.length; i++) {
+    // $(".language-bash pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-    var is_code = pre[i].children[0].className.indexOf('language-python');
+    // $(".language-python pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-    if (is_code === 0) {
+    // $(".language-c pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-        var button = document.createElement('button');
+    // $(".language-cpp pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-        button.className = 'btn btn-secondary copy-code mt-4';
-        button.textContent = 'Copy code';
-        button.type = 'button';
+    // $(".language-fortran pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-        pre[i].appendChild(button);
-    }
-}
+    // $(".language-markdown pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-var copy_code = new Clipboard('.copy-code', {
-    target: function(trigger) {
-        return trigger.previousElementSibling;
-    }
-});
+    // $(".language-rest pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-copy_code.on('success', function(event) {
-    event.clearSelection();
-    event.trigger.textContent = 'Copied!';
-    window.setTimeout(function() {
-        event.trigger.textContent = 'Copy code';
-    }, 2000);
-});
-
-copy_code.on('error', function(event) { 
-    event.trigger.textContent = 'Press "Ctrl + C" to copy...';
-    window.setTimeout(function() {
-        event.trigger.textContent = 'Copy code';
-    }, 2000);
+    anchors.add();
 });
             </script>
 

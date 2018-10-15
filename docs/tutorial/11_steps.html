@@ -1,10 +1,8 @@
 
-
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>compas -- additonal packages</title>
+        <title>COMPAS</title>
 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -12,12 +10,13 @@
         <meta name="author" content="Tom Van Mele" />
         <meta name="description" content="compas is a computational framework for research in architecture and structures." />
 
-        <link rel="shortcut icon" href="/_static/images/compas.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="../_static/images/compas.ico" type="image/x-icon">
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/github.css" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/compas.css" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/compas-reference.css" />
+
+        <link rel="stylesheet" type="text/css" href="../_static/css/prism.css" />
+        <link rel="stylesheet" type="text/css" href="../_static/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
 
         
             <link rel="next" title="Analysis" href="12_analysis.html" />
@@ -34,40 +33,37 @@
 
         <header class="navbar navbar-expand compas-navbar">
             <a class="navbar-brand" href="/">
-                <img src="/_static/images/compas_icon.png" width="36px" height="36px" alt="compas" />
+                <img src="/_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
             </a>
 
-                <ul class="navbar-nav">
-                    <li class="nav-item ">
-                        <a class="nav-link " href="/main/">Main library</a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link " href="/packages/">Additional Packages</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="http://forum.compas-framework.org">Forum</a>
-                    </li>
-                </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item ">
+                    <a class="nav-link " href="/">Home</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link " href="/main/">Main library</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link " href="/packages/">Additional Packages</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" target="_blank" href="http://forum.compas-framework.org">Forum</a>
+                </li>
+            </ul>
         </header>
         
         <div class="container-fluid compas-container">
             <div class="row flex-xl-nowrap">
 
-                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+                <!-- main content -->
+
+                
+
+                <main class="col-12 col-md-9 col-xl-8 mx-auto compas-content" role="main">
+
+                
 
                     
-
-                        <!-- 
-    <nav class="breadcrumb">
-        <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
-        <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">additional packages</a>
-        
-            
-                <a class="breadcrumb-item" href="../tutorial.html" accesskey="U">tutorial</a>
-            
-        
-    </nav>
- -->
 
                         
 
@@ -77,7 +73,7 @@
 <div class="section" id="adding-steps">
 <h2>Adding steps</h2>
 <p><strong>Step</strong> objects are used to define the type and order of analysis stages by bringing together all of the <strong>Displacement</strong> and <strong>Load</strong> objects. In the same way that <strong>Material</strong> and <strong>Section</strong> objects require <strong>ElementProperties</strong> objects to be activated, <strong>Load</strong> and <strong>Displacement</strong> objects use <strong>Step</strong> objects to be activated, as without them they will not impose any effect on the structure. <strong>Step</strong> objects are created from classes in module <strong>compas_fea.structure.step</strong>, for which the most commonly used <strong>GeneralStep</strong> is shown below. It is added to the <code class="docutils literal notranslate"><span class="pre">.steps</span></code> dictionary of the <strong>Structure</strong> object with its string key <code class="docutils literal notranslate"><span class="pre">name</span></code>, as well as lists of the string key names of the <strong>Load</strong> and <strong>Displacement</strong> objects to apply.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span> <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GeneralStep</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span> <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GeneralStep</span>
 
  <span class="n">mdl</span><span class="o">.</span><span class="n">add_steps</span><span class="p">([</span>
     <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">]),</span>
@@ -88,7 +84,7 @@
 </code></pre></div>
 </div>
 <p>Here in the above example, <strong>Step</strong> objects with string keys <code class="docutils literal notranslate"><span class="pre">'step_bc'</span></code> and <code class="docutils literal notranslate"><span class="pre">'step_loads'</span></code> are added, to be analysed in the order given by the list stored in <code class="docutils literal notranslate"><span class="pre">.steps_order</span></code>. That is, <code class="docutils literal notranslate"><span class="pre">'disp_pinned'</span></code> will be completed first in <code class="docutils literal notranslate"><span class="pre">'step_bc'</span></code>, followed by <code class="docutils literal notranslate"><span class="pre">'load_point'</span></code> and <code class="docutils literal notranslate"><span class="pre">'load_gravity'</span></code> of <code class="docutils literal notranslate"><span class="pre">'step_loads'</span></code>. The order of the <strong>Step</strong> objects can be seen at any time, and modified through:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span>
 <span class="go">[&#39;step_bc&#39;, &#39;step_loads&#39;]</span>
 </code></pre></div>
 </div>
@@ -99,7 +95,7 @@
 <div class="section" id="generalstep">
 <h3>GeneralStep</h3>
 <p>The most general <strong>Step</strong> type available is the <strong>GeneralStep</strong> object, it requires the string <code class="docutils literal notranslate"><span class="pre">name</span></code> and the lists of string names of the <strong>Load</strong> and <strong>Displacement</strong> objects to apply.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GeneralStep</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GeneralStep</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_combined&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_bc&#39;</span><span class="p">],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_applied&#39;</span><span class="p">]))</span>
 </code></pre></div>
@@ -117,7 +113,7 @@
 <div class="section" id="bucklingstep">
 <h3>BucklingStep</h3>
 <p>The <strong>BucklingStep</strong> object shares many of the same arguments as the <strong>GeneralStep</strong> object, and is used for determining buckling loads and buckling modes for structures that have prescribed loads and boundary conditions. The arguments in common with <strong>GeneralStep</strong> are: the step’s string <code class="docutils literal notranslate"><span class="pre">name</span></code>, the integer number of <code class="docutils literal notranslate"><span class="pre">increments</span></code> (default <code class="docutils literal notranslate"><span class="pre">100</span></code>), the proportionality factor <code class="docutils literal notranslate"><span class="pre">factor</span></code> (default <code class="docutils literal notranslate"><span class="pre">1.0</span></code>), and the <code class="docutils literal notranslate"><span class="pre">loads</span></code> and <code class="docutils literal notranslate"><span class="pre">displacements</span></code> lists of string names. The <strong>BucklingStep</strong> is also defined by its <code class="docutils literal notranslate"><span class="pre">type</span></code> (default <code class="docutils literal notranslate"><span class="pre">'buckle'</span></code>) and the number of requested <code class="docutils literal notranslate"><span class="pre">modes</span></code> (default <code class="docutils literal notranslate"><span class="pre">20</span></code>).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">BucklingStep</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">BucklingStep</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">BucklingStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_buckle&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_bc&#39;</span><span class="p">],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_point&#39;</span><span class="p">],</span> <span class="n">modes</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
 </code></pre></div>
@@ -126,7 +122,7 @@
 <div class="section" id="modalstep">
 <h3>ModalStep</h3>
 <p>The <strong>ModalStep</strong> object shares many of the same arguments as the <strong>BucklingStep</strong> object, and is used for determining modal frequencies and modal shapes for structures that have prescribed boundary conditions. The arguments common with <strong>BucklingStep</strong> are: the step’s string <code class="docutils literal notranslate"><span class="pre">name</span></code>, the integer number of <code class="docutils literal notranslate"><span class="pre">increments</span></code> (default <code class="docutils literal notranslate"><span class="pre">100</span></code>) and the <code class="docutils literal notranslate"><span class="pre">displacements</span></code> list of string names. The <strong>ModalStep</strong> is also defined by its <code class="docutils literal notranslate"><span class="pre">type</span></code> (default <code class="docutils literal notranslate"><span class="pre">'modal'</span></code>) and the number of requested <code class="docutils literal notranslate"><span class="pre">modes</span></code> (default <code class="docutils literal notranslate"><span class="pre">10</span></code>).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ModalStep</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ModalStep</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">ModalStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_modal&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_bc&#39;</span><span class="p">],</span> <span class="n">modes</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span>
 </code></pre></div>
@@ -135,7 +131,7 @@
 <div class="section" id="harmonicstep">
 <h3>HarmonicStep</h3>
 <p>The <strong>HarmonicStep</strong> object shares many of the same arguments as the <strong>GeneralStep</strong> object. The common arguments are: the step’s string <code class="docutils literal notranslate"><span class="pre">name</span></code>, the proportionality factor <code class="docutils literal notranslate"><span class="pre">factor</span></code> (default <code class="docutils literal notranslate"><span class="pre">1.0</span></code>), and the <code class="docutils literal notranslate"><span class="pre">loads</span></code> and <code class="docutils literal notranslate"><span class="pre">displacements</span></code> lists of string names. The <strong>HarmonicStep</strong> is also defined by its minimum and maximum frequency range in a list <code class="docutils literal notranslate"><span class="pre">freq_range</span></code>, an integer number of frequency steps <code class="docutils literal notranslate"><span class="pre">freq_steps</span></code>, the <code class="docutils literal notranslate"><span class="pre">damping</span></code> (default <code class="docutils literal notranslate"><span class="pre">None</span></code>) and the type which defaults to <code class="docutils literal notranslate"><span class="pre">type='harmonic'</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">HarmonicStep</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">HarmonicStep</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_step</span><span class="p">(</span><span class="n">HarmonicStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_harmonic&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_bc&#39;</span><span class="p">],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_harmonic&#39;</span><span class="p">],</span> <span class="n">damping</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">freq_range</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="n">freq_steps</span><span class="o">=</span><span class="mi">20</span><span class="p">))</span>
 </code></pre></div>
@@ -145,92 +141,18 @@
 </div>
 
                         
-                        <!-- <nav class="compas-sideways">
-                            
-                                <a href="10_displacements.html" class="btn btn-primary compas-prev" role="button">Displacements</a>
-                            
-
-                            
-                                <a href="12_analysis.html" class="btn btn-primary compas-next" role="button">Analysis</a>
-                            
-                        </nav> -->
-
                     
 
                 </main>
 
-                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
-                    <div class="navbar-light">
+                <!-- site navigation sidebar -->
 
-                        <form id="" class="d-flex compas-searchbox" action="../search.html" method="get">
-                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
-                            <input type="hidden" name="check_keywords" value="yes" />
-                            <input type="hidden" name="area" value="default" />
-
-                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                        </form>
-
-                        
-                        
-
-                            <div class="navbar-expand-md">
-                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
-
-                                <ul class="nav flex-column active">
-<li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
-<li class="nav-item active"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a><ul class="nav active">
-<li class="nav-item"><a class="nav-link reference internal" href="01_setup.html">Setup</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="02_structure.html">Structure</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="03_nodes.html">Nodes</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="04_elements.html">Elements</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="05_sets.html">Sets</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="06_sections.html">Sections</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="07_material.html">Materials</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="08_properties.html">Properties</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="09_loads.html">Loads</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="10_displacements.html">Displacements</a></li>
-<li class="nav-item active"><a class="nav-link active current reference internal" href="#">Steps</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="12_analysis.html">Analysis</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="13_cad.html">CAD</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="14_app.html">App</a></li>
-</ul>
-</li>
-<li class="nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
-</ul>
-
-
-                                </div>
-                            </div>
-
-                        
-
-                    </div>
-                </div>
                 
-                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
 
-                    
+                <!-- table of contents of main content -->
+                
+                
 
-                    <ul class="nav flex-column" id="compas-localnav">
-<li class="nav-item"><a class="nav-link reference internal" href="#">Steps</a><ul class="nav">
-<li class="nav-item"><a class="nav-link reference internal" href="#adding-steps">Adding steps</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#step-types">Step types</a><ul class="nav">
-<li class="nav-item"><a class="nav-link reference internal" href="#generalstep">GeneralStep</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#bucklingstep">BucklingStep</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#modalstep">ModalStep</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#harmonicstep">HarmonicStep</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-
-                </div>
             </div>
         </div>
 
@@ -242,7 +164,7 @@
             
 
             
-                Last updated on Jun 27, 2018.
+                Last updated on Oct 15, 2018.
             
 
             
@@ -258,7 +180,7 @@ var DOCUMENTATION_OPTIONS = {
     VERSION           : '0.1.0',
     COLLAPSE_INDEX    : false,
     FILE_SUFFIX       : '.html',
-    HAS_SOURCE        : false,
+    HAS_SOURCE        : 'false',
     SOURCELINK_SUFFIX : '.txt'
 };
             </script>
@@ -268,55 +190,50 @@ var DOCUMENTATION_OPTIONS = {
 
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
             
-            <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
 
-            <script src="/_static/underscore.js"></script>
-            <script src="/_static/doctools.js"></script>
-            <script src="/_static/js/searchtools_.js"></script>
+            <script src="../_static/underscore.js"></script>
+            <script src="../_static/doctools.js"></script>
+            <script src="../_static/js/searchtools_.js"></script>
+            <script src="../_static/js/prism.js"></script>
 
             <script>
-hljs.initHighlightingOnLoad();
-anchors.add();
+$(document).ready(function() {
 
-var pre = document.getElementsByTagName('pre');
+    // $(".language-default pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-for (var i = 0; i < pre.length; i++) {
+    // $(".language-bash pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-    var is_code = pre[i].children[0].className.indexOf('language-python');
+    // $(".language-python pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-    if (is_code === 0) {
+    // $(".language-c pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-        var button = document.createElement('button');
+    // $(".language-cpp pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-        button.className = 'btn btn-secondary copy-code mt-4';
-        button.textContent = 'Copy code';
-        button.type = 'button';
+    // $(".language-fortran pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-        pre[i].appendChild(button);
-    }
-}
+    // $(".language-markdown pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-var copy_code = new Clipboard('.copy-code', {
-    target: function(trigger) {
-        return trigger.previousElementSibling;
-    }
-});
+    // $(".language-rest pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-copy_code.on('success', function(event) {
-    event.clearSelection();
-    event.trigger.textContent = 'Copied!';
-    window.setTimeout(function() {
-        event.trigger.textContent = 'Copy code';
-    }, 2000);
-});
-
-copy_code.on('error', function(event) { 
-    event.trigger.textContent = 'Press "Ctrl + C" to copy...';
-    window.setTimeout(function() {
-        event.trigger.textContent = 'Copy code';
-    }, 2000);
+    anchors.add();
 });
             </script>
 

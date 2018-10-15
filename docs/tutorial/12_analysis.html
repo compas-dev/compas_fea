@@ -1,10 +1,8 @@
 
-
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>compas -- additonal packages</title>
+        <title>COMPAS</title>
 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -12,12 +10,13 @@
         <meta name="author" content="Tom Van Mele" />
         <meta name="description" content="compas is a computational framework for research in architecture and structures." />
 
-        <link rel="shortcut icon" href="/_static/images/compas.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="../_static/images/compas.ico" type="image/x-icon">
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/github.css" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/compas.css" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/compas-reference.css" />
+
+        <link rel="stylesheet" type="text/css" href="../_static/css/prism.css" />
+        <link rel="stylesheet" type="text/css" href="../_static/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
 
         
             <link rel="next" title="CAD" href="13_cad.html" />
@@ -34,40 +33,37 @@
 
         <header class="navbar navbar-expand compas-navbar">
             <a class="navbar-brand" href="/">
-                <img src="/_static/images/compas_icon.png" width="36px" height="36px" alt="compas" />
+                <img src="/_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
             </a>
 
-                <ul class="navbar-nav">
-                    <li class="nav-item ">
-                        <a class="nav-link " href="/main/">Main library</a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link " href="/packages/">Additional Packages</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="http://forum.compas-framework.org">Forum</a>
-                    </li>
-                </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item ">
+                    <a class="nav-link " href="/">Home</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link " href="/main/">Main library</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link " href="/packages/">Additional Packages</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" target="_blank" href="http://forum.compas-framework.org">Forum</a>
+                </li>
+            </ul>
         </header>
         
         <div class="container-fluid compas-container">
             <div class="row flex-xl-nowrap">
 
-                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+                <!-- main content -->
+
+                
+
+                <main class="col-12 col-md-9 col-xl-8 mx-auto compas-content" role="main">
+
+                
 
                     
-
-                        <!-- 
-    <nav class="breadcrumb">
-        <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
-        <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">additional packages</a>
-        
-            
-                <a class="breadcrumb-item" href="../tutorial.html" accesskey="U">tutorial</a>
-            
-        
-    </nav>
- -->
 
                         
 
@@ -80,22 +76,22 @@
 <li><p>Extract the data from the analysis results and store them back into <strong>structure.results</strong>. The relevant data are extracted with method <code class="docutils literal notranslate"><span class="pre">.extract_data()</span></code>.</p></li>
 </ul>
 <p>These three stages are performed in sequence using the method <code class="docutils literal notranslate"><span class="pre">.analyse_and_extract()</span></code>, which takes the <code class="docutils literal notranslate"><span class="pre">software</span></code> string (<code class="docutils literal notranslate"><span class="pre">'abaqus'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ansys'</span></code>, <code class="docutils literal notranslate"><span class="pre">'opensees'</span></code> or <code class="docutils literal notranslate"><span class="pre">sofistik</span></code>), a list of the data <code class="docutils literal notranslate"><span class="pre">fields</span></code> to extract, the number of processor cores to use with <code class="docutils literal notranslate"><span class="pre">cpus</span></code> (currently for Abaqus only), and if needed some information on the <code class="docutils literal notranslate"><span class="pre">license</span></code> type. A call to this method looks like:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">])</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">])</span>
 </code></pre></div>
 </div>
 <div class="section" id="abaqus">
 <h2>Abaqus</h2>
 <p>The input file for generating an Abaqus structural model is the <code class="docutils literal notranslate"><span class="pre">.inp</span></code> input file. With this file, it is possible to generate and analyse a structural model, as well as request certain output data to be written to an output database <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file. Because the official reference documentation for Abaqus <code class="docutils literal notranslate"><span class="pre">.inp</span></code> files is vast, it will not be described here what every line of the <code class="docutils literal notranslate"><span class="pre">.inp</span></code> file means. There are a few important points to highlight about the Python procedure and data format of the <strong>Structure</strong> object, and the generated input file format: 1) Abaqus uses a numbering system that starts from 1, therefore for the input file every node and element from the <strong>Structure</strong> object has 1 added to it, which is then subtracted for all results data so that it remains consistent with the input numbering. 2) When an element is created in the input file, <strong>compas_fea</strong> may also make an individual set for just that element named <strong>element_x</strong>. Because of the different numbering systems of Python and Abaqus, an element set named <strong>element_4</strong> will refer to Abaqus element number 5.</p>
 <p>When an input file is written, a confirmation message will appear in the terminal stating where it was written to:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="o">*****</span> <span class="n">Abaqus</span> <span class="nb">input</span> <span class="nb">file</span> <span class="n">generated</span><span class="p">:</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">Temp</span><span class="o">/</span><span class="n">truss_tower</span><span class="o">.</span><span class="n">inp</span> <span class="o">*****</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="o">*****</span> <span class="n">Abaqus</span> <span class="nb">input</span> <span class="nb">file</span> <span class="n">generated</span><span class="p">:</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">Temp</span><span class="o">/</span><span class="n">truss_tower</span><span class="o">.</span><span class="n">inp</span> <span class="o">*****</span>
 </code></pre></div>
 </div>
 <p>The input file will be sent for analysis via Abaqus in a Python subprocess that launches the Abaqus executable <code class="docutils literal notranslate"><span class="pre">abaqus</span> <span class="pre">cae</span></code> with no graphical user interface (<code class="docutils literal notranslate"><span class="pre">noGUI</span></code> mode) and running the <strong>launch_job.py</strong> script from <strong>compas_fea.fea.abaq</strong>. The goal of this subprocess is to pair the Abaqus executable with the <code class="docutils literal notranslate"><span class="pre">.inp</span></code> file and to generate an <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file of data, and is equivalent to manually performing the following in a terminal:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span>abaqus cae <span class="nv">noGUI</span><span class="o">=</span>~/compas_fea/fea/abaq/launch_job.py -- arguments
+<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>abaqus cae <span class="nv">noGUI</span><span class="o">=</span>~/compas_fea/fea/abaq/launch_job.py -- arguments
 </code></pre></div>
 </div>
 <p>During analysis, an information stream will print a rolling update of the subprocess progress, and show <code class="docutils literal notranslate"><span class="pre">COMPLETED</span></code> if the analysis was successful. If there was not a successful analysis, a variety of error messages will appear to try and help the user evaluate what may have gone wrong. If it was not possible to debug the issue from the terminal messages, the model should be inspected manually within Abaqus by loading the input file and submitting a job with the job monitor open. Student versions of Abaqus must have <code class="docutils literal notranslate"><span class="pre">cpus=1</span></code> (this is the case by default), as multi-core processing is not enabled for student versions. The output stream may look like the following:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span>Abaqus JOB simple-truss
+<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>Abaqus JOB simple-truss
  Abaqus <span class="m">6</span>.14-1
  Begin Analysis Input File Processor
  <span class="m">13</span>/09/2017 <span class="m">17</span>:56:25
@@ -115,13 +111,13 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </code></pre></div>
 </div>
 <p>If the analysis was successful, a confirmation message will appear in the terminal with the analysis time taken:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="o">*****</span> <span class="n">Analysis</span> <span class="n">successful</span> <span class="o">*****</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="o">*****</span> <span class="n">Analysis</span> <span class="n">successful</span> <span class="o">*****</span>
 
 <span class="o">*****</span> <span class="n">Abaqus</span> <span class="n">analysis</span> <span class="n">time</span> <span class="p">:</span> <span class="mf">17.1095</span> <span class="n">s</span> <span class="o">*****</span>
 </code></pre></div>
 </div>
 <p>If the analysis was unsuccessful, the terminal will look similar to the following:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">Abaqus</span><span class="o">/</span><span class="n">Analysis</span> <span class="n">exited</span> <span class="k">with</span> <span class="n">errors</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">Abaqus</span><span class="o">/</span><span class="n">Analysis</span> <span class="n">exited</span> <span class="k">with</span> <span class="n">errors</span>
 <span class="n">Abaqus</span> <span class="n">Error</span><span class="p">:</span> <span class="n">cae</span> <span class="n">exited</span> <span class="k">with</span> <span class="n">an</span> <span class="n">error</span><span class="o">.</span>
 
 <span class="o">*****</span> <span class="n">Analysis</span> <span class="n">failed</span> <span class="o">-</span> <span class="n">attempting</span> <span class="n">to</span> <span class="n">read</span> <span class="n">error</span> <span class="n">logs</span> <span class="o">*****</span>
@@ -129,13 +125,13 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </div>
 <p>If this is the case, the script will attempt to read a variety of error logs that are made during the analysis. If some, but not all data, was written to the <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file, the data extraction will still try to continue by reading the last frame of the output database. It must be remembered that if the analysis did not fully complete, this last frame is <strong>NOT</strong> the final frame of the analysis, and should be respected as an equilibrium state taking actions less than those applied. Often this frame will be at the stage that the given number of increments managed to progress to, and so increasing this number of increments may help the analysis continue further and reach the final equilibrium state.</p>
 <p>The data are extracted from the output database <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file with the <code class="docutils literal notranslate"><span class="pre">abaq.extract_odb_data()</span></code> function, which is called automatically as part of the <code class="docutils literal notranslate"><span class="pre">.extract_data()</span></code> method. In the same folder as the <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file, it will generate a <code class="docutils literal notranslate"><span class="pre">results.json</span></code> file of scraped unprocessed data. This file will be in the folder <strong>/path/name/</strong> and will store the data back into the <strong>Structure</strong> object with the following confirmation:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span>***** Saving data to structure.results successful *****
+<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>***** Saving data to structure.results successful *****
 
 ***** Data extracted from Abaqus .odb file : <span class="m">2</span>.3439 s *****
 </code></pre></div>
 </div>
 <p>If there was a problem with saving the data the following error message will appear:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span>***** Saving data to structure.results unsuccessful *****
+<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>***** Saving data to structure.results unsuccessful *****
 </code></pre></div>
 </div>
 </div>
@@ -144,11 +140,11 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 <p>The input file for generating an OpenSees structural model is the <code class="docutils literal notranslate"><span class="pre">.tcl</span></code> input file. A <code class="docutils literal notranslate"><span class="pre">basic</span></code> model type will be made in 3D <code class="docutils literal notranslate"><span class="pre">-ndm</span> <span class="pre">3</span></code> with all degrees-of-freedom at each node <code class="docutils literal notranslate"><span class="pre">-ndf</span> <span class="pre">6</span></code>, unless the model is exclusively made of truss elements where <code class="docutils literal notranslate"><span class="pre">-ndf</span> <span class="pre">3</span></code> will instead be used. Nodes and elements will be numbered starting from 1, and then 1 subtracted for the storage of data after the analysis, so that it is consistent with the input <strong>Structure</strong> object. An important difference (currently) with OpenSees is that the structural model should have only two steps: the first step representing all of the persistent boundary conditions containing only <strong>Displacement</strong> objects, and the second step representing all applied <strong>Load</strong> objects and any further applied <strong>Displacement</strong> objects.</p>
 <p>Beam elements must be given an <code class="docutils literal notranslate"><span class="pre">ex</span></code> local axis orientation for <code class="docutils literal notranslate"><span class="pre">geomTransf</span></code>, as OpenSees will not make an assumption for the cross-section orientation. This should be defined either directly when adding the elements with the <code class="docutils literal notranslate"><span class="pre">axes</span></code> argument, or added to the element name (<code class="docutils literal notranslate"><span class="pre">{'ex':</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">0]}</span></code> for example) so it can be picked-up in a CAD environment and automatically applied. This orientation need not be defined for <strong>TrussElement</strong> types as there is no local bending orientation.</p>
 <p>When written, a confirmation message will appear in the terminal showing where the file was saved:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="o">*****</span> <span class="n">OpenSees</span> <span class="nb">input</span> <span class="nb">file</span> <span class="n">generated</span><span class="p">:</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">Temp</span><span class="o">/</span><span class="n">beam_frame</span><span class="o">.</span><span class="n">tcl</span> <span class="o">*****</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="o">*****</span> <span class="n">OpenSees</span> <span class="nb">input</span> <span class="nb">file</span> <span class="n">generated</span><span class="p">:</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">Temp</span><span class="o">/</span><span class="n">beam_frame</span><span class="o">.</span><span class="n">tcl</span> <span class="o">*****</span>
 </code></pre></div>
 </div>
 <p>The input file will be sent for analysis via OpenSees in a Python subprocess that launches the executable, given by the <code class="docutils literal notranslate"><span class="pre">exe</span></code> string, or by assuming the default <code class="docutils literal notranslate"><span class="pre">C:/OpenSees.exe</span></code> location for Windows. No graphical user interface is launched for OpenSees, feedback will only be presented in the terminal while the <code class="docutils literal notranslate"><span class="pre">.tcl</span></code> file is running:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span>          OpenSees -- Open System For Earthquake Engineering Simulation
+<div class="highlight-none notranslate"><div class="highlight"><pre><code><span></span>          OpenSees -- Open System For Earthquake Engineering Simulation
                Pacific Earthquake Engineering Research Center
                       Version 2.5.0 (rev 6536) 64-Bit
 
@@ -158,7 +154,7 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </code></pre></div>
 </div>
 <p>Followed by a completion message after the analysis:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="o">*****</span> <span class="n">OpenSees</span> <span class="n">analysis</span> <span class="n">time</span> <span class="p">:</span> <span class="mf">0.9063</span> <span class="n">s</span> <span class="o">*****</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="o">*****</span> <span class="n">OpenSees</span> <span class="n">analysis</span> <span class="n">time</span> <span class="p">:</span> <span class="mf">0.9063</span> <span class="n">s</span> <span class="o">*****</span>
 </code></pre></div>
 </div>
 <p>Only simple constant static loads are currently implemented with the following basic analysis settings:</p>
@@ -179,7 +175,7 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 <h2>Sofistik</h2>
 <p>The input file for generating a Sofistik structural model is the <code class="docutils literal notranslate"><span class="pre">.dat</span></code> input file. Sofistik differs from Abaqus and OpenSees for the layout of its code, in that lines of code must be supplied in the appropriate sub-program, such as <strong>PROG AQUA</strong>, <strong>PROG SOFIMSHA</strong> or <strong>PROG SOFILOAD</strong>. The input file code will be automatically wrapped with these sub-programs calls, but as a consequence of the way they need to be ordered, will produce an input file which differs significantly when compared to the layout of the <code class="docutils literal notranslate"><span class="pre">.tcl</span></code> and <code class="docutils literal notranslate"><span class="pre">.inp</span></code> files. Similar to Abaqus and OpenSees, nodes and elements will be added starting from number 1, different from the Python 0 based numbering. The nodes will also be internally re-ordered by Sofistik for optimising the analysis via <code class="docutils literal notranslate"><span class="pre">CTRL</span> <span class="pre">OPT</span> <span class="pre">OPTI</span> <span class="pre">10</span></code>. For every <strong>ElementProperties</strong> object, a Sofistik group will be made in multiples of 10000, such that element 2943 in group number 2 will have Sofistik element number 22943, as it will be associated with <code class="docutils literal notranslate"><span class="pre">GRP</span> <span class="pre">2</span> <span class="pre">BASE</span> <span class="pre">20000</span></code>.</p>
 <p>When the <code class="docutils literal notranslate"><span class="pre">.dat</span></code> file is written, a confirmation message will appear in the terminal:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="o">*****</span> <span class="n">Sofistik</span> <span class="nb">input</span> <span class="nb">file</span> <span class="n">generated</span><span class="p">:</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">Temp</span><span class="o">/</span><span class="n">beam_frame</span><span class="o">.</span><span class="n">dat</span> <span class="o">*****</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="o">*****</span> <span class="n">Sofistik</span> <span class="nb">input</span> <span class="nb">file</span> <span class="n">generated</span><span class="p">:</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">Temp</span><span class="o">/</span><span class="n">beam_frame</span><span class="o">.</span><span class="n">dat</span> <span class="o">*****</span>
 </code></pre></div>
 </div>
 <p>Sofistik functionality is still in development and only supports writing the input <code class="docutils literal notranslate"><span class="pre">.dat</span></code> file with <code class="docutils literal notranslate"><span class="pre">.write_input_file()</span></code>. It will currently not be automatically sent for analysis or data extracted (<code class="docutils literal notranslate"><span class="pre">.analyse()</span></code> and <code class="docutils literal notranslate"><span class="pre">.extract_data()</span></code> do net yet do anything). The model must be manually run from the Sofistik GUI through <strong>Execute</strong> and then visualised in <strong>WinGRAF</strong>.</p>
@@ -192,10 +188,10 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 <div class="section" id="fields-components-and-data">
 <h3>Fields, components and data</h3>
 <p>After the analysis, the data are stored in the <strong>Structure</strong> object, where they can be accessed by the user to read or visualise the results. The organisation of the collected data in <code class="docutils literal notranslate"><span class="pre">structure.results</span></code> is in nested dictionaries with keys following a sequence of: the <code class="docutils literal notranslate"><span class="pre">step</span></code> string for the <strong>Step</strong> of interest, a data type string for <code class="docutils literal notranslate"><span class="pre">'nodal'</span></code> or <code class="docutils literal notranslate"><span class="pre">'element'</span></code> based data, the <code class="docutils literal notranslate"><span class="pre">field</span></code> string corresponding to the fields below, and finally the node or element number. The general format of accessing data is thus <code class="docutils literal notranslate"><span class="pre">structure.results[step][type][field][number]</span></code>. A helper method is also provided through <code class="docutils literal notranslate"><span class="pre">structure.get_nodal_results()</span></code> and <code class="docutils literal notranslate"><span class="pre">structure.get_element_results()</span></code>, where the <code class="docutils literal notranslate"><span class="pre">step</span></code>, <code class="docutils literal notranslate"><span class="pre">field</span></code> and <code class="docutils literal notranslate"><span class="pre">node</span></code> or <code class="docutils literal notranslate"><span class="pre">elements</span></code> are given as above, and the requested results are returned as a dictionary:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">get_nodal_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;rfm&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">)</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">get_nodal_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;rfm&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">)</span>
 </code></pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><code class="language-python border rounded"><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">get_element_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;sxx&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">get_element_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;sxx&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
 </code></pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">field</span></code> strings are based on the notation below:</p>
@@ -276,18 +272,18 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 <td><p><code class="docutils literal notranslate"><span class="pre">'spfz'</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>Section forces <code class="docutils literal notranslate"><span class="pre">'sf'</span></code></p></td>
-<td><p>Axial <code class="docutils literal notranslate"><span class="pre">'sfnx'</span></code></p></td>
-<td><p>Shear <cite>x</cite> <code class="docutils literal notranslate"><span class="pre">'sfvx'</span></code></p></td>
-<td><p>Shear <cite>y</cite> <code class="docutils literal notranslate"><span class="pre">'sfvy'</span></code></p></td>
+<td><p>Axial <code class="docutils literal notranslate"><span class="pre">'sf1'</span></code></p></td>
+<td><p>Shear <cite>x</cite> <code class="docutils literal notranslate"><span class="pre">'sf2'</span></code></p></td>
+<td><p>Shear <cite>y</cite> <code class="docutils literal notranslate"><span class="pre">'sf3'</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Shell forces <code class="docutils literal notranslate"><span class="pre">'sf'</span></code></p></td>
-<td><p>Axial <cite>x</cite> <code class="docutils literal notranslate"><span class="pre">'sfnx'</span></code></p></td>
-<td><p>Shear <cite>x</cite> <code class="docutils literal notranslate"><span class="pre">'sfvx'</span></code></p></td>
-<td><p>Shear <cite>y</cite> <code class="docutils literal notranslate"><span class="pre">'sfvy'</span></code></p></td>
+<td><p>Axial <cite>x</cite> <code class="docutils literal notranslate"><span class="pre">'sf1'</span></code></p></td>
+<td><p>Axial <cite>y</cite> <code class="docutils literal notranslate"><span class="pre">'sf2'</span></code></p></td>
+<td><p>Shear <cite>y</cite> <code class="docutils literal notranslate"><span class="pre">'sf3'</span></code></p></td>
 </tr>
 <tr class="row-even"><td></td>
-<td><p>Transverse <cite>x</cite> <code class="docutils literal notranslate"><span class="pre">'sfwx'</span></code></p></td>
-<td><p>Transverse <cite>y</cite> <code class="docutils literal notranslate"><span class="pre">'sfwy'</span></code></p></td>
+<td><p>Transverse <cite>x</cite> <code class="docutils literal notranslate"><span class="pre">'sf4'</span></code></p></td>
+<td><p>Transverse <cite>y</cite> <code class="docutils literal notranslate"><span class="pre">'sf5'</span></code></p></td>
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>Section moments <code class="docutils literal notranslate"><span class="pre">'sm'</span></code></p></td>
@@ -362,94 +358,18 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </div>
 
                         
-                        <!-- <nav class="compas-sideways">
-                            
-                                <a href="11_steps.html" class="btn btn-primary compas-prev" role="button">Steps</a>
-                            
-
-                            
-                                <a href="13_cad.html" class="btn btn-primary compas-next" role="button">CAD</a>
-                            
-                        </nav> -->
-
                     
 
                 </main>
 
-                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
-                    <div class="navbar-light">
+                <!-- site navigation sidebar -->
 
-                        <form id="" class="d-flex compas-searchbox" action="../search.html" method="get">
-                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
-                            <input type="hidden" name="check_keywords" value="yes" />
-                            <input type="hidden" name="area" value="default" />
-
-                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                        </form>
-
-                        
-                        
-
-                            <div class="navbar-expand-md">
-                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
-
-                                <ul class="nav flex-column active">
-<li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
-<li class="nav-item active"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a><ul class="nav active">
-<li class="nav-item"><a class="nav-link reference internal" href="01_setup.html">Setup</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="02_structure.html">Structure</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="03_nodes.html">Nodes</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="04_elements.html">Elements</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="05_sets.html">Sets</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="06_sections.html">Sections</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="07_material.html">Materials</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="08_properties.html">Properties</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="09_loads.html">Loads</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="10_displacements.html">Displacements</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="11_steps.html">Steps</a></li>
-<li class="nav-item active"><a class="nav-link active current reference internal" href="#">Analysis</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="13_cad.html">CAD</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="14_app.html">App</a></li>
-</ul>
-</li>
-<li class="nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
-</ul>
-
-
-                                </div>
-                            </div>
-
-                        
-
-                    </div>
-                </div>
                 
-                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
 
-                    
+                <!-- table of contents of main content -->
+                
+                
 
-                    <ul class="nav flex-column" id="compas-localnav">
-<li class="nav-item"><a class="nav-link reference internal" href="#">Analysis</a><ul class="nav">
-<li class="nav-item"><a class="nav-link reference internal" href="#abaqus">Abaqus</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#opensees">OpenSees</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#sofistik">Sofistik</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#ansys">Ansys</a><ul class="nav">
-<li class="nav-item"><a class="nav-link reference internal" href="#fields-components-and-data">Fields, components and data</a></li>
-</ul>
-</li>
-<li class="nav-item"><a class="nav-link reference internal" href="#node-fields">Node fields</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#element-fields">Element fields</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#integration-and-section-points">Integration and section points</a></li>
-</ul>
-</li>
-</ul>
-
-
-                </div>
             </div>
         </div>
 
@@ -461,7 +381,7 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
             
 
             
-                Last updated on Jun 27, 2018.
+                Last updated on Oct 15, 2018.
             
 
             
@@ -477,7 +397,7 @@ var DOCUMENTATION_OPTIONS = {
     VERSION           : '0.1.0',
     COLLAPSE_INDEX    : false,
     FILE_SUFFIX       : '.html',
-    HAS_SOURCE        : false,
+    HAS_SOURCE        : 'false',
     SOURCELINK_SUFFIX : '.txt'
 };
             </script>
@@ -487,55 +407,50 @@ var DOCUMENTATION_OPTIONS = {
 
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
             
-            <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
 
-            <script src="/_static/underscore.js"></script>
-            <script src="/_static/doctools.js"></script>
-            <script src="/_static/js/searchtools_.js"></script>
+            <script src="../_static/underscore.js"></script>
+            <script src="../_static/doctools.js"></script>
+            <script src="../_static/js/searchtools_.js"></script>
+            <script src="../_static/js/prism.js"></script>
 
             <script>
-hljs.initHighlightingOnLoad();
-anchors.add();
+$(document).ready(function() {
 
-var pre = document.getElementsByTagName('pre');
+    // $(".language-default pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-for (var i = 0; i < pre.length; i++) {
+    // $(".language-bash pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-    var is_code = pre[i].children[0].className.indexOf('language-python');
+    // $(".language-python pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-    if (is_code === 0) {
+    // $(".language-c pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-        var button = document.createElement('button');
+    // $(".language-cpp pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-        button.className = 'btn btn-secondary copy-code mt-4';
-        button.textContent = 'Copy code';
-        button.type = 'button';
+    // $(".language-fortran pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-        pre[i].appendChild(button);
-    }
-}
+    // $(".language-markdown pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-var copy_code = new Clipboard('.copy-code', {
-    target: function(trigger) {
-        return trigger.previousElementSibling;
-    }
-});
+    // $(".language-rest pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-copy_code.on('success', function(event) {
-    event.clearSelection();
-    event.trigger.textContent = 'Copied!';
-    window.setTimeout(function() {
-        event.trigger.textContent = 'Copy code';
-    }, 2000);
-});
-
-copy_code.on('error', function(event) { 
-    event.trigger.textContent = 'Press "Ctrl + C" to copy...';
-    window.setTimeout(function() {
-        event.trigger.textContent = 'Copy code';
-    }, 2000);
+    anchors.add();
 });
             </script>
 

@@ -1,11 +1,11 @@
 ********************************************************************************
-block_tets Rhino
+block_strip
 ********************************************************************************
 
 This example works for: **Abaqus**.
 
-.. figure:: /_images/block_tets_rhino.png
+.. figure:: /_images/block_strip_rhino.png
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/block_tets_rhino.py
+.. literalinclude:: /../../examples/block_strip_rhino.py

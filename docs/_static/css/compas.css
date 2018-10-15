@@ -26,6 +26,7 @@ h3 {
 
 a {
 	text-decoration: none;
+	color: #0092d2;
 }
 
 a:hover {
@@ -42,6 +43,10 @@ ol ol, ol ul, ul ol, ul ul {
 	margin-bottom: 1rem;
 }
 
+table {
+	margin: 2rem 0;
+}
+
 /*li .py-mod {
 	word-wrap: break-word;
 }*/
@@ -49,25 +54,24 @@ ol ol, ol ul, ul ol, ul ul {
 .compas-navbar {
 	height: 4rem;
 	z-index: 1053;
-	background-color: #eee;
-	border-bottom: 1px solid #ccc;
+	background-color: #0092d2;
+	border-bottom: 0px solid #ccc;
 }
 
 .compas-navbar .navbar-brand,
 .compas-navbar .nav-link {
-	color: #888;
+	color: #eee;
 }
 
 .compas-navbar .navbar-brand:hover,
 .compas-navbar .nav-link:hover,
 .compas-navbar .navbar-brand.active,
 .compas-navbar .nav-link.active {
-	color: #222;
+	color: #fff;
 }
 
 .compas-navbar .navbar-brand.active,
 .compas-navbar .nav-link.active {
-	font-weight: 600;
 }
 
 .compas-container {
@@ -362,15 +366,20 @@ ol ol, ol ul, ul ol, ul ul {
 	margin-bottom: 2rem;
 }
 
-.compas-content .highlight {
+.highlight {
 	margin-top: 2rem;
 	margin-bottom: 2rem;
+	font-size: 0.9rem;
+
+	/*position: relative;*/
 }
 
-.compas-content .highlight .hljs {
+.highlight pre {
 	padding: 2rem;
-	font-size: 0.8rem;
-	/*font-family: monospace;*/
+}
+
+.nohighlight pre {
+	background-color: #eee;
 }
 
 .compas-content .anchorjs-link {

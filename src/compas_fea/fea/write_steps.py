@@ -162,78 +162,79 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 
             # Write loads
 
-            if getattr(step, 'loads'):
+            if getattr(step, 'loads', None):
+
                 if isinstance(step.loads, str):
                     step.loads = [step.loads]
 
-            for k in step.loads:
+                for k in step.loads:
 
-                load  = loads[k]
-                ltype = load.__name__
-                com   = getattr(load, 'components', None)
-                axes  = getattr(load, 'axes', None)
-                nodes = getattr(load, 'nodes', None)
-                fact  = factor.get(k, 1.0) if isinstance(factor, dict) else factor
+                    load  = loads[k]
+                    ltype = load.__name__
+                    com   = getattr(load, 'components', None)
+                    axes  = getattr(load, 'axes', None)
+                    nodes = getattr(load, 'nodes', None)
+                    fact  = factor.get(k, 1.0) if isinstance(factor, dict) else factor
 
-                if isinstance(nodes, str):
-                    nodes = [nodes]
+                    if isinstance(nodes, str):
+                        nodes = [nodes]
 
-                if isinstance(load.elements, str):
-                    elset = [load.elements]
-                else:
-                    elset = load.elements
+                    if isinstance(load.elements, str):
+                        elset = [load.elements]
+                    else:
+                        elset = load.elements
 
-                if software != 'sofistik':
+                    if software != 'sofistik':
 
-                    f.write('{0} {1}\n'.format(c, k))
-                    f.write('{0} '.format(c) + '-' * len(k) + '\n')
-                    f.write('{0}\n'.format(c))
+                        f.write('{0} {1}\n'.format(c, k))
+                        f.write('{0} '.format(c) + '-' * len(k) + '\n')
+                        f.write('{0}\n'.format(c))
 
-                    # Point load
+                        # Point load
 
-                    if ltype == 'PointLoad':
-                        _write_point_load(f, software, com, nodes, ndof, sets, fact)
+                        if ltype == 'PointLoad':
+                            _write_point_load(f, software, com, nodes, ndof, sets, fact)
 
-                    # Point loads
+                        # Point loads
 
-                    elif ltype == 'PointLoads':
-                        _write_point_loads(f, software, com, fact)
+                        elif ltype == 'PointLoads':
+                            _write_point_loads(f, software, com, fact)
 
-                    # Pre-stress
+                        # Pre-stress
 
-                    elif ltype in ['PrestressLoad']:
-                        _write_prestress_load(f, software, elset, com)
+                        elif ltype in ['PrestressLoad']:
+                            _write_prestress_load(f, software, elset, com)
 
-                    # Line load
+                        # Line load
 
-                    elif ltype == 'LineLoad':
-                        _write_line_load(f, software, axes, com, fact, elset, sets, structure)
+                        elif ltype == 'LineLoad':
+                            _write_line_load(f, software, axes, com, fact, elset, sets, structure)
 
-                    # Area load
+                        # Area load
 
-                    elif ltype == 'AreaLoad':
-                        _write_area_load(f, software, com, axes, elset, sets, fact)
+                        elif ltype == 'AreaLoad':
+                            _write_area_load(f, software, com, axes, elset, sets, fact)
 
-                    # Body load
+                        # Body load
 
-                    elif ltype == 'BodyLoad':
+                        elif ltype == 'BodyLoad':
 
-                        raise NotImplementedError
+                            raise NotImplementedError
 
-                    # Gravity load
+                        # Gravity load
 
-                    elif ltype == 'GravityLoad':
-                        _write_gravity_load(f, software, load.g, com, elset, fact)
+                        elif ltype == 'GravityLoad':
+                            _write_gravity_load(f, software, load.g, com, elset, fact)
 
-                    # Tributary load
+                        # Tributary load
 
-                    elif ltype == 'TributaryLoad':
-                        _write_tributary_load(f, software, com, fact)
+                        elif ltype == 'TributaryLoad':
+                            _write_tributary_load(f, software, com, fact)
 
-                else:
+                    else:
 
-                    if ltype != 'GravityLoad':
-                        f.write('    LCC {0} FACT {1} $ {2}\n'.format(load.index + 1, fact, k))
+                        if ltype != 'GravityLoad':
+                            f.write('    LCC {0} FACT {1} $ {2}\n'.format(load.index + 1, fact, k))
 
 
             # Write displacements

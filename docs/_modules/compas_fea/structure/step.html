@@ -1,10 +1,8 @@
 
-
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>compas -- additonal packages</title>
+        <title>COMPAS</title>
 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -12,12 +10,13 @@
         <meta name="author" content="Tom Van Mele" />
         <meta name="description" content="compas is a computational framework for research in architecture and structures." />
 
-        <link rel="shortcut icon" href="/_static/images/compas.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="../../../_static/images/compas.ico" type="image/x-icon">
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/github.css" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/compas.css" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/compas-reference.css" />
+
+        <link rel="stylesheet" type="text/css" href="../../../_static/css/prism.css" />
+        <link rel="stylesheet" type="text/css" href="../../../_static/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="../../../_static/css/compas-reference.css" />
 
         
         
@@ -30,44 +29,41 @@
 
         <header class="navbar navbar-expand compas-navbar">
             <a class="navbar-brand" href="/">
-                <img src="/_static/images/compas_icon.png" width="36px" height="36px" alt="compas" />
+                <img src="/_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
             </a>
 
-                <ul class="navbar-nav">
-                    <li class="nav-item ">
-                        <a class="nav-link " href="/main/">Main library</a>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link " href="/packages/">Additional Packages</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="http://forum.compas-framework.org">Forum</a>
-                    </li>
-                </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item ">
+                    <a class="nav-link " href="/">Home</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link " href="/main/">Main library</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link " href="/packages/">Additional Packages</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" target="_blank" href="http://forum.compas-framework.org">Forum</a>
+                </li>
+            </ul>
         </header>
         
         <div class="container-fluid compas-container">
             <div class="row flex-xl-nowrap">
 
-                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+                <!-- main content -->
+
+                
+
+                <main class="col-12 col-md-9 col-xl-8 mx-auto compas-content" role="main">
+
+                
 
                     
 
-                        <!-- 
-    <nav class="breadcrumb">
-        <a class="breadcrumb-item" href="https://compas-dev.github.io/">compas</a>
-        <a class="breadcrumb-item" href="https://compas-dev.github.io/packages">additional packages</a>
-        
-            
-                <a class="breadcrumb-item" href="../../index.html" accesskey="U">module code</a>
-            
-        
-    </nav>
- -->
-
                         
 
-                        <h1>Source code for compas_fea.structure.step</h1><div class="highlight"><pre><code class="language-python border rounded">
+                        <h1>Source code for compas_fea.structure.step</h1><div class="highlight"><pre><code>
 <span></span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
@@ -81,15 +77,49 @@
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;Step&#39;</span><span class="p">,</span>
     <span class="s1">&#39;GeneralStep&#39;</span><span class="p">,</span>
     <span class="c1"># &#39;HeatStep&#39;,</span>
     <span class="s1">&#39;ModalStep&#39;</span><span class="p">,</span>
     <span class="s1">&#39;HarmonicStep&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;BucklingStep&#39;</span>
+    <span class="s1">&#39;BucklingStep&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;AcousticStep&#39;</span>
 <span class="p">]</span>
 
 
-<div class="viewcode-block" id="GeneralStep"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.step.GeneralStep.html#compas_fea.structure.step.GeneralStep">[docs]</a><span class="k">class</span> <span class="nc">GeneralStep</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Step"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.step.Step.html#compas_fea.structure.step.Step">[docs]</a><span class="k">class</span> <span class="nc">Step</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot; Initialises base Step object.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the Step object.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;StepObject&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;compas_fea </span><span class="si">{0}</span><span class="s1"> object&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:&lt;13}</span><span class="s1"> : </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)))</span>
+</div>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
+
+<div class="viewcode-block" id="GeneralStep"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.step.GeneralStep.html#compas_fea.structure.step.GeneralStep">[docs]</a><span class="k">class</span> <span class="nc">GeneralStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Initialises GeneralStep object for use in a static analysis.</span>
 
@@ -124,23 +154,27 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">nlgeom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nlmat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">nlgeom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nlmat</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span>
                  <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;static&#39;</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s1">&#39;sls&#39;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;GeneralStep&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">increments</span> <span class="o">=</span> <span class="n">increments</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span> <span class="o">=</span> <span class="n">iterations</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">factor</span> <span class="o">=</span> <span class="n">factor</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nlgeom</span> <span class="o">=</span> <span class="n">nlgeom</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nlmat</span> <span class="o">=</span> <span class="n">nlmat</span>
+        <span class="n">Step</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span>      <span class="o">=</span> <span class="s1">&#39;GeneralStep&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>          <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">increments</span>    <span class="o">=</span> <span class="n">increments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span>    <span class="o">=</span> <span class="n">iterations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factor</span>        <span class="o">=</span> <span class="n">factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nlgeom</span>        <span class="o">=</span> <span class="n">nlgeom</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nlmat</span>         <span class="o">=</span> <span class="n">nlmat</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="n">displacements</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">loads</span> <span class="o">=</span> <span class="n">loads</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span> <span class="o">=</span> <span class="n">tolerance</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loads</span>         <span class="o">=</span> <span class="n">loads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span>          <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span>     <span class="o">=</span> <span class="n">tolerance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span>         <span class="o">=</span> <span class="n">state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;increments&#39;</span><span class="p">,</span> <span class="s1">&#39;iterations&#39;</span><span class="p">,</span> <span class="s1">&#39;factor&#39;</span><span class="p">,</span> <span class="s1">&#39;nlgeom&#39;</span><span class="p">,</span> <span class="s1">&#39;nlmat&#39;</span><span class="p">,</span> <span class="s1">&#39;displacements&#39;</span><span class="p">,</span> <span class="s1">&#39;loads&#39;</span><span class="p">,</span></div>
+                               <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;tolerance&#39;</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">])</span>
 
 
-<span class="k">class</span> <span class="nc">HeatStep</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">HeatStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Initialises HeatStep object for use in a thermal analysis.</span>
 
@@ -168,17 +202,20 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">temp0</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">dTmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;heat transfer&#39;</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;HeatStep&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="n">Step</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span>    <span class="o">=</span> <span class="s1">&#39;HeatStep&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>        <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interaction</span> <span class="o">=</span> <span class="n">interaction</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">increments</span> <span class="o">=</span> <span class="n">increments</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">temp0</span> <span class="o">=</span> <span class="n">temp0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dTmax</span> <span class="o">=</span> <span class="n">dTmax</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">increments</span>  <span class="o">=</span> <span class="n">increments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temp0</span>       <span class="o">=</span> <span class="n">temp0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dTmax</span>       <span class="o">=</span> <span class="n">dTmax</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span>        <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration</span>    <span class="o">=</span> <span class="n">duration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;interaction&#39;</span><span class="p">,</span> <span class="s1">&#39;increments&#39;</span><span class="p">,</span> <span class="s1">&#39;temp0&#39;</span><span class="p">,</span> <span class="s1">&#39;dTmax&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">])</span>
 
 
-<div class="viewcode-block" id="ModalStep"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.step.ModalStep.html#compas_fea.structure.step.ModalStep">[docs]</a><span class="k">class</span> <span class="nc">ModalStep</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="ModalStep"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.step.ModalStep.html#compas_fea.structure.step.ModalStep">[docs]</a><span class="k">class</span> <span class="nc">ModalStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Initialises ModalStep object for use in a modal analysis.</span>
 
@@ -202,15 +239,18 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;modal&#39;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;ModalStep&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">modes</span> <span class="o">=</span> <span class="n">modes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">increments</span> <span class="o">=</span> <span class="n">increments</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="n">displacements</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="n">Step</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span>      <span class="o">=</span> <span class="s1">&#39;ModalStep&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>          <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modes</span>         <span class="o">=</span> <span class="n">modes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">increments</span>    <span class="o">=</span> <span class="n">increments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="n">displacements</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span>          <span class="o">=</span> <span class="nb">type</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;modes&#39;</span><span class="p">,</span> <span class="s1">&#39;increments&#39;</span><span class="p">,</span> <span class="s1">&#39;displacements&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">])</span>
 
 
-<div class="viewcode-block" id="HarmonicStep"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.step.HarmonicStep.html#compas_fea.structure.step.HarmonicStep">[docs]</a><span class="k">class</span> <span class="nc">HarmonicStep</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="HarmonicStep"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.step.HarmonicStep.html#compas_fea.structure.step.HarmonicStep">[docs]</a><span class="k">class</span> <span class="nc">HarmonicStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Initialises HarmonicStep object for use in a harmonic analysis.</span>
 
@@ -218,10 +258,8 @@
 <span class="sd">    ----------</span>
 <span class="sd">    name : str</span>
 <span class="sd">        Name of the HarmonicStep.</span>
-<span class="sd">    freq_range : list</span>
-<span class="sd">        First and last frequencies to analyse.</span>
-<span class="sd">    freq_steps : int</span>
-<span class="sd">        The number of equally spaced frequency steps.</span>
+<span class="sd">    freq_list : list</span>
+<span class="sd">        Sorted list of frequencies to analyse.</span>
 <span class="sd">    displacements : list</span>
 <span class="sd">        Displacement object names.</span>
 <span class="sd">    loads : list</span>
@@ -239,20 +277,21 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">freq_range</span><span class="p">,</span> <span class="n">freq_steps</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;harmonic&#39;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;HarmonicStep&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">freq_range</span> <span class="o">=</span> <span class="n">freq_range</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">freq_steps</span> <span class="o">=</span> <span class="n">freq_steps</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">freq_list</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;harmonic&#39;</span><span class="p">):</span>
+        <span class="n">Step</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span>      <span class="o">=</span> <span class="s1">&#39;HarmonicStep&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>          <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freq_list</span>     <span class="o">=</span> <span class="n">freq_list</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="n">displacements</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">loads</span> <span class="o">=</span> <span class="n">loads</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">factor</span> <span class="o">=</span> <span class="n">factor</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">damping</span> <span class="o">=</span> <span class="n">damping</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loads</span>         <span class="o">=</span> <span class="n">loads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factor</span>        <span class="o">=</span> <span class="n">factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">damping</span>       <span class="o">=</span> <span class="n">damping</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span>          <span class="o">=</span> <span class="nb">type</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;freq_list&#39;</span><span class="p">,</span> <span class="s1">&#39;displacements&#39;</span><span class="p">,</span> <span class="s1">&#39;loads&#39;</span><span class="p">,</span> <span class="s1">&#39;factor&#39;</span><span class="p">,</span> <span class="s1">&#39;damping&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">])</span>
 
 
-<div class="viewcode-block" id="BucklingStep"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.step.BucklingStep.html#compas_fea.structure.step.BucklingStep">[docs]</a><span class="k">class</span> <span class="nc">BucklingStep</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="BucklingStep"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.step.BucklingStep.html#compas_fea.structure.step.BucklingStep">[docs]</a><span class="k">class</span> <span class="nc">BucklingStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Initialises BucklingStep object for use in a buckling analysis.</span>
 
@@ -281,71 +320,85 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;buckle&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;BucklingStep&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">modes</span> <span class="o">=</span> <span class="n">modes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">increments</span> <span class="o">=</span> <span class="n">increments</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">factor</span> <span class="o">=</span> <span class="n">factor</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;buckle&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">Step</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span>      <span class="o">=</span> <span class="s1">&#39;BucklingStep&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>          <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modes</span>         <span class="o">=</span> <span class="n">modes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">increments</span>    <span class="o">=</span> <span class="n">increments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factor</span>        <span class="o">=</span> <span class="n">factor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="n">displacements</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">loads</span> <span class="o">=</span> <span class="n">loads</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loads</span>         <span class="o">=</span> <span class="n">loads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span>          <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step</span>          <span class="o">=</span> <span class="n">step</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;modes&#39;</span><span class="p">,</span> <span class="s1">&#39;increments&#39;</span><span class="p">,</span> <span class="s1">&#39;factor&#39;</span><span class="p">,</span> <span class="s1">&#39;displacements&#39;</span><span class="p">,</span> <span class="s1">&#39;loads&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;step&#39;</span><span class="p">])</span>
+
+
+<span class="k">class</span> <span class="nc">AcousticStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot; Initialises AcousticStep object for use in a acoustic analysis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the AcousticStep.</span>
+<span class="sd">    freq_range : list</span>
+<span class="sd">        Range of frequencies to analyse.</span>
+<span class="sd">    freq_step : int</span>
+<span class="sd">        Step size for frequency range.</span>
+<span class="sd">    displacements : list</span>
+<span class="sd">        Displacement object names.</span>
+<span class="sd">    loads : list</span>
+<span class="sd">        Load object names.</span>
+<span class="sd">    sources : list</span>
+<span class="sd">        List of source elements or element sets radiating sound.</span>
+<span class="sd">    samples : int</span>
+<span class="sd">        Number of samples for acoustic analysis.</span>
+<span class="sd">    factor : float</span>
+<span class="sd">        Proportionality factor on the loads and displacements.</span>
+<span class="sd">    damping : float</span>
+<span class="sd">        Constant harmonic damping ratio.</span>
+<span class="sd">    type : str</span>
+<span class="sd">        &#39;acoustic&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">freq_range</span><span class="p">,</span> <span class="n">freq_step</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="n">sources</span><span class="o">=</span><span class="p">[],</span> <span class="n">samples</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                 <span class="n">damping</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;acoustic&#39;</span><span class="p">):</span>
+        <span class="n">Step</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span>      <span class="o">=</span> <span class="s1">&#39;AcousticStep&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>          <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freq_range</span>    <span class="o">=</span> <span class="n">freq_range</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freq_step</span>     <span class="o">=</span> <span class="n">freq_step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="n">displacements</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sources</span>       <span class="o">=</span> <span class="n">sources</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples</span>       <span class="o">=</span> <span class="n">samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loads</span>         <span class="o">=</span> <span class="n">loads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factor</span>        <span class="o">=</span> <span class="n">factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">damping</span>       <span class="o">=</span> <span class="n">damping</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span>          <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;freq_range&#39;</span><span class="p">,</span> <span class="s1">&#39;freq_step&#39;</span><span class="p">,</span> <span class="s1">&#39;displacements&#39;</span><span class="p">,</span> <span class="s1">&#39;sources&#39;</span><span class="p">,</span> <span class="s1">&#39;samples&#39;</span><span class="p">,</span> <span class="s1">&#39;loads&#39;</span><span class="p">,</span> <span class="s1">&#39;factor&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;damping&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">])</span>
 </code></pre></div>
                         
-                        <!-- <nav class="compas-sideways">
-                            
-
-                            
-                        </nav> -->
-
                     
 
                 </main>
 
-                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
-                    <div class="navbar-light">
+                <!-- site navigation sidebar -->
 
-                        <form id="" class="d-flex compas-searchbox" action="../../../search.html" method="get">
-                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
-                            <input type="hidden" name="check_keywords" value="yes" />
-                            <input type="hidden" name="area" value="default" />
-
-                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                        </form>
-
-                        
-                        
-
-                            <div class="navbar-expand-md">
-                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
-
-                                <ul class="nav flex-column">
-<li class="nav-item"><a class="nav-link reference internal" href="../../../intro.html">Introduction</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../../../tutorial.html">Tutorial</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../../../examples.html">Examples</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../../../reference.html">Reference</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../../../license.html">License</a></li>
-</ul>
-
-
-                                </div>
-                            </div>
-
-                        
-
-                    </div>
-                </div>
                 
-                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
 
-                    
+                <!-- table of contents of main content -->
+                
+                
 
-                    
-
-                </div>
             </div>
         </div>
 
@@ -357,7 +410,7 @@
             
 
             
-                Last updated on Jun 27, 2018.
+                Last updated on Oct 15, 2018.
             
 
             
@@ -373,7 +426,7 @@ var DOCUMENTATION_OPTIONS = {
     VERSION           : '0.1.0',
     COLLAPSE_INDEX    : false,
     FILE_SUFFIX       : '.html',
-    HAS_SOURCE        : false,
+    HAS_SOURCE        : 'false',
     SOURCELINK_SUFFIX : '.txt'
 };
             </script>
@@ -383,55 +436,50 @@ var DOCUMENTATION_OPTIONS = {
 
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
             
-            <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
 
-            <script src="/_static/underscore.js"></script>
-            <script src="/_static/doctools.js"></script>
-            <script src="/_static/js/searchtools_.js"></script>
+            <script src="../../../_static/underscore.js"></script>
+            <script src="../../../_static/doctools.js"></script>
+            <script src="../../../_static/js/searchtools_.js"></script>
+            <script src="../../../_static/js/prism.js"></script>
 
             <script>
-hljs.initHighlightingOnLoad();
-anchors.add();
+$(document).ready(function() {
 
-var pre = document.getElementsByTagName('pre');
+    // $(".language-default pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-for (var i = 0; i < pre.length; i++) {
+    // $(".language-bash pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-    var is_code = pre[i].children[0].className.indexOf('language-python');
+    // $(".language-python pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-    if (is_code === 0) {
+    // $(".language-c pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-        var button = document.createElement('button');
+    // $(".language-cpp pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-        button.className = 'btn btn-secondary copy-code mt-4';
-        button.textContent = 'Copy code';
-        button.type = 'button';
+    // $(".language-fortran pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-        pre[i].appendChild(button);
-    }
-}
+    // $(".language-markdown pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-var copy_code = new Clipboard('.copy-code', {
-    target: function(trigger) {
-        return trigger.previousElementSibling;
-    }
-});
+    // $(".language-rest pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
 
-copy_code.on('success', function(event) {
-    event.clearSelection();
-    event.trigger.textContent = 'Copied!';
-    window.setTimeout(function() {
-        event.trigger.textContent = 'Copy code';
-    }, 2000);
-});
-
-copy_code.on('error', function(event) { 
-    event.trigger.textContent = 'Press "Ctrl + C" to copy...';
-    window.setTimeout(function() {
-        event.trigger.textContent = 'Copy code';
-    }, 2000);
+    anchors.add();
 });
             </script>
 
