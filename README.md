@@ -13,4 +13,8 @@ The complete documentation of the **compas_fea** package is available here: http
 
 The **compas_fea** forum can be visited here: http://forum.compas-framework.org/c/compas-fea.
 
-For citations to the **compas_fea** package please use: **Liew, A.** and **Méndez Echenagucia, T.**, compas_fea: A finite element analysis package for Python, 2018.
+For citations to the **compas_fea** package please use: 
+
+```
+Liew, A. and Méndez Echenagucia, T., compas_fea: A finite element analysis package for Python, 2018.
+```
