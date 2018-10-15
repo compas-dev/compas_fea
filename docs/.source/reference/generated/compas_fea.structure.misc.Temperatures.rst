@@ -1,9 +1,9 @@
-AcousticLoad
+Temperatures
 ======================================
 
-.. currentmodule:: compas_fea.structure.load
+.. currentmodule:: compas_fea.structure.misc
 
-.. autoclass:: AcousticLoad
+.. autoclass:: Temperatures
 
    
    
@@ -11,7 +11,7 @@ AcousticLoad
 
    .. autosummary::
    
-      ~AcousticLoad.__init__
+      ~Temperatures.__init__
    
    
 

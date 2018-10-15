@@ -24,7 +24,7 @@ __email__     = 'liew@arch.ethz.ch'
 
 # Local ex
 
-for i in rs.ObjectsByLayer('elset_lines'):
+for i in rs.ObjectsByLayer('elset_beams'):
     ez = subtract_vectors(rs.CurveEndPoint(i), rs.CurveStartPoint(i))
     ex = normalize_vector(cross_vectors(ez, [0, 0, 1]))
     rs.ObjectName(i, '_{0}'.format(json.dumps({'ex': ex})))
@@ -35,7 +35,7 @@ mdl = Structure(name='beam_bathe', path='C:/Temp/')
 
 # Elements
 
-rhino.add_nodes_elements_from_layers(mdl, line_type='BeamElement', layers='elset_lines')
+rhino.add_nodes_elements_from_layers(mdl, line_type='BeamElement', layers='elset_beams')
 
 # Sets
 
@@ -47,11 +47,11 @@ mdl.add_material(ElasticIsotropic(name='mat_elastic', E=10**7, v=10**(-5), p=1))
 
 # Sections
 
-mdl.add_section(RectangularSection(name='sec_rec', b=1, h=1))
+mdl.add_section(RectangularSection(name='sec_beam', b=1, h=1))
 
 # Properties
 
-ep = Properties(name='ep_beam', material='mat_elastic', section='sec_rec', elsets='elset_lines')
+ep = Properties(name='ep_beam', material='mat_elastic', section='sec_beam', elsets='elset_beams')
 mdl.add_element_properties(ep)
 
 # Displacements
@@ -66,7 +66,8 @@ mdl.add_load(PointLoad(name='load_point', nodes='nset_load', z=600))
 
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements=['disp_fixed']),
-    GeneralStep(name='step_load', loads=['load_point'])])
+    GeneralStep(name='step_load', loads=['load_point']),
+])
 mdl.steps_order = ['step_bc', 'step_load']
 
 # Summary
@@ -76,8 +77,6 @@ mdl.summary()
 # Run (Abaqus)
 
 mdl.analyse_and_extract(software='abaqus', fields=['u'], license='research')
-
-rhino.plot_data(mdl, step='step_load', field='uz', radius=1)
 
 # Run (OpenSees)
 

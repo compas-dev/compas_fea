@@ -199,10 +199,9 @@ if __name__ == "__main__":
     fnm = '/home/al/temp/knit_candela.obj'
 
     mdl = Structure.load_from_obj(fnm)
-    # mdl.view()
+    mdl.view()
     total = 0
     reactions = mdl.get_nodal_results('step_wind', 'rfm', nodes='nset_supports')
     for node, force in reactions.items():
         total += force
     print(total)
-

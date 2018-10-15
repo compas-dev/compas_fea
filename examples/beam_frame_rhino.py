@@ -38,26 +38,29 @@ mdl.add_section(PipeSection(name='sec_pipe', r=0.100, t=0.005))
 
 # Properties
 
-ep = Properties(name='ep_beams', material='mat_steel', section='sec_pipe', elsets='elset_beams')
+ep = Properties(name='ep_beam', material='mat_steel', section='sec_pipe', elsets='elset_beams')
 mdl.add_element_properties(ep)
 
 # Displacements
 
 mdl.add_displacements([
     PinnedDisplacement(name='disp_pins', nodes='nset_pins'),
-    RollerDisplacementXZ(name='disp_rollers', nodes='nset_rollers')])
+    RollerDisplacementXZ(name='disp_rollers', nodes='nset_rollers'),
+])
 
 # Loads
 
 mdl.add_loads([
     PointLoad(name='load_h', nodes='nset_load_h', x=+4000),
-    PointLoad(name='load_v', nodes='nset_load_v', z=-6000)])
+    PointLoad(name='load_v', nodes='nset_load_v', z=-6000),
+])
 
 # Steps
 
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements=['disp_pins', 'disp_rollers']),
-    GeneralStep(name='step_loads', loads=['load_h', 'load_v'], iterations=50)])
+    GeneralStep(name='step_loads', loads=['load_h', 'load_v'], iterations=50),
+])
 mdl.steps_order = ['step_bc', 'step_loads']
 
 # Summary
@@ -68,13 +71,11 @@ mdl.summary()
 
 mdl.write_input_file(software='sofistik')
 
-# Run (Abaqus/OpenSees)
+# Run (Abaqus)
 
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf'], license='research')
 mdl.analyse_and_extract(software='opensees', fields=['u', 'rf'])
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 'cf'], license='research')
 
 rhino.plot_data(mdl, step='step_loads', field='um', scale=50)
-rhino.plot_reaction_forces(mdl, step='step_loads', scale=0.1)
-rhino.plot_concentrated_forces(mdl, step='step_loads', scale=0.1)
 
 print(mdl.get_nodal_results(step='step_loads', field='rfm', nodes='nset_pins'))

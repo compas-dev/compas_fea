@@ -49,9 +49,10 @@ mdl.add_set(name='nset_edges', type='node', selection=edges)
 # Materials
 
 mdl.add_materials([
-    Concrete(name='mat_concrete', fck=90, fr=[1.16, 0.13]),
+    Concrete(name='mat_concrete', fck=90, fr=[1.16, 0.15]),
     Stiff(name='mat_stiff'),
-    Steel(name='mat_steel', fy=355)])
+    Steel(name='mat_steel', fy=355),
+])
     
 # Sections
 
@@ -59,37 +60,40 @@ mdl.add_sections([
     ShellSection(name='sec_ribs', t=0.020),
     ShellSection(name='sec_vault', t=0.050),
     RectangularSection(name='sec_stiff', b=1, h=1), 
-    TrussSection(name='sec_ties', A=pi*0.25*0.030**2)])
+    TrussSection(name='sec_ties', A=pi*0.25*0.030**2),
+])
 
 # Properties
 
 mdl.add_element_properties([
     Properties(name='ep_ribs', material='mat_concrete', section='sec_ribs', elsets='elset_ribs'),
     Properties(name='ep_vault', material='mat_concrete', section='sec_vault', elsets='elset_vault'),
+    Properties(name='ep_stiff', material='mat_stiff', section='sec_stiff', elsets='elset_stiff'),
     Properties(name='ep_ties', material='mat_steel', section='sec_ties', elsets='elset_ties'),
-    Properties(name='ep_stiff', material='mat_stiff', section='sec_stiff', elsets='elset_stiff')]) 
+])
 
 # Displacements
 
 mdl.add_displacements([
     RollerDisplacementXY(name='disp_edges', nodes='nset_edges'),
     PinnedDisplacement(name='disp_pinned', nodes='nset_corner1'),
-    GeneralDisplacement(name='disp_xdof', nodes='nset_corner2', x=0)])
+    GeneralDisplacement(name='disp_xdof', nodes='nset_corner2', x=0),
+])
     
 # Loads
 
-mesh = mesh_from_guid(Mesh(), rs.ObjectsByLayer('load_mesh')[0])
 mdl.add_loads([
     GravityLoad(name='load_gravity', elements=['elset_ribs', 'elset_vault']),
     PrestressLoad(name='load_prestress', elements='elset_ties', sxx=10*10**6),
-    TributaryLoad(mdl, name='load_tributary', mesh=mesh, z=-2000)])
+    TributaryLoad(mdl, name='load_tributary', mesh=mesh_from_guid(Mesh(), rs.ObjectsByLayer('load_mesh')[0]), z=-2000),
+])
 
 # Steps
 
-factors = {'load_gravity': 1.35, 'load_tributary': 1.50}
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements=['disp_edges', 'disp_pinned', 'disp_xdof']),
-    GeneralStep(name='step_loads', loads=['load_gravity', 'load_tributary'], factor=factors)])
+    GeneralStep(name='step_loads', loads=['load_gravity', 'load_tributary'], factor={'load_gravity': 1.35, 'load_tributary': 1.50}),
+])
 mdl.steps_order = ['step_bc', 'step_loads']
 
 # Summary
@@ -101,5 +105,4 @@ mdl.summary()
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's'], license='research')
 
 rhino.plot_data(mdl, step='step_loads', field='uz', radius=0.02, colorbar_size=0.5)
-rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.02, colorbar_size=0.5,
-                cbar=[0, 5*10**6], nodal='max', iptype='max')
+rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.02, colorbar_size=0.5, cbar=[0, 5*10**6])

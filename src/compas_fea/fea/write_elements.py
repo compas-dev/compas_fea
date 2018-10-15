@@ -542,7 +542,6 @@ def _write_springs(f, software, selection, elements, section, written_springs):
 
 def _write_sofistik_sections(f, properties, materials, sections):
 
-    f.write('$\n')
     f.write('$ -----------------------------------------------------------------------------\n')
     f.write('$ -------------------------------------------------------------------- Sections\n')
     f.write('$\n')

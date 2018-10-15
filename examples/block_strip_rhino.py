@@ -5,6 +5,7 @@ from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import GeneralDisplacement
 from compas_fea.structure import PinnedDisplacement
+from compas_fea.structure import RectangularSection
 from compas_fea.structure import RollerDisplacementY
 from compas_fea.structure import SolidSection
 from compas_fea.structure import Structure
@@ -25,7 +26,11 @@ mdl = Structure(name='block_strip', path='C:/Temp/')
 # Extrude
 
 rhino.mesh_extrude(mdl, guid=rs.ObjectsByLayer('base_mesh'), layers=5, thickness=0.010, 
-                   blocks_name='elset_blocks', plot_blocks=0)
+                   blocks_name='elset_blocks', plot_blocks=1)
+                   
+# Elements
+
+rhino.add_nodes_elements_from_layers(mdl, line_type='BeamElement', layers='elset_beams')
 
 # Sets
 
@@ -39,13 +44,19 @@ mdl.add_set(name='nset_bot', type='node', selection=nodes_bot)
 
 MPa = 10**6
 GPa = 10**9
+
 mdl.add_materials([
     ElasticPlastic(name='mat_1', E=100*GPa, v=0.3, p=1, f=[100*MPa, 100*MPa], e=[0, 1]),
-    ElasticPlastic(name='mat_2', E=150*GPa, v=0.3, p=1, f=[150*MPa, 150*MPa], e=[0, 1])])
+    ElasticPlastic(name='mat_2', E=150*GPa, v=0.3, p=1, f=[150*MPa, 150*MPa], e=[0, 1]),
+    ElasticPlastic(name='mat_3', E=200*GPa, v=0.3, p=1, f=[900*MPa, 900*MPa], e=[0, 1]),
+])
 
 # Sections
 
-mdl.add_section(SolidSection(name='sec_solid'))
+mdl.add_sections([
+    SolidSection(name='sec_solid'),
+    RectangularSection(name='sec_rectangle', b=0.002, h=0.002),
+])
 
 # Properties
 
@@ -55,6 +66,7 @@ mdl.add_element_properties([
     Properties(name='ep_solid_2', material='mat_2', section='sec_solid', elsets='elset_blocks_layer_2'),
     Properties(name='ep_solid_1', material='mat_1', section='sec_solid', elsets='elset_blocks_layer_1'),
     Properties(name='ep_solid_0', material='mat_2', section='sec_solid', elsets='elset_blocks_layer_0'),
+    Properties(name='ep_beams', material='mat_3', section='sec_rectangle', elsets='elset_beams'),
 ])
 
 # Displacements
@@ -67,8 +79,10 @@ mdl.add_displacements([
 
 # Steps
 
-mdl.add_step(GeneralStep(name='step_bc', displacements=['disp_pinned', 'disp_roller']))
-mdl.add_step(GeneralStep(name='step_move', displacements=['disp_move']))
+mdl.add_steps([
+    GeneralStep(name='step_bc', displacements=['disp_pinned', 'disp_roller']),
+    GeneralStep(name='step_move', displacements=['disp_move']),
+])
 mdl.steps_order = ['step_bc', 'step_move']
 
 # Structure
@@ -79,4 +93,4 @@ mdl.summary()
 
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's'], license='research')
 
-rhino.plot_data(mdl, step='step_move', field='smises')
+rhino.plot_data(mdl, step='step_move', field='smises', radius=0.002)

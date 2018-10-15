@@ -34,8 +34,8 @@ mdl = Structure(name='mesh_bridge', path='C:/Temp/')
 
 # Elements
 
-rhino.add_nodes_elements_from_layers(mdl, line_type='TrussElement', layers='elset_ties')
 rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers='elset_mesh')
+rhino.add_nodes_elements_from_layers(mdl, line_type='TrussElement', layers='elset_ties')
 rhino.add_nodes_elements_from_layers(mdl, line_type='BeamElement', layers='elset_ends')
 
 # Sets
@@ -50,51 +50,55 @@ mdl.add_set(name='nset_bot', type='node', selection=nodes_bot)
 
 mdl.add_materials([
     Concrete(name='mat_concrete', fck=90),
-    Steel(name='mat_steel', fy=355)])
+    Steel(name='mat_steel', fy=355),
+])
 
 # Sections
 
 mdl.add_sections([
     ShellSection(name='sec_mesh', t=0.004),
     TrussSection(name='sec_ties', A=0.25*pi*0.010**2),
-    RectangularSection(name='sec_ends', b=0.030, h=0.030)])
+    RectangularSection(name='sec_ends', b=0.030, h=0.030),
+])
 
 # Properties
 
 mdl.add_element_properties([
-    Properties(name='ep_concrete', material='mat_concrete', section='sec_mesh', elsets='elset_mesh'),
+    Properties(name='ep_mesh', material='mat_concrete', section='sec_mesh', elsets='elset_mesh'),
     Properties(name='ep_ties', material='mat_steel', section='sec_ties', elsets='elset_ties'),
-    Properties(name='ep_ends', material='mat_steel', section='sec_ends', elsets='elset_ends')])
+    Properties(name='ep_ends', material='mat_steel', section='sec_ends', elsets='elset_ends'),
+])
 
 # Displacements
 
 mdl.add_displacements([
     RollerDisplacementY(name='disp_top', nodes='nset_top'),
-    RollerDisplacementY(name='disp_bot', nodes='nset_bot')])
-displacements = ['disp_top', 'disp_bot']
+    RollerDisplacementY(name='disp_bot', nodes='nset_bot'),
+])
 
 # Loads
 
 mdl.add_load(GravityLoad(name='load_gravity', elements='elset_mesh'))
-loads = ['load_gravity', 'load_points']
 
 mesh = mesh_from_guid(Mesh(), rs.ObjectsByLayer('elset_mesh')[0])
-surface = rs.ObjectsByLayer('surface')[0]
-
 point_loads = {}
 for key in mesh.vertices():
     xyz = mesh.vertex_coordinates(key)
-    pt = rs.ProjectPointToSurface([xyz], surface, [0, 0, 1])[0]
+    pt = rs.ProjectPointToSurface([xyz], rs.ObjectsByLayer('surface')[0], [0, 0, 1])[0]
     pz = mesh.vertex_area(key) * distance_point_point(xyz, pt) * 2400 * 9.81
     point_loads[mdl.check_node_exists(xyz)] = {'z': -pz}
 mdl.add_load(PointLoads(name='load_points', components=point_loads))
 
 # Steps
 
+displacements = ['disp_top', 'disp_bot']
+loads = ['load_gravity', 'load_points']
+
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements=displacements),
     GeneralStep(name='step_loads', loads=loads, factor=1.35),
-    BucklingStep(name='step_buckle', loads=loads, displacements=displacements, modes=5)])
+    BucklingStep(name='step_buckle', loads=loads, displacements=displacements, modes=5),
+])
 mdl.steps_order = ['step_bc', 'step_loads', 'step_buckle']
 
 # Summary
@@ -106,11 +110,7 @@ mdl.summary()
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's'], license='research')
 
 rhino.plot_data(mdl, step='step_loads', field='uz', radius=0.01, colorbar_size=0.5)
-rhino.plot_data(mdl, step='step_loads', field='smaxp', cbar=[0, 1.5*10**6], nodal='max', iptype='max',
-                radius=0.01, colorbar_size=0.5)
-rhino.plot_data(mdl, step='step_loads', field='sminp', cbar=[-5*10**6, 0], nodal='min', iptype='min',
-                radius=0.01, colorbar_size=0.5)
+rhino.plot_data(mdl, step='step_loads', field='smaxp', cbar=[0, 1.5*10**6], radius=0.01, colorbar_size=0.5)
+rhino.plot_data(mdl, step='step_loads', field='sminp', cbar=[-5*10**6, 0], radius=0.01, colorbar_size=0.5)
                 
-for c in range(1, 6):
-    rhino.plot_data(mdl, step='step_buckle', field='um', mode=c, scale=0.5, radius=0.001)
-print(mdl.results['step_buckle']['info'])
+rhino.plot_mode_shapes(mdl, step='step_buckle', scale=0.5, radius=0.001)

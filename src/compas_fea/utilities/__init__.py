@@ -34,8 +34,9 @@ functions
     principal_stresses
     plotvoxels
     identify_ranges
-
+    mesh_from_shell_elements
 
 """
 
 from .functions import *
+

@@ -29,19 +29,21 @@ rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers=['els
         
 # Sets
 
-rhino.add_sets_from_layers(mdl, layers=['nset_fixed', 'nset_loads', 'elset_wall', 'elset_plinth'])
+rhino.add_sets_from_layers(mdl, layers=['nset_fixed', 'nset_loads'])
 
 # Materials
 
 mdl.add_materials([
     Concrete(name='mat_concrete', fck=40),
-    Steel(name='mat_rebar', fy=500, id='r')])
+    Steel(name='mat_rebar', fy=500, id='r'),
+])
 
 # Sections
 
 mdl.add_sections([
     ShellSection(name='sec_wall', t=0.150),
-    ShellSection(name='sec_plinth', t=0.300)])
+    ShellSection(name='sec_plinth', t=0.300),
+])
 
 # Properties
 
@@ -49,17 +51,19 @@ reb_plinth = {
     'p_u1': {'pos': +0.130, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 0},
     'p_u2': {'pos': +0.120, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 90},
     'p_l2': {'pos': -0.120, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 90},
-    'p_l1': {'pos': -0.130, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 0}}
-
+    'p_l1': {'pos': -0.130, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 0},
+}
 reb_wall = {
     'w_u1': {'pos': +0.055, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 0},
     'w_u2': {'pos': +0.045, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 90},
     'w_l2': {'pos': -0.045, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 90},
-    'w_l1': {'pos': -0.055, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 0}}
+    'w_l1': {'pos': -0.055, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 0},
+}
 
 mdl.add_element_properties([
     Properties(name='ep_plinth', material='mat_concrete', section='sec_plinth', elsets='elset_plinth', reinforcement=reb_plinth),
-    Properties(name='ep_wall', material='mat_concrete', section='sec_wall', elsets='elset_wall', reinforcement=reb_wall)])
+    Properties(name='ep_wall', material='mat_concrete', section='sec_wall', elsets='elset_wall', reinforcement=reb_wall),
+])
 
 # Displacements
 
@@ -67,14 +71,17 @@ mdl.add_displacement(FixedDisplacement(name='disp_fixed', nodes='nset_fixed'))
 
 # Loads
 
-mdl.add_load(GravityLoad(name='load_gravity', elements=['elset_wall', 'elset_plinth']))
-mdl.add_load(PointLoad(name='load_points', nodes=['nset_loads'], z=-20*10**3))
+mdl.add_loads([
+    GravityLoad(name='load_gravity', elements=['elset_wall', 'elset_plinth']),
+    PointLoad(name='load_points', nodes='nset_loads', z=-20*10**3),
+])
 
 # Steps
 
 mdl.add_steps([
-    GeneralStep(name='step_bc', nlgeom=False, displacements=['disp_fixed']),
-    GeneralStep(name='step_loads', nlgeom=False, loads=['load_gravity', 'load_points'])])
+    GeneralStep(name='step_bc', displacements=['disp_fixed']),
+    GeneralStep(name='step_loads', loads=['load_gravity', 'load_points']),
+])
 mdl.steps_order = ['step_bc', 'step_loads']
 
 # Summary
@@ -85,10 +92,10 @@ mdl.summary()
 
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'sf', 'rbfor'], license='research')
 
-rhino.plot_data(mdl, step='step_loads', field='um', colorbar_size=0.3)
-rhino.plot_data(mdl, step='step_loads', field='sf1', colorbar_size=0.3)
-rhino.plot_data(mdl, step='step_loads', field='sf2', colorbar_size=0.3)
-rhino.plot_data(mdl, step='step_loads', field='rbfor', iptype='max', nodal='max', colorbar_size=0.3)
+rhino.plot_data(mdl, step='step_loads', field='um', colorbar_size=0.5)
+rhino.plot_data(mdl, step='step_loads', field='sf1', colorbar_size=0.5)
+rhino.plot_data(mdl, step='step_loads', field='sf2', colorbar_size=0.5)
+rhino.plot_data(mdl, step='step_loads', field='rbfor', iptype='max', nodal='max', colorbar_size=0.5)
 rhino.plot_principal_stresses(mdl, step='step_loads', ptype='max', scale=5)
 rhino.plot_principal_stresses(mdl, step='step_loads', ptype='min', scale=2)
 
@@ -103,6 +110,6 @@ rs.EnableRedraw(False)
 for ekey, axes in mdl.results['step_loads']['element']['axes'].items():
     ex, ey, ez = axes
     centroid = mdl.element_centroid(ekey)
-    rhino.plot_axes(centroid, e11=ex, e22=ey, e33=ez, layer='Default', sc=0.1)
+    rhino.plot_axes(centroid, e11=ex, e22=ey, e33=ez, layer='local_axes', sc=0.1)
 
 rs.EnableRedraw(True)

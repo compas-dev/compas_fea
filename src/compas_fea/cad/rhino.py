@@ -402,6 +402,9 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
             rs.CurveArrows(l, 1)
             col = [int(j) for j in colorbar(rm[i] / rmax, input='float', type=255)]
             rs.ObjectColor(l, col)
+            vector = [rfx[i], rfy[i], rfz[i]]
+            name = json.dumps({'rfx': rfx[i], 'rfy': rfy[i], 'rfz': rfz[i], 'rfm': length_vector(vector)})
+            rs.ObjectName(l, '_' + name)
 
     rs.CurrentLayer(rs.AddLayer('Default'))
     rs.LayerVisible(layer, False)
@@ -451,6 +454,9 @@ def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
             rs.CurveArrows(l, 1)
             col = [int(j) for j in colorbar(rm[i] / rmax, input='float', type=255)]
             rs.ObjectColor(l, col)
+            vector = [cfx[i], cfy[i], cfz[i]]
+            name = json.dumps({'cfx': cfx[i], 'cfy': cfy[i], 'cfz': cfz[i], 'cfm': length_vector(vector)})
+            rs.ObjectName(l, '_' + name)
 
     rs.CurrentLayer(rs.AddLayer('Default'))
     rs.LayerVisible(layer, False)
@@ -555,53 +561,61 @@ def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name=''
     rs.CurrentLayer(rs.AddLayer('Default'))
 
 
+def plot_mode_shapes(structure, step, layer=None, scale=1.0, radius=1):
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iterations=50, refine=True):
-
-    """ Discretise a mesh from an input coarse mesh guid into small denser meshes.
+    """ Plots modal shapes from structure.results.
 
     Parameters
     ----------
     structure : obj
         Structure object.
-    guid : str
+    step : str
+        Name of the Step.
+    layer : str
+        Each mode will be placed in a layer with this string prefix.
+    scale : float
+        Scale displacements for the deformed plot.
+    radius : float
+        Radius of the pipe visualisation meshes.
+
+    Returns
+    -------
+    None
+
+    """
+
+    if not layer:
+        layer = step + '_mode_'
+
+    try:
+        iter = structure.results[step]['frequencies']
+    except:
+        iter = structure.results[step]['info']['description']
+
+    if isinstance(iter, list):
+        for c, fk in enumerate(iter, 1):
+            layerk = layer + str(c)
+            plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=c, radius=radius)
+
+    elif isinstance(iter, dict):
+        for mode in iter:
+            print(mode)
+            layerk = layer + str(mode)
+            plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=mode, radius=radius)
+
+
+def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iterations=50):
+
+    """ Discretise a mesh from an input triangulated coarse mesh guid into small denser meshes.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    guid : guid
         guid of the Rhino input mesh.
     layer : str
-        Layer name to plot resulting meshes on.
+        Layer name to draw results.
     target : float
         Target length of each triangle.
     min_angle : float
@@ -610,8 +624,6 @@ def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iter
         Factor on the maximum area of each triangle.
     iterations : int
         Number of iterations per face.
-    refine : bool
-        Refine beyond Delaunay.
 
     Returns
     -------
@@ -623,14 +635,13 @@ def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iter
     pts = rhinomesh.get_vertex_coordinates()
     fcs = [face[:3] for face in rhinomesh.get_face_vertices()]
 
-    path = structure.path
     basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc('discretise', basedir=basedir, tmpdir=path)
+    xfunc = XFunc('discretise', basedir=basedir, tmpdir=structure.path)
     xfunc.funcname = 'functions.discretise_faces'
 
     try:
         vertices, faces = xfunc(vertices=pts, faces=fcs, target=target, min_angle=min_angle, factor=factor,
-                                iterations=iterations, refine=refine)
+                                iterations=iterations)
 
         rs.CurrentLayer(rs.AddLayer(layer))
         rs.DeleteObjects(rs.ObjectsByLayer(layer))
@@ -647,6 +658,38 @@ def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iter
 
     except:
         '***** Mesh discretisation failed *****'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, layer='Default', acoustic=False,
@@ -752,33 +795,6 @@ def plot_axes(xyz, e11, e22, e33, layer, sc=1):
     rs.ObjectLayer(ez, layer)
 
 
-def plot_mode_shapes(structure, step, layer=None, scale=1.0):
-
-    """ Plots modal shapes from structure.results.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object.
-    step : str
-        Name of the Step.
-    layer : str
-        Each mode will be placed in a layer with this string as its base.
-    scale : float
-        Scale displacements for the deformed plot.
-
-    Returns
-    -------
-    None
-
-    """
-
-    iter = structure.results[step]['frequencies']
-    for c, fk in enumerate(iter, 1):
-        layerk = layer + str(c)
-        plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=c)
-
-
 def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
               nodal='mean', mode='', colorbar_size=1):
 
@@ -818,6 +834,14 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     - Pipe visualisation of line elements is not based on the element section.
 
     """
+
+    if field in ['smaxp', 'smises']:
+        nodal  = 'max'
+        iptype = 'max'
+
+    elif field in ['sminp']:
+        nodal  = 'min'
+        iptype = 'min'
 
     # Create and clear Rhino layer
 

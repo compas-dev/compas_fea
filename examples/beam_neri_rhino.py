@@ -50,7 +50,7 @@ rhino.add_nodes_elements_from_layers(mdl, line_type='BeamElement', layers=lines)
 
 mdl.add_material(ElasticIsotropic(name='mat_asa', E=1.87*10**9, v=0.35, p=1050))
 
-# Sctions
+# Sections
 
 for i in range(2, 11):
     sname = 'sec_{0}'.format(i)
@@ -60,14 +60,18 @@ for i in range(2, 11):
     ep = Properties(name=pname, material='mat_asa', section=sname, elsets=ename)
     mdl.add_element_properties(ep)
 
-# Displacements
+# Points
 
 rs.CurrentLayer('nset_pins')
 clear_layer('nset_pins')
-for nkey, node in mdl.nodes.items():
-    if node['z'] < 0.001:
-        rs.AddPoint(mdl.node_xyz(nkey))
-rhino.add_sets_from_layers(mdl, layers=['nset_pins'])
+[rs.AddPoint(mdl.node_xyz(i)) for i, j in mdl.nodes.items() if j['z'] < 0.001]
+       
+# Sets
+      
+rhino.add_sets_from_layers(mdl, layers='nset_pins')
+
+# Displacements
+
 mdl.add_displacement(PinnedDisplacement(name='disp_pins', nodes='nset_pins'))
 
 # Loads
@@ -80,7 +84,8 @@ rs.EnableRedraw(True)
 
 mdl.add_steps([
     GeneralStep(name='step_bc', displacements=['disp_pins']),
-    GeneralStep(name='step_load', loads=['load_gravity'], factor=1.2)])
+    GeneralStep(name='step_load', loads=['load_gravity'], factor=1.2),
+])
 mdl.steps_order = ['step_bc', 'step_load']
 
 # Summary
