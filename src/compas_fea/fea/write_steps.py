@@ -95,7 +95,7 @@ def write_input_steps(f, software, structure, steps, loads, displacements, sets,
 #         iterations = getattr(step, 'iterations', None)
         method     = getattr(step, 'type')
 #         scopy      = getattr(step, 'step', None)
-        modes      = getattr(step, 'modes')
+        modes      = getattr(step, 'modes', None)
         nlgeom = 'YES' if getattr(step, 'nlgeom') else 'NO'
 #         nlmat = 'YES' if getattr(step, 'nlmat', None) else 'NO'
 
