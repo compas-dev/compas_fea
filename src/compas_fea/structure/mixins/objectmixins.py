@@ -3,6 +3,14 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from compas_fea.structure import ElementProperties
+from compas_fea.structure import Load
+from compas_fea.structure import ThermalLoad
+from compas_fea.structure import GeneralDisplacement
+from compas_fea.structure import Material
+from compas_fea.structure import Section
+from compas_fea.structure import Step
+
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
 __copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
@@ -16,6 +24,48 @@ __all__ = [
 
 
 class ObjectMixins(object):
+
+    def add(self, objects):
+
+        """ Adds object(s) to their correct attribute dictionary in the structure.
+
+        Parameters
+        ----------
+        objects : obj, list
+            The object or list of objects to add.
+
+        Returns
+        -------
+        None
+
+        """
+
+        if not isinstance(objects, list):
+            objects = [objects]
+
+        for i in objects:
+            cl = i.__class__
+
+            if issubclass(cl, Material):
+                self.add_material(i)
+
+            elif issubclass(cl, Section):
+                self.add_section(i)
+
+            elif isinstance(i, ElementProperties):
+                self.add_element_properties(i)
+
+            elif issubclass(cl, GeneralDisplacement) or isinstance(i, GeneralDisplacement):
+                self.add_displacement(i)
+
+            elif issubclass(cl, Load) or isinstance(i, ThermalLoad):
+                self.add_load(i)
+
+            elif issubclass(cl, Step):
+                self.add_step(i)
+
+            else:
+                print('***** WARNING: object type not found using structure.add() *****')
 
     def add_constraint(self, constraint):
 

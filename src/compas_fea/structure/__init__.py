@@ -172,6 +172,7 @@ section
     PipeSection
     RectangularSection
     ShellSection
+    MembraneSection
     SolidSection
     TrapezoidalSection
     TrussSection

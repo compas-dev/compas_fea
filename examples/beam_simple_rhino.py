@@ -34,7 +34,7 @@ rhino.add_sets_from_layers(mdl, layers=['nset_left', 'nset_right', 'nset_weights
 
 # Materials
 
-mdl.add_material(ElasticIsotropic(name='mat_elastic', E=20*10**9, v=0.3, p=1500))
+mdl.add(ElasticIsotropic(name='mat_elastic', E=20*10**9, v=0.3, p=1500))
 
 # Sections
 
@@ -43,13 +43,12 @@ _, ekeys, L, Lt = rhino.ordered_network(mdl, network=network, layer='nset_left')
 for i, Li in zip(ekeys, L):
     ri = (1 + Li / Lt) * 0.020
     sname = 'sec_{0}'.format(i)
-    mdl.add_section(CircularSection(name=sname, r=ri))
-    ep = Properties(name='ep_{0}'.format(i), material='mat_elastic', section=sname, elements=[i])
-    mdl.add_element_properties(ep)
+    mdl.add(CircularSection(name=sname, r=ri))
+    mdl.add(Properties(name='ep_{0}'.format(i), material='mat_elastic', section=sname, elements=[i]))
 
 # Displacements
 
-mdl.add_displacements([
+mdl.add([
     PinnedDisplacement(name='disp_left', nodes='nset_left'),
     GeneralDisplacement(name='disp_right', nodes='nset_right', y=0, z=0, xx=0),
     GeneralDisplacement(name='disp_rotate', nodes='nset_left', yy=30*pi/180),
@@ -57,11 +56,11 @@ mdl.add_displacements([
 
 # Loads
 
-mdl.add_load(PointLoad(name='load_weights', nodes='nset_weights', z=-100))
+mdl.add(PointLoad(name='load_weights', nodes='nset_weights', z=-100))
 
 # Steps
 
-mdl.add_steps([
+mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_left', 'disp_right']),
     GeneralStep(name='step_load', loads=['load_weights'], displacements=['disp_rotate']),
 ])

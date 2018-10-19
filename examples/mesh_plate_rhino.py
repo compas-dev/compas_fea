@@ -30,32 +30,33 @@ rhino.add_sets_from_layers(mdl, layers=['nset_load', 'nset_left', 'nset_right'])
 
 # Materials
 
-mdl.add_material(ElasticIsotropic(name='mat_linear', E=75*10**9, v=0.3, p=2700))
+mdl.add(ElasticIsotropic(name='mat_linear', E=75*10**9, v=0.3, p=2700))
 
 # Sections
 
-mdl.add_section(ShellSection(name='sec_plate', t=0.020))
+mdl.add(ShellSection(name='sec_plate', t=0.020))
 
 # Properties
 
-ep = Properties(name='ep_plate', material='mat_linear', section='sec_plate', elsets='elset_mesh')
-mdl.add_element_properties(ep)
+mdl.add(Properties(name='ep_plate', material='mat_linear', section='sec_plate', elsets='elset_mesh'))
 
 # Displacements
 
-mdl.add_displacements([
+mdl.add([
     PinnedDisplacement(name='disp_left', nodes='nset_left'),
-    RollerDisplacementX(name='disp_right', nodes='nset_right')])
+    RollerDisplacementX(name='disp_right', nodes='nset_right'),
+])
 
 # Loads
 
-mdl.add_load(PointLoad(name='load_point', nodes='nset_load', y=100, z=-300))
+mdl.add(PointLoad(name='load_point', nodes='nset_load', y=100, z=-300))
 
 # Steps
 
-mdl.add_steps([
+mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_left', 'disp_right']),
-    GeneralStep(name='step_load', loads=['load_point'], tolerance=1, iterations=500)])
+    GeneralStep(name='step_load', loads=['load_point'], tolerance=1, iterations=500),
+])
 mdl.steps_order = ['step_bc', 'step_load']
 
 # Summary

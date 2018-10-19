@@ -48,7 +48,7 @@ mdl.add_set(name='nset_edges', type='node', selection=edges)
 
 # Materials
 
-mdl.add_materials([
+mdl.add([
     Concrete(name='mat_concrete', fck=90, fr=[1.16, 0.15]),
     Stiff(name='mat_stiff'),
     Steel(name='mat_steel', fy=355),
@@ -56,7 +56,7 @@ mdl.add_materials([
     
 # Sections
 
-mdl.add_sections([
+mdl.add([
     ShellSection(name='sec_ribs', t=0.020),
     ShellSection(name='sec_vault', t=0.050),
     RectangularSection(name='sec_stiff', b=1, h=1), 
@@ -65,7 +65,7 @@ mdl.add_sections([
 
 # Properties
 
-mdl.add_element_properties([
+mdl.add([
     Properties(name='ep_ribs', material='mat_concrete', section='sec_ribs', elsets='elset_ribs'),
     Properties(name='ep_vault', material='mat_concrete', section='sec_vault', elsets='elset_vault'),
     Properties(name='ep_stiff', material='mat_stiff', section='sec_stiff', elsets='elset_stiff'),
@@ -74,7 +74,7 @@ mdl.add_element_properties([
 
 # Displacements
 
-mdl.add_displacements([
+mdl.add([
     RollerDisplacementXY(name='disp_edges', nodes='nset_edges'),
     PinnedDisplacement(name='disp_pinned', nodes='nset_corner1'),
     GeneralDisplacement(name='disp_xdof', nodes='nset_corner2', x=0),
@@ -82,7 +82,7 @@ mdl.add_displacements([
     
 # Loads
 
-mdl.add_loads([
+mdl.add([
     GravityLoad(name='load_gravity', elements=['elset_ribs', 'elset_vault']),
     PrestressLoad(name='load_prestress', elements='elset_ties', sxx=10*10**6),
     TributaryLoad(mdl, name='load_tributary', mesh=mesh_from_guid(Mesh(), rs.ObjectsByLayer('load_mesh')[0]), z=-2000),
@@ -90,7 +90,7 @@ mdl.add_loads([
 
 # Steps
 
-mdl.add_steps([
+mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_edges', 'disp_pinned', 'disp_xdof']),
     GeneralStep(name='step_loads', loads=['load_gravity', 'load_tributary'], factor={'load_gravity': 1.35, 'load_tributary': 1.50}),
 ])

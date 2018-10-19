@@ -43,28 +43,27 @@ rhino.add_sets_from_layers(mdl, layers=['nset_support', 'nset_load'])
 
 # Materials
 
-mdl.add_material(ElasticIsotropic(name='mat_elastic', E=10**7, v=10**(-5), p=1))
+mdl.add(ElasticIsotropic(name='mat_elastic', E=10**7, v=10**(-5), p=1))
 
 # Sections
 
-mdl.add_section(RectangularSection(name='sec_beam', b=1, h=1))
+mdl.add(RectangularSection(name='sec_beam', b=1, h=1))
 
 # Properties
 
-ep = Properties(name='ep_beam', material='mat_elastic', section='sec_beam', elsets='elset_beams')
-mdl.add_element_properties(ep)
+mdl.add(Properties(name='ep_beam', material='mat_elastic', section='sec_beam', elsets='elset_beams'))
 
 # Displacements
 
-mdl.add_displacement(FixedDisplacement(name='disp_fixed', nodes='nset_support'))
+mdl.add(FixedDisplacement(name='disp_fixed', nodes='nset_support'))
 
 # Loads
 
-mdl.add_load(PointLoad(name='load_point', nodes='nset_load', z=600))
+mdl.add(PointLoad(name='load_point', nodes='nset_load', z=600))
 
 # Steps
 
-mdl.add_steps([
+mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_fixed']),
     GeneralStep(name='step_load', loads=['load_point']),
 ])

@@ -22,6 +22,7 @@ __all__ = [
     'PipeSection',
     'RectangularSection',
     'ShellSection',
+    'MembraneSection',
     'SolidSection',
     'TrapezoidalSection',
     'TrussSection',
@@ -473,7 +474,7 @@ class SpringSection(Section):
 
 class ShellSection(Section):
 
-    """ Section for shell and membrane elements.
+    """ Section for shell elements.
 
     Parameters
     ----------
@@ -492,6 +493,31 @@ class ShellSection(Section):
         Section.__init__(self, name=name)
 
         self.__name__ = 'ShellSection'
+        self.name     = name
+        self.geometry = {'t': t}
+
+
+class MembraneSection(Section):
+
+    """ Section for membrane elements.
+
+    Parameters
+    ----------
+    name : str
+        Section name.
+    t : float
+        Thickness.
+
+    Returns
+    -------
+    None
+
+    """
+
+    def __init__(self, name, t):
+        Section.__init__(self, name=name)
+
+        self.__name__ = 'MembraneSection'
         self.name     = name
         self.geometry = {'t': t}
 

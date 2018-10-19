@@ -69,9 +69,10 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 
     c = comments[software]
 
-    shells  = ['ShellSection']
-    solids  = ['SolidSection']
-    trusses = ['TrussSection', 'StrutSection', 'TieSection']
+    shells     = ['ShellSection']
+    membranes  = ['MembraneSection']
+    solids     = ['SolidSection']
+    trusses    = ['TrussSection', 'StrutSection', 'TieSection']
 
     f.write('{0} -----------------------------------------------------------------------------\n'.format(c))
     f.write('{0} -------------------------------------------------------------------- Elements\n'.format(c))
@@ -144,7 +145,7 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 
             # Beam sections
 
-            elif stype not in shells + solids + trusses:
+            elif stype not in shells + solids + trusses + membranes:
                 _write_beams(f, software, elements, selection, geometry, material, section_index, stype)
 
             # Truss sections
@@ -156,6 +157,11 @@ def write_input_elements(f, software, sections, properties, elements, structure,
 
             elif stype in shells:
                 _write_shells(f, software, selection, elements, geometry, material, materials, reinforcement)
+
+            # Membrane sections
+
+            elif stype in membranes:
+                _write_membranes(f, software, selection, elements, geometry, material, materials, reinforcement)
 
             # Solid sections
 
@@ -410,6 +416,54 @@ def _write_shells(f, software, selection, elements, geometry, material, material
             if reinforcement:
                 data.append(str(materials[list(reinforcement.values())[0]['material']].index + 1))
             f.write('{0}\n'.format(' '.join(data)))
+
+        elif software == 'ansys':
+
+            pass
+
+        f.write('{0}\n'.format(comments[software]))
+
+
+def _write_membranes(f, software, selection, elements, geometry, material, materials, reinforcement):
+
+    for select in selection:
+
+        element = elements[select]
+        nodes   = element.nodes
+        n  = select + 1
+        t  = geometry['t']
+        ex = element.axes.get('ex', None)
+        ey = element.axes.get('ey', None)
+
+        if software == 'abaqus':
+
+            e1 = 'element_{0}'.format(select)
+            f.write('*ELEMENT, TYPE={0}, ELSET={1}\n'.format('M3D3' if len(nodes) == 3 else 'M3D4', e1))
+            f.write('{0}, {1}\n'.format(n, ','.join([str(i + 1) for i in nodes])))
+
+            if ex and ey:
+                ori = 'ORI_element_{0}'.format(select)
+                f.write('*ORIENTATION, NAME={0}\n'.format(ori))
+                f.write(', '.join([str(j) for j in ex]) + ', ')
+                f.write(', '.join([str(j) for j in ey]) + '\n')
+                f.write('**\n')
+            else:
+                ori = None
+
+            f.write('*MEMBRANE SECTION, ELSET={0}, MATERIAL={1}'.format(e1, material.name))
+            if ori:
+                f.write(', ORIENTATION={0}\n'.format(ori))
+            else:
+                f.write('\n'.format(t))
+            f.write('{0}\n'.format(t))
+
+        elif software == 'opensees':
+
+            pass
+
+        elif software == 'sofistik':
+
+            pass
 
         elif software == 'ansys':
 

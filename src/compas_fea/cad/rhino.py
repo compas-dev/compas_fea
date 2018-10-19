@@ -50,6 +50,7 @@ __all__ = [
     'mesh_extrude',
     'network_from_lines',
     'ordered_network',
+    'draw_volmesh',
     'plot_axes',
     'plot_mode_shapes',
     'plot_data',
@@ -660,7 +661,45 @@ def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iter
         '***** Mesh discretisation failed *****'
 
 
+def draw_volmesh(volmesh, layer=None, draw_cells=True):
 
+    """ Draw a volmesh datastructure.
+
+    Parameters
+    ----------
+    volmesh : obj
+        volmesh datastructure object.
+    layer : str
+        Layer name to draw on.
+    draw_cells : bool
+        Draw cells.
+
+    Returns
+    -------
+    None
+
+    """
+
+    if layer:
+        rs.CurrentLayer(layer)
+
+    vkeys    = sorted(list(volmesh.vertices()), key=int)
+    vertices = [volmesh.vertex_coordinates(vkey) for vkey in vkeys]
+
+    if draw_cells:
+        meshes = []
+        for ckey in volmesh.cell:
+            faces = [volmesh.halfface_vertices(fk, ordered=True) for fk in volmesh.cell_halffaces(ckey)]
+            meshes.append(rs.AddMesh(vertices, faces))
+        return meshes
+
+    else:
+        faces = []
+        for fk in volmesh.halfface:
+            face = volmesh.halfface_vertices(fk, ordered=True)
+            faces.append(face)
+        mesh = rs.AddMesh(vertices, faces)
+        return mesh
 
 
 
@@ -1112,26 +1151,3 @@ def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None)
     except:
         print('\n***** Error calculating/plotting principal stresses *****')
 
-
-def draw_volmesh(volmesh, layer=None, draw_cells=True):
-
-    if layer:
-        rs.CurrentLayer(layer)
-
-    vkeys = sorted(list(volmesh.vertices()), key=int)
-    vertices = [volmesh.vertex_coordinates(vk) for vk in vkeys]
-
-    if draw_cells:
-        meshes = []
-        for ckey in volmesh.cell:
-            faces = [volmesh.halfface_vertices(fk, ordered=True) for fk in volmesh.cell_halffaces(ckey)]
-            meshes.append(rs.AddMesh(vertices, faces))
-        return meshes
-
-    else:
-        faces = []
-        for fk in volmesh.halfface:
-            face = volmesh.halfface_vertices(fk, ordered=True)
-            faces.append(face)
-        mesh = rs.AddMesh(vertices, faces)
-        return mesh
