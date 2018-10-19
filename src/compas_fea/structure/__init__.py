@@ -127,6 +127,7 @@ material
 .. autosummary::
     :toctree: generated/
 
+    Material
     Concrete
     ConcreteSmearedCrack
     ConcreteDamagedPlasticity

@@ -44,6 +44,7 @@ class Step(object):
 
     def __str__(self):
 
+        print('\n')
         print('compas_fea {0} object'.format(self.__name__))
         print('-' * (len(self.__name__) + 10))
 
