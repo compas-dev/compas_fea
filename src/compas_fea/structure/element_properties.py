@@ -67,3 +67,7 @@ class ElementProperties(object):
             print('{0:<13} : {1}'.format(attr, getattr(self, attr)))
 
         return ''
+
+    def __repr__(self):
+
+        return '{0}({1})'.format(self.__name__, self.name)

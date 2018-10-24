@@ -58,6 +58,10 @@ class Material(object):
 
         return ''
 
+    def __repr__(self):
+
+        return '{0}({1})'.format(self.__name__, self.name)
+
 
 # ==============================================================================
 # linear elastic

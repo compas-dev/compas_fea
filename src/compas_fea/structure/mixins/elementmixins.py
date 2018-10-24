@@ -67,20 +67,22 @@ class ElementMixins(object):
 
         """
 
-        ekey = self.check_element_exists(nodes)
+        if len(nodes) == len(set(nodes)):
+            ekey = self.check_element_exists(nodes)
+            if ekey is None:
+                ekey = self.element_count()
+                element = func_dic[type]()
+                element.axes = axes
+                element.nodes = nodes
+                element.number = ekey
+                element.acoustic = acoustic
+                element.thermal = thermal
+                self.elements[ekey] = element
+                self.add_element_to_element_index(ekey, nodes)
+            return ekey
 
-        if ekey is None:
-            ekey = self.element_count()
-            element = func_dic[type]()
-            element.axes = axes
-            element.nodes = nodes
-            element.number = ekey
-            element.acoustic = acoustic
-            element.thermal = thermal
-            self.elements[ekey] = element
-            self.add_element_to_element_index(ekey, nodes)
-
-        return ekey
+        else:
+            return None
 
     def add_elements(self, elements, type, acoustic=False, thermal=False, axes={}):
 

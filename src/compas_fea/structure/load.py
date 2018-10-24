@@ -70,6 +70,10 @@ class Load(object):
 
         return ''
 
+    def __repr__(self):
+
+        return '{0}({1})'.format(self.__name__, self.name)
+
 
 class PrestressLoad(Load):
 

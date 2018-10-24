@@ -518,7 +518,7 @@ Steps
 
         return fields_dict
 
-    def write_input_file(self, software, fields='u'):
+    def write_input_file(self, software, fields='u', output=True, save=True):
 
         """ Writes the FE software's input file.
 
@@ -528,6 +528,10 @@ Steps
             Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
         fields : list, str
             Data field requests.
+        output : bool
+            Print terminal output.
+        save : bool
+            Save to structure to .obj before writing.
 
         Returns
         -------
@@ -535,10 +539,11 @@ Steps
 
         """
 
-        self.save_to_obj()
+        if save:
+            self.save_to_obj()
 
         if software == 'abaqus':
-            abaq.input_generate(self, fields=fields)
+            abaq.input_generate(self, fields=fields, output=output)
 
         elif software == 'ansys':
             ansys.input_generate(self)
@@ -549,7 +554,7 @@ Steps
         elif software == 'sofistik':
             sofistik.input_generate(self, fields=fields)
 
-    def analyse(self, software, exe=None, cpus=4, license='student', delete=True):
+    def analyse(self, software, exe=None, cpus=4, license='student', delete=True, output=True):
 
         """ Runs the analysis through the chosen FEA software/library.
 
@@ -563,6 +568,8 @@ Steps
             Number of CPU cores to use.
         license : str
             FE software license type: 'research', 'student'.
+        output : bool
+            Print terminal output.
 
         Returns
         -------
@@ -573,7 +580,7 @@ Steps
         if software == 'abaqus':
             if license == 'student':
                 cpus = 1
-            abaq.launch_process(self, exe, cpus)
+            abaq.launch_process(self, exe, cpus, output)
 
         elif software == 'ansys':
             ansys.ansys_launch_process(self.path, self.name, cpus, license, delete=delete)
@@ -581,7 +588,7 @@ Steps
         elif software == 'opensees':
             opensees.launch_process(self, exe)
 
-    def extract_data(self, software, fields='u', steps='last', exe=None, sets=None, license='student'):
+    def extract_data(self, software, fields='u', steps='last', exe=None, sets=None, license='student', output=True):
 
         """ Extracts data from the FE software's output.
 
@@ -597,6 +604,8 @@ Steps
             Full terminal command to bypass subprocess defaults.
         license : str
             FE software license type: 'research', 'student'.
+        output : bool
+            Print terminal output.
 
         Returns
         -------
@@ -605,7 +614,7 @@ Steps
         """
 
         if software == 'abaqus':
-            abaq.extract_data(self, fields=fields, exe=exe)
+            abaq.extract_data(self, fields=fields, exe=exe, output=output)
 
         elif software == 'ansys':
             ansys.extract_rst_data(self, fields=fields, steps=steps, sets=sets, license=license)
@@ -613,7 +622,7 @@ Steps
         elif software == 'opensees':
             opensees.extract_data(self, fields=fields)
 
-    def analyse_and_extract(self, software, fields='u', exe=None, cpus=4, license='student'):
+    def analyse_and_extract(self, software, fields='u', exe=None, cpus=4, license='student', output=True, save=True):
 
         """ Runs the analysis through the chosen FEA software/library and extracts data.
 
@@ -629,6 +638,10 @@ Steps
             Number of CPU cores to use.
         license : str
             FE software license type: 'research', 'student'.
+        output : bool
+            Print terminal output.
+        save : bool
+            Save to structure to .obj before writing.
 
         Returns
         -------
@@ -636,9 +649,9 @@ Steps
 
         """
 
-        self.write_input_file(software=software, fields=fields)
-        self.analyse(software=software, exe=exe, cpus=cpus, license=license)
-        self.extract_data(software=software, fields=fields, exe=exe, license=license)
+        self.write_input_file(software=software, fields=fields, output=output, save=save)
+        self.analyse(software=software, exe=exe, cpus=cpus, license=license, output=output)
+        self.extract_data(software=software, fields=fields, exe=exe, license=license, output=output)
 
 
 # ==============================================================================
@@ -773,7 +786,7 @@ Steps
 # save
 # ==============================================================================
 
-    def save_to_obj(self):
+    def save_to_obj(self, output=True):
 
         """ Exports the Structure object to an .obj file through Pickle.
 
@@ -790,7 +803,8 @@ Steps
         filename = os.path.join(self.path, self.name + '.obj')
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
-        print('***** Structure saved to: {0} *****\n'.format(filename))
+        if output:
+            print('***** Structure saved to: {0} *****\n'.format(filename))
 
 
 # ==============================================================================
@@ -798,7 +812,7 @@ Steps
 # ==============================================================================
 
     @staticmethod
-    def load_from_obj(filename):
+    def load_from_obj(filename, output=True):
 
         """ Imports a Structure object from an .obj file through Pickle.
 
@@ -806,6 +820,8 @@ Steps
         ----------
         filename : str
             Path to load the Structure .obj from.
+        output : bool
+            Print terminal output.
 
         Returns
         -------
@@ -816,5 +832,6 @@ Steps
 
         with open(filename, 'rb') as f:
             structure = pickle.load(f)
-            print('***** Structure loaded from: {0} *****'.format(filename))
+            if output:
+                print('***** Structure loaded from: {0} *****'.format(filename))
         return structure
