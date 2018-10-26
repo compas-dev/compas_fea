@@ -8,6 +8,7 @@ from compas.geometry import angles_points_xy
 from compas.geometry import area_polygon_xy
 from compas.geometry import centroid_points
 from compas.geometry import circle_from_points_xy
+from compas.topology import delaunay_from_points
 from compas.geometry import cross_vectors
 from compas.geometry import distance_point_point
 from compas.geometry import length_vector
@@ -540,8 +541,9 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
 
                 # Delaunay
 
-                DT    = Delaunay(V[:, :2], furthest_site=False, incremental=False)
-                tris_ = DT.simplices
+                vdl   = 1 * V
+                vdl[:, 2] = 0
+                tris_ = delaunay_from_points(points=[list(i) for i in list(vdl)], boundary=None)
                 tris  = []
 
                 # Filter
@@ -600,7 +602,6 @@ def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations
 
         except:
             print('***** ERROR discretising face {0} *****'.format(count))
-
 
     return points_all, faces_all
 
