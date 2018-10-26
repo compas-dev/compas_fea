@@ -304,7 +304,7 @@ Steps
     def from_volmesh(cls, network):
         pass
 
-    def add_nodes_elements_from_mesh(self, mesh, element_type, thermal=False, elset=None):
+    def add_nodes_elements_from_mesh(self, mesh, element_type, acoustic=False, thermal=False, elset=None):
 
         """ Adds the nodes and faces of a Mesh to the Structure object.
 
