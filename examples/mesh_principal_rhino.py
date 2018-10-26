@@ -29,30 +29,30 @@ rhino.add_sets_from_layers(mdl, layers=['nset_pins'])
 
 # Materials
 
-mdl.add_material(ElasticIsotropic(name='mat_elastic', E=10**12, v=0.3, p=1000))
+mdl.add(ElasticIsotropic(name='mat_elastic', E=10**12, v=0.3, p=1000))
 
 # Sections
 
-mdl.add_section(ShellSection(name='sec_plate', t=1))
+mdl.add(ShellSection(name='sec_plate', t=1))
 
 # Properties
 
-ep = Properties(name='ep_plate', material='mat_elastic', section='sec_plate', elsets='elset_mesh')
-mdl.add_element_properties(ep)
+mdl.add(Properties(name='ep_plate', material='mat_elastic', section='sec_plate', elsets='elset_mesh'))
 
 # Displacements
 
-mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
+mdl.add(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
 
 # Loads
 
-mdl.add_load(GravityLoad(name='load_gravity', elements='elset_mesh'))
+mdl.add(GravityLoad(name='load_gravity', elements='elset_mesh'))
 
 # Steps
 
-mdl.add_steps([
+mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_pinned']),
-    GeneralStep(name='step_load', loads=['load_gravity'])])
+    GeneralStep(name='step_load', loads=['load_gravity']),
+])
 mdl.steps_order = ['step_bc', 'step_load']
 
 # Summary

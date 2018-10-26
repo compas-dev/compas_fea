@@ -40,7 +40,7 @@ node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
 
 
-def input_generate(structure, fields):
+def input_generate(structure, fields, output):
 
     """ Creates the Abaqus .inp file from the Structure object.
 
@@ -50,6 +50,8 @@ def input_generate(structure, fields):
         The Structure object to read from.
     fields : list
         Data field requests.
+    output : bool
+        Print terminal output.
 
     Returns
     -------
@@ -88,10 +90,11 @@ def input_generate(structure, fields):
         write_input_elements(f, 'abaqus', sections, properties, elements, structure, materials)
         write_input_steps(f, 'abaqus', structure, steps, loads, displacements, sets, fields)
 
-    print('***** Abaqus input file generated: {0} *****\n'.format(filename))
+    if output:
+        print('***** Abaqus input file generated: {0} *****\n'.format(filename))
 
 
-def launch_process(structure, exe, cpus):
+def launch_process(structure, exe, cpus, output):
 
     """ Runs the analysis through Abaqus.
 
@@ -103,6 +106,8 @@ def launch_process(structure, exe, cpus):
         Abaqus exe path to bypass defaults.
     cpus : int
         Number of CPU cores to use.
+    output : bool
+        Print terminal output.
 
     Returns
     -------
@@ -133,13 +138,16 @@ def launch_process(structure, exe, cpus):
             if not line:
                 break
             line = str(line.strip())
-            print(line)
+            if output:
+                print(line)
             if 'COMPLETED' in line:
                 success = True
 
         stdout, stderr = p.communicate()
-        print(stdout)
-        print(stderr)
+
+        if output:
+            print(stdout)
+            print(stderr)
 
     else:
 
@@ -151,10 +159,12 @@ def launch_process(structure, exe, cpus):
     toc = time() - tic
 
     if success:
-        print('***** Analysis successful - analysis time : {0} s *****'.format(toc))
+        if output:
+            print('***** Analysis successful - analysis time : {0} s *****'.format(toc))
 
     else:
-        print('***** Analysis failed: attempting to read error logs *****')
+        if output:
+            print('***** Analysis failed: attempting to read error logs *****')
 
         try:
             with open('{0}{1}.msg'.format(temp, name)) as f:
@@ -162,8 +172,9 @@ def launch_process(structure, exe, cpus):
 
                 for c, line in enumerate(lines):
                     if (' ***ERROR' in line) or (' ***WARNING' in line):
-                        print(lines[c][:-2])
-                        print(lines[c + 1][:-2])
+                        if output:
+                            print(lines[c][:-2])
+                            print(lines[c + 1][:-2])
         except:
             pass
 
@@ -178,7 +189,7 @@ def launch_process(structure, exe, cpus):
             pass
 
 
-def extract_data(structure, fields, exe):
+def extract_data(structure, fields, exe, output):
 
     """ Extract data from the Abaqus .odb file.
 
@@ -190,6 +201,8 @@ def extract_data(structure, fields, exe):
         Data field requests.
     exe : str
         Abaqus exe path to bypass defaults.
+    output : bool
+        Print terminal output.
 
     Returns
     -------
@@ -224,8 +237,10 @@ def extract_data(structure, fields, exe):
             print(line)
 
         stdout, stderr = p.communicate()
-        print(stdout)
-        print(stderr)
+
+        if output:
+            print(stdout)
+            print(stderr)
 
     else:
 
@@ -235,7 +250,8 @@ def extract_data(structure, fields, exe):
 
     toc1 = time() - tic1
 
-    print('\n***** Data extracted from Abaqus .odb file : {0:.3f} s *****\n'.format(toc1))
+    if output:
+        print('\n***** Data extracted from Abaqus .odb file : {0:.3f} s *****\n'.format(toc1))
 
     # Save results to Structure
 
@@ -250,7 +266,6 @@ def extract_data(structure, fields, exe):
             info = json.load(f)
 
         for step in results:
-            print('***** Saving step: {0} *****'.format(step))
             for dtype in results[step]:
                 if dtype in ['nodal', 'element']:
                     for field in results[step][dtype]:
@@ -266,8 +281,10 @@ def extract_data(structure, fields, exe):
 
         toc2 = time() - tic2
 
-        print('***** Saving data to structure.results successful : {0:.3f} s *****\n'.format(toc2))
+        if output:
+            print('***** Saving data to structure.results successful : {0:.3f} s *****\n'.format(toc2))
 
     except:
 
-        print('***** Saving data to structure.results unsuccessful *****')
+        if output:
+            print('***** Saving data to structure.results unsuccessful *****')

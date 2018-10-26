@@ -30,34 +30,33 @@ rhino.add_sets_from_layers(mdl, layers=['nset_pins', 'nset_load_v', 'nset_load_h
 
 # Materials
 
-mdl.add_material(Steel(name='mat_steel'))
+mdl.add(Steel(name='mat_steel'))
 
 # Sections
 
-mdl.add_section(PipeSection(name='sec_pipe', r=0.100, t=0.005))
+mdl.add(PipeSection(name='sec_pipe', r=0.100, t=0.005))
 
 # Properties
 
-ep = Properties(name='ep_beam', material='mat_steel', section='sec_pipe', elsets='elset_beams')
-mdl.add_element_properties(ep)
+mdl.add(Properties(name='ep_beam', material='mat_steel', section='sec_pipe', elsets='elset_beams'))
 
 # Displacements
 
-mdl.add_displacements([
+mdl.add([
     PinnedDisplacement(name='disp_pins', nodes='nset_pins'),
     RollerDisplacementXZ(name='disp_rollers', nodes='nset_rollers'),
 ])
 
 # Loads
 
-mdl.add_loads([
+mdl.add([
     PointLoad(name='load_h', nodes='nset_load_h', x=+4000),
     PointLoad(name='load_v', nodes='nset_load_v', z=-6000),
 ])
 
 # Steps
 
-mdl.add_steps([
+mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_pins', 'disp_rollers']),
     GeneralStep(name='step_loads', loads=['load_h', 'load_v'], iterations=50),
 ])

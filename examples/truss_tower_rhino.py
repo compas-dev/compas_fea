@@ -29,28 +29,27 @@ rhino.add_sets_from_layers(mdl, layers=['nset_pins', 'nset_top'])
 
 # Materials
 
-mdl.add_material(ElasticIsotropic(name='mat_elastic', E=200*10**9, v=0.3, p=7850))
+mdl.add(ElasticIsotropic(name='mat_elastic', E=200*10**9, v=0.3, p=7850))
 
 # Sections
 
-mdl.add_section(TrussSection(name='sec_truss', A=0.0001))
+mdl.add(TrussSection(name='sec_truss', A=0.0001))
 
 # Properties
 
-ep = Properties(name='ep_truss', material='mat_elastic', section='sec_truss', elsets='elset_truss')
-mdl.add_element_properties(ep)
+mdl.add(Properties(name='ep_truss', material='mat_elastic', section='sec_truss', elsets='elset_truss'))
 
 # Displacements
 
-mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
+mdl.add(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
 
 # Loads
 
-mdl.add_load(PointLoad(name='load_top', nodes='nset_top', x=2000, y=1000, z=-100000))
+mdl.add(PointLoad(name='load_top', nodes='nset_top', x=2000, y=1000, z=-100000))
 
 # Steps
 
-mdl.add_steps([
+mdl.add([
     GeneralStep(name='step_bc', displacements='disp_pinned'),
     GeneralStep(name='step_load', loads='load_top'),
 ])
@@ -66,18 +65,18 @@ mdl.write_input_file(software='sofistik')
 
 # Run (OpenSees)
 
-#mdl.analyse_and_extract(software='opensees', fields=['u', 'rf'])
+mdl.analyse_and_extract(software='opensees', fields=['u', 'rf'])
 
-#rhino.plot_data(mdl, step='step_load', field='um')
+rhino.plot_data(mdl, step='step_load', field='um')
 
 # Run (Abaqus)
 # Note: Abaqus returns stress data 'sxx' for truss elements, not section forces 'sfx'.
 
-#mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 's', 'cf'], license='research')
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 's', 'cf'], license='research')
 
-#rhino.plot_data(mdl, step='step_load', field='sxx')
-#rhino.plot_reaction_forces(mdl, step='step_load', scale=0.05)
-#rhino.plot_concentrated_forces(mdl, step='step_load', scale=0.05)
+rhino.plot_data(mdl, step='step_load', field='sxx')
+rhino.plot_reaction_forces(mdl, step='step_load', scale=0.05)
+rhino.plot_concentrated_forces(mdl, step='step_load', scale=0.05)
 
 # Save
 
@@ -85,5 +84,5 @@ mdl.save_to_obj()
 
 # Print results
 
-#print(mdl.get_nodal_results(step='step_load', field='um', nodes='nset_top'))
-#print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))
+print(mdl.get_nodal_results(step='step_load', field='um', nodes='nset_top'))
+print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))

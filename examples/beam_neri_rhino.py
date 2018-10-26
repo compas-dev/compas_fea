@@ -48,7 +48,7 @@ rhino.add_nodes_elements_from_layers(mdl, line_type='BeamElement', layers=lines)
 
 # Materials
 
-mdl.add_material(ElasticIsotropic(name='mat_asa', E=1.87*10**9, v=0.35, p=1050))
+mdl.add(ElasticIsotropic(name='mat_asa', E=1.87*10**9, v=0.35, p=1050))
 
 # Sections
 
@@ -56,9 +56,8 @@ for i in range(2, 11):
     sname = 'sec_{0}'.format(i)
     ename = 'lines-{0}'.format(i)
     pname = 'ep_{0}'.format(i)
-    mdl.add_section(PipeSection(name=sname, r=i/100, t=0.005))
-    ep = Properties(name=pname, material='mat_asa', section=sname, elsets=ename)
-    mdl.add_element_properties(ep)
+    mdl.add(PipeSection(name=sname, r=i/100, t=0.005))
+    mdl.add(Properties(name=pname, material='mat_asa', section=sname, elsets=ename))
 
 # Points
 
@@ -72,17 +71,17 @@ rhino.add_sets_from_layers(mdl, layers='nset_pins')
 
 # Displacements
 
-mdl.add_displacement(PinnedDisplacement(name='disp_pins', nodes='nset_pins'))
+mdl.add(PinnedDisplacement(name='disp_pins', nodes='nset_pins'))
 
 # Loads
 
-mdl.add_load(GravityLoad(name='load_gravity', elements=lines))
+mdl.add(GravityLoad(name='load_gravity', elements=lines))
 
 rs.EnableRedraw(True)
 
 # Steps
 
-mdl.add_steps([
+mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_pins']),
     GeneralStep(name='step_load', loads=['load_gravity'], factor=1.2),
 ])

@@ -7,6 +7,7 @@ from compas_fea.structure import GeneralDisplacement
 from compas_fea.structure import PinnedDisplacement
 from compas_fea.structure import RectangularSection
 from compas_fea.structure import RollerDisplacementY
+from compas_fea.structure import ShellSection
 from compas_fea.structure import SolidSection
 from compas_fea.structure import Structure
 
@@ -26,11 +27,12 @@ mdl = Structure(name='block_strip', path='C:/Temp/')
 # Extrude
 
 rhino.mesh_extrude(mdl, guid=rs.ObjectsByLayer('base_mesh'), layers=5, thickness=0.010, 
-                   blocks_name='elset_blocks', plot_blocks=1)
+                   blocks_name='elset_blocks', plot_blocks=0)
                    
 # Elements
 
 rhino.add_nodes_elements_from_layers(mdl, line_type='BeamElement', layers='elset_beams')
+rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers='elset_membranes')
 
 # Sets
 
@@ -45,7 +47,7 @@ mdl.add_set(name='nset_bot', type='node', selection=nodes_bot)
 MPa = 10**6
 GPa = 10**9
 
-mdl.add_materials([
+mdl.add([
     ElasticPlastic(name='mat_1', E=100*GPa, v=0.3, p=1, f=[100*MPa, 100*MPa], e=[0, 1]),
     ElasticPlastic(name='mat_2', E=150*GPa, v=0.3, p=1, f=[150*MPa, 150*MPa], e=[0, 1]),
     ElasticPlastic(name='mat_3', E=200*GPa, v=0.3, p=1, f=[900*MPa, 900*MPa], e=[0, 1]),
@@ -53,33 +55,40 @@ mdl.add_materials([
 
 # Sections
 
-mdl.add_sections([
+mdl.add([
     SolidSection(name='sec_solid'),
+    ShellSection(name='sec_membrane', t=0.002),
     RectangularSection(name='sec_rectangle', b=0.002, h=0.002),
 ])
 
 # Properties
 
-mdl.add_element_properties([
+rebar = {
+    'top': {'pos': +0.001, 'spacing': 0.010, 'material': 'mat_3', 'dia': 0.002, 'angle': 0},
+    'bot': {'pos': -0.001, 'spacing': 0.010, 'material': 'mat_3', 'dia': 0.002, 'angle': 90},
+}
+
+mdl.add([
     Properties(name='ep_solid_4', material='mat_2', section='sec_solid', elsets='elset_blocks_layer_4'),
     Properties(name='ep_solid_3', material='mat_1', section='sec_solid', elsets='elset_blocks_layer_3'),
     Properties(name='ep_solid_2', material='mat_2', section='sec_solid', elsets='elset_blocks_layer_2'),
     Properties(name='ep_solid_1', material='mat_1', section='sec_solid', elsets='elset_blocks_layer_1'),
     Properties(name='ep_solid_0', material='mat_2', section='sec_solid', elsets='elset_blocks_layer_0'),
     Properties(name='ep_beams', material='mat_3', section='sec_rectangle', elsets='elset_beams'),
+    Properties(name='ep_membrane', material='mat_2', section='sec_membrane', elsets='elset_membranes', reinforcement=rebar),
 ])
 
 # Displacements
 
-mdl.add_displacements([
+mdl.add([
     PinnedDisplacement(name='disp_pinned', nodes='nset_bot'),
     RollerDisplacementY(name='disp_roller', nodes='nset_top'),
-    GeneralDisplacement(name='disp_move', nodes='nset_top', y=0.060)
+    GeneralDisplacement(name='disp_move', nodes='nset_top', y=0.010)
 ])
 
 # Steps
 
-mdl.add_steps([
+mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_pinned', 'disp_roller']),
     GeneralStep(name='step_move', displacements=['disp_move']),
 ])

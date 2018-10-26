@@ -29,24 +29,23 @@ rhino.add_sets_from_layers(mdl, layers='nset_pins')
 
 # Materials
 
-mdl.add_material(Concrete(name='mat_concrete', fck=40))
+mdl.add(Concrete(name='mat_concrete', fck=40))
 
 # Sections
 
-mdl.add_section(ShellSection(name='sec_concrete', t=0.250))
+mdl.add(ShellSection(name='sec_concrete', t=0.250))
 
 # Properties
 
-mdl.add_element_properties(
-    Properties(name='ep_concrete', material='mat_concrete', section='sec_concrete', elsets='elset_concrete'))
+mdl.add(Properties(name='ep_concrete', material='mat_concrete', section='sec_concrete', elsets='elset_concrete'))
 
 # Displacements
 
-mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
+mdl.add(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
 
 # Steps
 
-mdl.add_steps([
+mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_pinned']),
     ModalStep(name='step_modal', modes=5),
 ])

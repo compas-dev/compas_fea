@@ -33,14 +33,14 @@ rhino.add_sets_from_layers(mdl, layers=['nset_fixed', 'nset_loads'])
 
 # Materials
 
-mdl.add_materials([
+mdl.add([
     Concrete(name='mat_concrete', fck=40),
     Steel(name='mat_rebar', fy=500, id='r'),
 ])
 
 # Sections
 
-mdl.add_sections([
+mdl.add([
     ShellSection(name='sec_wall', t=0.150),
     ShellSection(name='sec_plinth', t=0.300),
 ])
@@ -60,25 +60,25 @@ reb_wall = {
     'w_l1': {'pos': -0.055, 'spacing': 0.100, 'material': 'mat_rebar', 'dia': 0.012, 'angle': 0},
 }
 
-mdl.add_element_properties([
+mdl.add([
     Properties(name='ep_plinth', material='mat_concrete', section='sec_plinth', elsets='elset_plinth', reinforcement=reb_plinth),
     Properties(name='ep_wall', material='mat_concrete', section='sec_wall', elsets='elset_wall', reinforcement=reb_wall),
 ])
 
 # Displacements
 
-mdl.add_displacement(FixedDisplacement(name='disp_fixed', nodes='nset_fixed'))
+mdl.add(FixedDisplacement(name='disp_fixed', nodes='nset_fixed'))
 
 # Loads
 
-mdl.add_loads([
+mdl.add([
     GravityLoad(name='load_gravity', elements=['elset_wall', 'elset_plinth']),
     PointLoad(name='load_points', nodes='nset_loads', z=-20*10**3),
 ])
 
 # Steps
 
-mdl.add_steps([
+mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_fixed']),
     GeneralStep(name='step_loads', loads=['load_gravity', 'load_points']),
 ])

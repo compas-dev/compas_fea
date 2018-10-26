@@ -22,6 +22,7 @@ __all__ = [
     'PipeSection',
     'RectangularSection',
     'ShellSection',
+    'MembraneSection',
     'SolidSection',
     'TrapezoidalSection',
     'TrussSection',
@@ -54,6 +55,7 @@ class Section(object):
 
     def __str__(self):
 
+        print('\n')
         print('compas_fea {0} object'.format(self.__name__))
         print('-' * (len(self.__name__) + 18))
 
@@ -63,6 +65,10 @@ class Section(object):
             print('{0:<5} : {1}'.format(i, j))
 
         return ''
+
+    def __repr__(self):
+
+        return '{0}({1})'.format(self.__name__, self.name)
 
 
 # ==============================================================================
@@ -472,7 +478,7 @@ class SpringSection(Section):
 
 class ShellSection(Section):
 
-    """ Section for shell and membrane elements.
+    """ Section for shell elements.
 
     Parameters
     ----------
@@ -491,6 +497,31 @@ class ShellSection(Section):
         Section.__init__(self, name=name)
 
         self.__name__ = 'ShellSection'
+        self.name     = name
+        self.geometry = {'t': t}
+
+
+class MembraneSection(Section):
+
+    """ Section for membrane elements.
+
+    Parameters
+    ----------
+    name : str
+        Section name.
+    t : float
+        Thickness.
+
+    Returns
+    -------
+    None
+
+    """
+
+    def __init__(self, name, t):
+        Section.__init__(self, name=name)
+
+        self.__name__ = 'MembraneSection'
         self.name     = name
         self.geometry = {'t': t}
 

@@ -127,6 +127,7 @@ material
 .. autosummary::
     :toctree: generated/
 
+    Material
     Concrete
     ConcreteSmearedCrack
     ConcreteDamagedPlasticity
@@ -171,6 +172,7 @@ section
     PipeSection
     RectangularSection
     ShellSection
+    MembraneSection
     SolidSection
     TrapezoidalSection
     TrussSection

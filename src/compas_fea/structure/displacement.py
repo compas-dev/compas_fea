@@ -67,6 +67,7 @@ class GeneralDisplacement(object):
 
     def __str__(self):
 
+        print('\n')
         print('compas_fea {0} object'.format(self.__name__))
         print('-' * (len(self.__name__) + 18))
 
@@ -74,6 +75,10 @@ class GeneralDisplacement(object):
             print('{0:<10} : {1}'.format(attr, getattr(self, attr)))
 
         return ''
+
+    def __repr__(self):
+
+        return '{0}({1})'.format(self.__name__, self.name)
 
 
 class FixedDisplacement(GeneralDisplacement):

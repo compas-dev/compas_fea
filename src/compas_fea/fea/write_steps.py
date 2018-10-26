@@ -689,9 +689,8 @@ def _write_thermal_load(f, software, elset, temperature, sets, factor):
 
         elif software == 'sofistik':
 
-            for k in elset:
-                set_index = sets[k]['index'] + 1
-                f.write('    QUAD GRP {0} TYPE {1} {2}\n'.format(set_index, 'DTXY', temperature))
+            set_index = sets[k]['index'] + 1
+            f.write('    QUAD GRP {0} TYPE {1} {2}\n'.format(set_index, 'DTXY', temperature))
 
         elif software == 'opensees':
 
@@ -946,7 +945,7 @@ def _write_sofistik_output(f, stype, properties, state, step_index, key, nlgeom,
             f.write('$\n')
             f.write('CTRL SOLV 1\n')
             f.write('CTRL CONC\n')
-            f.write('CREP NCRE 10\n')
+            f.write('CREP NCRE 5\n')
             if nlgeom == 'YES':
                 f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2} PLC 2{3:0>2}00\n'.format(
                         increments, tolerance, nlmat, step_index))

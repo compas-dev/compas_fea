@@ -13,6 +13,7 @@ __email__     = 'liew@arch.ethz.ch'
 
 
 __all__ = [
+    'Material',
     'Concrete',
     'ConcreteSmearedCrack',
     'ConcreteDamagedPlasticity',
@@ -25,11 +26,48 @@ __all__ = [
 ]
 
 
+class Material(object):
+
+    """ Initialises base Material object.
+
+    Parameters
+    ----------
+    name : str
+        Name of the Material object.
+
+    Returns
+    -------
+    None
+
+    """
+
+    def __init__(self, name):
+
+        self.__name__  = 'MaterialObject'
+        self.name      = name
+        self.attr_list = ['name']
+
+    def __str__(self):
+
+        print('\n')
+        print('compas_fea {0} object'.format(self.__name__))
+        print('-' * (len(self.__name__) + 18))
+
+        for attr in self.attr_list:
+            print('{0:<11} : {1}'.format(attr, getattr(self, attr)))
+
+        return ''
+
+    def __repr__(self):
+
+        return '{0}({1})'.format(self.__name__, self.name)
+
+
 # ==============================================================================
 # linear elastic
 # ==============================================================================
 
-class ElasticIsotropic(object):
+class ElasticIsotropic(Material):
 
     """ Elastic, isotropic and homogeneous material.
 
@@ -55,14 +93,17 @@ class ElasticIsotropic(object):
     """
 
     def __init__(self, name, E, v, p, tension=True, compression=True):
-        self.__name__ = 'ElasticIsotropic'
-        self.name = name
-        self.E = {'E': E}
-        self.v = {'v': v}
-        self.G = {'G': 0.5 * E / (1 + v)}
-        self.p = p
-        self.tension = tension
+        Material.__init__(self, name=name)
+
+        self.__name__    = 'ElasticIsotropic'
+        self.name        = name
+        self.E           = {'E': E}
+        self.v           = {'v': v}
+        self.G           = {'G': 0.5 * E / (1 + v)}
+        self.p           = p
+        self.tension     = tension
         self.compression = compression
+        self.attr_list.extend(['E', 'v', 'G', 'p', 'tension', 'compression'])
 
 
 class Stiff(ElasticIsotropic):
@@ -82,10 +123,11 @@ class Stiff(ElasticIsotropic):
 
     def __init__(self, name):
         ElasticIsotropic.__init__(self, name=name, E=10**12, v=0.3, p=10**(-1))
+
         self.__name__ = 'Stiff'
 
 
-class ElasticOrthotropic(object):
+class ElasticOrthotropic(Material):
 
     """ Elastic, orthotropic and homogeneous material.
 
@@ -129,21 +171,24 @@ class ElasticOrthotropic(object):
     """
 
     def __init__(self, name, Ex, Ey, Ez, vxy, vyz, vzx, Gxy, Gyz, Gzx, p, tension=True, compression=True):
-        self.__name__ = 'ElasticOrthotropic'
-        self.name = name
-        self.E = {'Ex': Ex, 'Ey': Ey, 'Ez': Ez}
-        self.v = {'vxy': vxy, 'vyz': vyz, 'vzx': vzx}
-        self.G = {'Gxy': Gxy, 'Gyz': Gyz, 'Gzx': Gzx}
-        self.p = p
-        self.tension = tension
+        Material.__init__(self, name=name)
+
+        self.__name__    = 'ElasticOrthotropic'
+        self.name        = name
+        self.E           = {'Ex': Ex, 'Ey': Ey, 'Ez': Ez}
+        self.v           = {'vxy': vxy, 'vyz': vyz, 'vzx': vzx}
+        self.G           = {'Gxy': Gxy, 'Gyz': Gyz, 'Gzx': Gzx}
+        self.p           = p
+        self.tension     = tension
         self.compression = compression
+        self.attr_list.extend(['E', 'v', 'G', 'p', 'tension', 'compression'])
 
 
 # ==============================================================================
 # non-linear general
 # ==============================================================================
 
-class ElasticPlastic(object):
+class ElasticPlastic(Material):
 
     """ Elastic and plastic, isotropic and homogeneous material.
 
@@ -173,23 +218,27 @@ class ElasticPlastic(object):
     """
 
     def __init__(self, name, E, v, p, f, e):
+        Material.__init__(self, name=name)
+
         fc = [-i for i in f]
         ec = [-i for i in e]
-        self.__name__ = 'ElasticPlastic'
-        self.name = name
-        self.E = {'E': E}
-        self.v = {'v': v}
-        self.G = {'G': 0.5 * E / (1 + v)}
-        self.p = p
-        self.compression = {'f': fc, 'e': ec}
+
+        self.__name__    = 'ElasticPlastic'
+        self.name        = name
+        self.E           = {'E': E}
+        self.v           = {'v': v}
+        self.G           = {'G': 0.5 * E / (1 + v)}
+        self.p           = p
         self.tension     = {'f': f, 'e': e}
+        self.compression = {'f': fc, 'e': ec}
+        self.attr_list.extend(['E', 'v', 'G', 'p', 'tension', 'compression'])
 
 
 # ==============================================================================
 # non-linear metal
 # ==============================================================================
 
-class Steel(object):
+class Steel(Material):
 
     """ Bi-linear non-linear steel with yield stress.
 
@@ -221,6 +270,8 @@ class Steel(object):
     """
 
     def __init__(self, name, fy=355, fu=None, eu=20, E=210, v=0.3, p=7850, id='s', sf=1.15):
+        Material.__init__(self, name=name)
+
         E  *= 10.**9
         fy *= 10.**6
         eu *= 0.01
@@ -229,25 +280,26 @@ class Steel(object):
         else:
             fu *= 10.**6
         ep = eu - fy / E
-        f = [fy, fu]
-        e = [0, ep]
+        f  = [fy, fu]
+        e  = [0, ep]
         fc = [-i for i in f]
         ec = [-i for i in e]
 
-        self.__name__ = 'Steel'
-        self.name = name
-        self.fy = fy
-        self.fu = fu
-        self.eu = eu
-        self.ep = ep
-        self.p = p
-        self.E = {'E': E}
-        self.v = {'v': v}
-        self.G = {'G': 0.5 * E / (1 + v)}
+        self.__name__    = 'Steel'
+        self.name        = name
+        self.fy          = fy
+        self.fu          = fu
+        self.eu          = eu
+        self.ep          = ep
+        self.p           = p
+        self.E           = {'E': E}
+        self.v           = {'v': v}
+        self.G           = {'G': 0.5 * E / (1 + v)}
         self.compression = {'f': fc, 'e': ec}
         self.tension     = {'f': f, 'e': e}
-        self.id = id
-        self.sf = sf
+        self.id          = id
+        self.sf          = sf
+        self.attr_list.extend(['fy', 'fu', 'eu', 'ep', 'E', 'v', 'G', 'p', 'tension', 'compression'])
 
 
 # ==============================================================================
@@ -264,7 +316,7 @@ class Steel(object):
 # non-linear concrete
 # ==============================================================================
 
-class Concrete(object):
+class Concrete(Material):
 
     """ Elastic and plastic-cracking Eurocode based concrete material.
 
@@ -294,6 +346,8 @@ class Concrete(object):
     """
 
     def __init__(self, name, fck, v=0.2, p=2400, fr=None, sf=1.5):
+        Material.__init__(self, name=name)
+
         de   = 0.0001
         fcm  = fck + 8
         Ecm  = 22 * 10**3 * (fcm / 10.)**0.3
@@ -310,20 +364,21 @@ class Concrete(object):
         if not fr:
             fr = [1.16, fctm / fcm]
 
-        self.__name__ = 'Concrete'
-        self.name = name
-        self.fck = fck * 10.**6
-        self.E = {'E': E}
-        self.v = {'v': v}
-        self.G = {'G': 0.5 * E / (1 + v)}  # check assumption
-        self.p = p
+        self.__name__    = 'Concrete'
+        self.name        = name
+        self.fck         = fck * 10.**6
+        self.E           = {'E': E}
+        self.v           = {'v': v}
+        self.G           = {'G': 0.5 * E / (1 + v)}  # check assumption
+        self.p           = p
         self.compression = {'f': f[1:], 'e': ec}
-        self.tension = {'f': ft, 'e': et}
-        self.fratios = fr
-        self.sf = sf
+        self.tension     = {'f': ft, 'e': et}
+        self.fratios     = fr
+        self.sf          = sf
+        self.attr_list.extend(['fck', 'fratios', 'E', 'v', 'G', 'p', 'tension', 'compression'])
 
 
-class ConcreteSmearedCrack(object):
+class ConcreteSmearedCrack(Material):
 
     """ Elastic and plastic, cracking concrete material.
 
@@ -355,17 +410,21 @@ class ConcreteSmearedCrack(object):
     """
 
     def __init__(self, name, E, v, p, fc, ec, ft, et, fr=[1.16, 0.0836]):
-        self.__name__ = 'ConcreteSmearedCrack'
-        self.name = name
-        self.E = {'E': E}
-        self.v = {'v': v}
-        self.p = p
+        Material.__init__(self, name=name)
+
+        self.__name__    = 'ConcreteSmearedCrack'
+        self.name        = name
+        self.E           = {'E': E}
+        self.v           = {'v': v}
+        self.G           = {'G': 0.5 * E / (1 + v)}  # check assumption
+        self.p           = p
         self.compression = {'f': fc, 'e': ec}
-        self.tension = {'f': ft, 'e': et}
-        self.fratios = fr
+        self.tension     = {'f': ft, 'e': et}
+        self.fratios     = fr
+        self.attr_list.extend(['E', 'v', 'G', 'p', 'tension', 'compression', 'fratios'])
 
 
-class ConcreteDamagedPlasticity(object):
+class ConcreteDamagedPlasticity(Material):
 
     """ Damaged plasticity isotropic and homogeneous material.
 
@@ -393,21 +452,25 @@ class ConcreteDamagedPlasticity(object):
     """
 
     def __init__(self, name, E, v, p, damage, hardening, stiffening):
-        self.__name__ = 'ConcreteDamagedPlasticity'
-        self.name = name
-        self.E = {'E': E}
-        self.v = {'v': v}
-        self.p = p
-        self.damage = damage
-        self.hardening = hardening
+        Material.__init__(self, name=name)
+
+        self.__name__   = 'ConcreteDamagedPlasticity'
+        self.name       = name
+        self.E          = {'E': E}
+        self.v          = {'v': v}
+        self.G          = {'G': 0.5 * E / (1 + v)}  # check assumption
+        self.p          = p
+        self.damage     = damage
+        self.hardening  = hardening
         self.stiffening = stiffening
+        self.attr_list.extend(['E', 'v', 'G', 'p', 'damage', 'hardening', 'stiffening'])
 
 
 # ==============================================================================
 # thermal
 # ==============================================================================
 
-class ThermalMaterial(object):
+class ThermalMaterial(Material):
 
     """ Class for thermal material properties.
 
@@ -429,8 +492,11 @@ class ThermalMaterial(object):
     """
 
     def __init__(self, name, conductivity, p, sheat):
-        self.__name__ = 'ThermalMaterial'
-        self.name = name
+        Material.__init__(self, name=name)
+
+        self.__name__     = 'ThermalMaterial'
+        self.name         = name
         self.conductivity = conductivity
-        self.p = p
-        self.sheat = sheat
+        self.p            = p
+        self.sheat        = sheat
+        self.attr_list.extend(['p', 'conductivity', 'sheat'])

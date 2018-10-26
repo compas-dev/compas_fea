@@ -86,8 +86,8 @@ def write_input_materials(f, software, materials, sections=None, properties=None
 
         mtype       = material.__name__
         mindex      = material.index + 1
-        compression = material.compression
-        tension     = material.tension
+        compression = getattr(material, 'compression', None)
+        tension     = getattr(material, 'tension', None)
         E           = material.E['E']
         G           = material.G['G']
         v           = material.v['v']
@@ -135,7 +135,7 @@ def write_input_materials(f, software, materials, sections=None, properties=None
         # Concrete damaged plasticity
 
         elif mtype == 'ConcreteDamagedPlasticity':
-            _write_plasticity_concrete(f, software, material, c)
+            _write_plasticity_concrete(f, software, material, c, E, v)
 
         # Thermal
 
@@ -337,9 +337,15 @@ def _write_concrete(f, software, E, v, p, compression, tension, mindex, material
     f.write('{0}\n'.format(c))
 
 
-def _write_plasticity_concrete(f, software, material, c):
+def _write_plasticity_concrete(f, software, material, c, E, v):
 
     if software == 'abaqus':
+
+        f.write('*ELASTIC\n')
+        f.write('** E[Pa], v[-]\n')
+        f.write('**\n')
+        f.write('{0}, {1}\n'.format(E, v))
+        f.write('**\n')
 
         f.write('*CONCRETE DAMAGED PLASTICITY\n')
         f.write('** psi[deg], e[-], sr[-], Kc[-], mu[-]\n')

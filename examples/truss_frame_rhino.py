@@ -31,11 +31,11 @@ rhino.add_sets_from_layers(mdl, layers=['nset_pins', 'nset_load_v', 'nset_load_h
 
 # Materials
 
-mdl.add_material(Steel(name='mat_steel', fy=355))
+mdl.add(Steel(name='mat_steel', fy=355))
 
 # Sections
 
-mdl.add_sections([
+mdl.add([
     TrussSection(name='sec_main', A=0.0008),
     TrussSection(name='sec_diag', A=0.0005),
     TrussSection(name='sec_stays', A=0.0001),
@@ -43,7 +43,7 @@ mdl.add_sections([
 
 # Properties
 
-mdl.add_element_properties([
+mdl.add([
     Properties(name='ep_main', material='mat_steel', section='sec_main', elsets='elset_main'),
     Properties(name='ep_diag', material='mat_steel', section='sec_diag', elsets='elset_diag'),
     Properties(name='ep_stays', material='mat_steel', section='sec_stays', elsets='elset_stays'),
@@ -51,12 +51,12 @@ mdl.add_element_properties([
 
 # Displacements
 
-mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
+mdl.add(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
 
 # Loads
 # Note: GravityLoad doesnt activate for OpenSees
 
-mdl.add_loads([
+mdl.add([
     PointLoad(name='load_v', nodes='nset_load_v', z=-15500),
     PointLoad(name='load_h', nodes='nset_load_h', x=5000),
     GravityLoad(name='load_gravity', elements=['elset_diag', 'elset_main']),
@@ -64,7 +64,7 @@ mdl.add_loads([
 
 # Steps
 
-mdl.add_steps([
+mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_pinned']),
     GeneralStep(name='step_loads', loads=['load_v', 'load_h', 'load_gravity'], factor=1.5, increments=300),
 ])

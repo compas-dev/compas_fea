@@ -53,14 +53,16 @@ mdl.add_set(name='elset_shell', type='element', selection=[4])
 
 # Add sections
 
-mdl.add_section(CircularSection(name='sec_circ', r=0.010))
-mdl.add_section(ShellSection(name='sec_shell', t=0.005))
+mdl.add([
+    CircularSection(name='sec_circ', r=0.010),
+    ShellSection(name='sec_shell', t=0.005),
+])
 
 # print('Section geometry: ', mdl.sections['sec_circ'].geometry)
 
 # Add materials
 
-mdl.add_material(ElasticIsotropic(name='mat_elastic', E=10*10**9, v=0.3, p=1500))
+mdl.add(ElasticIsotropic(name='mat_elastic', E=10*10**9, v=0.3, p=1500))
 
 # print('Material E: ', mdl.materials['mat_elastic'].E)
 
@@ -68,26 +70,29 @@ mdl.add_material(ElasticIsotropic(name='mat_elastic', E=10*10**9, v=0.3, p=1500)
 
 ep1 = Properties(name='ep_circ', material='mat_elastic', section='sec_circ', elsets='elset_beams')
 ep2 = Properties(name='ep_shell', material='mat_elastic', section='sec_shell', elsets='elset_shell')
-mdl.add_element_properties(ep1)
-mdl.add_element_properties(ep2)
+mdl.add([ep1, ep2])
 
 # Add loads
 
-mdl.add_load(PointLoad(name='load_point', nodes='nset_top', x=10000, z=-10000))
-mdl.add_load(GravityLoad(name='load_gravity', elements='elset_beams'))
+mdl.add([
+    PointLoad(name='load_point', nodes='nset_top', x=10000, z=-10000),
+    GravityLoad(name='load_gravity', elements='elset_beams'),
+])
 
 # print('load_point components: ', mdl.loads['load_point'].components)
 
 # Add displacements
 
-mdl.add_displacement(PinnedDisplacement(name='disp_pinned', nodes='nset_base'))
+mdl.add(PinnedDisplacement(name='disp_pinned', nodes='nset_base'))
 
 # print('disp_pinned components: ', mdl.displacements['disp_pinned'].components)
 
 # Add steps
 
-mdl.add_step(GeneralStep(name='step_bc', displacements=['disp_pinned']))
-mdl.add_step(GeneralStep(name='step_loads', loads=['load_point', 'load_gravity']))
+mdl.add([
+    GeneralStep(name='step_bc', displacements=['disp_pinned']),
+    GeneralStep(name='step_loads', loads=['load_point', 'load_gravity']),
+])
 mdl.steps_order = ['step_bc', 'step_loads']
 
 # Structure summary
@@ -100,4 +105,4 @@ mdl.write_input_file(software='abaqus', fields=['s', 'u'])
 
 # Launch App
 
-mdl.view()
+# mdl.view()
