@@ -212,7 +212,7 @@ class NodeMixins(object):
 
         """
 
-        return len(self.nodes)
+        return len(self.nodes) + len(self.virtual_nodes)
 
     def node_xyz(self, node):
 

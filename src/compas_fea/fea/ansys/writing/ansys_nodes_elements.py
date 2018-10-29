@@ -1,5 +1,7 @@
 import os
 
+from compas.geometry import add_vectors
+
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
 __license__    = 'MIT License'
@@ -150,6 +152,7 @@ def write_solid_elements(structure, output_path, filename, ekeys, material):
     cFile.write('!\n')
     cFile.close()
 
+
 def write_set_srf_realconstant(output_path, filename, rkey):
     cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('R,' + str(rkey) + ', , , , , , , , , ,\n')
@@ -226,19 +229,22 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
         thickness_w = structure.sections[section].geometry['tf']
         thickness_f = structure.sections[section].geometry['tw']
         write_i_section(output_path, filename, height, base, thickness_w, thickness_f, sec_index)
-
-    orient = structure.sections[section].orientation
+    elif sec_type == 'TrapezoidalSection':
+        pass
+    else:
+        raise ValueError(sec_type + ' Type of section is not yet implemented for Ansys')
 
     cFile = open(os.path.join(output_path, filename), 'a')
     for ekey in ekeys:
         element = structure.elements[ekey].nodes
-        if orient:
-            enode = structure.nodes[element[-1]]
-            onode = [enode['x'] + orient[0], enode['y'] + orient[1], enode['z'] + orient[2]]
-            string = 'N,' + str(structure.node_count()) + ',' + str(onode[0]) + ',' + str(onode[1])
-            string += ',' + str(onode[2]) + ',0,0,0 \n'
-            cFile.write(string)
-            element.append(structure.node_count() - 1)
+        y = structure.elements[ekey].axes['ey']
+        enode = structure.nodes[element[-1]]
+        onode = add_vectors([enode['x'], enode['y'], enode['z']], y)
+        structure.add
+        string = 'N,' + str(structure.node_count()) + ',' + str(onode[0]) + ',' + str(onode[1])
+        string += ',' + str(onode[2]) + ',0,0,0 \n'
+        cFile.write(string)
+        element.append(structure.node_count() - 1)
         string = 'E,'
         for i in range(len(element)):
             string += str(int(element[i]) + 1)
