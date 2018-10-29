@@ -3,13 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from compas_fea.fea import write_input_bcs
-from compas_fea.fea import write_input_elements
-from compas_fea.fea import write_input_heading
-from compas_fea.fea import write_input_materials
-from compas_fea.fea import write_input_misc
-from compas_fea.fea import write_input_nodes
-from compas_fea.fea import write_input_steps
+from compas_fea.fea import Writer
 
 from subprocess import Popen
 from subprocess import PIPE
@@ -53,35 +47,23 @@ def input_generate(structure, fields):
 
     filename = '{0}{1}.tcl'.format(structure.path, structure.name)
 
-    with open(filename, 'w') as f:
+    ndof = 3
+    for element in structure.elements.values():
+        if element.__name__ not in ['TrussElement', 'TieElement', 'StrutElement', 'SpringElement']:
+            ndof = 6
+            break
 
-        constraints   = structure.constraints
-        displacements = structure.displacements
-        elements      = structure.elements
-        interactions  = structure.interactions
-        loads         = structure.loads
-        materials     = structure.materials
-        misc          = structure.misc
-        nodes         = structure.nodes
-        properties    = structure.element_properties
-        sections      = structure.sections
-        sets          = structure.sets
-        steps         = structure.steps
+    with Writer(structure=structure, software='opensees', filename=filename, ndof=ndof) as writer:
 
-        ndof = 3
-        for element in elements.values():
-            if element.__name__ not in ['TrussElement', 'TieElement', 'StrutElement', 'SpringElement']:
-                ndof = 6
-                break
+        writer.write_heading()
+        writer.write_nodes()
 
-        write_input_heading(f, 'opensees', ndof)
-        write_input_nodes(f, 'opensees', nodes)
-        write_input_bcs(f, 'opensees', structure, steps, displacements, sets, ndof)
-        write_input_materials(f, 'opensees', materials)
-        write_input_elements(f, 'opensees', sections, properties, elements, structure, materials)
-        write_input_steps(f, 'opensees', structure, steps, loads, displacements, sets, fields, ndof)
+    #     write_input_bcs(f, 'opensees', structure, steps, displacements, sets, ndof)
+    #     write_input_materials(f, 'opensees', materials)
+    #     write_input_elements(f, 'opensees', sections, properties, elements, structure, materials)
+    #     write_input_steps(f, 'opensees', structure, steps, loads, displacements, sets, fields, ndof)
 
-    print('***** OpenSees input file generated: {0} *****\n'.format(filename))
+    # print('***** OpenSees input file generated: {0} *****\n'.format(filename))
 
 
 def launch_process(structure, exe):

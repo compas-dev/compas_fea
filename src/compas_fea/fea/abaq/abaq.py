@@ -3,13 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from compas_fea.fea import write_input_bcs
-from compas_fea.fea import write_input_elements
-from compas_fea.fea import write_input_heading
-from compas_fea.fea import write_input_materials
-from compas_fea.fea import write_input_misc
-from compas_fea.fea import write_input_nodes
-from compas_fea.fea import write_input_steps
+from compas_fea.fea import Writer
 
 from compas_fea.fea.abaq import launch_job
 from compas_fea.fea.abaq import odb_extract
@@ -67,28 +61,17 @@ def input_generate(structure, fields, output):
     if 'u' not in fields:
         fields.append('u')
 
-    with open(filename, 'w') as f:
+    with Writer(structure=structure, software='abaqus', filename=filename) as writer:
 
-        constraints   = structure.constraints
-        displacements = structure.displacements
-        elements      = structure.elements
-        interactions  = structure.interactions
-        loads         = structure.loads
-        materials     = structure.materials
-        misc          = structure.misc
-        nodes         = structure.nodes
-        properties    = structure.element_properties
-        sections      = structure.sections
-        sets          = structure.sets
-        steps         = structure.steps
+        writer.write_heading()
+        writer.write_nodes()
+        writer.write_node_sets()
 
-        write_input_heading(f, 'abaqus')
-        write_input_nodes(f, 'abaqus', nodes, sets)
-        write_input_bcs(f, 'abaqus', structure, steps, displacements, sets)
-        write_input_materials(f, 'abaqus', materials)
-        write_input_misc(f, 'abaqus', misc)
-        write_input_elements(f, 'abaqus', sections, properties, elements, structure, materials)
-        write_input_steps(f, 'abaqus', structure, steps, loads, displacements, sets, fields)
+    #     write_input_bcs(f, 'abaqus', structure, steps, displacements, sets)
+    #     write_input_materials(f, 'abaqus', materials)
+    #     write_input_misc(f, 'abaqus', misc)
+    #     write_input_elements(f, 'abaqus', sections, properties, elements, structure, materials)
+    #     write_input_steps(f, 'abaqus', structure, steps, loads, displacements, sets, fields)
 
     if output:
         print('***** Abaqus input file generated: {0} *****\n'.format(filename))

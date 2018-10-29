@@ -3,13 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from compas_fea.fea import write_input_bcs
-from compas_fea.fea import write_input_elements
-from compas_fea.fea import write_input_heading
-from compas_fea.fea import write_input_materials
-from compas_fea.fea import write_input_misc
-from compas_fea.fea import write_input_nodes
-from compas_fea.fea import write_input_steps
+from compas_fea.fea import Writer
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -42,26 +36,13 @@ def input_generate(structure, fields=None):
 
     filename = '{0}{1}.dat'.format(structure.path, structure.name)
 
-    with open(filename, 'w') as f:
+    with Writer(structure=structure, software='sofistik', filename=filename) as writer:
 
-        constraints   = structure.constraints
-        displacements = structure.displacements
-        elements      = structure.elements
-        interactions  = structure.interactions
-        loads         = structure.loads
-        materials     = structure.materials
-        misc          = structure.misc
-        nodes         = structure.nodes
-        properties    = structure.element_properties
-        sections      = structure.sections
-        sets          = structure.sets
-        steps         = structure.steps
+        writer.write_heading()
+        writer.write_nodes()
 
-        write_input_heading(f, 'sofistik')
-        write_input_materials(f, 'sofistik', materials, sections, properties)
-        write_input_nodes(f, 'sofistik', nodes)
-        write_input_bcs(f, 'sofistik', structure, steps, displacements, sets)
-        write_input_elements(f, 'sofistik', sections, properties, elements, structure, materials)
-        write_input_steps(f, 'sofistik', structure, steps, loads, displacements, sets, fields, 6, properties)
+    #     write_input_bcs(f, 'sofistik', structure, steps, displacements, sets)
+    #     write_input_elements(f, 'sofistik', sections, properties, elements, structure, materials)
+    #     write_input_steps(f, 'sofistik', structure, steps, loads, displacements, sets, fields, 6, properties)
 
     print('***** Sofistik input file generated: {0} *****\n'.format(filename))

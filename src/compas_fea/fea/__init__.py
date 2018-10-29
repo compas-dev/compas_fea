@@ -10,108 +10,17 @@ fea
 The compas_fea package supports Abaqus, Ansys, Sofistik and OpenSees as analysis backends.
 
 
-write_heading
-=============
+writer
+======
 
-.. currentmodule:: compas_fea.fea.write_heading
+.. currentmodule:: compas_fea.fea.writer
 
-:mod:`compas_fea.fea.write_heading`
-
-.. autosummary::
-    :toctree: generated/
-
-    write_input_heading
-
-
-write_constraints
-=================
-
-.. currentmodule:: compas_fea.fea.write_constraints
-
-:mod:`compas_fea.fea.write_constraints`
+:mod:`compas_fea.fea.writer`
 
 .. autosummary::
     :toctree: generated/
 
-    write_input_constraints
-
-
-write_steps
-===========
-
-.. currentmodule:: compas_fea.fea.write_steps
-
-:mod:`compas_fea.fea.write_steps`
-
-.. autosummary::
-    :toctree: generated/
-
-    write_input_steps
-
-
-write_elements
-==============
-
-.. currentmodule:: compas_fea.fea.write_elements
-
-:mod:`compas_fea.fea.write_elements`
-
-.. autosummary::
-    :toctree: generated/
-
-    write_input_elements
-
-
-write_nodes
-=============
-
-.. currentmodule:: compas_fea.fea.write_nodes
-
-:mod:`compas_fea.fea.write_nodes`
-
-.. autosummary::
-    :toctree: generated/
-
-    write_input_nodes
-
-
-write_bcs
-=========
-
-.. currentmodule:: compas_fea.fea.write_bcs
-
-:mod:`compas_fea.fea.write_bcs`
-
-.. autosummary::
-    :toctree: generated/
-
-    write_input_bcs
-
-
-write_materials
-===============
-
-.. currentmodule:: compas_fea.fea.write_materials
-
-:mod:`compas_fea.fea.write_materials`
-
-.. autosummary::
-    :toctree: generated/
-
-    write_input_materials
-
-
-write_misc
-==========
-
-.. currentmodule:: compas_fea.fea.write_misc
-
-:mod:`compas_fea.fea.write_misc`
-
-.. autosummary::
-    :toctree: generated/
-
-    write_input_misc
+    Writer
 
 
 abaq
@@ -180,11 +89,4 @@ sofistik
 
 """
 
-from .write_heading import *
-from .write_constraints import *
-from .write_nodes import *
-from .write_bcs import *
-from .write_materials import *
-from .write_elements import *
-from .write_steps import *
-from .write_misc import *
+from .writer import *
