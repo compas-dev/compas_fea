@@ -52,12 +52,15 @@ def write_elastic_material(material, index, output_path, filename):
 
 
 def write_elasticplastic_material(material, index, output_path, filename):
+
     write_elastic_material(material, index, output_path, filename)
     cFile = open(os.path.join(output_path, filename), 'a')
-    cFile.write('TB,MISO,{0}, {0}, {1} ,0 \n'.format(index, len(material.tension['e'])))
+    # cFile.write('TB,MISO,{0}, {0}, {1} ,0 \n'.format(index + 1, len(material.tension['e'])))
+    cFile.write('TB, PLASTIC, {0}, ,{1}, MISO \n'.format(index + 1, len(material.tension['e']) + 1))
     cFile.write('TBTEMP, 0  \n')
+    cFile.write('TBPT, ,0, 5000 \n')
     for i, j in zip(material.tension['f'], material.tension['e']):
-        cFile.write('TBPT, ,{0}, {1}\n'.format(i, j))
+        cFile.write('TBPT, ,{1}, {0}\n'.format(i, j))
     cFile.close()
 
 
