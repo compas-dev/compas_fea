@@ -58,6 +58,7 @@ def write_elasticplastic_material(material, index, output_path, filename):
     cFile.write('TBTEMP, 0  \n')
     for i, j in zip(material.tension['f'], material.tension['e']):
         cFile.write('TBPT, ,{0}, {1}\n'.format(i, j))
+    cFile.close()
 
 
 def write_concrete_microplane_material(material, index, output_path, filename):

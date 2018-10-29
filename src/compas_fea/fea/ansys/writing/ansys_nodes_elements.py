@@ -1,6 +1,7 @@
 import os
 
 from compas.geometry import add_vectors
+from compas.geometry import normalize_vector
 
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
@@ -230,22 +231,30 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
         thickness_f = structure.sections[section].geometry['tw']
         write_i_section(output_path, filename, height, base, thickness_w, thickness_f, sec_index)
     elif sec_type == 'TrapezoidalSection':
-        pass
+        b1 = structure.sections[section].geometry['b1']
+        b2 = structure.sections[section].geometry['b2']
+        h  = structure.sections[section].geometry['h']
+        write_trapezoidal_section(output_path, filename, b1, b2, h, sec_index)
     else:
         raise ValueError(sec_type + ' Type of section is not yet implemented for Ansys')
 
     cFile = open(os.path.join(output_path, filename), 'a')
     for ekey in ekeys:
         element = structure.elements[ekey].nodes
-        y = structure.elements[ekey].axes['ey']
+        axis = structure.elements[ekey].axes['ex']
+        if not axis:
+            enode = structure.nodes[element[-1]]
+            axis = [1, 0, 0]
+        axis = normalize_vector(axis)
         enode = structure.nodes[element[-1]]
-        onode = add_vectors([enode['x'], enode['y'], enode['z']], y)
-        structure.add
-        string = 'N,' + str(structure.node_count()) + ',' + str(onode[0]) + ',' + str(onode[1])
+        onode = add_vectors([enode['x'], enode['y'], enode['z']], axis)
+        nkey = structure.add_node(onode, virtual=True)
+        string = 'N,' + str(nkey + 1) + ',' + str(onode[0]) + ',' + str(onode[1])
         string += ',' + str(onode[2]) + ',0,0,0 \n'
         cFile.write(string)
-        element.append(structure.node_count() - 1)
-        string = 'E,'
+
+        element.append(nkey)
+        string = 'E, '
         for i in range(len(element)):
             string += str(int(element[i]) + 1)
             if i < len(element) - 1:
@@ -253,6 +262,22 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
         string += '\n'
         cFile.write(string)
 
+    cFile.write('!\n')
+    cFile.close()
+
+
+def write_trapezoidal_section(output_path, filename, b1, b2, h, sec_index):
+
+    x1 = b1 / 2.
+    x2 = b2 / 2.
+    h = h / 2.
+
+    cFile = open(os.path.join(output_path, filename), 'a')
+    cFile.write('SECTYPE, ' + str(sec_index + 1) + ', BEAM, QUAD, , 0 \n')
+    cFile.write('SECOFFSET, CENT \n')
+    cFile.write('SECDATA, -{0}, -{1}, {0}, -{1}, {2}, {1}, -{2}, {1} \n'.format(x1, h, x2))
+    cFile.write('SECNUM, ' + str(sec_index + 1) + '\n')
+    cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()
 
