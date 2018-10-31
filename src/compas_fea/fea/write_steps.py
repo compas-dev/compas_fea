@@ -902,7 +902,7 @@ def _write_sofistik_output(f, stype, properties, state, step_index, key, nlgeom,
             # f.write('NSTR KMOD S1 KSV SLD\n')
         elif state == 'uls':
             # f.write('NSTR KMOD S1 KSV ULD\n')
-            f.write('ULTI 30 FAK1 0.1 DFAK 0.1 PRO 1.5 FAKE 1.5\n')
+            f.write('ULTI 50 FAK1 0.1 DFAK 0.1 PRO 1.5 FAKE 1.5\n')
 
         if nlgeom == 'YES':
             f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2}\n'.format(increments, tolerance, nlmat))
