@@ -240,7 +240,7 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
 
     cFile = open(os.path.join(output_path, filename), 'a')
     for ekey in ekeys:
-        element = structure.elements[ekey].nodes
+        element = list(structure.elements[ekey].nodes)
         axis = structure.elements[ekey].axes['ex']
         if not axis:
             enode = structure.nodes[element[-1]]

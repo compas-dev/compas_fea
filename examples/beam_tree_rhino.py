@@ -45,7 +45,7 @@ em = [0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09]
 
 mdl.add([
     ElasticIsotropic(name='mat_bamboo', E=20*10**9, v=0.35, p=1100),
-    ElasticPlastic(name='mat_mushroom', E=5*10**9, v=0.30, p=350, f=fm, e=em)])
+    ElasticPlastic(name='mat_mushroom', E=5*10**7, v=0.30, p=350, f=fm, e=em)])
 
 # Properties
 
@@ -75,13 +75,9 @@ mdl.add([
     GeneralStep(name='step_loads', loads=['load_gravity'])])
 mdl.steps_order = ['step_bc', 'step_loads']
 
-# Summary
-
-mdl.summary()
-
 # Run (Abaqus)
 
 mdl.analyse_and_extract(software='ansys', fields=['u', 'sf'], license='research')
 
 rhino.plot_data(mdl, step='step_loads', field='um', radius=0.05, colorbar_size=0.5)
-rhino.plot_data(mdl, step='step_loads', field='sf1', radius=0.05, colorbar_size=0.5)
+# rhino.plot_data(mdl, step='step_loads', field='sf1', radius=0.05, colorbar_size=0.5)

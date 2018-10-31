@@ -188,7 +188,7 @@ def delete_result_files(path, name):
     shutil.rmtree(out_path)
 
 
-def extract_rst_data(structure, fields='all', steps='last', sets=None, license='teaching'):
+def extract_rst_data(structure, fields='all', steps='all', sets=None, license='teaching'):
     """ Extracts results from Ansys rst file.
 
     Parameters:
@@ -217,13 +217,18 @@ def write_results_from_rst(structure, fields, steps, license='teaching', sets=No
     filename = structure.name + '_extract.txt'
     name = structure.name
     path = structure.path
+    print 'steps before', steps
     if steps == 'last':
         steps = [structure.steps_order[-1]]
     elif steps == 'all':
         steps = structure.steps_order
+
     ansys_open_post_process(path, filename)
+    print 'steps after', steps
     for skey in steps:
-        step_index = steps.index(skey)
+        print 'skey', skey
+        step_index = structure.steps_order.index(skey)
+        print 'step_index', step_index
         stype = structure.steps[skey].type
         if stype == 'static':
             set_current_step(path, filename, step_index=step_index)

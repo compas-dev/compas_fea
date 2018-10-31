@@ -192,21 +192,17 @@ def get_displacements_from_result_files(out_path, step):
     except(Exception):
         return None
     displacements = dfile.readlines()
-    # disp_dict = {}
-    # for i in range(len(displacements)):
-    #     dstring = displacements[i].split(',')
-    #     disp = map(float, dstring)
-    #     key = int(disp[0]) - 1
-    #     disp_dict[key] = {'ux': disp[1], 'uy': disp[2], 'uz': disp[3]}
 
-    disp_dict = {'ux': {}, 'uy': {}, 'uz': {}}
+    disp_dict = {'ux': {}, 'uy': {}, 'uz': {}, 'um': {}}
     for i in range(len(displacements)):
         dstring = displacements[i].split(',')
         disp = map(float, dstring)
         key = int(disp[0]) - 1
-        disp_dict['ux'][key] = float(disp[1])
-        disp_dict['uy'][key] = float(disp[2])
-        disp_dict['uz'][key] = float(disp[3])
+        disp_dict['ux'][key] = disp[1]
+        disp_dict['uy'][key] = disp[2]
+        disp_dict['uz'][key] = disp[3]
+        disp_dict['um'][key] = length_vector([disp[1], disp[2], disp[3]])
+
     return disp_dict
 
 
@@ -379,6 +375,7 @@ def get_acoustic_radiation_from_results_files(out_path, step):
         data = line.split(' ')
         tl_data[i] = {'freq': float(data[0]), 'tl': float(data[1]), 'rad': float(data[2]), 'inc': float(data[3])}
     return tl_data
+
 
 
 if __name__ == '__main__':

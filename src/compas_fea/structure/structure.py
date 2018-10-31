@@ -589,7 +589,7 @@ Steps
         elif software == 'opensees':
             opensees.launch_process(self, exe)
 
-    def extract_data(self, software, fields='u', steps='last', exe=None, sets=None, license='student', output=True):
+    def extract_data(self, software, fields='u', steps='all', exe=None, sets=None, license='student', output=True):
 
         """ Extracts data from the FE software's output.
 
