@@ -217,18 +217,18 @@ def write_results_from_rst(structure, fields, steps, license='teaching', sets=No
     filename = structure.name + '_extract.txt'
     name = structure.name
     path = structure.path
-    print 'steps before', steps
+    print('steps before', steps)
     if steps == 'last':
         steps = [structure.steps_order[-1]]
     elif steps == 'all':
         steps = structure.steps_order
 
     ansys_open_post_process(path, filename)
-    print 'steps after', steps
+    print('steps after', steps)
     for skey in steps:
-        print 'skey', skey
+        print('skey', skey)
         step_index = structure.steps_order.index(skey)
-        print 'step_index', step_index
+        print('step_index', step_index)
         stype = structure.steps[skey].type
         if stype == 'static':
             set_current_step(path, filename, step_index=step_index)
