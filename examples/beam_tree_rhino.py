@@ -75,7 +75,7 @@ mdl.add([
     GeneralStep(name='step_loads', loads=['load_gravity'])])
 mdl.steps_order = ['step_bc', 'step_loads']
 
-# Run (Abaqus)
+# Run (Abaqus, Ansys)
 
 mdl.analyse_and_extract(software='ansys', fields=['u', 'sf'], license='research')
 
