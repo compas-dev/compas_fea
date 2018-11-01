@@ -50,32 +50,39 @@ class Writer(Sets, Nodes, Heading):
         self.structure = structure
         self.spacer    = {'abaqus': ', ', 'opensees': ' ', 'sofistik': ' ', 'ansys':    ' '}
 
+
     def __enter__(self):
 
         self.file = open(self.filename, 'w')
         return self
 
+
     def __exit__(self, type, value, traceback):
 
         self.file.close()
+
 
     def blank_line(self):
 
         self.file.write('{0}\n'.format(self.comment))
 
+
     def divider_line(self):
 
         self.file.write('{0}------------------------------------------------------------------\n'.format(self.comment))
 
+
     def write_line(self, line):
 
         self.file.write('{0}\n'.format(line))
+
 
     def write_section(self, section):
 
         self.divider_line()
         self.write_line('{0} {1}'.format(self.comment, section))
         self.divider_line()
+
 
     def write_subsection(self, subsection):
 

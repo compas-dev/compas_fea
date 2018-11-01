@@ -21,6 +21,7 @@ class Sets(object):
 
         pass
 
+
     def write_node_sets(self):
 
         self.write_section('Node sets')
@@ -28,10 +29,11 @@ class Sets(object):
 
         for key in sorted(self.structure.sets):
             node_set = self.structure.sets[key]
-            if node_set['type'] == 'node':
+            if node_set.type == 'node':
                 self.write_node_set(key, node_set)
                 self.blank_line()
                 self.blank_line()
+
 
     def write_node_set(self, key, node_set):
 
@@ -47,7 +49,7 @@ class Sets(object):
         self.write_line(header[self.software])
         self.blank_line()
 
-        nodes = [i + 1 for i in node_set['selection']]
+        nodes = [i + 1 for i in node_set.selection]
 
         for i in range(0, len(nodes), 8):
             self.write_line(self.spacer[self.software].join([str(j) for j in nodes[i:i + 8]]))

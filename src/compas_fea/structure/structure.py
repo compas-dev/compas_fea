@@ -16,6 +16,7 @@ from compas_fea.structure.mixins.nodemixins import NodeMixins
 from compas_fea.structure.mixins.elementmixins import ElementMixins
 from compas_fea.structure.mixins.objectmixins import ObjectMixins
 from compas_fea.structure.displacement import *
+from compas_fea.structure.set import Set
 
 import pickle
 import os
@@ -215,7 +216,8 @@ Steps
 
         if isinstance(selection, int):
             selection = [selection]
-        self.sets[name] = {'type': type, 'selection': selection, 'index': len(self.sets)}
+
+        self.sets[name] = Set(name=name, type=type, selection=selection, index=len(self.sets))
 
 
 # ==============================================================================

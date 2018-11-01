@@ -59,6 +59,32 @@ displacement
     RollerDisplacementXZ
 
 
+node
+====
+
+.. currentmodule:: compas_fea.structure.node
+
+:mod:`compas_fea.structure.node`
+
+.. autosummary::
+    :toctree: generated/
+
+    Node
+
+
+set
+===
+
+.. currentmodule:: compas_fea.structure.set
+
+:mod:`compas_fea.structure.set`
+
+.. autosummary::
+    :toctree: generated/
+
+    Set
+
+
 element
 =======
 
@@ -208,6 +234,7 @@ from .interaction import *
 from .load import *
 from .material import *
 from .misc import *
+from .node import *
 from .section import *
 from .step import *
 from .structure import *

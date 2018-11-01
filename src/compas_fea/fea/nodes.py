@@ -21,6 +21,7 @@ class Nodes(object):
 
         pass
 
+
     def write_nodes(self):
 
         header = {
@@ -42,13 +43,13 @@ class Nodes(object):
         self.write_line(header[self.software])
 
         for key in sorted(self.structure.nodes, key=int):
-            node = self.structure.nodes[key]
-            self.write_node(key, node)
+            self.write_node(key)
 
         self.blank_line()
         self.blank_line()
 
-    def write_node(self, key, node):
+
+    def write_node(self, key):
 
         prefix  = self.prefix[self.software]
         spacer  = self.spacer[self.software]
