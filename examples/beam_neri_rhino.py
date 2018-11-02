@@ -93,7 +93,11 @@ mdl.summary()
 
 # Run (Abaqus)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 's'], license='research')
+# mdl.analyse_and_extract(software='abaqus', fields=['u', 's'], license='research')
+# rhino.plot_data(mdl, step='step_load', field='um', radius=0.02)
+# rhino.plot_data(mdl, step='step_load', field='smises', radius=0.02, nodal='max')
 
+# Run (Ansys)
+
+mdl.analyse_and_extract(software='abaqus', fields=['u', 's'], license='research')
 rhino.plot_data(mdl, step='step_load', field='um', radius=0.02)
-rhino.plot_data(mdl, step='step_load', field='smises', radius=0.02, nodal='max')

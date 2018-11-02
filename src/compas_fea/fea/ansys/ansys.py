@@ -217,18 +217,16 @@ def write_results_from_rst(structure, fields, steps, license='teaching', sets=No
     filename = structure.name + '_extract.txt'
     name = structure.name
     path = structure.path
-    print 'steps before', steps
+
     if steps == 'last':
         steps = [structure.steps_order[-1]]
     elif steps == 'all':
         steps = structure.steps_order
 
     ansys_open_post_process(path, filename)
-    print 'steps after', steps
+
     for skey in steps:
-        print 'skey', skey
         step_index = structure.steps_order.index(skey)
-        print 'step_index', step_index
         stype = structure.steps[skey].type
         if stype == 'static':
             set_current_step(path, filename, step_index=step_index)
@@ -280,7 +278,7 @@ def load_to_results(structure, fields, steps):
                 rlist.append(get_displacements_from_result_files(out_path, step))
             if 's' in fields or 'all' in fields:
                 rlist.append(get_nodal_stresses_from_result_files(out_path, step))
-            if 'r' in fields or 'all' in fields:
+            if 'rf' in fields or 'all' in fields:
                 rlist.append(get_reactions_from_result_files(out_path, step))
             if 'e' in fields or 'all' in fields:
                 rlist.append(get_principal_strains_from_result_files(out_path, step))

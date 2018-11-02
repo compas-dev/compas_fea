@@ -14,7 +14,7 @@ def write_all_materials(structure, output_path, filename):
             write_elastic_material(material, index, output_path, filename)
         elif material.__name__ == 'ConcreteMicroplane':
             write_concrete_microplane_material(material, index, output_path, filename)
-        elif material.__name__ == 'ElasticPlastic':
+        elif material.__name__ in ['ElasticPlastic', 'Steel']:
             write_elasticplastic_material(material, index, output_path, filename)
         else:
             raise ValueError(material.__name__ + ' Type of material is not yet implemented for Ansys')

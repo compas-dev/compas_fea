@@ -346,7 +346,7 @@ def get_reactions_from_result_files(out_path, step):
     #         react_dict[key] = {'rxx': reaction[3], 'ryy': reaction[4], 'rzz': reaction[5],
     #                            'rx': reaction[0], 'ry': reaction[1], 'rz': reaction[2]}
 
-    react_dict = {'rmx': {}, 'rmy': {}, 'rmz': {}, 'rfx': {}, 'rfy': {}, 'rfz': {}}
+    react_dict = {'rmx': {}, 'rmy': {}, 'rmz': {}, 'rfx': {}, 'rfy': {}, 'rfz': {}, 'rfm': {}}
     for i in range(len(r)):
         r_string = r[i].split(',')
         reaction = map(float, r_string)
@@ -358,7 +358,8 @@ def get_reactions_from_result_files(out_path, step):
             react_dict['rfx'][key] = float(reaction[1])
             react_dict['rfy'][key] = float(reaction[2])
             react_dict['rfz'][key] = float(reaction[3])
-
+            react_dict['rfm'][key] = length_vector([reaction[1], reaction[2], reaction[3]])
+    print 'inside dict', type(react_dict)
     return react_dict
 
 

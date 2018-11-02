@@ -79,6 +79,10 @@ mdl.analyse_and_extract(software='abaqus', fields=['u'], license='research')
 
 # Run (OpenSees)
 
-mdl.analyse_and_extract(software='opensees', fields=['u'])
+# mdl.analyse_and_extract(software='opensees', fields=['u'])
+
+# Run (Ansys)
+
+# mdl.analyse_and_extract(software='ansys', fields=['u'], license='research')
 
 rhino.plot_data(mdl, step='step_load', field='uz', radius=1)
