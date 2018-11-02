@@ -508,40 +508,17 @@ def write_request_node_displacements(path, name, step_name, mode=None):
 def write_constraint_nodes(structure, output_path, filename, displacements):
     cFile = open(os.path.join(output_path, filename), 'a')
 
+    cdict = {'x' : 'UX', 'y' : 'UY', 'z' : 'UZ', 'xx' : 'ROTX', 'yy' : 'ROTY', 'zz' : 'ROTZ'}
     for dkey in displacements:
         components = structure.displacements[dkey].components
-        string = ''
-        if components['x'] == 0:
-            string += 'UX,'
-        else:
-            string += ' ,'
-        if components['y'] == 0:
-            string += 'UY,'
-        else:
-            string += ' ,'
-        if components['z'] == 0:
-            string += 'UZ,'
-        else:
-            string += ' ,'
-        if components['xx'] == 0:
-            string += 'ROTX,'
-        else:
-            string += ' ,'
-        if components['yy'] == 0:
-            string += 'ROTY,'
-        else:
-            string += ' ,'
-        if components['zz'] == 0:
-            string += 'ROTZ,'
-        else:
-            string += '  '
-
         nodes = structure.displacements[dkey].nodes
         if type(nodes) == str:
             nodes = structure.sets[nodes]['selection']
         for node in nodes:
-            string_ = 'D,' + str(int(node) + 1) + ', ,0, , , ,' + string + ' \n'
-            cFile.write(string_)
+            for com in components:
+                if components[com] != None:
+                    string = 'D, {0}, {1}, {2} \n'.format(str(node + 1), cdict[com], components[com])
+                    cFile.write(string)
 
     cFile.write('!\n')
     cFile.write('!\n')
