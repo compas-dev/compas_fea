@@ -43,15 +43,6 @@ def write_static_solve(structure, path, filename, skey):
     cFile.close()
 
 
-def write_request_static_results(path, filename, step_name, fields):
-    write_request_node_displacements(path, filename, step_name)
-    write_request_nodal_stresses(path, filename, step_name)
-    write_request_pricipal_stresses(path, filename, step_name)
-    write_request_shear_stresses(path, filename, step_name)
-    write_request_principal_strains(path, filename, step_name)
-    write_request_reactions(path, filename, step_name)
-
-
 def write_static_results_from_ansys_rst(name, path, fields, step_index=0, step_name='step'):
 
     if type(fields) == str:
@@ -60,6 +51,7 @@ def write_static_results_from_ansys_rst(name, path, fields, step_index=0, step_n
         write_request_node_displacements(path, name, step_name)
     if 's' in fields or 'all' in fields:
         write_request_nodal_stresses(path, name, step_name)
+        # write_request_element_stresses(path, name, step_name)
     if 'sp' in fields or 'all' in fields:
         write_request_pricipal_stresses(path, name, step_name)
     if 'ss' in fields or 'all' in fields:

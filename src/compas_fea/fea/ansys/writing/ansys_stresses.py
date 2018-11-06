@@ -50,6 +50,34 @@ def write_request_nodal_stresses(path, name, step_name):
     cFile.write('!\n')
     cFile.close()
 
+    # attempt to write averaged nodal stresses (does not work on beams?)
+    # fh = open(os.path.join(path, filename), 'a')
+    # fh.write('*get, nnodes, node,, count \n')
+    # fh.write('*dim, s, array, nnodes, 11 \n')
+    # fh.write('! \n')
+
+    # fh.write('*do, i, 1, nnodes \n')
+    # fh.write('s(i,1) = i \n')
+    # fh.write('*get, s(i,2), NODE, s(i,1), S, X \n')
+    # fh.write('*get, s(i,3), NODE, s(i,1), S, Y \n')
+    # fh.write('*get, s(i,4), NODE, s(i,1), S, Z \n')
+    # fh.write('*get, s(i,5), NODE, s(i,1), S, XX \n')
+    # fh.write('*get, s(i,6), NODE, s(i,1), S, YY \n')
+    # fh.write('*get, s(i,7), NODE, s(i,1), S, ZZ \n')
+    # fh.write('*get, s(i,8), NODE, s(i,1), S, 1 \n')
+    # fh.write('*get, s(i,9), NODE, s(i,1), S, 2 \n')
+    # fh.write('*get, s(i,10),NODE, s(i,1), S, 3 \n')
+    # fh.write('*get, s(i,11),NODE, s(i,1), S, EQV \n')
+    # fh.write('*Enddo \n')
+    # fh.write('! \n')
+
+    # fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
+
+    # fh.write('*do,i,1,nnodes \n')
+    # fh.write('*CFWRITE, node S, s(i,1), s(i,2), s(i,3), s(i,4), s(i,5), s(i,6), s(i,7), s(i,8), s(i,9), s(i,10), s(i,11) \n')
+    # fh.write('*Enddo \n')
+    # fh.close()
+
 
 def write_request_pricipal_stresses(path, name, step_name):
     out_path = os.path.join(path, name + '_output')
@@ -186,38 +214,72 @@ def write_request_reactions(path, name, step_name):
     out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'reactions'
-    name = 'nds_r'
+    # name = 'nds_r'
 
+    # cFile = open(os.path.join(path, filename), 'a')
+    # cFile.write('*get,numNodes,node,,count \n')
+    # cFile.write('*set,RFX, \n')
+    # cFile.write('*dim,RFX,array,numNodes,1 \n')
+    # cFile.write('*set,RFY, \n')
+    # cFile.write('*dim,RFY,array,numNodes,1 \n')
+    # cFile.write('*set,RFZ, \n')
+    # cFile.write('*dim,RFZ,array,numNodes,1 \n')
+
+    # cFile.write('*set,RMX, \n')
+    # cFile.write('*dim,RMX,array,numNodes,1 \n')
+    # cFile.write('*set,RMY, \n')
+    # cFile.write('*dim,RMY,array,numNodes,1 \n')
+    # cFile.write('*set,RMZ, \n')
+    # cFile.write('*dim,RMZ,array,numNodes,1 \n')
+
+    # cFile.write('*dim,' + name + ', ,numNodes \n')
+    # cFile.write('*VGET, RFX, node, all, RF, FX,,,2 \n')
+    # cFile.write('*VGET, RFY, node, all, RF, FY,,,2 \n')
+    # cFile.write('*VGET, RFZ, node, all, RF, FZ,,,2 \n')
+    # cFile.write('*VGET, RMX, node, all, RF, MX,,,2 \n')
+    # cFile.write('*VGET, RMY, node, all, RF, MY,,,2 \n')
+    # cFile.write('*VGET, RMZ, node, all, RF, MZ,,,2 \n')
+
+    # cFile.write('*vfill,' + name + '(1),ramp,1,1 \n')
+    # cFile.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
+    # cFile.write('*vwrite, ' + name + '(1), \',\', RFX(1), \',\', RFY(1), \',\', ')
+    # cFile.write('RFZ(1), \',\', RMX(1), \',\', RMY(1), \',\', RMZ(1) \n')
+    # cFile.write('(F9.0, A, ES, A, ES, A, ES, A, ES, A, ES, A, ES) \n')
+    # cFile.write('*cfclose \n')
+    # cFile.write('!\n')
+    # cFile.write('!\n')
+    # cFile.close()
+
+    fh = open(os.path.join(path, filename), 'a')
+    fh.write('*get, nnodes, node,, count \n')
+    fh.write('*dim, r, array, nnodes, 7 \n')
+    fh.write('! \n')
+
+    fh.write('*do, i, 1, nnodes \n')
+    fh.write('r(i,1) = i                         !Collumn 1 is node number \n')
+    fh.write('*get, r(i,2), NODE, r(i,1), RF, FX   !Collumn 2 is RFX \n')
+    fh.write('*get, r(i,3), NODE, r(i,1), RF, FY   !Collumn 3 is RFY \n')
+    fh.write('*get, r(i,4), NODE, r(i,1), RF, FZ   !Collumn 4 is RFZ \n')
+    fh.write('*get, r(i,5), NODE, r(i,1), RF, MX !Collumn 5 is MX \n')
+    fh.write('*get, r(i,6), NODE, r(i,1), RF, MY !Collumn 5 is MY \n')
+    fh.write('*get, r(i,7), NODE, r(i,1), RF, MZ !Collumn 5 is MZ \n')
+    fh.write('*Enddo \n')
+    fh.write('! \n')
+
+    fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
+
+    fh.write('*do,i,1,nnodes \n')
+    fh.write('*CFWRITE, node RF, r(i,1), r(i,2), r(i,3), r(i,4), r(i,5), r(i,6), r(i,7) \n')
+    fh.write('*Enddo \n')
+    fh.close()
+
+
+def write_request_element_stresses(path, name, step_name):
+    # trying something out ...
+    # out_path = os.path.join(path, name + '_output')
+    filename = name + '_extract.txt'
     cFile = open(os.path.join(path, filename), 'a')
-    cFile.write('*get,numNodes,node,,count \n')
-    cFile.write('*set,RFX, \n')
-    cFile.write('*dim,RFX,array,numNodes,1 \n')
-    cFile.write('*set,RFY, \n')
-    cFile.write('*dim,RFY,array,numNodes,1 \n')
-    cFile.write('*set,RFZ, \n')
-    cFile.write('*dim,RFZ,array,numNodes,1 \n')
-
-    cFile.write('*set,RMX, \n')
-    cFile.write('*dim,RMX,array,numNodes,1 \n')
-    cFile.write('*set,RMY, \n')
-    cFile.write('*dim,RMY,array,numNodes,1 \n')
-    cFile.write('*set,RMZ, \n')
-    cFile.write('*dim,RMZ,array,numNodes,1 \n')
-
-    cFile.write('*dim,' + name + ', ,numNodes \n')
-    cFile.write('*VGET, RFX, node, all, RF, FX,,,2 \n')
-    cFile.write('*VGET, RFY, node, all, RF, FY,,,2 \n')
-    cFile.write('*VGET, RFZ, node, all, RF, FZ,,,2 \n')
-    cFile.write('*VGET, RMX, node, all, RF, MX,,,2 \n')
-    cFile.write('*VGET, RMY, node, all, RF, MY,,,2 \n')
-    cFile.write('*VGET, RMZ, node, all, RF, MZ,,,2 \n')
-
-    cFile.write('*vfill,' + name + '(1),ramp,1,1 \n')
-    cFile.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
-    cFile.write('*vwrite, ' + name + '(1), \',\', RFX(1), \',\', RFY(1), \',\', ')
-    cFile.write('RFZ(1), \',\', RMX(1), \',\', RMY(1), \',\', RMZ(1) \n')
-    cFile.write('(F9.0, A, ES, A, ES, A, ES, A, ES, A, ES, A, ES) \n')
-    cFile.write('*cfclose \n')
-    cFile.write('!\n')
-    cFile.write('!\n')
+    cFile.write('! \n')
+    cFile.write('ETABLE, , S, EQV, AVG \n')
+    cFile.write('! \n')
     cFile.close()
