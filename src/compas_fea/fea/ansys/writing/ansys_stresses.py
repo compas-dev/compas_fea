@@ -277,9 +277,57 @@ def write_request_reactions(path, name, step_name):
 def write_request_element_stresses(path, name, step_name):
     # trying something out ...
     # out_path = os.path.join(path, name + '_output')
+    # filename = name + '_extract.txt'
+    # cFile = open(os.path.join(path, filename), 'a')
+    # cFile.write('! \n')
+    # cFile.write('ETABLE, , S, EQV, AVG \n')
+    # cFile.write('! \n')
+    # cFile.close()
+
+    # out_path = os.path.join(path, name + '_output')
+    # filename = name + '_extract.txt'
+    # fname = str(step_name) + '_' + 'elem_stresses'
+    # fh = open(os.path.join(path, filename), 'a')
+    # fh.write('*get, nelem, elem,, count \n')
+    # fh.write('*dim, es, array, nelem, 4 \n')
+    # fh.write('! \n')
+
+    # fh.write('*do, i, 1, nelem \n')
+    # fh.write('es(i,1) = i \n')
+    # fh.write('*get, es(i,2), SECR, es(i,1), S, X, MAX \n')
+    # fh.write('*get, es(i,3), SECR, es(i,1), S, Y, MAX \n')
+    # fh.write('*get, es(i,4), SECR, es(i,1), S, Z, MAX \n')
+    # fh.write('*Enddo \n')
+    # fh.write('! \n')
+
+    # fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
+
+    # fh.write('*do,i,1,nelem \n')
+    # fh.write('*CFWRITE, elem S, es(i,1), es(i,2), es(i,3), es(i,4) \n')
+    # fh.write('*Enddo \n')
+    # fh.close()
+
+    out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
-    cFile = open(os.path.join(path, filename), 'a')
-    cFile.write('! \n')
-    cFile.write('ETABLE, , S, EQV, AVG \n')
-    cFile.write('! \n')
-    cFile.close()
+    fname = str(step_name) + '_' + 'elem_axial'
+    fh = open(os.path.join(path, filename), 'a')
+    fh.write('ETABLE, enum,  E,  \n')
+    fh.write('ETABLE, beamsI, SMISC, 1 \n')
+    fh.write('ETABLE, beamsJ, SMISC, 14 \n')
+
+    fh.write('*get, nelem, elem,, count \n')
+    fh.write('*dim, eaxial, array, nelem, 3 \n')
+    # fh.write('*dim, enum, char, nelem, 1 \n')
+
+    fh.write('*do,i,1,nelem \n')
+    fh.write('*get, eaxial(i,1), ETAB, 1, ELEM, i          \n')
+    fh.write('*get, eaxial(i,2), ETAB, 2, ELEM, i \n')
+    fh.write('*get, eaxial(i,3), ETAB, 3, ELEM, i \n')
+    fh.write('*Enddo \n')
+
+    fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
+    fh.write('*do,i,1,nelem \n')
+    fh.write('*CFWRITE, axial, eaxial(i,1), eaxial(i,2), eaxial(i,3) \n')
+    fh.write('*Enddo \n')
+
+    fh.close()

@@ -65,14 +65,20 @@ mdl.summary()
 
 # Run (Sofistik)
 
-mdl.write_input_file(software='sofistik')
+# mdl.write_input_file(software='sofistik')
 
 # Run (Abaqus)
 
-mdl.analyse_and_extract(software='abaqus', fields=['u'], license='research')
+# mdl.analyse_and_extract(software='abaqus', fields=['u'], license='research')
 
 # Run (OpenSees)
 
-mdl.analyse_and_extract(software='opensees', fields=['u'])
+# mdl.analyse_and_extract(software='opensees', fields=['u'])
 
-rhino.plot_data(mdl, step='step_load', field='um')
+# rhino.plot_data(mdl, step='step_load', field='um')
+
+# Run (Ansys)
+
+mdl.analyse_and_extract(software='ansys', fields=['s'], license='research')
+
+# rhino.plot_data(mdl, step='step_load', field='um')

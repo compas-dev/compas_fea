@@ -50,8 +50,8 @@ def write_static_results_from_ansys_rst(name, path, fields, step_index=0, step_n
     if 'u' in fields or 'all' in fields:
         write_request_node_displacements(path, name, step_name)
     if 's' in fields or 'all' in fields:
-        write_request_nodal_stresses(path, name, step_name)
-        # write_request_element_stresses(path, name, step_name)
+        # write_request_nodal_stresses(path, name, step_name)
+        write_request_element_stresses(path, name, step_name)
     if 'sp' in fields or 'all' in fields:
         write_request_pricipal_stresses(path, name, step_name)
     if 'ss' in fields or 'all' in fields:

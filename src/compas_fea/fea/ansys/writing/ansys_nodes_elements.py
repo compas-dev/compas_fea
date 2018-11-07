@@ -98,6 +98,9 @@ def write_set_element_material(output_path, filename, mat_index, elem_type, elem
     cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('ET,' + str(elem_type_index) + ',' + str(elem_type) + ' \n')
     cFile.write('TYPE,' + str(elem_type_index) + '\n')
+    cFile.write('KEYOPT, {0},  7, 2 \n'.format(str(elem_type_index)))
+    cFile.write('KEYOPT, {0},  9, 2 \n'.format(str(elem_type_index)))
+    # cFile.write('KEYOPT, {0}, 15, 1 \n'.format(str(elem_type_index)))
     if mat_index:
         cFile.write('MAT,' + str(mat_index + 1) + '\n')
     cFile.write('!\n')
@@ -239,6 +242,7 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
         raise ValueError(sec_type + ' Type of section is not yet implemented for Ansys')
 
     cFile = open(os.path.join(output_path, filename), 'a')
+
     for ekey in ekeys:
         element = list(structure.elements[ekey].nodes)
         # print structure.elements[ekey]
