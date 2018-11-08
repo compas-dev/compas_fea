@@ -9,10 +9,9 @@ __license__    = 'MIT License'
 __email__      = 'mendez@arch.ethz.ch'
 
 
-et_dict = {}
-
-
 def write_elements(structure, output_path, filename):
+
+    structure.et_dict = {}
 
     # combine elementa and virtual elements ------------------------------------
     elements = {}
@@ -98,8 +97,9 @@ def write_set_element_material(output_path, filename, mat_index, elem_type, elem
     cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('ET,' + str(elem_type_index) + ',' + str(elem_type) + ' \n')
     cFile.write('TYPE,' + str(elem_type_index) + '\n')
-    cFile.write('KEYOPT, {0},  7, 2 \n'.format(str(elem_type_index)))
-    cFile.write('KEYOPT, {0},  9, 2 \n'.format(str(elem_type_index)))
+    if elem_type == 'BEAM188':
+        cFile.write('KEYOPT, {0},  7, 2 \n'.format(str(elem_type_index)))
+        cFile.write('KEYOPT, {0},  9, 2 \n'.format(str(elem_type_index)))
     # cFile.write('KEYOPT, {0}, 15, 1 \n'.format(str(elem_type_index)))
     if mat_index:
         cFile.write('MAT,' + str(mat_index + 1) + '\n')
@@ -115,7 +115,7 @@ def write_shell4_elements(structure, output_path, filename, ekeys, section, mate
     ekeys = sorted(ekeys, key=int)
     mat_index = structure.materials[material].index
     sec_index = structure.sections[section].index
-    etkey = et_dict.setdefault('SHELL181', len(et_dict) + 1)
+    etkey = structure.et_dict.setdefault('SHELL181', len(structure.et_dict) + 1)
     write_set_element_material(output_path, filename, mat_index, 'SHELL181', etkey)
 
     thickness = structure.sections[section].geometry['t']
@@ -139,7 +139,7 @@ def write_shell4_elements(structure, output_path, filename, ekeys, section, mate
 def write_solid_elements(structure, output_path, filename, ekeys, material):
     ekeys = sorted(ekeys, key=int)
     mat_index = structure.materials[material].index
-    etkey = et_dict.setdefault('SOLID185', len(et_dict) + 1)
+    etkey = structure.et_dict.setdefault('SOLID185', len(structure.et_dict) + 1)
     write_set_element_material(output_path, filename, mat_index, 'SOLID185', etkey)
 
     cFile = open(os.path.join(output_path, filename), 'a')
@@ -170,7 +170,7 @@ def write_surface_elements(structure, output_path, filename, ekeys):
     in a given ansys input file. These shell elements require 4 nodes.
     """
     ekeys = sorted(ekeys, key=int)
-    etkey = et_dict.setdefault('SURF154', len(et_dict) + 1)
+    etkey = structure.et_dict.setdefault('SURF154', len(structure.et_dict) + 1)
     write_set_element_material(output_path, filename, None, 'SURF154', etkey)
     write_set_srf_realconstant(output_path, filename, etkey)
 
@@ -208,7 +208,7 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
     mat_index = structure.materials[material].index
     sec_index = structure.sections[section].index
 
-    etkey = et_dict.setdefault('BEAM188', len(et_dict) + 1)
+    etkey = structure.et_dict.setdefault('BEAM188', len(structure.et_dict) + 1)
     write_set_element_material(output_path, filename, mat_index, 'BEAM188', etkey)
     sec_type = structure.sections[section].__name__
     if sec_type == 'PipeSection':
@@ -338,7 +338,7 @@ def write_tie_elements(structure, output_path, filename, ekeys, section, materia
     mat_index = structure.materials[material].index
     sec_index = structure.sections[section].index
 
-    etkey = et_dict.setdefault('LINK180', len(et_dict) + 1)
+    etkey = structure.et_dict.setdefault('LINK180', len(structure.et_dict) + 1)
     write_set_element_material(output_path, filename, mat_index, 'LINK180', etkey)
 
     # axial_force =  0 for tension and compression, 1 tension only, 2 compression only
@@ -467,7 +467,12 @@ def write_request_element_nodes(path, name):
     cFile.close()
 
 
-def write_request_node_displacements(path, name, step_name, mode=None):
+def write_request_node_displacements(structure, step_index, mode=None):
+
+    name = structure.name
+    path = structure.path
+    step_name = structure.steps_order[step_index]
+
     out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     if mode:
@@ -814,7 +819,7 @@ def write_spring_elements_nodal(structure, out_path, filename, ekeys, section):
     kdict = section.stiffness
     fh = open(os.path.join(out_path, filename), 'a')
     for axis in kdict:
-        etkey = et_dict.setdefault('COMBIN14_' + axis, len(et_dict) + 1)
+        etkey = structure.et_dict.setdefault('COMBIN14_' + axis, len(structure.et_dict) + 1)
         fh.write('ET, {0}, COMBIN14 \n'.format(etkey))
         fh.write('KEYOPT, {0}, 1, 0 \n'.format(etkey))
         fh.write('KEYOPT, {0}, 2, {1} \n'.format(etkey, axis_dict[axis]))

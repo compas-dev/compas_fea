@@ -230,8 +230,7 @@ def write_results_from_rst(structure, fields, steps, license='teaching', sets=No
         stype = structure.steps[skey].type
         if stype == 'static':
             set_current_step(path, filename, step_index=step_index)
-            write_static_results_from_ansys_rst(name, path, fields,
-                                                step_index=step_index, step_name=skey)
+            write_static_results_from_ansys_rst(structure, fields, step_index=step_index)
         elif stype == 'modal':
             num_modes = structure.steps[skey].modes
             write_modal_results_from_ansys_rst(name, path, fields, num_modes,

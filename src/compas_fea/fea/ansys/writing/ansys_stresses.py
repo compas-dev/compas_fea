@@ -6,7 +6,12 @@ __license__    = 'MIT License'
 __email__      = 'mendez@arch.ethz.ch'
 
 
-def write_request_nodal_stresses(path, name, step_name):
+def write_request_nodal_stresses(structure, step_index):
+
+    name = structure.name
+    path = structure.path
+    step_name = structure.steps_order[step_index]
+
     out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'nodal_stresses'
@@ -274,7 +279,15 @@ def write_request_reactions(path, name, step_name):
     fh.close()
 
 
-def write_request_element_stresses(path, name, step_name):
+def write_request_element_stresses(structure, step_index):
+
+    for et in structure.et_dict:
+        etkey = structure.et_dict[et]
+        if et == 'BEAM188':
+            write_request_beam_stresses(structure, step_index, etkey)
+        elif et == 'SHELL181':
+            write_request_shell_stresses(structure, step_index, etkey)
+
     # trying something out ...
     # out_path = os.path.join(path, name + '_output')
     # filename = name + '_extract.txt'
@@ -307,27 +320,82 @@ def write_request_element_stresses(path, name, step_name):
     # fh.write('*Enddo \n')
     # fh.close()
 
+
+def write_request_beam_stresses(structure, step_index, etkey):
+
+    name = structure.name
+    path = structure.path
+    step_name = structure.steps_order[step_index]
+
     out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
-    fname = str(step_name) + '_' + 'elem_axial'
+    fname = str(step_name) + '_' + 'beam_axial'
+
     fh = open(os.path.join(path, filename), 'a')
-    fh.write('ETABLE, enum,  E,  \n')
-    fh.write('ETABLE, beamsI, SMISC, 1 \n')
-    fh.write('ETABLE, beamsJ, SMISC, 14 \n')
+    fh.write('ESEL, S, TYPE, , {0}, {0} \n'.format(etkey))
 
     fh.write('*get, nelem, elem,, count \n')
-    fh.write('*dim, eaxial, array, nelem, 3 \n')
-    # fh.write('*dim, enum, char, nelem, 1 \n')
+
+    fh.write('*dim, enum, array, nelem, 1 \n')
+    fh.write('*vget, enum, ELEM, , ELIST \n')
+
+    fh.write('ETABLE, , SMISC, 1 \n')
+    fh.write('ETABLE, , SMISC, 14 \n')
+
+    fh.write('*dim, eaxial, array, nelem, 2 \n')
 
     fh.write('*do,i,1,nelem \n')
-    fh.write('*get, eaxial(i,1), ETAB, 1, ELEM, i          \n')
-    fh.write('*get, eaxial(i,2), ETAB, 2, ELEM, i \n')
-    fh.write('*get, eaxial(i,3), ETAB, 3, ELEM, i \n')
+    fh.write('*get, eaxial(i,1), ETAB, 1, ELEM, enum(i) \n')
+    fh.write('*get, eaxial(i,2), ETAB, 2, ELEM, enum(i) \n')
     fh.write('*Enddo \n')
 
     fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
     fh.write('*do,i,1,nelem \n')
-    fh.write('*CFWRITE, axial, eaxial(i,1), eaxial(i,2), eaxial(i,3) \n')
+    fh.write('*CFWRITE, axial, enum(i,1), eaxial(i,1), eaxial(i,2) \n')
+    fh.write('*Enddo \n')
+    fh.write('! \n')
+    fh.write('ESEL, ALL \n')
+    fh.write('ETABLE, ERAS \n')
+    fh.write('! \n')
+
+    fh.close()
+
+
+def write_request_shell_stresses(structure, step_index, etkey):
+
+    name = structure.name
+    path = structure.path
+    step_name = structure.steps_order[step_index]
+
+    out_path = os.path.join(path, name + '_output')
+    filename = name + '_extract.txt'
+    fname = str(step_name) + '_' + 'shell_axial'
+
+    fh = open(os.path.join(path, filename), 'a')
+
+    fh.write('ESEL, S, TYPE, , {0}, {0} \n'.format(etkey))
+
+    fh.write('*get, nelem, elem,, count \n')
+
+    fh.write('*dim, enum, array, nelem, 1 \n')
+    fh.write('*vget, enum, ELEM, , ELIST \n')
+
+    fh.write('ETABLE, , SMISC, 1 \n')
+    fh.write('ETABLE, , SMISC, 2 \n')
+
+    fh.write('*dim, eaxial, array, nelem, 2 \n')
+
+    fh.write('*do,i,1,nelem \n')
+    fh.write('*get, eaxial(i,1), ETAB, 1, ELEM, enum(i) \n')
+    fh.write('*get, eaxial(i,2), ETAB, 2, ELEM, enum(i)\n')
     fh.write('*Enddo \n')
 
+    fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
+    fh.write('*do,i,1,nelem \n')
+    fh.write('*CFWRITE, axial, enum(i,1), eaxial(i,1), eaxial(i,2) \n')
+    fh.write('*Enddo \n')
+    fh.write('! \n')
+    fh.write('ESEL, ALL \n')
+    fh.write('ETABLE, ERAS \n')
+    fh.write('! \n')
     fh.close()

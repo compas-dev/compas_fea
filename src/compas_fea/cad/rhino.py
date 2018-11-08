@@ -218,7 +218,6 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                     elset.add(ekey)
 
             elif mesh_type and rs.IsMesh(guid):
-
                 vertices = rs.MeshVertices(guid)
                 nodes = [structure.add_node(vertex) for vertex in vertices]
                 added_nodes.update(nodes)
