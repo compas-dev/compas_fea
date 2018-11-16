@@ -3,21 +3,20 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from compas.datastructures.mesh import Mesh
-from compas.datastructures import Network
-from compas.utilities import XFunc
-
 try:
     from compas_rhino.geometry import RhinoMesh
     from compas_rhino.helpers.mesh import mesh_from_guid
 except:
     pass
 
+from compas.datastructures.mesh import Mesh
+from compas.datastructures import Network
 from compas.geometry import add_vectors
 from compas.geometry import cross_vectors
 from compas.geometry import length_vector
 from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
+from compas.utilities import XFunc
 
 from compas_fea import utilities
 from compas_fea.utilities import colorbar
@@ -42,22 +41,22 @@ __email__     = 'liew@arch.ethz.ch'
 
 __all__ = [
     'add_element_set',
-    'add_tets_from_mesh',
     'add_node_set',
-    'discretise_mesh',
     'add_nodes_elements_from_layers',
     'add_sets_from_layers',
+    'add_tets_from_mesh',
+    'discretise_mesh',
     'mesh_extrude',
     'network_from_lines',
     'ordered_network',
-    'draw_volmesh',
-    'plot_axes',
-    'plot_mode_shapes',
-    'plot_data',
-    'plot_voxels',
-    'plot_principal_stresses',
     'plot_reaction_forces',
     'plot_concentrated_forces',
+    'plot_mode_shapes',
+    'plot_volmesh',
+    'plot_axes',
+    'plot_data',
+    'plot_principal_stresses',
+    'plot_voxels',
 ]
 
 
@@ -300,6 +299,229 @@ def add_sets_from_layers(structure, layers):
                 print('***** Layer {0} contained a mixture of points and elements, set not created *****'.format(name))
 
 
+def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, layer='Default', thermal=False):
+
+    """ Adds tetrahedron elements from a mesh in Rhino to the Structure object.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    name : str
+        Name for the element set of tetrahedrons.
+    mesh : guid
+        The mesh in Rhino representing the outer surface.
+    draw_tets : str
+        Layer to draw tetrahedrons on.
+    volume : float
+        Maximum volume for each tet.
+    thermal : bool
+        Thermal properties on or off.
+
+    Returns
+    -------
+    None
+
+    """
+
+    rhinomesh = RhinoMesh(mesh)
+    vertices  = rhinomesh.get_vertex_coordinates()
+    faces     = [face[:3] for face in rhinomesh.get_face_vertices()]
+
+    basedir = utilities.__file__.split('__init__.py')[0]
+    xfunc = XFunc('tets', basedir=basedir, tmpdir=structure.path)
+    xfunc.funcname = 'meshing.tets_from_vertices_faces'
+
+    try:
+        tets_points, tets_elements = xfunc(vertices=vertices, faces=faces, volume=volume)
+
+        for point in tets_points:
+            structure.add_node(point)
+
+        ekeys = []
+
+        for element in tets_elements:
+            nodes = [structure.check_node_exists(tets_points[i]) for i in element]
+            ekey  = structure.add_element(nodes=nodes, type='TetrahedronElement', thermal=thermal)
+            ekeys.append(ekey)
+
+        structure.add_set(name=name, type='element', selection=ekeys)
+
+        if draw_tets:
+
+            rs.EnableRedraw(False)
+            rs.DeleteObjects(rs.ObjectsByLayer(draw_tets))
+            rs.CurrentLayer(draw_tets)
+
+            tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
+
+            for i, points in enumerate(tets_elements):
+                xyz = [tets_points[j] for j in points]
+                rs.AddMesh(vertices=xyz, face_vertices=tet_faces)
+
+            rs.EnableRedraw(True)
+
+        print('***** MeshPy (TetGen) successfull *****')
+
+    except:
+
+        print('***** Error using MeshPy (TetGen) or drawing Tets *****')
+
+
+def discretise_mesh(structure, mesh, layer, target, min_angle=15, factor=1):
+
+    """ Discretise a mesh from an input triangulated coarse mesh into small denser meshes.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    mesh : guid
+        The guid of the Rhino input mesh.
+    layer : str
+        Layer name to draw results.
+    target : float
+        Target length of each triangle.
+    min_angle : float
+        Minimum internal angle of triangles.
+    factor : float
+        Factor on the maximum area of each triangle.
+
+    Returns
+    -------
+    None
+
+    """
+
+    rhinomesh = RhinoMesh(mesh)
+    vertices  = rhinomesh.get_vertex_coordinates()
+    faces     = [face[:3] for face in rhinomesh.get_face_vertices()]
+
+    basedir = utilities.__file__.split('__init__.py')[0]
+    xfunc = XFunc('discretise', basedir=basedir, tmpdir=structure.path)
+    xfunc.funcname = 'meshing.discretise_faces'
+
+    try:
+
+        points, tris = xfunc(vertices=vertices, faces=faces, target=target, min_angle=min_angle, factor=factor)
+
+        rs.CurrentLayer(rs.AddLayer(layer))
+        rs.DeleteObjects(rs.ObjectsByLayer(layer))
+        rs.EnableRedraw(False)
+
+        for pts, tri in zip(points, tris):
+            mesh_faces = []
+
+            for i in tri:
+                face_ = i + [i[-1]]
+                mesh_faces.append(face_)
+            rs.AddMesh(pts, mesh_faces)
+
+        rs.EnableRedraw(True)
+
+    except:
+
+        print('***** Error using MeshPy (Triangle) or drawing faces *****')
+
+
+def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name='', blocks_name='', points_name='',
+                 plot_mesh=False, plot_links=False, plot_blocks=False, plot_points=False):
+
+    """ Extrudes a Rhino mesh and adds/creates elements.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    guid : guid
+        Rhino mesh guid.
+    layers : int
+        Number of layers.
+    thickness : float
+        Layer thickness.
+    mesh_name : str
+        Name of set for mesh on final surface.
+    links_name : str
+        Name of set for adding links along extrusion.
+    blocks_name : str
+        Name of set for solid elements.
+    points_name : str
+        Name of aded points.
+    plot_mesh : bool
+        Plot outer mesh.
+    plot_links : bool
+        Plot links.
+    plot_blocks : bool
+        Plot blocks.
+    plot_points : bool
+        Plot end points.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    - Extrusion is along the mesh vertex normals.
+
+    """
+
+    mesh = mesh_from_guid(Mesh(), guid)
+    extrude_mesh(structure=structure, mesh=mesh, layers=layers, thickness=thickness, mesh_name=mesh_name,
+                 links_name=links_name, blocks_name=blocks_name)
+
+    block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
+    xyz = structure.nodes_xyz()
+
+    rs.EnableRedraw(False)
+
+    if plot_blocks:
+
+        rs.CurrentLayer(rs.AddLayer(blocks_name))
+        rs.DeleteObjects(rs.ObjectsByLayer(blocks_name))
+
+        for i in structure.sets[blocks_name]['selection']:
+            nodes = structure.elements[i].nodes
+            xyz   = structure.nodes_xyz(nodes)
+            rs.AddMesh(xyz, block_faces)
+
+    if plot_mesh:
+
+        rs.CurrentLayer(rs.AddLayer(mesh_name))
+        rs.DeleteObjects(rs.ObjectsByLayer(mesh_name))
+
+        faces = []
+        for i in structure.sets[mesh_name]['selection']:
+            enodes = structure.elements[i].nodes
+            if len(enodes) == 3:
+                enodes.append(enodes[-1])
+            faces.append(enodes)
+        rs.AddMesh(xyz, faces)
+
+    if plot_links:
+
+        rs.CurrentLayer(rs.AddLayer(links_name))
+        rs.DeleteObjects(rs.ObjectsByLayer(links_name))
+
+        if plot_points:
+            rs.CurrentLayer(rs.AddLayer(points_name))
+            rs.DeleteObjects(rs.ObjectsByLayer(points_name))
+
+        for i in structure.sets[links_name]['selection']:
+
+            nodes = structure.elements[i].nodes
+            xyz = structure.nodes_xyz(nodes)
+            rs.CurrentLayer(links_name)
+            rs.AddLine(xyz[0], xyz[1])
+
+            if plot_points:
+                rs.CurrentLayer(points_name)
+                rs.AddPoint(xyz[1])
+
+    rs.EnableRedraw(True)
+    rs.CurrentLayer(rs.AddLayer('Default'))
+
+
 def network_from_lines(guids=[], layer=None):
 
     """ Creates a Network datastructure object from a list of Rhino curve guids.
@@ -463,104 +685,6 @@ def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
     rs.EnableRedraw(True)
 
 
-def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name='', blocks_name='', points_name='',
-                 plot_mesh=False, plot_links=False, plot_blocks=False, plot_points=False):
-
-    """ Extrudes a Rhino mesh and adds/creates elements.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object to update.
-    guid : guid
-        Rhino mesh guid.
-    layers : int
-        Number of layers.
-    thickness : float
-        Layer thickness.
-    mesh_name : str
-        Name of set for mesh on final surface.
-    links_name : str
-        Name of set for adding links along extrusion.
-    blocks_name : str
-        Name of set for solid elements.
-    points_name : str
-        Name of aded points.
-    plot_mesh : bool
-        Plot outer mesh.
-    plot_links : bool
-        Plot links.
-    plot_blocks : bool
-        Plot blocks.
-    plot_points : bool
-        Plot end points.
-
-    Returns
-    -------
-    None
-
-    Notes
-    -----
-    - Extrusion is along the mesh vertex normals.
-
-    """
-
-    mesh = mesh_from_guid(Mesh(), guid)
-    extrude_mesh(structure=structure, mesh=mesh, layers=layers, thickness=thickness, mesh_name=mesh_name,
-                 links_name=links_name, blocks_name=blocks_name)
-
-    block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
-    xyz = structure.nodes_xyz()
-
-    rs.EnableRedraw(False)
-
-    if plot_blocks:
-
-        rs.CurrentLayer(rs.AddLayer(blocks_name))
-        rs.DeleteObjects(rs.ObjectsByLayer(blocks_name))
-
-        for i in structure.sets[blocks_name]['selection']:
-            nodes = structure.elements[i].nodes
-            xyz   = structure.nodes_xyz(nodes)
-            rs.AddMesh(xyz, block_faces)
-
-    if plot_mesh:
-
-        rs.CurrentLayer(rs.AddLayer(mesh_name))
-        rs.DeleteObjects(rs.ObjectsByLayer(mesh_name))
-
-        faces = []
-        for i in structure.sets[mesh_name]['selection']:
-            enodes = structure.elements[i].nodes
-            if len(enodes) == 3:
-                enodes.append(enodes[-1])
-            faces.append(enodes)
-        rs.AddMesh(xyz, faces)
-
-    if plot_links:
-
-        rs.CurrentLayer(rs.AddLayer(links_name))
-        rs.DeleteObjects(rs.ObjectsByLayer(links_name))
-
-        if plot_points:
-            rs.CurrentLayer(rs.AddLayer(points_name))
-            rs.DeleteObjects(rs.ObjectsByLayer(points_name))
-
-        for i in structure.sets[links_name]['selection']:
-
-            nodes = structure.elements[i].nodes
-            xyz = structure.nodes_xyz(nodes)
-            rs.CurrentLayer(links_name)
-            rs.AddLine(xyz[0], xyz[1])
-
-            if plot_points:
-                rs.CurrentLayer(points_name)
-                rs.AddPoint(xyz[1])
-
-    rs.EnableRedraw(True)
-    rs.CurrentLayer(rs.AddLayer('Default'))
-
-
 def plot_mode_shapes(structure, step, layer=None, scale=1.0, radius=1):
 
     """ Plots modal shapes from structure.results.
@@ -588,81 +712,25 @@ def plot_mode_shapes(structure, step, layer=None, scale=1.0, radius=1):
         layer = step + '_mode_'
 
     try:
-        iter = structure.results[step]['frequencies']
+        it = structure.results[step]['frequencies']
     except:
-        iter = structure.results[step]['info']['description']
+        it = structure.results[step]['info']['description']
 
-    if isinstance(iter, list):
-        for c, fk in enumerate(iter, 1):
+    if isinstance(it, list):
+        for c, fk in enumerate(it, 1):
             layerk = layer + str(c)
             plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=c, radius=radius)
 
-    elif isinstance(iter, dict):
-        for mode in iter:
+    elif isinstance(it, dict):
+        for mode in it:
             print(mode)
             layerk = layer + str(mode)
             plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=mode, radius=radius)
 
 
-def discretise_mesh(structure, guid, layer, target, min_angle=15, factor=1, iterations=50):
+def plot_volmesh(volmesh, layer=None, draw_cells=True):
 
-    """ Discretise a mesh from an input triangulated coarse mesh guid into small denser meshes.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object.
-    guid : guid
-        guid of the Rhino input mesh.
-    layer : str
-        Layer name to draw results.
-    target : float
-        Target length of each triangle.
-    min_angle : float
-        Minimum internal angle of triangles.
-    factor : float
-        Factor on the maximum area of each triangle.
-    iterations : int
-        Number of iterations per face.
-
-    Returns
-    -------
-    None
-
-    """
-
-    rhinomesh = RhinoMesh(guid)
-    pts = rhinomesh.get_vertex_coordinates()
-    fcs = [face[:3] for face in rhinomesh.get_face_vertices()]
-
-    basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc('discretise', basedir=basedir, tmpdir=structure.path)
-    xfunc.funcname = 'functions.discretise_faces'
-
-    try:
-        vertices, faces = xfunc(vertices=pts, faces=fcs, target=target, min_angle=min_angle, factor=factor,
-                                iterations=iterations)
-
-        rs.CurrentLayer(rs.AddLayer(layer))
-        rs.DeleteObjects(rs.ObjectsByLayer(layer))
-        rs.EnableRedraw(False)
-
-        for points, face in zip(vertices, faces):
-            mesh_faces = []
-            for i in face:
-                face_ = i + [i[-1]]
-                mesh_faces.append(face_)
-            rs.AddMesh(points, mesh_faces)
-
-        rs.EnableRedraw(True)
-
-    except:
-        '***** Mesh discretisation failed *****'
-
-
-def draw_volmesh(volmesh, layer=None, draw_cells=True):
-
-    """ Draw a volmesh datastructure.
+    """ Plot a volmesh datastructure.
 
     Parameters
     ----------
@@ -699,101 +767,6 @@ def draw_volmesh(volmesh, layer=None, draw_cells=True):
             faces.append(face)
         mesh = rs.AddMesh(vertices, faces)
         return mesh
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, layer='Default', acoustic=False,
-                       thermal=False):
-
-    """ Adds tetrahedron elements from a Rhino mesh to the Structure object.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object to update.
-    name : str
-        Name for the element set of tetrahedrons.
-    mesh : obj
-        The Rhino mesh representing the outer surface.
-    draw_tets : bool
-        Draw the generated tetrahedrons.
-    volume : float
-        Maximum volume for each tet.
-    layer : str
-        Layer to draw tetrahedrons if draw_tets=True.
-    acoustic : bool
-        Acoustic properties on or off.
-    thermal : bool
-        Thermal properties on or off.
-
-    Returns
-    -------
-    None
-        Nodes and elements are updated in the Structure object.
-
-    """
-
-    rhinomesh = RhinoMesh(mesh)
-    vertices = rhinomesh.get_vertex_coordinates()
-    faces = [face[:3] for face in rhinomesh.get_face_vertices()]
-
-    basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc('tets', basedir=basedir, tmpdir=structure.path)
-    xfunc.funcname = 'functions.tets_from_vertices_faces'
-
-    try:
-        tets_points, tets_elements = xfunc(vertices=vertices, faces=faces, volume=volume)
-
-        for point in tets_points:
-            structure.add_node(point)
-
-        ekeys = []
-        for element in tets_elements:
-            nodes = [structure.check_node_exists(tets_points[i]) for i in element]
-            ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', acoustic=acoustic, thermal=thermal)
-            ekeys.append(ekey)
-        structure.add_set(name=name, type='element', selection=ekeys)
-
-        if draw_tets:
-            rs.EnableRedraw(False)
-            rs.DeleteObjects(rs.ObjectsByLayer(layer))
-            rs.CurrentLayer(layer)
-            tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
-            for i, points in enumerate(tets_elements):
-                xyz = [tets_points[j] for j in points]
-                rs.AddMesh(vertices=xyz, face_vertices=tet_faces)
-        rs.EnableRedraw(True)
-
-    except:
-        print('***** Error using MeshPy or drawing Tets *****')
 
 
 def plot_axes(xyz, e11, e22, e33, layer, sc=1):
@@ -988,6 +961,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         rs.MeshVertexColors(id, colors)
 
         h = 0.4 * s
+
         for i in range(5):
             x0 = xmin + 1.2 * s
             yu = ymin + (5.8 + i) * s
@@ -996,8 +970,10 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
             vl = float(-max(eabs, fabs) * (i + 1) / 5.)
             rs.AddText('{0:.5g}'.format(vu), [x0, yu, 0], height=h)
             rs.AddText('{0:.5g}'.format(vl), [x0, yl, 0], height=h)
+
         rs.AddText('0', [x0, ymin + 4.8 * s, 0], height=h)
         rs.AddText('Step:{0}   Field:{1}'.format(step, field), [xmin, ymin + 12 * s, 0], height=h)
+
         if mode != '':
             try:
                 freq = str(round(structure.results[step]['frequencies'][mode - 1], 3))
@@ -1012,11 +988,78 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         rs.EnableRedraw(True)
 
     except:
+
         print('\n***** Error encountered during data processing or plotting *****')
 
 
-def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean', nodal='mean',
-                vdx=None, mode='', plot='vtk'):
+def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None):
+
+    """ Plots the principal stresses of the elements.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    ptype : str
+        'max' or 'min' for maximum or minimum principal stresses.
+    scale : float
+        Scale on the length of the line markers.
+    rotate : int
+        Rotate lines by 90 deg, 0 or 1.
+    layer : str
+        Layer name for plotting.
+
+    Returns
+    -------
+    None
+
+    Notes
+    -----
+    - Currently an alpha script and only for triangular shell elements in Abaqus.
+    - Centroids are taken on the undeformed geometry.
+
+    """
+
+    data    = structure.results[step]['element']
+    basedir = utilities.__file__.split('__init__.py')[0]
+    xfunc   = XFunc('principal_stresses', basedir=basedir, tmpdir=structure.path)
+    xfunc.funcname = 'functions.principal_stresses'
+    result  = xfunc(data, ptype, scale, rotate)
+
+    try:
+
+        vec1, vec5, pr1, pr5, pmax = result
+
+        if not layer:
+            layer = '{0}_principal_{1}'.format(step, ptype)
+        rs.CurrentLayer(rs.AddLayer(layer))
+        rs.DeleteObjects(rs.ObjectsByLayer(layer))
+        rs.EnableRedraw(False)
+
+        centroids = [structure.element_centroid(i) for i in sorted(structure.elements, key=int)]
+
+        for c, centroid in enumerate(centroids):
+
+            v1   = vec1[c]
+            v5   = vec5[c]
+            id1  = rs.AddLine(add_vectors(centroid, scale_vector(v1, -1)), add_vectors(centroid, v1))
+            id5  = rs.AddLine(add_vectors(centroid, scale_vector(v5, -1)), add_vectors(centroid, v5))
+            col1 = colorbar(pr1[c] / pmax, input='float', type=255)
+            col5 = colorbar(pr5[c] / pmax, input='float', type=255)
+
+            rs.ObjectColor(id1, col1)
+            rs.ObjectColor(id5, col5)
+
+        rs.EnableRedraw(True)
+
+    except:
+
+        print('\n***** Error calculating or plotting principal stresses *****')
+
+
+def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean', nodal='mean', vdx=None, mode=''):
 
     """ Voxel 4D visualisation.
 
@@ -1038,8 +1081,6 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
         Voxel spacing.
     mode : int
         mode or frequency number to plot, in case of modal, harmonic or buckling analysis.
-    plot : str
-        Plot voxels with 'vtk'.
 
     Returns
     -------
@@ -1049,10 +1090,11 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
 
     # Node and element data
 
-    nodes = structure.nodes_xyz()
-    elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
+    xyz        = structure.nodes_xyz()
+    elements   = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
     nodal_data = structure.results[step]['nodal']
-    nkeys = sorted(structure.nodes, key=int)
+    nkeys      = sorted(structure.nodes, key=int)
+
     ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
     uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
     uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
@@ -1060,6 +1102,7 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
     try:
         data = [nodal_data[field + str(mode)][key] for key in nkeys]
         dtype = 'nodal'
+
     except(Exception):
         data = structure.results[step]['element'][field]
         dtype = 'element'
@@ -1069,7 +1112,7 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
     basedir = utilities.__file__.split('__init__.py')[0]
     xfunc = XFunc('postprocess', basedir=basedir, tmpdir=structure.path)
     xfunc.funcname = 'functions.postprocess'
-    result = xfunc(nodes, elements, ux, uy, uz, data, dtype, 1, cbar, 255, iptype, nodal)
+    result = xfunc(xyz, elements, ux, uy, uz, data, dtype, 1, cbar, 255, iptype, nodal)
 
     try:
         toc, U, cnodes, fabs, fscaled, celements, eabs = result
@@ -1081,72 +1124,17 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
     try:
         xfunc = XFunc('voxels', basedir=basedir, tmpdir=structure.path)
         xfunc.funcname = 'functions.plotvoxels'
-        xfunc(values=fscaled, U=U, vdx=vdx, plot=plot)
+        xfunc(values=fscaled, U=U, vdx=vdx)
         print('\n***** Voxels finished *****')
 
     except:
         print('\n***** Error plotting voxels *****')
 
 
-def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None):
+# ==============================================================================
+# Debugging
+# ==============================================================================
 
-    """ Plots the principal stresses of the elements.
+if __name__ == "__main__":
 
-    Parameters
-    ----------
-    structure : obj
-        Structure object.
-    step : str
-        Name of the Step.
-    ptype : str
-        'max' 'min' for maximum or minimum principal stresses.
-    scale : float
-        Scale on the length of the line markers.
-    rotate : int
-        Rotate lines by 90 deg, 0 or 1.
-    layer : str
-        Layer name for plotting.
-
-    Returns
-    -------
-    None
-
-    Notes
-    -----
-    - Currently an alpha script and only for triangular shell elements in Abaqus.
-    - Centroids are taken on the undeformed geometry.
-
-    """
-
-    data = structure.results[step]['element']
-    basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc('principal_stresses', basedir=basedir, tmpdir=structure.path)
-    xfunc.funcname = 'functions.principal_stresses'
-    result = xfunc(data, ptype, scale, rotate)
-
-    try:
-        vec1, vec5, pr1, pr5, pmax = result
-
-        if not layer:
-            layer = '{0}_principal_{1}'.format(step, ptype)
-        rs.CurrentLayer(rs.AddLayer(layer))
-        rs.DeleteObjects(rs.ObjectsByLayer(layer))
-        centroids = [structure.element_centroid(i) for i in sorted(structure.elements, key=int)]
-
-        rs.EnableRedraw(False)
-
-        for c, centroid in enumerate(centroids):
-            v1 = vec1[c]
-            v5 = vec5[c]
-            id1 = rs.AddLine(add_vectors(centroid, scale_vector(v1, -1)), add_vectors(centroid, v1))
-            id5 = rs.AddLine(add_vectors(centroid, scale_vector(v5, -1)), add_vectors(centroid, v5))
-            col1 = colorbar(pr1[c] / pmax, input='float', type=255)
-            col5 = colorbar(pr5[c] / pmax, input='float', type=255)
-            rs.ObjectColor(id1, col1)
-            rs.ObjectColor(id5, col5)
-
-        rs.EnableRedraw(True)
-
-    except:
-        print('\n***** Error calculating/plotting principal stresses *****')
-
+    pass
