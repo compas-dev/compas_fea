@@ -39,52 +39,57 @@ class Structure(ObjectMixins, ElementMixins, NodeMixins):
 
     Parameters
     ----------
+    path : str
+        Path to save all compas_fea associated files.
     name : str
         Name of the structure.
-    path : str
-        Path to save files.
 
     Attributes
     ----------
-    constraints : dic
+    constraints : dict
         Constraint objects.
-    displacements : dic
+    displacements : dict
         Displacement objects.
-    elements : dic
+    elements : dict
         Element objects.
-    element_index : dic
+    element_index : dict
         Index of elements (element centroid geometric keys).
-    element_properties : dic
-        Element properties objects.
-    interactions : dic
+    element_properties : dict
+        ElementProperties objects.
+    interactions : dict
         Interaction objects.
-    loads : dic
+    loads : dict
         Load objects.
-    materials : dic
+    materials : dict
         Material objects.
-    misc : dic
+    misc : dict
         Misc objects.
     name : str
         Structure name.
-    nodes : dic
-        Node co-ordinates and local axes.
-    node_index : dic
+    nodes : dict
+        Node objects.
+    node_index : dict
         Index of nodes (node geometric keys).
     path : str
         Path to save files.
-    results : dic
+    results : dict
         Dictionary containing analysis results.
-    sections : dic
+    sections : dict
         Section objects.
-    sets : dic
-        Node, element and surface sets.
-    steps : dic
+    sets : dict
+        Set objects.
+    steps : dict
         Step objects.
     steps_order : list
         Sorted list of Step object names.
     tol : str
         Geometric key tolerance.
-
+    virtual_nodes : dict
+        Node objects for virtual nodes.
+    virtual_elements : dict
+        Element objects for virtual elements.
+    virtual_element_index : dict
+        Index of virtual elements (element centroid geometric keys).
 
     Returns
     -------
@@ -93,33 +98,37 @@ class Structure(ObjectMixins, ElementMixins, NodeMixins):
     """
 
     def __init__(self, path, name='compas_fea-Structure'):
-        self.constraints = {}
-        self.displacements = {}
-        self.elements = {}
-        self.element_index = {}
-        self.element_properties = {}
-        self.interactions = {}
-        self.loads = {}
-        self.materials = {}
-        self.misc = {}
-        self.name = name
-        self.nodes = {}
-        self.node_index = {}
-        self.path = path
-        self.results = {}
-        self.sections = {}
-        self.sets = {}
-        self.steps = {}
-        self.steps_order = []
-        self.tol = '3'
-        self.virtual_nodes = {}
-        self.virtual_elements = {}
+
+        self.constraints           = {}
+        self.displacements         = {}
+        self.elements              = {}
+        self.element_index         = {}
+        self.element_properties    = {}
+        self.interactions          = {}
+        self.loads                 = {}
+        self.materials             = {}
+        self.misc                  = {}
+        self.name                  = name
+        self.nodes                 = {}
+        self.node_index            = {}
+        self.path                  = path
+        self.results               = {}
+        self.sections              = {}
+        self.sets                  = {}
+        self.steps                 = {}
+        self.steps_order           = []
+        self.tol                   = '3'
+        self.virtual_nodes         = {}
+        self.virtual_elements      = {}
         self.virtual_element_index = {}
 
+
     def __str__(self):
+
         n = self.node_count()
         m = self.element_count()
         data = [
+            self.sets,
             self.materials,
             self.sections,
             self.loads,
@@ -130,13 +139,14 @@ class Structure(ObjectMixins, ElementMixins, NodeMixins):
             self.steps,
         ]
 
-        d = ['\n'.join(['  {0} : {1} {2}(s)'.format(i, len(j['selection']), j['type'])
-                        for i, j in self.sets.items() if 'element_' not in i])]
+        d = []
+
         for entry in data:
+
             if entry:
                 d.append('\n'.join(['  {0} : {1}'.format(i, j.__name__) for i, j in entry.items()]))
             else:
-                d.append('  n/a')
+                d.append('n/a')
 
         return """
 
@@ -191,9 +201,9 @@ Steps
 """.format(self.name, n, m, d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8])
 
 
-# ==============================================================================
-# sets
-# ==============================================================================
+    # ==============================================================================
+    # Sets
+    # ==============================================================================
 
     def add_set(self, name, type, selection):
 
@@ -202,10 +212,10 @@ Steps
         Parameters
         ----------
         name : str
-            Name of the set.
+            Name of the Set.
         type : str
             'node', 'element', 'surface_node', surface_element'.
-        selection : list, dic
+        selection : list, dict
             The integer keys of the nodes, elements or the element numbers and sides.
 
         Returns
@@ -220,16 +230,14 @@ Steps
         self.sets[name] = Set(name=name, type=type, selection=selection, index=len(self.sets))
 
 
-# ==============================================================================
-# constructors
-# ==============================================================================
+    # ==============================================================================
+    # Constructors
+    # ==============================================================================
 
     @classmethod
     def from_mesh(cls, mesh):
 
-        """ Creates a Structure object based on data contained in a compas Mesh
-        datastructure. The Mesh object must contain displacements, materials, sections
-        and loads.
+        """ Creates a Structure object based on data contained in a compas Mesh datastructure.
 
         Parameters
         ----------
@@ -240,6 +248,10 @@ Steps
         -------
         obj
             The resulting Structure object.
+
+        Notes
+        -----
+        - The Mesh object must contain displacements, materials, sections and loads.
 
         """
 
@@ -252,7 +264,8 @@ Steps
         # Add displacements
 
         disp_groups = group_keys_by_attributes(mesh.vertex, ['ux', 'uy', 'uz', 'urx', 'ury', 'urz'])
-        disp_names = []
+        disp_names  = []
+
         for dk in disp_groups:
             if dk != '-_-_-_-_-_-':
                 disp_names.append(dk + '_nodes')
@@ -265,18 +278,21 @@ Steps
         # Add materials and sections
 
         mat_groups = group_keys_by_attributes(mesh.facedata, ['E', 'v', 'p'])
+
         for mk in mat_groups:
             m = [float(x) if x != '-' else None for x in mk.split('_')]
             material = ElasticIsotropic(name=mk + '_material', E=m[0], v=m[1], p=m[2])
             structure.add_material(material)
 
         thick_groups = group_keys_by_attribute(mesh.facedata, 'thick')
+
         for tk in thick_groups:
             t = float(tk)
             section = ShellSection(name=tk + '_section', t=t)
             structure.add_section(section)
 
         prop_comb = combine_all_sets(mat_groups, thick_groups)
+
         for pk in prop_comb:
             mat, sec = pk.split(',')
             prop = ElementProperties(material=mat + '_material', section=sec + '_section', elements=prop_comb[pk])
@@ -285,7 +301,8 @@ Steps
         # Add loads
 
         load_groups = group_keys_by_attribute(mesh.vertex, 'l')
-        load_names = []
+        load_names  = []
+
         for lk in load_groups:
             if lk != '-':
                 load_names.append(str(lk) + '_load')
@@ -298,15 +315,20 @@ Steps
 
         return structure
 
+
     @classmethod
     def from_network(cls, network):
+
         pass
+
 
     @classmethod
     def from_volmesh(cls, network):
+
         pass
 
-    def add_nodes_elements_from_mesh(self, mesh, element_type, acoustic=False, thermal=False, elset=None):
+
+    def add_nodes_elements_from_mesh(self, mesh, element_type, thermal=False, elset=None):
 
         """ Adds the nodes and faces of a Mesh to the Structure object.
 
@@ -330,15 +352,20 @@ Steps
 
         for key in sorted(list(mesh.vertices()), key=int):
             self.add_node(mesh.vertex_coordinates(key))
+
         ekeys = []
+
         for fkey in list(mesh.faces()):
             face = [self.check_node_exists(mesh.vertex_coordinates(i)) for i in mesh.face[fkey]]
-            ekeys.append(self.add_element(nodes=face, type=element_type, acoustic=acoustic, thermal=thermal))
+            ekeys.append(self.add_element(nodes=face, type=element_type, thermal=thermal))
+
         if elset:
             self.add_set(name=elset, type='element', selection=ekeys)
+
         return ekeys
 
-    def add_nodes_elements_from_network(self, network, element_type, acoustic=False, thermal=False, elset=None, axes={}):
+
+    def add_nodes_elements_from_network(self, network, element_type, thermal=False, elset=None, axes={}):
 
         """ Adds the nodes and edges of a Network to the Structure object.
 
@@ -364,14 +391,19 @@ Steps
 
         for key in sorted(list(network.vertices()), key=int):
             self.add_node(network.vertex_coordinates(key))
+
         ekeys = []
+
         for u, v in list(network.edges()):
             sp = self.check_node_exists(network.vertex_coordinates(u))
             ep = self.check_node_exists(network.vertex_coordinates(v))
             ekeys.append(self.add_element(nodes=[sp, ep], type=element_type, thermal=thermal, axes=axes))
+
         if elset:
             self.add_set(name=elset, type='element', selection=ekeys)
+
         return ekeys
+
 
     def add_nodes_elements_from_volmesh(self, volmesh, element_type='SolidElement', thermal=False, elset=None, axes={}):
 
@@ -399,7 +431,9 @@ Steps
 
         for key in sorted(list(volmesh.vertices()), key=int):
             self.add_node(volmesh.vertex_coordinates(key))
+
         ekeys = []
+
         for ckey in volmesh.cell:
             cell_vertices = volmesh.cell_vertices(ckey)
             nkeys = [self.check_node_exists(volmesh.vertex_coordinates(nk)) for nk in cell_vertices]
@@ -407,12 +441,13 @@ Steps
                                           axes=axes))
         if elset:
             self.add_set(name=elset, type='element', selection=ekeys)
+
         return ekeys
 
 
-# ==============================================================================
-# modifiers
-# ==============================================================================
+    # ==============================================================================
+    # Modifiers
+    # ==============================================================================
 
     def scale_displacements(self, displacements, factor):
 
@@ -420,25 +455,28 @@ Steps
 
         Parameters
         ----------
-        displacements : dic
+        displacements : dict
             Dictionary containing the displacements to scale.
         factor : float
             Factor to scale the displacements by.
 
         Returns
         -------
-        dic
+        dict
             The scaled displacements dictionary.
 
         """
 
         disp_dic = {}
+
         for key, disp in displacements.items():
             for dkey, dcomp in disp.components.items():
                 if dcomp is not None:
                     disp.components[dkey] *= factor
             disp_dic[key] = disp
+
         return disp_dic
+
 
     def scale_loads(self, loads, factor):
 
@@ -446,34 +484,36 @@ Steps
 
         Parameters
         ----------
-        loads : dic
+        loads : dict
             Dictionary containing the loads to scale.
         factor : float
             Factor to scale the loads by.
 
         Returns
         -------
-        dic
+        dict
             The scaled loads dictionary.
 
         """
 
         loads_dic = {}
+
         for key, load in loads.items():
             for lkey, lcomp in load.components.items():
                 if lcomp is not None:
                     load.components[lkey] *= factor
             loads_dic[key] = load
+
         return loads_dic
 
 
-# ==============================================================================
-# steps
-# ==============================================================================
+    # ==============================================================================
+    # Steps
+    # ==============================================================================
 
     def set_steps_order(self, order):
 
-        """ Sets the order the Steps will be analysed.
+        """ Sets the order that the Steps will be analysed.
 
         Parameters
         ----------

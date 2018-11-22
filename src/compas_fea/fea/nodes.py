@@ -25,9 +25,9 @@ class Nodes(object):
     def write_nodes(self):
 
         header = {
-            'abaqus':   '*NODE, NSET=nset_all\n**',
+            'abaqus':   '**\n*NODE, NSET=nset_all\n**',
             'opensees': '#',
-            'sofistik': '+PROG SOFIMSHA\nUNIT 0\nSYST 3D GDIR POSX,POSY,NEGZ\nCTRL OPT OPTI 10\n$\nNODE NO X Y Z',
+            'sofistik': '$\n+PROG SOFIMSHA\nUNIT 0\nSYST 3D GDIR POSX,POSY,NEGZ\nCTRL OPT OPTI 10\n$\n$\nNODE NO X Y Z\n$',
             'ansys':    '!',
         }
 
@@ -39,7 +39,6 @@ class Nodes(object):
         }
 
         self.write_section('Nodes')
-        self.blank_line()
         self.write_line(header[self.software])
 
         for key in sorted(self.structure.nodes, key=int):

@@ -25,21 +25,18 @@ mdl = Structure(name='introduction', path='/home/al/temp/')
 mdl.add_node(xyz=[-5., -5., 0.])
 mdl.add_nodes(nodes=[[5., -5., 0.], [5., 5., 0.], [-5., 5., 0.], [0., 0., 5.]])
 
-print('Nodes')
-print('-----\n')
-print('Node number 3:', mdl.nodes[3])
-print('Node number 3 xyz:', mdl.node_xyz(3))
-print('Node count: ', mdl.node_count())
-print('Node index: ', mdl.node_index)
-print('Check node at [0, 0, 0]: ', mdl.check_node_exists([0, 0, 0]))
-print('Check node at [5, 5, 0]: ', mdl.check_node_exists([5, 5, 0]))
-print('Node bounds: ', mdl.node_bounds())
-print('\n')
+# print('Node number 3:', mdl.nodes[3])
+# print('Node number 3 xyz:', mdl.node_xyz(3))
+# print('Node count: ', mdl.node_count())
+# print('Node index: ', mdl.node_index)
+# print('Check node at [0, 0, 0]: ', mdl.check_node_exists([0, 0, 0]))
+# print('Check node at [5, 5, 0]: ', mdl.check_node_exists([5, 5, 0]))
+# print('Node bounds: ', mdl.node_bounds())
 
 # Add elements
 
-# mdl.add_elements(elements=[[0, 4], [1, 4], [2, 4], [3, 4]], type='BeamElement')
-# mdl.add_element(nodes=[0, 1, 4], type='ShellElement')
+mdl.add_elements(elements=[[0, 4], [1, 4], [2, 4], [3, 4]], type='BeamElement')
+mdl.add_element(nodes=[0, 1, 4], type='ShellElement')
 
 # print('Element 3 nodes: ', mdl.elements[3].nodes)
 # print('Element count: ', mdl.element_count())
@@ -54,32 +51,30 @@ mdl.add_set(name='nset_top', type='node', selection=[4])
 mdl.add_set(name='elset_beams', type='element', selection=[0, 1, 2, 3])
 mdl.add_set(name='elset_shell', type='element', selection=[4])
 
-print('Sets')
-print('-----\n')
-print('Set: nset_base: ', mdl.sets['nset_base'])
-print('Set: elset_shell: ', mdl.sets['elset_shell'])
-print('\n')
+# print('Set: nset_base: ', mdl.sets['nset_base'])
+# print('Set: elset_shell: ', mdl.sets['elset_shell'])
 
 # Add sections
 
-# mdl.add([
-#     CircularSection(name='sec_circ', r=0.010),
-#     ShellSection(name='sec_shell', t=0.005),
-# ])
+mdl.add([
+    CircularSection(name='sec_circ', r=0.010),
+    ShellSection(name='sec_shell', t=0.005),
+])
 
 # print('Section geometry: ', mdl.sections['sec_circ'].geometry)
 
 # Add materials
 
-# mdl.add(ElasticIsotropic(name='mat_elastic', E=10*10**9, v=0.3, p=1500))
+mdl.add(ElasticIsotropic(name='mat_elastic', E=10*10**9, v=0.3, p=1500))
 
 # print('Material E: ', mdl.materials['mat_elastic'].E)
 
 # Add element properties
 
-# ep1 = Properties(name='ep_circ', material='mat_elastic', section='sec_circ', elsets='elset_beams')
-# ep2 = Properties(name='ep_shell', material='mat_elastic', section='sec_shell', elsets='elset_shell')
-# mdl.add([ep1, ep2])
+mdl.add([
+    Properties(name='ep_circ', material='mat_elastic', section='sec_circ', elset='elset_beams'),
+    Properties(name='ep_shell', material='mat_elastic', section='sec_shell', elset='elset_shell'),
+])
 
 # Add loads
 
@@ -92,21 +87,23 @@ print('\n')
 
 # Add displacements
 
-# mdl.add(PinnedDisplacement(name='disp_pinned', nodes='nset_base'))
+mdl.add(PinnedDisplacement(name='disp_pinned', nodes='nset_base'))
 
 # print('disp_pinned components: ', mdl.displacements['disp_pinned'].components)
 
 # Add steps
 
-# mdl.add([
-    # GeneralStep(name='step_bc', displacements=['disp_pinned']),
+mdl.add([
+    GeneralStep(name='step_bc', displacements=['disp_pinned']),
     # GeneralStep(name='step_loads', loads=['load_point', 'load_gravity']),
-# ])
+])
 # mdl.steps_order = ['step_bc', 'step_loads']
+mdl.steps_order = ['step_bc']
 
 # Structure summary
 
 # mdl.summary()
+print(mdl)
 
 # Generate input files
 

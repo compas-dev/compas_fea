@@ -39,9 +39,11 @@ def input_generate(structure, fields=None):
     with Writer(structure=structure, software='sofistik', filename=filename) as writer:
 
         writer.write_heading()
+        writer.write_materials()
         writer.write_nodes()
+        writer.write_boundary_conditions()
+        writer.write_elements()
 
-    #     write_input_bcs(f, 'sofistik', structure, steps, displacements, sets)
     #     write_input_elements(f, 'sofistik', sections, properties, elements, structure, materials)
     #     write_input_steps(f, 'sofistik', structure, steps, loads, displacements, sets, fields, 6, properties)
 

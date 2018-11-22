@@ -57,13 +57,13 @@ def input_generate(structure, fields):
 
         writer.write_heading()
         writer.write_nodes()
+        writer.write_boundary_conditions()
+        writer.write_materials()
+        writer.write_elements()
 
-    #     write_input_bcs(f, 'opensees', structure, steps, displacements, sets, ndof)
-    #     write_input_materials(f, 'opensees', materials)
-    #     write_input_elements(f, 'opensees', sections, properties, elements, structure, materials)
     #     write_input_steps(f, 'opensees', structure, steps, loads, displacements, sets, fields, ndof)
 
-    # print('***** OpenSees input file generated: {0} *****\n'.format(filename))
+    print('***** OpenSees input file generated: {0} *****\n'.format(filename))
 
 
 def launch_process(structure, exe):

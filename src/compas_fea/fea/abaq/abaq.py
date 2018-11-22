@@ -66,11 +66,11 @@ def input_generate(structure, fields, output):
         writer.write_heading()
         writer.write_nodes()
         writer.write_node_sets()
+        writer.write_boundary_conditions()
+        writer.write_materials()
+        writer.write_elements()
 
-    #     write_input_bcs(f, 'abaqus', structure, steps, displacements, sets)
-    #     write_input_materials(f, 'abaqus', materials)
     #     write_input_misc(f, 'abaqus', misc)
-    #     write_input_elements(f, 'abaqus', sections, properties, elements, structure, materials)
     #     write_input_steps(f, 'abaqus', structure, steps, loads, displacements, sets, fields)
 
     if output:

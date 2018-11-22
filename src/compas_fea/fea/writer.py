@@ -5,7 +5,10 @@ from __future__ import print_function
 
 from compas_fea.fea.heading import Heading
 from compas_fea.fea.nodes import Nodes
+from compas_fea.fea.elements import Elements
 from compas_fea.fea.sets import Sets
+from compas_fea.fea.bcs import BCs
+from compas_fea.fea.materials import Materials
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -27,7 +30,7 @@ comments = {
 }
 
 
-class Writer(Sets, Nodes, Heading):
+class Writer(Materials, BCs, Sets, Elements, Nodes, Heading):
 
     """ Initialises base file writer.
 
@@ -86,6 +89,6 @@ class Writer(Sets, Nodes, Heading):
 
     def write_subsection(self, subsection):
 
-        self.write_line(subsection)
-        self.write_line('{0}{1}'.format(self.comment, '-' * len(subsection)))
+        self.write_line('{0} {1}'.format(self.comment, subsection))
+        self.write_line('{0}-{1}'.format(self.comment, '-' * len(subsection)))
         self.blank_line()
