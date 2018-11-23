@@ -9,6 +9,7 @@ from compas_fea.fea.elements import Elements
 from compas_fea.fea.sets import Sets
 from compas_fea.fea.bcs import BCs
 from compas_fea.fea.materials import Materials
+from compas_fea.fea.steps import Steps
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -30,7 +31,7 @@ comments = {
 }
 
 
-class Writer(Materials, BCs, Sets, Elements, Nodes, Heading):
+class Writer(Steps, Materials, BCs, Sets, Elements, Nodes, Heading):
 
     """ Initialises base file writer.
 

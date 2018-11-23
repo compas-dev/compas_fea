@@ -69,12 +69,33 @@ def input_generate(structure, fields, output):
         writer.write_boundary_conditions()
         writer.write_materials()
         writer.write_elements()
-
-    #     write_input_misc(f, 'abaqus', misc)
-    #     write_input_steps(f, 'abaqus', structure, steps, loads, displacements, sets, fields)
+        # write_input_misc(f, 'abaqus', misc)
+        writer.write_steps()
 
     if output:
         print('***** Abaqus input file generated: {0} *****\n'.format(filename))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def launch_process(structure, exe, cpus, output):

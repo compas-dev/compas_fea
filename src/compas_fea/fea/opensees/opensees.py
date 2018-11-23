@@ -60,10 +60,46 @@ def input_generate(structure, fields):
         writer.write_boundary_conditions()
         writer.write_materials()
         writer.write_elements()
-
-    #     write_input_steps(f, 'opensees', structure, steps, loads, displacements, sets, fields, ndof)
+        writer.write_steps()
 
     print('***** OpenSees input file generated: {0} *****\n'.format(filename))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def launch_process(structure, exe):

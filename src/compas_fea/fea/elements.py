@@ -15,6 +15,21 @@ __all__ = [
 ]
 
 
+abaqus_data = {
+    'AngleSection':       {'name': 'L',           'geometry': ['b', 'h', 't', 't']},
+    'BoxSection':         {'name': 'BOX',         'geometry': ['b', 'h', 'tw', 'tf', 'tw', 'tf']},
+    'CircularSection':    {'name': 'CIRC',        'geometry': ['r']},
+    'ISection':           {'name': 'I',           'geometry': ['c', 'h', 'b', 'b', 'tf', 'tf', 'tw']},
+    'PipeSection':        {'name': 'PIPE',        'geometry': ['r', 't']},
+    'RectangularSection': {'name': 'RECTANGULAR', 'geometry': ['b', 'h']},
+    'TrapezoidalSection': {'name': 'TRAPEZOID',   'geometry': ['b1', 'h', 'b2', 'c']},
+    'GeneralSection':     {'name': 'GENERAL',     'geometry': ['A', 'I11', 'I12', 'I22', 'J', 'g0', 'gw']},
+    'ShellSection':       {'name': None,          'geometry': ['t']},
+    'SolidSection':       {'name': None,          'geometry': None},
+    'TrussSection':       {'name': None,          'geometry': ['A']},
+}
+
+
 class Elements(object):
 
     def __init__(self):
@@ -37,19 +52,27 @@ class Elements(object):
 
             self.write_subsection(key)
 
-            property       = properties[key]
-            reinforcement  = property.reinforcement
-            elset          = property.elset
+            property      = properties[key]
+            reinforcement = property.reinforcement
+            elset         = property.elset
 
-            section        = sections[property.section]
-            # section_index = section.index + 1
-            stype          = section.__name__
-            geometry       = section.geometry
+            section       = sections[property.section]
+            s_index       = section.index + 1
+            stype         = section.__name__
+            geometry      = section.geometry
 
-            material       = materials.get(property.material)
-            material_index = material.index + 1
+            material      = materials.get(property.material)
+            m_index       = material.index + 1
 
             selection = property.elements if property.elements else sets[elset].selection
+
+            t   = geometry.get('t', None)
+            A   = geometry.get('A', None)
+            J   = geometry.get('J', None)
+            Ixx = geometry.get('Ixx', None)
+            Iyy = geometry.get('Iyy', None)
+            E   = material.E.get('E', None)
+            G   = material.G.get('G', None)
 
 
             for select in selection:
@@ -58,12 +81,15 @@ class Elements(object):
                 nodes   = [str(i + 1) for i in element.nodes]
                 no      = len(nodes)
                 n       = select + 1
-                t       = geometry.get('t', None)
                 ex      = element.axes.get('ex', None)
                 ey      = element.axes.get('ey', None)
 
-                # Shell
-                # -----
+
+                # =====================================================================================================
+                # =====================================================================================================
+                # SHELL
+                # =====================================================================================================
+                # =====================================================================================================
 
                 if stype == 'ShellSection':
 
@@ -74,7 +100,7 @@ class Elements(object):
                     if self.software == 'opensees':
 
                         shell = 'ShellNLDKGT' if no == 3 else 'ShellNLDKGQ'
-                        self.write_line('section PlateFiber {0} {1} {2}'.format(n, material_index + 100, t))
+                        self.write_line('section PlateFiber {0} {1} {2}'.format(n, m_index + 100, t))
                         self.write_line('element {0} {1} {2} {1}'.format(shell, n, ' '.join(nodes)))
 
                     # -------------------------------------------------------------------------------------------------
@@ -90,7 +116,7 @@ class Elements(object):
                         elif no == 4:
                             self.write_line('QUAD NO N1 N2 N3 N4 MNO T1 T2 T3 T4 {0}'.format(mrf))
 
-                        entry = '{0} {1} {2} {3}'.format(n, ' '.join(nodes), material_index, '{0}[m] '.format(t) * no)
+                        entry = '{0} {1} {2} {3}'.format(n, ' '.join(nodes), m_index, '{0}[m] '.format(t) * no)
 
                         if reinforcement:
                             entry += str(materials[reinforcement.values()[0]['material']].index + 1)
@@ -140,8 +166,66 @@ class Elements(object):
 
                         pass
 
-        self.blank_line()
-        self.blank_line()
+
+                # =====================================================================================================
+                # =====================================================================================================
+                # BEAM
+                # =====================================================================================================
+                # =====================================================================================================
+
+                else:
+
+                    # -------------------------------------------------------------------------------------------------
+                    # OpenSees
+                    # -------------------------------------------------------------------------------------------------
+
+                    if self.software == 'opensees':
+
+                        self.write_line('geomTransf Corotational {0} {1}'.format(n, ' '.join([str(i) for i in ex])))
+                        self.write_line('{} {} {} {} {} {} {} {} {} {} {}'.format(
+                                        'element elasticBeamColumn', n, nodes[0], nodes[1], A, E, G, J, Ixx, Iyy, n))
+                        self.blank_line()
+
+                    # -------------------------------------------------------------------------------------------------
+                    # Sofistik
+                    # -------------------------------------------------------------------------------------------------
+
+                    elif self.software == 'sofistik':
+
+                        self.write_line('BEAM NO {0} NA {1} NE {2} NCS {3}'.format(n, nodes[0], nodes[1], s_index))
+
+                    # -------------------------------------------------------------------------------------------------
+                    # Abaqus
+                    # -------------------------------------------------------------------------------------------------
+
+                    elif self.software == 'abaqus':
+
+                        e = 'element_{0}'.format(select)
+                        a = abaqus_data[stype]
+                        h = '*BEAM GENERAL SECTION' if stype == 'GeneralSection' else '*BEAM SECTION'
+
+                        self.write_line('*ELEMENT, TYPE=B31, ELSET={0}'.format(e))
+                        self.write_line('{0}, {1},{2}'.format(n, nodes[0], nodes[1]))
+
+                        self.write_line('{0}, SECTION={1}, ELSET={2}, MATERIAL={3}'.format(
+                                        h, a['name'], e, material.name))
+                        self.write_line(', '.join([str(geometry[k]) for k in a['geometry']]))
+
+                        if ex:
+                            self.write_line(', '.join([str(i) for i in ex]))
+                        self.blank_line()
+
+                    # -------------------------------------------------------------------------------------------------
+                    # Ansys
+                    # -------------------------------------------------------------------------------------------------
+
+                    elif self.software == 'ansys':
+
+                        pass
+
+
+            self.blank_line()
+            self.blank_line()
 
 
 
@@ -169,19 +253,7 @@ class Elements(object):
 # from math import sqrt
 
 
-# abaqus_data = {
-#     'AngleSection':       {'name': 'L',           'geometry': ['b', 'h', 't', 't']},
-#     'BoxSection':         {'name': 'BOX',         'geometry': ['b', 'h', 'tw', 'tf', 'tw', 'tf']},
-#     'CircularSection':    {'name': 'CIRC',        'geometry': ['r']},
-#     'ISection':           {'name': 'I',           'geometry': ['c', 'h', 'b', 'b', 'tf', 'tf', 'tw']},
-#     'PipeSection':        {'name': 'PIPE',        'geometry': ['r', 't']},
-#     'RectangularSection': {'name': 'RECTANGULAR', 'geometry': ['b', 'h']},
-#     'TrapezoidalSection': {'name': 'TRAPEZOID',   'geometry': ['b1', 'h', 'b2', 'c']},
-#     'GeneralSection':     {'name': 'GENERAL',     'geometry': ['A', 'I11', 'I12', 'I22', 'J', 'g0', 'gw']},
-#     'ShellSection':       {'name': None,          'geometry': ['t']},
-#     'SolidSection':       {'name': None,          'geometry': None},
-#     'TrussSection':       {'name': None,          'geometry': ['A']},
-# }
+
 
 
 #     membranes  = ['MembraneSection']
@@ -235,7 +307,7 @@ class Elements(object):
 #             # Beam sections
 
 #             elif stype not in shells + solids + trusses + membranes:
-#                 _write_beams(f, software, elements, selection, geometry, material, section_index, stype)
+#                 _write_beams(f, software, elements, selection, geometry, material, s_index, stype)
 
 #             # Truss sections
 
@@ -335,51 +407,6 @@ class Elements(object):
 
 #         pass
 
-
-# def _write_beams(f, software, elements, selection, geometry, material, section_index, stype):
-
-#     for select in selection:
-
-#         element = elements[select]
-#         sp, ep = element.nodes
-#         n  = select + 1
-#         i  = sp + 1
-#         j  = ep + 1
-#         ex = element.axes.get('ex', None)
-
-#         if software == 'abaqus':
-
-#             e1 = 'element_{0}'.format(select)
-#             f.write('*ELEMENT, TYPE=B31, ELSET={0}\n'.format(e1))
-#             f.write('{0}, {1},{2}\n'.format(n, i, j))
-#             f.write('*BEAM GENERAL SECTION' if stype == 'GeneralSection' else '*BEAM SECTION')
-#             f.write(', SECTION={0}, ELSET={1}, MATERIAL={2}\n'.format(abaqus_data[stype]['name'], e1, material.name))
-#             f.write(', '.join([str(geometry[k]) for k in abaqus_data[stype]['geometry']]) + '\n')
-#             if ex:
-#                 f.write(', '.join([str(k) for k in ex]) + '\n')
-#             f.write('**\n')
-
-#         elif software == 'opensees':
-
-#             A   = geometry['A']
-#             E   = material.E['E']
-#             G   = material.G['G']
-#             J   = geometry['J']
-#             Ixx = geometry['Ixx']
-#             Iyy = geometry['Iyy']
-#             et  = 'element elasticBeamColumn'
-
-#             f.write('geomTransf Corotational {0} {1} {2} {3}\n'.format(n, ex[0], ex[1], ex[2]))
-#             f.write('{} {} {} {} {} {} {} {} {} {} {}\n'.format(et, n, i, j, A, E, G, J, Ixx, Iyy, n))
-#             f.write('#\n')
-
-#         elif software == 'sofistik':
-
-#             f.write('BEAM NO {0} NA {1} NE {2} NCS {3}\n'.format(n, i, j, section_index))
-
-#         elif software == 'ansys':
-
-#             pass
 
 
 # def _write_trusses(f, selection, software, elements, section, material, elset):
@@ -615,44 +642,7 @@ class Elements(object):
 #     return written_springs
 
 
-# def _write_sofistik_sections(f, properties, materials, sections):
 
-#     f.write('$ -----------------------------------------------------------------------------\n')
-#     f.write('$ -------------------------------------------------------------------- Sections\n')
-#     f.write('$\n')
-
-#     for key, property in properties.items():
-
-#         section       = sections[property.section]
-#         section_index = section.index + 1
-#         mindex        = materials[property.material].index + 1 if property.material else None
-#         stype         = section.__name__
-#         geometry      = section.geometry
-
-#         if stype not in ['SolidSection', 'ShellSection', 'SpringSection']:
-
-#             f.write('$ {0}\n'.format(section.name))
-#             f.write('$ ' + '-' * len(section.name) + '\n')
-#             f.write('$\n')
-
-#             if stype in ['PipeSection', 'CircularSection']:
-
-#                 D = geometry['D'] * 1000
-#                 t = geometry['t'] * 1000 if stype == 'PipeSection' else 0
-#                 f.write('TUBE NO {0} D {1}[mm] T {2}[mm] MNO {3}\n'.format(section_index, D, t, mindex))
-
-#             elif stype == 'RectangularSection':
-
-#                 b = geometry['b'] * 1000
-#                 h = geometry['h'] * 1000
-#                 f.write('SREC NO {0} H {1}[mm] B {2}[mm] MNO {3}\n'.format(section_index, h, b, mindex))
-
-#             elif stype in ['TrussSection', 'StrutSection', 'TieSection']:
-
-#                 D = sqrt(geometry['A'] * 4 / pi) * 1000
-#                 f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, 0, mindex))
-
-#             f.write('$\n')
 
 
 # def _write_sofistik_rebar(f, properties, sections, sets):

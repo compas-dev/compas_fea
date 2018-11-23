@@ -24,13 +24,6 @@ headers = {
     'ansys':    '',
 }
 
-footers = {
-    'abaqus':   '',
-    'opensees': '',
-    'sofistik': 'END\n$\n$',
-    'ansys':    '',
-}
-
 
 class Materials(object):
 
@@ -126,10 +119,6 @@ class Materials(object):
         self.blank_line()
         self.blank_line()
 
-        if footers[self.software]:
-            self.write_line(footers[self.software])
-
-
 
 
 
@@ -198,9 +187,6 @@ class Materials(object):
         #     _write_density(f, software, p, c)
 
         # f.write('{0}\n'.format(c))
-
-        # if software == 'sofistik':
-        #     _write_sofistik_sections(f, properties, materials, sections)
 
 
 

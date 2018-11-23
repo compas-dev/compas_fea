@@ -40,11 +40,62 @@ def input_generate(structure, fields=None):
 
         writer.write_heading()
         writer.write_materials()
+        write_sofistik_sections(writer, structure.element_properties, structure.materials, structure.sections)
         writer.write_nodes()
         writer.write_boundary_conditions()
         writer.write_elements()
 
-    #     write_input_elements(f, 'sofistik', sections, properties, elements, structure, materials)
-    #     write_input_steps(f, 'sofistik', structure, steps, loads, displacements, sets, fields, 6, properties)
+        #     if software == 'sofistik':
+
+#         _write_sofistik_loads_displacements(f, sets, displacements, loads, steps, structure)
+
+#         f.write('END\n')
+#         f.write('$\n')
+#         f.write('$\n')
+
+        writer.write_steps()
 
     print('***** Sofistik input file generated: {0} *****\n'.format(filename))
+
+
+def write_sofistik_sections(writer, properties, materials, sections):
+
+    writer.write_section('Sections')
+    writer.blank_line()
+
+    for key, property in properties.items():
+
+        section  = sections[property.section]
+        s_index  = section.index + 1
+        stype    = section.__name__
+        geometry = section.geometry
+        m_index  = materials[property.material].index + 1 if property.material else None
+
+        if stype not in ['SolidSection', 'ShellSection', 'SpringSection']:
+
+            writer.write_subsection(section.name)
+
+            if stype in ['PipeSection', 'CircularSection']:
+
+                D = geometry['D'] * 1000
+                t = geometry['t'] * 1000 if stype == 'PipeSection' else 0
+
+                writer.write_line('TUBE NO {0} D {1}[mm] T {2}[mm] MNO {3}'.format(s_index, D, t, m_index))
+
+#             elif stype == 'RectangularSection':
+
+#                 b = geometry['b'] * 1000
+#                 h = geometry['h'] * 1000
+#                 f.write('SREC NO {0} H {1}[mm] B {2}[mm] MNO {3}\n'.format(section_index, h, b, mindex))
+
+#             elif stype in ['TrussSection', 'StrutSection', 'TieSection']:
+
+#                 D = sqrt(geometry['A'] * 4 / pi) * 1000
+#                 f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, 0, mindex))
+
+            writer.blank_line()
+            writer.blank_line()
+
+    writer.write_line('END')
+    writer.blank_line()
+    writer.blank_line()

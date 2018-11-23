@@ -35,7 +35,7 @@ mdl.add_nodes(nodes=[[5., -5., 0.], [5., 5., 0.], [-5., 5., 0.], [0., 0., 5.]])
 
 # Add elements
 
-mdl.add_elements(elements=[[0, 4], [1, 4], [2, 4], [3, 4]], type='BeamElement')
+mdl.add_elements(elements=[[0, 4], [1, 4], [2, 4], [3, 4]], type='BeamElement', axes={'ex': [1, 0, 0]})
 mdl.add_element(nodes=[0, 1, 4], type='ShellElement')
 
 # print('Element 3 nodes: ', mdl.elements[3].nodes)
@@ -78,10 +78,10 @@ mdl.add([
 
 # Add loads
 
-# mdl.add([
-    # PointLoad(name='load_point', nodes='nset_top', x=10000, z=-10000),
-    # GravityLoad(name='load_gravity', elements='elset_beams'),
-# ])
+mdl.add([
+    PointLoad(name='load_point', nodes='nset_top', x=10000, z=-10000),
+    GravityLoad(name='load_gravity', elements='elset_beams'),
+])
 
 # print('load_point components: ', mdl.loads['load_point'].components)
 
@@ -95,15 +95,13 @@ mdl.add(PinnedDisplacement(name='disp_pinned', nodes='nset_base'))
 
 mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_pinned']),
-    # GeneralStep(name='step_loads', loads=['load_point', 'load_gravity']),
+    GeneralStep(name='step_loads', loads=['load_point', 'load_gravity']),
 ])
-# mdl.steps_order = ['step_bc', 'step_loads']
-mdl.steps_order = ['step_bc']
+mdl.steps_order = ['step_bc', 'step_loads']
 
 # Structure summary
 
-# mdl.summary()
-print(mdl)
+mdl.summary()
 
 # Generate input files
 
