@@ -68,7 +68,7 @@ class Materials(object):
 
                     self.write_line('uniaxialMaterial Elastic {0} {1}'.format(mindex, E['E']))
                     self.write_line('nDMaterial ElasticIsotropic {0} {1} {2} {3}'.format(
-                                    mindex + 100, E['E'], v['v'], p))
+                                    mindex + 1000, E['E'], v['v'], p))
 
             # ------------------------------------------------------------------------------------------------------
             # Sofistik
@@ -107,6 +107,18 @@ class Materials(object):
 
                     if not tension:
                         self.write_line('*NO TENSION')
+
+                # Density
+                # -------
+
+                self.blank_line()
+                self.write_line('*DENSITY')
+
+                if isinstance(p, list):
+                    for pi, T in p:
+                        self.write_line('{0}, {1}'.format(pi, T))
+                else:
+                    self.write_line(str(p))
 
             # ------------------------------------------------------------------------------------------------------
             # Ansys
@@ -181,12 +193,6 @@ class Materials(object):
 
         #     elif mtype == 'ThermalMaterial':
         #         _write_thermal(f, software, material, c)
-
-        #     # Density
-
-        #     _write_density(f, software, p, c)
-
-        # f.write('{0}\n'.format(c))
 
 
 
@@ -456,39 +462,3 @@ class Materials(object):
 
 #     f.write('{0}\n'.format(c))
 
-
-# # ==============================================================================
-# # Density
-# # ==============================================================================
-
-# def _write_density(f, software, p, c):
-
-#     if software == 'abaqus':
-
-#         f.write('*DENSITY\n')
-
-#         if isinstance(p, list):
-#             f.write('** p[kg/m3], T[C]\n')
-#             f.write('**\n')
-
-#             for pj, T in p:
-#                 f.write('{0}, {1}\n'.format(pj, T))
-
-#         else:
-#             f.write('** p[kg/m3]\n')
-#             f.write('**\n')
-#             f.write('{0}\n'.format(p))
-
-#         f.write('**\n')
-
-#     elif software == 'opensees':
-
-#         pass
-
-#     elif software == 'sofistik':
-
-#         pass
-
-#     elif software == 'ansys':
-
-#         pass

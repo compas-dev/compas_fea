@@ -28,7 +28,7 @@ __all__ = [
 ]
 
 
-def input_generate(structure, fields):
+def input_generate(structure, fields, output):
 
     """ Creates the OpenSees .tcl file from the Structure object.
 
@@ -38,6 +38,8 @@ def input_generate(structure, fields):
         The Structure object to read from.
     fields : list
         Data field requests.
+    output : bool
+        Print terminal output.
 
     Returns
     -------
@@ -53,7 +55,7 @@ def input_generate(structure, fields):
             ndof = 6
             break
 
-    with Writer(structure=structure, software='opensees', filename=filename, ndof=ndof) as writer:
+    with Writer(structure=structure, software='opensees', filename=filename, fields=fields, ndof=ndof) as writer:
 
         writer.write_heading()
         writer.write_nodes()

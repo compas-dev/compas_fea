@@ -5,6 +5,9 @@ from __future__ import print_function
 
 from compas_fea.fea import Writer
 
+from math import pi
+from math import sqrt
+
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
 __copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
@@ -17,7 +20,7 @@ __all__ = [
 ]
 
 
-def input_generate(structure, fields=None):
+def input_generate(structure, fields, output):
 
     """ Creates the Sofistik .dat file from the Structure object.
 
@@ -27,6 +30,8 @@ def input_generate(structure, fields=None):
         The Structure object to read from.
     fields : list
         Data field requests.
+    output : bool
+        Print terminal output.
 
     Returns
     -------
@@ -36,7 +41,7 @@ def input_generate(structure, fields=None):
 
     filename = '{0}{1}.dat'.format(structure.path, structure.name)
 
-    with Writer(structure=structure, software='sofistik', filename=filename) as writer:
+    with Writer(structure=structure, software='sofistik', filename=filename, fields=fields) as writer:
 
         writer.write_heading()
         writer.write_materials()
@@ -82,16 +87,17 @@ def write_sofistik_sections(writer, properties, materials, sections):
 
                 writer.write_line('TUBE NO {0} D {1}[mm] T {2}[mm] MNO {3}'.format(s_index, D, t, m_index))
 
-#             elif stype == 'RectangularSection':
+            elif stype == 'RectangularSection':
 
-#                 b = geometry['b'] * 1000
-#                 h = geometry['h'] * 1000
-#                 f.write('SREC NO {0} H {1}[mm] B {2}[mm] MNO {3}\n'.format(section_index, h, b, mindex))
+                b = geometry['b'] * 1000
+                h = geometry['h'] * 1000
 
-#             elif stype in ['TrussSection', 'StrutSection', 'TieSection']:
+                writer.write_line('SREC NO {0} H {1}[mm] B {2}[mm] MNO {3}'.format(s_index, h, b, m_index))
 
-#                 D = sqrt(geometry['A'] * 4 / pi) * 1000
-#                 f.write('TUBE NO {0} D {1} T {2} MNO {3}\n'.format(section_index, D, 0, mindex))
+            elif stype in ['TrussSection', 'StrutSection', 'TieSection']:
+
+                D = sqrt(geometry['A'] * 4 / pi) * 1000
+                writer.write_line('TUBE NO {0} D {1:.3f}[mm] T {2}[mm] MNO {3}'.format(s_index, D, 0, m_index))
 
             writer.blank_line()
             writer.blank_line()

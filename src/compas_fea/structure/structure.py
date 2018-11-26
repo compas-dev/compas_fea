@@ -529,9 +529,9 @@ Steps
         self.steps_order = order
 
 
-# ==============================================================================
-# analysis
-# ==============================================================================
+    # ==============================================================================
+    # Analysis
+    # ==============================================================================
 
     def fields_dict_from_list(self, fields_list):
 
@@ -544,21 +544,23 @@ Steps
 
         Returns
         -------
-        dic
+        dict
             Conversion to a fields dictionary.
 
         """
 
-        node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
+        node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
         element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'spf']
 
         fields_dict = {}
 
         for field in node_fields + element_fields:
+
             if field in fields_list:
                 fields_dict[field] = 'all'
 
         return fields_dict
+
 
     def write_input_file(self, software, fields='u', output=True, save=True):
 
@@ -567,13 +569,13 @@ Steps
         Parameters
         ----------
         software : str
-            Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
+            Analysis software / library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
         fields : list, str
             Data field requests.
         output : bool
             Print terminal output.
         save : bool
-            Save to structure to .obj before writing.
+            Save to structure to .obj before file writing.
 
         Returns
         -------
@@ -591,25 +593,28 @@ Steps
             ansys.input_generate(self)
 
         elif software == 'opensees':
-            opensees.input_generate(self, fields=fields)
+            opensees.input_generate(self, fields=fields, output=output)
 
         elif software == 'sofistik':
-            sofistik.input_generate(self, fields=fields)
+            sofistik.input_generate(self, fields=fields, output=output)
 
-    def analyse(self, software, exe=None, cpus=4, license='student', delete=True, output=True):
 
-        """ Runs the analysis through the chosen FEA software/library.
+    def analyse(self, software, exe=None, cpus=4, license='research', delete=True, output=True):
+
+        """ Runs the analysis through the chosen FEA software / library.
 
         Parameters
         ----------
         software : str
-            Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
+            Analysis software / library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
         exe : str
             Full terminal command to bypass subprocess defaults.
         cpus : int
             Number of CPU cores to use.
         license : str
-            FE software license type: 'research', 'student'.
+            Software license type: 'research', 'student'.
+        delete : bool
+            -
         output : bool
             Print terminal output.
 
@@ -620,9 +625,8 @@ Steps
         """
 
         if software == 'abaqus':
-            if license == 'student':
-                cpus = 1
-            abaq.launch_process(self, exe, cpus, output)
+            cpus = 1 if license == 'student' else cpus
+            abaq.launch_process(self, exe=exe, cpus=cpus, output=output)
 
         elif software == 'ansys':
             ansys.ansys_launch_process(self.path, self.name, cpus, license, delete=delete)
@@ -630,22 +634,28 @@ Steps
         elif software == 'opensees':
             opensees.launch_process(self, exe)
 
-    def extract_data(self, software, fields='u', steps='last', exe=None, sets=None, license='student', output=True):
+        elif software == 'sofistik':
+            pass
 
-        """ Extracts data from the FE software's output.
+
+    def extract_data(self, software, fields='u', steps='last', exe=None, sets=None, license='research', output=True):
+
+        """ Extracts data from the analysis output files.
 
         Parameters
         ----------
         software : str
-            Analysis software or library used, 'abaqus', 'opensees' or 'ansys'.
+            Analysis software / library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
         fields : list, str
             Data field requests.
         steps : list
             Loads steps to extract from.
         exe : str
             Full terminal command to bypass subprocess defaults.
+        sets : list
+            -
         license : str
-            FE software license type: 'research', 'student'.
+            Software license type: 'research', 'student'.
         output : bool
             Print terminal output.
 
@@ -664,14 +674,18 @@ Steps
         elif software == 'opensees':
             opensees.extract_data(self, fields=fields)
 
-    def analyse_and_extract(self, software, fields='u', exe=None, cpus=4, license='student', output=True, save=True):
+        elif software == 'sofistik':
+            pass
 
-        """ Runs the analysis through the chosen FEA software/library and extracts data.
+
+    def analyse_and_extract(self, software, fields='u', exe=None, cpus=4, license='research', output=True, save=True):
+
+        """ Runs the analysis through the chosen FEA software / library and extracts data.
 
         Parameters
         ----------
         software : str
-            Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
+            Analysis software / library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
         fields : list, str
             Data field requests.
         exe : str
@@ -679,11 +693,11 @@ Steps
         cpus : int
             Number of CPU cores to use.
         license : str
-            FE software license type: 'research', 'student'.
+            Software license type: 'research', 'student'.
         output : bool
             Print terminal output.
         save : bool
-            Save to structure to .obj before writing.
+            Save the structure to .obj before writing.
 
         Returns
         -------
@@ -726,7 +740,7 @@ Steps
         if nodes == 'all':
             keys = list(self.nodes.keys())
         elif isinstance(nodes, str):
-            keys = self.sets[nodes]['selection']
+            keys = self.sets[nodes].selection
         else:
             keys = nodes
 
@@ -760,7 +774,7 @@ Steps
         if elements == 'all':
             keys = list(self.elements.keys())
         elif isinstance(elements, str):
-            keys = self.sets[elements]['selection']
+            keys = self.sets[elements].selection
         else:
             keys = elements
 

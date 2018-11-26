@@ -157,90 +157,95 @@ def extract_odb_data(temp, name, fields, steps='all'):
             for field in element_fields:
                 if field in fields.split(','):
 
-                    ref = results[step]['element']
+                    try:
 
-                    if field == 'spf':
-                        field = 'ctf'
-                    if field == 'e':
-                        field = 'le'
+                        ref = results[step]['element']
 
-                    if field == 'rbfor':
-                        clabels = ['VALUE']
-                    else:
-                        clabels = list(fieldoutputs[field.upper()].componentLabels)
+                        if field == 'spf':
+                            field = 'ctf'
+                        if field == 'e':
+                            field = 'le'
 
-                    for c in clabels:
-                        ref[conversion[c]] = {}
+                        if field == 'rbfor':
+                            clabels = ['VALUE']
+                        else:
+                            clabels = list(fieldoutputs[field.upper()].componentLabels)
 
-                    if field == 's':
-                        ref['smises'] = {}
-
-                    if field in ['s', 'e', 'pe']:
-                        ref[field + 'maxp'] = {}
-                        ref[field + 'minp'] = {}
-                        ref['axes'] = {}
-                    elif field == 'le':
-                        ref['emaxp'] = {}
-                        ref['eminp'] = {}
-
-                    for value in fieldoutputs[field.upper()].values:
-                        data = value.data
-                        if isinstance(data, float):
-                            data = [data]
-                        element = value.elementLabel - 1
-                        ip = value.integrationPoint
-                        sp = value.sectionPoint.number if value.sectionPoint else 0
-                        id = 'ip{0}_sp{1}'.format(ip, sp)
-
-                        for i, c in enumerate(clabels):
-                            try:
-                                for i, c in enumerate(clabels):
-                                    ref[conversion[c]][element][id] = float(data[i])
-                            except:
-                                ref[conversion[c]][element] = {}
-                                try:
-                                    ref[conversion[c]][element][id] = float(data[i])
-                                except:
-                                    ref[conversion[c]][element][id] = None
+                        for c in clabels:
+                            ref[conversion[c]] = {}
 
                         if field == 's':
-                            try:
-                                ref['smises'][element][id] = float(value.mises)
-                            except:
-                                ref['smises'][element] = {}
+                            ref['smises'] = {}
+
+                        if field in ['s', 'e', 'pe']:
+                            ref[field + 'maxp'] = {}
+                            ref[field + 'minp'] = {}
+                            ref['axes'] = {}
+                        elif field == 'le':
+                            ref['emaxp'] = {}
+                            ref['eminp'] = {}
+
+                        for value in fieldoutputs[field.upper()].values:
+                            data = value.data
+                            if isinstance(data, float):
+                                data = [data]
+                            element = value.elementLabel - 1
+                            ip = value.integrationPoint
+                            sp = value.sectionPoint.number if value.sectionPoint else 0
+                            id = 'ip{0}_sp{1}'.format(ip, sp)
+
+                            for i, c in enumerate(clabels):
+                                try:
+                                    for i, c in enumerate(clabels):
+                                        ref[conversion[c]][element][id] = float(data[i])
+                                except:
+                                    ref[conversion[c]][element] = {}
+                                    try:
+                                        ref[conversion[c]][element][id] = float(data[i])
+                                    except:
+                                        ref[conversion[c]][element][id] = None
+
+                            if field == 's':
                                 try:
                                     ref['smises'][element][id] = float(value.mises)
                                 except:
-                                    ref['smises'][element][id] = None
+                                    ref['smises'][element] = {}
+                                    try:
+                                        ref['smises'][element][id] = float(value.mises)
+                                    except:
+                                        ref['smises'][element][id] = None
 
-                        if field in ['s', 'e', 'pe']:
-                            try:
-                                ref[field + 'maxp'][element][id] = float(value.maxPrincipal)
-                                ref[field + 'minp'][element][id] = float(value.minPrincipal)
-                                ref['axes'][element] = value.localCoordSystem
-                            except:
-                                ref[field + 'maxp'][element] = {}
-                                ref[field + 'minp'][element] = {}
+                            if field in ['s', 'e', 'pe']:
                                 try:
                                     ref[field + 'maxp'][element][id] = float(value.maxPrincipal)
                                     ref[field + 'minp'][element][id] = float(value.minPrincipal)
+                                    ref['axes'][element] = value.localCoordSystem
                                 except:
-                                    ref[field + 'maxp'][element][id] = None
-                                    ref[field + 'minp'][element][id] = None
+                                    ref[field + 'maxp'][element] = {}
+                                    ref[field + 'minp'][element] = {}
+                                    try:
+                                        ref[field + 'maxp'][element][id] = float(value.maxPrincipal)
+                                        ref[field + 'minp'][element][id] = float(value.minPrincipal)
+                                    except:
+                                        ref[field + 'maxp'][element][id] = None
+                                        ref[field + 'minp'][element][id] = None
 
-                        if field == 'le':  # temp fix
-                            try:
-                                ref['emaxp'][element][id] = float(value.maxPrincipal)
-                                ref['eminp'][element][id] = float(value.minPrincipal)
-                            except:
-                                ref['emaxp'][element] = {}
-                                ref['eminp'][element] = {}
+                            if field == 'le':  # temp fix
                                 try:
                                     ref['emaxp'][element][id] = float(value.maxPrincipal)
                                     ref['eminp'][element][id] = float(value.minPrincipal)
                                 except:
-                                    ref['emaxp'][element][id] = None
-                                    ref['eminp'][element][id] = None
+                                    ref['emaxp'][element] = {}
+                                    ref['eminp'][element] = {}
+                                    try:
+                                        ref['emaxp'][element][id] = float(value.maxPrincipal)
+                                        ref['eminp'][element][id] = float(value.minPrincipal)
+                                    except:
+                                        ref['emaxp'][element][id] = None
+                                        ref['eminp'][element][id] = None
+                    except:
+
+                        pass
 
     with open('{0}{1}-results.json'.format(temp, name), 'w') as f:
         json.dump(results, f)

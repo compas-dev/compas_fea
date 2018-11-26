@@ -106,9 +106,7 @@ mdl.summary()
 # Generate input files
 
 mdl.write_input_file(software='abaqus', fields=['s', 'u'])
-mdl.write_input_file(software='sofistik')
-mdl.write_input_file(software='opensees', fields=['s', 'u'])
 
 # Launch App
 
-# mdl.view()
+mdl.view()

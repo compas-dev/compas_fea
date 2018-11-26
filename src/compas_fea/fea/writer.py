@@ -45,13 +45,14 @@ class Writer(Steps, Materials, BCs, Sets, Elements, Nodes, Heading):
 
     """
 
-    def __init__(self, structure, software, filename, ndof=6):
+    def __init__(self, structure, software, filename, fields, ndof=6):
 
         self.comment   = comments[software]
         self.filename  = filename
         self.ndof      = ndof
         self.software  = software
         self.structure = structure
+        self.fields    = fields
         self.spacer    = {'abaqus': ', ', 'opensees': ' ', 'sofistik': ' ', 'ansys':    ' '}
 
 

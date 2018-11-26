@@ -29,6 +29,13 @@ abaqus_data = {
     'TrussSection':       {'name': None,          'geometry': ['A']},
 }
 
+footers = {
+    'abaqus':   '',
+    'opensees': '',
+    'sofistik': 'END\n$\n$',
+    'ansys':    '',
+}
+
 
 class Elements(object):
 
@@ -100,7 +107,7 @@ class Elements(object):
                     if self.software == 'opensees':
 
                         shell = 'ShellNLDKGT' if no == 3 else 'ShellNLDKGQ'
-                        self.write_line('section PlateFiber {0} {1} {2}'.format(n, m_index + 100, t))
+                        self.write_line('section PlateFiber {0} {1} {2}'.format(n, m_index + 1000, t))
                         self.write_line('element {0} {1} {2} {1}'.format(shell, n, ' '.join(nodes)))
 
                     # -------------------------------------------------------------------------------------------------
@@ -169,6 +176,61 @@ class Elements(object):
 
                 # =====================================================================================================
                 # =====================================================================================================
+                # TRUSS
+                # =====================================================================================================
+                # =====================================================================================================
+
+                elif stype == 'TrussSection':
+
+                    # -------------------------------------------------------------------------------------------------
+                    # OpenSees
+                    # -------------------------------------------------------------------------------------------------
+
+                    if self.software == 'opensees':
+
+                        e = 'element corotTruss'
+                        self.write_line('{0} {1} {2} {3} {4} {5}'.format(e, n, nodes[0], nodes[1], A, m_index))
+
+                    # -------------------------------------------------------------------------------------------------
+                    # Sofistik
+                    # -------------------------------------------------------------------------------------------------
+
+                    elif self.software == 'sofistik':
+
+                        # if material.__name__ in ['Steel']:  # add other materials that yield
+                        #     Ny = A * material.fy / 1000.
+                        #     tag = 'YIEL'
+                        # else:
+                        #     Ny = tag = ''
+                        Ny = ''
+                        tag = ''
+
+                        self.write_line('TRUS NO NA NE NCS {0}'.format(tag))
+                        self.write_line('{0} {1} {2} {3} {4}'.format(n, nodes[0], nodes[1], s_index, Ny))
+
+                    # -------------------------------------------------------------------------------------------------
+                    # Abaqus
+                    # -------------------------------------------------------------------------------------------------
+
+                    elif self.software == 'abaqus':
+
+                        e = 'element_{0}'.format(select)
+                        self.write_line('*ELEMENT, TYPE=T3D2, ELSET={0}'.format(e))
+                        self.write_line('{0}, {1},{2}'.format(n, nodes[0], nodes[1]))
+                        self.write_line('*SOLID SECTION, ELSET={0}, MATERIAL={1}'.format(e, material.name))
+                        self.write_line(str(A))
+
+                    # -------------------------------------------------------------------------------------------------
+                    # Ansys
+                    # -------------------------------------------------------------------------------------------------
+
+                    elif self.software == 'ansys':
+
+                        pass
+
+
+                # =====================================================================================================
+                # =====================================================================================================
                 # BEAM
                 # =====================================================================================================
                 # =====================================================================================================
@@ -181,10 +243,9 @@ class Elements(object):
 
                     if self.software == 'opensees':
 
+                        e = 'element elasticBeamColumn'
                         self.write_line('geomTransf Corotational {0} {1}'.format(n, ' '.join([str(i) for i in ex])))
-                        self.write_line('{} {} {} {} {} {} {} {} {} {} {}'.format(
-                                        'element elasticBeamColumn', n, nodes[0], nodes[1], A, E, G, J, Ixx, Iyy, n))
-                        self.blank_line()
+                        self.write_line('{} {} {} {} {} {} {} {} {} {} {}'.format(e, n, nodes[0], nodes[1], A, E, G, J, Ixx, Iyy, n))
 
                     # -------------------------------------------------------------------------------------------------
                     # Sofistik
@@ -213,7 +274,6 @@ class Elements(object):
 
                         if ex:
                             self.write_line(', '.join([str(i) for i in ex]))
-                        self.blank_line()
 
                     # -------------------------------------------------------------------------------------------------
                     # Ansys
@@ -223,9 +283,13 @@ class Elements(object):
 
                         pass
 
+                self.blank_line()
 
             self.blank_line()
             self.blank_line()
+
+        if footers[self.software]:
+            self.write_line(footers[self.software])
 
 
 
@@ -341,133 +405,6 @@ class Elements(object):
 
 #         if has_rebar:
 #             _write_sofistik_rebar(f, properties, sections, sets)
-
-#     # Abaqus
-
-#     elif software == 'abaqus':
-
-#         for key, eset in sets.items():
-#             stype = eset['type']
-
-#             if stype != 'node':
-
-#                 f.write('** {0}\n'.format(key))
-#                 f.write('** ' + '-' * len(key) + '\n')
-#                 f.write('**\n')
-
-#                 if stype in ['element', 'surface_node']:
-
-#                     if stype == 'element':
-#                         f.write('*ELSET, ELSET={0}\n'.format(key))
-#                         f.write('**\n')
-
-#                     elif stype == 'surface_node':
-#                         f.write('*SURFACE, TYPE=NODE, NAME={0}\n'.format(key))
-#                         f.write('**\n')
-
-#                     cnt = 0
-#                     selection = [i + 1 for i in eset['selection']]
-
-#                     for j in selection:
-#                         f.write(str(j))
-
-#                         if (cnt < 9) and (j != selection[-1]):
-#                             f.write(',')
-#                             cnt += 1
-
-#                         elif cnt >= 9:
-#                             f.write('\n')
-#                             cnt = 0
-
-#                         else:
-#                             f.write('\n')
-
-#                 if stype == 'surface_element':
-
-#                     f.write('*SURFACE, TYPE=ELEMENT, NAME={0}\n'.format(key))
-#                     f.write('** ELEMENT, SIDE\n')
-
-#                     for element, sides in eset['selection'].items():
-#                         for side in sides:
-#                             f.write('{0}, {1}'.format(element + 1, side))
-#                             f.write('\n')
-
-#                 f.write('**\n')
-#                 f.write('**\n')
-
-#     # OpenSees
-
-#     elif software == 'opensees':
-
-#         pass
-
-#     # Ansys
-
-#     elif software == 'ansys':
-
-#         pass
-
-
-
-# def _write_trusses(f, selection, software, elements, section, material, elset):
-
-#     A = section.geometry['A']
-
-#     # Write headings
-
-#     if software == 'abaqus':
-
-#         f.write('*SOLID SECTION, ELSET={0}, MATERIAL={1}\n'.format(elset, material.name))
-#         f.write('{0}\n'.format(A))
-#         f.write('**\n')
-#         f.write('*ELEMENT, TYPE=T3D2, ELSET={0}\n'.format(elset))
-#         f.write('**\n')
-
-#     elif software == 'sofistik':
-
-#         if material.__name__ in ['Steel']:  # add other materials that yield
-#             Ny = A * material.fy / 1000.
-#             tag = 'YIEL'
-#         else:
-#             Ny = tag = ''
-
-#         f.write('TRUS NO NA NE NCS {0}'.format(tag))
-#         f.write('\n$\n')
-
-#     elif software == 'opensees':
-
-#         pass
-
-#     elif software == 'ansys':
-
-#         pass
-
-#     # Write elements
-
-#     for select in selection:
-
-#         n = select + 1
-#         sp, ep = elements[select].nodes
-#         i = sp + 1
-#         j = ep + 1
-
-#         if software == 'abaqus':
-
-#             f.write('{0}, {1},{2}\n'.format(n, i, j))
-
-#         elif software == 'sofistik':
-
-#             f.write('{0} {1} {2} {3} {4}\n'.format(n, i, j, section.index + 1, Ny))
-
-#         elif software == 'opensees':
-
-#             f.write('element corotTruss {0} {1} {2} {3} {4}\n'.format(n, i, j, A, material.index + 1))
-
-#         elif software == 'ansys':
-
-#             pass
-
-
 
 
 

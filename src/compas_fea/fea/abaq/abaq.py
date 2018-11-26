@@ -61,7 +61,7 @@ def input_generate(structure, fields, output):
     if 'u' not in fields:
         fields.append('u')
 
-    with Writer(structure=structure, software='abaqus', filename=filename) as writer:
+    with Writer(structure=structure, software='abaqus', filename=filename, fields=fields) as writer:
 
         writer.write_heading()
         writer.write_nodes()
@@ -69,33 +69,11 @@ def input_generate(structure, fields, output):
         writer.write_boundary_conditions()
         writer.write_materials()
         writer.write_elements()
-        # write_input_misc(f, 'abaqus', misc)
+        writer.write_element_sets()
         writer.write_steps()
 
     if output:
         print('***** Abaqus input file generated: {0} *****\n'.format(filename))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def launch_process(structure, exe, cpus, output):
@@ -122,28 +100,29 @@ def launch_process(structure, exe, cpus, output):
     name = structure.name
     path = structure.path
     temp = '{0}{1}/'.format(path, name)
-    try:
-        os.stat(temp)
-    except:
-        os.mkdir(temp)
+
+    # Analyse
 
     tic = time()
 
     subprocess = 'noGUI={0}'.format(launch_job.__file__.replace('\\', '/'))
-    success = False
+    success    = False
 
     if not exe:
 
         args = ['abaqus', 'cae', subprocess, '--', str(cpus), path, name]
-        p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+        p    = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
 
         while True:
+
             line = p.stdout.readline()
             if not line:
                 break
             line = str(line.strip())
+
             if output:
                 print(line)
+
             if 'COMPLETED' in line:
                 success = True
 
@@ -155,9 +134,9 @@ def launch_process(structure, exe, cpus, output):
 
     else:
 
-        args = '{0} -- {1} {2} {3}'.format(subprocess, cpus, path, name)
         os.chdir(temp)
-        os.system('{0}{1}'.format(exe, args))
+        os.system('{0} {1} -- {2} {3} {4}'.format(exe, subprocess, cpus, path, name))
+
         success = True
 
     toc = time() - tic
@@ -167,30 +146,7 @@ def launch_process(structure, exe, cpus, output):
             print('***** Analysis successful - analysis time : {0} s *****'.format(toc))
 
     else:
-        if output:
-            print('***** Analysis failed: attempting to read error logs *****')
-
-        try:
-            with open('{0}{1}.msg'.format(temp, name)) as f:
-                lines = f.readlines()
-
-                for c, line in enumerate(lines):
-                    if (' ***ERROR' in line) or (' ***WARNING' in line):
-                        if output:
-                            print(lines[c][:-2])
-                            print(lines[c + 1][:-2])
-        except:
-            pass
-
-        try:
-            with open('{0}abaqus.rpy'.format(temp)) as f:
-                lines = f.readlines()
-
-                for c, line in enumerate(lines):
-                    if '#: ' in line:
-                        print(lines[c])
-        except:
-            pass
+        print('***** Analysis failed *****')
 
 
 def extract_data(structure, fields, exe, output):
@@ -231,14 +187,17 @@ def extract_data(structure, fields, exe, output):
     if not exe:
 
         args = ['abaqus', 'cae', subprocess, '--', fields, name, temp]
-        p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+        p    = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
 
         while True:
+
             line = p.stdout.readline()
             if not line:
                 break
             line = str(line.strip())
-            print(line)
+
+            if output:
+                print(line)
 
         stdout, stderr = p.communicate()
 
@@ -248,9 +207,8 @@ def extract_data(structure, fields, exe, output):
 
     else:
 
-        args = '{0} -- {1} {2} {3}'.format(subprocess, fields, name, temp)
         os.chdir(temp)
-        os.system('{0}{1}'.format(exe, args))
+        os.system('{0}{1} -- {2} {3} {4}'.format(exe, subprocess, fields, name, temp))
 
     toc1 = time() - tic1
 
@@ -270,12 +228,18 @@ def extract_data(structure, fields, exe, output):
             info = json.load(f)
 
         for step in results:
+
             for dtype in results[step]:
+
                 if dtype in ['nodal', 'element']:
+
                     for field in results[step][dtype]:
+
                         data = {}
+
                         for key in results[step][dtype][field]:
                             data[int(key)] = results[step][dtype][field][key]
+
                         results[step][dtype][field] = data
 
         structure.results = results
