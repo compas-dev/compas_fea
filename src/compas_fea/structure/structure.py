@@ -632,7 +632,7 @@ Steps
             ansys.ansys_launch_process(self.path, self.name, cpus, license, delete=delete)
 
         elif software == 'opensees':
-            opensees.launch_process(self, exe)
+            opensees.launch_process(self, exe=exe, output=output)
 
         elif software == 'sofistik':
             pass

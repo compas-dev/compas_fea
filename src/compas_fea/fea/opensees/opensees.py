@@ -67,44 +67,7 @@ def input_generate(structure, fields, output):
     print('***** OpenSees input file generated: {0} *****\n'.format(filename))
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def launch_process(structure, exe):
+def launch_process(structure, exe, output):
 
     """ Runs the analysis through OpenSees.
 
@@ -114,6 +77,8 @@ def launch_process(structure, exe):
         Structure object.
     exe : str
         OpenSees exe path to bypass defaults.
+    output : bool
+        Print terminal output.
 
     Returns
     -------
@@ -126,6 +91,7 @@ def launch_process(structure, exe):
         name = structure.name
         path = structure.path
         temp = '{0}{1}/'.format(path, name)
+
         try:
             os.stat(temp)
         except:
@@ -137,19 +103,25 @@ def launch_process(structure, exe):
             exe = 'C:/OpenSees.exe'
 
         command = '{0} {1}{2}.tcl'.format(exe, path, name)
-        print(command)
         p = Popen(command, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
 
+        print('Executing command ', command)
+
         while True:
+
             line = p.stdout.readline()
             if not line:
                 break
             line = str(line.strip())
-            print(line)
+
+            if output:
+                print(line)
 
         stdout, stderr = p.communicate()
-        print(stdout)
-        print(stderr)
+
+        if output:
+            print(stdout)
+            print(stderr)
 
         toc = time() - tic
 
@@ -178,47 +150,85 @@ def extract_data(structure, fields):
     """
 
     tic = time()
-    temp = '{0}{1}/'.format(structure.path, structure.name)
 
-    step = structure.steps_order[1]
+    name = structure.name
+    path = structure.path
+    temp = '{0}{1}/'.format(path, name)
+
+    step    = structure.steps_order[1]
     results = structure.results[step] = {'nodal': {}, 'element': {}}
     nodal   = results['nodal']
     element = results['element']
 
+    # Loads
+
+    nodes = range(structure.node_count())
+
+    for i in 'xyz':
+        nodal['cf{0}'.format(i)] = {i: 0 for i in nodes}
+        nodal['cm{0}'.format(i)] = {i: 0 for i in nodes}
+
+    for k in structure.steps[structure.steps_order[1]].loads:
+
+        load = structure.loads[k]
+
+        if load.__name__ == 'PointLoad':
+            com  = load.components
+
+            nn = load.nodes
+            if isinstance(nn, str):
+                nn = [nn]
+
+            for node in nn:
+                ns = structure.sets[node].selection if isinstance(node, str) else node
+
+                for ni in ns:
+                    for i in 'xyz':
+                        nodal['cf{0}'.format(i)][ni] += com[i]
+                        nodal['cm{0}'.format(i)][ni] += com[i + i]
+
+    # Fields
+
     for field in fields:
-        file = step + '_' + field
+
+        file = '{0}_{1}'.format(step, field)
 
         # Nodal data
 
         if field in ['u', 'ur', 'rf', 'rm']:
 
             try:
+
                 with open('{0}{1}.out'.format(temp, file), 'r') as f:
                     lines = f.readlines()
                 data = [float(i) for i in lines[-1].split(' ')[1:]]
 
-                for dof in 'xyz':
-                    nodal['{0}{1}'.format(field, dof)] = {}
-                nodal['{0}m'.format(field)] = {}
+                dofx = data[0::3]
+                dofy = data[1::3]
+                dofz = data[2::3]
+                dofm = [sqrt(u**2 + v**2 + w**2) for u, v, w in zip(dofx, dofy, dofz)]
 
-                for node in structure.nodes:
-                    sum2 = 0
-                    for c, dof in enumerate('xyz'):
-                        val = data[node * 3 + c]
-                        nodal['{0}{1}'.format(field, dof)][node] = val
-                        sum2 += val**2
-                    nodal['{0}m'.format(field)][node] = sqrt(sum2)
+                nodal['{0}x'.format(field)] = {i: dofx[i] for i in nodes}
+                nodal['{0}y'.format(field)] = {i: dofy[i] for i in nodes}
+                nodal['{0}z'.format(field)] = {i: dofz[i] for i in nodes}
+                nodal['{0}m'.format(field)] = {i: dofm[i] for i in nodes}
 
                 print('***** {0}.out data loaded *****'.format(file))
 
             except:
+
                 print('***** {0}.out data not loaded/saved'.format(file))
+
+        # Element data
 
         elif field in ['sf']:
 
             # Truss data
 
             try:
+
+                element['sf1'] = {}
+
                 with open('{0}{1}_truss.out'.format(temp, file), 'r') as f:
                     lines = f.readlines()
                 data = [float(i) for i in lines[-1].split(' ')[1:]]
@@ -226,14 +236,13 @@ def extract_data(structure, fields):
                 with open('{0}truss_ekeys.json'.format(temp), 'r') as f:
                     truss_ekeys = json.load(f)['truss_ekeys']
 
-                element['sf1'] = {}
                 for ekey, sf1 in zip(truss_ekeys, data):
-                    element['sf1'][ekey] = {}
-                    element['sf1'][ekey]['ip'] = sf1
+                    element['sf1'][ekey] = {'ip': sf1}
 
                 print('***** {0}.out data loaded *****'.format(file))
 
             except:
+
                 print('***** No truss element data loaded')
 
     #         try:

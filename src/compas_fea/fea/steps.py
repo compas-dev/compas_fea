@@ -22,7 +22,7 @@ dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 
 footers = {
     'abaqus':   '',
-    'opensees': '}#\n#',
+    'opensees': '}\n#\n#',
     'sofistik': 'END\n$\n$',
     'ansys':    '',
 }
@@ -440,29 +440,29 @@ class Steps(object):
                     if truss_elements:
                         self.write_line('{0}sf_truss.out -time -ele {1} axialForce'.format(prefix, truss_elements))
 
-                #     #     if beam_elements:
-                #     #         k = 'element_beam_sf.out'
-                #     #         j = 'force'
-                #     #         self.write_line('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, beam_elements, j))
+                    #     if beam_elements:
+                    #         k = 'element_beam_sf.out'
+                    #         j = 'force'
+                    #         self.write_line('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, beam_elements, j))
 
-                #     # if 'spf' in fields:
+                    # if 'spf' in fields:
 
-                #     #     if spring_elements:
-                #     #         k = 'element_spring_sf.out'
-                #     #         j = 'basicForces'
-                #     #         self.write_line('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, spring_elements, j))
+                    #     if spring_elements:
+                    #         k = 'element_spring_sf.out'
+                    #         j = 'basicForces'
+                    #         self.write_line('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, spring_elements, j))
 
 
-                #     # ekeys
+                # ekeys
 
-                #     with open('{0}truss_ekeys.json'.format(temp), 'w') as fo:
-                #         json.dump({'truss_ekeys': truss_ekeys}, fo)
+                with open('{0}truss_ekeys.json'.format(temp), 'w') as file:
+                    json.dump({'truss_ekeys': truss_ekeys}, file)
 
-                #     # with open('{0}beam_numbers.json'.format(temp), 'w') as fo:
-                #     #     json.dump({'beam_numbers': beam_numbers}, fo)
+                # with open('{0}beam_numbers.json'.format(temp), 'w') as file:
+                #     json.dump({'beam_numbers': beam_numbers}, file)
 
-                #     # with open('{0}spring_numbers.json'.format(temp), 'w') as fo:
-                #     #     json.dump({'spring_numbers': spring_numbers}, fo)
+                # with open('{0}spring_numbers.json'.format(temp), 'w') as file:
+                #     json.dump({'spring_numbers': spring_numbers}, file)
 
 
                 # Solver

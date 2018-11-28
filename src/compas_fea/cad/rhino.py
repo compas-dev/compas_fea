@@ -398,7 +398,7 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
     nodes = structure.nodes_xyz(nkeys)
 
     for i in nkeys:
-        if rm[i]:
+        if rm[i] > 0.001:
             l = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
             rs.CurveArrows(l, 1)
             col = [int(j) for j in colorbar(rm[i] / rmax, input='float', type=255)]
