@@ -20,12 +20,6 @@ __all__ = [
 
 dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 
-footers = {
-    'abaqus':   '',
-    'opensees': '}\n#\n#',
-    'ansys':    '',
-}
-
 
 class Steps(object):
 
@@ -91,9 +85,11 @@ class Steps(object):
 
                 if self.software == 'opensees':
 
-                    self.write_line('timeSeries Constant {0} -factor 1.0'.format(s_index))
-                    self.write_line('pattern Plain {0} {0} -fact {1} {2}'.format(s_index, factor, '{'))
-                    self.blank_line()
+                    if stype != 'ModalStep':
+
+                        self.write_line('timeSeries Constant {0} -factor 1.0'.format(s_index))
+                        self.write_line('pattern Plain {0} {0} -fact {1} {2}'.format(s_index, factor, '{'))
+                        self.blank_line()
 
                 # -------------------------------------------------------------------------------------------------
                 # Abaqus
@@ -310,9 +306,6 @@ class Steps(object):
                 self.blank_line()
                 self.blank_line()
 
-            if footers[self.software]:
-                self.write_line(footers[self.software])
-
             # =====================================================================================================
             # =====================================================================================================
             # OUTPUT
@@ -336,96 +329,145 @@ class Steps(object):
                     'rm': '4 5 6 reaction',
                 }
 
-                self.write_subsection('Node recorders')
+                if stype != 'ModalStep':
 
-                prefix = 'recorder Node -file {0}{1}_'.format(temp, key)
-                n = self.structure.node_count()
+                    self.write_line('}')
 
-                for field in node_output:
-                    if field in fields:
-                        dof = node_output[field]
-                        self.write_line('{0}{1}.out -time -nodeRange 1 {2} -dof {3}'.format(prefix, field, n, dof))
+                    self.blank_line()
+                    self.write_subsection('Node recorders')
+
+                    prefix = 'recorder Node -file {0}{1}_'.format(temp, key)
+                    n = self.structure.node_count()
+
+                    for field in node_output:
+                        if field in fields:
+                            dof = node_output[field]
+                            self.write_line('{0}{1}.out -time -nodeRange 1 {2} -dof {3}'.format(prefix, field, n, dof))
+                            self.blank_line()
+
+                    # Sort elements
+
+                    truss_elements = ''
+                    beam_elements  = ''
+                    truss_ekeys    = []
+                    beam_ekeys     = []
+                    # spring_elements = ''
+                    #     # spring_numbers = []
+
+                    for ekey, element in self.structure.elements.items():
+
+                        etype = element.__name__
+                        n = '{0} '.format(ekey + 1)
+
+                        if etype == 'TrussElement':
+                            truss_elements += n
+                            truss_ekeys.append(ekey)
+
+                        elif etype == 'BeamElement':
+                            beam_elements += n
+                            beam_ekeys.append(ekey)
+
+                #     elif etype in ['SpringElement']:
+                #         spring_elements += '{0} '.format(ekey + 1)
+                #         spring_numbers.append(ekey)
+
+
+                    # Element recorders
+
+                    self.blank_line()
+                    self.write_subsection('Element recorders')
+
+                    prefix = 'recorder Element -file {0}{1}_'.format(temp, key)
+
+                    if 'sf' in fields:
+
+                        if truss_elements:
+                            self.write_line('{0}sf_truss.out -time -ele {1} axialForce'.format(prefix, truss_elements))
+
+                        #     if beam_elements:
+                        #         k = 'element_beam_sf.out'
+                        #         j = 'force'
+                        #         self.write_line('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, beam_elements, j))
+
+                        # if 'spf' in fields:
+
+                        #     if spring_elements:
+                        #         k = 'element_spring_sf.out'
+                        #         j = 'basicForces'
+                        #         self.write_line('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, spring_elements, j))
+
+
+                    # ekeys
+
+                    with open('{0}truss_ekeys.json'.format(temp), 'w') as file:
+                        json.dump({'truss_ekeys': truss_ekeys}, file)
+
+                    # with open('{0}beam_numbers.json'.format(temp), 'w') as file:
+                    #     json.dump({'beam_numbers': beam_numbers}, file)
+
+                    # with open('{0}spring_numbers.json'.format(temp), 'w') as file:
+                    #     json.dump({'spring_numbers': spring_numbers}, file)
+
+
+                    # Solver
+
+                    self.blank_line()
+                    self.write_subsection('Solver')
+                    self.blank_line()
+
+                    # # self.write_line('constraints Plain\n')
+                    self.write_line('constraints Transformation')
+                    self.write_line('numberer RCM')
+                    self.write_line('system ProfileSPD')
+                    self.write_line('test NormUnbalance {0} {1} 5'.format(tolerance, iterations))
+                    self.write_line('algorithm NewtonLineSearch')
+                    self.write_line('integrator LoadControl {0}'.format(1. / increments))
+                    self.write_line('analysis Static')
+                    self.write_line('analyze {0}'.format(increments))
+
+                else:
+
+                    self.blank_line()
+                    self.write_subsection('Node recorders')
+
+                    for mode in range(modes):
+                        prefix = 'recorder Node -file {0}{1}_u_mode-{2}'.format(temp, key, mode + 1)
+                        n = self.structure.node_count()
+                        self.write_line('{0}.out -nodeRange 1 {1} -dof 1 2 3 "eigen {2}"'.format(prefix, n, mode + 1))
                         self.blank_line()
 
-                # Sort elements
+                    self.write_subsection('Eigen analysis')
 
-                truss_elements = ''
-                beam_elements  = ''
-                truss_ekeys    = []
-                beam_ekeys     = []
-                # spring_elements = ''
-                #     # spring_numbers = []
+                    self.write_line('set lambda [eigen {0}]'.format(modes))
+                    self.write_line('set omega {}')
+                    self.write_line('set f {}')
+                    self.write_line('set pi 3.141593')
+                    self.blank_line()
+                    self.write_line('foreach lam $lambda {')
+                    self.write_line('    lappend omega [expr sqrt($lam)]')
+                    self.write_line('    lappend f     [expr sqrt($lam)/(2*$pi)]')
+                    self.write_line('}')
+                    self.blank_line()
+                    self.write_line('puts "frequencies: $f"')
+                    self.blank_line()
+                    self.write_line('set file "{0}{1}_frequencies.txt"'.format(temp, key))
+                    self.write_line('set File [open $file "w"]')
+                    self.blank_line()
+                    self.write_line('foreach t $f {')
+                    self.write_line('    puts $File " $t"')
+                    self.write_line('}')
+                    self.write_line('close $File')
+                    self.blank_line()
+                    self.write_line('record')
 
-                for ekey, element in self.structure.elements.items():
-
-                    etype = element.__name__
-                    n = '{0} '.format(ekey + 1)
-
-                    if etype == 'TrussElement':
-                        truss_elements += n
-                        truss_ekeys.append(ekey)
-
-                    elif etype == 'BeamElement':
-                        beam_elements += n
-                        beam_ekeys.append(ekey)
-
-            #     elif etype in ['SpringElement']:
-            #         spring_elements += '{0} '.format(ekey + 1)
-            #         spring_numbers.append(ekey)
-
-
-                # Element recorders
-
-                self.blank_line()
-                self.write_subsection('Element recorders')
-
-                prefix = 'recorder Element -file {0}{1}_'.format(temp, key)
-
-                if 'sf' in fields:
-
-                    if truss_elements:
-                        self.write_line('{0}sf_truss.out -time -ele {1} axialForce'.format(prefix, truss_elements))
-
-                    #     if beam_elements:
-                    #         k = 'element_beam_sf.out'
-                    #         j = 'force'
-                    #         self.write_line('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, beam_elements, j))
-
-                    # if 'spf' in fields:
-
-                    #     if spring_elements:
-                    #         k = 'element_spring_sf.out'
-                    #         j = 'basicForces'
-                    #         self.write_line('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, spring_elements, j))
-
-
-                # ekeys
-
-                with open('{0}truss_ekeys.json'.format(temp), 'w') as file:
-                    json.dump({'truss_ekeys': truss_ekeys}, file)
-
-                # with open('{0}beam_numbers.json'.format(temp), 'w') as file:
-                #     json.dump({'beam_numbers': beam_numbers}, file)
-
-                # with open('{0}spring_numbers.json'.format(temp), 'w') as file:
-                #     json.dump({'spring_numbers': spring_numbers}, file)
-
-
-                # Solver
-
-                self.blank_line()
-                self.write_subsection('Solver')
-                self.blank_line()
-
-                # # self.write_line('constraints Plain\n')
-                self.write_line('constraints Transformation')
-                self.write_line('numberer RCM')
-                self.write_line('system ProfileSPD')
-                self.write_line('test NormUnbalance {0} {1} 5'.format(tolerance, iterations))
-                self.write_line('algorithm NewtonLineSearch')
-                self.write_line('integrator LoadControl {0}'.format(1. / increments))
-                self.write_line('analysis Static')
-                self.write_line('analyze {0}'.format(increments))
+                    # # get values of eigenvectors for translational DOFs
+                    # #---------------------------------------------------
+                    # set f11 [nodeEigenvector 3 1 1]
+                    # set f21 [nodeEigenvector 5 1 1]
+                    # set f12 [nodeEigenvector 3 2 1]
+                    # set f22 [nodeEigenvector 5 2 1]
+                    # puts "eigenvector 1: [list [expr {$f11/$f21}] [expr {$f21/$f21}] ]"
+                    # puts "eigenvector 2: [list [expr {$f12/$f22}] [expr {$f22/$f22}] ]"
 
             # -------------------------------------------------------------------------------------------------
             # Abaqus

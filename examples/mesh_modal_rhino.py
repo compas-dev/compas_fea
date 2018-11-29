@@ -21,35 +21,35 @@ mdl = Structure(name='mesh_modal', path='C:/Temp/')
 
 # Elements
 
-rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers='elset_concrete')
+rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers='elset_concrete', pA=600)
 
 # Sets
 
-#rhino.add_sets_from_layers(mdl, layers='nset_pins')
+rhino.add_sets_from_layers(mdl, layers='nset_pins')
 
 # Materials
 
-#mdl.add(ElasticIsotropic(name='mat_concrete', E=40*10**9, v=0.2, p=2400))
+mdl.add(ElasticIsotropic(name='mat_concrete', E=40*10**9, v=0.2, p=2400))
 
 # Sections
 
-#mdl.add(ShellSection(name='sec_concrete', t=0.250))
+mdl.add(ShellSection(name='sec_concrete', t=0.250))
 
 # Properties
 
-#mdl.add(Properties(name='ep_concrete', material='mat_concrete', section='sec_concrete', elset='elset_concrete'))
+mdl.add(Properties(name='ep_concrete', material='mat_concrete', section='sec_concrete', elset='elset_concrete'))
 
 # Displacements
 
-#mdl.add(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
+mdl.add(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
 
 # Steps
 
-#mdl.add([
-#    GeneralStep(name='step_bc', displacements=['disp_pinned']),
-#    ModalStep(name='step_modal', modes=5),
-#])
-#mdl.steps_order = ['step_bc', 'step_modal']
+mdl.add([
+    GeneralStep(name='step_bc', displacements=['disp_pinned']),
+    ModalStep(name='step_modal', modes=2),
+])
+mdl.steps_order = ['step_bc', 'step_modal']
 
 # Summary
 
@@ -57,10 +57,9 @@ mdl.summary()
 
 # Run
 
-mdl.write_input_file(software='opensees', fields=['u'])
-#mdl.analyse_and_extract(software='opensees', fields=['u'])
+mdl.analyse_and_extract(software='opensees', fields=['u'])
 
-#rhino.plot_mode_shapes(mdl, step='step_modal', layer='mode-')
+rhino.plot_mode_shapes(mdl, step='step_modal', layer='mode-')
 
-#print(mdl.results['step_modal']['frequencies'])
-#print(mdl.results['step_modal']['masses'])
+print(mdl.results['step_modal']['frequencies'])
+print(mdl.results['step_modal']['masses'])

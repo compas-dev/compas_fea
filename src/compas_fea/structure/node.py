@@ -38,7 +38,7 @@ class Node(object):
 
     """
 
-    def __init__(self, key, xyz, ex, ey, ez):
+    def __init__(self, key, xyz, ex, ey, ez, mass):
 
         self.__name__ = 'Node'
         self.key      = key
@@ -48,6 +48,7 @@ class Node(object):
         self.ex       = ex
         self.ey       = ey
         self.ez       = ez
+        self.mass     = mass
 
 
     def __str__(self):
@@ -56,7 +57,7 @@ class Node(object):
         print('compas_fea {0} object'.format(self.__name__))
         print('-' * (len(self.__name__) + 18))
 
-        for attr in ['key', 'x', 'y', 'z', 'ex', 'ey', 'ez']:
+        for attr in ['key', 'x', 'y', 'z', 'ex', 'ey', 'ez', 'mass']:
             print('{0:<5} : {1}'.format(attr, getattr(self, attr)))
 
         return ''

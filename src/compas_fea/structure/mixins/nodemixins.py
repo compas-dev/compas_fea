@@ -21,7 +21,7 @@ __all__ = [
 
 class NodeMixins(object):
 
-    def add_node(self, xyz, ex=[1, 0, 0], ey=[0, 1, 0], ez=[0, 0, 1]):
+    def add_node(self, xyz, ex=[1, 0, 0], ey=[0, 1, 0], ez=[0, 0, 1], mass=0):
 
         """ Adds a node to structure.nodes at co-ordinates xyz with local frame [ex, ey, ez].
 
@@ -35,6 +35,8 @@ class NodeMixins(object):
             Node's local y axis.
         ez : list
             Node's local z axis.
+        mass : float
+            Lumped mass at node.
 
         Returns
         -------
@@ -53,7 +55,7 @@ class NodeMixins(object):
         if key is None:
 
             key = self.node_count()
-            self.nodes[key] = Node(key=key, xyz=xyz, ex=ex, ey=ey, ez=ez)
+            self.nodes[key] = Node(key=key, xyz=xyz, ex=ex, ey=ey, ez=ez, mass=mass)
             self.add_node_to_node_index(key=key, xyz=xyz)
 
         return key

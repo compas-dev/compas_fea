@@ -160,126 +160,167 @@ def extract_data(structure, fields):
     nodal   = results['nodal']
     element = results['element']
 
-    # Loads
+    if structure.steps[step].__name__ != 'ModalStep':
 
-    nodes = range(structure.node_count())
+        # Loads
 
-    for i in 'xyz':
-        nodal['cf{0}'.format(i)] = {i: 0 for i in nodes}
-        nodal['cm{0}'.format(i)] = {i: 0 for i in nodes}
+        nodes = range(structure.node_count())
 
-    for k in structure.steps[structure.steps_order[1]].loads:
+        for i in 'xyz':
+            nodal['cf{0}'.format(i)] = {i: 0 for i in nodes}
+            nodal['cm{0}'.format(i)] = {i: 0 for i in nodes}
 
-        load = structure.loads[k]
+        for k in structure.steps[structure.steps_order[1]].loads:
 
-        if load.__name__ == 'PointLoad':
-            com  = load.components
+            load = structure.loads[k]
 
-            nn = load.nodes
-            if isinstance(nn, str):
-                nn = [nn]
+            if load.__name__ == 'PointLoad':
+                com  = load.components
 
-            for node in nn:
-                ns = structure.sets[node].selection if isinstance(node, str) else node
+                nn = load.nodes
+                if isinstance(nn, str):
+                    nn = [nn]
 
-                for ni in ns:
-                    for i in 'xyz':
-                        nodal['cf{0}'.format(i)][ni] += com[i]
-                        nodal['cm{0}'.format(i)][ni] += com[i + i]
+                for node in nn:
+                    ns = structure.sets[node].selection if isinstance(node, str) else node
 
-    # Fields
+                    for ni in ns:
+                        for i in 'xyz':
+                            nodal['cf{0}'.format(i)][ni] += com[i]
+                            nodal['cm{0}'.format(i)][ni] += com[i + i]
 
-    for field in fields:
+        # Fields
 
-        file = '{0}_{1}'.format(step, field)
+        for field in fields:
 
-        # Nodal data
+            file = '{0}_{1}'.format(step, field)
 
-        if field in ['u', 'ur', 'rf', 'rm']:
+            # Nodal data
+
+            if field in ['u', 'ur', 'rf', 'rm']:
+
+                try:
+
+                    with open('{0}{1}.out'.format(temp, file), 'r') as f:
+                        lines = f.readlines()
+                    data = [float(i) for i in lines[-1].split(' ')[1:]]
+
+                    dofx = data[0::3]
+                    dofy = data[1::3]
+                    dofz = data[2::3]
+                    dofm = [sqrt(u**2 + v**2 + w**2) for u, v, w in zip(dofx, dofy, dofz)]
+
+                    nodal['{0}x'.format(field)] = {i: dofx[i] for i in nodes}
+                    nodal['{0}y'.format(field)] = {i: dofy[i] for i in nodes}
+                    nodal['{0}z'.format(field)] = {i: dofz[i] for i in nodes}
+                    nodal['{0}m'.format(field)] = {i: dofm[i] for i in nodes}
+
+                    print('***** {0}.out data loaded *****'.format(file))
+
+                except:
+
+                    print('***** {0}.out data not loaded/saved'.format(file))
+
+            # Element data
+
+            elif field in ['sf']:
+
+                # Truss data
+
+                try:
+
+                    element['sf1'] = {}
+
+                    with open('{0}{1}_truss.out'.format(temp, file), 'r') as f:
+                        lines = f.readlines()
+                    data = [float(i) for i in lines[-1].split(' ')[1:]]
+
+                    with open('{0}truss_ekeys.json'.format(temp), 'r') as f:
+                        truss_ekeys = json.load(f)['truss_ekeys']
+
+                    for ekey, sf1 in zip(truss_ekeys, data):
+                        element['sf1'][ekey] = {'ip': sf1}
+
+                    print('***** {0}.out data loaded *****'.format(file))
+
+                except:
+
+                    print('***** No truss element data loaded')
+
+        #         try:
+
+        #             file = step + '_element_beam_sf'
+
+        #             with open('{0}{1}.out'.format(temp, file), 'r') as f:
+        #                 lines = f.readlines()
+        #             beam_data = [float(i) for i in lines[-1].split(' ')[1:]]
+
+        #             with open('{0}beam_numbers.json'.format(temp), 'r') as f:
+        #                 beam_numbers = json.load(f)['beam_numbers']
+
+        #             # sort beam data here
+
+        #         except:
+
+        #             print('***** No beam element data loaded *****')
+
+        #         try:
+
+        #             file = step + '_element_spring_sf'
+
+        #             with open('{0}{1}.out'.format(temp, file), 'r') as f:
+        #                 lines = f.readlines()
+        #             spring_data = [float(i) for i in lines[-1].split(' ')[1:]]
+
+        #             with open('{0}spring_numbers.json'.format(temp), 'r') as f:
+        #                 spring_numbers = json.load(f)['spring_numbers']
+
+        #             element['spfx'] = {}
+        #             for ekey, spfx in zip(spring_numbers, spring_data):
+        #                 element['spfx'][ekey] = {}
+        #                 element['spfx'][ekey]['ip'] = spfx
+
+        #         except:
+
+        #             print('***** No spring element data loaded *****')
+
+        print('\n***** Data extracted from OpenSees .out file(s) : {0} s *****\n'.format(time() - tic))
+
+    else:
+
+        nodes = range(structure.node_count())
+
+        file = '{0}_frequencies'.format(step)
+
+        with open('{0}{1}.txt'.format(temp, file), 'r') as f:
+            lines = f.readlines()
+        data = [float(i.rstrip('\n')) for i in lines]
+
+        structure.results[step]['frequencies'] = data
+        structure.results[step]['masses'] = [0 for i in data]
+
+        for mode in range(structure.steps[step].modes):
 
             try:
 
+                file = '{0}_u_mode-{1}'.format(step, mode + 1)
+
                 with open('{0}{1}.out'.format(temp, file), 'r') as f:
                     lines = f.readlines()
-                data = [float(i) for i in lines[-1].split(' ')[1:]]
+                data = [float(i) for i in lines[-1].split(' ')]
 
                 dofx = data[0::3]
                 dofy = data[1::3]
                 dofz = data[2::3]
                 dofm = [sqrt(u**2 + v**2 + w**2) for u, v, w in zip(dofx, dofy, dofz)]
 
-                nodal['{0}x'.format(field)] = {i: dofx[i] for i in nodes}
-                nodal['{0}y'.format(field)] = {i: dofy[i] for i in nodes}
-                nodal['{0}z'.format(field)] = {i: dofz[i] for i in nodes}
-                nodal['{0}m'.format(field)] = {i: dofm[i] for i in nodes}
+                nodal['ux{0}'.format(mode + 1)] = {i: dofx[i] for i in nodes}
+                nodal['uy{0}'.format(mode + 1)] = {i: dofy[i] for i in nodes}
+                nodal['uz{0}'.format(mode + 1)] = {i: dofz[i] for i in nodes}
+                nodal['um{0}'.format(mode + 1)] = {i: dofm[i] for i in nodes}
 
                 print('***** {0}.out data loaded *****'.format(file))
 
             except:
 
                 print('***** {0}.out data not loaded/saved'.format(file))
-
-        # Element data
-
-        elif field in ['sf']:
-
-            # Truss data
-
-            try:
-
-                element['sf1'] = {}
-
-                with open('{0}{1}_truss.out'.format(temp, file), 'r') as f:
-                    lines = f.readlines()
-                data = [float(i) for i in lines[-1].split(' ')[1:]]
-
-                with open('{0}truss_ekeys.json'.format(temp), 'r') as f:
-                    truss_ekeys = json.load(f)['truss_ekeys']
-
-                for ekey, sf1 in zip(truss_ekeys, data):
-                    element['sf1'][ekey] = {'ip': sf1}
-
-                print('***** {0}.out data loaded *****'.format(file))
-
-            except:
-
-                print('***** No truss element data loaded')
-
-    #         try:
-
-    #             file = step + '_element_beam_sf'
-
-    #             with open('{0}{1}.out'.format(temp, file), 'r') as f:
-    #                 lines = f.readlines()
-    #             beam_data = [float(i) for i in lines[-1].split(' ')[1:]]
-
-    #             with open('{0}beam_numbers.json'.format(temp), 'r') as f:
-    #                 beam_numbers = json.load(f)['beam_numbers']
-
-    #             # sort beam data here
-
-    #         except:
-
-    #             print('***** No beam element data loaded *****')
-
-    #         try:
-
-    #             file = step + '_element_spring_sf'
-
-    #             with open('{0}{1}.out'.format(temp, file), 'r') as f:
-    #                 lines = f.readlines()
-    #             spring_data = [float(i) for i in lines[-1].split(' ')[1:]]
-
-    #             with open('{0}spring_numbers.json'.format(temp), 'r') as f:
-    #                 spring_numbers = json.load(f)['spring_numbers']
-
-    #             element['spfx'] = {}
-    #             for ekey, spfx in zip(spring_numbers, spring_data):
-    #                 element['spfx'][ekey] = {}
-    #                 element['spfx'][ekey]['ip'] = spfx
-
-    #         except:
-
-    #             print('***** No spring element data loaded *****')
-
-    print('\n***** Data extracted from OpenSees .out file(s) : {0} s *****\n'.format(time() - tic))

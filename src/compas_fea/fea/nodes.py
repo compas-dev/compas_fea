@@ -40,7 +40,13 @@ class Nodes(object):
         self.write_line(header[self.software])
 
         for key in sorted(self.structure.nodes, key=int):
+
             self.write_node(key)
+
+        if self.software == 'opensees':
+            self.blank_line()
+            for key in sorted(self.structure.nodes, key=int):
+                self.write_mass(key)
 
         self.blank_line()
         self.blank_line()
@@ -53,4 +59,10 @@ class Nodes(object):
         x, y, z = self.structure.node_xyz(key)
 
         line    = '{0}{1}{2}{3:.3f}{2}{4:.3f}{2}{5:.3f}'.format(prefix, key + 1, spacer, x, y, z)
+        self.write_line(line)
+
+
+    def write_mass(self, key):
+
+        line = 'mass {0} {1} {1} {1} 0 0 0'.format(key + 1, self.structure.nodes[key].mass)
         self.write_line(line)
