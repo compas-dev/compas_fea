@@ -15,7 +15,6 @@ __all__ = [
 ]
 
 dofs    = ['x',  'y',  'z',  'xx', 'yy', 'zz']
-fixitys = ['PX', 'PY', 'PZ', 'MX', 'MY', 'MZ']
 
 
 class BCs(object):
@@ -60,20 +59,6 @@ class BCs(object):
 
                     for node in sorted(selection, key=int):
                         self.write_line('fix {0} {1}'.format(node + 1, ' '.join(entry)))
-
-                # ----------------------------------------------------------------------------
-                # Sofistik
-                # ----------------------------------------------------------------------------
-
-                elif self.software == 'sofistik':
-
-                    self.write_line('NODE NO FIX')
-                    self.blank_line()
-
-                    entry = [fixity for dof, fixity in zip(dofs, fixitys) if components[dof] == 0]
-
-                    for node in sorted(selection, key=int):
-                        self.write_line('{0} {1}'.format(node + 1, ' '.join(entry)))
 
                 # ----------------------------------------------------------------------------
                 # Abaqus

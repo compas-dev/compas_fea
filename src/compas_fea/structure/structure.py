@@ -6,7 +6,6 @@ from __future__ import print_function
 from compas_fea.fea.abaq import abaq
 from compas_fea.fea.ansys import ansys
 from compas_fea.fea.opensees import opensees
-from compas_fea.fea.sofistik import sofistik
 
 from compas_fea.utilities import combine_all_sets
 from compas_fea.utilities import group_keys_by_attribute
@@ -569,7 +568,7 @@ Steps
         Parameters
         ----------
         software : str
-            Analysis software / library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
+            Analysis software / library to use, 'abaqus', 'opensees', or 'ansys'.
         fields : list, str
             Data field requests.
         output : bool
@@ -595,9 +594,6 @@ Steps
         elif software == 'opensees':
             opensees.input_generate(self, fields=fields, output=output)
 
-        elif software == 'sofistik':
-            sofistik.input_generate(self, fields=fields, output=output)
-
 
     def analyse(self, software, exe=None, cpus=4, license='research', delete=True, output=True):
 
@@ -606,7 +602,7 @@ Steps
         Parameters
         ----------
         software : str
-            Analysis software / library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
+            Analysis software / library to use, 'abaqus', 'opensees' or 'ansys'.
         exe : str
             Full terminal command to bypass subprocess defaults.
         cpus : int
@@ -634,9 +630,6 @@ Steps
         elif software == 'opensees':
             opensees.launch_process(self, exe=exe, output=output)
 
-        elif software == 'sofistik':
-            pass
-
 
     def extract_data(self, software, fields='u', steps='last', exe=None, sets=None, license='research', output=True):
 
@@ -645,7 +638,7 @@ Steps
         Parameters
         ----------
         software : str
-            Analysis software / library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
+            Analysis software / library to use, 'abaqus', 'opensees' or 'ansys'.
         fields : list, str
             Data field requests.
         steps : list
@@ -674,9 +667,6 @@ Steps
         elif software == 'opensees':
             opensees.extract_data(self, fields=fields)
 
-        elif software == 'sofistik':
-            pass
-
 
     def analyse_and_extract(self, software, fields='u', exe=None, cpus=4, license='research', output=True, save=True):
 
@@ -685,7 +675,7 @@ Steps
         Parameters
         ----------
         software : str
-            Analysis software / library to use, 'abaqus', 'opensees', 'sofistik' or 'ansys'.
+            Analysis software / library to use, 'abaqus', 'opensees' or 'ansys'.
         fields : list, str
             Data field requests.
         exe : str
@@ -710,9 +700,9 @@ Steps
         self.extract_data(software=software, fields=fields, exe=exe, license=license, output=output)
 
 
-# ==============================================================================
-# results
-# ==============================================================================
+    # ==============================================================================
+    # Results
+    # ==============================================================================
 
     def get_nodal_results(self, step, field, nodes='all'):
 
@@ -729,24 +719,28 @@ Steps
 
         Returns
         -------
-        dic
+        dict
             The nodal results for the requested field.
 
         """
 
-        data = {}
+        data  = {}
         rdict = self.results[step]['nodal']
 
         if nodes == 'all':
             keys = list(self.nodes.keys())
+
         elif isinstance(nodes, str):
             keys = self.sets[nodes].selection
+
         else:
             keys = nodes
 
         for key in keys:
             data[key] = rdict[field][key]
+
         return data
+
 
     def get_element_results(self, step, field, elements='all'):
 
@@ -763,33 +757,36 @@ Steps
 
         Returns
         -------
-        dic
+        dict
             The element results for the requested field.
 
         """
 
-        data = {}
+        data  = {}
         rdict = self.results[step]['element']
 
         if elements == 'all':
             keys = list(self.elements.keys())
+
         elif isinstance(elements, str):
             keys = self.sets[elements].selection
+
         else:
             keys = elements
 
         for key in keys:
             data[key] = rdict[field][key]
+
         return data
 
 
-# ==============================================================================
-# summary
-# ==============================================================================
+    # ==============================================================================
+    # Summary
+    # ==============================================================================
 
     def summary(self):
 
-        """ Prints a summary of the Structure object contents.
+        """ Prints a summary of the Structure object.
 
         Parameters
         ----------
@@ -804,13 +801,13 @@ Steps
         print(self)
 
 
-# ==============================================================================
-# app
-# ==============================================================================
+    # ==============================================================================
+    # App
+    # ==============================================================================
 
     def view(self):
 
-        """ Starts the Pyside app for visualisation.
+        """ Starts the PyQt app for visualisation.
 
         Parameters
         ----------
@@ -838,9 +835,9 @@ Steps
             print('***** Launching App failed *****')
 
 
-# ==============================================================================
-# save
-# ==============================================================================
+    # ==============================================================================
+    # Save
+    # ==============================================================================
 
     def save_to_obj(self, output=True):
 
@@ -848,7 +845,8 @@ Steps
 
         Parameters
         ----------
-        None
+        output : bool
+            Print terminal output.
 
         Returns
         -------
@@ -857,15 +855,17 @@ Steps
         """
 
         filename = os.path.join(self.path, self.name + '.obj')
+
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
+
         if output:
             print('***** Structure saved to: {0} *****\n'.format(filename))
 
 
-# ==============================================================================
-# load
-# ==============================================================================
+    # ==============================================================================
+    # Load
+    # ==============================================================================
 
     @staticmethod
     def load_from_obj(filename, output=True):
@@ -888,6 +888,8 @@ Steps
 
         with open(filename, 'rb') as f:
             structure = pickle.load(f)
-            if output:
-                print('***** Structure loaded from: {0} *****'.format(filename))
+
+        if output:
+            print('***** Structure loaded from: {0} *****'.format(filename))
+
         return structure

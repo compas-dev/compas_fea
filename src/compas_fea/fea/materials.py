@@ -17,13 +17,6 @@ __all__ = [
 MPa = 10**(-6)
 GPa = 10**(-9)
 
-headers = {
-    'abaqus':   '',
-    'opensees': '',
-    'sofistik': '+PROG AQUA\nHEAD AQUA\nNORM DC SIA NDC 262\n$\n$',
-    'ansys':    '',
-}
-
 
 class Materials(object):
 
@@ -38,9 +31,6 @@ class Materials(object):
         self.blank_line()
 
         materials = self.structure.materials
-
-        if headers[self.software]:
-            self.write_line(headers[self.software])
 
         for key, material in materials.items():
 
@@ -71,20 +61,6 @@ class Materials(object):
                                     mindex + 1000, E['E'], v['v'], p))
 
             # ------------------------------------------------------------------------------------------------------
-            # Sofistik
-            # ------------------------------------------------------------------------------------------------------
-
-            elif self.software == 'sofistik':
-
-                # Elastic
-                # -------
-
-                if mtype == 'ElasticIsotropic':
-
-                    self.write_line('MATE {0} E {1}[MPa] MUE {2} G {3:.1f}[MPa] GAM {4}'.format(
-                                    mindex, E['E'] * MPa, v['v'], G['G'] * MPa, p * 0.01))
-
-            # ------------------------------------------------------------------------------------------------------
             # Abaqus
             # ------------------------------------------------------------------------------------------------------
 
@@ -96,7 +72,7 @@ class Materials(object):
                 # Elastic
                 # -------
 
-                if mtype in ['ElasticIsotropic']:
+                if mtype in ['ElasticIsotropic', 'ElasticPlastic', 'Steel', 'Concrete']:
 
                     self.write_line('*ELASTIC')
                     self.blank_line()
@@ -108,11 +84,55 @@ class Materials(object):
                     if not tension:
                         self.write_line('*NO TENSION')
 
+                # Plastic
+                # -------
+
+                if mtype in ['ElasticPlastic', 'Steel', 'Concrete']:
+
+                    if mtype == 'Concrete':
+
+                        self.blank_line()
+                        self.write_line('*CONCRETE')
+                        self.blank_line()
+
+                        for i, j in zip(compression['f'], compression['e']):
+                            self.write_line('{0}, {1}'.format(i, j))
+
+                    else:
+
+                        self.blank_line()
+                        self.write_line('*PLASTIC')
+                        self.blank_line()
+
+                        for i, j in zip(tension['f'], tension['e']):
+                            self.write_line('{0}, {1}'.format(i, j))
+
+                # Tension
+                # -------
+
+                if mtype in ['Concrete']:
+
+                    self.blank_line()
+                    self.write_line('*TENSION STIFFENING')
+                    self.blank_line()
+
+                    for i, j in zip(tension['f'], tension['e']):
+                        self.write_line('{0}, {1}'.format(i, j))
+
+                    self.blank_line()
+                    self.write_line('*FAILURE RATIOS')
+                    self.blank_line()
+
+                    a, b = material.fratios
+
+                    self.write_line('{0}, {1}'.format(a, b))
+
                 # Density
                 # -------
 
                 self.blank_line()
                 self.write_line('*DENSITY')
+                self.blank_line()
 
                 if isinstance(p, list):
                     for pi, T in p:
@@ -128,8 +148,11 @@ class Materials(object):
 
                 pass
 
+            self.blank_line()
+
         self.blank_line()
         self.blank_line()
+
 
 
 
@@ -163,16 +186,6 @@ class Materials(object):
 
         #     elif mtype == 'ElasticOrthotropic':
         #         raise NotImplementedError
-
-        #     # Elastic--Plastic
-
-        #     elif mtype == 'ElasticPlastic':
-        #         _write_elastic_plastic(f, software, E, v, tension, c)
-
-        #     # Steel
-
-        #     elif mtype == 'Steel':
-        #         _write_steel(f, software, E, v, p, tension, c, mindex, material)
 
         #     # Cracked Concrete
 
@@ -208,9 +221,6 @@ class Materials(object):
 #                 step.displacements = [step.displacements]
 
 
-
-
-
 #         except:
 
 #             print('***** Error writing boundary conditions, check Step exists in structure.steps_order[0] *****')
@@ -224,59 +234,9 @@ class Materials(object):
 
 
 
-
-
-
-
-
-
-
-
-# # ==============================================================================
-# # Plastic
-# # ==============================================================================
-
-# def _write_elastic_plastic(f, software, E, v, tension, c):
-
-#     if software == 'abaqus':
-
-#         f.write('*ELASTIC\n')
-#         f.write('** E[Pa], v[-]\n')
-#         f.write('**\n')
-#         f.write('{0}, {1}\n'.format(E, v))
-#         f.write('**\n')
-
-#         f.write('*PLASTIC\n')
-#         f.write('** f[Pa], e[-] : compression-tension\n')
-#         f.write('**\n')
-
-#         for i, j in zip(tension['f'], tension['e']):
-#             f.write('{0}, {1}\n'.format(i, j))
-
-#     elif software == 'opensees':
-
-#         pass
-
-#     elif software == 'sofistik':
-
-#         pass
-
-#     elif software == 'ansys':
-
-#         pass
-
-#     f.write('{0}\n'.format(c))
-
-
 # # ==============================================================================
 # # Metals
 # # ==============================================================================
-
-# def _write_steel(f, software, E, v, p, tension, c, mindex, material):
-
-#     if software == 'abaqus':
-
-#         _write_elastic_plastic(f, software, E, v, tension, c)
 
 #     elif software == 'opensees':
 
@@ -305,55 +265,13 @@ class Materials(object):
 #     f.write('{0}\n'.format(c))
 
 
-# # ==============================================================================
-# # Concrete
-# # ==============================================================================
 
 # def _write_cracked_concrete(f, software, E, v, compression, tension, material, c):
 
 #     if software == 'abaqus':
 
-#         f.write('*ELASTIC\n')
-#         f.write('** E[Pa], v[-]\n')
-#         f.write('**\n')
-#         f.write('{0}, {1}\n'.format(E, v))
-#         f.write('**\n')
 
-#         f.write('*CONCRETE\n')
-#         f.write('** f[Pa], e[-] : compression\n')
-#         f.write('**\n')
 
-#         for cf, ce in zip(compression['f'], compression['e']):
-#             f.write('{0}, {1}\n'.format(cf, ce))
-
-#         f.write('**\n')
-#         f.write('*TENSION STIFFENING\n')
-#         f.write('** f[Pa], e[-] : tension\n')
-#         f.write('**\n')
-
-#         for tf, te in zip(tension['f'], tension['e']):
-#             f.write('{0}, {1}\n'.format(tf, te))
-
-#         f.write('**\n')
-#         f.write('*FAILURE RATIOS\n')
-
-#         a, b = material.fratios
-
-#         f.write('{0}, {1}\n'.format(a, b))
-
-#     elif software == 'opensees':
-
-#         pass
-
-#     elif software == 'sofistik':
-
-#         pass
-
-#     elif software == 'ansys':
-
-#         pass
-
-#     f.write('{0}\n'.format(c))
 
 
 # def _write_concrete(f, software, E, v, p, compression, tension, mindex, material, c):

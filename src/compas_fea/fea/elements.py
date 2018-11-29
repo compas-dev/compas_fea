@@ -29,13 +29,6 @@ abaqus_data = {
     'TrussSection':       {'name': None,          'geometry': ['A']},
 }
 
-footers = {
-    'abaqus':   '',
-    'opensees': '',
-    'sofistik': 'END\n$\n$',
-    'ansys':    '',
-}
-
 
 class Elements(object):
 
@@ -111,26 +104,6 @@ class Elements(object):
                         self.write_line('element {0} {1} {2} {1}'.format(shell, n, ' '.join(nodes)))
 
                     # -------------------------------------------------------------------------------------------------
-                    # Sofistik
-                    # -------------------------------------------------------------------------------------------------
-
-                    elif self.software == 'sofistik':
-
-                        mrf = 'MRF' if reinforcement else ''
-
-                        if no == 3:
-                            pass
-                        elif no == 4:
-                            self.write_line('QUAD NO N1 N2 N3 N4 MNO T1 T2 T3 T4 {0}'.format(mrf))
-
-                        entry = '{0} {1} {2} {3}'.format(n, ' '.join(nodes), m_index, '{0}[m] '.format(t) * no)
-
-                        if reinforcement:
-                            entry += str(materials[reinforcement.values()[0]['material']].index + 1)
-
-                        self.write_line(entry)
-
-                    # -------------------------------------------------------------------------------------------------
                     # Abaqus
                     # -------------------------------------------------------------------------------------------------
 
@@ -192,23 +165,6 @@ class Elements(object):
                         self.write_line('{0} {1} {2} {3} {4} {5}'.format(e, n, nodes[0], nodes[1], A, m_index))
 
                     # -------------------------------------------------------------------------------------------------
-                    # Sofistik
-                    # -------------------------------------------------------------------------------------------------
-
-                    elif self.software == 'sofistik':
-
-                        # if material.__name__ in ['Steel']:  # add other materials that yield
-                        #     Ny = A * material.fy / 1000.
-                        #     tag = 'YIEL'
-                        # else:
-                        #     Ny = tag = ''
-                        Ny = ''
-                        tag = ''
-
-                        self.write_line('TRUS NO NA NE NCS {0}'.format(tag))
-                        self.write_line('{0} {1} {2} {3} {4}'.format(n, nodes[0], nodes[1], s_index, Ny))
-
-                    # -------------------------------------------------------------------------------------------------
                     # Abaqus
                     # -------------------------------------------------------------------------------------------------
 
@@ -248,14 +204,6 @@ class Elements(object):
                         self.write_line('{} {} {} {} {} {} {} {} {} {} {}'.format(e, n, nodes[0], nodes[1], A, E, G, J, Ixx, Iyy, n))
 
                     # -------------------------------------------------------------------------------------------------
-                    # Sofistik
-                    # -------------------------------------------------------------------------------------------------
-
-                    elif self.software == 'sofistik':
-
-                        self.write_line('BEAM NO {0} NA {1} NE {2} NCS {3}'.format(n, nodes[0], nodes[1], s_index))
-
-                    # -------------------------------------------------------------------------------------------------
                     # Abaqus
                     # -------------------------------------------------------------------------------------------------
 
@@ -287,9 +235,6 @@ class Elements(object):
 
             self.blank_line()
             self.blank_line()
-
-        if footers[self.software]:
-            self.write_line(footers[self.software])
 
 
 

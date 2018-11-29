@@ -44,7 +44,6 @@ class Sets(object):
         header = {
             'abaqus':   '*NSET, NSET={0}'.format(key),
             'opensees': '',
-            'sofistik': '',
             'ansys':    '',
         }
 

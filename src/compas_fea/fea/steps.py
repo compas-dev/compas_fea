@@ -23,7 +23,6 @@ dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 footers = {
     'abaqus':   '',
     'opensees': '}\n#\n#',
-    'sofistik': 'END\n$\n$',
     'ansys':    '',
 }
 
@@ -97,34 +96,6 @@ class Steps(object):
                     self.blank_line()
 
                 # -------------------------------------------------------------------------------------------------
-                # Sofistik
-                # -------------------------------------------------------------------------------------------------
-
-                elif self.software == 'sofistik':
-
-                    self.write_line('+PROG SOFILOAD')
-                    self.write_line("HEAD LC 1{0:0>3}00 TITL '{1} - LOADS'".format(s_index, key))
-                    self.blank_line()
-                    self.blank_line()
-
-                    gravity = 'DLX {0} DLY {1} DLZ {2}'.format(0, 0, 0)
-
-                    if stype != 'BucklingStep':
-                        self.write_line("LC 1{0:0>3}00 TITL '{1}' {2}".format(s_index, key, gravity))
-                        self.blank_line()
-                    else:
-                        pass
-                        # scopy_index = steps[scopy].index
-                        # self.write_line('HEAD BUCKLING LC {0}\n'.format(scopy))
-                        # self.write_line('$\n')
-                        # self.write_line('SYST PLC 2{0:0>2}00\n'.format(scopy_index))
-                        # self.write_line('EIGE {0} ETYP BUCK LMIN AUTO LC 2{1:0>2}01\n'.format(modes, scopy_index))
-                        # self.write_line('$\n')
-                        # self.write_line('$\n')
-                        # self.write_line('END\n')
-
-
-                # -------------------------------------------------------------------------------------------------
                 # Abaqus
                 # -------------------------------------------------------------------------------------------------
 
@@ -140,6 +111,7 @@ class Steps(object):
 
                         p = ', PERTURBATION' if stype == 'BucklingStep' else ''
                         self.write_line('*STEP, NLGEOM={0}, NAME={1}{2}, INC={3}'.format(nlgeom, key, p, increments))
+                        self.blank_line()
                         self.write_line('*{0}'.format(method.upper()))
                         self.blank_line()
 
@@ -219,40 +191,6 @@ class Steps(object):
                             print('***** GravityLoad not yet implemented in OpenSees *****')
 
                     # -------------------------------------------------------------------------------------------------
-                    # Sofistik
-                    # -------------------------------------------------------------------------------------------------
-
-                    elif self.software == 'sofistik':
-
-                        # Point load
-                        # ----------
-
-                        if ltype == 'PointLoad':
-
-                            for node in nodes:
-
-                                ns = sets[node].selection if isinstance(node, str) else node
-
-                                for ni in [i + 1 for i in ns]:
-
-                                    for c, value in com.items():
-
-                                        if value:
-                                            if c in 'xyz':
-                                                self.write_line('NODE NO {0} TYPE P{1}{1} {2}[kN]'.format(
-                                                                ni, c.upper(), value * 0.001 * fact))
-                                            else:
-                                                self.write_line('NODE NO {0} TYPE M{1} {2}[kN]'.format(
-                                                                ni, c.upper(), value * 0.001 * fact))
-
-                        # Gravity
-                        # ------
-
-                        elif ltype == 'GravityLoad':
-
-                            gravity = ' DLX {0} DLY {1} DLZ {2}'.format(gx * fact, gy * fact, gz * fact)
-
-                    # -------------------------------------------------------------------------------------------------
                     # Abaqus
                     # -------------------------------------------------------------------------------------------------
 
@@ -285,6 +223,22 @@ class Steps(object):
                                 self.blank_line()
                                 self.write_line('{0}, GRAV, {1}, {2}, {3}, {4}'.format(k, 9.81 * fact, gx, gy, gz))
                                 self.blank_line()
+
+                        # Prestress
+                        # ---------
+
+                        elif ltype == 'PrestressLoad':
+
+                            for k in elements:
+
+                                stresses = ''
+
+                                if com['sxx']:
+                                    stresses += str(com['sxx'] * fact)
+
+                                self.write_line('*INITIAL CONDITIONS, TYPE=STRESS')
+                                self.blank_line()
+                                self.write_line('{0}, {1}'.format(k, stresses))
 
                     # -------------------------------------------------------------------------------------------------
                     # Ansys
@@ -334,14 +288,6 @@ class Steps(object):
                     # -------------------------------------------------------------------------------------------------
 
                     if self.software == 'opensees':
-
-                        pass
-
-                    # -------------------------------------------------------------------------------------------------
-                    # Sofistik
-                    # -------------------------------------------------------------------------------------------------
-
-                    elif self.software == 'sofistik':
 
                         pass
 
@@ -480,82 +426,6 @@ class Steps(object):
                 self.write_line('integrator LoadControl {0}'.format(1. / increments))
                 self.write_line('analysis Static')
                 self.write_line('analyze {0}'.format(increments))
-
-            # -------------------------------------------------------------------------------------------------
-            # Sofistik
-            # -------------------------------------------------------------------------------------------------
-
-            elif self.software == 'sofistik':
-
-                #     has_concrete = False
-                #     for material in materials.values():
-                #         if material.__name__ in ['Concrete', 'ConcreteSmearedCrack', 'ConcreteDamagedPlasticity']:
-                #             has_concrete = True
-
-                if stype != 'BucklingStep':
-
-                #         # Rebar
-
-                #         has_rebar = False
-                #         for property in properties.values():
-                #             if property.reinforcement:
-                #                 has_rebar = True
-                #                 break
-
-                #         if has_rebar:
-
-                #             self.write_line('+PROG BEMESS\n')
-                #             self.write_line("HEAD REBAR {0} LC 1{1:0>2}00\n".format(state.upper(), step_index))
-                #             self.write_line('$\n')
-                #             self.write_line('CTRL WARN 471 $ Element thickness too thin and not allowed for a design.\n')
-                #             self.write_line('CTRL WARN 496 $ Possible non-constant longitudinal reinforcement.\n')
-                #             self.write_line('CTRL WARN 254 $ Vertical shear reinforcement not allowed for slab thickness smaller 20 cm.\n')
-                #             self.write_line('CTRL PFAI 2\n')
-                #             if state == 'sls':
-                #                 self.write_line('CTRL SLS\n')
-                #                 self.write_line('CRAC WK PARA\n')
-                #             else:
-                #                 self.write_line('CTRL ULTI\n')
-                #             self.write_line('CTRL LCR {0}\n'.format(step_index))
-                #             self.write_line('LC 1{0:0>2}00\n'.format(step_index))
-                #             self.write_line('$\n')
-                #             self.write_line('$\n')
-                #             self.write_line('END\n')
-                #             self.write_line('$\n')
-                #             self.write_line('$\n')
-
-                    self.write_line('+PROG ASE')
-                    self.write_line("HEAD LC 2{0:0>3}00 TITL '{1} - GRAVITY + LOADS'".format(s_index, key))
-                    self.blank_line()
-                    self.blank_line()
-                    self.write_line('CTRL SOLV 1')
-
-                #         if has_concrete:
-                #             self.write_line('CTRL CONC\n')
-
-                #         if state == 'sls':
-                #             pass
-                #             # self.write_line('NSTR KMOD S1 KSV SLD\n')
-                #         elif state == 'uls':
-                #             # self.write_line('NSTR KMOD S1 KSV ULD\n')
-                #             self.write_line('ULTI 30 FAK1 0.1 DFAK 0.1 PRO 1.5 FAKE 1.5\n')
-
-                    if nlgeom == 'YES':
-                        self.write_line('SYST PROB TH3 ITER {0} TOL {1}'.format(increments, tolerance))
-                        # self.write_line('SYST PROB TH3 ITER {0} TOL {1} NMAT {2}'.format(increments, tolerance))
-                #             # self.write_line('SYST PROB TH3 ITER {0} TOL {1} NMAT {2} PLC 1{3:0>2}00\n'.format(increments, tolerance, nlmat, step_index))
-
-                #         if has_concrete:
-                #             self.write_line('REIQ LCR {0}\n'.format(step_index))
-                #         self.write_line('$\n')
-
-                    self.blank_line()
-                    self.write_line("LC 2{0:0>3}00 TITL '{1}' {2}".format(s_index, key, gravity))
-                    self.write_line('LCC 1{0:0>3}00 PLC YES'.format(s_index))
-
-                    self.blank_line()
-                    self.blank_line()
-                    self.write_line('END')
 
             # -------------------------------------------------------------------------------------------------
             # Abaqus
@@ -860,29 +730,8 @@ class Steps(object):
 #             pass
 
 
-# def _write_prestress_load(f, software, elset, com):
 
-#     for k in elset:
 
-#         if software == 'abaqus':
-
-#             f.write('*INITIAL CONDITIONS, TYPE=STRESS\n')
-#             f.write('{0}, '.format(k))
-
-#             if com['sxx']:
-#                 f.write('{0}\n'.format(com['sxx']))
-
-#         elif software == 'sofistik':
-
-#             pass
-
-#         elif software == 'opensees':
-
-#                 pass
-
-#         elif software == 'ansys':
-
-#             pass
 
 
 # def _write_thermal_load(f, software, elset, temperature, sets, factor):

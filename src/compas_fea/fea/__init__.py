@@ -74,19 +74,6 @@ opensees
     extract_data
     launch_process
 
-
-sofistik
-========
-
-.. currentmodule:: compas_fea.fea.sofistik
-
-:mod:`compas_fea.fea.sofistik`
-
-.. autosummary::
-    :toctree: generated/
-
-    input_generate
-
 """
 
 from .writer import *

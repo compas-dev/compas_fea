@@ -27,7 +27,6 @@ class Heading(object):
         header = {
             'abaqus':   '*PHYSICAL CONSTANTS, ABSOLUTE ZERO=-273.15, STEFAN BOLTZMANN=5.67e-8',
             'opensees': 'wipe\nmodel basic -ndm 3 -ndf {0}'.format(self.ndof),
-            'sofistik': '$',
             'ansys':    '!',
         }
 

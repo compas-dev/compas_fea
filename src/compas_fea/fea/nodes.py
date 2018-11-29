@@ -27,14 +27,12 @@ class Nodes(object):
         header = {
             'abaqus':   '**\n*NODE, NSET=nset_all\n**',
             'opensees': '#',
-            'sofistik': '$\n+PROG SOFIMSHA\nUNIT 0\nSYST 3D GDIR POSX,POSY,NEGZ\nCTRL OPT OPTI 10\n$\n$\nNODE NO X Y Z\n$',
             'ansys':    '!',
         }
 
         self.prefix = {
             'abaqus':   '',
             'opensees': 'node ',
-            'sofistik': '',
             'ansys':    '',
         }
 
@@ -54,5 +52,5 @@ class Nodes(object):
         spacer  = self.spacer[self.software]
         x, y, z = self.structure.node_xyz(key)
 
-        line    = '{0}{1}{2}{3:>7.3f}{2}{4:>7.3f}{2}{5:>7.3f}'.format(prefix, key + 1, spacer, x, y, z)
+        line    = '{0}{1}{2}{3:.3f}{2}{4:.3f}{2}{5:.3f}'.format(prefix, key + 1, spacer, x, y, z)
         self.write_line(line)

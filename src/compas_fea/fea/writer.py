@@ -53,7 +53,7 @@ class Writer(Steps, Materials, BCs, Sets, Elements, Nodes, Heading):
         self.software  = software
         self.structure = structure
         self.fields    = fields
-        self.spacer    = {'abaqus': ', ', 'opensees': ' ', 'sofistik': ' ', 'ansys':    ' '}
+        self.spacer    = {'abaqus': ', ', 'opensees': ' ', 'ansys':    ' '}
 
 
     def __enter__(self):
