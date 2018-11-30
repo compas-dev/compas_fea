@@ -16,14 +16,20 @@ __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
 
+p  = 7850
+A1 = 0.0008
+A2 = 0.0005
+A3 = 0.0001
+
 # Structure
 
 mdl = Structure(name='truss_frame', path='C:/Temp/')
 
 # Elements
 
-layers = ['elset_main', 'elset_diag', 'elset_stays']
-rhino.add_nodes_elements_from_layers(mdl, line_type='TrussElement', layers=layers)
+rhino.add_nodes_elements_from_layers(mdl, line_type='TrussElement', layers='elset_main', pL=A1*p)
+rhino.add_nodes_elements_from_layers(mdl, line_type='TrussElement', layers='elset_diag', pL=A2*p)
+rhino.add_nodes_elements_from_layers(mdl, line_type='TrussElement', layers='elset_stays', pL=A3*p)
 
 # Sets
 
@@ -31,22 +37,22 @@ rhino.add_sets_from_layers(mdl, layers=['nset_pins', 'nset_load_v', 'nset_load_h
 
 # Materials
 
-mdl.add(Steel(name='mat_steel', fy=355))
+mdl.add(Steel(name='mat_steel', fy=355, p=p))
 
 # Sections
 
 mdl.add([
-    TrussSection(name='sec_main', A=0.0008),
-    TrussSection(name='sec_diag', A=0.0005),
-    TrussSection(name='sec_stays', A=0.0001),
+    TrussSection(name='sec_main', A=A1),
+    TrussSection(name='sec_diag', A=A2),
+    TrussSection(name='sec_stays', A=A3),
 ])
 
 # Properties
 
 mdl.add([
-    Properties(name='ep_main', material='mat_steel', section='sec_main', elsets='elset_main'),
-    Properties(name='ep_diag', material='mat_steel', section='sec_diag', elsets='elset_diag'),
-    Properties(name='ep_stays', material='mat_steel', section='sec_stays', elsets='elset_stays'),
+    Properties(name='ep_main', material='mat_steel', section='sec_main', elset='elset_main'),
+    Properties(name='ep_diag', material='mat_steel', section='sec_diag', elset='elset_diag'),
+    Properties(name='ep_stays', material='mat_steel', section='sec_stays', elset='elset_stays'),
 ])
 
 # Displacements
@@ -54,7 +60,6 @@ mdl.add([
 mdl.add(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
 
 # Loads
-# Note: GravityLoad doesnt activate for OpenSees
 
 mdl.add([
     PointLoad(name='load_v', nodes='nset_load_v', z=-15500),
@@ -74,22 +79,12 @@ mdl.steps_order = ['step_bc', 'step_loads']
 
 mdl.summary()
 
-# Run (Sofistik)
+# Run
 
-mdl.write_input_file(software='sofistik')
+mdl.analyse_and_extract(software='opensees', fields=['u', 's', 'sf', 'cf', 'rf'])
 
-# Run (Abaqus)
-
-mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'cf', 'rf'], license='research')
-
-rhino.plot_data(mdl, step='step_loads', field='um', radius=0.1, scale=10, colorbar_size=0.3)
-rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.1, colorbar_size=0.3)
+rhino.plot_data(mdl, step='step_loads', field='um', radius=0.1, scale=10, cbar_size=0.3)
+#rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.1, cbar_size=0.3)  # abaqus
+rhino.plot_data(mdl, step='step_loads', field='sf1', radius=0.1, cbar_size=0.3)  # opensees
 rhino.plot_reaction_forces(mdl, step='step_loads', scale=0.05)
 rhino.plot_concentrated_forces(mdl, step='step_loads', scale=0.05)
-
-# Run (OpenSees)
-
-mdl.analyse_and_extract(software='opensees', fields=['u', 'sf'])
-
-rhino.plot_data(mdl, step='step_loads', field='um', radius=0.1, scale=10, colorbar_size=0.3)
-rhino.plot_data(mdl, step='step_loads', field='sf1', radius=0.1, colorbar_size=0.3)

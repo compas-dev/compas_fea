@@ -37,7 +37,7 @@ class Materials(object):
             self.write_subsection(key)
 
             mtype       = material.__name__
-            mindex      = material.index + 1
+            m_index     = material.index + 1
             compression = getattr(material, 'compression', None)
             tension     = getattr(material, 'tension', None)
             E           = material.E
@@ -56,9 +56,18 @@ class Materials(object):
 
                 if mtype == 'ElasticIsotropic':
 
-                    self.write_line('uniaxialMaterial Elastic {0} {1}'.format(mindex, E['E']))
+                    self.write_line('uniaxialMaterial Elastic {0} {1}'.format(m_index, E['E']))
                     self.write_line('nDMaterial ElasticIsotropic {0} {1} {2} {3}'.format(
-                                    mindex + 1000, E['E'], v['v'], p))
+                                    m_index + 1000, E['E'], v['v'], p))
+
+                elif mtype == 'Steel':
+
+                    fy = material.fy
+                    fu = material.fu
+                    ep = material.ep
+                    EshE = (fu - fy) / ep
+
+                    self.write_line('uniaxialMaterial Steel01 {0} {1} {2} {3}'.format(m_index, fy, E['E'], EshE))
 
             # ------------------------------------------------------------------------------------------------------
             # Abaqus
@@ -180,7 +189,7 @@ class Materials(object):
         #     # Stiff
 
         #     elif mtype == 'Stiff':
-        #         _write_elastic(f, software, E, G, v, p, compression, tension, c, mindex)
+        #         _write_elastic(f, software, E, G, v, p, compression, tension, c, m_index)
 
         #     # ElasticOrthotropic
 
@@ -195,7 +204,7 @@ class Materials(object):
         #     # Concrete
 
         #     elif mtype == 'Concrete':
-        #         _write_concrete(f, software, E, v, p, compression, tension, mindex, material, c)
+        #         _write_concrete(f, software, E, v, p, compression, tension, m_index, material, c)
 
         #     # Concrete damaged plasticity
 
@@ -234,35 +243,6 @@ class Materials(object):
 
 
 
-# # ==============================================================================
-# # Metals
-# # ==============================================================================
-
-#     elif software == 'opensees':
-
-#         fy = material.fy
-#         fu = material.fu
-#         ep = material.ep
-#         EshE = (fu - fy) / ep
-
-#         f.write('uniaxialMaterial Steel01 {0} {1} {2} {3}\n#\n'.format(mindex, fy, E, EshE))
-
-#     elif software == 'sofistik':
-
-#         it = 'B' if material.id == 'r' else 'S'
-#         fy = material.fy
-#         fu = material.fu
-#         sf = material.sf
-#         eyp = 1000 * fy / E
-#         eup = 1000 * material.eu
-
-#         f.write('STEE {0} {1} ES {2} GAM {3} FY {4} FT {5} FP {4} SCM {6} EPSY {7} EPST {8} MUE {9}\n$\n'.format(mindex, it, E * MPa, p * 0.01, fy * MPa, fu * MPa, sf, eyp, eup, v))
-
-#     elif software == 'ansys':
-
-#         pass
-
-#     f.write('{0}\n'.format(c))
 
 
 
@@ -274,7 +254,7 @@ class Materials(object):
 
 
 
-# def _write_concrete(f, software, E, v, p, compression, tension, mindex, material, c):
+# def _write_concrete(f, software, E, v, p, compression, tension, m_index, material, c):
 
 #     if software == 'abaqus':
 
@@ -287,7 +267,7 @@ class Materials(object):
 #     elif software == 'sofistik':
 
 #         f.write('CONC {0} TYPE C FCN {1} MUE {2} GAM {3} TYPR C SCM {4}\n'.format(
-#                 mindex, material.fck * MPa, v, p * 0.01, material.sf))
+#                 m_index, material.fck * MPa, v, p * 0.01, material.sf))
 #         f.write('$\n')
 
 #     elif software == 'ansys':

@@ -46,7 +46,8 @@ class Nodes(object):
         if self.software == 'opensees':
             self.blank_line()
             for key in sorted(self.structure.nodes, key=int):
-                self.write_mass(key)
+                if self.structure.nodes[key].mass:
+                    self.write_mass(key)
 
         self.blank_line()
         self.blank_line()
@@ -64,5 +65,6 @@ class Nodes(object):
 
     def write_mass(self, key):
 
-        line = 'mass {0} {1} {1} {1} 0 0 0'.format(key + 1, self.structure.nodes[key].mass)
+        mr = '' if self.ndof == 3 else '0 0 0'
+        line = 'mass {0} {1} {1} {1} {2}'.format(key + 1, self.structure.nodes[key].mass, mr)
         self.write_line(line)

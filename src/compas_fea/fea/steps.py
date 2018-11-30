@@ -184,7 +184,9 @@ class Steps(object):
 
                         elif ltype == 'GravityLoad':
 
-                            print('***** GravityLoad not yet implemented in OpenSees *****')
+                            for nkey, node in self.structure.nodes.items():
+                                W = - fact * node.mass * 9.81
+                                self.write_line('load {0} {1} {2} {3}'.format(nkey + 1, gx * W, gy * W, gz * W))
 
                     # -------------------------------------------------------------------------------------------------
                     # Abaqus
@@ -243,6 +245,8 @@ class Steps(object):
                     elif self.software == 'ansys':
 
                         pass
+
+                    self.blank_line()
 
                 self.blank_line()
                 self.blank_line()
@@ -384,10 +388,8 @@ class Steps(object):
                         if truss_elements:
                             self.write_line('{0}sf_truss.out -time -ele {1} axialForce'.format(prefix, truss_elements))
 
-                        #     if beam_elements:
-                        #         k = 'element_beam_sf.out'
-                        #         j = 'force'
-                        #         self.write_line('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, beam_elements, j))
+                        if beam_elements:
+                            self.write_line('{0}sf_beam.out -time -ele {1} force'.format(prefix, beam_elements))
 
                         # if 'spf' in fields:
 
@@ -402,8 +404,8 @@ class Steps(object):
                     with open('{0}truss_ekeys.json'.format(temp), 'w') as file:
                         json.dump({'truss_ekeys': truss_ekeys}, file)
 
-                    # with open('{0}beam_numbers.json'.format(temp), 'w') as file:
-                    #     json.dump({'beam_numbers': beam_numbers}, file)
+                    with open('{0}beam_ekeys.json'.format(temp), 'w') as file:
+                        json.dump({'beam_ekeys': beam_ekeys}, file)
 
                     # with open('{0}spring_numbers.json'.format(temp), 'w') as file:
                     #     json.dump({'spring_numbers': spring_numbers}, file)
