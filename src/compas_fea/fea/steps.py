@@ -266,30 +266,29 @@ class Steps(object):
                 for k in step.displacements:
 
                     displacement = displacements[k]
-    #                 displacement_index = displacement.index + 1 + len(loads)
-    #                 com   = displacement.components
-    #                 nodes = displacement.nodes
-    #                 fact  = factor.get(k, 1.0) if isinstance(factor, dict) else factor
+                    com          = displacement.components
+                    nodes        = displacement.nodes
 
-    #                 if software != 'sofistik':
+                    if isinstance(nodes, str):
+                        nodes = [nodes]
 
-    #                     f.write('{0} {1}\n'.format(c, k))
-    #                     f.write('{0} '.format(c) + '-' * len(k) + '\n')
-    #                     f.write('{0}\n'.format(c))
+                    fact = factor.get(k, 1.0) if isinstance(factor, dict) else factor
 
-    #                     _write_displacements(f, software, com, nodes, fact, sets, ndof)
-
-    #                 else:
-
-    #                     if stype != 'BucklingStep':
-    #                         f.write('    LCC {0} $ {1}\n'.format(displacement_index, k))
                     # -------------------------------------------------------------------------------------------------
                     # OpenSees
                     # -------------------------------------------------------------------------------------------------
 
                     if self.software == 'opensees':
 
-                        pass
+                        for node in nodes:
+
+                            ns = sets[node].selection if isinstance(node, str) else node
+
+                            for ni in [i + 1 for i in ns]:
+
+                                for c, dof in enumerate(dofs[:self.ndof], 1):
+                                    if com[dof] is not None:
+                                        self.write_line('sp {0} {1} {2}'.format(ni, c, com[dof]))
 
                     # -------------------------------------------------------------------------------------------------
                     # Abaqus
@@ -297,7 +296,16 @@ class Steps(object):
 
                     elif self.software == 'abaqus':
 
-                        pass
+                        self.write_line('*BOUNDARY')
+                        self.blank_line()
+
+                        for node in nodes:
+
+                            ni = node if isinstance(node, str) else node + 1
+
+                            for c, dof in enumerate(dofs, 1):
+                                if com[dof] is not None:
+                                    self.write_line('{0}, {1}, {1}, {2}'.format(ni, c, com[dof] * fact))
 
                     # -------------------------------------------------------------------------------------------------
                     # Ansys
@@ -539,50 +547,6 @@ class Steps(object):
 
 
 
-# def _write_sofistik_loads_displacements(f, sets, displacements, loads, steps, structure):
-#
-
-#     for k in sorted(loads):
-
-#         load  = loads[k]
-#         ltype = load.__name__
-#         com   = getattr(load, 'components', None)
-#         axes  = getattr(load, 'axes', None)
-#         temp  = getattr(load, 'temperature', None)
-#         nodes = getattr(load, 'nodes', None)
-#         elset = getattr(load, 'elements', None)
-
-#         if isinstance(nodes, str):
-#             nodes = [nodes]
-
-#         if isinstance(elset, str):
-#             elset = [elset]
-
-#         if ltype != 'GravityLoad':
-
-
-#     for k in sorted(displacements):
-
-#         bcs = steps[structure.steps_order[0]].displacements
-#         if isinstance(bcs, str):
-#             bcs = [bcs]
-
-#         if k not in bcs:
-
-#             displacement = displacements[k]
-#             displacement_index = displacement.index + 1 + len(loads)
-#             com   = displacement.components
-#             nodes = displacement.nodes
-
-#             f.write('$ {0}\n'.format(k))
-#             f.write('$ ' + '-' * len(k) + '\n')
-#             f.write('$\n')
-#             f.write("LC {0} TITL '{1}'\n".format(displacement_index, k))
-
-#             _write_displacements(f, 'sofistik', com, nodes, 1, sets, 6)
-
-#             f.write('$\n')
-
 
 # def _write_line_load(f, software, axes, com, factor, elset, sets, structure):
 
@@ -656,66 +620,13 @@ class Steps(object):
 
 #         pass
 
-#     elif software == 'sofistik':
-
-#         components = ''
-
-#         for i in 'xyz':
-#             if com[i]:
-
-#                 if axes == 'local':
-#                     components += ' P{0} {1}[kN/m2]'.format(i.upper(), 0.001 * com[i])
-
-#                 elif axes == 'global':
-#                     components += ' P{0}{0} {1}[kN/m2]'.format(i.upper(), 0.001 * com[i])
-
-#         for k in elset:
-
-#             set_index = sets[k]['index'] + 1
-#             f.write('    QUAD GRP {0} TYPE{1}\n'.format(set_index, components))
-
-#     elif software == 'ansys':
-
-#         pass
-
 
 
 
 
 # def _write_displacements(f, software, com, nset, factor, sets, ndof):
 
-#     if software == 'abaqus':
 
-#         f.write('*BOUNDARY\n')
-#         f.write('**\n')
-
-#         for ci, dof in enumerate(dofs, 1):
-#             if com[dof] is not None:
-#                 f.write('{0}, {1}, {1}, {2}\n'.format(nset, ci, com[dof] * factor))
-
-#     elif software == 'opensees':
-
-#         for ci, dof in enumerate(dofs[:ndof], 1):
-#             if com[dof] is not None:
-#                 for node in sets[nset]['selection']:
-#                     f.write('sp {0} {1} {2}\n'.format(node + 1, ci, com[dof]))
-
-#     elif software == 'sofistik':
-
-#         for i in sets[nset]['selection']:
-#             ni = i + 1
-#             if com['x'] is not None:
-#                 f.write('    NODE {0} TYPE WXX {1}[mm]\n'.format(ni, com['x'] * 1000))
-#             if com['y'] is not None:
-#                 f.write('    NODE {0} TYPE WYY {1}[mm]\n'.format(ni, com['y'] * 1000))
-#             if com['z'] is not None:
-#                 f.write('    NODE {0} TYPE WZZ {1}[mm]\n'.format(ni, com['z'] * 1000))
-#             if com['xx'] is not None:
-#                 f.write('    NODE {0} TYPE DXX {1}\n'.format(ni, com['xx'] * 1000))
-#             if com['yy'] is not None:
-#                 f.write('    NODE {0} TYPE DYY {1}\n'.format(ni, com['yy'] * 1000))
-#             if com['zz'] is not None:
-#                 f.write('    NODE {0} TYPE DZZ {1}\n'.format(ni, com['zz'] * 1000))
 
 
 # def _write_tributary_load(f, software, com, factor):

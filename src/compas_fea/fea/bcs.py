@@ -85,6 +85,8 @@ class BCs(object):
 
                     pass
 
+                self.blank_line()
+
         except:
 
             print('***** Error writing boundary conditions, check Step exists in structure.steps_order[0] *****')

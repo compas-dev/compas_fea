@@ -142,7 +142,7 @@ def process_data(data, dtype, iptype, nodal, elements, n):
         lengths    = zeros(m, dtype=int64)
         data_array = zeros((m, 20), dtype=float64)
 
-        iptypes = {'max': 0, 'min': 1, 'mean': 2}
+        iptypes = {'max': 0, 'min': 1, 'mean': 2, 'abs': 3}
 
         for ekey, item in data.items():
             fdata = list(item.values())
@@ -182,6 +182,9 @@ def process_data(data, dtype, iptype, nodal, elements, n):
 
                 elif iptype == 2:
                     ve[i]  = mean(data_array[i, :lengths[i]])
+
+                elif iptype == 3:
+                    ve[i]  = max(abs(data_array[i, :lengths[i]]))
 
             return ve
 
