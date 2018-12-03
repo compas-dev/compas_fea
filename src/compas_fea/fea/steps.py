@@ -462,15 +462,6 @@ class Steps(object):
                     self.blank_line()
                     self.write_line('record')
 
-                    # # get values of eigenvectors for translational DOFs
-                    # #---------------------------------------------------
-                    # set f11 [nodeEigenvector 3 1 1]
-                    # set f21 [nodeEigenvector 5 1 1]
-                    # set f12 [nodeEigenvector 3 2 1]
-                    # set f22 [nodeEigenvector 5 2 1]
-                    # puts "eigenvector 1: [list [expr {$f11/$f21}] [expr {$f21/$f21}] ]"
-                    # puts "eigenvector 2: [list [expr {$f12/$f22}] [expr {$f22/$f22}] ]"
-
             # -------------------------------------------------------------------------------------------------
             # Abaqus
             # -------------------------------------------------------------------------------------------------
