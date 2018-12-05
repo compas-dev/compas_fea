@@ -4,6 +4,7 @@ from compas_fea.fea.ansys.writing.ansys_materials import *
 from compas_fea.fea.ansys.writing.ansys_loads import *
 from compas_fea.fea.ansys.writing.ansys_process import *
 from compas_fea.fea.ansys.writing.ansys_steps import *
+from compas_fea.fea.ansys.writing.ansys_forces import *
 
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
@@ -50,6 +51,12 @@ def write_static_results_from_ansys_rst(structure, fields, step_index=0):
         fields = [fields]
     if 'u' in fields or 'all' in fields:
         write_request_node_displacements(structure, step_index)
+    if 'sf' in fields or 'all' in fields:
+        write_request_element_forces(structure, step_index)
+
+
+
+
     if 's' in fields or 'all' in fields:
         # write_request_nodal_stresses(structure, step_index)
         write_request_element_stresses(structure, step_index)
@@ -61,3 +68,4 @@ def write_static_results_from_ansys_rst(structure, fields, step_index=0):
         write_request_principal_strains(path, name, step_name)
     if 'rf' in fields or 'all' in fields:
         write_request_reactions(path, name, step_name)
+
