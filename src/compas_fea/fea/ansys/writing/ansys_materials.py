@@ -11,14 +11,16 @@ def write_all_materials(structure, output_path, filename):
     for index, key in enumerate(materials):
         material = materials[key]
         if material.__name__ == 'ElasticIsotropic':
-            write_elastic_material(structure, material, index, output_path, filename)
+            write_elastic_material(material, index, output_path, filename)
         elif material.__name__ == 'ConcreteMicroplane':
-            write_concrete_microplane_material(structure, material, index, output_path, filename)
+            write_concrete_microplane_material(material, index, output_path, filename)
+        elif material.__name__ in ['ElasticPlastic', 'Steel']:
+            write_elasticplastic_material(material, index, output_path, filename)
         else:
             raise ValueError(material.__name__ + ' Type of material is not yet implemented for Ansys')
 
 
-def write_elastic_material(structure, material, index, output_path, filename):
+def write_elastic_material(material, index, output_path, filename):
     E = material.E['E']
     P = material.v['v']
     material_index = index + 1
@@ -49,9 +51,22 @@ def write_elastic_material(structure, material, index, output_path, filename):
     cFile.close()
 
 
-def write_concrete_microplane_material(structure, material, index, output_path, filename):
+def write_elasticplastic_material(material, index, output_path, filename):
 
-    write_elastic_material(structure, material, index, output_path, filename)
+    write_elastic_material(material, index, output_path, filename)
+    cFile = open(os.path.join(output_path, filename), 'a')
+    # cFile.write('TB,MISO,{0}, {0}, {1} ,0 \n'.format(index + 1, len(material.tension['e'])))
+    cFile.write('TB, PLASTIC, {0}, ,{1}, MISO \n'.format(index + 1, len(material.tension['e']) + 1))
+    cFile.write('TBTEMP, 0  \n')
+    cFile.write('TBPT, ,0, 5000 \n')
+    for i, j in zip(material.tension['f'], material.tension['e']):
+        cFile.write('TBPT, ,{1}, {0}\n'.format(i, j))
+    cFile.close()
+
+
+def write_concrete_microplane_material(material, index, output_path, filename):
+
+    write_elastic_material(material, index, output_path, filename)
 
     material_index = index + 1
     E = material.E['E']

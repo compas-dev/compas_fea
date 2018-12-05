@@ -631,7 +631,7 @@ Steps
             opensees.launch_process(self, exe=exe, output=output)
 
 
-    def extract_data(self, software, fields='u', steps='last', exe=None, sets=None, license='research', output=True):
+    def extract_data(self, software, fields='u', steps='all', exe=None, sets=None, license='research', output=True):
 
         """ Extracts data from the analysis output files.
 

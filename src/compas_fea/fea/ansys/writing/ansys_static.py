@@ -33,6 +33,7 @@ def write_static_solve(structure, path, filename, skey):
     cFile = open(os.path.join(path, filename), 'a')
     cFile.write('! \n')
     cFile.write('/SOLU ! \n')
+    cFile.write('ERESX, NO \n')  # this copies IP results to nodes
     cFile.write('ANTYPE,0\n')
     cFile.write('!\n')
     if structure.steps[skey].nlgeom:
@@ -43,28 +44,20 @@ def write_static_solve(structure, path, filename, skey):
     cFile.close()
 
 
-def write_request_static_results(path, filename, step_name, fields):
-    write_request_node_displacements(path, filename, step_name)
-    write_request_nodal_stresses(path, filename, step_name)
-    write_request_pricipal_stresses(path, filename, step_name)
-    write_request_shear_stresses(path, filename, step_name)
-    write_request_principal_strains(path, filename, step_name)
-    write_request_reactions(path, filename, step_name)
-
-
-def write_static_results_from_ansys_rst(name, path, fields, step_index=0, step_name='step'):
+def write_static_results_from_ansys_rst(structure, fields, step_index=0):
 
     if type(fields) == str:
         fields = [fields]
     if 'u' in fields or 'all' in fields:
-        write_request_node_displacements(path, name, step_name)
+        write_request_node_displacements(structure, step_index)
     if 's' in fields or 'all' in fields:
-        write_request_nodal_stresses(path, name, step_name)
+        # write_request_nodal_stresses(structure, step_index)
+        write_request_element_stresses(structure, step_index)
     if 'sp' in fields or 'all' in fields:
         write_request_pricipal_stresses(path, name, step_name)
     if 'ss' in fields or 'all' in fields:
         write_request_shear_stresses(path, name, step_name)
     if 'e' in fields or 'all' in fields:
         write_request_principal_strains(path, name, step_name)
-    if 'r' in fields or 'all' in fields:
+    if 'rf' in fields or 'all' in fields:
         write_request_reactions(path, name, step_name)

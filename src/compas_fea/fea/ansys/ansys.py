@@ -188,7 +188,7 @@ def delete_result_files(path, name):
     shutil.rmtree(out_path)
 
 
-def extract_rst_data(structure, fields='all', steps='last', sets=None, license='teaching'):
+def extract_rst_data(structure, fields='all', steps='all', sets=None, license='teaching'):
     """ Extracts results from Ansys rst file.
 
     Parameters:
@@ -217,18 +217,20 @@ def write_results_from_rst(structure, fields, steps, license='teaching', sets=No
     filename = structure.name + '_extract.txt'
     name = structure.name
     path = structure.path
+
     if steps == 'last':
         steps = [structure.steps_order[-1]]
     elif steps == 'all':
         steps = structure.steps_order
+
     ansys_open_post_process(path, filename)
+
     for skey in steps:
-        step_index = steps.index(skey)
+        step_index = structure.steps_order.index(skey)
         stype = structure.steps[skey].type
         if stype == 'static':
             set_current_step(path, filename, step_index=step_index)
-            write_static_results_from_ansys_rst(name, path, fields,
-                                                step_index=step_index, step_name=skey)
+            write_static_results_from_ansys_rst(structure, fields, step_index=step_index)
         elif stype == 'modal':
             num_modes = structure.steps[skey].modes
             write_modal_results_from_ansys_rst(name, path, fields, num_modes,
@@ -275,7 +277,7 @@ def load_to_results(structure, fields, steps):
                 rlist.append(get_displacements_from_result_files(out_path, step))
             if 's' in fields or 'all' in fields:
                 rlist.append(get_nodal_stresses_from_result_files(out_path, step))
-            if 'r' in fields or 'all' in fields:
+            if 'rf' in fields or 'all' in fields:
                 rlist.append(get_reactions_from_result_files(out_path, step))
             if 'e' in fields or 'all' in fields:
                 rlist.append(get_principal_strains_from_result_files(out_path, step))

@@ -21,7 +21,7 @@ __all__ = [
 
 class NodeMixins(object):
 
-    def add_node(self, xyz, ex=[1, 0, 0], ey=[0, 1, 0], ez=[0, 0, 1], mass=0):
+    def add_node(self, xyz, ex=[1, 0, 0], ey=[0, 1, 0], ez=[0, 0, 1], mass=0, virtual=False):
 
         """ Adds a node to structure.nodes at co-ordinates xyz with local frame [ex, ey, ez].
 
@@ -37,6 +37,8 @@ class NodeMixins(object):
             Node's local z axis.
         mass : float
             Lumped mass at node.
+        virtual: bool
+            Is the node virtual.
 
         Returns
         -------
@@ -56,7 +58,11 @@ class NodeMixins(object):
 
             key = self.node_count()
             self.nodes[key] = Node(key=key, xyz=xyz, ex=ex, ey=ey, ez=ez, mass=mass)
-            self.add_node_to_node_index(key=key, xyz=xyz)
+
+            if virtual:
+                self.add_node_to_node_index(key=key, xyz=xyz, virtual=True)
+            else:
+                self.add_node_to_node_index(key=key, xyz=xyz)
 
         return key
 
@@ -88,7 +94,7 @@ class NodeMixins(object):
 
         return [self.add_node(xyz=node, ex=ex, ey=ey, ez=ez) for node in nodes]
 
-    def add_node_to_node_index(self, key, xyz):
+    def add_node_to_node_index(self, key, xyz, virtual=False):
 
         """ Adds the node to the node_index dictionary.
 
@@ -98,6 +104,8 @@ class NodeMixins(object):
             Prescribed node key.
         xyz : list
             [x, y, z] co-ordinates of the node.
+        virtual: bool
+            Is the node virtual or not
 
         Returns
         -------
@@ -106,7 +114,10 @@ class NodeMixins(object):
         """
 
         gkey = geometric_key(xyz, '{0}f'.format(self.tol))
-        self.node_index[gkey] = key
+        if virtual:
+            self.virtual_node_index[gkey] = key
+        else:
+            self.node_index[gkey] = key
 
     def check_node_exists(self, xyz):
 
@@ -223,7 +234,7 @@ class NodeMixins(object):
 
         """
 
-        return len(self.nodes)
+        return len(self.nodes) + len(self.virtual_nodes)
 
     def node_xyz(self, node):
 

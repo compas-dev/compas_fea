@@ -157,12 +157,12 @@ def get_modal_shapes_from_result_files(out_path):
         mode = f.readlines()
         for j in range(len(mode)):
             string = mode[j].split(',')
-            a = map(float, string)
+            a = map(float, string[1:])
             nkey = int(a[0]) - 1
             modes_dict['ux' + str(i)][nkey] = a[1]
             modes_dict['uy' + str(i)][nkey] = a[2]
             modes_dict['uz' + str(i)][nkey] = a[3]
-            modes_dict['um' + str(i)][nkey] = length_vector((a[1], a[2], a[3]))
+            modes_dict['um' + str(i)][nkey] = a[4]
         f.close()
 
     return modes_dict
@@ -192,21 +192,17 @@ def get_displacements_from_result_files(out_path, step):
     except(Exception):
         return None
     displacements = dfile.readlines()
-    # disp_dict = {}
-    # for i in range(len(displacements)):
-    #     dstring = displacements[i].split(',')
-    #     disp = map(float, dstring)
-    #     key = int(disp[0]) - 1
-    #     disp_dict[key] = {'ux': disp[1], 'uy': disp[2], 'uz': disp[3]}
 
-    disp_dict = {'ux': {}, 'uy': {}, 'uz': {}}
+    disp_dict = {'ux': {}, 'uy': {}, 'uz': {}, 'um': {}}
     for i in range(len(displacements)):
         dstring = displacements[i].split(',')
-        disp = map(float, dstring)
+        disp = map(float, dstring[1:])
         key = int(disp[0]) - 1
-        disp_dict['ux'][key] = float(disp[1])
-        disp_dict['uy'][key] = float(disp[2])
-        disp_dict['uz'][key] = float(disp[3])
+        disp_dict['ux'][key] = disp[1]
+        disp_dict['uy'][key] = disp[2]
+        disp_dict['uz'][key] = disp[3]
+        disp_dict['um'][key] = disp[4]
+
     return disp_dict
 
 
@@ -350,10 +346,10 @@ def get_reactions_from_result_files(out_path, step):
     #         react_dict[key] = {'rxx': reaction[3], 'ryy': reaction[4], 'rzz': reaction[5],
     #                            'rx': reaction[0], 'ry': reaction[1], 'rz': reaction[2]}
 
-    react_dict = {'rmx': {}, 'rmy': {}, 'rmz': {}, 'rfx': {}, 'rfy': {}, 'rfz': {}}
+    react_dict = {'rmx': {}, 'rmy': {}, 'rmz': {}, 'rfx': {}, 'rfy': {}, 'rfz': {}, 'rfm': {}}
     for i in range(len(r)):
         r_string = r[i].split(',')
-        reaction = map(float, r_string)
+        reaction = map(float, r_string[1:])
         key = int(reaction[0]) - 1
         if all(v == 0.0 for v in reaction) is False:
             react_dict['rmx'][key] = float(reaction[4])
@@ -362,7 +358,7 @@ def get_reactions_from_result_files(out_path, step):
             react_dict['rfx'][key] = float(reaction[1])
             react_dict['rfy'][key] = float(reaction[2])
             react_dict['rfz'][key] = float(reaction[3])
-
+            react_dict['rfm'][key] = length_vector([reaction[1], reaction[2], reaction[3]])
     return react_dict
 
 
@@ -379,6 +375,7 @@ def get_acoustic_radiation_from_results_files(out_path, step):
         data = line.split(' ')
         tl_data[i] = {'freq': float(data[0]), 'tl': float(data[1]), 'rad': float(data[2]), 'inc': float(data[3])}
     return tl_data
+
 
 
 if __name__ == '__main__':

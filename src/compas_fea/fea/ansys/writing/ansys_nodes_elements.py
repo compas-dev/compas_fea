@@ -1,15 +1,17 @@
 import os
 
+from compas.geometry import add_vectors
+from compas.geometry import normalize_vector
+
 __author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
 __copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
 __license__    = 'MIT License'
 __email__      = 'mendez@arch.ethz.ch'
 
 
-et_dict = {}
-
-
 def write_elements(structure, output_path, filename):
+
+    structure.et_dict = {}
 
     # combine elementa and virtual elements ------------------------------------
     elements = {}
@@ -95,6 +97,10 @@ def write_set_element_material(output_path, filename, mat_index, elem_type, elem
     cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('ET,' + str(elem_type_index) + ',' + str(elem_type) + ' \n')
     cFile.write('TYPE,' + str(elem_type_index) + '\n')
+    if elem_type == 'BEAM188':
+        cFile.write('KEYOPT, {0},  7, 2 \n'.format(str(elem_type_index)))
+        cFile.write('KEYOPT, {0},  9, 2 \n'.format(str(elem_type_index)))
+    # cFile.write('KEYOPT, {0}, 15, 1 \n'.format(str(elem_type_index)))
     if mat_index:
         cFile.write('MAT,' + str(mat_index + 1) + '\n')
     cFile.write('!\n')
@@ -109,7 +115,7 @@ def write_shell4_elements(structure, output_path, filename, ekeys, section, mate
     ekeys = sorted(ekeys, key=int)
     mat_index = structure.materials[material].index
     sec_index = structure.sections[section].index
-    etkey = et_dict.setdefault('SHELL181', len(et_dict) + 1)
+    etkey = structure.et_dict.setdefault('SHELL181', len(structure.et_dict) + 1)
     write_set_element_material(output_path, filename, mat_index, 'SHELL181', etkey)
 
     thickness = structure.sections[section].geometry['t']
@@ -133,7 +139,7 @@ def write_shell4_elements(structure, output_path, filename, ekeys, section, mate
 def write_solid_elements(structure, output_path, filename, ekeys, material):
     ekeys = sorted(ekeys, key=int)
     mat_index = structure.materials[material].index
-    etkey = et_dict.setdefault('SOLID185', len(et_dict) + 1)
+    etkey = structure.et_dict.setdefault('SOLID185', len(structure.et_dict) + 1)
     write_set_element_material(output_path, filename, mat_index, 'SOLID185', etkey)
 
     cFile = open(os.path.join(output_path, filename), 'a')
@@ -150,6 +156,7 @@ def write_solid_elements(structure, output_path, filename, ekeys, material):
     cFile.write('!\n')
     cFile.close()
 
+
 def write_set_srf_realconstant(output_path, filename, rkey):
     cFile = open(os.path.join(output_path, filename), 'a')
     cFile.write('R,' + str(rkey) + ', , , , , , , , , ,\n')
@@ -163,7 +170,7 @@ def write_surface_elements(structure, output_path, filename, ekeys):
     in a given ansys input file. These shell elements require 4 nodes.
     """
     ekeys = sorted(ekeys, key=int)
-    etkey = et_dict.setdefault('SURF154', len(et_dict) + 1)
+    etkey = structure.et_dict.setdefault('SURF154', len(structure.et_dict) + 1)
     write_set_element_material(output_path, filename, None, 'SURF154', etkey)
     write_set_srf_realconstant(output_path, filename, etkey)
 
@@ -201,7 +208,7 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
     mat_index = structure.materials[material].index
     sec_index = structure.sections[section].index
 
-    etkey = et_dict.setdefault('BEAM188', len(et_dict) + 1)
+    etkey = structure.et_dict.setdefault('BEAM188', len(structure.et_dict) + 1)
     write_set_element_material(output_path, filename, mat_index, 'BEAM188', etkey)
     sec_type = structure.sections[section].__name__
     if sec_type == 'PipeSection':
@@ -226,20 +233,33 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
         thickness_w = structure.sections[section].geometry['tf']
         thickness_f = structure.sections[section].geometry['tw']
         write_i_section(output_path, filename, height, base, thickness_w, thickness_f, sec_index)
-
-    orient = structure.sections[section].orientation
+    elif sec_type == 'TrapezoidalSection':
+        b1 = structure.sections[section].geometry['b1']
+        b2 = structure.sections[section].geometry['b2']
+        h  = structure.sections[section].geometry['h']
+        write_trapezoidal_section(output_path, filename, b1, b2, h, sec_index)
+    else:
+        raise ValueError(sec_type + ' Type of section is not yet implemented for Ansys')
 
     cFile = open(os.path.join(output_path, filename), 'a')
+
     for ekey in ekeys:
-        element = structure.elements[ekey].nodes
-        if orient:
+        element = list(structure.elements[ekey].nodes)
+        # print structure.elements[ekey]
+        axis = structure.elements[ekey].axes['ex']
+        if not axis:
             enode = structure.nodes[element[-1]]
-            onode = [enode['x'] + orient[0], enode['y'] + orient[1], enode['z'] + orient[2]]
-            string = 'N,' + str(structure.node_count()) + ',' + str(onode[0]) + ',' + str(onode[1])
-            string += ',' + str(onode[2]) + ',0,0,0 \n'
-            cFile.write(string)
-            element.append(structure.node_count() - 1)
-        string = 'E,'
+            axis = [0, 1, 0]
+        axis = normalize_vector(axis)
+        enode = structure.nodes[element[-1]]
+        onode = add_vectors([enode['x'], enode['y'], enode['z']], axis)
+        nkey = structure.add_node(onode, virtual=True)
+        string = 'N,' + str(nkey + 1) + ',' + str(onode[0]) + ',' + str(onode[1])
+        string += ',' + str(onode[2]) + ',0,0,0 \n'
+        cFile.write(string)
+
+        element.append(nkey)
+        string = 'E, '
         for i in range(len(element)):
             string += str(int(element[i]) + 1)
             if i < len(element) - 1:
@@ -247,6 +267,22 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
         string += '\n'
         cFile.write(string)
 
+    cFile.write('!\n')
+    cFile.close()
+
+
+def write_trapezoidal_section(output_path, filename, b1, b2, h, sec_index):
+
+    x1 = b1 / 2.
+    x2 = b2 / 2.
+    h = h / 2.
+
+    cFile = open(os.path.join(output_path, filename), 'a')
+    cFile.write('SECTYPE, ' + str(sec_index + 1) + ', BEAM, QUAD, , 0 \n')
+    cFile.write('SECOFFSET, CENT \n')
+    cFile.write('SECDATA, -{0}, -{1}, {0}, -{1}, {2}, {1}, -{2}, {1} \n'.format(x1, h, x2))
+    cFile.write('SECNUM, ' + str(sec_index + 1) + '\n')
+    cFile.write('!\n')
     cFile.write('!\n')
     cFile.close()
 
@@ -302,7 +338,7 @@ def write_tie_elements(structure, output_path, filename, ekeys, section, materia
     mat_index = structure.materials[material].index
     sec_index = structure.sections[section].index
 
-    etkey = et_dict.setdefault('LINK180', len(et_dict) + 1)
+    etkey = structure.et_dict.setdefault('LINK180', len(structure.et_dict) + 1)
     write_set_element_material(output_path, filename, mat_index, 'LINK180', etkey)
 
     # axial_force =  0 for tension and compression, 1 tension only, 2 compression only
@@ -431,85 +467,88 @@ def write_request_element_nodes(path, name):
     cFile.close()
 
 
-def write_request_node_displacements(path, name, step_name, mode=None):
+def write_request_node_displacements(structure, step_index, mode=None):
+
+    name = structure.name
+    path = structure.path
+    step_name = structure.steps_order[step_index]
+
     out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     if mode:
         fname = 'modal_shape_' + str(mode)
-        name_ = 'nds_d' + str(mode)
-        name_x = 'dispX' + str(mode)
-        name_y = 'dispY' + str(mode)
-        name_z = 'dispZ' + str(mode)
+        # name_ = 'nds_d' + str(mode)
+        # name_x = 'dispX' + str(mode)
+        # name_y = 'dispY' + str(mode)
+        # name_z = 'dispZ' + str(mode)
         out_path = os.path.join(out_path, 'modal_out')
     else:
         fname = str(step_name) + '_' + 'displacements'
-        name_ = 'nds_d'
-        name_x = 'dispX'
-        name_y = 'dispY'
-        name_z = 'dispZ'
+        # name_ = 'nds_d'
+        # name_x = 'dispX'
+        # name_y = 'dispY'
+        # name_z = 'dispZ'
 
-    cFile = open(os.path.join(path, filename), 'a')
-    cFile.write('/POST1 \n')
-    cFile.write('!\n')
-    cFile.write('*get,numNodes,node,,count \n')
-    cFile.write('*set,' + name_x + ', \n')
-    cFile.write('*dim,' + name_x + ',array,numNodes,1 \n')
-    cFile.write('*set,' + name_y + ', \n')
-    cFile.write('*dim,' + name_y + ',array,numNodes,1 \n')
-    cFile.write('*set,' + name_z + ', \n')
-    cFile.write('*dim,' + name_z + ',array,numNodes,1 \n')
-    cFile.write('*dim,' + name_ + ', ,numNodes \n')
-    cFile.write('*VGET, ' + name_x + ', node, all, u, X,,,2 \n')
-    cFile.write('*VGET, ' + name_y + ', node, all, u, Y,,,2 \n')
-    cFile.write('*VGET, ' + name_z + ', node, all, u, Z,,,2 \n')
-    cFile.write('*vfill,' + name_ + '(1),ramp,1,1 \n')
-    cFile.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
-    cFile.write('*vwrite, ' + name_ + '(1) , \',\'  , ' + name_x + '(1) , \',\' , ')
-    cFile.write(name_y + '(1) , \',\' ,' + name_z + '(1) \n')
-    cFile.write('(          F9.0,       A,       ES,           A,          ES,          A,      ES) \n')
-    cFile.write('*cfclose \n')
-    cFile.write('!\n')
-    cFile.write('!\n')
-    cFile.close()
+    # cFile = open(os.path.join(path, filename), 'a')
+    # cFile.write('/POST1 \n')
+    # cFile.write('!\n')
+    # cFile.write('*get,numNodes,node,,count \n')
+    # cFile.write('*set,' + name_x + ', \n')
+    # cFile.write('*dim,' + name_x + ',array,numNodes,1 \n')
+    # cFile.write('*set,' + name_y + ', \n')
+    # cFile.write('*dim,' + name_y + ',array,numNodes,1 \n')
+    # cFile.write('*set,' + name_z + ', \n')
+    # cFile.write('*dim,' + name_z + ',array,numNodes,1 \n')
+    # cFile.write('*dim,' + name_ + ', ,numNodes \n')
+    # cFile.write('*VGET, ' + name_x + ', node, all, u, X,,,2 \n')
+    # cFile.write('*VGET, ' + name_y + ', node, all, u, Y,,,2 \n')
+    # cFile.write('*VGET, ' + name_z + ', node, all, u, Z,,,2 \n')
+    # cFile.write('*vfill,' + name_ + '(1),ramp,1,1 \n')
+    # cFile.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
+    # cFile.write('*vwrite, ' + name_ + '(1) , \',\'  , ' + name_x + '(1) , \',\' , ')
+    # cFile.write(name_y + '(1) , \',\' ,' + name_z + '(1) \n')
+    # cFile.write('(          F9.0,       A,       ES,           A,          ES,          A,      ES) \n')
+    # cFile.write('*cfclose \n')
+    # cFile.write('!\n')
+    # cFile.write('!\n')
+    # cFile.close()
+
+    fh = open(os.path.join(path, filename), 'a')
+    fh.write('*get, nnodes, node,, count \n')
+    fh.write('*dim, u, array, nnodes, 5 \n')
+    fh.write('! \n')
+
+    fh.write('*do, i, 1, nnodes \n')
+    fh.write('u(i,1) = i                         !Collumn 1 is node number \n')
+    fh.write('*get, u(i,2), NODE, u(i,1), U, X   !Collumn 2 is Ux \n')
+    fh.write('*get, u(i,3), NODE, u(i,1), U, Y   !Collumn 3 is Uy \n')
+    fh.write('*get, u(i,4), NODE, u(i,1), U, Z   !Collumn 4 is Uz \n')
+    fh.write('*get, u(i,5), NODE, u(i,1), U, SUM !Collumn 5 is Um \n')
+    fh.write('*Enddo \n')
+    fh.write('! \n')
+
+    fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
+
+    fh.write('*do,i,1,nnodes \n')
+    fh.write('*CFWRITE, node U, u(i,1), u(i,2), u(i,3), u(i,4), u(i,5) \n')
+    fh.write('*Enddo \n')
+    fh.close()
 
 
 def write_constraint_nodes(structure, output_path, filename, displacements):
     cFile = open(os.path.join(output_path, filename), 'a')
 
+    cdict = {'x' : 'UX', 'y' : 'UY', 'z' : 'UZ', 'xx' : 'ROTX', 'yy' : 'ROTY', 'zz' : 'ROTZ'}
     for dkey in displacements:
         components = structure.displacements[dkey].components
-        string = ''
-        if components['x'] == 0:
-            string += 'UX,'
-        else:
-            string += ' ,'
-        if components['y'] == 0:
-            string += 'UY,'
-        else:
-            string += ' ,'
-        if components['z'] == 0:
-            string += 'UZ,'
-        else:
-            string += ' ,'
-        if components['xx'] == 0:
-            string += 'ROTX,'
-        else:
-            string += ' ,'
-        if components['yy'] == 0:
-            string += 'ROTY,'
-        else:
-            string += ' ,'
-        if components['zz'] == 0:
-            string += 'ROTZ,'
-        else:
-            string += '  '
-
         nodes = structure.displacements[dkey].nodes
         if type(nodes) == str:
             nodes = structure.sets[nodes]['selection']
         for node in nodes:
-            string_ = 'D,' + str(int(node) + 1) + ', ,0, , , ,' + string + ' \n'
-            cFile.write(string_)
+            for com in components:
+                if components[com] != None:
+                    string = 'D, {0}, {1}, {2} \n'.format(str(node + 1), cdict[com], components[com])
+                    cFile.write(string)
 
     cFile.write('!\n')
     cFile.write('!\n')
@@ -780,7 +819,7 @@ def write_spring_elements_nodal(structure, out_path, filename, ekeys, section):
     kdict = section.stiffness
     fh = open(os.path.join(out_path, filename), 'a')
     for axis in kdict:
-        etkey = et_dict.setdefault('COMBIN14_' + axis, len(et_dict) + 1)
+        etkey = structure.et_dict.setdefault('COMBIN14_' + axis, len(structure.et_dict) + 1)
         fh.write('ET, {0}, COMBIN14 \n'.format(etkey))
         fh.write('KEYOPT, {0}, 1, 0 \n'.format(etkey))
         fh.write('KEYOPT, {0}, 2, {1} \n'.format(etkey, axis_dict[axis]))

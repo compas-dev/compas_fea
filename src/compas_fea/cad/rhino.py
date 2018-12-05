@@ -589,6 +589,7 @@ def ordered_network(structure, network, layer):
         Cumulative length at element mid-points.
     float
         Total length.
+<<<<<<< HEAD
 
     Notes
     -----
@@ -599,6 +600,18 @@ def ordered_network(structure, network, layer):
     start = rs.PointCoordinates(rs.ObjectsByLayer(layer)[0])
     return network_order(start=start, structure=structure, network=network)
 
+=======
+
+    Notes
+    -----
+    - This function is for a Network representing a single structural element, i.e. with two end-points (leaves).
+
+    """
+
+    start = rs.PointCoordinates(rs.ObjectsByLayer(layer)[0])
+    return network_order(start=start, structure=structure, network=network)
+
+>>>>>>> origin/develop
 
 def plot_reaction_forces(structure, step, layer=None, scale=1.0):
 
