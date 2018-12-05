@@ -33,6 +33,7 @@ def write_static_solve(structure, path, filename, skey):
     cFile = open(os.path.join(path, filename), 'a')
     cFile.write('! \n')
     cFile.write('/SOLU ! \n')
+    cFile.write('ERESX, NO \n')  # this copies IP results to nodes
     cFile.write('ANTYPE,0\n')
     cFile.write('!\n')
     if structure.steps[skey].nlgeom:

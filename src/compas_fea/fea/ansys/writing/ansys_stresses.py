@@ -281,44 +281,14 @@ def write_request_reactions(path, name, step_name):
 
 def write_request_element_stresses(structure, step_index):
 
+    write_request_ip_stresses(structure, step_index)
+
     for et in structure.et_dict:
         etkey = structure.et_dict[et]
         if et == 'BEAM188':
             write_request_beam_stresses(structure, step_index, etkey)
         elif et == 'SHELL181':
             write_request_shell_stresses(structure, step_index, etkey)
-
-    # trying something out ...
-    # out_path = os.path.join(path, name + '_output')
-    # filename = name + '_extract.txt'
-    # cFile = open(os.path.join(path, filename), 'a')
-    # cFile.write('! \n')
-    # cFile.write('ETABLE, , S, EQV, AVG \n')
-    # cFile.write('! \n')
-    # cFile.close()
-
-    # out_path = os.path.join(path, name + '_output')
-    # filename = name + '_extract.txt'
-    # fname = str(step_name) + '_' + 'elem_stresses'
-    # fh = open(os.path.join(path, filename), 'a')
-    # fh.write('*get, nelem, elem,, count \n')
-    # fh.write('*dim, es, array, nelem, 4 \n')
-    # fh.write('! \n')
-
-    # fh.write('*do, i, 1, nelem \n')
-    # fh.write('es(i,1) = i \n')
-    # fh.write('*get, es(i,2), SECR, es(i,1), S, X, MAX \n')
-    # fh.write('*get, es(i,3), SECR, es(i,1), S, Y, MAX \n')
-    # fh.write('*get, es(i,4), SECR, es(i,1), S, Z, MAX \n')
-    # fh.write('*Enddo \n')
-    # fh.write('! \n')
-
-    # fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
-
-    # fh.write('*do,i,1,nelem \n')
-    # fh.write('*CFWRITE, elem S, es(i,1), es(i,2), es(i,3), es(i,4) \n')
-    # fh.write('*Enddo \n')
-    # fh.close()
 
 
 def write_request_beam_stresses(structure, step_index, etkey):
@@ -398,4 +368,37 @@ def write_request_shell_stresses(structure, step_index, etkey):
     fh.write('ESEL, ALL \n')
     fh.write('ETABLE, ERAS \n')
     fh.write('! \n')
+    fh.close()
+
+
+def write_request_ip_stresses(structure, step_index):
+
+    name = structure.name
+    path = structure.path
+    step_name = structure.steps_order[step_index]
+
+    out_path = os.path.join(path, name + '_output')
+    filename = name + '_extract.txt'
+    fname = str(step_name) + '_' + 'ip_stresses'
+
+    fh = open(os.path.join(path, filename), 'a')
+    fh.write('*get, nelem, elem,, count \n')
+    fh.write('*dim, ips, array, nelem, 3 \n')
+
+    fh.write('*do,i,1,nelem \n')
+    fh.write('ESEL, S, ELEM, , i, i \n')
+    # fh.write('*do,j,1,2 \n')
+    fh.write('*GET, num, ELEM, i, NODE, 1 \n')
+    fh.write('*get, ips(i,1), NODE, num, S, X \n')
+    fh.write('*get, ips(i,2), NODE, num, S, Y \n')
+    fh.write('*get, ips(i,3), NODE, num, S, Z \n')
+    # fh.write('*Enddo \n')
+    fh.write('*Enddo \n')
+
+    fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
+    fh.write('*do,i,1,nelem \n')
+    fh.write('*CFWRITE, IPS, ips(i,1), ips(i,2), ips(i,3) \n')
+    fh.write('*Enddo \n')
+    fh.write('! \n')
+
     fh.close()
