@@ -81,7 +81,7 @@ class Materials(object):
                 # Elastic
                 # -------
 
-                if mtype in ['ElasticIsotropic', 'ElasticPlastic', 'Steel', 'Concrete']:
+                if mtype in ['ElasticIsotropic', 'ElasticPlastic', 'Steel', 'Concrete', 'Stiff']:
 
                     self.write_line('*ELASTIC')
                     self.blank_line()
@@ -185,12 +185,6 @@ class Materials(object):
 
 
 
-
-        #     # Stiff
-
-        #     elif mtype == 'Stiff':
-        #         _write_elastic(f, software, E, G, v, p, compression, tension, c, m_index)
-
         #     # ElasticOrthotropic
 
         #     elif mtype == 'ElasticOrthotropic':
@@ -236,21 +230,6 @@ class Materials(object):
 
 #         self.blank_line()
 #         self.blank_line()
-
-
-# from compas_fea.fea.write_elements import _write_sofistik_sections
-
-
-
-
-
-
-
-# def _write_cracked_concrete(f, software, E, v, compression, tension, material, c):
-
-#     if software == 'abaqus':
-
-
 
 
 
@@ -323,18 +302,6 @@ class Materials(object):
 
 #         for i in material.sheat:
 #             f.write(', '.join([str(j) for j in i]) + '\n')
-
-#     elif software == 'opensees':
-
-#         pass
-
-#     elif software == 'sofistik':
-
-#         pass
-
-#     elif software == 'ansys':
-
-#         pass
 
 #     f.write('{0}\n'.format(c))
 

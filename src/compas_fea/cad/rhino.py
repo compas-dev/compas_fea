@@ -234,8 +234,7 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                 nodes = []
 
                 for c, vertex in enumerate(vertices):
-                    if pA:
-                        m = mesh.vertex_area(c) * pA
+                    m = mesh.vertex_area(c) * pA if pA else None
                     nodes.append(structure.add_node(xyz=vertex, mass=m))
 
                 added_nodes.update(nodes)
@@ -578,7 +577,6 @@ def ordered_network(structure, network, layer):
         Network Datastructure object.
     layer : str
         Layer to extract start-point (Rhino point).
-
     Returns
     -------
     list
@@ -589,29 +587,15 @@ def ordered_network(structure, network, layer):
         Cumulative length at element mid-points.
     float
         Total length.
-<<<<<<< HEAD
-
     Notes
     -----
     - This function is for a Network representing a single structural element, i.e. with two end-points (leaves).
-
     """
 
     start = rs.PointCoordinates(rs.ObjectsByLayer(layer)[0])
+
     return network_order(start=start, structure=structure, network=network)
 
-=======
-
-    Notes
-    -----
-    - This function is for a Network representing a single structural element, i.e. with two end-points (leaves).
-
-    """
-
-    start = rs.PointCoordinates(rs.ObjectsByLayer(layer)[0])
-    return network_order(start=start, structure=structure, network=network)
-
->>>>>>> origin/develop
 
 def plot_reaction_forces(structure, step, layer=None, scale=1.0):
 

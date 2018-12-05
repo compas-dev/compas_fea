@@ -65,7 +65,7 @@ mdl.add([
     PinnedDisplacement(name='disp_bot', nodes='supports_bot'),
     RollerDisplacementZ(name='disp_top', nodes='supports_top'),
 ])
-    
+
 # Loads
 
 mdl.add(GravityLoad(name='load_gravity', elements=layers))
