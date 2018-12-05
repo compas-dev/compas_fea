@@ -219,7 +219,7 @@ class Steps(object):
 
                                 self.write_line('*DLOAD')
                                 self.blank_line()
-                                self.write_line('{0}, GRAV, {1}, {2}, {3}, {4}'.format(k, 9.81 * fact, gx, gy, gz))
+                                self.write_line('{0}, GRAV, {1}, {2}, {3}, {4}'.format(k, -9.81 * fact, gx, gy, gz))
                                 self.blank_line()
 
                         # Prestress

@@ -254,28 +254,6 @@ class Materials(object):
 
 
 
-# def _write_concrete(f, software, E, v, p, compression, tension, m_index, material, c):
-
-#     if software == 'abaqus':
-
-#         _write_cracked_concrete(f, software, E, v, compression, tension, material, c)
-
-#     elif software == 'opensees':
-
-#         pass
-
-#     elif software == 'sofistik':
-
-#         f.write('CONC {0} TYPE C FCN {1} MUE {2} GAM {3} TYPR C SCM {4}\n'.format(
-#                 m_index, material.fck * MPa, v, p * 0.01, material.sf))
-#         f.write('$\n')
-
-#     elif software == 'ansys':
-
-#         pass
-
-#     f.write('{0}\n'.format(c))
-
 
 # def _write_plasticity_concrete(f, software, material, c, E, v):
 

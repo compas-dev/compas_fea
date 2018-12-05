@@ -17,5 +17,5 @@ mdl = Structure(name='mesh_discretise', path='C:/Temp/')
 
 # Discretise
 
-guid = rs.ObjectsByLayer('span=10m,l/d=15')[0]
-rhino.discretise_mesh(mdl, guid=guid, layer='span=10m,l/d=15_mesh', target=0.080, min_angle=15, iterations=100)
+guid = rs.ObjectsByLayer('mesh_input')[0]
+rhino.discretise_mesh(mdl, guid=guid, layer='elset_mesh', target=0.080, min_angle=15)

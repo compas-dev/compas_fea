@@ -36,7 +36,8 @@ rhino.add_sets_from_layers(mdl, layers=['supports_bot', 'supports_top'])
 mdl.add([
     TrapezoidalSection(name='sec_mushroom', b1=0.001, b2=0.150, h=0.225),
     RectangularSection(name='sec_bamboo', b=0.020, h=0.100),
-    RectangularSection(name='sec_joints', b=0.020, h=0.075)])
+    RectangularSection(name='sec_joints', b=0.020, h=0.075),
+])
 
 # Materials
 
@@ -45,24 +46,25 @@ em = [0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09]
 
 mdl.add([
     ElasticIsotropic(name='mat_bamboo', E=20*10**9, v=0.35, p=1100),
-    ElasticPlastic(name='mat_mushroom', E=5*10**6, v=0.30, p=350, f=fm, e=em)])
+    ElasticPlastic(name='mat_mushroom', E=5*10**6, v=0.30, p=350, f=fm, e=em),
+])
 
 # Properties
 
-s1 = ['struts_mushroom', 'joints_mushroom']
-s2 = ['struts_bamboo', 'joints_bamboo']
-s3 = ['joints_grid']
-
 mdl.add([
-    Properties(name='ep_mushroom', material='mat_mushroom', section='sec_mushroom', elsets=s1),
-    Properties(name='ep_bamboo', material='mat_bamboo', section='sec_bamboo', elsets=s2),
-    Properties(name='ep_joints', material='mat_bamboo', section='sec_joints', elsets=s3)])
+    Properties(name='ep_mush_1', material='mat_mushroom', section='sec_mushroom', elset='struts_mushroom'),
+    Properties(name='ep_mush_2', material='mat_mushroom', section='sec_mushroom', elset='joints_mushroom'),
+    Properties(name='ep_bamb_1', material='mat_bamboo', section='sec_bamboo', elset='struts_bamboo'),
+    Properties(name='ep_bamb_2', material='mat_bamboo', section='sec_bamboo', elset='joints_bamboo'),
+    Properties(name='ep_joints', material='mat_bamboo', section='sec_joints', elset='joints_grid'),
+])
 
 # Displacements
 
 mdl.add([
     PinnedDisplacement(name='disp_bot', nodes='supports_bot'),
-    RollerDisplacementZ(name='disp_top', nodes='supports_top')])
+    RollerDisplacementZ(name='disp_top', nodes='supports_top'),
+])
     
 # Loads
 
@@ -72,16 +74,18 @@ mdl.add(GravityLoad(name='load_gravity', elements=layers))
 
 mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_bot', 'disp_top']),
-    GeneralStep(name='step_loads', loads=['load_gravity'])])
+    GeneralStep(name='step_loads', loads=['load_gravity']),
+])
 mdl.steps_order = ['step_bc', 'step_loads']
 
 # Summary
 
 mdl.summary()
 
-# Run (Abaqus)
+# Run
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'sf'], license='research')
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'sf', 'rf'])
 
-rhino.plot_data(mdl, step='step_loads', field='um', radius=0.05, colorbar_size=0.5)
-rhino.plot_data(mdl, step='step_loads', field='sf1', radius=0.05, colorbar_size=0.5)
+rhino.plot_data(mdl, step='step_loads', field='um', radius=0.05, cbar_size=0.5)
+rhino.plot_data(mdl, step='step_loads', field='sf1', radius=0.05, cbar_size=0.5)
+rhino.plot_reaction_forces(mdl, step='step_loads')
