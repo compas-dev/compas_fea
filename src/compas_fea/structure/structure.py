@@ -6,7 +6,6 @@ from __future__ import print_function
 from compas_fea.fea.abaq import abaq
 from compas_fea.fea.ansys import ansys
 from compas_fea.fea.opensees import opensees
-from compas_fea.fea.sofistik import sofistik
 
 from compas_fea.utilities import combine_all_sets
 from compas_fea.utilities import group_keys_by_attribute
@@ -16,6 +15,7 @@ from compas_fea.structure.mixins.nodemixins import NodeMixins
 from compas_fea.structure.mixins.elementmixins import ElementMixins
 from compas_fea.structure.mixins.objectmixins import ObjectMixins
 from compas_fea.structure.displacement import *
+from compas_fea.structure.set import Set
 
 import pickle
 import os
@@ -38,52 +38,57 @@ class Structure(ObjectMixins, ElementMixins, NodeMixins):
 
     Parameters
     ----------
+    path : str
+        Path to save all compas_fea associated files.
     name : str
         Name of the structure.
-    path : str
-        Path to save files.
 
     Attributes
     ----------
-    constraints : dic
+    constraints : dict
         Constraint objects.
-    displacements : dic
+    displacements : dict
         Displacement objects.
-    elements : dic
+    elements : dict
         Element objects.
-    element_index : dic
+    element_index : dict
         Index of elements (element centroid geometric keys).
-    element_properties : dic
-        Element properties objects.
-    interactions : dic
+    element_properties : dict
+        ElementProperties objects.
+    interactions : dict
         Interaction objects.
-    loads : dic
+    loads : dict
         Load objects.
-    materials : dic
+    materials : dict
         Material objects.
-    misc : dic
+    misc : dict
         Misc objects.
     name : str
         Structure name.
-    nodes : dic
-        Node co-ordinates and local axes.
-    node_index : dic
+    nodes : dict
+        Node objects.
+    node_index : dict
         Index of nodes (node geometric keys).
     path : str
         Path to save files.
-    results : dic
+    results : dict
         Dictionary containing analysis results.
-    sections : dic
+    sections : dict
         Section objects.
-    sets : dic
-        Node, element and surface sets.
-    steps : dic
+    sets : dict
+        Set objects.
+    steps : dict
         Step objects.
     steps_order : list
         Sorted list of Step object names.
     tol : str
         Geometric key tolerance.
-
+    virtual_nodes : dict
+        Node objects for virtual nodes.
+    virtual_elements : dict
+        Element objects for virtual elements.
+    virtual_element_index : dict
+        Index of virtual elements (element centroid geometric keys).
 
     Returns
     -------
@@ -92,34 +97,37 @@ class Structure(ObjectMixins, ElementMixins, NodeMixins):
     """
 
     def __init__(self, path, name='compas_fea-Structure'):
-        self.constraints = {}
-        self.displacements = {}
-        self.elements = {}
-        self.element_index = {}
-        self.element_properties = {}
-        self.interactions = {}
-        self.loads = {}
-        self.materials = {}
-        self.misc = {}
-        self.name = name
-        self.nodes = {}
-        self.node_index = {}
-        self.path = path
-        self.results = {}
-        self.sections = {}
-        self.sets = {}
-        self.steps = {}
-        self.steps_order = []
-        self.tol = '3'
-        self.virtual_nodes = {}
-        self.virtual_node_index = {}
-        self.virtual_elements = {}
+
+        self.constraints           = {}
+        self.displacements         = {}
+        self.elements              = {}
+        self.element_index         = {}
+        self.element_properties    = {}
+        self.interactions          = {}
+        self.loads                 = {}
+        self.materials             = {}
+        self.misc                  = {}
+        self.name                  = name
+        self.nodes                 = {}
+        self.node_index            = {}
+        self.path                  = path
+        self.results               = {}
+        self.sections              = {}
+        self.sets                  = {}
+        self.steps                 = {}
+        self.steps_order           = []
+        self.tol                   = '3'
+        self.virtual_nodes         = {}
+        self.virtual_elements      = {}
         self.virtual_element_index = {}
 
+
     def __str__(self):
+
         n = self.node_count()
         m = self.element_count()
         data = [
+            self.sets,
             self.materials,
             self.sections,
             self.loads,
@@ -130,13 +138,14 @@ class Structure(ObjectMixins, ElementMixins, NodeMixins):
             self.steps,
         ]
 
-        d = ['\n'.join(['  {0} : {1} {2}(s)'.format(i, len(j['selection']), j['type'])
-                        for i, j in self.sets.items() if 'element_' not in i])]
+        d = []
+
         for entry in data:
+
             if entry:
                 d.append('\n'.join(['  {0} : {1}'.format(i, j.__name__) for i, j in entry.items()]))
             else:
-                d.append('  n/a')
+                d.append('n/a')
 
         return """
 
@@ -191,9 +200,9 @@ Steps
 """.format(self.name, n, m, d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8])
 
 
-# ==============================================================================
-# sets
-# ==============================================================================
+    # ==============================================================================
+    # Sets
+    # ==============================================================================
 
     def add_set(self, name, type, selection):
 
@@ -202,10 +211,10 @@ Steps
         Parameters
         ----------
         name : str
-            Name of the set.
+            Name of the Set.
         type : str
             'node', 'element', 'surface_node', surface_element'.
-        selection : list, dic
+        selection : list, dict
             The integer keys of the nodes, elements or the element numbers and sides.
 
         Returns
@@ -216,19 +225,18 @@ Steps
 
         if isinstance(selection, int):
             selection = [selection]
-        self.sets[name] = {'type': type, 'selection': selection, 'index': len(self.sets)}
+
+        self.sets[name] = Set(name=name, type=type, selection=selection, index=len(self.sets))
 
 
-# ==============================================================================
-# constructors
-# ==============================================================================
+    # ==============================================================================
+    # Constructors
+    # ==============================================================================
 
     @classmethod
     def from_mesh(cls, mesh):
 
-        """ Creates a Structure object based on data contained in a compas Mesh
-        datastructure. The Mesh object must contain displacements, materials, sections
-        and loads.
+        """ Creates a Structure object based on data contained in a compas Mesh datastructure.
 
         Parameters
         ----------
@@ -239,6 +247,10 @@ Steps
         -------
         obj
             The resulting Structure object.
+
+        Notes
+        -----
+        - The Mesh object must contain displacements, materials, sections and loads.
 
         """
 
@@ -251,7 +263,8 @@ Steps
         # Add displacements
 
         disp_groups = group_keys_by_attributes(mesh.vertex, ['ux', 'uy', 'uz', 'urx', 'ury', 'urz'])
-        disp_names = []
+        disp_names  = []
+
         for dk in disp_groups:
             if dk != '-_-_-_-_-_-':
                 disp_names.append(dk + '_nodes')
@@ -264,18 +277,21 @@ Steps
         # Add materials and sections
 
         mat_groups = group_keys_by_attributes(mesh.facedata, ['E', 'v', 'p'])
+
         for mk in mat_groups:
             m = [float(x) if x != '-' else None for x in mk.split('_')]
             material = ElasticIsotropic(name=mk + '_material', E=m[0], v=m[1], p=m[2])
             structure.add_material(material)
 
         thick_groups = group_keys_by_attribute(mesh.facedata, 'thick')
+
         for tk in thick_groups:
             t = float(tk)
             section = ShellSection(name=tk + '_section', t=t)
             structure.add_section(section)
 
         prop_comb = combine_all_sets(mat_groups, thick_groups)
+
         for pk in prop_comb:
             mat, sec = pk.split(',')
             prop = ElementProperties(material=mat + '_material', section=sec + '_section', elements=prop_comb[pk])
@@ -284,7 +300,8 @@ Steps
         # Add loads
 
         load_groups = group_keys_by_attribute(mesh.vertex, 'l')
-        load_names = []
+        load_names  = []
+
         for lk in load_groups:
             if lk != '-':
                 load_names.append(str(lk) + '_load')
@@ -297,15 +314,20 @@ Steps
 
         return structure
 
+
     @classmethod
     def from_network(cls, network):
+
         pass
+
 
     @classmethod
     def from_volmesh(cls, network):
+
         pass
 
-    def add_nodes_elements_from_mesh(self, mesh, element_type, acoustic=False, thermal=False, elset=None):
+
+    def add_nodes_elements_from_mesh(self, mesh, element_type, thermal=False, elset=None):
 
         """ Adds the nodes and faces of a Mesh to the Structure object.
 
@@ -329,15 +351,20 @@ Steps
 
         for key in sorted(list(mesh.vertices()), key=int):
             self.add_node(mesh.vertex_coordinates(key))
+
         ekeys = []
+
         for fkey in list(mesh.faces()):
             face = [self.check_node_exists(mesh.vertex_coordinates(i)) for i in mesh.face[fkey]]
-            ekeys.append(self.add_element(nodes=face, type=element_type, acoustic=acoustic, thermal=thermal))
+            ekeys.append(self.add_element(nodes=face, type=element_type, thermal=thermal))
+
         if elset:
             self.add_set(name=elset, type='element', selection=ekeys)
+
         return ekeys
 
-    def add_nodes_elements_from_network(self, network, element_type, acoustic=False, thermal=False, elset=None, axes={}):
+
+    def add_nodes_elements_from_network(self, network, element_type, thermal=False, elset=None, axes={}):
 
         """ Adds the nodes and edges of a Network to the Structure object.
 
@@ -363,14 +390,19 @@ Steps
 
         for key in sorted(list(network.vertices()), key=int):
             self.add_node(network.vertex_coordinates(key))
+
         ekeys = []
+
         for u, v in list(network.edges()):
             sp = self.check_node_exists(network.vertex_coordinates(u))
             ep = self.check_node_exists(network.vertex_coordinates(v))
             ekeys.append(self.add_element(nodes=[sp, ep], type=element_type, thermal=thermal, axes=axes))
+
         if elset:
             self.add_set(name=elset, type='element', selection=ekeys)
+
         return ekeys
+
 
     def add_nodes_elements_from_volmesh(self, volmesh, element_type='SolidElement', thermal=False, elset=None, axes={}):
 
@@ -398,7 +430,9 @@ Steps
 
         for key in sorted(list(volmesh.vertices()), key=int):
             self.add_node(volmesh.vertex_coordinates(key))
+
         ekeys = []
+
         for ckey in volmesh.cell:
             cell_vertices = volmesh.cell_vertices(ckey)
             nkeys = [self.check_node_exists(volmesh.vertex_coordinates(nk)) for nk in cell_vertices]
@@ -406,12 +440,13 @@ Steps
                                           axes=axes))
         if elset:
             self.add_set(name=elset, type='element', selection=ekeys)
+
         return ekeys
 
 
-# ==============================================================================
-# modifiers
-# ==============================================================================
+    # ==============================================================================
+    # Modifiers
+    # ==============================================================================
 
     def scale_displacements(self, displacements, factor):
 
@@ -419,25 +454,28 @@ Steps
 
         Parameters
         ----------
-        displacements : dic
+        displacements : dict
             Dictionary containing the displacements to scale.
         factor : float
             Factor to scale the displacements by.
 
         Returns
         -------
-        dic
+        dict
             The scaled displacements dictionary.
 
         """
 
         disp_dic = {}
+
         for key, disp in displacements.items():
             for dkey, dcomp in disp.components.items():
                 if dcomp is not None:
                     disp.components[dkey] *= factor
             disp_dic[key] = disp
+
         return disp_dic
+
 
     def scale_loads(self, loads, factor):
 
@@ -445,34 +483,36 @@ Steps
 
         Parameters
         ----------
-        loads : dic
+        loads : dict
             Dictionary containing the loads to scale.
         factor : float
             Factor to scale the loads by.
 
         Returns
         -------
-        dic
+        dict
             The scaled loads dictionary.
 
         """
 
         loads_dic = {}
+
         for key, load in loads.items():
             for lkey, lcomp in load.components.items():
                 if lcomp is not None:
                     load.components[lkey] *= factor
             loads_dic[key] = load
+
         return loads_dic
 
 
-# ==============================================================================
-# steps
-# ==============================================================================
+    # ==============================================================================
+    # Steps
+    # ==============================================================================
 
     def set_steps_order(self, order):
 
-        """ Sets the order the Steps will be analysed.
+        """ Sets the order that the Steps will be analysed.
 
         Parameters
         ----------
@@ -488,9 +528,9 @@ Steps
         self.steps_order = order
 
 
-# ==============================================================================
-# analysis
-# ==============================================================================
+    # ==============================================================================
+    # Analysis
+    # ==============================================================================
 
     def fields_dict_from_list(self, fields_list):
 
@@ -503,21 +543,23 @@ Steps
 
         Returns
         -------
-        dic
+        dict
             Conversion to a fields dictionary.
 
         """
 
-        node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
+        node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
         element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'spf']
 
         fields_dict = {}
 
         for field in node_fields + element_fields:
+
             if field in fields_list:
                 fields_dict[field] = 'all'
 
         return fields_dict
+
 
     def write_input_file(self, software, fields='u', output=True, save=True):
 
@@ -526,13 +568,13 @@ Steps
         Parameters
         ----------
         software : str
-            Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
+            Analysis software / library to use, 'abaqus', 'opensees', or 'ansys'.
         fields : list, str
             Data field requests.
         output : bool
             Print terminal output.
         save : bool
-            Save to structure to .obj before writing.
+            Save to structure to .obj before file writing.
 
         Returns
         -------
@@ -550,25 +592,25 @@ Steps
             ansys.input_generate(self)
 
         elif software == 'opensees':
-            opensees.input_generate(self, fields=fields)
+            opensees.input_generate(self, fields=fields, output=output)
 
-        elif software == 'sofistik':
-            sofistik.input_generate(self, fields=fields)
 
-    def analyse(self, software, exe=None, cpus=4, license='student', delete=True, output=True):
+    def analyse(self, software, exe=None, cpus=4, license='research', delete=True, output=True):
 
-        """ Runs the analysis through the chosen FEA software/library.
+        """ Runs the analysis through the chosen FEA software / library.
 
         Parameters
         ----------
         software : str
-            Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
+            Analysis software / library to use, 'abaqus', 'opensees' or 'ansys'.
         exe : str
             Full terminal command to bypass subprocess defaults.
         cpus : int
             Number of CPU cores to use.
         license : str
-            FE software license type: 'research', 'student'.
+            Software license type: 'research', 'student'.
+        delete : bool
+            -
         output : bool
             Print terminal output.
 
@@ -579,32 +621,34 @@ Steps
         """
 
         if software == 'abaqus':
-            if license == 'student':
-                cpus = 1
-            abaq.launch_process(self, exe, cpus, output)
+            cpus = 1 if license == 'student' else cpus
+            abaq.launch_process(self, exe=exe, cpus=cpus, output=output)
 
         elif software == 'ansys':
             ansys.ansys_launch_process(self.path, self.name, cpus, license, delete=delete)
 
         elif software == 'opensees':
-            opensees.launch_process(self, exe)
+            opensees.launch_process(self, exe=exe, output=output)
 
-    def extract_data(self, software, fields='u', steps='all', exe=None, sets=None, license='student', output=True):
 
-        """ Extracts data from the FE software's output.
+    def extract_data(self, software, fields='u', steps='all', exe=None, sets=None, license='research', output=True):
+
+        """ Extracts data from the analysis output files.
 
         Parameters
         ----------
         software : str
-            Analysis software or library used, 'abaqus', 'opensees' or 'ansys'.
+            Analysis software / library to use, 'abaqus', 'opensees' or 'ansys'.
         fields : list, str
             Data field requests.
         steps : list
             Loads steps to extract from.
         exe : str
             Full terminal command to bypass subprocess defaults.
+        sets : list
+            -
         license : str
-            FE software license type: 'research', 'student'.
+            Software license type: 'research', 'student'.
         output : bool
             Print terminal output.
 
@@ -623,14 +667,15 @@ Steps
         elif software == 'opensees':
             opensees.extract_data(self, fields=fields)
 
-    def analyse_and_extract(self, software, fields='u', exe=None, cpus=4, license='student', output=True, save=True):
 
-        """ Runs the analysis through the chosen FEA software/library and extracts data.
+    def analyse_and_extract(self, software, fields='u', exe=None, cpus=4, license='research', output=True, save=True):
+
+        """ Runs the analysis through the chosen FEA software / library and extracts data.
 
         Parameters
         ----------
         software : str
-            Analysis software or library to use, 'abaqus', 'opensees' or 'ansys'.
+            Analysis software / library to use, 'abaqus', 'opensees' or 'ansys'.
         fields : list, str
             Data field requests.
         exe : str
@@ -638,11 +683,11 @@ Steps
         cpus : int
             Number of CPU cores to use.
         license : str
-            FE software license type: 'research', 'student'.
+            Software license type: 'research', 'student'.
         output : bool
             Print terminal output.
         save : bool
-            Save to structure to .obj before writing.
+            Save the structure to .obj before writing.
 
         Returns
         -------
@@ -655,9 +700,9 @@ Steps
         self.extract_data(software=software, fields=fields, exe=exe, license=license, output=output)
 
 
-# ==============================================================================
-# results
-# ==============================================================================
+    # ==============================================================================
+    # Results
+    # ==============================================================================
 
     def get_nodal_results(self, step, field, nodes='all'):
 
@@ -674,24 +719,28 @@ Steps
 
         Returns
         -------
-        dic
+        dict
             The nodal results for the requested field.
 
         """
 
-        data = {}
+        data  = {}
         rdict = self.results[step]['nodal']
 
         if nodes == 'all':
             keys = list(self.nodes.keys())
+
         elif isinstance(nodes, str):
-            keys = self.sets[nodes]['selection']
+            keys = self.sets[nodes].selection
+
         else:
             keys = nodes
 
         for key in keys:
             data[key] = rdict[field][key]
+
         return data
+
 
     def get_element_results(self, step, field, elements='all'):
 
@@ -708,33 +757,36 @@ Steps
 
         Returns
         -------
-        dic
+        dict
             The element results for the requested field.
 
         """
 
-        data = {}
+        data  = {}
         rdict = self.results[step]['element']
 
         if elements == 'all':
             keys = list(self.elements.keys())
+
         elif isinstance(elements, str):
-            keys = self.sets[elements]['selection']
+            keys = self.sets[elements].selection
+
         else:
             keys = elements
 
         for key in keys:
             data[key] = rdict[field][key]
+
         return data
 
 
-# ==============================================================================
-# summary
-# ==============================================================================
+    # ==============================================================================
+    # Summary
+    # ==============================================================================
 
     def summary(self):
 
-        """ Prints a summary of the Structure object contents.
+        """ Prints a summary of the Structure object.
 
         Parameters
         ----------
@@ -749,13 +801,13 @@ Steps
         print(self)
 
 
-# ==============================================================================
-# app
-# ==============================================================================
+    # ==============================================================================
+    # App
+    # ==============================================================================
 
     def view(self):
 
-        """ Starts the Pyside app for visualisation.
+        """ Starts the PyQt app for visualisation.
 
         Parameters
         ----------
@@ -783,9 +835,9 @@ Steps
             print('***** Launching App failed *****')
 
 
-# ==============================================================================
-# save
-# ==============================================================================
+    # ==============================================================================
+    # Save
+    # ==============================================================================
 
     def save_to_obj(self, output=True):
 
@@ -793,7 +845,8 @@ Steps
 
         Parameters
         ----------
-        None
+        output : bool
+            Print terminal output.
 
         Returns
         -------
@@ -802,15 +855,17 @@ Steps
         """
 
         filename = os.path.join(self.path, self.name + '.obj')
+
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
+
         if output:
             print('***** Structure saved to: {0} *****\n'.format(filename))
 
 
-# ==============================================================================
-# load
-# ==============================================================================
+    # ==============================================================================
+    # Load
+    # ==============================================================================
 
     @staticmethod
     def load_from_obj(filename, output=True):
@@ -833,6 +888,8 @@ Steps
 
         with open(filename, 'rb') as f:
             structure = pickle.load(f)
-            if output:
-                print('***** Structure loaded from: {0} *****'.format(filename))
+
+        if output:
+            print('***** Structure loaded from: {0} *****'.format(filename))
+
         return structure

@@ -149,7 +149,7 @@ def add_node_set(structure, guids, name):
     structure.add_set(name=name, type='node', selection=nodes)
 
 
-def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, thermal=False):
+def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, thermal=False, pA=None, pL=None):
 
     """ Adds node and element data from Rhino layers to the Structure object.
 
@@ -165,6 +165,10 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
         Element type for mesh objects.
     thermal : bool
         Thermal properties on or off.
+    pA : float
+        Mass area density [kg/m2].
+    pL : float
+        Mass length density [kg/m].
 
     Returns
     -------
@@ -191,13 +195,17 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 
                 sp_xyz = rs.CurveStartPoint(guid)
                 ep_xyz = rs.CurveEndPoint(guid)
-                sp = structure.add_node(sp_xyz)
-                ep = structure.add_node(ep_xyz)
+                ez = subtract_vectors(ep_xyz, sp_xyz)
+                L  = length_vector(ez)
+                m  = 0.5 * L * pL if pL else None
+
+                sp = structure.add_node(xyz=sp_xyz, mass=m)
+                ep = structure.add_node(xyz=ep_xyz, mass=m)
                 added_nodes.add(sp)
                 added_nodes.add(ep)
 
-                ez = subtract_vectors(ep_xyz, sp_xyz)
                 try:
+
                     name = rs.ObjectName(guid).replace("'", '"')
                     if name[0] in ['_', '^']:
                         name = name[1:]
@@ -207,8 +215,10 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                     if ex and not ey:
                         ey = cross_vectors(ex, ez)
                 except:
+
                     ex = None
                     ey = None
+
                 axes = {'ex': ex, 'ey': ey, 'ez': ez}
 
                 ekey = structure.add_element(nodes=[sp, ep], type=line_type, thermal=thermal, axes=axes)
@@ -217,8 +227,17 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                     elset.add(ekey)
 
             elif mesh_type and rs.IsMesh(guid):
+
+                mesh = mesh_from_guid(Mesh(), guid)
+
                 vertices = rs.MeshVertices(guid)
-                nodes = [structure.add_node(vertex) for vertex in vertices]
+                nodes = []
+
+                for c, vertex in enumerate(vertices):
+                    if pA:
+                        m = mesh.vertex_area(c) * pA
+                    nodes.append(structure.add_node(xyz=vertex, mass=m))
+
                 added_nodes.update(nodes)
 
                 if mesh_type in ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']:
@@ -570,6 +589,7 @@ def ordered_network(structure, network, layer):
         Cumulative length at element mid-points.
     float
         Total length.
+<<<<<<< HEAD
 
     Notes
     -----
@@ -580,6 +600,18 @@ def ordered_network(structure, network, layer):
     start = rs.PointCoordinates(rs.ObjectsByLayer(layer)[0])
     return network_order(start=start, structure=structure, network=network)
 
+=======
+
+    Notes
+    -----
+    - This function is for a Network representing a single structural element, i.e. with two end-points (leaves).
+
+    """
+
+    start = rs.PointCoordinates(rs.ObjectsByLayer(layer)[0])
+    return network_order(start=start, structure=structure, network=network)
+
+>>>>>>> origin/develop
 
 def plot_reaction_forces(structure, step, layer=None, scale=1.0):
 
@@ -619,7 +651,7 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
     nodes = structure.nodes_xyz(nkeys)
 
     for i in nkeys:
-        if rm[i]:
+        if rm[i] > 0.001:
             l = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
             rs.CurveArrows(l, 1)
             col = [int(j) for j in colorbar(rm[i] / rmax, input='float', type=255)]
@@ -807,7 +839,7 @@ def plot_axes(xyz, e11, e22, e33, layer, sc=1):
 
 
 def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
-              nodal='mean', mode='', colorbar_size=1):
+              nodal='mean', mode='', cbar_size=1):
 
     """ Plots analysis results on the deformed shape of the Structure.
 
@@ -833,7 +865,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         'mean', 'max' or 'min' for nodal values.
     mode : int
         Mode or frequency number to plot, for modal, harmonic or buckling analysis.
-    colorbar_size : float
+    cbar_size : float
         Scale on the size of the colorbar.
 
     Returns
@@ -945,7 +977,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
         xr, yr, _ = structure.node_bounds()
         yran = yr[1] - yr[0] if yr[1] - yr[0] else 1
-        s = yran * 0.1 * colorbar_size
+        s = yran * 0.1 * cbar_size
         xmin = xr[1] + 3 * s
         ymin = yr[0]
 
@@ -956,7 +988,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         id = rs.AddMesh(verts, faces)
 
         y = [i[1] for i in verts]
-        yn = yran * colorbar_size
+        yn = yran * cbar_size
         colors = [colorbar(2 * (yi - ymin - 0.5 * yn) / yn, input='float', type=255) for yi in y]
         rs.MeshVertexColors(id, colors)
 

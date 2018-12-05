@@ -3,13 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from compas_fea.fea import write_input_bcs
-from compas_fea.fea import write_input_elements
-from compas_fea.fea import write_input_heading
-from compas_fea.fea import write_input_materials
-from compas_fea.fea import write_input_misc
-from compas_fea.fea import write_input_nodes
-from compas_fea.fea import write_input_steps
+from compas_fea.fea import Writer
 
 from compas_fea.fea.abaq import launch_job
 from compas_fea.fea.abaq import odb_extract
@@ -67,28 +61,16 @@ def input_generate(structure, fields, output):
     if 'u' not in fields:
         fields.append('u')
 
-    with open(filename, 'w') as f:
+    with Writer(structure=structure, software='abaqus', filename=filename, fields=fields) as writer:
 
-        constraints   = structure.constraints
-        displacements = structure.displacements
-        elements      = structure.elements
-        interactions  = structure.interactions
-        loads         = structure.loads
-        materials     = structure.materials
-        misc          = structure.misc
-        nodes         = structure.nodes
-        properties    = structure.element_properties
-        sections      = structure.sections
-        sets          = structure.sets
-        steps         = structure.steps
-
-        write_input_heading(f, 'abaqus')
-        write_input_nodes(f, 'abaqus', nodes, sets)
-        write_input_bcs(f, 'abaqus', structure, steps, displacements, sets)
-        write_input_materials(f, 'abaqus', materials)
-        write_input_misc(f, 'abaqus', misc)
-        write_input_elements(f, 'abaqus', sections, properties, elements, structure, materials)
-        write_input_steps(f, 'abaqus', structure, steps, loads, displacements, sets, fields)
+        writer.write_heading()
+        writer.write_nodes()
+        writer.write_node_sets()
+        writer.write_boundary_conditions()
+        writer.write_materials()
+        writer.write_elements()
+        writer.write_element_sets()
+        writer.write_steps()
 
     if output:
         print('***** Abaqus input file generated: {0} *****\n'.format(filename))
@@ -118,28 +100,29 @@ def launch_process(structure, exe, cpus, output):
     name = structure.name
     path = structure.path
     temp = '{0}{1}/'.format(path, name)
-    try:
-        os.stat(temp)
-    except:
-        os.mkdir(temp)
+
+    # Analyse
 
     tic = time()
 
     subprocess = 'noGUI={0}'.format(launch_job.__file__.replace('\\', '/'))
-    success = False
+    success    = False
 
     if not exe:
 
         args = ['abaqus', 'cae', subprocess, '--', str(cpus), path, name]
-        p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+        p    = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
 
         while True:
+
             line = p.stdout.readline()
             if not line:
                 break
             line = str(line.strip())
+
             if output:
                 print(line)
+
             if 'COMPLETED' in line:
                 success = True
 
@@ -151,9 +134,9 @@ def launch_process(structure, exe, cpus, output):
 
     else:
 
-        args = '{0} -- {1} {2} {3}'.format(subprocess, cpus, path, name)
         os.chdir(temp)
-        os.system('{0}{1}'.format(exe, args))
+        os.system('{0} {1} -- {2} {3} {4}'.format(exe, subprocess, cpus, path, name))
+
         success = True
 
     toc = time() - tic
@@ -163,30 +146,7 @@ def launch_process(structure, exe, cpus, output):
             print('***** Analysis successful - analysis time : {0} s *****'.format(toc))
 
     else:
-        if output:
-            print('***** Analysis failed: attempting to read error logs *****')
-
-        try:
-            with open('{0}{1}.msg'.format(temp, name)) as f:
-                lines = f.readlines()
-
-                for c, line in enumerate(lines):
-                    if (' ***ERROR' in line) or (' ***WARNING' in line):
-                        if output:
-                            print(lines[c][:-2])
-                            print(lines[c + 1][:-2])
-        except:
-            pass
-
-        try:
-            with open('{0}abaqus.rpy'.format(temp)) as f:
-                lines = f.readlines()
-
-                for c, line in enumerate(lines):
-                    if '#: ' in line:
-                        print(lines[c])
-        except:
-            pass
+        print('***** Analysis failed *****')
 
 
 def extract_data(structure, fields, exe, output):
@@ -227,14 +187,17 @@ def extract_data(structure, fields, exe, output):
     if not exe:
 
         args = ['abaqus', 'cae', subprocess, '--', fields, name, temp]
-        p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+        p    = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
 
         while True:
+
             line = p.stdout.readline()
             if not line:
                 break
             line = str(line.strip())
-            print(line)
+
+            if output:
+                print(line)
 
         stdout, stderr = p.communicate()
 
@@ -244,9 +207,8 @@ def extract_data(structure, fields, exe, output):
 
     else:
 
-        args = '{0} -- {1} {2} {3}'.format(subprocess, fields, name, temp)
         os.chdir(temp)
-        os.system('{0}{1}'.format(exe, args))
+        os.system('{0}{1} -- {2} {3} {4}'.format(exe, subprocess, fields, name, temp))
 
     toc1 = time() - tic1
 
@@ -266,12 +228,18 @@ def extract_data(structure, fields, exe, output):
             info = json.load(f)
 
         for step in results:
+
             for dtype in results[step]:
+
                 if dtype in ['nodal', 'element']:
+
                     for field in results[step][dtype]:
+
                         data = {}
+
                         for key in results[step][dtype][field]:
                             data[int(key)] = results[step][dtype][field][key]
+
                         results[step][dtype][field] = data
 
         structure.results = results

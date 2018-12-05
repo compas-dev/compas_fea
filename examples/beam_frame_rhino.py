@@ -38,7 +38,7 @@ mdl.add(PipeSection(name='sec_pipe', r=0.100, t=0.005))
 
 # Properties
 
-mdl.add(Properties(name='ep_beam', material='mat_steel', section='sec_pipe', elsets='elset_beams'))
+mdl.add(Properties(name='ep_beam', material='mat_steel', section='sec_pipe', elset='elset_beams'))
 
 # Displacements
 
@@ -66,16 +66,12 @@ mdl.steps_order = ['step_bc', 'step_loads']
 
 mdl.summary()
 
-# Run (Sofistik)
+# Run
 
-# mdl.write_input_file(software='sofistik')
-
-# Run (Abaqus)
-
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf'], license='research')
-# mdl.analyse_and_extract(software='ansys', fields=['u', 'rf'], license='research')
-# mdl.analyse_and_extract(software='opensees', fields=['u', 'rf'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 'sf', 'sm'])
 
 rhino.plot_data(mdl, step='step_loads', field='um', scale=50)
-
-print(mdl.get_nodal_results(step='step_loads', field='rfm', nodes='nset_pins'))
+rhino.plot_data(mdl, step='step_loads', field='sf1', iptype='abs', nodal='max')
+rhino.plot_data(mdl, step='step_loads', field='sf2', iptype='abs', nodal='max')
+rhino.plot_data(mdl, step='step_loads', field='sm1', iptype='abs', nodal='max')
+rhino.plot_reaction_forces(mdl, step='step_loads', scale=0.5)

@@ -1,6 +1,6 @@
 
 from compas_fea.cad import rhino
-from compas_fea.structure import Concrete
+from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import ModalStep
@@ -21,7 +21,7 @@ mdl = Structure(name='mesh_modal', path='C:/Temp/')
 
 # Elements
 
-rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers='elset_concrete')
+rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers='elset_concrete', pA=600)
 
 # Sets
 
@@ -29,7 +29,7 @@ rhino.add_sets_from_layers(mdl, layers='nset_pins')
 
 # Materials
 
-mdl.add(Concrete(name='mat_concrete', fck=40))
+mdl.add(ElasticIsotropic(name='mat_concrete', E=40*10**9, v=0.2, p=2400))
 
 # Sections
 
@@ -37,7 +37,7 @@ mdl.add(ShellSection(name='sec_concrete', t=0.250))
 
 # Properties
 
-mdl.add(Properties(name='ep_concrete', material='mat_concrete', section='sec_concrete', elsets='elset_concrete'))
+mdl.add(Properties(name='ep_concrete', material='mat_concrete', section='sec_concrete', elset='elset_concrete'))
 
 # Displacements
 
@@ -47,7 +47,7 @@ mdl.add(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
 
 mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_pinned']),
-    ModalStep(name='step_modal', modes=5),
+    ModalStep(name='step_modal', modes=2),
 ])
 mdl.steps_order = ['step_bc', 'step_modal']
 
@@ -55,9 +55,9 @@ mdl.steps_order = ['step_bc', 'step_modal']
 
 mdl.summary()
 
-# Run (Abaqus)
+# Run
 
-mdl.analyse_and_extract(software='abaqus', fields=['u'], license='research')
+mdl.analyse_and_extract(software='opensees', fields=['u'])
 
 rhino.plot_mode_shapes(mdl, step='step_modal', layer='mode-')
 

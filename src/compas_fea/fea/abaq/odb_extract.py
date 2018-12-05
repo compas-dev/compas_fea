@@ -35,7 +35,7 @@ conversion = {
     'LE11':  'exx',  'LE22': 'eyy',  'LE33': 'ezz',  'LE12': 'exy',  'LE13': 'exz',  'LE23': 'exz',
     'PE11':  'pexx', 'PE22': 'peyy', 'PE33': 'pezz', 'PE12': 'pexy', 'PE13': 'pexz', 'PE23': 'pexz',
     'SF1':   'sf1',  'SF2':  'sf2',  'SF3':  'sf3',  'SF4':  'sf4',  'SF5':  'sf5',  'SF6':  'sf6',
-    'SM1':   'smx',  'SM2':  'smy',  'SM3':  'smz',
+    'SM1':   'sm1',  'SM2':  'sm2',  'SM3':  'sm3',
     'SK1':   'skx',  'SK2':  'sky',  'SK3':  'skz',
     'SE1':   'senx', 'SE2':  'sevy', 'SE3':  'sevx',
     'CTF1':  'spfx', 'CTF2': 'spfy', 'CTF3': 'spfz',
@@ -157,90 +157,95 @@ def extract_odb_data(temp, name, fields, steps='all'):
             for field in element_fields:
                 if field in fields.split(','):
 
-                    ref = results[step]['element']
+                    try:
 
-                    if field == 'spf':
-                        field = 'ctf'
-                    if field == 'e':
-                        field = 'le'
+                        ref = results[step]['element']
 
-                    if field == 'rbfor':
-                        clabels = ['VALUE']
-                    else:
-                        clabels = list(fieldoutputs[field.upper()].componentLabels)
+                        if field == 'spf':
+                            field = 'ctf'
+                        if field == 'e':
+                            field = 'le'
 
-                    for c in clabels:
-                        ref[conversion[c]] = {}
+                        if field == 'rbfor':
+                            clabels = ['VALUE']
+                        else:
+                            clabels = list(fieldoutputs[field.upper()].componentLabels)
 
-                    if field == 's':
-                        ref['smises'] = {}
-
-                    if field in ['s', 'e', 'pe']:
-                        ref[field + 'maxp'] = {}
-                        ref[field + 'minp'] = {}
-                        ref['axes'] = {}
-                    elif field == 'le':
-                        ref['emaxp'] = {}
-                        ref['eminp'] = {}
-
-                    for value in fieldoutputs[field.upper()].values:
-                        data = value.data
-                        if isinstance(data, float):
-                            data = [data]
-                        element = value.elementLabel - 1
-                        ip = value.integrationPoint
-                        sp = value.sectionPoint.number if value.sectionPoint else 0
-                        id = 'ip{0}_sp{1}'.format(ip, sp)
-
-                        for i, c in enumerate(clabels):
-                            try:
-                                for i, c in enumerate(clabels):
-                                    ref[conversion[c]][element][id] = float(data[i])
-                            except:
-                                ref[conversion[c]][element] = {}
-                                try:
-                                    ref[conversion[c]][element][id] = float(data[i])
-                                except:
-                                    ref[conversion[c]][element][id] = None
+                        for c in clabels:
+                            ref[conversion[c]] = {}
 
                         if field == 's':
-                            try:
-                                ref['smises'][element][id] = float(value.mises)
-                            except:
-                                ref['smises'][element] = {}
+                            ref['smises'] = {}
+
+                        if field in ['s', 'e', 'pe']:
+                            ref[field + 'maxp'] = {}
+                            ref[field + 'minp'] = {}
+                            ref['axes'] = {}
+                        elif field == 'le':
+                            ref['emaxp'] = {}
+                            ref['eminp'] = {}
+
+                        for value in fieldoutputs[field.upper()].values:
+                            data = value.data
+                            if isinstance(data, float):
+                                data = [data]
+                            element = value.elementLabel - 1
+                            ip = value.integrationPoint
+                            sp = value.sectionPoint.number if value.sectionPoint else 0
+                            id = 'ip{0}_sp{1}'.format(ip, sp)
+
+                            for i, c in enumerate(clabels):
+                                try:
+                                    for i, c in enumerate(clabels):
+                                        ref[conversion[c]][element][id] = float(data[i])
+                                except:
+                                    ref[conversion[c]][element] = {}
+                                    try:
+                                        ref[conversion[c]][element][id] = float(data[i])
+                                    except:
+                                        ref[conversion[c]][element][id] = None
+
+                            if field == 's':
                                 try:
                                     ref['smises'][element][id] = float(value.mises)
                                 except:
-                                    ref['smises'][element][id] = None
+                                    ref['smises'][element] = {}
+                                    try:
+                                        ref['smises'][element][id] = float(value.mises)
+                                    except:
+                                        ref['smises'][element][id] = None
 
-                        if field in ['s', 'e', 'pe']:
-                            try:
-                                ref[field + 'maxp'][element][id] = float(value.maxPrincipal)
-                                ref[field + 'minp'][element][id] = float(value.minPrincipal)
-                                ref['axes'][element] = value.localCoordSystem
-                            except:
-                                ref[field + 'maxp'][element] = {}
-                                ref[field + 'minp'][element] = {}
+                            if field in ['s', 'e', 'pe']:
                                 try:
                                     ref[field + 'maxp'][element][id] = float(value.maxPrincipal)
                                     ref[field + 'minp'][element][id] = float(value.minPrincipal)
+                                    ref['axes'][element] = value.localCoordSystem
                                 except:
-                                    ref[field + 'maxp'][element][id] = None
-                                    ref[field + 'minp'][element][id] = None
+                                    ref[field + 'maxp'][element] = {}
+                                    ref[field + 'minp'][element] = {}
+                                    try:
+                                        ref[field + 'maxp'][element][id] = float(value.maxPrincipal)
+                                        ref[field + 'minp'][element][id] = float(value.minPrincipal)
+                                    except:
+                                        ref[field + 'maxp'][element][id] = None
+                                        ref[field + 'minp'][element][id] = None
 
-                        if field == 'le':  # temp fix
-                            try:
-                                ref['emaxp'][element][id] = float(value.maxPrincipal)
-                                ref['eminp'][element][id] = float(value.minPrincipal)
-                            except:
-                                ref['emaxp'][element] = {}
-                                ref['eminp'][element] = {}
+                            if field == 'le':  # temp fix
                                 try:
                                     ref['emaxp'][element][id] = float(value.maxPrincipal)
                                     ref['eminp'][element][id] = float(value.minPrincipal)
                                 except:
-                                    ref['emaxp'][element][id] = None
-                                    ref['eminp'][element][id] = None
+                                    ref['emaxp'][element] = {}
+                                    ref['eminp'][element] = {}
+                                    try:
+                                        ref['emaxp'][element][id] = float(value.maxPrincipal)
+                                        ref['eminp'][element][id] = float(value.minPrincipal)
+                                    except:
+                                        ref['emaxp'][element][id] = None
+                                        ref['eminp'][element][id] = None
+                    except:
+
+                        pass
 
     with open('{0}{1}-results.json'.format(temp, name), 'w') as f:
         json.dump(results, f)

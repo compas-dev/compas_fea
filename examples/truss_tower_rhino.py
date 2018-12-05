@@ -37,7 +37,7 @@ mdl.add(TrussSection(name='sec_truss', A=0.0001))
 
 # Properties
 
-mdl.add(Properties(name='ep_truss', material='mat_elastic', section='sec_truss', elsets='elset_truss'))
+mdl.add(Properties(name='ep_truss', material='mat_elastic', section='sec_truss', elset='elset_truss'))
 
 # Displacements
 
@@ -59,28 +59,15 @@ mdl.steps_order = ['step_bc', 'step_load']
 
 mdl.summary()
 
-# Run (Sofistik)
+# Run
 
-mdl.write_input_file(software='sofistik')
-
-# Run (OpenSees)
-
-mdl.analyse_and_extract(software='opensees', fields=['u', 'rf'])
+mdl.analyse_and_extract(software='opensees', fields=['u', 'cf', 'rf', 'sf', 's'])
 
 rhino.plot_data(mdl, step='step_load', field='um')
-
-# Run (Abaqus)
-# Note: Abaqus returns stress data 'sxx' for truss elements, not section forces 'sfx'.
-
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 's', 'cf'], license='research')
-
-rhino.plot_data(mdl, step='step_load', field='sxx')
+#rhino.plot_data(mdl, step='step_load', field='smises')  # abaqus
+rhino.plot_data(mdl, step='step_load', field='sf1')  # opensees
 rhino.plot_reaction_forces(mdl, step='step_load', scale=0.05)
 rhino.plot_concentrated_forces(mdl, step='step_load', scale=0.05)
-
-# Save
-
-mdl.save_to_obj()
 
 # Print results
 

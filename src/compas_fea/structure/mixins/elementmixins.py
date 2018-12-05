@@ -336,14 +336,8 @@ class ElementMixins(object):
 
         """
 
-        if element_property.elsets:
-            elements = []
-            if type(element_property.elsets) == str:
-                elsets = [element_property.elsets]
-            else:
-                elsets = element_property.elsets
-            for elset in elsets:
-                elements.extend(self.sets[elset]['selection'])
+        if element_property.elset:
+            elements = self.sets[element_property.elset].selection
         else:
             elements = element_property.elements
 

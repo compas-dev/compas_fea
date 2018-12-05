@@ -3,6 +3,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from compas_fea.structure import Node
+
 from compas.utilities import geometric_key
 
 
@@ -19,7 +21,7 @@ __all__ = [
 
 class NodeMixins(object):
 
-    def add_node(self, xyz, ex=[1, 0, 0], ey=[0, 1, 0], ez=[0, 0, 1], virtual=False):
+    def add_node(self, xyz, ex=[1, 0, 0], ey=[0, 1, 0], ez=[0, 0, 1], mass=0, virtual=False):
 
         """ Adds a node to structure.nodes at co-ordinates xyz with local frame [ex, ey, ez].
 
@@ -33,8 +35,10 @@ class NodeMixins(object):
             Node's local y axis.
         ez : list
             Node's local z axis.
+        mass : float
+            Lumped mass at node.
         virtual: bool
-            Is the node virtual or not
+            Is the node virtual.
 
         Returns
         -------
@@ -49,13 +53,17 @@ class NodeMixins(object):
 
         xyz = [float(i) for i in xyz]
         key = self.check_node_exists(xyz)
+
         if key is None:
+
             key = self.node_count()
-            self.nodes[key] = {'x': xyz[0], 'y': xyz[1], 'z': xyz[2], 'ex': ex, 'ey': ey, 'ez': ez}
+            self.nodes[key] = Node(key=key, xyz=xyz, ex=ex, ey=ey, ez=ez, mass=mass)
+
             if virtual:
                 self.add_node_to_node_index(key=key, xyz=xyz, virtual=True)
             else:
                 self.add_node_to_node_index(key=key, xyz=xyz)
+
         return key
 
     def add_nodes(self, nodes, ex=[1, 0, 0], ey=[0, 1, 0], ez=[0, 0, 1]):
@@ -131,10 +139,9 @@ class NodeMixins(object):
 
         """
 
-        gkey = geometric_key(xyz, '{0}f'.format(self.tol))
-        return self.node_index.get(gkey, None)
+        return self.node_index.get(geometric_key(xyz, '{0}f'.format(self.tol)), None)
 
-    def edit_node(self, key, attr_dic):
+    def edit_node(self, key, attr_dict):
 
         """ Edit a node's data.
 
@@ -142,7 +149,7 @@ class NodeMixins(object):
         ----------
         key : int
             Key of the node to edit.
-        attr_dic : dic
+        attr_dict : dict
             Atribute dictionary of data to edit.
 
         Returns
@@ -153,8 +160,10 @@ class NodeMixins(object):
 
         gkey = geometric_key(self.node_xyz(key), '{0}f'.format(self.tol))
         del self.node_index[gkey]
-        for attr, item in attr_dic.items():
-            self.nodes[key][attr] = item
+
+        for attr, item in attr_dict.items():
+            setattr(self.nodes[key], attr, item)
+
         self.add_node_to_node_index(key, self.node_xyz(key))
 
     def make_node_index_dic(self):
@@ -198,13 +207,16 @@ class NodeMixins(object):
         x = [0] * n
         y = [0] * n
         z = [0] * n
+
         for c, node in self.nodes.items():
-            x[c] = node['x']
-            y[c] = node['y']
-            z[c] = node['z']
+            x[c] = node.x
+            y[c] = node.y
+            z[c] = node.z
+
         xmin, xmax = min(x), max(x)
         ymin, ymax = min(y), max(y)
         zmin, zmax = min(z), max(z)
+
         return [xmin, xmax], [ymin, ymax], [zmin, zmax]
 
     def node_count(self):
@@ -240,7 +252,7 @@ class NodeMixins(object):
 
         """
 
-        return [self.nodes[node][i] for i in 'xyz']
+        return [getattr(self.nodes[node], i) for i in 'xyz']
 
     def nodes_xyz(self, nodes=[]):
 
@@ -249,7 +261,7 @@ class NodeMixins(object):
         Parameters
         ----------
         nodes : list
-            Node numbers, else all will be given.
+            Node numbers, else all nodes will be given.
 
         Returns
         -------

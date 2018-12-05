@@ -27,7 +27,7 @@ class ElementProperties(object):
         Name of the Material object to assign.
     section : str
         Name of the Section object to assign.
-    elsets : list
+    elset : list
         Element set names assignment.
     elements : list
         Element keys assignment.
@@ -40,21 +40,21 @@ class ElementProperties(object):
 
     Notes
     -----
-    - Either ``elements`` or ``elsets`` should be given, not both.
+    - Either ``elements`` or ``elset`` should be given, not both.
 
     """
 
-    def __init__(self, name, material=None, section=None, elsets=None, elements=None, reinforcement={}):
+    def __init__(self, name, material=None, section=None, elset=None, elements=None, reinforcement={}):
 
         self.__name__      = 'ElementProperties'
         self.name          = name
         self.material      = material
         self.section       = section
-        self.elsets        = elsets
+        self.elset         = elset
         self.elements      = elements
         self.reinforcement = reinforcement
 
-        if (not elsets) and (not elements):
+        if (not elset) and (not elements):
             raise NameError('***** ElementProperties objects require elements or element sets *****')
 
     def __str__(self):
@@ -63,7 +63,7 @@ class ElementProperties(object):
         print('compas_fea {0} object'.format(self.__name__))
         print('-' * (len(self.__name__) + 18))
 
-        for attr in ['name', 'material', 'section', 'elsets', 'elements', 'reinforcement']:
+        for attr in ['name', 'material', 'section', 'elset', 'elements', 'reinforcement']:
             print('{0:<13} : {1}'.format(attr, getattr(self, attr)))
 
         return ''

@@ -51,7 +51,7 @@ mdl.add(RectangularSection(name='sec_beam', b=1, h=1))
 
 # Properties
 
-mdl.add(Properties(name='ep_beam', material='mat_elastic', section='sec_beam', elsets='elset_beams'))
+mdl.add(Properties(name='ep_beam', material='mat_elastic', section='sec_beam', elset='elset_beams'))
 
 # Displacements
 
@@ -73,16 +73,8 @@ mdl.steps_order = ['step_bc', 'step_load']
 
 mdl.summary()
 
-# Run (Abaqus)
+# Run
 
-mdl.analyse_and_extract(software='abaqus', fields=['u'], license='research')
-
-# Run (OpenSees)
-
-# mdl.analyse_and_extract(software='opensees', fields=['u'])
-
-# Run (Ansys)
-
-# mdl.analyse_and_extract(software='ansys', fields=['u'], license='research')
+mdl.analyse_and_extract(software='opensees', fields=['u', 'sf', 'sm'])
 
 rhino.plot_data(mdl, step='step_load', field='uz', radius=1)
