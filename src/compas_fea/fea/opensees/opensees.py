@@ -273,7 +273,6 @@ def extract_data(structure, fields):
                     sm2_b = data[10::12]
                     sm3_b = data[11::12]
 
-
                     with open('{0}beam_ekeys.json'.format(temp), 'r') as f:
                         beam_ekeys = json.load(f)['beam_ekeys']
 
@@ -291,25 +290,25 @@ def extract_data(structure, fields):
 
                     print('***** No beam element data loaded *****')
 
-        #         try:
+                # try:
 
-        #             file = step + '_element_spring_sf'
+                #     file = step + '_element_spring_sf'
 
-        #             with open('{0}{1}.out'.format(temp, file), 'r') as f:
-        #                 lines = f.readlines()
-        #             spring_data = [float(i) for i in lines[-1].split(' ')[1:]]
+                #     with open('{0}{1}.out'.format(temp, file), 'r') as f:
+                #         lines = f.readlines()
+                #     spring_data = [float(i) for i in lines[-1].split(' ')[1:]]
 
-        #             with open('{0}spring_numbers.json'.format(temp), 'r') as f:
-        #                 spring_numbers = json.load(f)['spring_numbers']
+                #     with open('{0}spring_numbers.json'.format(temp), 'r') as f:
+                #         spring_numbers = json.load(f)['spring_numbers']
 
-        #             element['spfx'] = {}
-        #             for ekey, spfx in zip(spring_numbers, spring_data):
-        #                 element['spfx'][ekey] = {}
-        #                 element['spfx'][ekey]['ip'] = spfx
+                #     element['spfx'] = {}
+                #     for ekey, spfx in zip(spring_numbers, spring_data):
+                #         element['spfx'][ekey] = {}
+                #         element['spfx'][ekey]['ip'] = spfx
 
-        #         except:
+                # except:
 
-        #             print('***** No spring element data loaded *****')
+                #     print('***** No spring element data loaded *****')
 
         print('\n***** Data extracted from OpenSees .out file(s) : {0} s *****\n'.format(time() - tic))
 

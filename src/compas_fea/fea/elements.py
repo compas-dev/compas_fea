@@ -242,26 +242,8 @@ class Elements(object):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # from math import pi
 # from math import sqrt
-
-
-
 
 
 #     membranes  = ['MembraneSection']
@@ -291,9 +273,6 @@ class Elements(object):
 #         for elset in elsets:
 
 #             # Extract selection
-
-
-
 
 
 # def _write_membranes(f, software, selection, elements, geometry, material, materials, reinforcement):
@@ -328,18 +307,6 @@ class Elements(object):
 #             else:
 #                 f.write('\n'.format(t))
 #             f.write('{0}\n'.format(t))
-
-#         elif software == 'opensees':
-
-#             pass
-
-#         elif software == 'sofistik':
-
-#             pass
-
-#         elif software == 'ansys':
-
-#             pass
 
 #         f.write('{0}\n'.format(comments[software]))
 
@@ -464,9 +431,6 @@ class Elements(object):
 #             pass
 
 #     return written_springs
-
-
-
 
 
 # def _write_sofistik_rebar(f, properties, sections, sets):

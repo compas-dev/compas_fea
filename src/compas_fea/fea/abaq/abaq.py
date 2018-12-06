@@ -149,7 +149,7 @@ def launch_process(structure, exe, cpus, output):
         print('***** Analysis failed *****')
 
 
-def extract_data(structure, fields, exe, output):
+def extract_data(structure, fields, exe, output, return_data, components):
 
     """ Extract data from the Abaqus .odb file.
 
@@ -163,6 +163,10 @@ def extract_data(structure, fields, exe, output):
         Abaqus exe path to bypass defaults.
     output : bool
         Print terminal output.
+    return_data : bool
+        Return data back into structure.results.
+    components : list
+        Specific components to extract from the fields data.
 
     Returns
     -------
@@ -178,7 +182,9 @@ def extract_data(structure, fields, exe, output):
 
     if isinstance(fields, str):
         fields = [fields]
-    fields = ','.join(list(structure.fields_dict_from_list(fields).keys()))
+
+    fields     = ','.join(fields)
+    components = ','.join(components) if components else 'None'
 
     tic1 = time()
 
@@ -186,7 +192,7 @@ def extract_data(structure, fields, exe, output):
 
     if not exe:
 
-        args = ['abaqus', 'cae', subprocess, '--', fields, name, temp]
+        args = ['abaqus', 'cae', subprocess, '--', components, fields, name, temp]
         p    = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
 
         while True:
@@ -208,7 +214,7 @@ def extract_data(structure, fields, exe, output):
     else:
 
         os.chdir(temp)
-        os.system('{0}{1} -- {2} {3} {4}'.format(exe, subprocess, fields, name, temp))
+        os.system('{0}{1} -- {2} {3} {4} {5}'.format(exe, subprocess, components, fields, name, temp))
 
     toc1 = time() - tic1
 
@@ -217,42 +223,44 @@ def extract_data(structure, fields, exe, output):
 
     # Save results to Structure
 
-    try:
+    if return_data:
 
-        tic2 = time()
+        try:
 
-        with open('{0}{1}-results.json'.format(temp, name), 'r') as f:
-            results = json.load(f)
+            tic2 = time()
 
-        with open('{0}{1}-info.json'.format(temp, name), 'r') as f:
-            info = json.load(f)
+            with open('{0}{1}-results.json'.format(temp, name), 'r') as f:
+                results = json.load(f)
 
-        for step in results:
+            with open('{0}{1}-info.json'.format(temp, name), 'r') as f:
+                info = json.load(f)
 
-            for dtype in results[step]:
+            for step in results:
 
-                if dtype in ['nodal', 'element']:
+                for dtype in results[step]:
 
-                    for field in results[step][dtype]:
+                    if dtype in ['nodal', 'element']:
 
-                        data = {}
+                        for field in results[step][dtype]:
 
-                        for key in results[step][dtype][field]:
-                            data[int(key)] = results[step][dtype][field][key]
+                            data = {}
 
-                        results[step][dtype][field] = data
+                            for key in results[step][dtype][field]:
+                                data[int(key)] = results[step][dtype][field][key]
 
-        structure.results = results
+                            results[step][dtype][field] = data
 
-        for step in info:
-            structure.results[step]['info'] = info[step]
+            structure.results = results
 
-        toc2 = time() - tic2
+            for step in info:
+                structure.results[step]['info'] = info[step]
 
-        if output:
-            print('***** Saving data to structure.results successful : {0:.3f} s *****\n'.format(toc2))
+            toc2 = time() - tic2
 
-    except:
+            if output:
+                print('***** Saving data to structure.results successful : {0:.3f} s *****\n'.format(toc2))
 
-        if output:
-            print('***** Saving data to structure.results unsuccessful *****')
+        except:
+
+            if output:
+                print('***** Saving data to structure.results unsuccessful *****')

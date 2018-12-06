@@ -532,36 +532,7 @@ Steps
     # Analysis
     # ==============================================================================
 
-    def fields_dict_from_list(self, fields_list):
-
-        """ Creates a fields dictionary from a fields list.
-
-        Parameters
-        ----------
-        fields_list : list
-            List of fields and/or components.
-
-        Returns
-        -------
-        dict
-            Conversion to a fields dictionary.
-
-        """
-
-        node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
-        element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'spf']
-
-        fields_dict = {}
-
-        for field in node_fields + element_fields:
-
-            if field in fields_list:
-                fields_dict[field] = 'all'
-
-        return fields_dict
-
-
-    def write_input_file(self, software, fields='u', output=True, save=True):
+    def write_input_file(self, software, fields='u', output=True, save=False):
 
         """ Writes the FE software's input file.
 
@@ -631,7 +602,8 @@ Steps
             opensees.launch_process(self, exe=exe, output=output)
 
 
-    def extract_data(self, software, fields='u', steps='all', exe=None, sets=None, license='research', output=True):
+    def extract_data(self, software, fields='u', steps='all', exe=None, sets=None, license='research', output=True,
+                     return_data=True, components=None):
 
         """ Extracts data from the analysis output files.
 
@@ -651,6 +623,10 @@ Steps
             Software license type: 'research', 'student'.
         output : bool
             Print terminal output.
+        return_data : bool
+            Return data back into structure.results.
+        components : list
+            Specific components to extract from the fields data.
 
         Returns
         -------
@@ -659,7 +635,8 @@ Steps
         """
 
         if software == 'abaqus':
-            abaq.extract_data(self, fields=fields, exe=exe, output=output)
+            abaq.extract_data(self, fields=fields, exe=exe, output=output, return_data=return_data,
+                              components=components)
 
         elif software == 'ansys':
             ansys.extract_rst_data(self, fields=fields, steps=steps, sets=sets, license=license)
@@ -668,7 +645,8 @@ Steps
             opensees.extract_data(self, fields=fields)
 
 
-    def analyse_and_extract(self, software, fields='u', exe=None, cpus=4, license='research', output=True, save=True):
+    def analyse_and_extract(self, software, fields='u', exe=None, cpus=4, license='research', output=True, save=False,
+                            return_data=True, components=None):
 
         """ Runs the analysis through the chosen FEA software / library and extracts data.
 
@@ -688,6 +666,10 @@ Steps
             Print terminal output.
         save : bool
             Save the structure to .obj before writing.
+        return_data : bool
+            Return data back into structure.results.
+        components : list
+            Specific components to extract from the fields data.
 
         Returns
         -------
@@ -696,8 +678,11 @@ Steps
         """
 
         self.write_input_file(software=software, fields=fields, output=output, save=save)
+
         self.analyse(software=software, exe=exe, cpus=cpus, license=license, output=output)
-        self.extract_data(software=software, fields=fields, exe=exe, license=license, output=output)
+
+        self.extract_data(software=software, fields=fields, exe=exe, license=license, output=output,
+                          return_data=return_data, components=components)
 
 
     # ==============================================================================

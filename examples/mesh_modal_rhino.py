@@ -57,7 +57,7 @@ mdl.summary()
 
 # Run
 
-mdl.analyse_and_extract(software='opensees', fields=['u'])
+mdl.analyse_and_extract(software='abaqus', fields=['u'])
 
 rhino.plot_mode_shapes(mdl, step='step_modal', layer='mode-')
 

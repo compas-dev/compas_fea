@@ -23,13 +23,13 @@ __all__ = [
 ]
 
 
-conversion = {
-    'CF1':   'cfx',  'CF2':  'cfy',  'CF3':  'cfz',
-    'CM1':   'cmx',  'CM2':  'cmy',  'CM3':  'cmz',
-    'U1':    'ux',   'U2':   'uy',   'U3':   'uz',
-    'UR1':   'urx',  'UR2':  'ury',  'UR3':  'urz',
-    'RF1':   'rfx',  'RF2':  'rfy',  'RF3':  'rfz',
-    'RM1':   'rmx',  'RM2':  'rmy',  'RM3':  'rmz',
+convert = {
+    'CF1':   'cfx',  'CF2':  'cfy',  'CF3':  'cfz', 'CFM': 'cfm',
+    'CM1':   'cmx',  'CM2':  'cmy',  'CM3':  'cmz', 'CMM': 'cmm',
+    'U1':    'ux',   'U2':   'uy',   'U3':   'uz',  'UM':  'um',
+    'UR1':   'urx',  'UR2':  'ury',  'UR3':  'urz', 'URM': 'urm',
+    'RF1':   'rfx',  'RF2':  'rfy',  'RF3':  'rfz', 'RFM': 'rfm',
+    'RM1':   'rmx',  'RM2':  'rmy',  'RM3':  'rmz', 'RMM': 'rmm',
     'S11':   'sxx',  'S22':  'syy',  'S33':  'szz',  'S12':  'sxy',  'S13':  'sxz',  'S23':  'sxz',
     'E11':   'exx',  'E22':  'eyy',  'E33':  'ezz',  'E12':  'exy',  'E13':  'exz',  'E23':  'exz',
     'LE11':  'exx',  'LE22': 'eyy',  'LE33': 'ezz',  'LE12': 'exy',  'LE13': 'exz',  'LE23': 'exz',
@@ -39,14 +39,17 @@ conversion = {
     'SK1':   'skx',  'SK2':  'sky',  'SK3':  'skz',
     'SE1':   'senx', 'SE2':  'sevy', 'SE3':  'sevx',
     'CTF1':  'spfx', 'CTF2': 'spfy', 'CTF3': 'spfz',
-    'VALUE': 'rbfor',
+
+    'VALUE':  'rbfor',
+    'AXES':   'axes',
+    'SMISES': 'smises', 'SMAXP': 'smaxp', 'SMINP': 'sminp',
 }
 
 node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'spf', 'rbfor']
 
 
-def extract_odb_data(temp, name, fields, steps='all'):
+def extract_odb_data(temp, name, fields, components, steps='all'):
 
     """ Extracts data from the .odb file for the requested steps and fields.
 
@@ -58,6 +61,8 @@ def extract_odb_data(temp, name, fields, steps='all'):
         Name of the Structure object.
     fields : list
         Data field requests.
+    components : list
+        Specific components to extract from the fields data.
     steps : list, str
         Step names to extract data for, or 'all' for all steps.
 
@@ -69,182 +74,221 @@ def extract_odb_data(temp, name, fields, steps='all'):
 
     odb = openOdb(path='{0}{1}.odb'.format(temp, name))
 
+    if not components:
+        components = set()
+        for value in convert.values():
+            components.add(value)
+    else:
+        components = set(components)
+
     results = {}
-    info = {}
+    info    = {}
 
     if steps == 'all':
-        steps = list(odb.steps.keys())
+        steps = odb.steps.keys()
 
     for step in steps:
 
-        results[step] = {}
-        info[step] = {}
+        results[step] = {'nodal': {}, 'element': {}}
+        info[step]    = {}
 
         description = odb.steps[step].frames[-1].description
-        info[step]['description'] = description
+
+        refn = results[step]['nodal']
+        refe = results[step]['element']
 
         if 'Mode' in description:
 
-            counter = 0
-            results[step]['nodal'] = {}
             info[step]['description'] = {}
 
-            for ii in range(len(odb.steps[step].frames)):
-                frame = odb.steps[step].frames[ii]
+            counter = 0
+
+            for fi in range(len(odb.steps[step].frames)):
+
+                frame = odb.steps[step].frames[fi]
+                fieldoutputs = frame.fieldOutputs
                 info[step]['description'][counter] = frame.description
 
-                fieldoutputs = frame.fieldOutputs
                 clabels = list(fieldoutputs['U'].componentLabels)
+
                 for c in clabels:
-                    results[step]['nodal'][conversion[c] + str(counter)] = {}
-                results[step]['nodal']['um' + str(counter)] = {}
+                    if convert[c] in components:
+                        refn[convert[c] + str(counter)] = {}
+
+                if 'um' in components:
+                    refn['um' + str(counter)] = {}
 
                 for value in fieldoutputs['U'].values:
+
                     data = value.data
                     node = value.nodeLabel - 1
 
                     for i, c in enumerate(clabels):
-                        results[step]['nodal'][conversion[c] + str(counter)][node] = float(data[i])
-                    results[step]['nodal']['um' + str(counter)][node] = float(value.magnitude)
+                        if convert[c] in components:
+                            refn[convert[c] + str(counter)][node] = float(data[i])
+
+                    if 'um' in components:
+                        refn['um' + str(counter)][node] = float(value.magnitude)
 
                 counter += 1
 
             try:
                 frequencies = odb.steps[step].historyRegions['Assembly Assembly-1'].historyOutputs['EIGFREQ'].data
-                frequencies = [i[1] for i in frequencies]
-                results[step]['frequencies'] = frequencies
+                results[step]['frequencies'] = [i[1] for i in frequencies]
             except:
                 pass
+
             try:
                 masses = odb.steps[step].historyRegions['Assembly Assembly-1'].historyOutputs['GM'].data
-                masses = [i[1] for i in masses]
-                results[step]['masses'] = masses
+                results[step]['masses'] = [i[1] for i in masses]
             except:
                 pass
 
         else:
+
+            info[step]['description'] = description
 
             frame = odb.steps[step].frames[-1]
             fieldoutputs = frame.fieldOutputs
 
             # Node data
 
-            results[step]['nodal'] = {}
-
             for field in node_fields:
-                if field in fields.split(','):
+
+                if field in fields:
 
                     clabels = list(fieldoutputs[field.upper()].componentLabels)
-                    ref = results[step]['nodal']
+
                     for c in clabels:
-                        ref[conversion[c]] = {}
-                    ref[field + 'm'] = {}
+                        if convert[c] in components:
+                            refn[convert[c]] = {}
+
+                    if field + 'm' in components:
+                        refn[field + 'm'] = {}
 
                     for value in fieldoutputs[field.upper()].values:
+
                         data = value.data
                         if isinstance(data, float):
                             data = [data]
                         node = value.nodeLabel - 1
 
                         for i, c in enumerate(clabels):
-                            ref[conversion[c]][node] = float(data[i])
-                        ref[field + 'm'][node] = float(value.magnitude)
+                            if convert[c] in components:
+                                refn[convert[c]][node] = float(data[i])
+
+                        if field + 'm' in components:
+                            refn[field + 'm'][node] = float(value.magnitude)
 
             # Element data
 
-            results[step]['element'] = {}
-
             for field in element_fields:
-                if field in fields.split(','):
+
+                if field in fields:
 
                     try:
 
-                        ref = results[step]['element']
+                        field = 'ctf'if field == 'spf' else field
+                        field = 'le' if field == 'e' else field
 
-                        if field == 'spf':
-                            field = 'ctf'
-                        if field == 'e':
-                            field = 'le'
-
-                        if field == 'rbfor':
-                            clabels = ['VALUE']
-                        else:
-                            clabels = list(fieldoutputs[field.upper()].componentLabels)
+                        clabels = ['VALUE'] if field == 'rbfor' else list(fieldoutputs[field.upper()].componentLabels)
 
                         for c in clabels:
-                            ref[conversion[c]] = {}
+                            if convert[c] in components:
+                                refe[convert[c]] = {}
 
-                        if field == 's':
-                            ref['smises'] = {}
+                        if (field == 's') and ('smises' in components):
+                            refe['smises'] = {}
 
-                        if field in ['s', 'e', 'pe']:
-                            ref[field + 'maxp'] = {}
-                            ref[field + 'minp'] = {}
-                            ref['axes'] = {}
+                        if field in ['s', 'pe']:
+                            if field + 'maxp' in components:
+                                refe[field + 'maxp'] = {}
+                            if field + 'minp' in components:
+                                refe[field + 'minp'] = {}
+                            if 'axes' in components:
+                                refe['axes'] = {}
+
                         elif field == 'le':
-                            ref['emaxp'] = {}
-                            ref['eminp'] = {}
+                            if 'emaxp' in components:
+                                refe['emaxp'] = {}
+                            if 'eminp' in components:
+                                refe['eminp'] = {}
 
                         for value in fieldoutputs[field.upper()].values:
+
                             data = value.data
                             if isinstance(data, float):
                                 data = [data]
+
                             element = value.elementLabel - 1
-                            ip = value.integrationPoint
-                            sp = value.sectionPoint.number if value.sectionPoint else 0
-                            id = 'ip{0}_sp{1}'.format(ip, sp)
+                            ip      = value.integrationPoint
+                            sp      = value.sectionPoint.number if value.sectionPoint else 0
+                            id      = 'ip{0}_sp{1}'.format(ip, sp)
 
                             for i, c in enumerate(clabels):
-                                try:
-                                    for i, c in enumerate(clabels):
-                                        ref[conversion[c]][element][id] = float(data[i])
-                                except:
-                                    ref[conversion[c]][element] = {}
+                                if convert[c] in components:
                                     try:
-                                        ref[conversion[c]][element][id] = float(data[i])
+                                        refe[convert[c]][element][id] = float(data[i])
                                     except:
-                                        ref[conversion[c]][element][id] = None
+                                        refe[convert[c]][element] = {}
+                                        try:
+                                            refe[convert[c]][element][id] = float(data[i])
+                                        except:
+                                            refe[convert[c]][element][id] = None
 
                             if field == 's':
-                                try:
-                                    ref['smises'][element][id] = float(value.mises)
-                                except:
-                                    ref['smises'][element] = {}
+                                if 'smises' in components:
                                     try:
-                                        ref['smises'][element][id] = float(value.mises)
+                                        refe['smises'][element][id] = float(value.mises)
                                     except:
-                                        ref['smises'][element][id] = None
+                                        refe['smises'][element] = {}
+                                        try:
+                                            refe['smises'][element][id] = float(value.mises)
+                                        except:
+                                            refe['smises'][element][id] = None
 
-                            if field in ['s', 'e', 'pe']:
+                            if field in ['s', 'pe']:
                                 try:
-                                    ref[field + 'maxp'][element][id] = float(value.maxPrincipal)
-                                    ref[field + 'minp'][element][id] = float(value.minPrincipal)
-                                    ref['axes'][element] = value.localCoordSystem
+                                    if field + 'maxp' in components:
+                                        refe[field + 'maxp'][element][id] = float(value.maxPrincipal)
+                                    if field + 'minp' in components:
+                                        refe[field + 'minp'][element][id] = float(value.minPrincipal)
+                                    if 'axes' in components:
+                                        refe['axes'][element] = value.localCoordSystem
                                 except:
-                                    ref[field + 'maxp'][element] = {}
-                                    ref[field + 'minp'][element] = {}
+                                    refe[field + 'maxp'][element] = {}
+                                    refe[field + 'minp'][element] = {}
                                     try:
-                                        ref[field + 'maxp'][element][id] = float(value.maxPrincipal)
-                                        ref[field + 'minp'][element][id] = float(value.minPrincipal)
+                                        if field + 'maxp' in components:
+                                            refe[field + 'maxp'][element][id] = float(value.maxPrincipal)
+                                        if field + 'minp' in components:
+                                            refe[field + 'minp'][element][id] = float(value.minPrincipal)
                                     except:
-                                        ref[field + 'maxp'][element][id] = None
-                                        ref[field + 'minp'][element][id] = None
+                                        if field + 'maxp' in components:
+                                            refe[field + 'maxp'][element][id] = None
+                                        if field + 'minp' in components:
+                                            refe[field + 'minp'][element][id] = None
 
-                            if field == 'le':  # temp fix
+                            if field == 'le':
                                 try:
-                                    ref['emaxp'][element][id] = float(value.maxPrincipal)
-                                    ref['eminp'][element][id] = float(value.minPrincipal)
+                                    if 'emaxp' in components:
+                                        refe['emaxp'][element][id] = float(value.maxPrincipal)
+                                    if 'eminp' in components:
+                                        refe['eminp'][element][id] = float(value.minPrincipal)
                                 except:
-                                    ref['emaxp'][element] = {}
-                                    ref['eminp'][element] = {}
+                                    refe['emaxp'][element] = {}
+                                    refe['eminp'][element] = {}
                                     try:
-                                        ref['emaxp'][element][id] = float(value.maxPrincipal)
-                                        ref['eminp'][element][id] = float(value.minPrincipal)
+                                        if 'emaxp' in components:
+                                            refe['emaxp'][element][id] = float(value.maxPrincipal)
+                                        if 'eminp' in components:
+                                            refe['eminp'][element][id] = float(value.minPrincipal)
                                     except:
-                                        ref['emaxp'][element][id] = None
-                                        ref['eminp'][element][id] = None
+                                        if 'emaxp' in components:
+                                            refe['emaxp'][element][id] = None
+                                        if 'eminp' in components:
+                                            refe['eminp'][element][id] = None
                     except:
-
                         pass
 
     with open('{0}{1}-results.json'.format(temp, name), 'w') as f:
@@ -256,8 +300,9 @@ def extract_odb_data(temp, name, fields, steps='all'):
 
 if __name__ == "__main__":
 
-    temp = sys.argv[-1]
-    name = sys.argv[-2]
-    fields = sys.argv[-3]
+    temp       = sys.argv[-1]
+    name       = sys.argv[-2]
+    fields     = sys.argv[-3].split(',')
+    components = None if sys.argv[-4] == 'None' else sys.argv[-4].split(',')
 
-    extract_odb_data(temp=temp, name=name, fields=fields)
+    extract_odb_data(temp=temp, name=name, fields=fields, components=components)

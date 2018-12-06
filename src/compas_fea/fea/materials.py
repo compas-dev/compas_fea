@@ -164,27 +164,6 @@ class Materials(object):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         #     # ElasticOrthotropic
 
         #     elif mtype == 'ElasticOrthotropic':

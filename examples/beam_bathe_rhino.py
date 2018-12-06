@@ -75,6 +75,6 @@ mdl.summary()
 
 # Run
 
-mdl.analyse_and_extract(software='opensees', fields=['u', 'sf', 'sm'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'sf', 'sm'])
 
 rhino.plot_data(mdl, step='step_load', field='uz', radius=1)

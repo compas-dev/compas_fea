@@ -61,11 +61,11 @@ mdl.summary()
 
 # Run
 
-mdl.analyse_and_extract(software='opensees', fields=['u', 'cf', 'rf', 'sf', 's'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'cf', 'rf', 'sf', 's'])
 
 rhino.plot_data(mdl, step='step_load', field='um')
-#rhino.plot_data(mdl, step='step_load', field='smises')  # abaqus
-rhino.plot_data(mdl, step='step_load', field='sf1')  # opensees
+rhino.plot_data(mdl, step='step_load', field='smises')  # abaqus
+#rhino.plot_data(mdl, step='step_load', field='sf1')  # opensees
 rhino.plot_reaction_forces(mdl, step='step_load', scale=0.05)
 rhino.plot_concentrated_forces(mdl, step='step_load', scale=0.05)
 

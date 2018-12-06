@@ -492,9 +492,6 @@ class Steps(object):
 
             elif self.software == 'abaqus':
 
-                if isinstance(fields, list):
-                    fields = self.structure.fields_dict_from_list(fields_list=fields)
-
                 #     if 'spf' in fields:
                 #         fields['ctf'] = 'all'
                 #         del fields['spf']
@@ -635,33 +632,6 @@ class Steps(object):
 #     elif software == 'opensees':
 
 #         pass
-
-
-
-# def _write_thermal_load(f, software, elset, temperature, sets, factor):
-
-#     for k in elset:
-
-#         if software == 'abaqus':
-
-#             pass
-
-#         elif software == 'sofistik':
-
-#             set_index = sets[k]['index'] + 1
-#             f.write('    QUAD GRP {0} TYPE {1} {2}\n'.format(set_index, 'DTXY', temperature))
-
-#         elif software == 'opensees':
-
-#                 pass
-
-#         elif software == 'ansys':
-
-#             pass
-
-
-
-
 
 
 # # Thermal
