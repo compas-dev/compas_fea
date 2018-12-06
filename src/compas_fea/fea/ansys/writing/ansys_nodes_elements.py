@@ -86,7 +86,7 @@ def write_nodes(structure, output_path, filename):
     nodes = structure.nodes
     for i in range(len(nodes)):
         node = nodes[i]
-        string = 'N,' + str(i + 1) + ',' + str(node['x']) + ',' + str(node['y']) + ',' + str(node['z']) + ',0,0,0 \n'
+        string = 'N,' + str(i + 1) + ',' + str(node.x) + ',' + str(node.y) + ',' + str(node.z) + ',0,0,0 \n'
         cFile.write(string)
     cFile.write('!\n')
     cFile.write('!\n')
@@ -252,7 +252,7 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
             axis = [0, 1, 0]
         axis = normalize_vector(axis)
         enode = structure.nodes[element[-1]]
-        onode = add_vectors([enode['x'], enode['y'], enode['z']], axis)
+        onode = add_vectors([enode.x, enode.y, enode.z], axis)
         nkey = structure.add_node(onode, virtual=True)
         string = 'N,' + str(nkey + 1) + ',' + str(onode[0]) + ',' + str(onode[1])
         string += ',' + str(onode[2]) + ',0,0,0 \n'

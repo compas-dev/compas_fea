@@ -118,6 +118,7 @@ class Structure(ObjectMixins, ElementMixins, NodeMixins):
         self.steps_order           = []
         self.tol                   = '3'
         self.virtual_nodes         = {}
+        self.virtual_node_index    = {}
         self.virtual_elements      = {}
         self.virtual_element_index = {}
 

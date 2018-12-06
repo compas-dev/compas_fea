@@ -39,7 +39,7 @@ mdl.add(RectangularSection(name='sec_pipe', b=0.005, h=0.05))
 
 # Properties
 
-mdl.add(Properties(name='ep_beam', material='mat_steel', section='sec_pipe', elsets='elset_beams'))
+mdl.add(Properties(name='ep_beam', material='mat_steel', section='sec_pipe', elset='elset_beams'))
 
 # Displacements
 
@@ -64,6 +64,6 @@ mdl.steps_order = ['step_bc_loads']
 
 # Run (Ansys)
 
-mdl.analyse_and_extract(software='ansys', fields=['sf'], license='research')
+mdl.analyse_and_extract(software='ansys', fields=['s'], license='research')
 
 # print(mdl.get_nodal_results(step='step_loads', field='rfm', nodes='nset_pins'))
