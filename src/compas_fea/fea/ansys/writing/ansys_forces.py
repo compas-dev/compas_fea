@@ -12,7 +12,9 @@ def write_request_element_forces(structure, step_index):
         if et == 'BEAM188':
             write_request_beam_forces(structure, step_index, etkey)
         elif et == 'SHELL181':
-            write_request_shell_stresses(structure, step_index, etkey)
+            pass
+            # write_request_shell_forces(structure, step_index, etkey)
+
 
 def write_request_beam_forces(structure, step_index, etkey):
 
@@ -66,10 +68,11 @@ def write_request_beam_forces(structure, step_index, etkey):
     fh.write('*get, eforces(i,12), ETAB, 12, ELEM, enum(i) \n')
     fh.write('*Enddo \n')
 
-    fname = str(step_name) + '_' + 'beam_axial'
+    fname = str(step_name) + '_' + 'beam_forces'
     fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
+    fh.write('*CFWRITE, forces, E number, axial I, axial J,  \n')
     fh.write('*do,i,1,nelem \n')
-    fh.write('*CFWRITE, axial, enum(i,1), eforces(i,1), eforces(i,2) \n')
+    fh.write('*CFWRITE, forces, enum(i,1), eforces(i,1), eforces(i,2) \n')
     fh.write('*Enddo \n')
     fh.write('! \n')
 
