@@ -15,7 +15,7 @@ __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
 
-# Structure 
+# Structure
 
 mdl = Structure(name='mesh_modal', path='C:/Temp/')
 

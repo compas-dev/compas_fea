@@ -222,6 +222,22 @@ class Steps(object):
                                 self.write_line('{0}, GRAV, {1}, {2}, {3}, {4}'.format(k, -9.81 * fact, gx, gy, gz))
                                 self.blank_line()
 
+                        # TributaryLoad
+                        # -------------
+
+                        elif ltype == 'TributaryLoad':
+
+                            self.write_line('*CLOAD')
+                            self.blank_line()
+
+                            for node in sorted(com, key=int):
+
+                                ni = node + 1
+
+                                for ci, dof in enumerate(dofs[:3], 1):
+                                    if com[node][dof]:
+                                        self.write_line('{0}, {1}, {2}'.format(ni, ci, com[node][dof] * fact))
+
                         # Prestress
                         # ---------
 
@@ -622,64 +638,6 @@ class Steps(object):
 
 
 
-
-
-# def _write_displacements(f, software, com, nset, factor, sets, ndof):
-
-
-
-
-# def _write_tributary_load(f, software, com, factor):
-
-#     if software == 'abaqus':
-
-#         f.write('*CLOAD\n')
-#         f.write('**\n')
-
-#     elif software == 'sofistik':
-
-#         pass
-
-#     elif software == 'opensees':
-
-#         pass
-
-#     elif software == 'ansys':
-
-#         pass
-
-#     for node in sorted(com, key=int):
-#         ni = node + 1
-
-#         if software == 'abaqus':
-
-#             for ci, dof in enumerate(dofs[:3], 1):
-#                 if com[node][dof]:
-#                     dl = com[node][dof] * factor
-#                     f.write('{0}, {1}, {2}\n'.format(ni, ci, dl))
-
-#         elif software == 'sofistik':
-
-#             f.write('    NODE NO {0} TYPE '.format(ni))
-
-#             for ci, dof in enumerate(dofs[:3], 1):
-#                 if com[node][dof]:
-#                     dl = com[node][dof] / 1000.
-#                     f.write('P{0}{0}[kN] {1}\n'.format(dof.upper(), dl))
-
-#         elif software == 'opensees':
-
-#             pass
-
-#         elif software == 'ansys':
-
-#             pass
-
-
-
-
-
-
 # def _write_thermal_load(f, software, elset, temperature, sets, factor):
 
 #     for k in elset:
@@ -700,54 +658,6 @@ class Steps(object):
 #         elif software == 'ansys':
 
 #             pass
-
-
-
-# def _write_sofistik_output(f, stype, properties, state, step_index, key, nlgeom, increments, tolerance, nlmat, loads,
-#                            factor, materials):
-
-
-
-
-
-#         # Creep
-
-#         if has_concrete:
-
-#             f.write('+PROG ASE\n')
-#             f.write("HEAD CREEP {0} LC 3{1:0>2}00 {2}\n".format(state.upper(), step_index, key))
-#             f.write('$\n')
-#             f.write('CTRL SOLV 1\n')
-#             f.write('CTRL CONC\n')
-#             f.write('CREP NCRE 5\n')
-#             if nlgeom == 'YES':
-#                 f.write('SYST PROB TH3 ITER {0} TOL {1} NMAT {2} PLC 2{3:0>2}00\n'.format(
-#                         increments, tolerance, nlmat, step_index))
-#             f.write('GRP ALL FACS 1.00 PHI 1.00 PHIF 0 EPS -0.0005\n')
-#             f.write('REIQ LCR {0}\n'.format(step_index))
-#             f.write('$\n')
-
-#             DLX, DLY, DLZ = 0, 0, 0
-#             for load in loads.values():
-#                 if load.__name__ == 'GravityLoad':
-#                     com = load.components
-#                     DLX = com.get('x', 0)
-#                     DLY = com.get('y', 0)
-#                     DLZ = com.get('z', 0)
-#                     break
-
-#             f.write('$\n')
-#             f.write("LC 3{0:0>2}00 TITL '{1} CREEP'".format(step_index, key))
-#             f.write(' DLX {0} DLY {1} DLZ {2}\n'.format(DLX * fact, DLY * fact, DLZ * fact))
-#             f.write('    LCC 2{0:0>2}00 PLC YES\n'.format(step_index))
-
-#             f.write('$\n')
-#             f.write('END\n')
-#             f.write('$\n')
-#             f.write('$\n')
-
-
-
 
 
 

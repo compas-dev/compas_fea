@@ -123,7 +123,6 @@ class Elements(object):
                         else:
                             ori = ''
 
-                        self.blank_line()
                         self.write_line('*SHELL SECTION, ELSET={0}, MATERIAL={1} {2}'.format(e, material.name, ori))
                         self.write_line('{0}'.format(t))
 
@@ -293,63 +292,6 @@ class Elements(object):
 
 #             # Extract selection
 
-
-
-#             # Sofistik groups from sets
-
-#             if (software == 'sofistik') and (elset in sets):
-#                 if not stype == 'SpringSection':
-
-#                     set_index = sets[elset]['index'] + 1
-#                     for i in selection:
-#                         entry = int(100000 * set_index + i + 1)
-#                         structure.sofistik_mapping[i] = entry
-
-#                     f.write('GRP {0} BASE {0}00000\n'.format(set_index))
-#                     f.write('$\n')
-
-#             # Springs
-
-#             if stype == 'SpringSection':
-#                 _write_springs(f, software, selection, elements, section, written_springs)
-
-#             # Beam sections
-
-#             elif stype not in shells + solids + trusses + membranes:
-#                 _write_beams(f, software, elements, selection, geometry, material, s_index, stype)
-
-#             # Truss sections
-
-#             elif stype in trusses:
-#                 _write_trusses(f, selection, software, elements, section, material, elset)
-
-#             # Shell sections
-
-
-
-#             # Membrane sections
-
-#             elif stype in membranes:
-#                 _write_membranes(f, software, selection, elements, geometry, material, materials, reinforcement)
-
-#             # Solid sections
-
-#             elif stype in solids:
-#                 _write_blocks(f, software, selection, elements, material)
-
-#             if stype != 'SpringSection':
-#                 f.write('{0}\n'.format(c))
-
-#     # Sofistik
-
-#     if software == 'sofistik':
-
-#         f.write('END\n')
-#         f.write('$\n')
-#         f.write('$\n')
-
-#         if has_rebar:
-#             _write_sofistik_rebar(f, properties, sections, sets)
 
 
 

@@ -28,7 +28,7 @@ for i in rs.ObjectsByLayer('elset_beams'):
     ez = subtract_vectors(rs.CurveEndPoint(i), rs.CurveStartPoint(i))
     ex = normalize_vector(cross_vectors(ez, [0, 0, 1]))
     rs.ObjectName(i, '_{0}'.format(json.dumps({'ex': ex})))
-    
+
 # Structure
 
 mdl = Structure(name='beam_bathe', path='C:/Temp/')

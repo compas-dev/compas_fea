@@ -43,7 +43,7 @@ rhino.add_nodes_elements_from_layers(mdl, line_type='TrussElement', layers='else
 # Sets
 
 rhino.add_sets_from_layers(mdl, layers=['nset_corner1', 'nset_corner2'])
-edges = [i for i in mdl.nodes if mdl.nodes[i]['z'] < 0.001]
+edges = [i for i in mdl.nodes if mdl.nodes[i].z < 0.001]
 mdl.add_set(name='nset_edges', type='node', selection=edges)
 
 # Materials
@@ -66,10 +66,10 @@ mdl.add([
 # Properties
 
 mdl.add([
-    Properties(name='ep_ribs', material='mat_concrete', section='sec_ribs', elsets='elset_ribs'),
-    Properties(name='ep_vault', material='mat_concrete', section='sec_vault', elsets='elset_vault'),
-    Properties(name='ep_stiff', material='mat_stiff', section='sec_stiff', elsets='elset_stiff'),
-    Properties(name='ep_ties', material='mat_steel', section='sec_ties', elsets='elset_ties'),
+    Properties(name='ep_ribs', material='mat_concrete', section='sec_ribs', elset='elset_ribs'),
+    Properties(name='ep_vault', material='mat_concrete', section='sec_vault', elset='elset_vault'),
+    Properties(name='ep_stiff', material='mat_stiff', section='sec_stiff', elset='elset_stiff'),
+    Properties(name='ep_ties', material='mat_steel', section='sec_ties', elset='elset_ties'),
 ])
 
 # Displacements
@@ -85,14 +85,14 @@ mdl.add([
 mdl.add([
     GravityLoad(name='load_gravity', elements=['elset_ribs', 'elset_vault']),
     PrestressLoad(name='load_prestress', elements='elset_ties', sxx=10*10**6),
-    TributaryLoad(mdl, name='load_tributary', mesh=mesh_from_guid(Mesh(), rs.ObjectsByLayer('load_mesh')[0]), z=-2000),
+    TributaryLoad(mdl, name='load_area', mesh=mesh_from_guid(Mesh(), rs.ObjectsByLayer('load_mesh')[0]), z=-2000),
 ])
 
 # Steps
 
 mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_edges', 'disp_pinned', 'disp_xdof']),
-    GeneralStep(name='step_loads', loads=['load_gravity', 'load_tributary'], factor={'load_gravity': 1.35, 'load_tributary': 1.50}),
+    GeneralStep(name='step_loads', loads=['load_gravity', 'load_area'], factor={'load_gravity': 1.35, 'load_area': 1.50}),
 ])
 mdl.steps_order = ['step_bc', 'step_loads']
 
@@ -100,9 +100,9 @@ mdl.steps_order = ['step_bc', 'step_loads']
 
 mdl.summary()
 
-# Run (Abaqus)
+# Run
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 's'], license='research')
+mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
-rhino.plot_data(mdl, step='step_loads', field='uz', radius=0.02, colorbar_size=0.5)
-rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.02, colorbar_size=0.5, cbar=[0, 5*10**6])
+rhino.plot_data(mdl, step='step_loads', field='uz', radius=0.02, cbar_size=0.5)
+rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.02, cbar_size=0.5, cbar=[0, 5*10**6])
