@@ -738,8 +738,8 @@ def plot_mode_shapes(structure, step, layer=None, scale=1.0, radius=1):
             plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=c, radius=radius)
 
     elif isinstance(it, dict):
-        for mode in it:
-            print(mode)
+        for mode, value in it.items():
+            print(mode, value)
             layerk = layer + str(mode)
             plot_data(structure=structure, step=step, field='um', layer=layerk, scale=scale, mode=mode, radius=radius)
 

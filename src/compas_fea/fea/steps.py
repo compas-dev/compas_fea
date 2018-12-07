@@ -114,6 +114,8 @@ class Steps(object):
                         if stype == 'BucklingStep':
                             self.write_line('{0}, {1}, {2}, {3}'.format(modes, modes, 2 * modes, increments))
 
+                    self.blank_line()
+
                 # -------------------------------------------------------------------------------------------------
                 # Ansys
                 # -------------------------------------------------------------------------------------------------
@@ -165,8 +167,8 @@ class Steps(object):
 
                     if self.software == 'opensees':
 
-                        # Point load
-                        # ----------
+                        # PointLoad
+                        # ---------
 
                         if ltype == 'PointLoad':
 
@@ -194,8 +196,8 @@ class Steps(object):
 
                     elif self.software == 'abaqus':
 
-                        # Point load
-                        # ----------
+                        # PointLoad
+                        # ---------
 
                         if ltype == 'PointLoad':
 
@@ -209,6 +211,19 @@ class Steps(object):
                                 for c, dof in enumerate(dofs, 1):
                                     if com[dof]:
                                         self.write_line('{0}, {1}, {2}'.format(ni, c, com[dof] * fact))
+
+                        # PointLoads
+                        # ----------
+
+                        elif ltype == 'PointLoads':
+
+                            self.write_line('*CLOAD')
+                            self.blank_line()
+
+                            for node, coms in com.items():
+                                for ci, value in coms.items():
+                                    index = dofs.index(ci) + 1
+                                    self.write_line('{0}, {1}, {2}'.format(node + 1, index, value * fact))
 
                         # Gravity
                         # -------
@@ -306,22 +321,30 @@ class Steps(object):
                                     if com[dof] is not None:
                                         self.write_line('sp {0} {1} {2}'.format(ni, c, com[dof]))
 
+                        self.blank_line()
+                        self.blank_line()
+
                     # -------------------------------------------------------------------------------------------------
                     # Abaqus
                     # -------------------------------------------------------------------------------------------------
 
                     elif self.software == 'abaqus':
 
-                        self.write_line('*BOUNDARY')
-                        self.blank_line()
+                        if stype not in ['ModalStep', 'BucklingStep']:
 
-                        for node in nodes:
+                            self.write_line('*BOUNDARY')
+                            self.blank_line()
 
-                            ni = node if isinstance(node, str) else node + 1
+                            for node in nodes:
 
-                            for c, dof in enumerate(dofs, 1):
-                                if com[dof] is not None:
-                                    self.write_line('{0}, {1}, {1}, {2}'.format(ni, c, com[dof] * fact))
+                                ni = node if isinstance(node, str) else node + 1
+
+                                for c, dof in enumerate(dofs, 1):
+                                    if com[dof] is not None:
+                                        self.write_line('{0}, {1}, {1}, {2}'.format(ni, c, com[dof] * fact))
+
+                            self.blank_line()
+                            self.blank_line()
 
                     # -------------------------------------------------------------------------------------------------
                     # Ansys
@@ -331,8 +354,6 @@ class Steps(object):
 
                         pass
 
-                self.blank_line()
-                self.blank_line()
 
             # =====================================================================================================
             # =====================================================================================================
@@ -515,6 +536,8 @@ class Steps(object):
 
                 self.blank_line()
                 self.write_line('*END STEP')
+                self.blank_line()
+                self.blank_line()
 
             # -------------------------------------------------------------------------------------------------
             # Ansys
@@ -523,41 +546,6 @@ class Steps(object):
             elif self.software == 'ansys':
 
                 pass
-
-        self.blank_line()
-        self.blank_line()
-
-
-# def _write_point_loads(f, software, com, factor):
-
-#     if software == 'abaqus':
-
-#         f.write('*CLOAD\n')
-#         f.write('**\n')
-
-#         for node, coms in com.items():
-#             for ci, value in coms.items():
-#                 index = dofs.index(ci) + 1
-#                 f.write('{0}, {1}, {2}'.format(node + 1, index, value * factor) + '\n')
-
-#     elif software == 'sofistik':
-
-#         for node, coms in com.items():
-#             for ci, value in coms.items():
-#                 if ci in 'xyz':
-#                     f.write('    NODE NO {0} TYPE P{1}{1} {2}[kN]\n'.format(node + 1, ci.upper(), value * 0.001))
-#                 else:
-#                     f.write('    NODE NO {0} TYPE M{1} {2}[kNm]\n'.format(node + 1, ci.upper(), value * 0.001))
-
-#     elif software == 'opensees':
-
-#         pass
-
-#     elif software == 'ansys':
-
-#         pass
-
-
 
 
 
@@ -590,102 +578,61 @@ class Steps(object):
 #                 elements = ' '.join([str(i + 1) for i in sets[k]['selection']])
 #                 f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, -com['y'], -com['x']))
 
-#         elif software == 'sofistik':
-
-#             for i in sets[k]['selection']:
-#                 ni = structure.sofistik_mapping[i]
-
-#                 if axes == 'global':
-#                     for j in 'xyz':
-#                         if com[j]:
-#                             f.write('    BEAM {0} TYPE P{1}{1} {2}[kN/m]\n'.format(ni, j.upper(), com['x'] * 0.001))
-
-#                 elif axes == 'local':
-#                     for j, jj in zip('xyz', 'zxy'):
-#                         if com[jj]:
-#                             f.write('    BEAM {0} TYPE P{1} {2}[kN/m]\n'.format(ni, j.upper(), com[jj] * 0.001))
-
-#         elif software == 'ansys':
-
-#             pass
 
 
-# def _write_area_load(f, software, com, axes, elset, sets, factor):
 
-#     if software == 'abaqus':
+# Thermal
 
-#         for k in elset:
+# try:
+#     duration = step.duration
+# except:
+#     duration = 1
+#     temperatures = steps[key].temperatures
+#     if temperatures:
+#         file = misc[temperatures].file
+#         einc = str(misc[temperatures].einc)
+#         f.write('**\n')
+#         f.write('*TEMPERATURE, FILE={0}, BSTEP=1, BINC=1, ESTEP=1, EINC={1}, INTERPOLATE\n'.format(file, einc))
 
-#             if axes == 'global':
+# elif stype == 'HeatStep':
 
-#                 raise NotImplementedError
+#     temp0 = step.temp0
+#     duration = step.duration
+#     deltmx = steps[key].deltmx
+#     interaction = interactions[step.interaction]
+#     amplitude = interaction.amplitude
+#     interface = interaction.interface
+#     sink_t = interaction.sink_t
+#     film_c = interaction.film_c
+#     ambient_t = interaction.ambient_t
+#     emissivity = interaction.emissivity
 
-#             elif axes == 'local':
-#                 # x COMPONENT
-#                 # y COMPONENT
-#                 f.write('*DLOAD\n')
-#                 f.write('**\n')
+#     # Initial T
 
-#                 if com['z']:
-#                     f.write('{0}, P, {1}'.format(k, factor * com['z']) + '\n')
+#     f.write('*INITIAL CONDITIONS, TYPE=TEMPERATURE\n')
+#     f.write('NSET_ALL, {0}\n'.format(temp0))
+#     f.write('**\n')
 
-#     elif software == 'opensees':
+#     # Interface
 
-#         pass
+#     f.write('*STEP, NAME={0}, INC={1}\n'.format(sname, increments))
+#     f.write('*{0}, END=PERIOD, DELTMX={1}\n'.format(method, deltmx))
+#     f.write('1, {0}, 5.4e-05, {0}\n'.format(duration))
+#     f.write('**\n')
+#     f.write('*SFILM, AMPLITUDE={0}\n'.format(amplitude))
+#     f.write('{0}, F, {1}, {2}\n'.format(interface, sink_t, film_c))
+#     f.write('**\n')
+#     f.write('*SRADIATE, AMPLITUDE={0}\n'.format(amplitude))
+#     f.write('{0}, R, {1}, {2}\n'.format(interface, ambient_t, emissivity))
 
+#     # fieldOutputs
 
-# # Thermal
-
-# # try:
-# #     duration = step.duration
-# # except:
-# #     duration = 1
-# #     temperatures = steps[key].temperatures
-# #     if temperatures:
-# #         file = misc[temperatures].file
-# #         einc = str(misc[temperatures].einc)
-# #         f.write('**\n')
-# #         f.write('*TEMPERATURE, FILE={0}, BSTEP=1, BINC=1, ESTEP=1, EINC={1}, INTERPOLATE\n'.format(file, einc))
-
-# # elif stype == 'HeatStep':
-
-# #     temp0 = step.temp0
-# #     duration = step.duration
-# #     deltmx = steps[key].deltmx
-# #     interaction = interactions[step.interaction]
-# #     amplitude = interaction.amplitude
-# #     interface = interaction.interface
-# #     sink_t = interaction.sink_t
-# #     film_c = interaction.film_c
-# #     ambient_t = interaction.ambient_t
-# #     emissivity = interaction.emissivity
-
-# #     # Initial T
-
-# #     f.write('*INITIAL CONDITIONS, TYPE=TEMPERATURE\n')
-# #     f.write('NSET_ALL, {0}\n'.format(temp0))
-# #     f.write('**\n')
-
-# #     # Interface
-
-# #     f.write('*STEP, NAME={0}, INC={1}\n'.format(sname, increments))
-# #     f.write('*{0}, END=PERIOD, DELTMX={1}\n'.format(method, deltmx))
-# #     f.write('1, {0}, 5.4e-05, {0}\n'.format(duration))
-# #     f.write('**\n')
-# #     f.write('*SFILM, AMPLITUDE={0}\n'.format(amplitude))
-# #     f.write('{0}, F, {1}, {2}\n'.format(interface, sink_t, film_c))
-# #     f.write('**\n')
-# #     f.write('*SRADIATE, AMPLITUDE={0}\n'.format(amplitude))
-# #     f.write('{0}, R, {1}, {2}\n'.format(interface, ambient_t, emissivity))
-
-# #     # fieldOutputs
-
-# #     f.write('**\n')
-# #     f.write('** OUTPUT\n')
-# #     f.write('** ------\n')
-# #     f.write('*OUTPUT, FIELD\n')
-# #     f.write('**\n')
-# #     f.write('*NODE OUTPUT\n')
-# #     f.write('NT\n')
-# #     f.write('**\n')
-# #     f.write('*END STEP\n')
+#     f.write('**\n')
+#     f.write('** OUTPUT\n')
+#     f.write('** ------\n')
+#     f.write('*OUTPUT, FIELD\n')
+#     f.write('**\n')
+#     f.write('*NODE OUTPUT\n')
+#     f.write('NT\n')
+#     f.write('**\n')
+#     f.write('*END STEP\n')

@@ -3,6 +3,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from math import pi
+
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
 __copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
@@ -53,7 +55,7 @@ class Elements(object):
             self.write_subsection(key)
 
             property      = properties[key]
-            reinforcement = property.reinforcement
+            reinforcement = property.rebar
             elset         = property.elset
 
             section       = sections[property.section]
@@ -116,26 +118,28 @@ class Elements(object):
                         if ex and ey:
                             o   = 'ORI_element_{0}'.format(select)
                             ori = ', ORIENTATION={0}'.format(o)
-                        #     self.write_line('*ORIENTATION, NAME={0}\n'.format(o))
-                        #     self.write_line(', '.join([str(j) for j in ex]) + ', ')
-                        #     self.write_line(', '.join([str(j) for j in ey]) + '\n')
-                        #     self.write_line('**\n')
+                            self.write_line('*ORIENTATION, NAME={0}'.format(o))
+                            self.write_line(', '.join([str(j) for j in ex]) + ', ' + ', '.join([str(j) for j in ey]))
+                            self.blank_line()
                         else:
                             ori = ''
 
                         self.write_line('*SHELL SECTION, ELSET={0}, MATERIAL={1} {2}'.format(e, material.name, ori))
                         self.write_line('{0}'.format(t))
 
-                        # if reinforcement:
-                        #     self.write_line('*REBAR LAYER\n')
-                        #     for name, rebar in reinforcement.items():
-                        #         pos     = rebar['pos']
-                        #         spacing = rebar['spacing']
-                        #         rmat    = rebar['material']
-                        #         angle   = rebar['angle']
-                        #         dia     = rebar['dia']
-                        #         area    = 0.25 * pi * dia**2
-                        #         self.write_line('{0}, {1}, {2}, {3}, {4}, {5}\n'.format(name, area, spacing, pos, rmat, angle))
+                        if reinforcement:
+                            self.write_line('*REBAR LAYER')
+
+                            for name, rebar in reinforcement.items():
+
+                                pos   = rebar['pos']
+                                l     = rebar['spacing']
+                                rmat  = rebar['material']
+                                angle = rebar['angle']
+                                dia   = rebar['dia']
+                                area  = 0.25 * pi * dia**2
+
+                                self.write_line('{0}, {1}, {2}, {3}, {4}, {5}'.format(name, area, l, pos, rmat, angle))
 
                     # -------------------------------------------------------------------------------------------------
                     # Ansys

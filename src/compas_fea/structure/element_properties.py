@@ -31,7 +31,7 @@ class ElementProperties(object):
         Element set names assignment.
     elements : list
         Element keys assignment.
-    reinforcement : dict
+    rebar : dict
         Reinforcement layer data.
 
     Returns
@@ -44,15 +44,15 @@ class ElementProperties(object):
 
     """
 
-    def __init__(self, name, material=None, section=None, elset=None, elements=None, reinforcement={}):
+    def __init__(self, name, material=None, section=None, elset=None, elements=None, rebar={}):
 
-        self.__name__      = 'ElementProperties'
-        self.name          = name
-        self.material      = material
-        self.section       = section
-        self.elset         = elset
-        self.elements      = elements
-        self.reinforcement = reinforcement
+        self.__name__ = 'ElementProperties'
+        self.name     = name
+        self.material = material
+        self.section  = section
+        self.elset    = elset
+        self.elements = elements
+        self.rebar    = rebar
 
         if (not elset) and (not elements):
             raise NameError('***** ElementProperties objects require elements or element sets *****')
@@ -63,7 +63,7 @@ class ElementProperties(object):
         print('compas_fea {0} object'.format(self.__name__))
         print('-' * (len(self.__name__) + 18))
 
-        for attr in ['name', 'material', 'section', 'elset', 'elements', 'reinforcement']:
+        for attr in ['name', 'material', 'section', 'elset', 'elements', 'rebar']:
             print('{0:<13} : {1}'.format(attr, getattr(self, attr)))
 
         return ''
