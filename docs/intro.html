@@ -70,12 +70,12 @@
                         <div class="section" id="introduction">
 <h1>Introduction</h1>
 <p>Finite element analysis, or the finite element method, is a numerical approach to solve a variety of problems in the sciences, mathematics and engineering fields. In a broad sense, a continuum such as a fluid or solid volume, is split into a set of smaller discrete elements. For each element, data of interest such as stresses, displacements, temperatures and so on, are found at the nodes and element integration points. They are interpolated for values across the element with various shape functions. The greater the number of elements used to represent the continuum, the better the numerical model will represent the original continuous solution. The finite element method is often used when closed-form solutions for the continua cases can be difficult or impossible to ascertain, and so a numerical approximation is sought.</p>
-<div class="figure" id="id1">
+<div class="figure align-center" id="id1">
 <img alt="_images/discretise-compound.png" class="figure-img img-fluid" src="_images/discretise-compound.png" />
 <p class="caption"><span class="caption-text">Example discretisations of solids into finite elements: Scientific Computing and Imaging Institute, University of Utah (left), COMSOL Multiphysics (right).</span></p>
 </div>
 <p>The <strong>compas_fea</strong> package of the <strong>COMPAS</strong> framework seeks to aid the user, be they an architect, scientist or engineer, in creating and analysing a suitable finite element model for their problem. This is achieved by creating a <strong>Structure</strong> object, to contain geometric information about the model, and then to apply loads, displacements, materials and other objects for a subsequent analysis. This construction of the <strong>Structure</strong> object may be performed in a pure scripting manner with Python, and/or through various modules that help construct the object through existing or parametrically generated geometry. Once the model has been constructed, it may be analysed through a finite element solver in the background, with the data then stored back into the original object or as raw data files. The data can then be post-processed to display the results either through stand-alone viewers and applications, or with visualisation support from specific CAD or finite element software.</p>
-<div class="figure" id="id2">
+<div class="figure align-center" id="id2">
 <img alt="_images/cad_environment.png" class="figure-img img-fluid" src="_images/cad_environment.png" />
 <p class="caption"><span class="caption-text">A scripting and CAD software pairing can be used to create and analyse a structure, and then visualise the results in the same window.</span></p>
 </div>
@@ -107,11 +107,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Dec 10, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
             
         </footer>
 

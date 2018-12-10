@@ -19,11 +19,11 @@
         <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
         
-            <link rel="next" title="add_node_set" href="compas_fea.cad.rhino.add_node_set.html" />
+            <link rel="next" title="discretise_mesh" href="compas_fea.cad.rhino.discretise_mesh.html" />
         
         
         
-            <link rel="prev" title="add_element_set" href="compas_fea.cad.rhino.add_element_set.html" />
+            <link rel="prev" title="add_sets_from_layers" href="compas_fea.cad.rhino.add_sets_from_layers.html" />
         
 
         <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -71,23 +71,21 @@
 <h1>add_tets_from_mesh</h1>
 <dl class="function">
 <dt id="compas_fea.cad.rhino.add_tets_from_mesh">
-<code class="descclassname">compas_fea.cad.rhino.</code><code class="descname">add_tets_from_mesh</code><span class="sig-paren">(</span><em>structure</em>, <em>name</em>, <em>mesh</em>, <em>draw_tets=False</em>, <em>volume=None</em>, <em>layer='Default'</em>, <em>acoustic=False</em>, <em>thermal=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/cad/rhino.html#add_tets_from_mesh"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Adds tetrahedron elements from a Rhino mesh to the Structure object.</p>
+<code class="descclassname">compas_fea.cad.rhino.</code><code class="descname">add_tets_from_mesh</code><span class="sig-paren">(</span><em>structure</em>, <em>name</em>, <em>mesh</em>, <em>draw_tets=False</em>, <em>volume=None</em>, <em>layer='Default'</em>, <em>thermal=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/cad/rhino.html#add_tets_from_mesh"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Adds tetrahedron elements from a mesh in Rhino to the Structure object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>structure</strong> (<em>obj</em>) – Structure object to update.</p></li>
 <li><p><strong>name</strong> (<em>str</em>) – Name for the element set of tetrahedrons.</p></li>
-<li><p><strong>mesh</strong> (<em>obj</em>) – The Rhino mesh representing the outer surface.</p></li>
-<li><p><strong>draw_tets</strong> (<em>bool</em>) – Draw the generated tetrahedrons.</p></li>
+<li><p><strong>mesh</strong> (<em>guid</em>) – The mesh in Rhino representing the outer surface.</p></li>
+<li><p><strong>draw_tets</strong> (<em>str</em>) – Layer to draw tetrahedrons on.</p></li>
 <li><p><strong>volume</strong> (<em>float</em>) – Maximum volume for each tet.</p></li>
-<li><p><strong>layer</strong> (<em>str</em>) – Layer to draw tetrahedrons if draw_tets=True.</p></li>
-<li><p><strong>acoustic</strong> (<em>bool</em>) – Acoustic properties on or off.</p></li>
 <li><p><strong>thermal</strong> (<em>bool</em>) – Thermal properties on or off.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><em>None</em> – Nodes and elements are updated in the Structure object.</p>
+<dd class="field-even"><p><em>None</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -118,11 +116,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Dec 10, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
             
         </footer>
 

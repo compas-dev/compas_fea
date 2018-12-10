@@ -350,12 +350,14 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
     xfunc = XFunc('tets', basedir=basedir, tmpdir=structure.path)
     xfunc.funcname = 'meshing.tets_from_vertices_faces'
 
+
     try:
         tets_points, tets_elements = xfunc(vertices=vertices, faces=faces, volume=volume)
 
         for point in tets_points:
             structure.add_node(point)
 
+        print('test')
         ekeys = []
 
         for element in tets_elements:

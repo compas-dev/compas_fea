@@ -88,6 +88,7 @@
     <span class="s1">&#39;PipeSection&#39;</span><span class="p">,</span>
     <span class="s1">&#39;RectangularSection&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ShellSection&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;MembraneSection&#39;</span><span class="p">,</span>
     <span class="s1">&#39;SolidSection&#39;</span><span class="p">,</span>
     <span class="s1">&#39;TrapezoidalSection&#39;</span><span class="p">,</span>
     <span class="s1">&#39;TrussSection&#39;</span><span class="p">,</span>
@@ -120,6 +121,7 @@
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;compas_fea </span><span class="si">{0}</span><span class="s1"> object&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="mi">18</span><span class="p">))</span>
 
@@ -127,8 +129,12 @@
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:&lt;5}</span><span class="s1"> : </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
-</div>
+
         <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">(</span><span class="si">{1}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -172,8 +178,8 @@
         <span class="n">J</span>   <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">h</span> <span class="o">+</span> <span class="n">b</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="o">**</span><span class="mi">3</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;AngleSection&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="BoxSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.BoxSection.html#compas_fea.structure.section.BoxSection">[docs]</a><span class="k">class</span> <span class="nc">BoxSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
@@ -210,8 +216,8 @@
         <span class="n">J</span>   <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">Ap</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">p</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;BoxSection&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;tw&#39;</span><span class="p">:</span> <span class="n">tw</span><span class="p">,</span> <span class="s1">&#39;tf&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;tw&#39;</span><span class="p">:</span> <span class="n">tw</span><span class="p">,</span> <span class="s1">&#39;tf&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="CircularSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.CircularSection.html#compas_fea.structure.section.CircularSection">[docs]</a><span class="k">class</span> <span class="nc">CircularSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
@@ -240,8 +246,8 @@
         <span class="n">J</span>   <span class="o">=</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="n">D</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">/</span> <span class="mi">32</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;CircularSection&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="n">r</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="n">D</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="n">r</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="n">D</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="GeneralSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.GeneralSection.html#compas_fea.structure.section.GeneralSection">[docs]</a><span class="k">class</span> <span class="nc">GeneralSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
@@ -277,8 +283,8 @@
         <span class="n">Section</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;GeneralSection&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="n">Ixy</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;g0&#39;</span><span class="p">:</span> <span class="n">g0</span><span class="p">,</span> <span class="s1">&#39;gw&#39;</span><span class="p">:</span> <span class="n">gw</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="n">Ixy</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;g0&#39;</span><span class="p">:</span> <span class="n">g0</span><span class="p">,</span> <span class="s1">&#39;gw&#39;</span><span class="p">:</span> <span class="n">gw</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="ISection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.ISection.html#compas_fea.structure.section.ISection">[docs]</a><span class="k">class</span> <span class="nc">ISection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
@@ -313,8 +319,8 @@
         <span class="n">J</span>   <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">b</span> <span class="o">*</span> <span class="n">tf</span><span class="o">**</span><span class="mi">3</span> <span class="o">+</span> <span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">tf</span><span class="p">)</span> <span class="o">*</span> <span class="n">tw</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;ISection&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;tw&#39;</span><span class="p">:</span> <span class="n">tw</span><span class="p">,</span> <span class="s1">&#39;tf&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="n">h</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;tw&#39;</span><span class="p">:</span> <span class="n">tw</span><span class="p">,</span> <span class="s1">&#39;tf&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="n">h</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="PipeSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.PipeSection.html#compas_fea.structure.section.PipeSection">[docs]</a><span class="k">class</span> <span class="nc">PipeSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
@@ -345,8 +351,8 @@
         <span class="n">J</span>   <span class="o">=</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="o">**</span><span class="mi">3</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;PipeSection&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="n">r</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="n">D</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="n">r</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="n">D</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="RectangularSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.RectangularSection.html#compas_fea.structure.section.RectangularSection">[docs]</a><span class="k">class</span> <span class="nc">RectangularSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
@@ -381,8 +387,8 @@
         <span class="n">J</span>   <span class="o">=</span> <span class="p">(</span><span class="n">l1</span> <span class="o">*</span> <span class="n">l2</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.33333</span> <span class="o">-</span> <span class="mf">0.21</span> <span class="o">*</span> <span class="p">(</span><span class="n">l2</span> <span class="o">/</span> <span class="n">l1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">l2</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">12</span> <span class="o">*</span> <span class="n">l1</span><span class="o">**</span><span class="mi">4</span><span class="p">)))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;RectangularSection&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="TrapezoidalSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.TrapezoidalSection.html#compas_fea.structure.section.TrapezoidalSection">[docs]</a><span class="k">class</span> <span class="nc">TrapezoidalSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
@@ -419,8 +425,8 @@
         <span class="n">Iyy</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mf">48.</span><span class="p">)</span> <span class="o">*</span> <span class="n">h</span> <span class="o">*</span> <span class="p">(</span><span class="n">b1</span> <span class="o">+</span> <span class="n">b2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">b2</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">*</span> <span class="n">b1</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;TrapezoidalSection&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b1&#39;</span><span class="p">:</span> <span class="n">b1</span><span class="p">,</span> <span class="s1">&#39;b2&#39;</span><span class="p">:</span> <span class="n">b2</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b1&#39;</span><span class="p">:</span> <span class="n">b1</span><span class="p">,</span> <span class="s1">&#39;b2&#39;</span><span class="p">:</span> <span class="n">b2</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="n">Ixx</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="n">Iyy</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="TrussSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.TrussSection.html#compas_fea.structure.section.TrussSection">[docs]</a><span class="k">class</span> <span class="nc">TrussSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
@@ -444,8 +450,8 @@
         <span class="n">Section</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;TrussSection&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="s1">&#39;Ixx&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Iyy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Ixy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="StrutSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.StrutSection.html#compas_fea.structure.section.StrutSection">[docs]</a><span class="k">class</span> <span class="nc">StrutSection</span><span class="p">(</span><span class="n">TrussSection</span><span class="p">):</span>
@@ -467,8 +473,8 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
         <span class="n">TrussSection</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="n">A</span><span class="p">)</span>
-</div>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;StrutSection&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;StrutSection&#39;</span></div>
 
 
 <div class="viewcode-block" id="TieSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.TieSection.html#compas_fea.structure.section.TieSection">[docs]</a><span class="k">class</span> <span class="nc">TieSection</span><span class="p">(</span><span class="n">TrussSection</span><span class="p">):</span>
@@ -490,8 +496,8 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
         <span class="n">TrussSection</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="n">A</span><span class="p">)</span>
-</div>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;TieSection&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;TieSection&#39;</span></div>
 
 
 <div class="viewcode-block" id="SpringSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.SpringSection.html#compas_fea.structure.section.SpringSection">[docs]</a><span class="k">class</span> <span class="nc">SpringSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
@@ -528,8 +534,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span>          <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span>      <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">forces</span>        <span class="o">=</span> <span class="n">forces</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="n">displacements</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stiffness</span>     <span class="o">=</span> <span class="n">stiffness</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="n">displacements</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stiffness</span>     <span class="o">=</span> <span class="n">stiffness</span></div>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -538,7 +544,7 @@
 
 <div class="viewcode-block" id="ShellSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.ShellSection.html#compas_fea.structure.section.ShellSection">[docs]</a><span class="k">class</span> <span class="nc">ShellSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot; Section for shell and membrane elements.</span>
+    <span class="sd">&quot;&quot;&quot; Section for shell elements.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -557,8 +563,33 @@
         <span class="n">Section</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;ShellSection&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="MembraneSection"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.section.MembraneSection.html#compas_fea.structure.section.MembraneSection">[docs]</a><span class="k">class</span> <span class="nc">MembraneSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot; Section for membrane elements.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Section name.</span>
+<span class="sd">    t : float</span>
+<span class="sd">        Thickness.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="n">Section</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;MembraneSection&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">}</span></div>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -584,8 +615,8 @@
         <span class="n">Section</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;SolidSection&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="kc">None</span></div>
 </code></pre></div>
                         
                     
@@ -611,11 +642,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Dec 10, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
             
         </footer>
 

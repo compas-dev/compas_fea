@@ -19,11 +19,7 @@
         <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
 
         
-            <link rel="next" title="mesh_plate" href="mesh_plate_rhino.html" />
         
-        
-        
-            <link rel="prev" title="mesh_mould" href="mesh_mould_rhino.html" />
         
 
         <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -93,8 +89,7 @@
 <span class="c1"># Discretise</span>
 
 <span class="n">guid</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">ObjectsByLayer</span><span class="p">(</span><span class="s1">&#39;mesh_input&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">rs</span><span class="o">.</span><span class="n">DeleteObjects</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">ObjectsByLayer</span><span class="p">(</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">))</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">discretise_mesh</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">guid</span><span class="o">=</span><span class="n">guid</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="mf">0.050</span><span class="p">,</span> <span class="n">min_angle</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">discretise_mesh</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">guid</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="mf">0.050</span><span class="p">,</span> <span class="n">min_angle</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
 </code></pre></div>
 </div>
 </div>
@@ -123,11 +118,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Dec 10, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
             
         </footer>
 

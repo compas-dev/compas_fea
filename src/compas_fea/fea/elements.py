@@ -68,14 +68,14 @@ class Elements(object):
 
             selection = property.elements if property.elements else sets[elset].selection
 
-            t   = geometry.get('t', None)
-            A   = geometry.get('A', None)
-            J   = geometry.get('J', None)
-            Ixx = geometry.get('Ixx', None)
-            Iyy = geometry.get('Iyy', None)
-            E   = material.E.get('E', None)
-            G   = material.G.get('G', None)
-
+            if geometry is not None:
+                t   = geometry.get('t', None)
+                A   = geometry.get('A', None)
+                J   = geometry.get('J', None)
+                Ixx = geometry.get('Ixx', None)
+                Iyy = geometry.get('Iyy', None)
+                E   = material.E.get('E', None)
+                G   = material.G.get('G', None)
 
             for select in selection:
 
@@ -89,11 +89,49 @@ class Elements(object):
 
                 # =====================================================================================================
                 # =====================================================================================================
+                # SOLID
+                # =====================================================================================================
+                # =====================================================================================================
+
+                if stype == 'SolidSection':
+
+                    # -------------------------------------------------------------------------------------------------
+                    # OpenSees
+                    # -------------------------------------------------------------------------------------------------
+
+                    if self.software == 'opensees':
+
+                        pass
+
+                    # -------------------------------------------------------------------------------------------------
+                    # Abaqus
+                    # -------------------------------------------------------------------------------------------------
+
+                    elif self.software == 'abaqus':
+
+                        etypes = {4: 'C3D4', 6: 'C3D6', 8: 'C3D8'}
+                        e = 'element_{0}'.format(select)
+
+                        self.write_line('*ELEMENT, TYPE={0}, ELSET={1}'.format(etypes[len(nodes)], e))
+                        self.write_line('{0}, {1}'.format(n, ','.join(nodes)))
+                        self.write_line('*SOLID SECTION, ELSET={0}, MATERIAL={1}'.format(e, material.name))
+                        self.write_line('')
+
+                    # -------------------------------------------------------------------------------------------------
+                    # Ansys
+                    # -------------------------------------------------------------------------------------------------
+
+                    elif self.software == 'ansys':
+
+                        pass
+
+                # =====================================================================================================
+                # =====================================================================================================
                 # SHELL
                 # =====================================================================================================
                 # =====================================================================================================
 
-                if stype == 'ShellSection':
+                elif stype == 'ShellSection':
 
                     # -------------------------------------------------------------------------------------------------
                     # OpenSees
@@ -255,28 +293,13 @@ class Elements(object):
 #     trusses    = ['TrussSection', 'StrutSection', 'TieSection']
 
 #     written_springs = []
-#     structure.sofistik_mapping = {}
-#     has_rebar = False
-
-
-
-#         # Check rebar
-
-#         if reinforcement:
-#             has_rebar = True
 
 #         # Make elsets list
-
-
 
 #         if not (stype == 'SpringSection'):
 #             f.write('{0} Property: {1}\n'.format(c, key))
 #             f.write('{0} ----------'.format(c) + '-' * (len(key)) + '\n')
 #             f.write('{0}\n'.format(c))
-
-#         for elset in elsets:
-
-#             # Extract selection
 
 
 # def _write_membranes(f, software, selection, elements, geometry, material, materials, reinforcement):
@@ -314,38 +337,6 @@ class Elements(object):
 
 #         f.write('{0}\n'.format(comments[software]))
 
-
-# def _write_blocks(f, software, selection, elements, material):
-
-#     abaqus_etypes = {4: 'C3D4', 6: 'C3D6', 8: 'C3D8'}
-#     sofistik_etypes = {8: 'BRIC NO N1 N2 N3 N4 N5 N6 N7 N8 MNO\n'}
-
-#     for select in selection:
-
-#         nodes = elements[select].nodes
-#         ni    = select + 1
-
-#         if software == 'sofistik':
-
-#             f.write(sofistik_etypes[len(nodes)])
-#             f.write('{0} {1} {2}\n'.format(ni, ' '.join([str(i + 1) for i in nodes]), material.index + 1))
-
-#         elif software == 'opensees':
-
-#             pass
-
-#         elif software == 'ansys':
-
-#             pass
-
-#         elif software == 'abaqus':
-
-#             f.write('*ELEMENT, TYPE={0}, ELSET=element_{1}\n'.format(abaqus_etypes[len(nodes)], select))
-#             f.write('{0}, {1}\n'.format(ni, ','.join([str(i + 1) for i in nodes])))
-#             f.write('*SOLID SECTION, ELSET=element_{0}, MATERIAL={1}\n'.format(select, material.name))
-#             f.write('\n')
-
-#         f.write('{0}\n'.format(comments[software]))
 
 
 # def _write_springs(f, software, selection, elements, section, written_springs):
@@ -419,102 +410,9 @@ class Elements(object):
 #             f.write('ORI_{0}\n'.format(select))
 #             f.write('**\n')
 
-#         elif software == 'sofistik':
-
-#             f.write('SPRI NO {0} NA {1} NE {2} CP {3} CT {4} CM {5}\n'.format(ni, j, i, kx, ky, kr))
-
 #         elif software == 'opensees':
 
 #             orientation = ' '.join([str(k) for k in ey])
 #             f.write('element twoNodeLink {0} {1} {2} -mat 1{3:0>3} -dir 1 -orient {4} \n'.format(
 #                     ni, i, j, section_index, orientation))
 #             f.write('#\n')
-
-#         elif software == 'ansys':
-
-#             pass
-
-#     return written_springs
-
-
-# def _write_sofistik_rebar(f, properties, sections, sets):
-
-#         f.write('+PROG BEMESS\n')
-#         f.write('$\n')
-#         f.write('CTRL WARN 7 $ Upper cover (<10mm or >0.70d)\n')
-#         f.write('CTRL WARN 9 $ Bottom cover (<10mm or >0.70d)\n')
-#         f.write('CTRL WARN 471 $ Element thickness too thin and not allowed for design\n')
-#         f.write('$\n')
-
-#         for key, property in properties.items():
-
-#             if property.reinforcement:
-
-#                 if isinstance(property.elsets, str):
-#                     elsets = [property.elsets]
-
-#                 f.write('$ Reinforcement: {0}\n'.format(key))
-#                 f.write('$ ---------------' + '-' * (len(key)) + '\n')
-#                 f.write('$\n')
-
-#                 t = sections[property.section].geometry['t']
-#                 pos_u, pos_l, dia_u, dia_l, A_u, A_l = [], [], [], [], [], []
-
-#                 for name, rebar in property.reinforcement.items():
-#                     pos = rebar['pos']
-#                     dia = rebar['dia']
-#                     A = 0.25 * pi * (dia * 100)**2 / rebar['spacing']
-#                     if pos > 0:
-#                         pos_u.append(pos)
-#                         dia_u.append(dia)
-#                         A_u.append(A)
-#                     else:
-#                         pos_l.append(pos)
-#                         dia_l.append(dia)
-#                         A_l.append(A)
-
-#                 geom = 'GEOM -'
-#                 data = ''
-
-#                 if len(pos_u) == 1:
-
-#                     geom += ' HA {0}[mm]'.format((0.5 * t - pos_u[0]) * 1000)
-#                     data += '     DU {0}[mm] ASU {1}[cm2/m] BSU {2}[cm2/m]\n'.format(dia_u[0] * 1000, A_u[0], A_u[0])
-
-#                 elif len(pos_u) == 2:
-
-#                     no = [0, 1] if pos_u[0] > pos_u[1] else [1, 0]
-#                     HA  = (0.5 * t - pos_u[no[0]]) * 1000
-#                     DHA = abs(pos_u[0] - pos_u[1]) * 1000
-#                     geom += ' HA {0}[mm] DHA {1}[mm]'.format(HA, DHA)
-#                     data += '     DU {0}[mm] ASU {1}[cm2/m] BSU {1}[cm2/m]\n'.format(dia_u[no[0]] * 1000, A_u[no[0]])
-#                     data += '     DU2 {0}[mm] ASU2 {1}[cm2/m] BSU2 {1}[cm2/m]\n'.format(dia_u[no[1]] * 1000, A_u[no[1]])
-
-#                 if len(pos_l) == 1:
-
-#                     geom += ' HB {0}[mm]'.format((0.5 * t + pos_l[0]) * 1000)
-#                     data += '     DL {0}[mm] ASL {1}[cm2/m] BSL {2}[cm2/m]\n'.format(dia_l[0] * 1000, A_l[0], A_l[0])
-
-#                 elif len(pos_l) == 2:
-
-#                     no = [0, 1] if pos_l[0] < pos_l[1] else [1, 0]
-#                     HB  = (0.5 * t + pos_l[no[0]]) * 1000
-#                     DHB = abs(pos_l[0] - pos_l[1]) * 1000
-#                     geom += ' HB {0}[mm] DHB {1}[mm]'.format(HB, DHB)
-#                     data += '     DL {0}[mm] ASL {1}[cm2/m] BSL {1}[cm2/m]\n'.format(dia_l[no[0]] * 1000, A_l[no[0]])
-#                     data += '     DL2 {0}[mm] ASL2 {1}[cm2/m] BSL2 {1}[cm2/m]\n'.format(dia_l[no[1]] * 1000, A_l[no[1]])
-
-#                 f.write(geom + '\n')
-#                 f.write('$\n')
-
-#                 f.write('PARA NOG - WKU 0.1[mm] WKL 0.1[mm]\n')
-#                 for elset in elsets:
-#                     set_index = sets[elset]['index'] + 1
-#                     f.write('PARA NOG {0}\n{1}'.format(set_index, data))
-
-#                 f.write('$\n')
-#                 f.write('$\n')
-
-#         f.write('END\n')
-#         f.write('$\n')
-#         f.write('$\n')

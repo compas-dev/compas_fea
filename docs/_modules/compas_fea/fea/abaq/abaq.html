@@ -69,13 +69,7 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 
-<span class="kn">from</span> <span class="nn">compas_fea.fea</span> <span class="k">import</span> <span class="n">write_input_bcs</span>
-<span class="kn">from</span> <span class="nn">compas_fea.fea</span> <span class="k">import</span> <span class="n">write_input_elements</span>
-<span class="kn">from</span> <span class="nn">compas_fea.fea</span> <span class="k">import</span> <span class="n">write_input_heading</span>
-<span class="kn">from</span> <span class="nn">compas_fea.fea</span> <span class="k">import</span> <span class="n">write_input_materials</span>
-<span class="kn">from</span> <span class="nn">compas_fea.fea</span> <span class="k">import</span> <span class="n">write_input_misc</span>
-<span class="kn">from</span> <span class="nn">compas_fea.fea</span> <span class="k">import</span> <span class="n">write_input_nodes</span>
-<span class="kn">from</span> <span class="nn">compas_fea.fea</span> <span class="k">import</span> <span class="n">write_input_steps</span>
+<span class="kn">from</span> <span class="nn">compas_fea.fea</span> <span class="k">import</span> <span class="n">Writer</span>
 
 <span class="kn">from</span> <span class="nn">compas_fea.fea.abaq</span> <span class="k">import</span> <span class="n">launch_job</span>
 <span class="kn">from</span> <span class="nn">compas_fea.fea.abaq</span> <span class="k">import</span> <span class="n">odb_extract</span>
@@ -106,7 +100,7 @@
 <span class="n">element_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sf&#39;</span><span class="p">,</span> <span class="s1">&#39;sm&#39;</span><span class="p">,</span> <span class="s1">&#39;sk&#39;</span><span class="p">,</span> <span class="s1">&#39;se&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;pe&#39;</span><span class="p">,</span> <span class="s1">&#39;rbfor&#39;</span><span class="p">,</span> <span class="s1">&#39;ctf&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="input_generate"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.input_generate.html#compas_fea.fea.abaq.input_generate">[docs]</a><span class="k">def</span> <span class="nf">input_generate</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+<div class="viewcode-block" id="input_generate"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.input_generate.html#compas_fea.fea.abaq.input_generate">[docs]</a><span class="k">def</span> <span class="nf">input_generate</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Creates the Abaqus .inp file from the Structure object.</span>
 
@@ -116,6 +110,8 @@
 <span class="sd">        The Structure object to read from.</span>
 <span class="sd">    fields : list</span>
 <span class="sd">        Data field requests.</span>
+<span class="sd">    output : bool</span>
+<span class="sd">        Print terminal output.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -131,33 +127,22 @@
     <span class="k">if</span> <span class="s1">&#39;u&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
         <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;u&#39;</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">Writer</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
 
-        <span class="n">constraints</span>   <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">constraints</span>
-        <span class="n">displacements</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">displacements</span>
-        <span class="n">elements</span>      <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">elements</span>
-        <span class="n">interactions</span>  <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">interactions</span>
-        <span class="n">loads</span>         <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">loads</span>
-        <span class="n">materials</span>     <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">materials</span>
-        <span class="n">misc</span>          <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">misc</span>
-        <span class="n">nodes</span>         <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">nodes</span>
-        <span class="n">properties</span>    <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">element_properties</span>
-        <span class="n">sections</span>      <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">sections</span>
-        <span class="n">sets</span>          <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">sets</span>
-        <span class="n">steps</span>         <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">steps</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write_heading</span><span class="p">()</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write_nodes</span><span class="p">()</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write_node_sets</span><span class="p">()</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write_boundary_conditions</span><span class="p">()</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write_materials</span><span class="p">()</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write_elements</span><span class="p">()</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write_element_sets</span><span class="p">()</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write_steps</span><span class="p">()</span>
 
-        <span class="n">write_input_heading</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">)</span>
-        <span class="n">write_input_nodes</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">sets</span><span class="p">)</span>
-        <span class="n">write_input_bcs</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">sets</span><span class="p">)</span>
-        <span class="n">write_input_materials</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
-        <span class="n">write_input_misc</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">misc</span><span class="p">)</span>
-        <span class="n">write_input_elements</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">sections</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
-        <span class="n">write_input_steps</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">loads</span><span class="p">,</span> <span class="n">displacements</span><span class="p">,</span> <span class="n">sets</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>
-</div>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Abaqus input file generated: </span><span class="si">{0}</span><span class="s1"> *****</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Abaqus input file generated: </span><span class="si">{0}</span><span class="s1"> *****</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="launch_process"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.launch_process.html#compas_fea.fea.abaq.launch_process">[docs]</a><span class="k">def</span> <span class="nf">launch_process</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">exe</span><span class="p">,</span> <span class="n">cpus</span><span class="p">):</span>
+<div class="viewcode-block" id="launch_process"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.launch_process.html#compas_fea.fea.abaq.launch_process">[docs]</a><span class="k">def</span> <span class="nf">launch_process</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">exe</span><span class="p">,</span> <span class="n">cpus</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Runs the analysis through Abaqus.</span>
 
@@ -169,6 +154,8 @@
 <span class="sd">        Abaqus exe path to bypass defaults.</span>
 <span class="sd">    cpus : int</span>
 <span class="sd">        Number of CPU cores to use.</span>
+<span class="sd">    output : bool</span>
+<span class="sd">        Print terminal output.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -179,72 +166,56 @@
     <span class="n">name</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">path</span>
     <span class="n">temp</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+
+    <span class="c1"># Analyse</span>
 
     <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
 
     <span class="n">subprocess</span> <span class="o">=</span> <span class="s1">&#39;noGUI=</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">launch_job</span><span class="o">.</span><span class="vm">__file__</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">))</span>
-    <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">success</span>    <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">exe</span><span class="p">:</span>
 
         <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="s1">&#39;cae&#39;</span><span class="p">,</span> <span class="n">subprocess</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">cpus</span><span class="p">),</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">]</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">temp</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">p</span>    <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">temp</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+
             <span class="n">line</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
                 <span class="k">break</span>
             <span class="n">line</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
             <span class="k">if</span> <span class="s1">&#39;COMPLETED&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
                 <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">stdout</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">stderr</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">stdout</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">stderr</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
 
-        <span class="n">args</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> -- </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="s1"> </span><span class="si">{3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">subprocess</span><span class="p">,</span> <span class="n">cpus</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exe</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> </span><span class="si">{1}</span><span class="s1"> -- </span><span class="si">{2}</span><span class="s1"> </span><span class="si">{3}</span><span class="s1"> </span><span class="si">{4}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exe</span><span class="p">,</span> <span class="n">subprocess</span><span class="p">,</span> <span class="n">cpus</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+
         <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="n">toc</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic</span>
 
     <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Analysis successful - analysis time : </span><span class="si">{0}</span><span class="s1"> s *****&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">toc</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Analysis successful - analysis time : </span><span class="si">{0}</span><span class="s1"> s *****&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">toc</span><span class="p">))</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Analysis failed: attempting to read error logs *****&#39;</span><span class="p">)</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">.msg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-
-                <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39; ***ERROR&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39; ***WARNING&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">c</span><span class="p">][:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">c</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="k">pass</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">abaqus.rpy&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-
-                <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="s1">&#39;#: &#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">c</span><span class="p">])</span>
-        <span class="k">except</span><span class="p">:</span></div>
-            <span class="k">pass</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Analysis failed *****&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="extract_data"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.extract_data.html#compas_fea.fea.abaq.extract_data">[docs]</a><span class="k">def</span> <span class="nf">extract_data</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">exe</span><span class="p">):</span>
+<div class="viewcode-block" id="extract_data"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.abaq.extract_data.html#compas_fea.fea.abaq.extract_data">[docs]</a><span class="k">def</span> <span class="nf">extract_data</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">exe</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">return_data</span><span class="p">,</span> <span class="n">components</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Extract data from the Abaqus .odb file.</span>
 
@@ -256,6 +227,12 @@
 <span class="sd">        Data field requests.</span>
 <span class="sd">    exe : str</span>
 <span class="sd">        Abaqus exe path to bypass defaults.</span>
+<span class="sd">    output : bool</span>
+<span class="sd">        Print terminal output.</span>
+<span class="sd">    return_data : bool</span>
+<span class="sd">        Return data back into structure.results.</span>
+<span class="sd">    components : list</span>
+<span class="sd">        Specific components to extract from the fields data.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -271,7 +248,9 @@
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">fields</span><span class="p">]</span>
-    <span class="n">fields</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">fields_dict_from_list</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+    <span class="n">fields</span>     <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+    <span class="n">components</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="k">if</span> <span class="n">components</span> <span class="k">else</span> <span class="s1">&#39;None&#39;</span>
 
     <span class="n">tic1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
 
@@ -279,64 +258,78 @@
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">exe</span><span class="p">:</span>
 
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="s1">&#39;cae&#39;</span><span class="p">,</span> <span class="n">subprocess</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">temp</span><span class="p">]</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">temp</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="s1">&#39;cae&#39;</span><span class="p">,</span> <span class="n">subprocess</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">temp</span><span class="p">]</span>
+        <span class="n">p</span>    <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">temp</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+
             <span class="n">line</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
                 <span class="k">break</span>
             <span class="n">line</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
         <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">stdout</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">stderr</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">stdout</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">stderr</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
 
-        <span class="n">args</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> -- </span><span class="si">{1}</span><span class="s1"> </span><span class="si">{2}</span><span class="s1"> </span><span class="si">{3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">subprocess</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">temp</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exe</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1"> -- </span><span class="si">{2}</span><span class="s1"> </span><span class="si">{3}</span><span class="s1"> </span><span class="si">{4}</span><span class="s1"> </span><span class="si">{5}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exe</span><span class="p">,</span> <span class="n">subprocess</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">temp</span><span class="p">))</span>
 
     <span class="n">toc1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic1</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">***** Data extracted from Abaqus .odb file : </span><span class="si">{0:.3f}</span><span class="s1"> s *****</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">toc1</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">***** Data extracted from Abaqus .odb file : </span><span class="si">{0:.3f}</span><span class="s1"> s *****</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">toc1</span><span class="p">))</span>
 
     <span class="c1"># Save results to Structure</span>
 
-    <span class="k">try</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">return_data</span><span class="p">:</span>
 
-        <span class="n">tic2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">-results.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">tic2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">-info.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">info</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">-results.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Saving step: </span><span class="si">{0}</span><span class="s1"> *****&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">))</span>
-            <span class="k">for</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">]:</span>
-                <span class="k">if</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;nodal&#39;</span><span class="p">,</span> <span class="s1">&#39;element&#39;</span><span class="p">]:</span>
-                    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">]:</span>
-                        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-                        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">][</span><span class="n">field</span><span class="p">]:</span>
-                            <span class="n">data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
-                        <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">][</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">-info.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">info</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
-        <span class="n">structure</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">results</span>
+            <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
 
-        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
-            <span class="n">structure</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="s1">&#39;info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="n">step</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">]:</span>
 
-        <span class="n">toc2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic2</span>
+                    <span class="k">if</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;nodal&#39;</span><span class="p">,</span> <span class="s1">&#39;element&#39;</span><span class="p">]:</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Saving data to structure.results successful : </span><span class="si">{0:.3f}</span><span class="s1"> s *****</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">toc2</span><span class="p">))</span>
+                        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">]:</span>
 
-    <span class="k">except</span><span class="p">:</span>
-</div>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Saving data to structure.results unsuccessful *****&#39;</span><span class="p">)</span>
+                            <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+
+                            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">][</span><span class="n">field</span><span class="p">]:</span>
+                                <span class="n">data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">][</span><span class="n">field</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+
+                            <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">dtype</span><span class="p">][</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+
+            <span class="n">structure</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">results</span>
+
+            <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+                <span class="n">structure</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="s1">&#39;info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="n">step</span><span class="p">]</span>
+
+            <span class="n">toc2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tic2</span>
+
+            <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Saving data to structure.results successful : </span><span class="si">{0:.3f}</span><span class="s1"> s *****</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">toc2</span><span class="p">))</span>
+
+        <span class="k">except</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** Saving data to structure.results unsuccessful *****&#39;</span><span class="p">)</span></div>
 </code></pre></div>
                         
                     
@@ -362,11 +355,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Dec 10, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
             
         </footer>
 

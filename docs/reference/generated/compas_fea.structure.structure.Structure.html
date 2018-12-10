@@ -77,123 +77,251 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to save all compas_fea associated files.</p></li>
 <li><p><strong>name</strong> (<em>str</em>) – Name of the structure.</p></li>
-<li><p><strong>path</strong> (<em>str</em>) – Path to save files.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.constraints">
 <code class="descname">constraints</code></dt>
-<dd><p><em>dic</em> – Constraint objects.</p>
+<dd><p>Constraint objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.displacements">
 <code class="descname">displacements</code></dt>
-<dd><p><em>dic</em> – Displacement objects.</p>
+<dd><p>Displacement objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.elements">
 <code class="descname">elements</code></dt>
-<dd><p><em>dic</em> – Element objects.</p>
+<dd><p>Element objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.element_index">
 <code class="descname">element_index</code></dt>
-<dd><p><em>dic</em> – Index of elements (element centroid geometric keys).</p>
+<dd><p>Index of elements (element centroid geometric keys).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.element_properties">
 <code class="descname">element_properties</code></dt>
-<dd><p><em>dic</em> – Element properties objects.</p>
+<dd><p>ElementProperties objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.interactions">
 <code class="descname">interactions</code></dt>
-<dd><p><em>dic</em> – Interaction objects.</p>
+<dd><p>Interaction objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.loads">
 <code class="descname">loads</code></dt>
-<dd><p><em>dic</em> – Load objects.</p>
+<dd><p>Load objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.materials">
 <code class="descname">materials</code></dt>
-<dd><p><em>dic</em> – Material objects.</p>
+<dd><p>Material objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.misc">
 <code class="descname">misc</code></dt>
-<dd><p><em>dic</em> – Misc objects.</p>
+<dd><p>Misc objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.name">
 <code class="descname">name</code></dt>
-<dd><p><em>str</em> – Structure name.</p>
+<dd><p>Structure name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.nodes">
 <code class="descname">nodes</code></dt>
-<dd><p><em>dic</em> – Node co-ordinates and local axes.</p>
+<dd><p>Node objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.node_index">
 <code class="descname">node_index</code></dt>
-<dd><p><em>dic</em> – Index of nodes (node geometric keys).</p>
+<dd><p>Index of nodes (node geometric keys).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.path">
 <code class="descname">path</code></dt>
-<dd><p><em>str</em> – Path to save files.</p>
+<dd><p>Path to save files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.results">
 <code class="descname">results</code></dt>
-<dd><p><em>dic</em> – Dictionary containing analysis results.</p>
+<dd><p>Dictionary containing analysis results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.sections">
 <code class="descname">sections</code></dt>
-<dd><p><em>dic</em> – Section objects.</p>
+<dd><p>Section objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.sets">
 <code class="descname">sets</code></dt>
-<dd><p><em>dic</em> – Node, element and surface sets.</p>
+<dd><p>Set objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.steps">
 <code class="descname">steps</code></dt>
-<dd><p><em>dic</em> – Step objects.</p>
+<dd><p>Step objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.steps_order">
 <code class="descname">steps_order</code></dt>
-<dd><p><em>list</em> – Sorted list of Step object names.</p>
+<dd><p>Sorted list of Step object names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)">list</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="compas_fea.structure.structure.Structure.tol">
 <code class="descname">tol</code></dt>
-<dd><p><em>str</em> – Geometric key tolerance.</p>
+<dd><p>Geometric key tolerance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="compas_fea.structure.structure.Structure.virtual_nodes">
+<code class="descname">virtual_nodes</code></dt>
+<dd><p>Node objects for virtual nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="compas_fea.structure.structure.Structure.virtual_elements">
+<code class="descname">virtual_elements</code></dt>
+<dd><p>Element objects for virtual elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="compas_fea.structure.structure.Structure.virtual_element_index">
+<code class="descname">virtual_element_index</code></dt>
+<dd><p>Index of virtual elements (element centroid geometric keys).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="field-list simple">
@@ -212,55 +340,55 @@
 <td><p>Initialize self.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_constraint</span></code>(constraint)</p></td>
-<td><p>Adds a Constraint object to structure.</p></td>
+<td><p>Adds a Constraint object to structure.constraints.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_displacement</span></code>(displacement)</p></td>
-<td><p>Adds a Displacement object to structure.</p></td>
+<td><p>Adds a Displacement object to structure.displacements.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_displacements</span></code>(displacements)</p></td>
-<td><p>Adds Displacement objects to structure.</p></td>
+<td><p>Adds Displacement objects to structure.displacements.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_element</span></code>(nodes, type[, acoustic, …])</p></td>
-<td><p>Adds an element to structure.</p></td>
+<td><p>Adds an element to structure.elements with centroid geometric key.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_element_properties</span></code>(element_properties)</p></td>
-<td><p>Adds ElementProperties object(s) to structure.</p></td>
+<td><p>Adds ElementProperties object(s) to structure.element_properties.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_element_to_element_index</span></code>(key, nodes[, …])</p></td>
 <td><p>Adds the element to the element_index dictionary.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_elements</span></code>(elements, type[, acoustic, …])</p></td>
-<td><p>Adds multiple elements of the same type to structure.</p></td>
+<td><p>Adds multiple elements of the same type to structure.elements.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_interaction</span></code>(interaction)</p></td>
-<td><p>Adds an Interaction object to structure.</p></td>
+<td><p>Adds an Interaction object to structure.interactions.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_load</span></code>(load)</p></td>
-<td><p>Adds a Load object to structure.</p></td>
+<td><p>Adds a Load object to structure.loads.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_loads</span></code>(loads)</p></td>
-<td><p>Adds Load objects to structure.</p></td>
+<td><p>Adds Load objects to structure.loads.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_material</span></code>(material)</p></td>
-<td><p>Adds a Material object to structure.</p></td>
+<td><p>Adds a Material object to structure.materials.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_materials</span></code>(materials)</p></td>
-<td><p>Adds Material objects to structure.</p></td>
+<td><p>Adds Material objects to structure.materials.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_misc</span></code>(misc)</p></td>
-<td><p>Adds a Misc object to structure.</p></td>
+<td><p>Adds a Misc object to structure.misc.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_nodal_element</span></code>(node, type[, virtual_node])</p></td>
-<td><p>Adds a nodal element to structure.</p></td>
+<td><p>Adds a nodal element to structure.elements with the possibility of adding a coincident virtual node.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_node</span></code>(xyz[, ex, ey, ez])</p></td>
-<td><p>Adds a node to structure.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_node</span></code>(xyz[, ex, ey, ez, mass, virtual])</p></td>
+<td><p>Adds a node to structure.nodes at co-ordinates xyz with local frame [ex, ey, ez].</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_node_to_node_index</span></code>(key, xyz)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_node_to_node_index</span></code>(key, xyz[, virtual])</p></td>
 <td><p>Adds the node to the node_index dictionary.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_nodes</span></code>(nodes[, ex, ey, ez])</p></td>
-<td><p>Adds a list of nodes to structure.</p></td>
+<td><p>Adds a list of nodes to structure.nodes at given co-ordinates all with local frame [ex, ey, ez].</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_nodes_elements_from_mesh</span></code>(mesh, element_type)</p></td>
 <td><p>Adds the nodes and faces of a Mesh to the Structure object.</p></td>
@@ -269,25 +397,25 @@
 <td><p>Adds the nodes and edges of a Network to the Structure object.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_section</span></code>(section)</p></td>
-<td><p>Adds a Section object to structure.</p></td>
+<td><p>Adds a Section object to structure.sections.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_sections</span></code>(sections)</p></td>
-<td><p>Adds Section objects to structure.</p></td>
+<td><p>Adds Section objects to structure.sections.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_set</span></code>(name, type, selection)</p></td>
-<td><p>Adds a node, element or surface set to structure.</p></td>
+<td><p>Adds a node, element or surface set to structure.sets.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_step</span></code>(step)</p></td>
-<td><p>Adds a Step object to structure.</p></td>
+<td><p>Adds a Step object to structure.steps.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_steps</span></code>(steps)</p></td>
-<td><p>Adds Step objects to structure.</p></td>
+<td><p>Adds Step objects to structure.steps.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">analyse</span></code>(software[, exe, cpus, license, delete])</p></td>
-<td><p>Runs the analysis through the chosen FEA software/library.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">analyse</span></code>(software[, exe, cpus, license, …])</p></td>
+<td><p>Runs the analysis through the chosen FEA software / library.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">analyse_and_extract</span></code>(software[, fields, exe, …])</p></td>
-<td><p>Runs the analysis through the chosen FEA software/library and extracts data.</p></td>
+<td><p>Runs the analysis through the chosen FEA software / library and extracts data.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_element_exists</span></code>(nodes[, xyz, virtual])</p></td>
 <td><p>Check if an element already exists based on the nodes it connects to or its centroid.</p></td>
@@ -298,17 +426,17 @@
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">edit_element</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">edit_node</span></code>(key, attr_dic)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">edit_node</span></code>(key, attr_dict)</p></td>
 <td><p>Edit a node’s data.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">element_centroid</span></code>(element)</p></td>
 <td><p>Return the centroid of an element.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">element_count</span></code>()</p></td>
-<td><p>Return the number of elements in structure.</p></td>
+<td><p>Return the number of elements in structure.elements.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_data</span></code>(software[, fields, steps, exe, …])</p></td>
-<td><p>Extracts data from the FE software’s output.</p></td>
+<td><p>Extracts data from the analysis output files.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Structure.fields_dic_from_list</span></code></p></td>
 <td><p></p></td>
@@ -320,25 +448,25 @@
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_element_results</span></code>(step, field[, elements])</p></td>
-<td><p>Extract element results from self.</p></td>
+<td><p>Extract element results from self.results.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_nodal_results</span></code>(step, field[, nodes])</p></td>
-<td><p>Extract nodal results from self.</p></td>
+<td><p>Extract nodal results from self.results.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_from_obj</span></code>()</p></td>
-<td><p>Imports a Structure object from an .</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_from_obj</span></code>(filename[, output])</p></td>
+<td><p>Imports a Structure object from an .obj file through Pickle.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_element_index_dic</span></code>()</p></td>
-<td><p>Makes an element_index dictionary from existing structure.</p></td>
+<td><p>Makes an element_index dictionary from existing structure.elements.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_node_index_dic</span></code>()</p></td>
-<td><p>Makes a node_index dictionary from existing structure.</p></td>
+<td><p>Makes a node_index dictionary from existing structure.nodes.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">node_bounds</span></code>()</p></td>
 <td><p>Return the bounds formed by the Structure’s nodal co-ordinates.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">node_count</span></code>()</p></td>
-<td><p>Return the number of nodes in structure.</p></td>
+<td><p>Return the number of nodes in structure.nodes.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">node_xyz</span></code>(node)</p></td>
 <td><p>Return the xyz co-ordinates of a node.</p></td>
@@ -346,8 +474,8 @@
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes_xyz</span></code>([nodes])</p></td>
 <td><p>Return the xyz co-ordinates of given or all nodes.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_to_obj</span></code>()</p></td>
-<td><p>Exports the Structure object to an .</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_to_obj</span></code>([output])</p></td>
+<td><p>Exports the Structure object to an .obj file through Pickle.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale_displacements</span></code>(displacements, factor)</p></td>
 <td><p>Scales displacements by a given factor.</p></td>
@@ -356,15 +484,15 @@
 <td><p>Scales loads by a given factor.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_steps_order</span></code>(order)</p></td>
-<td><p>Sets the order the Steps will be analysed.</p></td>
+<td><p>Sets the order that the Steps will be analysed.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code>()</p></td>
-<td><p>Prints a summary of the Structure object contents.</p></td>
+<td><p>Prints a summary of the Structure object.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">view</span></code>()</p></td>
-<td><p>Starts the Pyside app for visualisation.</p></td>
+<td><p>Starts the PyQt app for visualisation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_input_file</span></code>(software[, fields])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_input_file</span></code>(software[, fields, output, …])</p></td>
 <td><p>Writes the FE software’s input file.</p></td>
 </tr>
 </tbody>
@@ -397,11 +525,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Dec 10, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
             
         </footer>
 

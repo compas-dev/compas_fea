@@ -110,13 +110,18 @@
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;compas_fea </span><span class="si">{0}</span><span class="s1"> object&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:&lt;13}</span><span class="s1"> : </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)))</span>
-</div>
+
         <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">(</span><span class="si">{1}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="GeneralStep"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.step.GeneralStep.html#compas_fea.structure.step.GeneralStep">[docs]</a><span class="k">class</span> <span class="nc">GeneralStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -170,8 +175,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span>          <span class="o">=</span> <span class="nb">type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span>     <span class="o">=</span> <span class="n">tolerance</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span>         <span class="o">=</span> <span class="n">state</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;increments&#39;</span><span class="p">,</span> <span class="s1">&#39;iterations&#39;</span><span class="p">,</span> <span class="s1">&#39;factor&#39;</span><span class="p">,</span> <span class="s1">&#39;nlgeom&#39;</span><span class="p">,</span> <span class="s1">&#39;nlmat&#39;</span><span class="p">,</span> <span class="s1">&#39;displacements&#39;</span><span class="p">,</span> <span class="s1">&#39;loads&#39;</span><span class="p">,</span></div>
-                               <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;tolerance&#39;</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;increments&#39;</span><span class="p">,</span> <span class="s1">&#39;iterations&#39;</span><span class="p">,</span> <span class="s1">&#39;factor&#39;</span><span class="p">,</span> <span class="s1">&#39;nlgeom&#39;</span><span class="p">,</span> <span class="s1">&#39;nlmat&#39;</span><span class="p">,</span> <span class="s1">&#39;displacements&#39;</span><span class="p">,</span> <span class="s1">&#39;loads&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;tolerance&#39;</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">])</span></div>
 
 
 <span class="k">class</span> <span class="nc">HeatStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -246,8 +251,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">modes</span>         <span class="o">=</span> <span class="n">modes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">increments</span>    <span class="o">=</span> <span class="n">increments</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="n">displacements</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span>          <span class="o">=</span> <span class="nb">type</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;modes&#39;</span><span class="p">,</span> <span class="s1">&#39;increments&#39;</span><span class="p">,</span> <span class="s1">&#39;displacements&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span>          <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;modes&#39;</span><span class="p">,</span> <span class="s1">&#39;increments&#39;</span><span class="p">,</span> <span class="s1">&#39;displacements&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="HarmonicStep"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.step.HarmonicStep.html#compas_fea.structure.step.HarmonicStep">[docs]</a><span class="k">class</span> <span class="nc">HarmonicStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -287,8 +292,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">loads</span>         <span class="o">=</span> <span class="n">loads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">factor</span>        <span class="o">=</span> <span class="n">factor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">damping</span>       <span class="o">=</span> <span class="n">damping</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span>          <span class="o">=</span> <span class="nb">type</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;freq_list&#39;</span><span class="p">,</span> <span class="s1">&#39;displacements&#39;</span><span class="p">,</span> <span class="s1">&#39;loads&#39;</span><span class="p">,</span> <span class="s1">&#39;factor&#39;</span><span class="p">,</span> <span class="s1">&#39;damping&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span>          <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;freq_list&#39;</span><span class="p">,</span> <span class="s1">&#39;displacements&#39;</span><span class="p">,</span> <span class="s1">&#39;loads&#39;</span><span class="p">,</span> <span class="s1">&#39;factor&#39;</span><span class="p">,</span> <span class="s1">&#39;damping&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="BucklingStep"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.step.BucklingStep.html#compas_fea.structure.step.BucklingStep">[docs]</a><span class="k">class</span> <span class="nc">BucklingStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -331,8 +336,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="n">displacements</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loads</span>         <span class="o">=</span> <span class="n">loads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span>          <span class="o">=</span> <span class="nb">type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">step</span>          <span class="o">=</span> <span class="n">step</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;modes&#39;</span><span class="p">,</span> <span class="s1">&#39;increments&#39;</span><span class="p">,</span> <span class="s1">&#39;factor&#39;</span><span class="p">,</span> <span class="s1">&#39;displacements&#39;</span><span class="p">,</span> <span class="s1">&#39;loads&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;step&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step</span>          <span class="o">=</span> <span class="n">step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;modes&#39;</span><span class="p">,</span> <span class="s1">&#39;increments&#39;</span><span class="p">,</span> <span class="s1">&#39;factor&#39;</span><span class="p">,</span> <span class="s1">&#39;displacements&#39;</span><span class="p">,</span> <span class="s1">&#39;loads&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;step&#39;</span><span class="p">])</span></div>
 
 
 <span class="k">class</span> <span class="nc">AcousticStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -410,11 +415,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Dec 10, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
             
         </footer>
 

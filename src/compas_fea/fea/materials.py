@@ -81,7 +81,8 @@ class Materials(object):
                 # Elastic
                 # -------
 
-                if mtype in ['ElasticIsotropic', 'ElasticPlastic', 'Steel', 'Concrete', 'Stiff']:
+                if mtype in ['ElasticIsotropic', 'ElasticPlastic', 'Steel', 'Concrete', 'Stiff',
+                             'ConcreteSmearedCrack', 'ConcreteDamagedPlasticity']:
 
                     self.write_line('*ELASTIC')
                     self.blank_line()
@@ -93,12 +94,13 @@ class Materials(object):
                     if not tension:
                         self.write_line('*NO TENSION')
 
-                # Plastic
-                # -------
+                # Compression
+                # -----------
 
-                if mtype in ['ElasticPlastic', 'Steel', 'Concrete']:
+                if mtype in ['ElasticPlastic', 'Steel', 'Concrete', 'ConcreteSmearedCrack',
+                             'ConcreteDamagedPlasticity']:
 
-                    if mtype == 'Concrete':
+                    if mtype in ['Concrete', 'ConcreteSmearedCrack']:
 
                         self.blank_line()
                         self.write_line('*CONCRETE')
@@ -107,19 +109,34 @@ class Materials(object):
                         for i, j in zip(compression['f'], compression['e']):
                             self.write_line('{0}, {1}'.format(i, j))
 
+                    elif mtype == 'ConcreteDamagedPlasticity':
+
+                        self.blank_line()
+                        self.write_line('*CONCRETE DAMAGED PLASTICITY')
+                        self.blank_line()
+
+                        self.write_line(', '.join([str(i) for i in material.damage]))
+
+                        self.blank_line()
+                        self.write_line('*CONCRETE COMPRESSION HARDENING')
+                        self.blank_line()
+
+                        for i in material.hardening:
+                            self.write(', '.join([str(j) for j in i]))
+
                     else:
 
                         self.blank_line()
                         self.write_line('*PLASTIC')
                         self.blank_line()
 
-                        for i, j in zip(tension['f'], tension['e']):
-                            self.write_line('{0}, {1}'.format(i, j))
+                        for i, j in zip(compression['f'], compression['e']):
+                            self.write_line('{0}, {1}'.format(abs(i), abs(j)))
 
                 # Tension
                 # -------
 
-                if mtype in ['Concrete']:
+                if mtype in ['Concrete', 'ConcreteSmearedCrack']:
 
                     self.blank_line()
                     self.write_line('*TENSION STIFFENING')
@@ -135,6 +152,15 @@ class Materials(object):
                     a, b = material.fratios
 
                     self.write_line('{0}, {1}'.format(a, b))
+
+                elif mtype == 'ConcreteDamagedPlasticity':
+
+                    self.blank_line()
+                    self.write_line('*CONCRETE TENSION STIFFENING, TYPE=GFI')
+                    self.blank_line()
+
+                    for i in material.stiffening:
+                        self.write_line(', '.join([str(j) for j in i]))
 
                 # Density
                 # -------
@@ -163,124 +189,17 @@ class Materials(object):
         self.blank_line()
 
 
+# f.write('*CONDUCTIVITY\n')
+# f.write('** k[W/mK]\n')
+# f.write('**\n')
 
-        #     # ElasticOrthotropic
+# for i in material.conductivity:
+#     f.write(', '.join([str(j) for j in i]) + '\n')
 
-        #     elif mtype == 'ElasticOrthotropic':
-        #         raise NotImplementedError
+# f.write('**\n')
+# f.write('*SPECIFIC HEAT\n')
+# f.write('** c[J/kgK]\n')
+# f.write('**\n')
 
-        #     # Cracked Concrete
-
-        #     elif mtype == 'ConcreteSmearedCrack':
-        #         _write_cracked_concrete(f, software, E, v, compression, tension, material, c)
-
-        #     # Concrete
-
-        #     elif mtype == 'Concrete':
-        #         _write_concrete(f, software, E, v, p, compression, tension, m_index, material, c)
-
-        #     # Concrete damaged plasticity
-
-        #     elif mtype == 'ConcreteDamagedPlasticity':
-        #         _write_plasticity_concrete(f, software, material, c, E, v)
-
-        #     # Thermal
-
-        #     elif mtype == 'ThermalMaterial':
-        #         _write_thermal(f, software, material, c)
-
-
-
-#         sets          = self.structure.sets
-#         steps         = self.structure.steps
-#         displacements = self.structure.displacements
-
-#         try:
-
-#             step = steps[self.structure.steps_order[0]]
-
-#             if isinstance(step.displacements, str):
-#                 step.displacements = [step.displacements]
-
-
-#         except:
-
-#             print('***** Error writing boundary conditions, check Step exists in structure.steps_order[0] *****')
-
-#         self.blank_line()
-#         self.blank_line()
-
-
-
-
-# def _write_plasticity_concrete(f, software, material, c, E, v):
-
-#     if software == 'abaqus':
-
-#         f.write('*ELASTIC\n')
-#         f.write('** E[Pa], v[-]\n')
-#         f.write('**\n')
-#         f.write('{0}, {1}\n'.format(E, v))
-#         f.write('**\n')
-
-#         f.write('*CONCRETE DAMAGED PLASTICITY\n')
-#         f.write('** psi[deg], e[-], sr[-], Kc[-], mu[-]\n')
-#         f.write('**\n')
-#         f.write(', '.join([str(i) for i in material.damage]) + '\n')
-#         f.write('**\n')
-
-#         f.write('*CONCRETE COMPRESSION HARDENING\n')
-#         f.write('** fy[Pa], eu[-], , T[C]\n')
-#         f.write('**\n')
-
-#         for i in material.hardening:
-#             f.write(', '.join([str(j) for j in i]) + '\n')
-
-#         f.write('**\n')
-#         f.write('*CONCRETE TENSION STIFFENING, TYPE=GFI\n')
-#         f.write('** ft[Pa], et[-], etd[1/s], T[C]\n')
-#         f.write('**\n')
-
-#         for i in material.stiffening:
-#             f.write(', '.join([str(j) for j in i]) + '\n')
-
-#     elif software == 'opensees':
-
-#         pass
-
-#     elif software == 'sofistik':
-
-#         pass
-
-#     elif software == 'ansys':
-
-#         pass
-
-#     f.write('{0}\n'.format(c))
-
-
-# # ==============================================================================
-# # Thermal
-# # ==============================================================================
-
-# def _write_thermal(f, software, material, c):
-
-#     if software == 'abaqus':
-
-#         f.write('*CONDUCTIVITY\n')
-#         f.write('** k[W/mK]\n')
-#         f.write('**\n')
-
-#         for i in material.conductivity:
-#             f.write(', '.join([str(j) for j in i]) + '\n')
-
-#         f.write('**\n')
-#         f.write('*SPECIFIC HEAT\n')
-#         f.write('** c[J/kgK]\n')
-#         f.write('**\n')
-
-#         for i in material.sheat:
-#             f.write(', '.join([str(j) for j in i]) + '\n')
-
-#     f.write('{0}\n'.format(c))
-
+# for i in material.sheat:
+#     f.write(', '.join([str(j) for j in i]) + '\n')

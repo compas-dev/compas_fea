@@ -272,12 +272,11 @@ def tets_from_vertices_faces(vertices, faces, volume=None):
     """
 
     try:
-
         info = MeshInfo()
         info.set_points(vertices)
         info.set_facets(faces)
 
-        tets = build(info, max_volume=volume, allow_volume_steiner=False)
+        tets     = build(info, max_volume=volume)
         points   = [list(i) for i in list(tets.points)]
         elements = [list(i) for i in list(tets.elements)]
 

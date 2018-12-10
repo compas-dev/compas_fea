@@ -23,7 +23,7 @@
         
         
         
-            <link rel="prev" title="input_generate" href="generated/compas_fea.fea.sofistik.input_generate.html" />
+            <link rel="prev" title="launch_process" href="generated/compas_fea.fea.opensees.launch_process.html" />
         
 
         <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -150,6 +150,36 @@
 </tbody>
 </table>
 </div>
+<div class="section" id="node">
+<h2>node</h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.structure.node</span></code></p>
+<table class="longtable docutils">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.node.Node.html#compas_fea.structure.node.Node" title="compas_fea.structure.node.Node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Node</span></code></a>(key, xyz, ex, ey, ez, mass)</p></td>
+<td><p>Initialises base Node object.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="set">
+<h2>set</h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.structure.set</span></code></p>
+<table class="longtable docutils">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.set.Set.html#compas_fea.structure.set.Set" title="compas_fea.structure.set.Set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code></a>(name, type, selection, index)</p></td>
+<td><p>Initialises base Set object.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="element">
 <h2>element</h2>
 <p><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea.structure.element</span></code></p>
@@ -261,28 +291,31 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.Concrete.html#compas_fea.structure.material.Concrete" title="compas_fea.structure.material.Concrete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Concrete</span></code></a>(name, fck[, v, p, fr, sf])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.Material.html#compas_fea.structure.material.Material" title="compas_fea.structure.material.Material"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Material</span></code></a>(name)</p></td>
+<td><p>Initialises base Material object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.Concrete.html#compas_fea.structure.material.Concrete" title="compas_fea.structure.material.Concrete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Concrete</span></code></a>(name, fck[, v, p, fr, sf])</p></td>
 <td><p>Elastic and plastic-cracking Eurocode based concrete material.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.ConcreteSmearedCrack.html#compas_fea.structure.material.ConcreteSmearedCrack" title="compas_fea.structure.material.ConcreteSmearedCrack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConcreteSmearedCrack</span></code></a>(name, E, v, p, fc, ec, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.ConcreteSmearedCrack.html#compas_fea.structure.material.ConcreteSmearedCrack" title="compas_fea.structure.material.ConcreteSmearedCrack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConcreteSmearedCrack</span></code></a>(name, E, v, p, fc, ec, …)</p></td>
 <td><p>Elastic and plastic, cracking concrete material.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.ConcreteDamagedPlasticity.html#compas_fea.structure.material.ConcreteDamagedPlasticity" title="compas_fea.structure.material.ConcreteDamagedPlasticity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConcreteDamagedPlasticity</span></code></a>(name, E, v, p, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.ConcreteDamagedPlasticity.html#compas_fea.structure.material.ConcreteDamagedPlasticity" title="compas_fea.structure.material.ConcreteDamagedPlasticity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConcreteDamagedPlasticity</span></code></a>(name, E, v, p, …)</p></td>
 <td><p>Damaged plasticity isotropic and homogeneous material.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.Stiff.html#compas_fea.structure.material.Stiff" title="compas_fea.structure.material.Stiff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stiff</span></code></a>(name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.Stiff.html#compas_fea.structure.material.Stiff" title="compas_fea.structure.material.Stiff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stiff</span></code></a>(name)</p></td>
 <td><p>Elastic and very stiff massless material.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.ElasticIsotropic.html#compas_fea.structure.material.ElasticIsotropic" title="compas_fea.structure.material.ElasticIsotropic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElasticIsotropic</span></code></a>(name, E, v, p[, tension, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.ElasticIsotropic.html#compas_fea.structure.material.ElasticIsotropic" title="compas_fea.structure.material.ElasticIsotropic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElasticIsotropic</span></code></a>(name, E, v, p[, tension, …])</p></td>
 <td><p>Elastic, isotropic and homogeneous material.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.ElasticOrthotropic.html#compas_fea.structure.material.ElasticOrthotropic" title="compas_fea.structure.material.ElasticOrthotropic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElasticOrthotropic</span></code></a>(name, Ex, Ey, Ez, vxy, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.ElasticOrthotropic.html#compas_fea.structure.material.ElasticOrthotropic" title="compas_fea.structure.material.ElasticOrthotropic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElasticOrthotropic</span></code></a>(name, Ex, Ey, Ez, vxy, …)</p></td>
 <td><p>Elastic, orthotropic and homogeneous material.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.ElasticPlastic.html#compas_fea.structure.material.ElasticPlastic" title="compas_fea.structure.material.ElasticPlastic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElasticPlastic</span></code></a>(name, E, v, p, f, e)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.ElasticPlastic.html#compas_fea.structure.material.ElasticPlastic" title="compas_fea.structure.material.ElasticPlastic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElasticPlastic</span></code></a>(name, E, v, p, f, e)</p></td>
 <td><p>Elastic and plastic, isotropic and homogeneous material.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.Steel.html#compas_fea.structure.material.Steel" title="compas_fea.structure.material.Steel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Steel</span></code></a>(name[, fy, fu, eu, E, v, p, id, sf])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.material.Steel.html#compas_fea.structure.material.Steel" title="compas_fea.structure.material.Steel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Steel</span></code></a>(name[, fy, fu, eu, E, v, p, id, sf])</p></td>
 <td><p>Bi-linear non-linear steel with yield stress.</p></td>
 </tr>
 </tbody>
@@ -343,24 +376,27 @@
 <td><p>Solid rectangular cross-section for beam elements.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.ShellSection.html#compas_fea.structure.section.ShellSection" title="compas_fea.structure.section.ShellSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ShellSection</span></code></a>(name, t)</p></td>
-<td><p>Section for shell and membrane elements.</p></td>
+<td><p>Section for shell elements.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.SolidSection.html#compas_fea.structure.section.SolidSection" title="compas_fea.structure.section.SolidSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SolidSection</span></code></a>(name)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.MembraneSection.html#compas_fea.structure.section.MembraneSection" title="compas_fea.structure.section.MembraneSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MembraneSection</span></code></a>(name, t)</p></td>
+<td><p>Section for membrane elements.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.SolidSection.html#compas_fea.structure.section.SolidSection" title="compas_fea.structure.section.SolidSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SolidSection</span></code></a>(name)</p></td>
 <td><p>Section for solid elements.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.TrapezoidalSection.html#compas_fea.structure.section.TrapezoidalSection" title="compas_fea.structure.section.TrapezoidalSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TrapezoidalSection</span></code></a>(name, b1, b2, h)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.TrapezoidalSection.html#compas_fea.structure.section.TrapezoidalSection" title="compas_fea.structure.section.TrapezoidalSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TrapezoidalSection</span></code></a>(name, b1, b2, h)</p></td>
 <td><p>Solid trapezoidal cross-section for beam elements.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.TrussSection.html#compas_fea.structure.section.TrussSection" title="compas_fea.structure.section.TrussSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TrussSection</span></code></a>(name, A)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.TrussSection.html#compas_fea.structure.section.TrussSection" title="compas_fea.structure.section.TrussSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TrussSection</span></code></a>(name, A)</p></td>
 <td><p>For use with truss elements.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.StrutSection.html#compas_fea.structure.section.StrutSection" title="compas_fea.structure.section.StrutSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StrutSection</span></code></a>(name, A)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.StrutSection.html#compas_fea.structure.section.StrutSection" title="compas_fea.structure.section.StrutSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StrutSection</span></code></a>(name, A)</p></td>
 <td><p>For use with strut elements.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.TieSection.html#compas_fea.structure.section.TieSection" title="compas_fea.structure.section.TieSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TieSection</span></code></a>(name, A)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.TieSection.html#compas_fea.structure.section.TieSection" title="compas_fea.structure.section.TieSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TieSection</span></code></a>(name, A)</p></td>
 <td><p>For use with tie elements.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.SpringSection.html#compas_fea.structure.section.SpringSection" title="compas_fea.structure.section.SpringSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpringSection</span></code></a>(name[, forces, displacements, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.structure.section.SpringSection.html#compas_fea.structure.section.SpringSection" title="compas_fea.structure.section.SpringSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpringSection</span></code></a>(name[, forces, displacements, …])</p></td>
 <td><p>For use with spring elements.</p></td>
 </tr>
 </tbody>
@@ -419,11 +455,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Dec 10, 2018.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
             
         </footer>
 

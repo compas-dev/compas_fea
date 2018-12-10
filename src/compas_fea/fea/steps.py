@@ -45,7 +45,8 @@ class Steps(object):
 
         try:
             os.stat(temp)
-            # delete folder
+            for file in os.listdir(temp):
+                os.remove(os.path.join(temp, file))
         except:
             os.mkdir(temp)
 
@@ -56,17 +57,13 @@ class Steps(object):
             step       = steps[key]
             stype      = step.__name__
             s_index    = step.index
-    #         state      = getattr(step, 'state', None)
             factor     = getattr(step, 'factor', 1)
             increments = getattr(step, 'increments', 100)
             iterations = getattr(step, 'iterations', 100)
             tolerance  = getattr(step, 'tolerance', None)
             method     = getattr(step, 'type')
-    #         # scopy      = getattr(step, 'step', None)
             modes      = getattr(step, 'modes', None)
-
-            nlgeom = 'YES' if getattr(step, 'nlgeom', None) else 'NO'
-            # nlmat  = 'YES' if getattr(step, 'nlmat', None) else 'NO'
+            nlgeom     = 'YES' if getattr(step, 'nlgeom', None) else 'NO'
 
 
             # =====================================================================================================
@@ -190,6 +187,22 @@ class Steps(object):
                                 W = - fact * node.mass * 9.81
                                 self.write_line('load {0} {1} {2} {3}'.format(nkey + 1, gx * W, gy * W, gz * W))
 
+                        # LineLoad
+                        # --------
+
+                        elif ltype == 'LineLoad':
+
+                            if axes == 'global':
+
+                                raise NotImplementedError
+
+                            elif axes == 'local':
+
+                                elements = ' '.join([str(i + 1) for i in sets[k].selection])
+                                lx = -com['x'] * fact
+                                ly = -com['y'] * fact
+                                self.write_line('eleLoad -ele {0} -type -beamUniform {1} {2}'.format(elements, ly, lx))
+
                     # -------------------------------------------------------------------------------------------------
                     # Abaqus
                     # -------------------------------------------------------------------------------------------------
@@ -252,6 +265,30 @@ class Steps(object):
                                 for ci, dof in enumerate(dofs[:3], 1):
                                     if com[node][dof]:
                                         self.write_line('{0}, {1}, {2}'.format(ni, ci, com[node][dof] * fact))
+
+                        # LineLoad
+                        # --------
+
+                        elif ltype == 'LineLoad':
+
+                            for k in elements:
+
+                                self.write_line('*DLOAD')
+                                self.blank_line()
+
+                                if axes == 'global':
+
+                                    for dof in dofs[:3]:
+                                        if com[dof]:
+                                            self.write_line('{0}, P{1}, {2}'.format(k, dof.upper(), fact * com[dof]))
+
+                                elif axes == 'local':
+
+                                    if com['x']:
+                                        self.write_line('{0}, P1, {1}'.format(k, fact * com['x']))
+
+                                    if com['y']:
+                                        self.write_line('{0}, P2, {1}'.format(k, fact * com['y']))
 
                         # Prestress
                         # ---------
@@ -401,7 +438,7 @@ class Steps(object):
                     truss_ekeys    = []
                     beam_ekeys     = []
                     # spring_elements = ''
-                    #     # spring_numbers = []
+                    # spring_numbers = []
 
                     for ekey, element in self.structure.elements.items():
 
@@ -416,9 +453,9 @@ class Steps(object):
                             beam_elements += n
                             beam_ekeys.append(ekey)
 
-                #     elif etype in ['SpringElement']:
-                #         spring_elements += '{0} '.format(ekey + 1)
-                #         spring_numbers.append(ekey)
+                    # elif etype in ['SpringElement']:
+                    #     spring_elements += '{0} '.format(ekey + 1)
+                    #     spring_numbers.append(ekey)
 
 
                     # Element recorders
@@ -462,7 +499,6 @@ class Steps(object):
                     self.write_subsection('Solver')
                     self.blank_line()
 
-                    # # self.write_line('constraints Plain\n')
                     self.write_line('constraints Transformation')
                     self.write_line('numberer RCM')
                     self.write_line('system ProfileSPD')
@@ -546,38 +582,6 @@ class Steps(object):
             elif self.software == 'ansys':
 
                 pass
-
-
-
-# def _write_line_load(f, software, axes, com, factor, elset, sets, structure):
-
-#     for k in elset:
-
-#         if software == 'abaqus':
-
-#             f.write('*DLOAD\n')
-#             f.write('**\n')
-
-#             if axes == 'global':
-#                 for dof in dofs[:3]:
-#                     if com[dof]:
-#                         f.write('{0}, P{1}, {2}'.format(k, dof.upper(), factor * com[dof]) + '\n')
-
-#             elif axes == 'local':
-#                 if com['x']:
-#                     f.write('{0}, P1, {1}'.format(k, factor * com['x']) + '\n')
-#                 if com['y']:
-#                     f.write('{0}, P2, {1}'.format(k, factor * com['y']) + '\n')
-
-#         elif software == 'opensees':
-
-#             if axes == 'global':
-#                 raise NotImplementedError
-
-#             elif axes == 'local':
-#                 elements = ' '.join([str(i + 1) for i in sets[k]['selection']])
-#                 f.write('eleLoad -ele {0} -type -beamUniform {1} {2}\n'.format(elements, -com['y'], -com['x']))
-
 
 
 
