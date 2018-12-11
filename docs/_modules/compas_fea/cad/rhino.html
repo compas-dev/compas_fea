@@ -416,12 +416,14 @@
     <span class="n">xfunc</span> <span class="o">=</span> <span class="n">XFunc</span><span class="p">(</span><span class="s1">&#39;tets&#39;</span><span class="p">,</span> <span class="n">basedir</span><span class="o">=</span><span class="n">basedir</span><span class="p">,</span> <span class="n">tmpdir</span><span class="o">=</span><span class="n">structure</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
     <span class="n">xfunc</span><span class="o">.</span><span class="n">funcname</span> <span class="o">=</span> <span class="s1">&#39;meshing.tets_from_vertices_faces&#39;</span>
 
+
     <span class="k">try</span><span class="p">:</span>
         <span class="n">tets_points</span><span class="p">,</span> <span class="n">tets_elements</span> <span class="o">=</span> <span class="n">xfunc</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">faces</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="n">volume</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">tets_points</span><span class="p">:</span>
             <span class="n">structure</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>
         <span class="n">ekeys</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">tets_elements</span><span class="p">:</span>
@@ -1245,7 +1247,7 @@
             
 
             
-                Last updated on Dec 10, 2018.
+                Last updated on Dec 11, 2018.
             
 
             

@@ -69,24 +69,10 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">add_vectors</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">angles_points_xy</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">area_polygon_xy</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">centroid_points</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">circle_from_points_xy</span>
-<span class="kn">from</span> <span class="nn">compas.topology</span> <span class="k">import</span> <span class="n">delaunay_from_points</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">cross_vectors</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">distance_point_point</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">length_vector</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">normalize_vector</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">scale_vector</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">subtract_vectors</span>
-
-<span class="kn">from</span> <span class="nn">compas.topology</span> <span class="k">import</span> <span class="n">dijkstra_path</span>
-
-<span class="kn">from</span> <span class="nn">compas.utilities</span> <span class="k">import</span> <span class="n">geometric_key</span>
-
 <span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="k">import</span> <span class="n">Mesh</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">distance_point_point</span>
+<span class="kn">from</span> <span class="nn">compas.topology</span> <span class="k">import</span> <span class="n">dijkstra_path</span>
+<span class="kn">from</span> <span class="nn">compas.utilities</span> <span class="k">import</span> <span class="n">geometric_key</span>
 
 <span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">time</span>
 
@@ -105,7 +91,6 @@
     <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">array</span>
     <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">asarray</span>
     <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">cos</span>
-    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">dot</span>
     <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">float64</span>
     <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">hstack</span>
     <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">isnan</span>
@@ -122,24 +107,13 @@
     <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">sqrt</span>
     <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="nb">sum</span>
     <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">tile</span>
-    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">vstack</span>
     <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">zeros</span>
-    <span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="k">import</span> <span class="n">inv</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">pass</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="k">import</span> <span class="n">griddata</span>
-    <span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="k">import</span> <span class="n">det</span>
     <span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="k">import</span> <span class="n">csr_matrix</span>
-    <span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="k">import</span> <span class="n">Delaunay</span>
-    <span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="k">import</span> <span class="n">distance_matrix</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="k">pass</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">meshpy.tet</span> <span class="k">import</span> <span class="n">build</span>
-    <span class="kn">from</span> <span class="nn">meshpy.tet</span> <span class="k">import</span> <span class="n">MeshInfo</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">pass</span>
 
@@ -153,15 +127,12 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;colorbar&#39;</span><span class="p">,</span>
     <span class="s1">&#39;combine_all_sets&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;discretise_faces&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;extrude_mesh&#39;</span><span class="p">,</span>
     <span class="s1">&#39;group_keys_by_attribute&#39;</span><span class="p">,</span>
     <span class="s1">&#39;group_keys_by_attributes&#39;</span><span class="p">,</span>
     <span class="s1">&#39;network_order&#39;</span><span class="p">,</span>
     <span class="s1">&#39;normalise_data&#39;</span><span class="p">,</span>
     <span class="s1">&#39;postprocess&#39;</span><span class="p">,</span>
     <span class="s1">&#39;process_data&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;tets_from_vertices_faces&#39;</span><span class="p">,</span>
     <span class="s1">&#39;principal_stresses&#39;</span><span class="p">,</span>
     <span class="s1">&#39;plotvoxels&#39;</span><span class="p">,</span>
     <span class="s1">&#39;identify_ranges&#39;</span><span class="p">,</span>
@@ -398,105 +369,6 @@
     <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
 
-<div class="viewcode-block" id="extrude_mesh"><a class="viewcode-back" href="../../../reference/generated/compas_fea.utilities.functions.extrude_mesh.html#compas_fea.utilities.functions.extrude_mesh">[docs]</a><span class="k">def</span> <span class="nf">extrude_mesh</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">thickness</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">links_name</span><span class="p">,</span> <span class="n">blocks_name</span><span class="p">):</span>
-
-    <span class="sd">&quot;&quot;&quot; Extrudes a Mesh and adds/creates elements to a Structure.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    structure : obj</span>
-<span class="sd">        Structure object to update.</span>
-<span class="sd">    mesh : obj</span>
-<span class="sd">        Mesh datastructure</span>
-<span class="sd">    layers : int</span>
-<span class="sd">        Number of layers.</span>
-<span class="sd">    thickness : float</span>
-<span class="sd">        Layer thickness.</span>
-<span class="sd">    mesh_name : str</span>
-<span class="sd">        Name of set for mesh on final surface.</span>
-<span class="sd">    links_name : str</span>
-<span class="sd">        Name of set for adding links along extrusion.</span>
-<span class="sd">    blocks_name : str</span>
-<span class="sd">        Name of set for solid elements.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    None</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    - Extrusion is along the Mesh vertex normals.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">ki</span>     <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">faces</span>  <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">links</span>  <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">blocks</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">slices</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">layers</span><span class="p">)}</span>
-
-    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">():</span>
-
-        <span class="n">normal</span> <span class="o">=</span> <span class="n">normalize_vector</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertex_normal</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-        <span class="n">xyz</span>    <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-        <span class="n">ki</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_0&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">layers</span><span class="p">):</span>
-
-            <span class="n">xyzi</span> <span class="o">=</span> <span class="n">add_vectors</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">scale_vector</span><span class="p">(</span><span class="n">normal</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">thickness</span><span class="p">))</span>
-            <span class="n">ki</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">xyzi</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">links_name</span><span class="p">:</span>
-
-                <span class="n">node1</span> <span class="o">=</span> <span class="n">ki</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">0</span><span class="p">)]</span>
-                <span class="n">node2</span> <span class="o">=</span> <span class="n">ki</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
-                <span class="n">L</span>  <span class="o">=</span> <span class="n">subtract_vectors</span><span class="p">(</span><span class="n">xyzi</span><span class="p">,</span> <span class="n">xyz</span><span class="p">)</span>
-                <span class="n">ez</span> <span class="o">=</span> <span class="n">normalize_vector</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">ey</span> <span class="o">=</span> <span class="n">cross_vectors</span><span class="p">(</span><span class="n">ez</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-                <span class="k">except</span><span class="p">:</span>
-                    <span class="k">pass</span>
-                <span class="n">axes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ez&#39;</span><span class="p">:</span> <span class="n">ez</span><span class="p">,</span> <span class="s1">&#39;ey&#39;</span><span class="p">:</span> <span class="n">ey</span><span class="p">}</span>
-
-                <span class="n">ekey</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;SpringElement&#39;</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
-                <span class="n">structure</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">ekey</span><span class="p">]</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertex_area</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-                <span class="n">structure</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">ekey</span><span class="p">]</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="n">L</span>
-                <span class="n">links</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ekey</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">faces</span><span class="p">():</span>
-
-        <span class="n">vs</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">face_vertices</span><span class="p">(</span><span class="n">face</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">layers</span><span class="p">):</span>
-
-            <span class="n">bot</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">vs</span><span class="p">]</span>
-            <span class="n">top</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">vs</span><span class="p">]</span>
-
-            <span class="k">if</span> <span class="n">blocks_name</span><span class="p">:</span>
-
-                <span class="n">etype</span>  <span class="o">=</span> <span class="s1">&#39;PentahedronElement&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="s1">&#39;HexahedronElement&#39;</span>
-                <span class="n">nodes</span>  <span class="o">=</span> <span class="p">[</span><span class="n">ki</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">bot</span> <span class="o">+</span> <span class="n">top</span><span class="p">]</span>
-                <span class="n">ekey</span>   <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">etype</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-                <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ekey</span><span class="p">)</span>
-                <span class="n">slices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ekey</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">layers</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">mesh_name</span><span class="p">:</span>
-                <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ki</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">top</span><span class="p">]</span>
-                <span class="n">ekey</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">,</span> <span class="n">acoustic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">thermal</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-                <span class="n">faces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ekey</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">blocks_name</span><span class="p">:</span>
-        <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">blocks_name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">blocks</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">layers</span><span class="p">):</span>
-            <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_layer_</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">blocks_name</span><span class="p">,</span> <span class="n">i</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">slices</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-
-    <span class="k">if</span> <span class="n">mesh_name</span><span class="p">:</span>
-        <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">mesh_name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">faces</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">links</span><span class="p">:</span>
-        <span class="n">structure</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">links_name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">links</span><span class="p">)</span></div>
-
-
 <span class="k">def</span> <span class="nf">_angle</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
 
     <span class="n">AB</span> <span class="o">=</span> <span class="n">B</span> <span class="o">-</span> <span class="n">A</span>
@@ -522,205 +394,6 @@
     <span class="n">r</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">ax</span> <span class="o">-</span> <span class="n">centerx</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">ay</span> <span class="o">-</span> <span class="n">centery</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">[</span><span class="n">centerx</span><span class="p">,</span> <span class="n">centery</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">r</span>
-
-
-<div class="viewcode-block" id="discretise_faces"><a class="viewcode-back" href="../../../reference/generated/compas_fea.utilities.functions.discretise_faces.html#compas_fea.utilities.functions.discretise_faces">[docs]</a><span class="k">def</span> <span class="nf">discretise_faces</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">min_angle</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
-
-    <span class="sd">&quot;&quot;&quot; Make discretised triangles from input coarse triangles data.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    vertices : list</span>
-<span class="sd">        Co-ordinates of coarse vertices.</span>
-<span class="sd">    faces : list</span>
-<span class="sd">        Vertex numbers of each face of the coarse triangles.</span>
-<span class="sd">    target : float</span>
-<span class="sd">        Target edge length of each triangle.</span>
-<span class="sd">    min_angle : float</span>
-<span class="sd">        Minimum internal angle of triangles.</span>
-<span class="sd">    factor : float</span>
-<span class="sd">        Factor on the maximum area of each triangle.</span>
-<span class="sd">    iterations : int</span>
-<span class="sd">        Number of iterations per face.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    list</span>
-<span class="sd">        Vertices of the discretised trianlges.</span>
-<span class="sd">    list</span>
-<span class="sd">        Vertex numbers of the discretised trianlges.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    - An experimental script.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">points_all</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">faces_all</span>  <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="n">Amax</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">target</span><span class="o">**</span><span class="mi">2</span>
-
-    <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">face</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">faces</span><span class="p">):</span>
-
-        <span class="c1"># Seed</span>
-
-        <span class="n">face</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">face</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">face</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">face</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-            <span class="n">sp</span>  <span class="o">=</span> <span class="n">vertices</span><span class="p">[</span><span class="n">u</span><span class="p">]</span>
-            <span class="n">ep</span>  <span class="o">=</span> <span class="n">vertices</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
-            <span class="n">vec</span> <span class="o">=</span> <span class="n">subtract_vectors</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">sp</span><span class="p">)</span>
-            <span class="n">l</span>   <span class="o">=</span> <span class="n">length_vector</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
-            <span class="n">div</span> <span class="o">=</span> <span class="n">l</span> <span class="o">/</span> <span class="n">target</span>
-            <span class="n">n</span>   <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">div</span><span class="p">)])</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-                <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add_vectors</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">scale_vector</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">j</span> <span class="o">/</span> <span class="n">n</span><span class="p">)))</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">centroid_points</span><span class="p">(</span><span class="n">points</span><span class="p">))</span>
-
-        <span class="c1"># Starting orientation</span>
-
-        <span class="n">cent</span> <span class="o">=</span> <span class="n">centroid_points</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
-        <span class="n">vec1</span> <span class="o">=</span> <span class="n">subtract_vectors</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">vec2</span> <span class="o">=</span> <span class="n">subtract_vectors</span><span class="p">(</span><span class="n">cent</span><span class="p">,</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">vecn</span> <span class="o">=</span> <span class="n">cross_vectors</span><span class="p">(</span><span class="n">vec1</span><span class="p">,</span> <span class="n">vec2</span><span class="p">)</span>
-
-        <span class="c1"># Rotate about x</span>
-
-        <span class="n">points</span>   <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">points</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
-        <span class="n">phi</span>      <span class="o">=</span> <span class="o">-</span><span class="n">arctan2</span><span class="p">(</span><span class="n">vecn</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">vecn</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">pi</span>
-        <span class="n">Rx</span>       <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span> <span class="o">-</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span> <span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)]])</span>
-        <span class="n">vecn_x</span>   <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">Rx</span><span class="p">,</span> <span class="n">array</span><span class="p">(</span><span class="n">vecn</span><span class="p">)[:,</span> <span class="n">newaxis</span><span class="p">])</span>
-        <span class="n">points_x</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">Rx</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
-        <span class="n">Rx_inv</span>   <span class="o">=</span> <span class="n">inv</span><span class="p">(</span><span class="n">Rx</span><span class="p">)</span>
-
-        <span class="c1"># Rotate about y</span>
-
-        <span class="n">psi</span>      <span class="o">=</span> <span class="o">+</span><span class="n">arctan2</span><span class="p">(</span><span class="n">vecn_x</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">vecn_x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">pi</span>
-        <span class="n">Ry</span>       <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="n">cos</span><span class="p">(</span><span class="n">psi</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">sin</span><span class="p">(</span><span class="n">psi</span><span class="p">)],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="n">sin</span><span class="p">(</span><span class="n">psi</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">cos</span><span class="p">(</span><span class="n">psi</span><span class="p">)]])</span>
-        <span class="n">points_y</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">Ry</span><span class="p">,</span> <span class="n">points_x</span><span class="p">)</span>
-        <span class="n">Ry_inv</span>   <span class="o">=</span> <span class="n">inv</span><span class="p">(</span><span class="n">Ry</span><span class="p">)</span>
-
-        <span class="n">V</span> <span class="o">=</span> <span class="n">points_y</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">it</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">while</span> <span class="n">it</span> <span class="o">&lt;</span> <span class="n">iterations</span><span class="p">:</span>
-
-                <span class="c1"># Delaunay</span>
-
-                <span class="n">vdl</span>   <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">V</span>
-                <span class="n">vdl</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="n">tris_</span> <span class="o">=</span> <span class="n">delaunay_from_points</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">vdl</span><span class="p">)],</span> <span class="n">boundary</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-                <span class="n">tris</span>  <span class="o">=</span> <span class="p">[]</span>
-
-                <span class="c1"># Filter</span>
-
-                <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">tris_</span><span class="p">:</span>
-
-                    <span class="n">p1</span> <span class="o">=</span> <span class="n">V</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-                    <span class="n">p2</span> <span class="o">=</span> <span class="n">V</span><span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-                    <span class="n">p3</span> <span class="o">=</span> <span class="n">V</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-                    <span class="n">t1</span> <span class="o">=</span> <span class="n">_angle</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">)</span>
-                    <span class="n">t2</span> <span class="o">=</span> <span class="n">_angle</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
-                    <span class="n">t3</span> <span class="o">=</span> <span class="n">_angle</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
-
-                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
-                        <span class="c1"># mat = array([[p1[0], p2[0], p3[0]], [p1[1], p2[1], p3[1]], [1, 1, 1]])</span>
-                        <span class="c1"># A = 0.5 * abs(det(mat))</span>
-                        <span class="c1"># if A &lt; 100 * Amax:</span>
-                        <span class="n">tris</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">])</span>
-
-                <span class="c1"># Area</span>
-
-                <span class="n">checked</span> <span class="o">=</span> <span class="kc">True</span>
-
-                <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">tris</span><span class="p">:</span>
-
-                    <span class="n">p1</span> <span class="o">=</span> <span class="n">V</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-                    <span class="n">p2</span> <span class="o">=</span> <span class="n">V</span><span class="p">[</span><span class="n">v</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-                    <span class="n">p3</span> <span class="o">=</span> <span class="n">V</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-                    <span class="n">t1</span> <span class="o">=</span> <span class="n">_angle</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">)</span>
-                    <span class="n">t2</span> <span class="o">=</span> <span class="n">_angle</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
-                    <span class="n">t3</span> <span class="o">=</span> <span class="n">_angle</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
-                    <span class="n">tm</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="p">])</span>
-
-                    <span class="n">c</span><span class="p">,</span> <span class="n">r</span>  <span class="o">=</span> <span class="n">_centre</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">)</span>
-                    <span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">V</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
-                    <span class="n">mat</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p3</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p3</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
-                    <span class="n">A</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">det</span><span class="p">(</span><span class="n">mat</span><span class="p">))</span>
-                    <span class="c1"># if (tm &lt; min_angle) or (A &gt; Amax):</span>
-                    <span class="k">if</span> <span class="n">A</span> <span class="o">&gt;</span> <span class="n">Amax</span><span class="p">:</span>
-                        <span class="n">checked</span> <span class="o">=</span> <span class="kc">False</span>
-                        <span class="n">dist</span> <span class="o">=</span> <span class="n">distance_matrix</span><span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="n">c</span><span class="p">]),</span> <span class="n">V</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">5</span><span class="p">)</span>
-                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">dist</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span>
-                            <span class="n">V</span> <span class="o">=</span> <span class="n">vstack</span><span class="p">([</span><span class="n">V</span><span class="p">,</span> <span class="n">array</span><span class="p">([</span><span class="n">c</span><span class="p">])])</span>
-                            <span class="k">break</span>
-
-                <span class="k">if</span> <span class="n">checked</span><span class="p">:</span>
-                    <span class="k">break</span>
-
-                <span class="n">it</span> <span class="o">+=</span> <span class="mi">1</span>
-
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Discretising face </span><span class="si">{0}</span><span class="s1">/</span><span class="si">{1}</span><span class="s1">: </span><span class="si">{2}</span><span class="s1"> iterations&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">faces</span><span class="p">),</span> <span class="n">it</span><span class="p">))</span>
-
-            <span class="n">points</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">Ry_inv</span><span class="p">,</span> <span class="n">V</span><span class="o">.</span><span class="n">transpose</span><span class="p">())</span>
-            <span class="n">points_all</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">list</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">Rx_inv</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">())])</span>
-            <span class="n">faces_all</span><span class="o">.</span><span class="n">append</span><span class="p">([[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tri</span><span class="p">]</span> <span class="k">for</span> <span class="n">tri</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">tris</span><span class="p">)])</span>
-
-        <span class="k">except</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** ERROR discretising face </span><span class="si">{0}</span><span class="s1"> *****&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">))</span>
-
-    <span class="k">return</span> <span class="n">points_all</span><span class="p">,</span> <span class="n">faces_all</span></div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <div class="viewcode-block" id="combine_all_sets"><a class="viewcode-back" href="../../../reference/generated/compas_fea.utilities.functions.combine_all_sets.html#compas_fea.utilities.functions.combine_all_sets">[docs]</a><span class="k">def</span> <span class="nf">combine_all_sets</span><span class="p">(</span><span class="n">sets_a</span><span class="p">,</span> <span class="n">sets_b</span><span class="p">):</span>
@@ -1025,40 +698,6 @@
     <span class="k">return</span> <span class="n">Am</span></div>
 
 
-<div class="viewcode-block" id="tets_from_vertices_faces"><a class="viewcode-back" href="../../../reference/generated/compas_fea.utilities.functions.tets_from_vertices_faces.html#compas_fea.utilities.functions.tets_from_vertices_faces">[docs]</a><span class="k">def</span> <span class="nf">tets_from_vertices_faces</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-
-    <span class="sd">&quot;&quot;&quot; Generate tetrahedron points and elements with MeshPy (TetGen).</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    vertices : list</span>
-<span class="sd">        List of lists of vertex co-ordinates for input surface mesh.</span>
-<span class="sd">    faces : list</span>
-<span class="sd">        List of lists of face indices for input surface mesh.</span>
-<span class="sd">    volume : float</span>
-<span class="sd">        Volume constraint for each tetrahedron element.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    list</span>
-<span class="sd">        Points of the tetrahedrons.</span>
-<span class="sd">    list</span>
-<span class="sd">        Indices of points for each tetrahedron element.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">info</span> <span class="o">=</span> <span class="n">MeshInfo</span><span class="p">()</span>
-        <span class="n">info</span><span class="o">.</span><span class="n">set_points</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
-        <span class="n">info</span><span class="o">.</span><span class="n">set_facets</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span>
-        <span class="n">tets</span> <span class="o">=</span> <span class="n">build</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">max_volume</span><span class="o">=</span><span class="n">volume</span><span class="p">)</span>
-        <span class="n">tets_points</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">tets</span><span class="o">.</span><span class="n">points</span><span class="p">)]</span>
-        <span class="n">tets_elements</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">tets</span><span class="o">.</span><span class="n">elements</span><span class="p">)]</span>
-        <span class="k">return</span> <span class="n">tets_points</span><span class="p">,</span> <span class="n">tets_elements</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***** MeshPy failed *****&#39;</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="principal_stresses"><a class="viewcode-back" href="../../../reference/generated/compas_fea.utilities.functions.principal_stresses.html#compas_fea.utilities.functions.principal_stresses">[docs]</a><span class="k">def</span> <span class="nf">principal_stresses</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ptype</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">rotate</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Performs principal stress calculations.</span>
@@ -1141,8 +780,8 @@
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 
-    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">55</span><span class="p">,</span><span class="mi">89</span><span class="p">,</span><span class="mi">56</span><span class="p">,</span><span class="mi">56</span><span class="p">]</span>
-    <span class="nb">print</span> <span class="p">(</span><span class="n">identify_ranges</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">89</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">56</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">identify_ranges</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
 </code></pre></div>
                         
                     
@@ -1168,7 +807,7 @@
             
 
             
-                Last updated on Dec 10, 2018.
+                Last updated on Dec 11, 2018.
             
 
             

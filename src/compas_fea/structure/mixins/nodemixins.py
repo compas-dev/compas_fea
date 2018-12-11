@@ -66,6 +66,7 @@ class NodeMixins(object):
 
         return key
 
+
     def add_nodes(self, nodes, ex=[1, 0, 0], ey=[0, 1, 0], ez=[0, 0, 1]):
 
         """ Adds a list of nodes to structure.nodes at given co-ordinates all with local frame [ex, ey, ez].
@@ -94,6 +95,7 @@ class NodeMixins(object):
 
         return [self.add_node(xyz=node, ex=ex, ey=ey, ez=ez) for node in nodes]
 
+
     def add_node_to_node_index(self, key, xyz, virtual=False):
 
         """ Adds the node to the node_index dictionary.
@@ -119,6 +121,7 @@ class NodeMixins(object):
         else:
             self.node_index[gkey] = key
 
+
     def check_node_exists(self, xyz):
 
         """ Check if a node already exists at given x, y, z co-ordinates.
@@ -140,6 +143,7 @@ class NodeMixins(object):
         """
 
         return self.node_index.get(geometric_key(xyz, '{0}f'.format(self.tol)), None)
+
 
     def edit_node(self, key, attr_dict):
 
@@ -166,6 +170,7 @@ class NodeMixins(object):
 
         self.add_node_to_node_index(key, self.node_xyz(key))
 
+
     def make_node_index_dic(self):
 
         """ Makes a node_index dictionary from existing structure.nodes.
@@ -183,6 +188,7 @@ class NodeMixins(object):
         for key in self.nodes:
             gkey = geometric_key(self.node_xyz(key), '{0}f'.format(self.tol))
             self.node_index[gkey] = key
+
 
     def node_bounds(self):
 
@@ -219,6 +225,7 @@ class NodeMixins(object):
 
         return [xmin, xmax], [ymin, ymax], [zmin, zmax]
 
+
     def node_count(self):
 
         """ Return the number of nodes in structure.nodes.
@@ -235,6 +242,7 @@ class NodeMixins(object):
         """
 
         return len(self.nodes) + len(self.virtual_nodes)
+
 
     def node_xyz(self, node):
 
@@ -253,6 +261,7 @@ class NodeMixins(object):
         """
 
         return [getattr(self.nodes[node], i) for i in 'xyz']
+
 
     def nodes_xyz(self, nodes=[]):
 
