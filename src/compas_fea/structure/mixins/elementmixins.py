@@ -39,7 +39,7 @@ func_dic = {
 
 class ElementMixins(object):
 
-    def add_element(self, nodes, type, acoustic=False, thermal=False, axes={}):
+    def add_element(self, nodes, type, thermal=False, axes={}):
 
         """ Adds an element to structure.elements with centroid geometric key.
 
@@ -49,8 +49,6 @@ class ElementMixins(object):
             Nodes the element is connected to.
         type : str
             Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
-        acoustic : bool
-            Acoustic properties on or off.
         thermal : bool
             Thermal properties on or off.
         axes : dic
@@ -68,23 +66,27 @@ class ElementMixins(object):
         """
 
         if len(nodes) == len(set(nodes)):
+
             ekey = self.check_element_exists(nodes)
+
             if ekey is None:
                 ekey = self.element_count()
-                element = func_dic[type]()
-                element.axes = axes
-                element.nodes = nodes
-                element.number = ekey
-                element.acoustic = acoustic
+                element         = func_dic[type]()
+                element.axes    = axes
+                element.nodes   = nodes
+                element.number  = ekey
                 element.thermal = thermal
                 self.elements[ekey] = element
                 self.add_element_to_element_index(ekey, nodes)
+
             return ekey
 
         else:
+
             return None
 
-    def add_elements(self, elements, type, acoustic=False, thermal=False, axes={}):
+
+    def add_elements(self, elements, type, thermal=False, axes={}):
 
         """ Adds multiple elements of the same type to structure.elements.
 
@@ -94,8 +96,6 @@ class ElementMixins(object):
             List of lists of the nodes the elements are connected to.
         type : str
             Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
-        acoustic : bool
-            Acoustic properties on or off.
         thermal : bool
             Thermal properties on or off.
         axes : dic
@@ -112,8 +112,9 @@ class ElementMixins(object):
 
         """
 
-        return [self.add_element(nodes=nodes, type=type, acoustic=acoustic, thermal=thermal, axes=axes)
+        return [self.add_element(nodes=nodes, type=type, thermal=thermal, axes=axes)
                 for nodes in elements]
+
 
     def add_element_to_element_index(self, key, nodes, virtual=False):
 
@@ -140,6 +141,7 @@ class ElementMixins(object):
             self.virtual_element_index[gkey] = key
         else:
             self.element_index[gkey] = key
+
 
     def check_element_exists(self, nodes, xyz=None, virtual=False):
 
@@ -173,8 +175,10 @@ class ElementMixins(object):
         else:
             return self.element_index.get(gkey, None)
 
+
     def edit_element(self):
         raise NotImplementedError
+
 
     def element_count(self):
 
@@ -194,6 +198,7 @@ class ElementMixins(object):
 
         return len(self.elements) + len(self.virtual_elements)
 
+
     def make_element_index_dic(self):
 
         """ Makes an element_index dictionary from existing structure.elements.
@@ -210,6 +215,7 @@ class ElementMixins(object):
 
         for key, element in self.elements.items():
             self.add_element_to_element_index(key=key, nodes=element.nodes)
+
 
     def element_centroid(self, element):
 
