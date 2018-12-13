@@ -152,6 +152,8 @@
 <span class="sd">        A tolerance for analysis solvers.</span>
 <span class="sd">    state : str</span>
 <span class="sd">        Limit state &#39;sls&#39; or &#39;uls&#39; for design.</span>
+<span class="sd">    propagate : bool</span>
+<span class="sd">        Propogate the previous load cases.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -160,7 +162,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">nlgeom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nlmat</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span>
-                 <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;static&#39;</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s1">&#39;sls&#39;</span><span class="p">):</span>
+                 <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;static&#39;</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s1">&#39;sls&#39;</span><span class="p">,</span> <span class="n">propagate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">Step</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span>      <span class="o">=</span> <span class="s1">&#39;GeneralStep&#39;</span>
@@ -172,6 +174,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nlmat</span>         <span class="o">=</span> <span class="n">nlmat</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="n">displacements</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loads</span>         <span class="o">=</span> <span class="n">loads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagate</span>     <span class="o">=</span> <span class="n">propagate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span>          <span class="o">=</span> <span class="nb">type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span>     <span class="o">=</span> <span class="n">tolerance</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span>         <span class="o">=</span> <span class="n">state</span>
@@ -415,7 +418,7 @@
             
 
             
-                Last updated on Dec 12, 2018.
+                Last updated on Dec 13, 2018.
             
 
             
