@@ -86,6 +86,8 @@ class GeneralStep(Step):
         A tolerance for analysis solvers.
     state : str
         Limit state 'sls' or 'uls' for design.
+    propagate : bool
+        Propogate the previous load cases.
 
     Returns
     -------
@@ -94,7 +96,7 @@ class GeneralStep(Step):
     """
 
     def __init__(self, name, increments=100, iterations=100, factor=1.0, nlgeom=True, nlmat=False, displacements=[],
-                 loads=[], type='static', tolerance=0.01, state='sls'):
+                 loads=[], type='static', tolerance=0.01, state='sls', propagate=True):
         Step.__init__(self, name=name)
 
         self.__name__      = 'GeneralStep'
@@ -106,6 +108,7 @@ class GeneralStep(Step):
         self.nlmat         = nlmat
         self.displacements = displacements
         self.loads         = loads
+        self.propagate     = propagate
         self.type          = type
         self.tolerance     = tolerance
         self.state         = state

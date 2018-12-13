@@ -225,6 +225,20 @@ class Steps(object):
                                     if com[dof]:
                                         self.write_line('{0}, {1}, {2}'.format(ni, c, com[dof] * fact))
 
+                        # AreaLoad
+                        # --------
+
+                        elif ltype == 'AreaLoad':
+
+                            for k in elements:
+
+                                self.write_line('*DLOAD')
+                                self.blank_line()
+
+                                if com['z']:
+                                    self.write_line('{0}, P, {1}'.format(k, fact * com['z']))
+                                    self.blank_line()
+
                         # PointLoads
                         # ----------
 
