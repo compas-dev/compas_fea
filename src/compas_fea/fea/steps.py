@@ -63,7 +63,9 @@ class Steps(object):
             tolerance  = getattr(step, 'tolerance', None)
             method     = getattr(step, 'type')
             modes      = getattr(step, 'modes', None)
+            modify     = getattr(step, 'modify', None)
             nlgeom     = 'YES' if getattr(step, 'nlgeom', None) else 'NO'
+            op         = 'MOD' if modify else 'NEW'
 
 
             # =====================================================================================================
@@ -129,7 +131,6 @@ class Steps(object):
             # =====================================================================================================
 
             if getattr(step, 'loads', None):
-
 
                 if isinstance(step.loads, str):
                     step.loads = [step.loads]
@@ -209,17 +210,12 @@ class Steps(object):
 
                     elif self.software == 'abaqus':
 
-                        propagate = getattr(step, 'propagate')
-
                         # PointLoad
                         # ---------
 
                         if ltype == 'PointLoad':
 
-                            if not propagate:
-                                self.write_line('*CLOAD, op=NEW')
-                            else:
-                                self.write_line('*CLOAD')
+                            self.write_line('*CLOAD, OP={0}'.format(op))
                             self.blank_line()
 
                             for node in nodes:
@@ -236,10 +232,7 @@ class Steps(object):
                         elif ltype == 'AreaLoad':
 
                             for k in elements:
-                                if not propagate:
-                                    self.write_line('*DLOAD, op=NEW')
-                                else:
-                                    self.write_line('*DLOAD')
+                                self.write_line('*DLOAD, OP={0}'.format(op))
                                 self.blank_line()
 
                                 if com['z']:
@@ -250,10 +243,7 @@ class Steps(object):
                         # ----------
 
                         elif ltype == 'PointLoads':
-                            if not propagate:
-                                self.write_line('*CLOAD, op=NEW')
-                            else:
-                                self.write_line('*CLOAD')
+                            self.write_line('*CLOAD, OP={0}'.format(op))
                             self.blank_line()
 
                             for node, coms in com.items():
@@ -268,10 +258,7 @@ class Steps(object):
 
                             for k in elements:
 
-                                if not propagate:
-                                    self.write_line('*DLOAD, op=NEW')
-                                else:
-                                    self.write_line('*DLOAD')
+                                self.write_line('*DLOAD, OP={0}'.format(op))
                                 self.blank_line()
                                 self.write_line('{0}, GRAV, {1}, {2}, {3}, {4}'.format(k, -9.81 * fact, gx, gy, gz))
                                 self.blank_line()
@@ -281,11 +268,7 @@ class Steps(object):
 
                         elif ltype == 'TributaryLoad':
 
-                            if not propagate:
-                                self.write_line('*CLOAD, op=NEW')
-                            else:
-                                self.write_line('*CLOAD')
-
+                            self.write_line('*CLOAD, OP={0}'.format(op))
                             self.blank_line()
 
                             for node in sorted(com, key=int):
@@ -303,10 +286,7 @@ class Steps(object):
 
                             for k in elements:
 
-                                if not propagate:
-                                    self.write_line('*DLOAD, op=NEW')
-                                else:
-                                    self.write_line('*DLOAD')
+                                self.write_line('*DLOAD, OP={0}'.format(op))
                                 self.blank_line()
 
                                 if axes == 'global':
