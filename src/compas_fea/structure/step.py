@@ -87,7 +87,7 @@ class GeneralStep(Step):
     state : str
         Limit state 'sls' or 'uls' for design.
     propagate : bool
-        Propogate the previous load cases.
+        Propagate the previous load cases.
 
     Returns
     -------
