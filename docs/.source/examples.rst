@@ -9,27 +9,27 @@ Rhino
 .. toctree::
     :maxdepth: 1
 
-    .. examples/beam_bathe_rhino
-    .. examples/beam_frame_rhino
-    .. examples/beam_simple_rhino
-    .. examples/beam_tree_rhino
+    examples/beam_bathe_rhino
+    examples/beam_frame_rhino
+    examples/beam_simple_rhino
+    examples/beam_tree_rhino
 
-    .. examples/block_strip_rhino
-    .. examples/block_deepbeam_rhino
-    .. examples/block_tets_rhino
+    examples/block_strip_rhino
+    examples/block_deepbeam_rhino
+    examples/block_tets_rhino
 
-    .. examples/mesh_discretise_rhino
-    .. examples/mesh_floor_rhino
-    .. examples/mesh_modal_rhino
-    .. examples/mesh_mould_rhino
-    .. examples/mesh_bridge_rhino
-    .. examples/mesh_plate_rhino
-    .. examples/mesh_planar_rhino
-    .. examples/mesh_principal_rhino
-    .. examples/mesh_strip_rhino
+    examples/mesh_discretise_rhino
+    examples/mesh_floor_rhino
+    examples/mesh_modal_rhino
+    examples/mesh_mould_rhino
+    examples/mesh_bridge_rhino
+    examples/mesh_plate_rhino
+    examples/mesh_planar_rhino
+    examples/mesh_principal_rhino
+    examples/mesh_strip_rhino
 
-    .. examples/truss_tower_rhino
-    .. examples/truss_frame_rhino
+    examples/truss_tower_rhino
+    examples/truss_frame_rhino
 
     .. examples/spring_simple_rhino
 
@@ -48,7 +48,7 @@ Blender
 
     .. examples/mesh_floor_blender
     .. examples/mesh_mould_blender
-    .. examples/mesh_tris_blender
+    .. examples/mesh_discretise_blender
 
     .. examples/truss_tower_blender
 

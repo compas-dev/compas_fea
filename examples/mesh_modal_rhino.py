@@ -47,7 +47,7 @@ mdl.add(PinnedDisplacement(name='disp_pinned', nodes='nset_pins'))
 
 mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_pinned']),
-    ModalStep(name='step_modal', modes=2),
+    ModalStep(name='step_modal', modes=5),
 ])
 mdl.steps_order = ['step_bc', 'step_modal']
 
