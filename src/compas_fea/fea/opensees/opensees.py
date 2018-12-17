@@ -51,7 +51,8 @@ def input_generate(structure, fields, output):
 
     ndof = 3
     for element in structure.elements.values():
-        if element.__name__ not in ['TrussElement', 'TieElement', 'StrutElement', 'SpringElement']:
+        if element.__name__ not in ['TrussElement', 'TieElement', 'StrutElement', 'SpringElement',
+                                    'TetrahedronElement']:
             ndof = 6
             break
 

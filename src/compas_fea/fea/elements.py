@@ -101,7 +101,10 @@ class Elements(object):
 
                     if self.software == 'opensees':
 
-                        pass
+                        if len(nodes) == 4:
+
+                            solid = 'FourNodeTetrahedron'
+                            self.write_line('element {0} {1} {2} {3}'.format(solid, n, ' '.join(nodes), m_index + 1000))
 
                     # -------------------------------------------------------------------------------------------------
                     # Abaqus
