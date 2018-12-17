@@ -21,7 +21,7 @@ __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
 
-# Structure 
+# Structure
 
 mdl = Structure(name='mesh_planar', path='C:/Temp/')
 
@@ -68,7 +68,7 @@ mdl.add([
 loads = {}
 for i in rs.ObjectsByLayer('loads'):
     loads[mdl.check_node_exists(rs.PointCoordinates(i))] = {'y': float(rs.ObjectName(i))}
-    
+
 mdl.add([
     PointLoads(name='load_points', components=loads),
     PrestressLoad(name='load_prestress', elements='elset_tie', sxx=50*10**6),
