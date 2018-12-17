@@ -122,7 +122,7 @@ class Stiff(ElasticIsotropic):
     """
 
     def __init__(self, name):
-        ElasticIsotropic.__init__(self, name=name, E=10**12, v=0.3, p=10**(-1))
+        ElasticIsotropic.__init__(self, name=name, E=10**13, v=0.3, p=10**(-1))
 
         self.__name__ = 'Stiff'
 
@@ -258,10 +258,6 @@ class Steel(Material):
         Poisson's ratio v [-].
     p : float
         Density [kg/m3].
-    id : str
-        's' structural steel, 'r' reinforcement steel.
-    sf : float
-        Material safety factor.
 
     Returns
     -------
@@ -269,7 +265,7 @@ class Steel(Material):
 
     """
 
-    def __init__(self, name, fy=355, fu=None, eu=20, E=210, v=0.3, p=7850, id='s', sf=1.15):
+    def __init__(self, name, fy=355, fu=None, eu=20, E=210, v=0.3, p=7850):
         Material.__init__(self, name=name)
 
         E  *= 10.**9
@@ -297,8 +293,6 @@ class Steel(Material):
         self.G           = {'G': 0.5 * E / (1 + v)}
         self.compression = {'f': fc, 'e': ec}
         self.tension     = {'f': f, 'e': e}
-        self.id          = id
-        self.sf          = sf
         self.attr_list.extend(['fy', 'fu', 'eu', 'ep', 'E', 'v', 'G', 'p', 'tension', 'compression'])
 
 
@@ -332,8 +326,6 @@ class Concrete(Material):
         Density [kg/m3].
     fr : list
         Failure ratios.
-    sf : float
-        Material safety factor.
 
     Returns
     -------
@@ -345,7 +337,7 @@ class Concrete(Material):
 
     """
 
-    def __init__(self, name, fck, v=0.2, p=2400, fr=None, sf=1.5):
+    def __init__(self, name, fck, v=0.2, p=2400, fr=None):
         Material.__init__(self, name=name)
 
         de   = 0.0001
@@ -374,7 +366,6 @@ class Concrete(Material):
         self.compression = {'f': f[1:], 'e': ec}
         self.tension     = {'f': ft, 'e': et}
         self.fratios     = fr
-        self.sf          = sf
         self.attr_list.extend(['fck', 'fratios', 'E', 'v', 'G', 'p', 'tension', 'compression'])
 
 

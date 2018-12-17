@@ -71,7 +71,7 @@
 <h1>Concrete</h1>
 <dl class="class">
 <dt id="compas_fea.structure.material.Concrete">
-<em class="property">class </em><code class="descclassname">compas_fea.structure.material.</code><code class="descname">Concrete</code><span class="sig-paren">(</span><em>name</em>, <em>fck</em>, <em>v=0.2</em>, <em>p=2400</em>, <em>fr=None</em>, <em>sf=1.5</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/material.html#Concrete"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="descclassname">compas_fea.structure.material.</code><code class="descname">Concrete</code><span class="sig-paren">(</span><em>name</em>, <em>fck</em>, <em>v=0.2</em>, <em>p=2400</em>, <em>fr=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/material.html#Concrete"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference internal" href="compas_fea.structure.material.Material.html#compas_fea.structure.material.Material" title="compas_fea.structure.material.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_fea.structure.material.Material</span></code></a></p>
 <p>Elastic and plastic-cracking Eurocode based concrete material.</p>
 <dl class="field-list simple">
@@ -82,7 +82,6 @@
 <li><p><strong>v</strong> (<em>float</em>) – Poisson’s ratio v [-].</p></li>
 <li><p><strong>p</strong> (<em>float</em>) – Density [kg/m3].</p></li>
 <li><p><strong>fr</strong> (<em>list</em>) – Failure ratios.</p></li>
-<li><p><strong>sf</strong> (<em>float</em>) – Material safety factor.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -100,7 +99,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code>(name, fck[, v, p, fr, sf])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code>(name, fck[, v, p, fr])</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
 </tbody>
@@ -133,7 +132,7 @@
             
 
             
-                Last updated on Dec 14, 2018.
+                Last updated on Dec 17, 2018.
             
 
             

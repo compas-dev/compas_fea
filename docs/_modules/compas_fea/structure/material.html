@@ -188,7 +188,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="n">ElasticIsotropic</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">12</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">ElasticIsotropic</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">13</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;Stiff&#39;</span></div>
 
@@ -324,10 +324,6 @@
 <span class="sd">        Poisson&#39;s ratio v [-].</span>
 <span class="sd">    p : float</span>
 <span class="sd">        Density [kg/m3].</span>
-<span class="sd">    id : str</span>
-<span class="sd">        &#39;s&#39; structural steel, &#39;r&#39; reinforcement steel.</span>
-<span class="sd">    sf : float</span>
-<span class="sd">        Material safety factor.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -335,7 +331,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">,</span> <span class="n">fu</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eu</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">210</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">7850</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">sf</span><span class="o">=</span><span class="mf">1.15</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">,</span> <span class="n">fu</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eu</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">210</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">7850</span><span class="p">):</span>
         <span class="n">Material</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
         <span class="n">E</span>  <span class="o">*=</span> <span class="mf">10.</span><span class="o">**</span><span class="mi">9</span>
@@ -363,8 +359,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">G</span>           <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;G&#39;</span><span class="p">:</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">E</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">v</span><span class="p">)}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="n">fc</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="n">ec</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tension</span>     <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="n">e</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">id</span>          <span class="o">=</span> <span class="nb">id</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sf</span>          <span class="o">=</span> <span class="n">sf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;fy&#39;</span><span class="p">,</span> <span class="s1">&#39;fu&#39;</span><span class="p">,</span> <span class="s1">&#39;eu&#39;</span><span class="p">,</span> <span class="s1">&#39;ep&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="s1">&#39;tension&#39;</span><span class="p">,</span> <span class="s1">&#39;compression&#39;</span><span class="p">])</span></div>
 
 
@@ -398,8 +392,6 @@
 <span class="sd">        Density [kg/m3].</span>
 <span class="sd">    fr : list</span>
 <span class="sd">        Failure ratios.</span>
-<span class="sd">    sf : float</span>
-<span class="sd">        Material safety factor.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -411,7 +403,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fck</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2400</span><span class="p">,</span> <span class="n">fr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sf</span><span class="o">=</span><span class="mf">1.5</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fck</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2400</span><span class="p">,</span> <span class="n">fr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">Material</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
         <span class="n">de</span>   <span class="o">=</span> <span class="mf">0.0001</span>
@@ -440,7 +432,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="n">ec</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tension</span>     <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="n">ft</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="n">et</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fratios</span>     <span class="o">=</span> <span class="n">fr</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sf</span>          <span class="o">=</span> <span class="n">sf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;fck&#39;</span><span class="p">,</span> <span class="s1">&#39;fratios&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="s1">&#39;tension&#39;</span><span class="p">,</span> <span class="s1">&#39;compression&#39;</span><span class="p">])</span></div>
 
 
@@ -591,7 +582,7 @@
             
 
             
-                Last updated on Dec 14, 2018.
+                Last updated on Dec 17, 2018.
             
 
             
