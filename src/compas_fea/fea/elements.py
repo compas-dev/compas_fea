@@ -142,9 +142,13 @@ class Elements(object):
 
                     if self.software == 'opensees':
 
-                        shell = 'ShellNLDKGT' if no == 3 else 'ShellNLDKGQ'
-                        self.write_line('section PlateFiber {0} {1} {2}'.format(n, m_index + 1000, t))
-                        self.write_line('element {0} {1} {2} {1}'.format(shell, n, ' '.join(nodes)))
+                        if no == 3:
+                            # 'ShellNLDKGT' 'ShellDKGT'
+                            self.write_line('element tri31 {0} {1} {2} PlaneStress {3} 0 {4}'.format(
+                                            n, ' '.join(nodes), t, m_index + 1000, material.p))
+                        else:
+                            self.write_line('section PlateFiber {0} {1} {2}'.format(n, m_index + 1000, t))
+                            self.write_line('element ShellNLDKGQ {0} {1} {2}'.format(n, ' '.join(nodes)))
 
                     # -------------------------------------------------------------------------------------------------
                     # Abaqus
