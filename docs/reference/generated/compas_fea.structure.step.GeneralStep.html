@@ -71,7 +71,7 @@
 <h1>GeneralStep</h1>
 <dl class="class">
 <dt id="compas_fea.structure.step.GeneralStep">
-<em class="property">class </em><code class="descclassname">compas_fea.structure.step.</code><code class="descname">GeneralStep</code><span class="sig-paren">(</span><em>name</em>, <em>increments=100</em>, <em>iterations=100</em>, <em>factor=1.0</em>, <em>nlgeom=True</em>, <em>nlmat=False</em>, <em>displacements=[]</em>, <em>loads=[]</em>, <em>type='static'</em>, <em>tolerance=0.01</em>, <em>state='sls'</em>, <em>modify=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/step.html#GeneralStep"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="descclassname">compas_fea.structure.step.</code><code class="descname">GeneralStep</code><span class="sig-paren">(</span><em>name</em>, <em>increments=100</em>, <em>iterations=100</em>, <em>tolerance=0.01</em>, <em>factor=1.0</em>, <em>nlgeom=True</em>, <em>nlmat=True</em>, <em>displacements=None</em>, <em>loads=None</em>, <em>type='static'</em>, <em>modify=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/step.html#GeneralStep"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference internal" href="compas_fea.structure.step.Step.html#compas_fea.structure.step.Step" title="compas_fea.structure.step.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_fea.structure.step.Step</span></code></a></p>
 <p>Initialises GeneralStep object for use in a static analysis.</p>
 <dl class="field-list simple">
@@ -80,14 +80,13 @@
 <li><p><strong>name</strong> (<em>str</em>) – Name of the GeneralStep.</p></li>
 <li><p><strong>increments</strong> (<em>int</em>) – Number of step increments.</p></li>
 <li><p><strong>iterations</strong> (<em>int</em>) – Number of step iterations.</p></li>
-<li><p><strong>factor</strong> (<em>float</em>) – Proportionality factor on the loads and displacements.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>) – A tolerance for analysis solvers.</p></li>
+<li><p><strong>factor</strong> (<em>float, dict</em>) – Proportionality factor(s) on the loads and displacements.</p></li>
 <li><p><strong>nlgeom</strong> (<em>bool</em>) – Analyse non-linear geometry effects.</p></li>
 <li><p><strong>nlmat</strong> (<em>bool</em>) – Analyse non-linear material effects.</p></li>
 <li><p><strong>displacements</strong> (<em>list</em>) – Displacement object names.</p></li>
 <li><p><strong>loads</strong> (<em>list</em>) – Load object names.</p></li>
 <li><p><strong>type</strong> (<em>str</em>) – ‘static’,’static,riks’.</p></li>
-<li><p><strong>tolerance</strong> (<em>float</em>) – A tolerance for analysis solvers.</p></li>
-<li><p><strong>state</strong> (<em>str</em>) – Limit state ‘sls’ or ‘uls’ for design.</p></li>
 <li><p><strong>modify</strong> (<em>bool</em>) – Modify the previously added loads.</p></li>
 </ul>
 </dd>
@@ -135,11 +134,11 @@
             
 
             
-                Last updated on Dec 17, 2018.
+                Last updated on Jan 07, 2019.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
             
         </footer>
 

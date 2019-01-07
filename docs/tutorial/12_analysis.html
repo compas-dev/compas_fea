@@ -69,48 +69,53 @@
 
                         <div class="section" id="analysis">
 <h1>Analysis</h1>
-<p>This page describes how to analyse a completed <strong>Structure</strong> object and view the resulting data. There are three processes in analysing a <strong>Structure</strong> object when using a specific finite element software package or library:</p>
+<p>This page describes how to analyse a completed <strong>Structure</strong> object and view the resulting data. There are three processes involved when analysing a <strong>Structure</strong> object using a specific finite element software package or library:</p>
 <ul class="simple">
-<li><p>Write the native input file for the FE software to read with the method <code class="docutils literal notranslate"><span class="pre">.write_input_file()</span></code>.</p></li>
+<li><p>Write the native input file for the FE software with the method <code class="docutils literal notranslate"><span class="pre">.write_input_file()</span></code>.</p></li>
 <li><p>Send the input file to the FE solver for analysis with method <code class="docutils literal notranslate"><span class="pre">.analyse()</span></code>.</p></li>
-<li><p>Extract the data from the analysis results and store them back into <strong>structure.results</strong>. The relevant data are extracted with method <code class="docutils literal notranslate"><span class="pre">.extract_data()</span></code>.</p></li>
+<li><p>Extract the data from the analysis results and return them back to <strong>structure.results</strong>. The relevant data are extracted with method <code class="docutils literal notranslate"><span class="pre">.extract_data()</span></code>.</p></li>
 </ul>
-<p>These three stages are performed in sequence using the method <code class="docutils literal notranslate"><span class="pre">.analyse_and_extract()</span></code>, which takes the <code class="docutils literal notranslate"><span class="pre">software</span></code> string (<code class="docutils literal notranslate"><span class="pre">'abaqus'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ansys'</span></code>, <code class="docutils literal notranslate"><span class="pre">'opensees'</span></code> or <code class="docutils literal notranslate"><span class="pre">sofistik</span></code>), a list of the data <code class="docutils literal notranslate"><span class="pre">fields</span></code> to extract, the number of processor cores to use with <code class="docutils literal notranslate"><span class="pre">cpus</span></code> (currently for Abaqus only), and if needed some information on the <code class="docutils literal notranslate"><span class="pre">license</span></code> type. A call to this method looks like:</p>
-<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">])</span>
+<p>These three processes are performed in sequence using the method <code class="docutils literal notranslate"><span class="pre">.analyse_and_extract()</span></code>, which takes the <code class="docutils literal notranslate"><span class="pre">software</span></code> string (<code class="docutils literal notranslate"><span class="pre">'abaqus'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ansys'</span></code> or <code class="docutils literal notranslate"><span class="pre">'opensees'</span></code>), a list of the data <code class="docutils literal notranslate"><span class="pre">fields</span></code> to extract, the number of processor cores to use with <code class="docutils literal notranslate"><span class="pre">cpus</span></code> (currently for Abaqus only and defaults to 4), and if needed some information on the <code class="docutils literal notranslate"><span class="pre">license</span></code> type (defaults to <code class="docutils literal notranslate"><span class="pre">'research'</span></code>, a restricted <code class="docutils literal notranslate"><span class="pre">'student'</span></code> license is also accepted). A call to this method looks like:</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">],</span> <span class="n">cpus</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">license</span><span class="o">=</span><span class="s1">&#39;research&#39;</span><span class="p">)</span>
 </code></pre></div>
 </div>
+<p>Some additional arguments that can be given to <code class="docutils literal notranslate"><span class="pre">.analyse_and_extract()</span></code> are: <code class="docutils literal notranslate"><span class="pre">output</span></code> (bool) to display terminal text updates, <code class="docutils literal notranslate"><span class="pre">return_data</span></code> (bool) to return results back to <strong>structure.results</strong> or not, <code class="docutils literal notranslate"><span class="pre">components</span></code> (list) to request individual components of the requested <code class="docutils literal notranslate"><span class="pre">fields</span></code>, and <code class="docutils literal notranslate"><span class="pre">dof</span></code> (int) which is specific to OpenSees for the number of degrees-of-freedom at a node (3 or 6).</p>
 <div class="section" id="abaqus">
 <h2>Abaqus</h2>
-<p>The input file for generating an Abaqus structural model is the <code class="docutils literal notranslate"><span class="pre">.inp</span></code> input file. With this file, it is possible to generate and analyse a structural model, as well as request certain output data to be written to an output database <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file. Because the official reference documentation for Abaqus <code class="docutils literal notranslate"><span class="pre">.inp</span></code> files is vast, it will not be described here what every line of the <code class="docutils literal notranslate"><span class="pre">.inp</span></code> file means. There are a few important points to highlight about the Python procedure and data format of the <strong>Structure</strong> object, and the generated input file format: 1) Abaqus uses a numbering system that starts from 1, therefore for the input file every node and element from the <strong>Structure</strong> object has 1 added to it, which is then subtracted for all results data so that it remains consistent with the input numbering. 2) When an element is created in the input file, <strong>compas_fea</strong> may also make an individual set for just that element named <strong>element_x</strong>. Because of the different numbering systems of Python and Abaqus, an element set named <strong>element_4</strong> will refer to Abaqus element number 5.</p>
-<p>When an input file is written, a confirmation message will appear in the terminal stating where it was written to:</p>
+<p>The input file for generating an Abaqus structural model is the <code class="docutils literal notranslate"><span class="pre">.inp</span></code> file. With this file, it is possible to generate and analyse a structural model, as well as request certain output data to be written to an output database <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file. Because the official reference documentation for Abaqus <code class="docutils literal notranslate"><span class="pre">.inp</span></code> files is vast, it will not be described here what every line of the <code class="docutils literal notranslate"><span class="pre">.inp</span></code> file means. There are a few important points to highlight about the Python procedure and data format of the <strong>Structure</strong> object, and the generated input file format:</p>
+<ul class="simple">
+<li><p>Abaqus uses a numbering system that starts from 1, therefore for the input file every node and element from the <strong>Structure</strong> object has 1 added to it (as Python is 0 based), which is then subtracted for all results data so that it remains consistent with the input numbering system.</p></li>
+<li><p>When an element is created in the input file, <strong>compas_fea</strong> will also make an individual set for just that element named <strong>element_x</strong>, where <strong>x</strong> is the Python 0 based element number. Because of the different numbering systems of Python and Abaqus, an element set named <strong>element_4</strong> will refer to Abaqus element number 5.</p></li>
+</ul>
+<p>When an input file is written, a confirmation message will appear (if <code class="docutils literal notranslate"><span class="pre">output=True</span></code>) in the terminal stating where it was written to:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="o">*****</span> <span class="n">Abaqus</span> <span class="nb">input</span> <span class="nb">file</span> <span class="n">generated</span><span class="p">:</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">Temp</span><span class="o">/</span><span class="n">truss_tower</span><span class="o">.</span><span class="n">inp</span> <span class="o">*****</span>
 </code></pre></div>
 </div>
-<p>The input file will be sent for analysis via Abaqus in a Python subprocess that launches the Abaqus executable <code class="docutils literal notranslate"><span class="pre">abaqus</span> <span class="pre">cae</span></code> with no graphical user interface (<code class="docutils literal notranslate"><span class="pre">noGUI</span></code> mode) and running the <strong>launch_job.py</strong> script from <strong>compas_fea.fea.abaq</strong>. The goal of this subprocess is to pair the Abaqus executable with the <code class="docutils literal notranslate"><span class="pre">.inp</span></code> file and to generate an <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file of data, and is equivalent to manually performing the following in a terminal:</p>
+<p>The input file will be sent for analysis via Abaqus in a system subprocess that launches the Abaqus executable <code class="docutils literal notranslate"><span class="pre">abaqus</span> <span class="pre">cae</span></code> with no graphical user interface (<code class="docutils literal notranslate"><span class="pre">noGUI</span></code> mode) and running the <strong>launch_job.py</strong> script from <strong>compas_fea.fea.abaq</strong>. The goal of this subprocess is to pair the Abaqus executable with the <code class="docutils literal notranslate"><span class="pre">.inp</span></code> file and to generate an <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file of data, and is equivalent to manually performing the following in a terminal:</p>
 <div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>abaqus cae <span class="nv">noGUI</span><span class="o">=</span>~/compas_fea/fea/abaq/launch_job.py -- arguments
 </code></pre></div>
 </div>
-<p>During analysis, an information stream will print a rolling update of the subprocess progress, and show <code class="docutils literal notranslate"><span class="pre">COMPLETED</span></code> if the analysis was successful. If there was not a successful analysis, a variety of error messages will appear to try and help the user evaluate what may have gone wrong. If it was not possible to debug the issue from the terminal messages, the model should be inspected manually within Abaqus by loading the input file and submitting a job with the job monitor open. Student versions of Abaqus must have <code class="docutils literal notranslate"><span class="pre">cpus=1</span></code> (this is the case by default), as multi-core processing is not enabled for student versions. The output stream may look like the following:</p>
+<p>During analysis (if <code class="docutils literal notranslate"><span class="pre">output=True</span></code>), an information stream will print a rolling update of the subprocess progress, and show <code class="docutils literal notranslate"><span class="pre">COMPLETED</span></code> if the analysis was successful. If it was not possible to debug the issue from the terminal messages, the model should be inspected manually within Abaqus by loading the input file and submitting a job with the job monitor open. Student versions of Abaqus must have <code class="docutils literal notranslate"><span class="pre">cpus=1</span></code> (this is the case by default), as multi-core processing is not enabled for student versions. The output stream may look like the following:</p>
 <div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>Abaqus JOB simple-truss
- Abaqus <span class="m">6</span>.14-1
- Begin Analysis Input File Processor
- <span class="m">13</span>/09/2017 <span class="m">17</span>:56:25
- Run pre.exe
- <span class="m">13</span>/09/2017 <span class="m">17</span>:56:28
- End Analysis Input File Processor
- Begin Abaqus/Standard Analysis
- <span class="m">13</span>/09/2017 <span class="m">17</span>:56:28
- Run standard.exe
- <span class="m">13</span>/09/2017 <span class="m">17</span>:56:30
- End Abaqus/Standard Analysis
- Abaqus JOB truss-tower COMPLETED
+Abaqus <span class="m">6</span>.14-1
+Begin Analysis Input File Processor
+<span class="m">13</span>/09/2017 <span class="m">17</span>:56:25
+Run pre.exe
+<span class="m">13</span>/09/2017 <span class="m">17</span>:56:28
+End Analysis Input File Processor
+Begin Abaqus/Standard Analysis
+<span class="m">13</span>/09/2017 <span class="m">17</span>:56:28
+Run standard.exe
+<span class="m">13</span>/09/2017 <span class="m">17</span>:56:30
+End Abaqus/Standard Analysis
+Abaqus JOB truss-tower COMPLETED
 
 Abaqus License Manager checked out the following licenses:
 Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server XXX-XXX-XXX.
 &lt;<span class="m">212</span> out of <span class="m">580</span> licenses remain available&gt;.
 </code></pre></div>
 </div>
-<p>If the analysis was successful, a confirmation message will appear in the terminal with the analysis time taken:</p>
+<p>If the analysis was successful and if <code class="docutils literal notranslate"><span class="pre">output=True</span></code>, a confirmation message will appear in the terminal with the analysis time taken:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="o">*****</span> <span class="n">Analysis</span> <span class="n">successful</span> <span class="o">*****</span>
 
 <span class="o">*****</span> <span class="n">Abaqus</span> <span class="n">analysis</span> <span class="n">time</span> <span class="p">:</span> <span class="mf">17.1095</span> <span class="n">s</span> <span class="o">*****</span>
@@ -120,11 +125,11 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">Abaqus</span><span class="o">/</span><span class="n">Analysis</span> <span class="n">exited</span> <span class="k">with</span> <span class="n">errors</span>
 <span class="n">Abaqus</span> <span class="n">Error</span><span class="p">:</span> <span class="n">cae</span> <span class="n">exited</span> <span class="k">with</span> <span class="n">an</span> <span class="n">error</span><span class="o">.</span>
 
-<span class="o">*****</span> <span class="n">Analysis</span> <span class="n">failed</span> <span class="o">-</span> <span class="n">attempting</span> <span class="n">to</span> <span class="n">read</span> <span class="n">error</span> <span class="n">logs</span> <span class="o">*****</span>
+<span class="o">*****</span> <span class="n">Analysis</span> <span class="n">failed</span> <span class="o">*****</span>
 </code></pre></div>
 </div>
-<p>If this is the case, the script will attempt to read a variety of error logs that are made during the analysis. If some, but not all data, was written to the <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file, the data extraction will still try to continue by reading the last frame of the output database. It must be remembered that if the analysis did not fully complete, this last frame is <strong>NOT</strong> the final frame of the analysis, and should be respected as an equilibrium state taking actions less than those applied. Often this frame will be at the stage that the given number of increments managed to progress to, and so increasing this number of increments may help the analysis continue further and reach the final equilibrium state.</p>
-<p>The data are extracted from the output database <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file with the <code class="docutils literal notranslate"><span class="pre">abaq.extract_odb_data()</span></code> function, which is called automatically as part of the <code class="docutils literal notranslate"><span class="pre">.extract_data()</span></code> method. In the same folder as the <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file, it will generate a <code class="docutils literal notranslate"><span class="pre">results.json</span></code> file of scraped unprocessed data. This file will be in the folder <strong>/path/name/</strong> and will store the data back into the <strong>Structure</strong> object with the following confirmation:</p>
+<p>If some, but not all data was written to the <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file, the data extraction will still try to continue by reading the last frame of the output database. It must be remembered that if the analysis did not fully complete, this last frame is <strong>NOT</strong> the final frame of the analysis, and should be respected as an equilibrium state taking actions less than those applied. Often this frame will be at the stage that the given number of increments managed to progress to, and so increasing this number of <code class="docutils literal notranslate"><span class="pre">increments</span></code> in the <strong>Step</strong> may help the analysis continue further and reach the final equilibrium state.</p>
+<p>The data are extracted from the output database <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file with the <code class="docutils literal notranslate"><span class="pre">abaq.extract_odb_data()</span></code> function, which is called automatically as part of the <code class="docutils literal notranslate"><span class="pre">.extract_data()</span></code> method. In the same folder as the <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file, it will generate a <code class="docutils literal notranslate"><span class="pre">results.json</span></code> file of scraped unprocessed data, based on what was given in <code class="docutils literal notranslate"><span class="pre">fields</span></code> and <code class="docutils literal notranslate"><span class="pre">components</span></code>. This file will be in the folder <strong>/path/name/</strong> and will store the data back into the <strong>Structure</strong> object with the following confirmation (if <code class="docutils literal notranslate"><span class="pre">output=True</span></code>):</p>
 <div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>***** Saving data to structure.results successful *****
 
 ***** Data extracted from Abaqus .odb file : <span class="m">2</span>.3439 s *****
@@ -137,13 +142,13 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </div>
 <div class="section" id="opensees">
 <h2>OpenSees</h2>
-<p>The input file for generating an OpenSees structural model is the <code class="docutils literal notranslate"><span class="pre">.tcl</span></code> input file. A <code class="docutils literal notranslate"><span class="pre">basic</span></code> model type will be made in 3D <code class="docutils literal notranslate"><span class="pre">-ndm</span> <span class="pre">3</span></code> with all degrees-of-freedom at each node <code class="docutils literal notranslate"><span class="pre">-ndf</span> <span class="pre">6</span></code>, unless the model is exclusively made of truss elements where <code class="docutils literal notranslate"><span class="pre">-ndf</span> <span class="pre">3</span></code> will instead be used. Nodes and elements will be numbered starting from 1, and then 1 subtracted for the storage of data after the analysis, so that it is consistent with the input <strong>Structure</strong> object. An important difference (currently) with OpenSees is that the structural model should have only two steps: the first step representing all of the persistent boundary conditions containing only <strong>Displacement</strong> objects, and the second step representing all applied <strong>Load</strong> objects and any further applied <strong>Displacement</strong> objects.</p>
+<p>The input file for generating an OpenSees structural model is the <code class="docutils literal notranslate"><span class="pre">.tcl</span></code> input file. A <code class="docutils literal notranslate"><span class="pre">basic</span></code> model type will be made in 3D <code class="docutils literal notranslate"><span class="pre">-ndm</span> <span class="pre">3</span></code> with degrees-of-freedom at each node <code class="docutils literal notranslate"><span class="pre">-ndf</span></code> set from the <code class="docutils literal notranslate"><span class="pre">dof</span></code> argument. Nodes and elements will be numbered starting from 1, and then 1 subtracted for the storage of data after the analysis, so that it is consistent with the input <strong>Structure</strong> object. An important difference (currently) with OpenSees is that the structural model should have only two steps: the first step representing all of the persistent boundary conditions containing only <strong>Displacement</strong> objects, and the second step representing all applied <strong>Load</strong> objects and any further applied <strong>Displacement</strong> objects.</p>
 <p>Beam elements must be given an <code class="docutils literal notranslate"><span class="pre">ex</span></code> local axis orientation for <code class="docutils literal notranslate"><span class="pre">geomTransf</span></code>, as OpenSees will not make an assumption for the cross-section orientation. This should be defined either directly when adding the elements with the <code class="docutils literal notranslate"><span class="pre">axes</span></code> argument, or added to the element name (<code class="docutils literal notranslate"><span class="pre">{'ex':</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">0]}</span></code> for example) so it can be picked-up in a CAD environment and automatically applied. This orientation need not be defined for <strong>TrussElement</strong> types as there is no local bending orientation.</p>
 <p>When written, a confirmation message will appear in the terminal showing where the file was saved:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="o">*****</span> <span class="n">OpenSees</span> <span class="nb">input</span> <span class="nb">file</span> <span class="n">generated</span><span class="p">:</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">Temp</span><span class="o">/</span><span class="n">beam_frame</span><span class="o">.</span><span class="n">tcl</span> <span class="o">*****</span>
 </code></pre></div>
 </div>
-<p>The input file will be sent for analysis via OpenSees in a Python subprocess that launches the executable, given by the <code class="docutils literal notranslate"><span class="pre">exe</span></code> string, or by assuming the default <code class="docutils literal notranslate"><span class="pre">C:/OpenSees.exe</span></code> location for Windows. No graphical user interface is launched for OpenSees, feedback will only be presented in the terminal while the <code class="docutils literal notranslate"><span class="pre">.tcl</span></code> file is running:</p>
+<p>The input file will be sent for analysis via OpenSees in a system subprocess that launches the executable, given by the <code class="docutils literal notranslate"><span class="pre">exe</span></code> string, or by assuming the default <code class="docutils literal notranslate"><span class="pre">C:/OpenSees.exe</span></code> location for Windows. No graphical user interface is launched for OpenSees, feedback will only be presented in the terminal while the <code class="docutils literal notranslate"><span class="pre">.tcl</span></code> file is running:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><code><span></span>          OpenSees -- Open System For Earthquake Engineering Simulation
                Pacific Earthquake Engineering Research Center
                       Version 2.5.0 (rev 6536) 64-Bit
@@ -153,7 +158,7 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 (Copyright and Disclaimer @ http://www.berkeley.edu/OpenSees/copyright.html)
 </code></pre></div>
 </div>
-<p>Followed by a completion message after the analysis:</p>
+<p>Followed by a completion message after the analysis has successfully completed, or with terminal output stating any error messages that have arisen:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="o">*****</span> <span class="n">OpenSees</span> <span class="n">analysis</span> <span class="n">time</span> <span class="p">:</span> <span class="mf">0.9063</span> <span class="n">s</span> <span class="o">*****</span>
 </code></pre></div>
 </div>
@@ -169,16 +174,7 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 <li><p><code class="docutils literal notranslate"><span class="pre">analysis</span> <span class="pre">Static</span></code> and <code class="docutils literal notranslate"><span class="pre">analyze</span></code> using the number of increments in <code class="docutils literal notranslate"><span class="pre">step.increments</span></code>.</p></li>
 </ul>
 </div></blockquote>
-<p>As OpenSees support is still in early development, only limited output is automatically extracted, mainly nodal data such as <code class="docutils literal notranslate"><span class="pre">'u'</span></code>: displacements and <code class="docutils literal notranslate"><span class="pre">'ur'</span></code>: rotations, <code class="docutils literal notranslate"><span class="pre">rf</span></code>: reaction forces and <code class="docutils literal notranslate"><span class="pre">rm</span></code>: reaction moments, and only limited element data such as truss axial forces. Data will be stored for all nodes and elements as <code class="docutils literal notranslate"><span class="pre">.out</span></code> text files such as <code class="docutils literal notranslate"><span class="pre">step_name_node_u.out</span></code>. These files are organised with OpenSees file writing defaults, which list analysis increments vertically and data horizontally. <strong>Note</strong>: plotting functions currently use only the final increment, i.e. the last line of the file.</p>
-</div>
-<div class="section" id="sofistik">
-<h2>Sofistik</h2>
-<p>The input file for generating a Sofistik structural model is the <code class="docutils literal notranslate"><span class="pre">.dat</span></code> input file. Sofistik differs from Abaqus and OpenSees for the layout of its code, in that lines of code must be supplied in the appropriate sub-program, such as <strong>PROG AQUA</strong>, <strong>PROG SOFIMSHA</strong> or <strong>PROG SOFILOAD</strong>. The input file code will be automatically wrapped with these sub-programs calls, but as a consequence of the way they need to be ordered, will produce an input file which differs significantly when compared to the layout of the <code class="docutils literal notranslate"><span class="pre">.tcl</span></code> and <code class="docutils literal notranslate"><span class="pre">.inp</span></code> files. Similar to Abaqus and OpenSees, nodes and elements will be added starting from number 1, different from the Python 0 based numbering. The nodes will also be internally re-ordered by Sofistik for optimising the analysis via <code class="docutils literal notranslate"><span class="pre">CTRL</span> <span class="pre">OPT</span> <span class="pre">OPTI</span> <span class="pre">10</span></code>. For every <strong>ElementProperties</strong> object, a Sofistik group will be made in multiples of 10000, such that element 2943 in group number 2 will have Sofistik element number 22943, as it will be associated with <code class="docutils literal notranslate"><span class="pre">GRP</span> <span class="pre">2</span> <span class="pre">BASE</span> <span class="pre">20000</span></code>.</p>
-<p>When the <code class="docutils literal notranslate"><span class="pre">.dat</span></code> file is written, a confirmation message will appear in the terminal:</p>
-<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="o">*****</span> <span class="n">Sofistik</span> <span class="nb">input</span> <span class="nb">file</span> <span class="n">generated</span><span class="p">:</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">Temp</span><span class="o">/</span><span class="n">beam_frame</span><span class="o">.</span><span class="n">dat</span> <span class="o">*****</span>
-</code></pre></div>
-</div>
-<p>Sofistik functionality is still in development and only supports writing the input <code class="docutils literal notranslate"><span class="pre">.dat</span></code> file with <code class="docutils literal notranslate"><span class="pre">.write_input_file()</span></code>. It will currently not be automatically sent for analysis or data extracted (<code class="docutils literal notranslate"><span class="pre">.analyse()</span></code> and <code class="docutils literal notranslate"><span class="pre">.extract_data()</span></code> do net yet do anything). The model must be manually run from the Sofistik GUI through <strong>Execute</strong> and then visualised in <strong>WinGRAF</strong>.</p>
+<p>As OpenSees support is still in early development, only limited output is automatically extracted, mainly nodal data such as <code class="docutils literal notranslate"><span class="pre">'u'</span></code>: displacements and <code class="docutils literal notranslate"><span class="pre">'ur'</span></code>: rotations, <code class="docutils literal notranslate"><span class="pre">rf</span></code>: reaction forces and <code class="docutils literal notranslate"><span class="pre">rm</span></code>: reaction moments, and only limited element data such as truss axial forces and some beam element data. Data will be stored for all nodes and elements as <code class="docutils literal notranslate"><span class="pre">.out</span></code> text files such as <code class="docutils literal notranslate"><span class="pre">step_name_u.out</span></code>. These files are organised with OpenSees file writing defaults, which lists analysis increments vertically in the output text files and the data horizontally. <strong>Note</strong>: plotting functions currently use only the final increment, i.e. the last line of the file.</p>
 </div>
 <div class="section" id="ansys">
 <h2>Ansys</h2>
@@ -187,14 +183,14 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </ul>
 <div class="section" id="fields-components-and-data">
 <h3>Fields, components and data</h3>
-<p>After the analysis, the data are stored in the <strong>Structure</strong> object, where they can be accessed by the user to read or visualise the results. The organisation of the collected data in <code class="docutils literal notranslate"><span class="pre">structure.results</span></code> is in nested dictionaries with keys following a sequence of: the <code class="docutils literal notranslate"><span class="pre">step</span></code> string for the <strong>Step</strong> of interest, a data type string for <code class="docutils literal notranslate"><span class="pre">'nodal'</span></code> or <code class="docutils literal notranslate"><span class="pre">'element'</span></code> based data, the <code class="docutils literal notranslate"><span class="pre">field</span></code> string corresponding to the fields below, and finally the node or element number. The general format of accessing data is thus <code class="docutils literal notranslate"><span class="pre">structure.results[step][type][field][number]</span></code>. A helper method is also provided through <code class="docutils literal notranslate"><span class="pre">structure.get_nodal_results()</span></code> and <code class="docutils literal notranslate"><span class="pre">structure.get_element_results()</span></code>, where the <code class="docutils literal notranslate"><span class="pre">step</span></code>, <code class="docutils literal notranslate"><span class="pre">field</span></code> and <code class="docutils literal notranslate"><span class="pre">node</span></code> or <code class="docutils literal notranslate"><span class="pre">elements</span></code> are given as above, and the requested results are returned as a dictionary:</p>
+<p>After the analysis, the data are stored in the <strong>Structure</strong> object, where they can be accessed by the user to read or visualise the results. The organisation of the collected data in <code class="docutils literal notranslate"><span class="pre">structure.results</span></code> is in nested dictionaries with keys following a sequence of: the <code class="docutils literal notranslate"><span class="pre">step</span></code> string for the <strong>Step</strong> of interest, a data type string for <code class="docutils literal notranslate"><span class="pre">'nodal'</span></code> or <code class="docutils literal notranslate"><span class="pre">'element'</span></code> based data, the <code class="docutils literal notranslate"><span class="pre">field</span></code> string corresponding to one of the field tables below, and finally the node or element number. The general format of accessing data is thus <code class="docutils literal notranslate"><span class="pre">structure.results[step][type][field][number]</span></code>. Two helper methods are also provided through <code class="docutils literal notranslate"><span class="pre">structure.get_nodal_results()</span></code> and <code class="docutils literal notranslate"><span class="pre">structure.get_element_results()</span></code>, where the <code class="docutils literal notranslate"><span class="pre">step</span></code>, <code class="docutils literal notranslate"><span class="pre">field</span></code> and <code class="docutils literal notranslate"><span class="pre">nodes</span></code> or <code class="docutils literal notranslate"><span class="pre">elements</span></code> are given the same as above, and the requested results are returned as a dictionary:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">get_nodal_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;rfm&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">)</span>
 </code></pre></div>
 </div>
-<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">get_element_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;sxx&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">get_element_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;smises&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
 </code></pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">field</span></code> strings are based on the notation below:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">field</span></code> strings are based on the notation tables below for the nodal data and the element data:</p>
 </div>
 </div>
 <div class="section" id="node-fields">
@@ -216,37 +212,37 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Reaction forces      <code class="docutils literal notranslate"><span class="pre">'rf'</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'rf'</span></code> Reaction forces</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'rfx'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'rfy'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'rfz'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'rfm'</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p>Reaction moments     <code class="docutils literal notranslate"><span class="pre">'rm'</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'rm'</span></code> Reaction moments</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'rmx'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'rmy'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'rmz'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'rmm'</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p>Displacements        <code class="docutils literal notranslate"><span class="pre">'u'</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'u'</span></code>  Displacements</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'ux'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'uy'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'uz'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'um'</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p>Rotations            <code class="docutils literal notranslate"><span class="pre">'ur'</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'ur'</span></code> Rotations</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'urx'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'ury'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'urz'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'urm'</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p>Concentrated forces  <code class="docutils literal notranslate"><span class="pre">'cf'</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'cf'</span></code> Concentrated forces</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'cfx'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'cfy'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'cfz'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'cfm'</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p>Concentrated moments <code class="docutils literal notranslate"><span class="pre">'cm'</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'cm'</span></code> Concentrated moments</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'cmx'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'cmy'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'cmz'</span></code></p></td>
@@ -266,79 +262,79 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 <col style="width: 25%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p>Spring forces <code class="docutils literal notranslate"><span class="pre">'spf'</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'spf'</span></code> Spring forces</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'spfx'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'spfy'</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">'spfz'</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p>Section forces <code class="docutils literal notranslate"><span class="pre">'sf'</span></code></p></td>
-<td><p>Axial <code class="docutils literal notranslate"><span class="pre">'sf1'</span></code></p></td>
-<td><p>Shear <cite>x</cite> <code class="docutils literal notranslate"><span class="pre">'sf2'</span></code></p></td>
-<td><p>Shear <cite>y</cite> <code class="docutils literal notranslate"><span class="pre">'sf3'</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'sf'</span></code>  Section forces</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sf1'</span></code> Axial</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sf2'</span></code> Shear <cite>x</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sf3'</span></code> Shear <cite>y</cite></p></td>
 </tr>
-<tr class="row-odd"><td><p>Shell forces <code class="docutils literal notranslate"><span class="pre">'sf'</span></code></p></td>
-<td><p>Axial <cite>x</cite> <code class="docutils literal notranslate"><span class="pre">'sf1'</span></code></p></td>
-<td><p>Axial <cite>y</cite> <code class="docutils literal notranslate"><span class="pre">'sf2'</span></code></p></td>
-<td><p>Shear <cite>y</cite> <code class="docutils literal notranslate"><span class="pre">'sf3'</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'sf'</span></code>  Shell forces</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sf1'</span></code> Axial <cite>x</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sf2'</span></code> Axial <cite>y</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sf3'</span></code> Shear <cite>y</cite></p></td>
 </tr>
 <tr class="row-even"><td></td>
-<td><p>Transverse <cite>x</cite> <code class="docutils literal notranslate"><span class="pre">'sf4'</span></code></p></td>
-<td><p>Transverse <cite>y</cite> <code class="docutils literal notranslate"><span class="pre">'sf5'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sf4'</span></code> Transverse <cite>x</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sf5'</span></code> Transverse <cite>y</cite></p></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p>Section moments <code class="docutils literal notranslate"><span class="pre">'sm'</span></code></p></td>
-<td><p>Moment <cite>x-x</cite> <code class="docutils literal notranslate"><span class="pre">'smx'</span></code></p></td>
-<td><p>Moment <cite>y-y</cite> <code class="docutils literal notranslate"><span class="pre">'smy'</span></code></p></td>
-<td><p>Torsion <code class="docutils literal notranslate"><span class="pre">'smz'</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'sm'</span></code>  Section moments</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sm1'</span></code> Moment <cite>x-x</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sm2'</span></code> Moment <cite>y-y</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sm3'</span></code> Torsion</p></td>
 </tr>
-<tr class="row-even"><td><p>Shell moments <code class="docutils literal notranslate"><span class="pre">'sm'</span></code></p></td>
-<td><p>Moment <cite>y-y</cite> <code class="docutils literal notranslate"><span class="pre">'smx'</span></code></p></td>
-<td><p>Moment <cite>x-x</cite> <code class="docutils literal notranslate"><span class="pre">'smy'</span></code></p></td>
-<td><p>Torsion <code class="docutils literal notranslate"><span class="pre">'smz'</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'sm'</span></code>  Shell moments</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sm1'</span></code> Moment <cite>y-y</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sm2'</span></code> Moment <cite>x-x</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sm3'</span></code> Torsion</p></td>
 </tr>
-<tr class="row-odd"><td><p>Section strains <code class="docutils literal notranslate"><span class="pre">'se'</span></code></p></td>
-<td><p>Axial <code class="docutils literal notranslate"><span class="pre">'senx'</span></code></p></td>
-<td><p>Shear <cite>y</cite> <code class="docutils literal notranslate"><span class="pre">'sevy'</span></code></p></td>
-<td><p>Shear <cite>x</cite> <code class="docutils literal notranslate"><span class="pre">'sevx'</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'se'</span></code>  Section strains</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'se1'</span></code> Axial</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'se2'</span></code> Shear <cite>y</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'se3'</span></code> Shear <cite>x</cite></p></td>
 </tr>
-<tr class="row-even"><td><p>Section curvatures <code class="docutils literal notranslate"><span class="pre">'sk'</span></code></p></td>
-<td><p>Curvature <cite>x-x</cite> <code class="docutils literal notranslate"><span class="pre">'skx'</span></code></p></td>
-<td><p>Curvature <cite>y-y</cite> <code class="docutils literal notranslate"><span class="pre">'sky'</span></code></p></td>
-<td><p>Twist <code class="docutils literal notranslate"><span class="pre">'skz'</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'sk'</span></code>  Section curvatures</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'skx'</span></code> Curvature <cite>x-x</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sky'</span></code> Curvature <cite>y-y</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'skz'</span></code> Twist</p></td>
 </tr>
-<tr class="row-odd"><td><p>Shell curvatures <code class="docutils literal notranslate"><span class="pre">'sk'</span></code></p></td>
-<td><p>Curvature <cite>y-y</cite> <code class="docutils literal notranslate"><span class="pre">'skx'</span></code></p></td>
-<td><p>Curvature <cite>x-x</cite> <code class="docutils literal notranslate"><span class="pre">'sky'</span></code></p></td>
-<td><p>Twist <code class="docutils literal notranslate"><span class="pre">'skz'</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'sk'</span></code>  Shell curvatures</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'skx'</span></code> Curvature <cite>y-y</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sky'</span></code> Curvature <cite>x-x</cite></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'skz'</span></code> Twist</p></td>
 </tr>
-<tr class="row-even"><td><p>Stress <code class="docutils literal notranslate"><span class="pre">'s'</span></code> (beams)</p></td>
-<td><p>Axial <code class="docutils literal notranslate"><span class="pre">'sxx'</span></code></p></td>
-<td><p>Hoop <code class="docutils literal notranslate"><span class="pre">'syy'</span></code></p></td>
-<td><p>Torsion <code class="docutils literal notranslate"><span class="pre">'sxy'</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'s'</span></code>   Stress (beams)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sxx'</span></code> Axial</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'syy'</span></code> Hoop</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sxy'</span></code> Torsion</p></td>
 </tr>
-<tr class="row-odd"><td><p>Stress <code class="docutils literal notranslate"><span class="pre">'s'</span></code> (shells)</p></td>
-<td><p>Axial <code class="docutils literal notranslate"><span class="pre">'sxx'</span></code></p></td>
-<td><p>Axial <code class="docutils literal notranslate"><span class="pre">'syy'</span></code></p></td>
-<td><p>Shear <code class="docutils literal notranslate"><span class="pre">'sxy'</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'s'</span></code>   Stress (shells)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sxx'</span></code> Axial</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'syy'</span></code> Axial</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sxy'</span></code> Shear</p></td>
 </tr>
-<tr class="row-even"><td><p>Stress (derived) <code class="docutils literal notranslate"><span class="pre">'s'</span></code></p></td>
-<td><p>Von Mises <code class="docutils literal notranslate"><span class="pre">'smises'</span></code></p></td>
-<td><p>Max principal <code class="docutils literal notranslate"><span class="pre">'smaxp'</span></code></p></td>
-<td><p>Min principal <code class="docutils literal notranslate"><span class="pre">'sminp'</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'s'</span></code>   Stress (derived)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'smises'</span></code> Von Mises</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'smaxp'</span></code> Max principal</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'sminp'</span></code> Min principal</p></td>
 </tr>
-<tr class="row-odd"><td><p>Strain <code class="docutils literal notranslate"><span class="pre">'e'</span></code> (beams)</p></td>
-<td><p>Axial <code class="docutils literal notranslate"><span class="pre">'exx'</span></code></p></td>
-<td><p>Hoop <code class="docutils literal notranslate"><span class="pre">'eyy'</span></code></p></td>
-<td><p>Shear (torsion) <code class="docutils literal notranslate"><span class="pre">'exy'</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'e'</span></code>   Strain (beams)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'exx'</span></code> Axial</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'eyy'</span></code> Hoop</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'exy'</span></code> Shear (torsion)</p></td>
 </tr>
-<tr class="row-even"><td><p>Strain <code class="docutils literal notranslate"><span class="pre">'e'</span></code> (shells)</p></td>
-<td><p>Axial <code class="docutils literal notranslate"><span class="pre">'exx'</span></code></p></td>
-<td><p>Axial <code class="docutils literal notranslate"><span class="pre">'eyy'</span></code></p></td>
-<td><p>Shear <code class="docutils literal notranslate"><span class="pre">'exy'</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'e'</span></code>   Strain (shells)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'exx'</span></code> Axial</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'eyy'</span></code> Axial</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'exy'</span></code> Shear</p></td>
 </tr>
-<tr class="row-odd"><td><p>Strain (derived) <code class="docutils literal notranslate"><span class="pre">'e'</span></code>  )</p></td>
-<td><p>Max principal <code class="docutils literal notranslate"><span class="pre">'emaxp'</span></code></p></td>
-<td><p>Min principal <code class="docutils literal notranslate"><span class="pre">'eminp'</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'e'</span></code>   Strain (derived)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'emaxp'</span></code> Max principal</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'eminp'</span></code> Min principal</p></td>
 <td></td>
 </tr>
 </tbody>
@@ -347,12 +343,12 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </div>
 <div class="section" id="integration-and-section-points">
 <h2>Integration and section points</h2>
-<p>For <code class="docutils literal notranslate"><span class="pre">'nodal'</span></code> data, accessing the displacement in <cite>z</cite> for step <code class="docutils literal notranslate"><span class="pre">'step_load'</span></code> and for node 4 would be <code class="docutils literal notranslate"><span class="pre">structure.results['step_load']['nodal']['uz'][4]</span></code>, which would give a single float value. For <code class="docutils literal notranslate"><span class="pre">'element'</span></code> data, there is often no single data value that can represent the entire element, as some elements require many data values to be evaluated across its volume, especially higher order elements. During a finite element analysis, specific points are evaluated across an element and  section related to the element shape function and cross-section shape (Gauss points). Each of these data-points is stored by <strong>compas_fea</strong> for each of the elements with an integration point–section point string key. This special key takes the form of <code class="docutils literal notranslate"><span class="pre">'ip4_sp1'</span></code>, which represent data for integration point 4 and section point 1 (see the Elements and Sections topics for the locations of these points).</p>
-<p>The data request <code class="docutils literal notranslate"><span class="pre">structure.results['step_load']['element']['smises'][4]</span></code> for an example shell element, will return a dictionary of data with string keys as the integration point–section point keys. For a four noded linear shell element, these would be four integration points (the four internal points, unless a reduced integration scheme is used leading to one point) and two section points (top and bottom layers by default). When data stored in this integration–section point format are converted to nodal data, which is important for plotting data on meshes where vertices are coloured, the following points must be observed:</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">'nodal'</span></code> data, accessing the displacement in <cite>z</cite> for step <code class="docutils literal notranslate"><span class="pre">'step_load'</span></code> and for node 4 would be <code class="docutils literal notranslate"><span class="pre">structure.results['step_load']['nodal']['uz'][4]</span></code>, which would give a single float value in return. For <code class="docutils literal notranslate"><span class="pre">'element'</span></code> data, there is often no single data value that can represent the entire element, as some elements require many data values to be evaluated across its volume, especially higher order elements, quads and solid elements. During a finite element analysis, specific points are evaluated across an element and  section related to the element shape function and cross-section shape (Gauss points). Each of these data-points is stored by <strong>compas_fea</strong> for each of the elements with an integration point–section point string key. This special key takes the form of <code class="docutils literal notranslate"><span class="pre">'ip4_sp1'</span></code>, which represents data for integration point 4 and section point 1 (see the Elements and Sections topics for the locations of these points).</p>
+<p>The data request <code class="docutils literal notranslate"><span class="pre">structure.results['step_load']['element']['smises'][4]</span></code> for an example element, will return a dictionary of data with string keys as the integration point–section point keys. For a four noded linear shell element, these would be four integration points (the four internal points, unless a reduced integration scheme is used leading to one point) and two section points (top and bottom layers by default). When data stored in this integration–section point format are converted to nodal data, which is important for plotting data on meshes where vertices are coloured, the following points must be observed:</p>
 <ul class="simple">
 <li><p>For some situations, taking a mean value of all data points for an element could give meaningless or misleading results. For example, the mean value of normal stresses in a beam under pure bending would be zero, as positive and negative normal stresses would cancel each other out.</p></li>
-<li><p>Selecting one representative integration point for an element is generally not possible without some understanding of the structural model and loading. For instance, points on a beam cross-section will have completely different stress values depending on the combination of major axis and minor axis bending.</p></li>
-<li><p>Picking a maximum value of Von Mises stress could be used to find a critical heavily stressed point, as these stresses are always positive. But picking a maximum or minimum value for a stress where the sign matters, because it represents say compression or tension, is not so straightforward and must be done carefully.</p></li>
+<li><p>Selecting one representative integration point for an element is generally not possible without some understanding of the structural model and loading. For instance, points around a beam cross-section will have completely different stress values depending on the combination of major axis and minor axis bending.</p></li>
+<li><p>Picking a maximum value of Von Mises stress could be used to find a critical heavily stressed point, as these stresses are always positive. But picking a maximum or minimum value for a stress where the sign matters is not so straightforward and must be done carefully, because it represents say compression or tension.</p></li>
 </ul>
 </div>
 </div>
@@ -381,11 +377,11 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
             
 
             
-                Last updated on Dec 17, 2018.
+                Last updated on Jan 07, 2019.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
             
         </footer>
 

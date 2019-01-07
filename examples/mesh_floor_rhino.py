@@ -107,3 +107,5 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'cf'], components=[
 rhino.plot_data(mdl, step='step_loads', field='uz', radius=0.02, cbar_size=0.5)
 rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.02, cbar_size=0.5, cbar=[0, 5*10**6])
 rhino.plot_concentrated_forces(mdl, step='step_loads')
+
+mdl.save_to_obj()

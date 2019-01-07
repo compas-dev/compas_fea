@@ -59,7 +59,6 @@ class Elements(object):
             elset         = property.elset
 
             section       = sections[property.section]
-            s_index       = section.index + 1
             stype         = section.__name__
             geometry      = section.geometry
 
@@ -143,12 +142,14 @@ class Elements(object):
                     if self.software == 'opensees':
 
                         if no == 3:
-                            # 'ShellNLDKGT' 'ShellDKGT'
-                            self.write_line('element tri31 {0} {1} {2} PlaneStress {3} 0 {4}'.format(
-                                            n, ' '.join(nodes), t, m_index + 1000, material.p))
+                            # self.write_line('element tri31 {0} {1} {2} PlaneStress {3} 0 {4} 0 0'.format(
+                                            # n, ' '.join(nodes), t, m_index + 1000, material.p))
+                            self.write_line('section PlateFiber {0} {1} {2}'.format(n, m_index + 1000, t))
+                            self.write_line('element ShellDKGT {0} {1} {0}'.format(n, ' '.join(nodes)))
+                            # self.write_line('element ShellNLDKGT {0} {1} {0}'.format(n, ' '.join(nodes)))
                         else:
                             self.write_line('section PlateFiber {0} {1} {2}'.format(n, m_index + 1000, t))
-                            self.write_line('element ShellNLDKGQ {0} {1} {2}'.format(n, ' '.join(nodes)))
+                            self.write_line('element ShellNLDKGQ {0} {1} {0}'.format(n, ' '.join(nodes)))
 
                     # -------------------------------------------------------------------------------------------------
                     # Abaqus

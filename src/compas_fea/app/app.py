@@ -3,12 +3,13 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from compas_fea.utilities import postprocess
+# from compas_fea.utilities import postprocess
 
 from compas.viewers import VtkViewer
 
 from numpy import array
 from numpy import hstack
+from numpy import min
 from numpy import newaxis
 from numpy import zeros
 
@@ -32,32 +33,30 @@ class App(VtkViewer):
         data['vertices'] = {i: structure.node_xyz(i) for i in structure.nodes}
         data['edges']    = []
         data['faces']    = {}
-        data['fixed']    = set()
-
-        try:
-            for key in structure.steps[structure.steps_order[0]].displacements:
-                displacement = structure.displacements[key]
-                nodes = structure.sets[displacement.nodes]['selection']
-                data['fixed'] |= set(nodes)
-            data['fixed'] = list(data['fixed'])
-        except:
-            pass
 
         for ekey, element in structure.elements.items():
 
             nodes = element.nodes
 
+            # Beams, trussea and springs
+
             if len(nodes) == 2:
-                sp, ep = nodes
+
                 if element.__name__ == 'TrussElement':
                     col = [255, 150, 150]
+
                 elif element.__name__ == 'BeamElement':
                     col = [150, 150, 255]
+
                 elif element.__name__ == 'SpringElement':
                     col = [200, 255, 0]
-                data['edges'].append({'u': sp, 'v': ep, 'color': col})
+
+                data['edges'].append({'u': nodes[0], 'v': nodes[1], 'color': col})
+
+            # Tris and quads
 
             elif (len(nodes) == 3) or (len(nodes) == 4):
+
                 data['faces'][ekey] = {'vertices': nodes, 'color': [150, 250, 150]}
 
 
@@ -69,20 +68,22 @@ class App(VtkViewer):
         zm = 0.5 * (zb[0] + zb[1])
 
         self.camera_target = [xm, ym, zm]
-        self.vertex_size = 1
-        self.edge_width = 0
-        self.structure = structure
-        self.nodes = structure.nodes_xyz()
-        self.nkeys = sorted(structure.nodes, key=int)
+        self.vertex_size   = 1
+        self.edge_width    = 10
+        self.structure     = structure
+        self.nodes         = structure.nodes_xyz()
+        self.nkeys         = sorted(structure.nodes, key=int)
+
         self.xyz = array(self.nodes)
-        self.U = zeros(self.xyz.shape)
-        self.elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
+        self.U   = zeros(self.xyz.shape)
+#         self.elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
+
+        # UI setup
 
         self.setup()
 
         self.add_label(name='label_scale', text='Scale: {0}'.format(1))
-        self.add_slider(name='slider_scale', value=1, minimum=0, maximum=1000, interval=100,
-                        callback=self.scale_callback)
+        self.add_slider(name='slider_scale', value=1, minimum=0, maximum=1000, interval=100, callback=self.scale_callback)
 
         if structure.steps_order:
 
@@ -101,90 +102,97 @@ class App(VtkViewer):
     def scale_callback(self):
 
         value = self.sliders['slider_scale'].value()
-        X = self.xyz + self.U * value
+        X     = self.xyz + self.U * value
+
         self.labels['label_scale'].setText('Scale: {0}'.format(value))
-        self.update_vertices_coordinates({i: X[i, :] for i in range(X.shape[0])})
+        self.update_vertices_coordinates({i: X[i, :] for i in range(self.structure.node_count())})
 
 
     def update_fields(self):
 
-        step = self.listboxes['listbox_steps'].currentText()
-
         self.listboxes['listbox_fields_nodal'].clear()
         self.listboxes['listbox_fields_element'].clear()
+        step = self.listboxes['listbox_steps'].currentText()
 
         try:
-            keys = list(self.structure.results[step].keys())
+
+            keys    = list(self.structure.results[step].keys())
+            results = self.structure.results[step]
 
             if 'nodal' in keys:
 
-                node_fields = sorted(list(self.structure.results[step]['nodal'].keys()))
+                node_fields = sorted(list(results['nodal'].keys()))
                 self.listboxes['listbox_fields_nodal'].addItems(node_fields)
 
                 mode = ''
-                nodal_data = self.structure.results[step]['nodal']
-                self.ux = [nodal_data['ux{0}'.format(mode)][i] for i in self.nkeys]
-                self.uy = [nodal_data['uy{0}'.format(mode)][i] for i in self.nkeys]
-                self.uz = [nodal_data['uz{0}'.format(mode)][i] for i in self.nkeys]
-                self.U = hstack([array(self.ux)[:, newaxis], array(self.uy)[:, newaxis], array(self.uz)[:, newaxis]])
+                self.ux = array([results['nodal']['ux{0}'.format(mode)][i] for i in self.nkeys])
+                self.uy = array([results['nodal']['uy{0}'.format(mode)][i] for i in self.nkeys])
+                self.uz = array([results['nodal']['uz{0}'.format(mode)][i] for i in self.nkeys])
+                self.U  = hstack([self.ux[:, newaxis], self.uy[:, newaxis], self.uz[:, newaxis]])
+                print(min(self.U[:, 2]))
 
             if 'element' in keys:
 
-                element_fields = sorted(list(self.structure.results[step]['element'].keys()))
+                element_fields = sorted(list(results['element'].keys()))
                 self.listboxes['listbox_fields_element'].addItems(element_fields)
 
         except:
+
             pass
 
 
     def nodal_plot(self):
 
-        try:
-            step  = self.listboxes['listbox_steps'].currentText()
-            field = self.listboxes['listbox_fields_nodal'].currentText()
+        pass
 
-            cbar = [None, None]
+#         try:
+#             step  = self.listboxes['listbox_steps'].currentText()
+#             field = self.listboxes['listbox_fields_nodal'].currentText()
 
-            nodal_data = self.structure.results[step]['nodal']
-            data = [nodal_data['{0}{1}'.format(field, '')][i] for i in self.nkeys]
-            dtype = 'nodal'
+#             cbar = [None, None]
 
-            result = postprocess(self.nodes, self.elements, self.ux, self.uy, self.uz, data, dtype, 1, cbar, 255,
-                                 None, None)
-            toc, _, cnodes, fabs, fscaled, _, _ = result
+#             nodal_data = self.structure.results[step]['nodal']
+#             data = [nodal_data['{0}{1}'.format(field, '')][i] for i in self.nkeys]
+#             dtype = 'nodal'
 
-            self.update_vertices_colors({i: j for i, j in enumerate(cnodes)})
-            self.update_statusbar('Plotting: {0:.3f} s'.format(toc))
+#             result = postprocess(self.nodes, self.elements, self.ux, self.uy, self.uz, data, dtype, 1, cbar, 255,
+#                                  None, None)
+#             toc, _, cnodes, fabs, fscaled, _, _ = result
 
-        except:
-            pass
+#             self.update_vertices_colors({i: j for i, j in enumerate(cnodes)})
+#             self.update_statusbar('Plotting: {0:.3f} s'.format(toc))
+
+#         except:
+#             pass
 
 
     def element_plot(self):
 
-        try:
-            step  = self.listboxes['listbox_steps'].currentText()
-            field = self.listboxes['listbox_fields_element'].currentText()
+        pass
 
-            if field != 'axes':
+#         try:
+#             step  = self.listboxes['listbox_steps'].currentText()
+#             field = self.listboxes['listbox_fields_element'].currentText()
 
-                iptype = 'mean'
-                nodal  = 'mean'
+#             if field != 'axes':
 
-                cbar = [None, None]
+#                 iptype = 'mean'
+#                 nodal  = 'mean'
 
-                data = self.structure.results[step]['element'][field]
-                dtype = 'element'
+#                 cbar = [None, None]
 
-                result = postprocess(self.nodes, self.elements, self.ux, self.uy, self.uz, data, dtype, 1, cbar, 255,
-                                     iptype, nodal)
-                toc, _, cnodes, fabs, fscaled, _, _ = result
+#                 data = self.structure.results[step]['element'][field]
+#                 dtype = 'element'
 
-                self.update_vertices_colors({i: j for i, j in enumerate(cnodes)})
-                self.update_statusbar('Plotting: {0:.3f} s'.format(toc))
+#                 result = postprocess(self.nodes, self.elements, self.ux, self.uy, self.uz, data, dtype, 1, cbar, 255,
+#                                      iptype, nodal)
+#                 toc, _, cnodes, fabs, fscaled, _, _ = result
 
-        except:
-            pass
+#                 self.update_vertices_colors({i: j for i, j in enumerate(cnodes)})
+#                 self.update_statusbar('Plotting: {0:.3f} s'.format(toc))
+
+#         except:
+#             pass
 
 
 # ==============================================================================
@@ -196,12 +204,9 @@ if __name__ == "__main__":
 
     from compas_fea.structure import Structure
 
-    fnm = '/home/al/temp/knit_candela.obj'
+    fnm = '/home/al/temp/mesh_floor.obj'
 
     mdl = Structure.load_from_obj(fnm)
-    mdl.view()
-    total = 0
-    reactions = mdl.get_nodal_results('step_wind', 'rfm', nodes='nset_supports')
-    for node, force in reactions.items():
-        total += force
-    print(total)
+    # mdl.view()
+
+    print(mdl.results['step_loads']['nodal']['ux'])

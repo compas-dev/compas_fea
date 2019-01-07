@@ -108,6 +108,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
 
+
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -118,6 +119,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:&lt;13}</span><span class="s1"> : </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)))</span>
 
         <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
@@ -136,8 +138,10 @@
 <span class="sd">        Number of step increments.</span>
 <span class="sd">    iterations : int</span>
 <span class="sd">        Number of step iterations.</span>
-<span class="sd">    factor : float</span>
-<span class="sd">        Proportionality factor on the loads and displacements.</span>
+<span class="sd">    tolerance : float</span>
+<span class="sd">        A tolerance for analysis solvers.</span>
+<span class="sd">    factor : float, dict</span>
+<span class="sd">        Proportionality factor(s) on the loads and displacements.</span>
 <span class="sd">    nlgeom : bool</span>
 <span class="sd">        Analyse non-linear geometry effects.</span>
 <span class="sd">    nlmat : bool</span>
@@ -148,10 +152,6 @@
 <span class="sd">        Load object names.</span>
 <span class="sd">    type : str</span>
 <span class="sd">        &#39;static&#39;,&#39;static,riks&#39;.</span>
-<span class="sd">    tolerance : float</span>
-<span class="sd">        A tolerance for analysis solvers.</span>
-<span class="sd">    state : str</span>
-<span class="sd">        Limit state &#39;sls&#39; or &#39;uls&#39; for design.</span>
 <span class="sd">    modify : bool</span>
 <span class="sd">        Modify the previously added loads.</span>
 
@@ -161,14 +161,20 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">nlgeom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nlmat</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span>
-                 <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;static&#39;</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s1">&#39;sls&#39;</span><span class="p">,</span> <span class="n">modify</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">nlgeom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nlmat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;static&#39;</span><span class="p">,</span> <span class="n">modify</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">Step</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">displacements</span><span class="p">:</span>
+            <span class="n">displacements</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">loads</span><span class="p">:</span>
+            <span class="n">loads</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span>      <span class="o">=</span> <span class="s1">&#39;GeneralStep&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span>          <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">increments</span>    <span class="o">=</span> <span class="n">increments</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span>    <span class="o">=</span> <span class="n">iterations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span>     <span class="o">=</span> <span class="n">tolerance</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">factor</span>        <span class="o">=</span> <span class="n">factor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nlgeom</span>        <span class="o">=</span> <span class="n">nlgeom</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nlmat</span>         <span class="o">=</span> <span class="n">nlmat</span>
@@ -176,10 +182,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">loads</span>         <span class="o">=</span> <span class="n">loads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modify</span>        <span class="o">=</span> <span class="n">modify</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span>          <span class="o">=</span> <span class="nb">type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span>     <span class="o">=</span> <span class="n">tolerance</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span>         <span class="o">=</span> <span class="n">state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attr_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;increments&#39;</span><span class="p">,</span> <span class="s1">&#39;iterations&#39;</span><span class="p">,</span> <span class="s1">&#39;factor&#39;</span><span class="p">,</span> <span class="s1">&#39;nlgeom&#39;</span><span class="p">,</span> <span class="s1">&#39;nlmat&#39;</span><span class="p">,</span> <span class="s1">&#39;displacements&#39;</span><span class="p">,</span> <span class="s1">&#39;loads&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;tolerance&#39;</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">,</span> <span class="s1">&#39;modify&#39;</span><span class="p">])</span></div>
+                               <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;tolerance&#39;</span><span class="p">,</span> <span class="s1">&#39;modify&#39;</span><span class="p">])</span></div>
 
 
 <span class="k">class</span> <span class="nc">HeatStep</span><span class="p">(</span><span class="n">Step</span><span class="p">):</span>
@@ -246,8 +250,11 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;modal&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;modal&#39;</span><span class="p">):</span>
         <span class="n">Step</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">displacements</span><span class="p">:</span>
+            <span class="n">displacements</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span>      <span class="o">=</span> <span class="s1">&#39;ModalStep&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span>          <span class="o">=</span> <span class="n">name</span>
@@ -285,8 +292,14 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">freq_list</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;harmonic&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">freq_list</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;harmonic&#39;</span><span class="p">):</span>
         <span class="n">Step</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">displacements</span><span class="p">:</span>
+            <span class="n">displacements</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">loads</span><span class="p">:</span>
+            <span class="n">loads</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span>      <span class="o">=</span> <span class="s1">&#39;HarmonicStep&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span>          <span class="o">=</span> <span class="n">name</span>
@@ -311,7 +324,7 @@
 <span class="sd">        Number of modes to analyse.</span>
 <span class="sd">    increments : int</span>
 <span class="sd">        Number of increments.</span>
-<span class="sd">    factor : float</span>
+<span class="sd">    factor : float, dict</span>
 <span class="sd">        Proportionality factor on the loads and displacements.</span>
 <span class="sd">    displacements : list</span>
 <span class="sd">        Displacement object names.</span>
@@ -328,8 +341,15 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;buckle&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">increments</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;buckle&#39;</span><span class="p">,</span>
+                 <span class="n">step</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">Step</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">displacements</span><span class="p">:</span>
+            <span class="n">displacements</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">loads</span><span class="p">:</span>
+            <span class="n">loads</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span>      <span class="o">=</span> <span class="s1">&#39;BucklingStep&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span>          <span class="o">=</span> <span class="n">name</span>
@@ -376,9 +396,18 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">freq_range</span><span class="p">,</span> <span class="n">freq_step</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[],</span> <span class="n">sources</span><span class="o">=</span><span class="p">[],</span> <span class="n">samples</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-                 <span class="n">damping</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;acoustic&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">freq_range</span><span class="p">,</span> <span class="n">freq_step</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sources</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                 <span class="n">factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;acoustic&#39;</span><span class="p">):</span>
         <span class="n">Step</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">displacements</span><span class="p">:</span>
+            <span class="n">displacements</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">loads</span><span class="p">:</span>
+            <span class="n">loads</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sources</span><span class="p">:</span>
+            <span class="n">sources</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span>      <span class="o">=</span> <span class="s1">&#39;AcousticStep&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span>          <span class="o">=</span> <span class="n">name</span>
@@ -418,11 +447,11 @@
             
 
             
-                Last updated on Dec 17, 2018.
+                Last updated on Jan 07, 2019.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
             
         </footer>
 

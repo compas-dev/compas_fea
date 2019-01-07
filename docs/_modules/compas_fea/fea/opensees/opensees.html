@@ -94,7 +94,7 @@
 <span class="p">]</span>
 
 
-<div class="viewcode-block" id="input_generate"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_generate.html#compas_fea.fea.opensees.input_generate">[docs]</a><span class="k">def</span> <span class="nf">input_generate</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+<div class="viewcode-block" id="input_generate"><a class="viewcode-back" href="../../../../reference/generated/compas_fea.fea.opensees.input_generate.html#compas_fea.fea.opensees.input_generate">[docs]</a><span class="k">def</span> <span class="nf">input_generate</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">ndof</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Creates the OpenSees .tcl file from the Structure object.</span>
 
@@ -106,6 +106,8 @@
 <span class="sd">        Data field requests.</span>
 <span class="sd">    output : bool</span>
 <span class="sd">        Print terminal output.</span>
+<span class="sd">    ndof : int</span>
+<span class="sd">        Number of degrees-of-freedom in the model, 3 or 6.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -114,12 +116,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}{1}</span><span class="s1">.tcl&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-
-    <span class="n">ndof</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">structure</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">element</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;TrussElement&#39;</span><span class="p">,</span> <span class="s1">&#39;TieElement&#39;</span><span class="p">,</span> <span class="s1">&#39;StrutElement&#39;</span><span class="p">,</span> <span class="s1">&#39;SpringElement&#39;</span><span class="p">]:</span>
-            <span class="n">ndof</span> <span class="o">=</span> <span class="mi">6</span>
-            <span class="k">break</span>
 
     <span class="k">with</span> <span class="n">Writer</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">software</span><span class="o">=</span><span class="s1">&#39;opensees&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">,</span> <span class="n">ndof</span><span class="o">=</span><span class="n">ndof</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
 
@@ -441,11 +437,11 @@
             
 
             
-                Last updated on Dec 17, 2018.
+                Last updated on Jan 07, 2019.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
             
         </footer>
 

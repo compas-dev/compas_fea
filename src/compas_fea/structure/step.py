@@ -42,6 +42,7 @@ class Step(object):
         self.name = name
         self.attr_list = ['name']
 
+
     def __str__(self):
 
         print('\n')
@@ -52,6 +53,7 @@ class Step(object):
             print('{0:<13} : {1}'.format(attr, getattr(self, attr)))
 
         return ''
+
 
     def __repr__(self):
 
@@ -70,8 +72,10 @@ class GeneralStep(Step):
         Number of step increments.
     iterations : int
         Number of step iterations.
-    factor : float
-        Proportionality factor on the loads and displacements.
+    tolerance : float
+        A tolerance for analysis solvers.
+    factor : float, dict
+        Proportionality factor(s) on the loads and displacements.
     nlgeom : bool
         Analyse non-linear geometry effects.
     nlmat : bool
@@ -82,10 +86,6 @@ class GeneralStep(Step):
         Load object names.
     type : str
         'static','static,riks'.
-    tolerance : float
-        A tolerance for analysis solvers.
-    state : str
-        Limit state 'sls' or 'uls' for design.
     modify : bool
         Modify the previously added loads.
 
@@ -95,14 +95,20 @@ class GeneralStep(Step):
 
     """
 
-    def __init__(self, name, increments=100, iterations=100, factor=1.0, nlgeom=True, nlmat=False, displacements=[],
-                 loads=[], type='static', tolerance=0.01, state='sls', modify=True):
+    def __init__(self, name, increments=100, iterations=100, tolerance=0.01, factor=1.0, nlgeom=True, nlmat=True, displacements=None, loads=None, type='static', modify=True):
         Step.__init__(self, name=name)
+
+        if not displacements:
+            displacements = []
+
+        if not loads:
+            loads = []
 
         self.__name__      = 'GeneralStep'
         self.name          = name
         self.increments    = increments
         self.iterations    = iterations
+        self.tolerance     = tolerance
         self.factor        = factor
         self.nlgeom        = nlgeom
         self.nlmat         = nlmat
@@ -110,10 +116,8 @@ class GeneralStep(Step):
         self.loads         = loads
         self.modify        = modify
         self.type          = type
-        self.tolerance     = tolerance
-        self.state         = state
         self.attr_list.extend(['increments', 'iterations', 'factor', 'nlgeom', 'nlmat', 'displacements', 'loads',
-                               'type', 'tolerance', 'state', 'modify'])
+                               'type', 'tolerance', 'modify'])
 
 
 class HeatStep(Step):
@@ -180,8 +184,11 @@ class ModalStep(Step):
 
     """
 
-    def __init__(self, name, modes=10, increments=100, displacements=[], type='modal'):
+    def __init__(self, name, modes=10, increments=100, displacements=None, type='modal'):
         Step.__init__(self, name=name)
+
+        if not displacements:
+            displacements = []
 
         self.__name__      = 'ModalStep'
         self.name          = name
@@ -219,8 +226,14 @@ class HarmonicStep(Step):
 
     """
 
-    def __init__(self, name, freq_list, displacements=[], loads=[], factor=1.0, damping=None, type='harmonic'):
+    def __init__(self, name, freq_list, displacements=None, loads=None, factor=1.0, damping=None, type='harmonic'):
         Step.__init__(self, name=name)
+
+        if not displacements:
+            displacements = []
+
+        if not loads:
+            loads = []
 
         self.__name__      = 'HarmonicStep'
         self.name          = name
@@ -245,7 +258,7 @@ class BucklingStep(Step):
         Number of modes to analyse.
     increments : int
         Number of increments.
-    factor : float
+    factor : float, dict
         Proportionality factor on the loads and displacements.
     displacements : list
         Displacement object names.
@@ -262,8 +275,15 @@ class BucklingStep(Step):
 
     """
 
-    def __init__(self, name, modes=5, increments=100, factor=1., displacements=[], loads=[], type='buckle', step=None):
+    def __init__(self, name, modes=5, increments=100, factor=1., displacements=None, loads=None, type='buckle',
+                 step=None):
         Step.__init__(self, name=name)
+
+        if not displacements:
+            displacements = []
+
+        if not loads:
+            loads = []
 
         self.__name__      = 'BucklingStep'
         self.name          = name
@@ -310,9 +330,18 @@ class AcousticStep(Step):
 
     """
 
-    def __init__(self, name, freq_range, freq_step, displacements=[], loads=[], sources=[], samples=5, factor=1.0,
-                 damping=None, type='acoustic'):
+    def __init__(self, name, freq_range, freq_step, displacements=None, loads=None, sources=None, samples=5,
+                 factor=1.0, damping=None, type='acoustic'):
         Step.__init__(self, name=name)
+
+        if not displacements:
+            displacements = []
+
+        if not loads:
+            loads = []
+
+        if not sources:
+            sources = []
 
         self.__name__      = 'AcousticStep'
         self.name          = name
