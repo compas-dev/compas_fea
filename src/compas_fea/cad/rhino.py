@@ -205,7 +205,6 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                 added_nodes.add(ep)
 
                 try:
-
                     name = rs.ObjectName(guid).replace("'", '"')
                     if name[0] in ['_', '^']:
                         name = name[1:]
@@ -214,8 +213,8 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                     ey  = dic.get('ey', None)
                     if ex and not ey:
                         ey = cross_vectors(ex, ez)
-                except:
 
+                except:
                     ex = None
                     ey = None
 
