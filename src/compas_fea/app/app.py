@@ -5,7 +5,7 @@ from __future__ import print_function
 
 from compas_fea.utilities import postprocess
 
-from compas.viewers import VtkViewer
+from compas.viewers.vtkviewer import VtkViewer
 
 from numpy import array
 from numpy import hstack
@@ -202,10 +202,9 @@ class App(VtkViewer):
 
 if __name__ == "__main__":
 
-
     from compas_fea.structure import Structure
 
-    fnm = '/home/al/temp/mesh_floor.obj'
+    fnm = 'C:/compas_fea/data/mesh_floor.obj'
 
     mdl = Structure.load_from_obj(fnm)
     mdl.view()
