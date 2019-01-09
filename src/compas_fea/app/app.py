@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-# from compas_fea.utilities import postprocess
+from compas_fea.utilities import postprocess
 
 from compas.viewers import VtkViewer
 
@@ -72,11 +72,11 @@ class App(VtkViewer):
         self.structure     = structure
         self.nodes         = structure.nodes_xyz()
         self.nkeys         = sorted(structure.nodes, key=int)
+        self.elements      = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
         self.mode          = mode
 
         self.xyz = array(self.nodes)
         self.U   = zeros(self.xyz.shape)
-#         self.elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
 
         # UI setup
 
@@ -97,6 +97,12 @@ class App(VtkViewer):
 
                 self.add_label(name='label_fields_element', text='Fields (element)')
                 self.add_listbox(name='listbox_fields_element', items=[], callback=self.element_plot)
+
+                self.add_label(name='label_iptype', text='iptype')
+                self.add_listbox(name='listbox_iptype', items=['mean', 'min', 'max'], callback=self.element_plot)
+
+                self.add_label(name='label_nodal', text='nodal')
+                self.add_listbox(name='listbox_nodal', items=['mean', 'min', 'max'], callback=self.element_plot)
 
 
     def scale_callback(self):
@@ -122,10 +128,9 @@ class App(VtkViewer):
             if 'nodal' in keys:
 
                 node_fields = sorted(list(results['nodal'].keys()))
-                self.listboxes['listbox_fields_nodal'].addItems(node_fields)
+                self.listboxes['listbox_fields_nodal'].addItems(['-select-'] + node_fields)
 
                 mode = self.mode
-                print(mode)
                 self.ux = array([results['nodal']['ux{0}'.format(mode)][i] for i in self.nkeys])
                 self.uy = array([results['nodal']['uy{0}'.format(mode)][i] for i in self.nkeys])
                 self.uz = array([results['nodal']['uz{0}'.format(mode)][i] for i in self.nkeys])
@@ -134,7 +139,7 @@ class App(VtkViewer):
             if 'element' in keys:
 
                 element_fields = sorted(list(results['element'].keys()))
-                self.listboxes['listbox_fields_element'].addItems(element_fields)
+                self.listboxes['listbox_fields_element'].addItems(['-select-'] + element_fields)
 
             self.scale_callback()
 
@@ -145,56 +150,50 @@ class App(VtkViewer):
 
     def nodal_plot(self):
 
-        pass
+        try:
 
-#         try:
-#             step  = self.listboxes['listbox_steps'].currentText()
-#             field = self.listboxes['listbox_fields_nodal'].currentText()
+            step  = self.listboxes['listbox_steps'].currentText()
+            field = self.listboxes['listbox_fields_nodal'].currentText()
 
-#             cbar = [None, None]
+            cbar = [None, None]
+            data = [self.structure.results[step]['nodal']['{0}{1}'.format(field, self.mode)][i] for i in self.nkeys]
 
-#             nodal_data = self.structure.results[step]['nodal']
-#             data = [nodal_data['{0}{1}'.format(field, '')][i] for i in self.nkeys]
-#             dtype = 'nodal'
+            result = postprocess(self.nodes, self.elements, self.ux, self.uy, self.uz, data, 'nodal', 1, cbar,
+                                 255, None, None)
+            toc, _, cnodes, *_ = result
 
-#             result = postprocess(self.nodes, self.elements, self.ux, self.uy, self.uz, data, dtype, 1, cbar, 255,
-#                                  None, None)
-#             toc, _, cnodes, fabs, fscaled, _, _ = result
+            self.update_vertices_colors({i: j for i, j in enumerate(cnodes)})
+            self.update_statusbar('Plotting: {0:.3f} s'.format(toc))
 
-#             self.update_vertices_colors({i: j for i, j in enumerate(cnodes)})
-#             self.update_statusbar('Plotting: {0:.3f} s'.format(toc))
+        except:
 
-#         except:
-#             pass
+            pass
 
 
     def element_plot(self):
 
-        pass
+        try:
 
-#         try:
-#             step  = self.listboxes['listbox_steps'].currentText()
-#             field = self.listboxes['listbox_fields_element'].currentText()
+            step  = self.listboxes['listbox_steps'].currentText()
+            field = self.listboxes['listbox_fields_element'].currentText()
 
-#             if field != 'axes':
+            if field != 'axes':
 
-#                 iptype = 'mean'
-#                 nodal  = 'mean'
+                iptype = self.listboxes['listbox_iptype'].currentText()
+                nodal  = self.listboxes['listbox_nodal'].currentText()
+                cbar   = [None, None]
+                data   = self.structure.results[step]['element'][field]
 
-#                 cbar = [None, None]
+                result = postprocess(self.nodes, self.elements, self.ux, self.uy, self.uz, data, 'element', 1, cbar,
+                                     255, iptype, nodal)
+                toc, _, cnodes, *_ = result
 
-#                 data = self.structure.results[step]['element'][field]
-#                 dtype = 'element'
+                self.update_vertices_colors({i: j for i, j in enumerate(cnodes)})
+                self.update_statusbar('Plotting: {0:.3f} s'.format(toc))
 
-#                 result = postprocess(self.nodes, self.elements, self.ux, self.uy, self.uz, data, dtype, 1, cbar, 255,
-#                                      iptype, nodal)
-#                 toc, _, cnodes, fabs, fscaled, _, _ = result
+        except:
 
-#                 self.update_vertices_colors({i: j for i, j in enumerate(cnodes)})
-#                 self.update_statusbar('Plotting: {0:.3f} s'.format(toc))
-
-#         except:
-#             pass
+            pass
 
 
 # ==============================================================================
@@ -206,9 +205,7 @@ if __name__ == "__main__":
 
     from compas_fea.structure import Structure
 
-    fnm = '/home/al/temp/mesh_plate.obj'
+    fnm = '/home/al/temp/mesh_floor.obj'
 
     mdl = Structure.load_from_obj(fnm)
     mdl.view()
-
-    # print(mdl.results['step_loads']['nodal']['ux'])
