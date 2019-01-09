@@ -68,3 +68,5 @@ mdl.summary()
 mdl.analyse_and_extract(software='abaqus', fields=['u'])
 
 rhino.plot_data(mdl, step='step_load', field='um')
+
+mdl.save_to_obj()

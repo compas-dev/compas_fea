@@ -121,8 +121,8 @@ class Stiff(ElasticIsotropic):
 
     """
 
-    def __init__(self, name):
-        ElasticIsotropic.__init__(self, name=name, E=10**13, v=0.3, p=10**(-1))
+    def __init__(self, name, E=10**13):
+        ElasticIsotropic.__init__(self, name=name, E=E, v=0.3, p=10**(-1))
 
         self.__name__ = 'Stiff'
 

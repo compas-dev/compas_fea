@@ -9,7 +9,6 @@ from compas.viewers import VtkViewer
 
 from numpy import array
 from numpy import hstack
-from numpy import min
 from numpy import newaxis
 from numpy import zeros
 
@@ -27,7 +26,7 @@ __all__ = [
 
 class App(VtkViewer):
 
-    def __init__(self, structure, name='compas_fea App', width=1500, height=1000, data={}):
+    def __init__(self, structure, name='compas_fea App', width=1500, height=1000, data={}, mode=''):
 
         data = {}
         data['vertices'] = {i: structure.node_xyz(i) for i in structure.nodes}
@@ -73,6 +72,7 @@ class App(VtkViewer):
         self.structure     = structure
         self.nodes         = structure.nodes_xyz()
         self.nkeys         = sorted(structure.nodes, key=int)
+        self.mode          = mode
 
         self.xyz = array(self.nodes)
         self.U   = zeros(self.xyz.shape)
@@ -124,17 +124,19 @@ class App(VtkViewer):
                 node_fields = sorted(list(results['nodal'].keys()))
                 self.listboxes['listbox_fields_nodal'].addItems(node_fields)
 
-                mode = ''
+                mode = self.mode
+                print(mode)
                 self.ux = array([results['nodal']['ux{0}'.format(mode)][i] for i in self.nkeys])
                 self.uy = array([results['nodal']['uy{0}'.format(mode)][i] for i in self.nkeys])
                 self.uz = array([results['nodal']['uz{0}'.format(mode)][i] for i in self.nkeys])
                 self.U  = hstack([self.ux[:, newaxis], self.uy[:, newaxis], self.uz[:, newaxis]])
-                print(min(self.U[:, 2]))
 
             if 'element' in keys:
 
                 element_fields = sorted(list(results['element'].keys()))
                 self.listboxes['listbox_fields_element'].addItems(element_fields)
+
+            self.scale_callback()
 
         except:
 
@@ -204,9 +206,9 @@ if __name__ == "__main__":
 
     from compas_fea.structure import Structure
 
-    fnm = '/home/al/temp/mesh_floor.obj'
+    fnm = '/home/al/temp/mesh_plate.obj'
 
     mdl = Structure.load_from_obj(fnm)
-    # mdl.view()
+    mdl.view()
 
-    print(mdl.results['step_loads']['nodal']['ux'])
+    # print(mdl.results['step_loads']['nodal']['ux'])

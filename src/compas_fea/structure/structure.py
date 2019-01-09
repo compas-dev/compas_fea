@@ -231,11 +231,11 @@ Steps
 
 
     # ==============================================================================
-    # Constructors
+    # Constructors    EXPERIMENTAL
     # ==============================================================================
 
     @classmethod
-    def from_mesh(cls, mesh):
+    def from_mesh(cls, mesh, path):
 
         """ Creates a Structure object based on data contained in a compas Mesh datastructure.
 
@@ -255,11 +255,11 @@ Steps
 
         """
 
-        structure = cls()
+        structure = cls(path=path)
 
         # Add nodes and elements from Mesh
 
-        structure.add_nodes_elements_from_mesh(mesh=mesh, type='ShellElement')
+        structure.add_nodes_elements_from_mesh(mesh=mesh, element_type='ShellElement')
 
         # Add displacements
 
@@ -791,7 +791,7 @@ Steps
     # App
     # ==============================================================================
 
-    def view(self):
+    def view(self, mode=''):
 
         """ Starts the PyQt app for visualisation.
 
@@ -814,7 +814,7 @@ Steps
 
             from compas_fea.app.app import App
 
-            app = App(structure=self)
+            app = App(structure=self, mode=mode)
             app.start()
 
         except:
