@@ -875,25 +875,28 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
     if not layer:
         layer = '{0}-{1}{2}'.format(step, field, mode)
+
     rs.CurrentLayer(rs.AddLayer(layer))
     rs.DeleteObjects(rs.ObjectsByLayer(layer))
     rs.EnableRedraw(False)
 
     # Node and element data
 
-    nodes = structure.nodes_xyz()
-    elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
+    nodes      = structure.nodes_xyz()
+    elements   = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
     nodal_data = structure.results[step]['nodal']
-    nkeys = sorted(structure.nodes, key=int)
+    nkeys      = sorted(structure.nodes, key=int)
+
     ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
     uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
     uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
 
     try:
-        data = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
+        data  = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
         dtype = 'nodal'
+
     except(Exception):
-        data = structure.results[step]['element'][field]
+        data  = structure.results[step]['element'][field]
         dtype = 'element'
 
     # Postprocess
@@ -909,15 +912,17 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
         # Plot meshes
 
-        mesh_faces = []
-        line_faces = [[0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]]
+        mesh_faces  = []
+        line_faces  = [[0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]]
         block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
-        tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
+        tet_faces   = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
 
         for element, nodes in enumerate(elements):
+
             n = len(nodes)
 
             if n == 2:
+
                 u, v = nodes
                 sp, ep = U[u], U[v]
                 plane = rs.PlaneFromNormal(sp, subtract_vectors(ep, sp))
@@ -933,17 +938,22 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
                        add_vectors(ep, xa_pr), add_vectors(ep, ya_pr),
                        add_vectors(ep, xa_mr), add_vectors(ep, ya_mr)]
                 guid = rs.AddMesh(pts, line_faces)
+
                 if dtype == 'element':
                     col1 = col2 = celements[element]
+
                 elif dtype == 'nodal':
                     col1 = cnodes[u]
                     col2 = cnodes[v]
+
                 rs.MeshVertexColors(guid, [col1] * 4 + [col2] * 4)
 
             elif n == 3:
+
                 mesh_faces.append(nodes + [nodes[-1]])
 
             elif n == 4:
+
                 if structure.elements[element].__name__ in ['ShellElement', 'MembraneElement']:
                     mesh_faces.append(nodes)
                 else:
@@ -951,6 +961,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
                         mesh_faces.append([nodes[i] for i in face])
 
             elif n == 8:
+
                 for block in block_faces:
                     mesh_faces.append([nodes[i] for i in block])
 

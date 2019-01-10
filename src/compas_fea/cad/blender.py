@@ -5,11 +5,13 @@ from __future__ import print_function
 
 from compas_blender.geometry import BlenderMesh
 # from compas_blender.helpers import mesh_from_bmesh
-# from compas_blender.utilities import clear_layer
-# from compas_blender.utilities import draw_pipes
+from compas_blender.utilities import clear_layer
+from compas_blender.utilities import draw_cylinder
 # from compas_blender.utilities import draw_plane
 from compas_blender.utilities import get_objects
 from compas_blender.utilities import get_points
+from compas_blender.utilities import set_select
+from compas_blender.utilities import set_deselect
 # from compas_blender.utilities import get_object_location
 # from compas_blender.utilities import set_object_location
 # from compas_blender.utilities import xdraw_mesh
@@ -21,12 +23,17 @@ from compas.geometry import subtract_vectors
 # from compas_fea.utilities import colorbar
 # from compas_fea.utilities import extrude_mesh
 # from compas_fea.utilities import network_order
-# from compas_fea.utilities import postprocess
+from compas_fea.utilities import postprocess
 # from compas_fea.utilities import tets_from_vertices_faces
 # from compas_fea.utilities import plotvoxels
 
-# from numpy import array
-# from numpy import newaxis
+from numpy import array
+from numpy import newaxis
+
+try:
+    import bpy
+except ImportError:
+    pass
 
 # import json
 
@@ -44,7 +51,7 @@ __all__ = [
 #     'add_nset_from_bmeshes',
 #     'add_elset_from_bmeshes',
 #     'add_nset_from_objects',
-#     'plot_data',
+    'plot_data',
 #     'ordered_network',
 #     'plot_voxels',
 #     'mesh_extrude',
@@ -449,105 +456,131 @@ def add_nsets_from_layers(structure, layers):
 #     raise NotImplementedError
 
 
-# def plot_data(structure, step, field, layer, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
-#               nodal='mean', mode='', colorbar_size=1):
+def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
+              nodal='mean', mode='', colorbar_size=1):
 
-#     """ Plots analysis results on the deformed shape of the Structure.
+    """ Plots analysis results on the deformed shape of the Structure.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object.
-#     step : str
-#         Name of the Step.
-#     field : str
-#         Field to plot, e.g. 'um', 'sxx', 'sm1'.
-#     layer : int
-#         Layer number for plotting.
-#     scale : float
-#         Scale on displacements for the deformed plot.
-#     radius : float
-#         Radius of the pipe visualisation meshes.
-#     cbar : list
-#         Minimum and maximum limits on the colorbar.
-#     iptype : str
-#         'mean', 'max' or 'min' of an element's integration point data.
-#     nodal : str
-#         'mean', 'max' or 'min' for nodal values.
-#     mode : int
-#         Mode or frequency number to plot, for modal, harmonic or buckling analysis.
-#     colorbar_size : float
-#         Scale on the size of the colorbar.
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    field : str
+        Field to plot, e.g. 'um', 'sxx', 'sm1'.
+    layer : str
+        Layer name for plotting.
+    scale : float
+        Scale on displacements for the deformed plot.
+    radius : float
+        Radius of the pipe visualisation meshes.
+    cbar : list
+        Minimum and maximum limits on the colorbar.
+    iptype : str
+        'mean', 'max' or 'min' of an element's integration point data.
+    nodal : str
+        'mean', 'max' or 'min' for nodal values.
+    mode : int
+        Mode or frequency number to plot, for modal, harmonic or buckling analysis.
+    colorbar_size : float
+        Scale on the size of the colorbar.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     Notes
-#     -----
-#     - Pipe visualisation of line elements is not based on the element section.
+    Notes
+    -----
+    - Pipe visualisation of line elements is not based on the element section.
 
-#     """
+    """
 
-#     clear_layer(layer=layer)
+    if field in ['smaxp', 'smises']:
+        nodal  = 'max'
+        iptype = 'max'
 
-#     # Node and element data
+    elif field in ['sminp']:
+        nodal  = 'min'
+        iptype = 'min'
 
-#     nodes = structure.nodes_xyz()
-#     elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
-#     nodal_data = structure.results[step]['nodal']
-#     nkeys = sorted(structure.nodes, key=int)
-#     ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
-#     uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
-#     uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
+    # Create and clear Rhino layer
 
-#     try:
-#         data = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
-#         dtype = 'nodal'
-#     except(Exception):
-#         data = structure.results[step]['element'][field]
-#         dtype = 'element'
+    if not layer:
+        layer = '{0}-{1}{2}'.format(step, field, mode)
 
-#     # Postprocess
+    clear_layer(layer=layer)
 
-#     result = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1, iptype, nodal)
+    # Node and element data
 
-#     try:
-#         toc, U, cnodes, fabs, fscaled, celements, eabs = result
-#         U = array(U)
-#         print('\n***** Data processed : {0:.3f} s *****'.format(toc))
+    nodes      = structure.nodes_xyz()
+    elements   = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
+    nodal_data = structure.results[step]['nodal']
+    nkeys      = sorted(structure.nodes, key=int)
 
-#     except:
-#         print('\n***** Error encountered during data processing or plotting *****')
+    ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
+    uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
+    uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
 
+    try:
+        data  = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
+        dtype = 'nodal'
 
-#     # Plot meshes
+    except(Exception):
+        data  = structure.results[step]['element'][field]
+        dtype = 'element'
 
-#     npts = 8
-#     mesh_faces = []
+    # Postprocess
 
-#     for element, nodes in enumerate(elements):
-#         n = len(nodes)
+    result = postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 1, iptype, nodal)
 
-#         if n == 2:
-#             u, v = nodes
-#             pipe = draw_pipes(start=[U[u]], end=[U[v]], radius=radius, layer=layer)[0]
-#             if dtype == 'element':
-#                 col1 = col2 = [celements[element]] * npts
-#             elif dtype == 'nodal':
-#                 col1 = [cnodes[u]] * npts
-#                 col2 = [cnodes[v]] * npts
-#             blendermesh = BlenderMesh(pipe)
-#             blendermesh.set_vertex_colors(vertices=range(0, 2*npts, 2), colors=col1)
-#             blendermesh.set_vertex_colors(vertices=range(1, 2*npts, 2), colors=col2)
+    try:
+        toc, U, cnodes, fabs, fscaled, celements, eabs = result
+        U = array(U)
+        print('\n***** Data processed : {0} s *****'.format(toc))
 
-#         elif n in [3, 4]:
-#             mesh_faces.append(nodes)
+    except:
+        print('\n***** Error encountered during data processing or plotting *****')
+
+    # Plot meshes
+
+    npts = 8
+    mesh_faces = []
+    pipes      = []
+
+    for element, nodes in enumerate(elements):
+
+        n = len(nodes)
+
+        if n == 2:
+
+            u, v = nodes
+            pipe = draw_cylinder(start=U[u], end=U[v], radius=radius, div=npts, layer=layer)
+            pipes.append(pipe)
+
+            if dtype == 'element':
+                col1 = col2 = celements[element]
+
+            elif dtype == 'nodal':
+                col1 = cnodes[u]
+                col2 = cnodes[v]
+
+            blendermesh = BlenderMesh(object=pipe)
+            blendermesh.set_vertices_colors({i: col1 for i in range(0, 2*npts, 2)})
+            blendermesh.set_vertices_colors({i: col2 for i in range(1, 2*npts, 2)})
+
+        elif n in [3, 4]:
+
+            mesh_faces.append(nodes)
 
 #     if mesh_faces:
 #         bmesh = xdraw_mesh(name='bmesh', vertices=U, faces=mesh_faces, layer=layer)
 #         blendermesh = BlenderMesh(bmesh)
 #         blendermesh.set_vertex_colors(vertices=range(U.shape[0]), colors=cnodes)
+
+    set_deselect()
+    set_select(objects=pipes)
+    bpy.ops.object.join()
 
 #     # Plot colourbar
 
