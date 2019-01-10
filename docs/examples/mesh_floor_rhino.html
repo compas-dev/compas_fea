@@ -125,16 +125,16 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
     <span class="n">Concrete</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">fck</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">fr</span><span class="o">=</span><span class="p">[</span><span class="mf">1.16</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">]),</span>
-    <span class="n">Stiff</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_stiff&#39;</span><span class="p">),</span>
+    <span class="n">Stiff</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_stiff&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">12</span><span class="p">),</span>
     <span class="n">Steel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">),</span>
 <span class="p">])</span>
-    
+
 <span class="c1"># Sections</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
     <span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_ribs&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.020</span><span class="p">),</span>
     <span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_vault&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.050</span><span class="p">),</span>
-    <span class="n">RectangularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_stiff&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> 
+    <span class="n">RectangularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_stiff&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
     <span class="n">TrussSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_ties&#39;</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="n">pi</span><span class="o">*</span><span class="mf">0.25</span><span class="o">*</span><span class="mf">0.030</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span>
 <span class="p">])</span>
 
@@ -154,7 +154,7 @@
     <span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_corner1&#39;</span><span class="p">),</span>
     <span class="n">GeneralDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_xdof&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_corner2&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
 <span class="p">])</span>
-    
+
 <span class="c1"># Loads</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
@@ -182,6 +182,8 @@
 <span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;uz&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">cbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;smises&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">cbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">])</span>
 <span class="n">rhino</span><span class="o">.</span><span class="n">plot_concentrated_forces</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">)</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">save_to_obj</span><span class="p">()</span>
 </code></pre></div>
 </div>
 </div>
@@ -210,7 +212,7 @@
             
 
             
-                Last updated on Jan 07, 2019.
+                Last updated on Jan 10, 2019.
             
 
             

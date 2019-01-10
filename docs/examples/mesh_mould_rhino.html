@@ -94,14 +94,14 @@
 <span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
 
 
-<span class="c1"># Structure </span>
+<span class="c1"># Structure</span>
 
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mesh_mould&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;C:/Temp/&#39;</span><span class="p">)</span>
 
 <span class="c1"># Elements</span>
 
 <span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;elset_wall&#39;</span><span class="p">,</span> <span class="s1">&#39;elset_plinth&#39;</span><span class="p">])</span>
-        
+
 <span class="c1"># Sets</span>
 
 <span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;nset_fixed&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_loads&#39;</span><span class="p">])</span>
@@ -212,7 +212,7 @@
             
 
             
-                Last updated on Jan 07, 2019.
+                Last updated on Jan 10, 2019.
             
 
             
