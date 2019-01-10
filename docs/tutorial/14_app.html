@@ -69,20 +69,28 @@
 
                         <div class="section" id="app">
 <h1>App</h1>
-<p>This page describes the use of the <strong>compas_fea</strong> App, which can be used for visualising the geometry of the created <strong>Structure</strong> and later (when implemented) for plotting the results from the analysis.</p>
+<p>This page describes the use of the <strong>compas_fea</strong> App, which can be used for visualising the geometry of the created <strong>Structure</strong> and for plotting the results from an analysis. The App is still experimental and has only limited functionality, it requires PyOpenGL, VTK and PyQt5 to function.</p>
 <div class="section" id="viewing-the-structure">
 <h2>Viewing the Structure</h2>
-<p>The App may be invoked by using the <code class="docutils literal notranslate"><span class="pre">structure.view()</span></code> method, which will take the geometry information stored in the <code class="docutils literal notranslate"><span class="pre">.nodes</span></code> and <code class="docutils literal notranslate"><span class="pre">.elements</span></code> dictionaries, and plot an OpenGL/Vtk based 3D representation of the <strong>Structure</strong>. To load and view a <strong>Structure</strong> from an <a href="#id1"><span class="problematic" id="id2">``</span></a>.obj’ file, use the following code:</p>
+<p>The App may be invoked by using the <code class="docutils literal notranslate"><span class="pre">.view()</span></code> method, which will take the geometry information stored in the <code class="docutils literal notranslate"><span class="pre">.nodes</span></code> and <code class="docutils literal notranslate"><span class="pre">.elements</span></code> dictionaries, and plot a 3D representation of the <strong>Structure</strong> in a graphical user interface. To load and view a <strong>Structure</strong> from an existing <code class="docutils literal notranslate"><span class="pre">.obj'</span></code> file, use the following code:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Structure</span>
 
-<span class="n">fnm</span> <span class="o">=</span> <span class="s1">&#39;/home/al/mesh_roof.obj&#39;</span>
+<span class="n">fnm</span> <span class="o">=</span> <span class="s1">&#39;/home/al/mesh_floorroof.obj&#39;</span>  <span class="c1"># location of .obj file</span>
 
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="o">.</span><span class="n">load_from_obj</span><span class="p">(</span><span class="n">fnm</span><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="o">.</span><span class="n">load_from_obj</span><span class="p">(</span><span class="n">fnm</span><span class="p">)</span>  <span class="c1"># load Structure from .obj file</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>  <span class="c1"># open the App</span>
 </code></pre></div>
 </div>
-<p>The App, as shown in the figure below, will plot: 1) 1D line elements in blue for beams, red for trusses and yellow for springs, 2) 2D shell elements will be plotted as mesh faces in green, and 3) free nodes will be plotted as points in blue and nodes with some displacement object attached to them plotted in orange.</p>
-<a class="reference internal image-reference" href="../_images/roof_app.png"><img alt="../_images/roof_app.png" src="../_images/roof_app.png" style="width: 674.1px; height: 460.35px;" /></a>
+<p>The App will plot 1D line elements in blue for beams, red for trusses and yellow for springs, and plot 2D shell elements as mesh faces in green. The <em>Opacity</em> slider on the left-hand-side changes the transparency of the mesh and its edges, and the <em>Vertex size</em> slider adjusts the size of the structural nodes (set to zero for no node display).</p>
+<a class="reference internal image-reference" href="../_images/app_edges.png"><img alt="../_images/app_edges.png" src="../_images/app_edges.png" style="width: 674.1px; height: 458.55px;" /></a>
+<p>Using the <em>Edge width</em> slider allows the thickness of the mesh face edges to be altered, if this is taken to zero (i.e. edge display turned off), this may help to more clearly see the main structure by hiding the individual discretised elements.</p>
+<a class="reference internal image-reference" href="../_images/app_no_edges.png"><img alt="../_images/app_no_edges.png" src="../_images/app_no_edges.png" style="width: 672.75px; height: 458.55px;" /></a>
+<p>Nodal and element analysis results can be plotted on top of the visualisation mesh, by first selecting the relevant <strong>Step</strong> from the <em>Steps</em> listbox, and then selecting the field of interest from either the <em>Fields (nodal)</em> or <em>Fields (element)</em> listboxes. <strong>Note</strong>: that the first <strong>Step</strong> (here <em>step_bc</em>) that is associated with the structure’s displacement boundary conditions before loading, will not have any analysis results to plot.</p>
+<a class="reference internal image-reference" href="../_images/app_nodal.png"><img alt="../_images/app_nodal.png" src="../_images/app_nodal.png" style="width: 673.65px; height: 457.2px;" /></a>
+<p>For the element data, use the <em>iptype</em> and <em>nodal</em> listboxes, which have entries of <em>min</em>, <em>max</em> and <em>mean</em>, to further adjust the way element data is transferred to the nodes as vertex colours on the visualisation mesh.</p>
+<a class="reference internal image-reference" href="../_images/app_element.png"><img alt="../_images/app_element.png" src="../_images/app_element.png" style="width: 673.2px; height: 457.65000000000003px;" /></a>
+<p>The analysis results will be plotted on the deformed structure for the selected <strong>Step</strong>. To change the scale of the deformations use the <em>Scale</em> slider, by default deformations are scaled to 1, they can be turned off by setting this slider to 0, or magnified up to a scale of 1000.</p>
+<a class="reference internal image-reference" href="../_images/app_scale.png"><img alt="../_images/app_scale.png" src="../_images/app_scale.png" style="width: 671.85px; height: 457.2px;" /></a>
 </div>
 </div>
 
@@ -110,7 +118,7 @@
             
 
             
-                Last updated on Jan 07, 2019.
+                Last updated on Jan 10, 2019.
             
 
             

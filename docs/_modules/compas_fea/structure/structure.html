@@ -297,11 +297,11 @@
 
 
     <span class="c1"># ==============================================================================</span>
-    <span class="c1"># Constructors</span>
+    <span class="c1"># Constructors    EXPERIMENTAL</span>
     <span class="c1"># ==============================================================================</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_mesh</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">from_mesh</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot; Creates a Structure object based on data contained in a compas Mesh datastructure.</span>
 
@@ -321,11 +321,11 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">structure</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+        <span class="n">structure</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
 
         <span class="c1"># Add nodes and elements from Mesh</span>
 
-        <span class="n">structure</span><span class="o">.</span><span class="n">add_nodes_elements_from_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">)</span>
+        <span class="n">structure</span><span class="o">.</span><span class="n">add_nodes_elements_from_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">element_type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">)</span>
 
         <span class="c1"># Add displacements</span>
 
@@ -857,7 +857,7 @@
     <span class="c1"># App</span>
     <span class="c1"># ==============================================================================</span>
 
-    <span class="k">def</span> <span class="nf">view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot; Starts the PyQt app for visualisation.</span>
 
@@ -880,7 +880,7 @@
 
             <span class="kn">from</span> <span class="nn">compas_fea.app.app</span> <span class="k">import</span> <span class="n">App</span>
 
-            <span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
             <span class="n">app</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
         <span class="k">except</span><span class="p">:</span>
@@ -970,7 +970,7 @@
             
 
             
-                Last updated on Jan 07, 2019.
+                Last updated on Jan 10, 2019.
             
 
             

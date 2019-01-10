@@ -271,7 +271,6 @@
                 <span class="n">added_nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span>
 
                 <span class="k">try</span><span class="p">:</span>
-
                     <span class="n">name</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">ObjectName</span><span class="p">(</span><span class="n">guid</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;^&#39;</span><span class="p">]:</span>
                         <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
@@ -280,8 +279,8 @@
                     <span class="n">ey</span>  <span class="o">=</span> <span class="n">dic</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ey&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">ex</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ey</span><span class="p">:</span>
                         <span class="n">ey</span> <span class="o">=</span> <span class="n">cross_vectors</span><span class="p">(</span><span class="n">ex</span><span class="p">,</span> <span class="n">ez</span><span class="p">)</span>
-                <span class="k">except</span><span class="p">:</span>
 
+                <span class="k">except</span><span class="p">:</span>
                     <span class="n">ex</span> <span class="o">=</span> <span class="kc">None</span>
                     <span class="n">ey</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -1247,7 +1246,7 @@
             
 
             
-                Last updated on Jan 07, 2019.
+                Last updated on Jan 10, 2019.
             
 
             
