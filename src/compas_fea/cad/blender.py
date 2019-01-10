@@ -7,20 +7,22 @@ from compas_blender.geometry import BlenderMesh
 # from compas_blender.helpers import mesh_from_bmesh
 from compas_blender.utilities import clear_layer
 from compas_blender.utilities import draw_cylinder
-# from compas_blender.utilities import draw_plane
+from compas_blender.utilities import draw_plane
+from compas_blender.utilities import draw_line
 from compas_blender.utilities import get_objects
 from compas_blender.utilities import get_points
 from compas_blender.utilities import set_select
 from compas_blender.utilities import set_deselect
 # from compas_blender.utilities import get_object_location
-# from compas_blender.utilities import set_object_location
+from compas_blender.utilities import set_objects_coordinates
+from compas_blender.utilities import set_object_property
 # from compas_blender.utilities import xdraw_mesh
-# from compas_blender.utilities import xdraw_texts
+from compas_blender.utilities import draw_text
 
 # from compas.geometry import cross_vectors
 from compas.geometry import subtract_vectors
 
-# from compas_fea.utilities import colorbar
+from compas_fea.utilities import colorbar
 # from compas_fea.utilities import extrude_mesh
 # from compas_fea.utilities import network_order
 from compas_fea.utilities import postprocess
@@ -28,7 +30,11 @@ from compas_fea.utilities import postprocess
 # from compas_fea.utilities import plotvoxels
 
 from numpy import array
+from numpy import hstack
+from numpy import max
 from numpy import newaxis
+from numpy import where
+from numpy.linalg import norm
 
 try:
     import bpy
@@ -55,6 +61,8 @@ __all__ = [
 #     'ordered_network',
 #     'plot_voxels',
 #     'mesh_extrude',
+    'plot_reaction_forces',
+    'plot_concentrated_forces',
 ]
 
 
@@ -457,7 +465,7 @@ def add_nsets_from_layers(structure, layers):
 
 
 def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
-              nodal='mean', mode='', colorbar_size=1):
+              nodal='mean', mode='', cbar_size=1):
 
     """ Plots analysis results on the deformed shape of the Structure.
 
@@ -483,7 +491,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         'mean', 'max' or 'min' for nodal values.
     mode : int
         Mode or frequency number to plot, for modal, harmonic or buckling analysis.
-    colorbar_size : float
+    cbar_size : float
         Scale on the size of the colorbar.
 
     Returns
@@ -504,7 +512,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         nodal  = 'min'
         iptype = 'min'
 
-    # Create and clear Rhino layer
+    # Create and clear Blender layer
 
     if not layer:
         layer = '{0}-{1}{2}'.format(step, field, mode)
@@ -578,44 +586,137 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 #         blendermesh = BlenderMesh(bmesh)
 #         blendermesh.set_vertex_colors(vertices=range(U.shape[0]), colors=cnodes)
 
+    # Plot colourbar
+
+    xr, yr, _ = structure.node_bounds()
+    yran = yr[1] - yr[0] if yr[1] - yr[0] else 1
+    s    = yran * 0.1 * cbar_size
+    xmin = xr[1] + 3 * s
+    ymin = yr[0]
+
+    cmesh = draw_plane(name='colorbar', Lx=s, dx=s, Ly=10*s, dy=s, layer=layer)
+    set_objects_coordinates(objects=[cmesh], coords=[[xmin, ymin, 0]])
+    blendermesh = BlenderMesh(object=cmesh)
+    vertices    = blendermesh.get_vertices_coordinates().values()
+
+    y  = array(list(vertices))[:, 1]
+    yn = yran * cbar_size
+    colors = colorbar(((y - ymin - 0.5 * yn) * 2 / yn)[:, newaxis], input='array', type=1)
+    blendermesh.set_vertices_colors({i: j for i, j in zip(range(len(vertices)), colors)})
+
     set_deselect()
-    set_select(objects=pipes)
+    set_select(objects=pipes + [cmesh])
     bpy.ops.object.join()
 
-#     # Plot colourbar
+    h = 0.6 * s
 
-#     xr, yr, _ = structure.node_bounds()
-#     yran = yr[1] - yr[0] if yr[1] - yr[0] else 1
-#     s = yran * 0.1 * colorbar_size
-#     xmin = xr[1] + 3 * s
-#     ymin = yr[0]
+    for i in range(5):
 
-#     cmesh = draw_plane(name='colorbar', Lx=s, dx=s, Ly=10*s, dy=s, layer=layer)
-#     set_object_location(object=cmesh, location=[xmin, ymin, 0])
-#     blendermesh = BlenderMesh(cmesh)
-#     verts = blendermesh.get_vertex_coordinates()
+        x0 = xmin + 1.2 * s
+        yu = ymin + (5.8 + i) * s
+        yl = ymin + (3.8 - i) * s
+        vu = float(+max(eabs, fabs) * (i + 1) / 5.)
+        vl = float(-max(eabs, fabs) * (i + 1) / 5.)
 
-#     y = array(verts)[:, 1]
-#     yn = yran * colorbar_size
-#     colors = colorbar(((y - ymin - 0.5 * yn) * 2 / yn)[:, newaxis], input='array', type=1)
-#     blendermesh.set_vertex_colors(vertices=range(len(verts)), colors=colors)
+        draw_text(radius=h, pos=[x0, yu, 0], text='{0:.3g}'.format(vu), layer=layer)
+        draw_text(radius=h, pos=[x0, yl, 0], text='{0:.3g}'.format(vl), layer=layer)
 
-#     h = 0.6 * s
-#     texts = []
-#     for i in range(5):
-#         x0 = xmin + 1.2 * s
-#         yu = ymin + (5.8 + i) * s
-#         yl = ymin + (3.8 - i) * s
-#         vu = float(+max(eabs, fabs) * (i + 1) / 5.)
-#         vl = float(-max(eabs, fabs) * (i + 1) / 5.)
-#         texts.extend([
-#             {'radius': h, 'pos': [x0, yu, 0], 'text': '{0:.3g}'.format(vu), 'layer': layer},
-#             {'radius': h, 'pos': [x0, yl, 0], 'text': '{0:.3g}'.format(vl), 'layer': layer}])
-#     texts.extend([
-#         {'radius': h, 'pos': [x0, ymin + 4.8 * s, 0], 'text': '0', 'layer': layer},
-#         {'radius': h, 'pos': [xmin, ymin + 12 * s, 0], 'text': 'Step:{0}   Field:{1}'.format(step, field), 'layer': layer}])
+    draw_text(radius=h, pos=[x0,  ymin + 4.8 * s, 0], text='0', layer=layer)
+    draw_text(radius=h, pos=[xmin, ymin + 12 * s, 0], text='Step:{0}   Field:{1}'.format(step, field), layer=layer)
 
-#     xdraw_texts(texts)
+
+def plot_reaction_forces(structure, step, layer=None, scale=1.0):
+
+    """ Plots reaction forces for the Structure analysis results.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    layer : str
+        Layer name for plotting.
+    scale : float
+        Scale of the arrows.
+
+    Returns
+    -------
+    None
+
+    """
+
+    if not layer:
+        layer = '{0}-{1}'.format(step, 'reactions')
+
+    clear_layer(layer=layer)
+
+    rfx   = array(list(structure.results[step]['nodal']['rfx'].values()))[:, newaxis]
+    rfy   = array(list(structure.results[step]['nodal']['rfy'].values()))[:, newaxis]
+    rfz   = array(list(structure.results[step]['nodal']['rfz'].values()))[:, newaxis]
+    rf    = hstack([rfx, rfy, rfz])
+    rfm   = norm(rf, axis=1)
+    rmax  = max(rfm)
+    nodes = array(structure.nodes_xyz())
+
+    for i in where(rfm > 0)[0]:
+
+        sp   = nodes[i, :]
+        ep   = nodes[i, :] + rf[i, :] * -scale * 0.001
+        col  = colorbar(rfm[i] / rmax, input='float', type=1)
+        line = draw_line(start=sp, end=ep, width=0.01, color=col)
+
+        set_object_property(object=line, property='rfx', value=rf[i, 0])
+        set_object_property(object=line, property='rfy', value=rf[i, 1])
+        set_object_property(object=line, property='rfz', value=rf[i, 2])
+        set_object_property(object=line, property='rfm', value=rfm[i])
+
+
+def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
+
+#     """ Plots reaction forces for the Structure analysis results.
+
+#     Parameters
+#     ----------
+#     structure : obj
+#         Structure object.
+#     step : str
+#         Name of the Step.
+#     layer : str
+#         Layer name for plotting.
+#     scale : float
+#         Scale of the arrows.
+
+#     Returns
+#     -------
+#     None
+
+#     """
+
+    if not layer:
+        layer = '{0}-{1}'.format(step, 'forces')
+
+#     clear_layer(layer=layer)
+
+#     rfx   = array(list(structure.results[step]['nodal']['rfx'].values()))[:, newaxis]
+#     rfy   = array(list(structure.results[step]['nodal']['rfy'].values()))[:, newaxis]
+#     rfz   = array(list(structure.results[step]['nodal']['rfz'].values()))[:, newaxis]
+#     rf    = hstack([rfx, rfy, rfz])
+#     rfm   = norm(rf, axis=1)
+#     rmax  = max(rfm)
+#     nodes = array(structure.nodes_xyz())
+
+#     for i in where(rfm > 0)[0]:
+
+#         sp   = nodes[i, :]
+#         ep   = nodes[i, :] + rf[i, :] * -scale * 0.001
+#         col  = colorbar(rfm[i] / rmax, input='float', type=1)
+#         line = draw_line(start=sp, end=ep, width=0.01, color=col)
+
+#         set_object_property(object=line, property='rfx', value=rf[i, 0])
+#         set_object_property(object=line, property='rfy', value=rf[i, 1])
+#         set_object_property(object=line, property='rfz', value=rf[i, 2])
+#         set_object_property(object=line, property='rfm', value=rfm[i])
 
 
 # def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean', nodal='mean',

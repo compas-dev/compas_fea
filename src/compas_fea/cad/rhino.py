@@ -621,6 +621,7 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
 
     if not layer:
         layer = '{0}-{1}'.format(step, 'reactions')
+
     rs.CurrentLayer(rs.AddLayer(layer))
     rs.DeleteObjects(rs.ObjectsByLayer(layer))
     rs.EnableRedraw(False)
@@ -630,12 +631,13 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
     rfz = structure.results[step]['nodal']['rfz']
 
     nkeys = rfx.keys()
-    v = [scale_vector([rfx[i], rfy[i], rfz[i]], -scale * 0.001) for i in nkeys]
-    rm = [length_vector(i) for i in v]
-    rmax = max(rm)
+    v     = [scale_vector([rfx[i], rfy[i], rfz[i]], -scale * 0.001) for i in nkeys]
+    rm    = [length_vector(i) for i in v]
+    rmax  = max(rm)
     nodes = structure.nodes_xyz(nkeys)
 
     for i in nkeys:
+
         if rm[i] > 0.001:
             l = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
             rs.CurveArrows(l, 1)
@@ -973,7 +975,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
         xr, yr, _ = structure.node_bounds()
         yran = yr[1] - yr[0] if yr[1] - yr[0] else 1
-        s = yran * 0.1 * cbar_size
+        s    = yran * 0.1 * cbar_size
         xmin = xr[1] + 3 * s
         ymin = yr[0]
 
@@ -983,7 +985,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         faces = [[i, i + 1, i + 12, i + 11] for i in range(10)]
         id = rs.AddMesh(verts, faces)
 
-        y = [i[1] for i in verts]
+        y  = [i[1] for i in verts]
         yn = yran * cbar_size
         colors = [colorbar(2 * (yi - ymin - 0.5 * yn) / yn, input='float', type=255) for yi in y]
         rs.MeshVertexColors(id, colors)
@@ -991,6 +993,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         h = 0.4 * s
 
         for i in range(5):
+
             x0 = xmin + 1.2 * s
             yu = ymin + (5.8 + i) * s
             yl = ymin + (3.8 - i) * s
