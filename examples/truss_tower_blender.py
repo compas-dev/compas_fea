@@ -8,10 +8,6 @@ from compas_fea.structure import PointLoad
 from compas_fea.structure import Structure
 from compas_fea.structure import TrussSection
 
-import compas_fea.cad.blender
-import imp
-imp.reload(compas_fea.cad.blender)
-
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
 __copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
@@ -69,10 +65,10 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 'cf', 'rf', 'sf', 's'])
 
 # blender.plot_data(mdl, step='step_load', field='um')
 # blender.plot_data(mdl, step='step_load', field='smises')
-compas_fea.cad.blender.plot_reaction_forces(mdl, step='step_load', scale=0.05)
+# blender.plot_reaction_forces(mdl, step='step_load', scale=0.05)
 # blender.plot_concentrated_forces(mdl, step='step_load', scale=0.05)
 
 # Print results
 
-# print(mdl.get_nodal_results(step='step_load', field='um', nodes='nset_top'))
-# print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))
+print(mdl.get_nodal_results(step='step_load', field='um', nodes='nset_top'))
+print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))

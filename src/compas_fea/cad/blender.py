@@ -15,11 +15,12 @@ from compas_blender.utilities import set_select
 from compas_blender.utilities import set_deselect
 # from compas_blender.utilities import get_object_location
 from compas_blender.utilities import set_objects_coordinates
+from compas_blender.utilities import get_object_property
 from compas_blender.utilities import set_object_property
 # from compas_blender.utilities import xdraw_mesh
 from compas_blender.utilities import draw_text
 
-# from compas.geometry import cross_vectors
+from compas.geometry import cross_vectors
 from compas.geometry import subtract_vectors
 
 from compas_fea.utilities import colorbar
@@ -58,7 +59,6 @@ __all__ = [
 #     'add_elset_from_bmeshes',
 #     'add_nset_from_objects',
     'plot_data',
-#     'ordered_network',
 #     'plot_voxels',
 #     'mesh_extrude',
     'plot_reaction_forces',
@@ -106,15 +106,9 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
 
     if line_type and edges:
 
-#         try:
-#             dic = json.loads(name.replace("'", '"'))
-#             ex = dic.get('ex', None)
-#             ey = dic.get('ey', None)
-#         except:
-#             ex = None
-#             ey = None
-#         axes = {'ex': ex, 'ey': ey}
-        axes = {}
+        ex   = get_object_property(object=bmesh, property='ex')
+        ey   = get_object_property(object=bmesh, property='ey')
+        axes = {'ex': list(ex) if ex else ex, 'ey': list(ey) if ey else ey}
 
         for u, v in edges.values():
 
@@ -123,10 +117,10 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
             sp = structure.check_node_exists(sp_xyz)
             ep = structure.check_node_exists(ep_xyz)
             ez = subtract_vectors(ep_xyz, sp_xyz)
-#             if ex and not ey:
-#                 ey = cross_vectors(ex, ez)
-#             axes['ey'] = ey
-#             axes['ez'] = ez
+            if ex and not ey:
+                ey = cross_vectors(ex, ez)
+            axes['ey'] = ey
+            axes['ez'] = ez
             ekey = structure.add_element(nodes=[sp, ep], type=line_type, thermal=thermal, axes=axes)
             if ekey is not None:
                 added_elements.add(ekey)
@@ -385,6 +379,7 @@ def add_nsets_from_layers(structure, layers):
         for point in get_points(layer=layer):
             nodes.append(structure.check_node_exists(list(point.location)))
 
+        # ADD MESHES HERE AND ADD VERTICES TO NODES
         # for object in get_objects(layer=layer):
 
         structure.add_set(name=layer, type='node', selection=nodes)
@@ -424,44 +419,6 @@ def add_nsets_from_layers(structure, layers):
 #     mesh = mesh_from_bmesh(bmesh)
 #     extrude_mesh(structure=structure, mesh=mesh, layers=layers, thickness=thickness, mesh_name=mesh_name,
 #                  links_name=links_name, blocks_name=blocks_name)
-
-
-# def ordered_network(structure, network, layer):
-
-#     """ Extract node and element orders from a Network for a given start-point.
-
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object.
-#     network : obj
-#         Network object.
-#     layer : int
-#         Layer to extract start-point (Blender object).
-
-#     Returns
-#     -------
-#     list
-#         Ordered nodes.
-#     list
-#         Ordered elements.
-#     list
-#         Cumulative lengths at element mid-points.
-#     float
-#         Total length.
-
-#     Notes
-#     -----
-#     - Function is for a Network representing a single structural element.
-
-#     """
-
-#     start = get_object_location(object=get_objects(layer=layer)[0])
-#     return network_order(start=start, structure=structure, network=network)
-
-
-# def plot_axes():
-#     raise NotImplementedError
 
 
 def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
@@ -615,8 +572,8 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         x0 = xmin + 1.2 * s
         yu = ymin + (5.8 + i) * s
         yl = ymin + (3.8 - i) * s
-        vu = float(+max(eabs, fabs) * (i + 1) / 5.)
-        vl = float(-max(eabs, fabs) * (i + 1) / 5.)
+        vu = +max([eabs, fabs]) * (i + 1) / 5.
+        vl = -max([eabs, fabs]) * (i + 1) / 5.
 
         draw_text(radius=h, pos=[x0, yu, 0], text='{0:.3g}'.format(vu), layer=layer)
         draw_text(radius=h, pos=[x0, yl, 0], text='{0:.3g}'.format(vl), layer=layer)
@@ -674,49 +631,49 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
 
 def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
 
-#     """ Plots reaction forces for the Structure analysis results.
+    """ Plots reaction forces for the Structure analysis results.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object.
-#     step : str
-#         Name of the Step.
-#     layer : str
-#         Layer name for plotting.
-#     scale : float
-#         Scale of the arrows.
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    layer : str
+        Layer name for plotting.
+    scale : float
+        Scale of the arrows.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     """
+    """
 
     if not layer:
         layer = '{0}-{1}'.format(step, 'forces')
 
-#     clear_layer(layer=layer)
+    clear_layer(layer=layer)
 
-#     rfx   = array(list(structure.results[step]['nodal']['rfx'].values()))[:, newaxis]
-#     rfy   = array(list(structure.results[step]['nodal']['rfy'].values()))[:, newaxis]
-#     rfz   = array(list(structure.results[step]['nodal']['rfz'].values()))[:, newaxis]
-#     rf    = hstack([rfx, rfy, rfz])
-#     rfm   = norm(rf, axis=1)
-#     rmax  = max(rfm)
-#     nodes = array(structure.nodes_xyz())
+    cfx   = array(list(structure.results[step]['nodal']['cfx'].values()))[:, newaxis]
+    cfy   = array(list(structure.results[step]['nodal']['cfy'].values()))[:, newaxis]
+    cfz   = array(list(structure.results[step]['nodal']['cfz'].values()))[:, newaxis]
+    cf    = hstack([cfx, cfy, cfz])
+    cfm   = norm(cf, axis=1)
+    cmax  = max(cfm)
+    nodes = array(structure.nodes_xyz())
 
-#     for i in where(rfm > 0)[0]:
+    for i in where(cfm > 0)[0]:
 
-#         sp   = nodes[i, :]
-#         ep   = nodes[i, :] + rf[i, :] * -scale * 0.001
-#         col  = colorbar(rfm[i] / rmax, input='float', type=1)
-#         line = draw_line(start=sp, end=ep, width=0.01, color=col)
+        sp   = nodes[i, :]
+        ep   = nodes[i, :] + cf[i, :] * -scale * 0.001
+        col  = colorbar(cfm[i] / cmax, input='float', type=1)
+        line = draw_line(start=sp, end=ep, width=0.01, color=col)
 
-#         set_object_property(object=line, property='rfx', value=rf[i, 0])
-#         set_object_property(object=line, property='rfy', value=rf[i, 1])
-#         set_object_property(object=line, property='rfz', value=rf[i, 2])
-#         set_object_property(object=line, property='rfm', value=rfm[i])
+        set_object_property(object=line, property='cfx', value=cf[i, 0])
+        set_object_property(object=line, property='cfy', value=cf[i, 1])
+        set_object_property(object=line, property='cfz', value=cf[i, 2])
+        set_object_property(object=line, property='cfm', value=cfm[i])
 
 
 # def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean', nodal='mean',
