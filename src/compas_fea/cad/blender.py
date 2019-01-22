@@ -17,8 +17,8 @@ from compas_blender.utilities import set_deselect
 from compas_blender.utilities import set_objects_coordinates
 from compas_blender.utilities import get_object_property
 from compas_blender.utilities import set_object_property
-# from compas_blender.utilities import xdraw_mesh
 from compas_blender.utilities import draw_text
+from compas_blender.utilities import xdraw_mesh
 
 from compas.geometry import cross_vectors
 from compas.geometry import subtract_vectors
@@ -26,6 +26,7 @@ from compas.geometry import subtract_vectors
 from compas_fea.utilities import colorbar
 # from compas_fea.utilities import extrude_mesh
 # from compas_fea.utilities import network_order
+from compas_fea.utilities import discretise_faces
 from compas_fea.utilities import postprocess
 # from compas_fea.utilities import tets_from_vertices_faces
 # from compas_fea.utilities import plotvoxels
@@ -54,6 +55,7 @@ __email__     = 'liew@arch.ethz.ch'
 __all__ = [
     'add_nodes_elements_from_bmesh',
     'add_nodes_elements_from_layers',
+    'discretise_mesh',
 #     'add_tets_from_bmesh',
 #     'add_nset_from_bmeshes',
 #     'add_elset_from_bmeshes',
@@ -208,6 +210,49 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
         structure.add_set(name=layer, type='element', selection=list(elset))
 
     return list(added_nodes), list(added_elements)
+
+
+def discretise_mesh(structure, mesh, layer, target, min_angle=15, factor=1):
+
+    """ Discretise a mesh from an input triangulated coarse mesh into small denser meshes.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    mesh : obj
+        The object of the Blender input mesh.
+    layer : str
+        Layer name to draw results.
+    target : float
+        Target length of each triangle.
+    min_angle : float
+        Minimum internal angle of triangles.
+    factor : float
+        Factor on the maximum area of each triangle.
+
+    Returns
+    -------
+    None
+
+    """
+
+    blendermesh = BlenderMesh(mesh)
+    vertices = list(blendermesh.get_vertices_coordinates().values())
+    faces    = list(blendermesh.get_faces_vertex_indices().values())
+
+    try:
+
+        points, tris = discretise_faces(vertices=vertices, faces=faces, target=target, min_angle=min_angle,
+                                        factor=factor)
+
+        for pts, tri in zip(points, tris):
+            bmesh = xdraw_mesh(name='face', vertices=pts, faces=tri, layer=layer)
+            add_nodes_elements_from_bmesh(structure=structure, bmesh=bmesh, mesh_type='ShellElement')
+
+    except:
+
+        print('***** Error using MeshPy (Triangle) or drawing faces *****')
 
 
 # def add_tets_from_bmesh(structure, name, bmesh, draw_tets=False, volume=None, layer=19, acoustic=False, thermal=False):

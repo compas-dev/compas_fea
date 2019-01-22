@@ -69,6 +69,9 @@ mdl.summary()
 
 # Run
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'ur', 'cf', 'rf', 'sf', 'sm'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'ur', 'sf', 'sm'])
 
-blender.plot_data(mdl, step='step_load', field='um', radius=0.01, cbar_size=0.3)
+# blender.plot_data(mdl, step='step_load', field='um', radius=0.01, cbar_size=0.3)
+# blender.plot_data(mdl, step='step_load', field='urx', radius=0.01, cbar_size=0.3)
+# blender.plot_data(mdl, step='step_load', field='sf1', radius=0.01, cbar_size=0.3)
+# blender.plot_data(mdl, step='step_load', field='sm1', radius=0.01, cbar_size=0.3)
