@@ -206,11 +206,14 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 
                 try:
                     name = rs.ObjectName(guid).replace("'", '"')
+
                     if name[0] in ['_', '^']:
                         name = name[1:]
+
                     dic = json.loads(name)
                     ex  = dic.get('ex', None)
                     ey  = dic.get('ey', None)
+
                     if ex and not ey:
                         ey = cross_vectors(ex, ez)
 
@@ -221,6 +224,7 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                 axes = {'ex': ex, 'ey': ey, 'ez': ez}
 
                 ekey = structure.add_element(nodes=[sp, ep], type=line_type, thermal=thermal, axes=axes)
+
                 if ekey is not None:
                     added_elements.add(ekey)
                     elset.add(ekey)
@@ -239,32 +243,42 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                 added_nodes.update(nodes)
 
                 if mesh_type in ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']:
+
                     ekey = structure.add_element(nodes=nodes, type=mesh_type, thermal=thermal)
+
                     if ekey is not None:
                         added_elements.add(ekey)
                         elset.add(ekey)
 
                 else:
+
                     try:
                         name = rs.ObjectName(guid).replace("'", '"')
+
                         if name[0] in ['_', '^']:
                             name = name[1:]
+
                         dic = json.loads(name)
                         ex  = dic.get('ex', None)
                         ey  = dic.get('ey', None)
                         ez  = dic.get('ez', None)
+
                         if (ex and ey) and (not ez):
                             ez = cross_vectors(ex, ey)
+
                     except:
                         ex = None
                         ey = None
                         ez = None
+
                     axes = {'ex': ex, 'ey': ey, 'ez': ez}
 
                     for face in rs.MeshFaceVertices(guid):
+
                         nodes = [structure.check_node_exists(vertices[i]) for i in face]
                         if nodes[-1] == nodes[-2]:
                             del nodes[-1]
+
                         ekey = structure.add_element(nodes=nodes, type=mesh_type, thermal=thermal, axes=axes)
                         if ekey is not None:
                             added_elements.add(ekey)

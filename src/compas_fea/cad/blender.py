@@ -123,38 +123,45 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
                 ey = cross_vectors(ex, ez)
             axes['ey'] = ey
             axes['ez'] = ez
+
             ekey = structure.add_element(nodes=[sp, ep], type=line_type, thermal=thermal, axes=axes)
             if ekey is not None:
                 added_elements.add(ekey)
 
-#     if mesh_type:
+    if mesh_type:
 
-#         if mesh_type in ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']:
+        if mesh_type in ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']:
+
+            pass
 #             nodes = [structure.check_node_exists(i) for i in vertices]
 #             e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
 #             if e is not None:
 #                 created_elements.add(e)
 
-#         else:
-#             try:
-#                 dic = json.loads(name.replace("'", '"'))
-#                 ex = dic.get('ex', None)
-#                 ey = dic.get('ey', None)
-#                 if ex and ey:
-#                     ez = cross_vectors(ex, ey)
-#                 else:
-#                     ez = None
-#             except:
-#                 ex = None
-#                 ey = None
-#                 ez = None
-#             axes = {'ex': ex, 'ey': ey, 'ez': ez}
+        else:
 
-#             for face in faces:
-#                 nodes = [structure.check_node_exists(vertices[i]) for i in face]
-#                 e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal, axes=axes)
-#                 if e is not None:
-#                     created_elements.add(e)
+            try:
+                ex = get_object_property(object=bmesh, property='ex')
+                ey = get_object_property(object=bmesh, property='ey')
+
+                if ex and ey:
+                    ez = cross_vectors(ex, ey)
+                else:
+                    ez = None
+
+            except:
+                ex = None
+                ey = None
+                ez = None
+
+            axes = {'ex': ex, 'ey': ey, 'ez': ez}
+
+            for face in faces.values():
+
+                nodes = [structure.check_node_exists(vertices[i]) for i in face]
+                ekey = structure.add_element(nodes=nodes, type=mesh_type, thermal=thermal, axes=axes)
+                if ekey is not None:
+                    added_elements.add(ekey)
 
     return list(added_nodes), list(added_elements)
 
@@ -557,6 +564,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     npts = 8
     mesh_faces = []
     pipes      = []
+    mesh_add   = []
 
     for element, nodes in enumerate(elements):
 
@@ -575,18 +583,23 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
                 col1 = cnodes[u]
                 col2 = cnodes[v]
 
-            blendermesh = BlenderMesh(object=pipe)
-            blendermesh.set_vertices_colors({i: col1 for i in range(0, 2*npts, 2)})
-            blendermesh.set_vertices_colors({i: col2 for i in range(1, 2*npts, 2)})
+            try:
+                blendermesh = BlenderMesh(object=pipe)
+                blendermesh.set_vertices_colors({i: col1 for i in range(0, 2*npts, 2)})
+                blendermesh.set_vertices_colors({i: col2 for i in range(1, 2*npts, 2)})
+            except:
+                pass
 
         elif n in [3, 4]:
 
             mesh_faces.append(nodes)
 
-#     if mesh_faces:
-#         bmesh = xdraw_mesh(name='bmesh', vertices=U, faces=mesh_faces, layer=layer)
-#         blendermesh = BlenderMesh(bmesh)
-#         blendermesh.set_vertex_colors(vertices=range(U.shape[0]), colors=cnodes)
+    if mesh_faces:
+
+        bmesh = xdraw_mesh(name='bmesh', vertices=U, faces=mesh_faces, layer=layer)
+        blendermesh = BlenderMesh(bmesh)
+        blendermesh.set_vertices_colors({i: col for i, col in enumerate(cnodes)})
+        mesh_add = [bmesh]
 
     # Plot colourbar
 
@@ -607,7 +620,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     blendermesh.set_vertices_colors({i: j for i, j in zip(range(len(vertices)), colors)})
 
     set_deselect()
-    set_select(objects=pipes + [cmesh])
+    set_select(objects=pipes + [cmesh] + mesh_add)
     bpy.ops.object.join()
 
     h = 0.6 * s
