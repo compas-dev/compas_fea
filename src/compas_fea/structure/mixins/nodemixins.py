@@ -142,6 +142,7 @@ class NodeMixins(object):
 
         """
 
+        xyz = [float(i) for i in xyz]
         return self.node_index.get(geometric_key(xyz, '{0}f'.format(self.tol)), None)
 
 

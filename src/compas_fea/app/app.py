@@ -29,9 +29,9 @@ class App(VtkViewer):
     def __init__(self, structure, name='compas_fea App', width=1500, height=1000, data={}, mode=''):
 
         data = {}
-        data['vertices'] = {i: structure.node_xyz(i) for i in structure.nodes}
+        data['vertices'] = structure.nodes_xyz()
         data['edges']    = []
-        data['faces']    = {}
+        data['faces']    = []
 
         for ekey, element in structure.elements.items():
 
@@ -50,13 +50,13 @@ class App(VtkViewer):
                 elif element.__name__ == 'SpringElement':
                     col = [200, 255, 0]
 
-                data['edges'].append({'u': nodes[0], 'v': nodes[1], 'color': col})
+                data['edges'].append({'vertices': nodes, 'color': col})
 
             # Tris and quads
 
             elif (len(nodes) == 3) or (len(nodes) == 4):
 
-                data['faces'][ekey] = {'vertices': nodes, 'color': [150, 250, 150]}
+                data['faces'].append({'vertices': nodes, 'color': [150, 250, 150]})
 
 
         VtkViewer.__init__(self, name=name, data=data, width=width, height=height)
@@ -82,43 +82,43 @@ class App(VtkViewer):
 
         self.setup()
 
-        self.add_label(name='label_scale', text='Scale: {0}'.format(1))
-        self.add_slider(name='slider_scale', value=1, minimum=0, maximum=1000, interval=100, callback=self.scale_callback)
+        self.add_label(name='scale', text='Scale: {0}'.format(1))
+        self.add_slider(name='scale', value=1, min=0, max=1000, interval=100, callback=self.scale_callback)
 
         if structure.steps_order:
 
-            self.add_label(name='label_steps', text='Steps')
-            self.add_listbox(name='listbox_steps', items=structure.steps_order, callback=self.update_fields)
+            self.add_label(name='steps', text='Steps')
+            self.add_listbox(name='steps', items=structure.steps_order, callback=self.update_fields)
 
             if structure.results.keys():
 
-                self.add_label(name='label_fields_nodal', text='Fields (nodal)')
-                self.add_listbox(name='listbox_fields_nodal', items=[], callback=self.nodal_plot)
+                self.add_label(name='fields_nodal', text='Fields (nodal)')
+                self.add_listbox(name='fields_nodal', items=[], callback=self.nodal_plot)
 
-                self.add_label(name='label_fields_element', text='Fields (element)')
-                self.add_listbox(name='listbox_fields_element', items=[], callback=self.element_plot)
+                self.add_label(name='fields_element', text='Fields (element)')
+                self.add_listbox(name='fields_element', items=[], callback=self.element_plot)
 
-                self.add_label(name='label_iptype', text='iptype')
-                self.add_listbox(name='listbox_iptype', items=['mean', 'min', 'max'], callback=self.element_plot)
+                self.add_label(name='iptype', text='iptype')
+                self.add_listbox(name='iptype', items=['mean', 'min', 'max'], callback=self.element_plot)
 
-                self.add_label(name='label_nodal', text='nodal')
-                self.add_listbox(name='listbox_nodal', items=['mean', 'min', 'max'], callback=self.element_plot)
+                self.add_label(name='nodal', text='nodal')
+                self.add_listbox(name='nodal', items=['mean', 'min', 'max'], callback=self.element_plot)
 
 
     def scale_callback(self):
 
-        value = self.sliders['slider_scale'].value()
+        value = self.sliders['scale'].value()
         X     = self.xyz + self.U * value
 
-        self.labels['label_scale'].setText('Scale: {0}'.format(value))
+        self.labels['scale'].setText('Scale: {0}'.format(value))
         self.update_vertices_coordinates({i: X[i, :] for i in range(self.structure.node_count())})
 
 
     def update_fields(self):
 
-        self.listboxes['listbox_fields_nodal'].clear()
-        self.listboxes['listbox_fields_element'].clear()
-        step = self.listboxes['listbox_steps'].currentText()
+        self.listboxes['fields_nodal'].clear()
+        self.listboxes['fields_element'].clear()
+        step = self.listboxes['steps'].currentText()
 
         try:
 
@@ -128,7 +128,7 @@ class App(VtkViewer):
             if 'nodal' in keys:
 
                 node_fields = sorted(list(results['nodal'].keys()))
-                self.listboxes['listbox_fields_nodal'].addItems(['-select-'] + node_fields)
+                self.listboxes['fields_nodal'].addItems(['-select-'] + node_fields)
 
                 mode = self.mode
                 self.ux = array([results['nodal']['ux{0}'.format(mode)][i] for i in self.nkeys])
@@ -139,7 +139,7 @@ class App(VtkViewer):
             if 'element' in keys:
 
                 element_fields = sorted(list(results['element'].keys()))
-                self.listboxes['listbox_fields_element'].addItems(['-select-'] + element_fields)
+                self.listboxes['fields_element'].addItems(['-select-'] + element_fields)
 
             self.scale_callback()
 
@@ -152,8 +152,8 @@ class App(VtkViewer):
 
         try:
 
-            step  = self.listboxes['listbox_steps'].currentText()
-            field = self.listboxes['listbox_fields_nodal'].currentText()
+            step  = self.listboxes['steps'].currentText()
+            field = self.listboxes['fields_nodal'].currentText()
 
             cbar = [None, None]
             data = [self.structure.results[step]['nodal']['{0}{1}'.format(field, self.mode)][i] for i in self.nkeys]
@@ -174,13 +174,13 @@ class App(VtkViewer):
 
         try:
 
-            step  = self.listboxes['listbox_steps'].currentText()
-            field = self.listboxes['listbox_fields_element'].currentText()
+            step  = self.listboxes['steps'].currentText()
+            field = self.listboxes['fields_element'].currentText()
 
             if field != 'axes':
 
-                iptype = self.listboxes['listbox_iptype'].currentText()
-                nodal  = self.listboxes['listbox_nodal'].currentText()
+                iptype = self.listboxes['iptype'].currentText()
+                nodal  = self.listboxes['nodal'].currentText()
                 cbar   = [None, None]
                 data   = self.structure.results[step]['element'][field]
 
@@ -204,7 +204,7 @@ if __name__ == "__main__":
 
     from compas_fea.structure import Structure
 
-    fnm = 'C:/compas_fea/data/mesh_floor.obj'
+    fnm = '/home/al/temp/mesh_floor.obj'
 
     mdl = Structure.load_from_obj(fnm)
     mdl.view()
