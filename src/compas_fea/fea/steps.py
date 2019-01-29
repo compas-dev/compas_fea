@@ -111,7 +111,7 @@ class Steps(object):
                         self.blank_line()
 
                         if stype == 'BucklingStep':
-                            self.write_line('{0}, {1}, {2}, {3}'.format(modes, modes, 2 * modes, increments))
+                            self.write_line('{0}, {1}, {2}, {3}'.format(modes, modes, 5 * modes, increments))
 
                     self.blank_line()
 

@@ -204,7 +204,7 @@ if __name__ == "__main__":
 
     from compas_fea.structure import Structure
 
-    fnm = '/home/al/temp/mesh_floor.obj'
+    fnm = '/home/al/temp/example_shell.obj'
 
     mdl = Structure.load_from_obj(fnm)
     mdl.view()

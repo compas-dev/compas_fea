@@ -62,8 +62,10 @@ mdl.summary()
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'cf', 'rf'])
 # open .inp and .odb files
 
-rhino.plot_data(mdl, step='loads', field='um', radius=0.1, scale=100, cbar_size=0.3)
+rhino.plot_data(mdl, step='loads', field='um', radius=0.1, scale=10, cbar_size=0.3)
 rhino.plot_data(mdl, step='loads', field='smises', radius=0.1, cbar_size=0.3)
 rhino.plot_reaction_forces(mdl, step='loads', scale=0.1)
 rhino.plot_concentrated_forces(mdl, step='loads', scale=0.1)
 # edit parameters and geometry
+
+mdl.save_to_obj()
