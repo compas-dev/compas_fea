@@ -9,6 +9,7 @@ from compas_blender.utilities import clear_layer
 from compas_blender.utilities import draw_cylinder
 from compas_blender.utilities import draw_plane
 from compas_blender.utilities import draw_line
+from compas_blender.utilities import get_meshes
 from compas_blender.utilities import get_objects
 from compas_blender.utilities import get_points
 from compas_blender.utilities import set_select
@@ -57,7 +58,7 @@ __all__ = [
     'add_nodes_elements_from_layers',
     'discretise_mesh',
 #     'add_tets_from_bmesh',
-#     'add_nset_from_bmeshes',
+    'add_nset_from_meshes',
 #     'add_elset_from_bmeshes',
 #     'add_nset_from_objects',
     'plot_data',
@@ -367,41 +368,35 @@ def discretise_mesh(structure, mesh, layer, target, min_angle=15, factor=1):
 #     structure.add_set(name=name, type='element', selection=elements)
 
 
-# def add_nset_from_bmeshes(structure, name, bmeshes=None, layer=None):
+def add_nset_from_meshes(structure, layer):
 
-#     """ Adds the Blender meshes' vertices as a node set.
+    """ Adds the Blender meshes' vertices from a layer as a node set.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     name : str
-#         Name of the new node set.
-#     bmeshes : list
-#         Blender mesh objects to extract vertices.
-#     layer : int
-#         Layer to get bmeshes from if bmeshes are not given.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    layer : str
+        Layer to get meshes.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     Notes
-#     -----
-#     - Either bmeshes or layer should be given, not both.
+    """
 
-#     """
+    nodes = []
 
-#     if layer is not None:
-#         bmeshes = [object for object in get_objects(layer=layer) if object.type == 'MESH']
+    for mesh in get_meshes(layer=layer):
 
-#     nodes = []
-#     for bmesh in bmeshes:
-#         for vertex in BlenderMesh(bmesh).get_vertex_coordinates():
-#             node = structure.check_node_exists(vertex)
-#             if node is not None:
-#                 nodes.append(node)
-#     structure.add_set(name=name, type='node', selection=nodes)
+        for vertex in BlenderMesh(mesh).get_vertices_coordinates().values():
+
+            node = structure.check_node_exists(vertex)
+
+            if node is not None:
+                nodes.append(node)
+
+    structure.add_set(name=layer, type='node', selection=nodes)
 
 
 def add_nsets_from_layers(structure, layers):
@@ -620,8 +615,8 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     blendermesh.set_vertices_colors({i: j for i, j in zip(range(len(vertices)), colors)})
 
     set_deselect()
-    set_select(objects=pipes + [cmesh] + mesh_add)
-    bpy.ops.object.join()
+    # set_select(objects=pipes + [cmesh] + mesh_add)
+    # bpy.ops.object.join()
 
     h = 0.6 * s
 
