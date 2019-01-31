@@ -209,6 +209,8 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 
         for bmesh in get_objects(layer=layer):
 
+            # pA and pL
+
             nodes, elements = add_nodes_elements_from_bmesh(structure=structure, bmesh=bmesh, line_type=line_type,
                                                             mesh_type=mesh_type, thermal=thermal)
             added_nodes.update(nodes)
