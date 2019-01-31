@@ -3,4 +3,4 @@ script_introduction
 ********************************************************************************
 
 .. literalinclude:: /../../examples/introduction_script.py
-
+    :language: python

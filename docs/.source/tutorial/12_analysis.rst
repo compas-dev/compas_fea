@@ -170,6 +170,8 @@ The ``field`` strings are based on the notation tables below for the nodal data 
 Node fields
 -----------
 
+.. rst-class:: table table-responsive table-bordered
+
 +-------------------------------+-----------+-----------+-----------+-----------+
 | Field                         |     x     |     y     |     z     | Magnitude |
 +===============================+===========+===========+===========+===========+
@@ -193,6 +195,8 @@ Element fields
 --------------
 
 For elements such as shell elements, the local element axes can be accessed through ``'axes'`` as a component entry. **Note**: shell forces and moments are per unit width.
+
+.. rst-class:: table table-responsive table-bordered
 
 +-----------------------------+---------------------------+---------------------------+---------------------------+
 |``'spf'`` Spring forces      |``'spfx'``                 |``'spfy'``                 |``'spfz'``                 |

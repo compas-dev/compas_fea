@@ -63,15 +63,15 @@
 <div class="figure">
 <img alt="../_images/truss_tower_rhino.png" class="figure-img img-fluid" src="../_images/truss_tower_rhino.png" />
 </div>
-<div class="nohighlight notranslate"><div class="highlight"><pre><code><span></span>
-<span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">rhino</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElasticIsotropic</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralStep</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PinnedDisplacement</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PointLoad</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">TrussSection</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span>
+<span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">rhino</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElasticIsotropic</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GeneralStep</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PinnedDisplacement</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PointLoad</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Structure</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">TrussSection</span>
 
 
 <span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
@@ -136,8 +136,8 @@
 
 <span class="c1"># Print results</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">get_nodal_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;um&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_top&#39;</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">get_nodal_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;rfm&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">get_nodal_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;um&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_top&#39;</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">get_nodal_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;rfm&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">))</span>
 </code></pre></div>
 </div>
 </div>
@@ -190,6 +190,11 @@
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_strip_rhino.html">mesh_strip</a></li>
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">truss_tower</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_blender.html">mesh_floor</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_discretise_blender.html">mesh_discretise</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_blender.html">truss_tower</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="script_introduction.html">script_introduction</a></li>
 </ul>
 </li>

@@ -63,19 +63,19 @@
 <div class="figure">
 <img alt="../_images/mesh_mould_rhino.png" class="figure-img img-fluid" src="../_images/mesh_mould_rhino.png" />
 </div>
-<div class="nohighlight notranslate"><div class="highlight"><pre><code><span></span>
-<span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">rhino</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Concrete</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">FixedDisplacement</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralStep</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GravityLoad</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PointLoad</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ShellSection</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Steel</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span>
+<span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">rhino</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Concrete</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">FixedDisplacement</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GeneralStep</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GravityLoad</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PointLoad</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ShellSection</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Steel</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Structure</span>
 
-<span class="kn">import</span> <span class="nn">rhinoscriptsyntax</span> <span class="k">as</span> <span class="nn">rs</span>
+<span class="kn">import</span> <span class="nn">rhinoscriptsyntax</span> <span class="kn">as</span> <span class="nn">rs</span>
 
 
 <span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
@@ -166,14 +166,14 @@
 
 <span class="c1"># Plot axes</span>
 
-<span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">ekey</span><span class="p">,</span> <span class="n">axes</span> <span class="ow">in</span> <span class="n">mdl</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;step_loads&#39;</span><span class="p">][</span><span class="s1">&#39;element&#39;</span><span class="p">][</span><span class="s1">&#39;axes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="n">ex</span><span class="p">,</span> <span class="n">ey</span><span class="p">,</span> <span class="n">ez</span> <span class="o">=</span> <span class="n">axes</span>
     <span class="n">centroid</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">element_centroid</span><span class="p">(</span><span class="n">ekey</span><span class="p">)</span>
     <span class="n">rhino</span><span class="o">.</span><span class="n">plot_axes</span><span class="p">(</span><span class="n">centroid</span><span class="p">,</span> <span class="n">e11</span><span class="o">=</span><span class="n">ex</span><span class="p">,</span> <span class="n">e22</span><span class="o">=</span><span class="n">ey</span><span class="p">,</span> <span class="n">e33</span><span class="o">=</span><span class="n">ez</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;local_axes&#39;</span><span class="p">,</span> <span class="n">sc</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 
-<span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
 </code></pre></div>
 </div>
 </div>
@@ -226,6 +226,11 @@
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_strip_rhino.html">mesh_strip</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_blender.html">mesh_floor</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_discretise_blender.html">mesh_discretise</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_blender.html">truss_tower</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="script_introduction.html">script_introduction</a></li>
 </ul>
 </li>

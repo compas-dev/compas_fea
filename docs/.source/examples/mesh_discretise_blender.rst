@@ -7,3 +7,4 @@ mesh_discretise
     :class: figure-img img-fluid
 
 .. literalinclude:: /../../examples/mesh_discretise_blender.py
+    :language: python
