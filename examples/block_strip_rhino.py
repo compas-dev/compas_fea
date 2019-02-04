@@ -26,9 +26,9 @@ mdl = Structure(name='block_strip', path='C:/Temp/')
 
 # Extrude
 
-rhino.mesh_extrude(mdl, guid=rs.ObjectsByLayer('base_mesh'), layers=5, thickness=0.010, 
+rhino.mesh_extrude(mdl, guid=rs.ObjectsByLayer('base_mesh'), layers=5, thickness=0.010,
                    blocks_name='elset_blocks', plot_blocks=0)
-                   
+
 # Elements
 
 rhino.add_nodes_elements_from_layers(mdl, line_type='BeamElement', layers='elset_beams')
