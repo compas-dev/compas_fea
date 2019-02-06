@@ -32,7 +32,7 @@ from compas_fea.utilities import extrude_mesh
 # from compas_fea.utilities import network_order
 from compas_fea.utilities import discretise_faces
 from compas_fea.utilities import postprocess
-# from compas_fea.utilities import tets_from_vertices_faces
+from compas_fea.utilities import tets_from_vertices_faces
 from compas_fea.utilities import plotvoxels
 
 from numpy import array
@@ -60,7 +60,7 @@ __all__ = [
     'add_nodes_elements_from_bmesh',
     'add_nodes_elements_from_layers',
     'discretise_mesh',
-#     'add_tets_from_bmesh',
+    'add_tets_from_mesh',
     'add_nset_from_meshes',
 #     'add_elset_from_bmeshes',
 #     'add_nset_from_objects',
@@ -268,56 +268,66 @@ def discretise_mesh(structure, mesh, layer, target, min_angle=15, factor=1):
         print('***** Error using MeshPy (Triangle) or drawing faces *****')
 
 
-# def add_tets_from_bmesh(structure, name, bmesh, draw_tets=False, volume=None, layer=19, acoustic=False, thermal=False):
+def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, thermal=False):
 
-#     """ Adds tetrahedron elements from a Blender mesh to the Structure object.
+    """ Adds tetrahedron elements from a mesh to the Structure object.
 
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     name : str
-#         Name for the element set of tetrahedrons.
-#     bmesh : obj
-#         The Blender mesh representing the outer surface.
-#     draw_tets : bool
-#         Draw the generated tetrahedrons.
-#     volume : float
-#         Maximum volume for tets.
-#     layer : int
-#         Layer to draw tetrahedrons if draw_tets=True.
-#     acoustic : bool
-#         Acoustic properties on or off.
-#     thermal : bool
-#         Thermal properties on or off.
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    name : str
+        Name for the element set of tetrahedrons.
+    mesh : obj
+        The Blender mesh representing the outer surface.
+    draw_tets : bool
+        Layer to draw tetrahedrons on.
+    volume : float
+        Maximum volume for tets.
+    thermal : bool
+        Thermal properties on or off.
 
-#     Returns
-#     -------
-#     None
+    Returns
+    -------
+    None
 
-#     """
+    """
 
-#     blendermesh = BlenderMesh(bmesh)
-#     vertices = blendermesh.get_vertex_coordinates()
-#     faces = blendermesh.get_face_vertex_indices()
+    blendermesh = BlenderMesh(mesh)
+    vertices    = blendermesh.get_vertices_coordinates().values()
+    faces       = blendermesh.get_faces_vertex_indices().values()
 
-#     tets_points, tets_elements = tets_from_vertices_faces(vertices=vertices, faces=faces, volume=volume)
+    try:
 
-#     for point in tets_points:
-#         structure.add_node(point)
+        tets_points, tets_elements = tets_from_vertices_faces(vertices=vertices, faces=faces, volume=volume)
 
-#     ekeys = []
-#     for element in tets_elements:
-#         nodes = [structure.check_node_exists(tets_points[i]) for i in element]
-#         ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', acoustic=acoustic, thermal=thermal)
-#         ekeys.append(ekey)
-#     structure.add_set(name=name, type='element', selection=ekeys)
+        for point in tets_points:
+            structure.add_node(point)
 
-#     if draw_tets:
-#         tet_faces = [[0, 1, 2], [1, 3, 2], [1, 3, 0], [0, 2, 3]]
-#         for i, points in enumerate(tets_elements):
-#             xyz = [tets_points[j] for j in points]
-#             xdraw_mesh(name=str(i), vertices=xyz, faces=tet_faces, layer=layer)
+        ekeys = []
+
+        for element in tets_elements:
+
+            nodes = [structure.check_node_exists(tets_points[i]) for i in element]
+            ekey  = structure.add_element(nodes=nodes, type='TetrahedronElement', thermal=thermal)
+            ekeys.append(ekey)
+
+        structure.add_set(name=name, type='element', selection=ekeys)
+
+        if draw_tets:
+
+            tet_faces = [[0, 1, 2], [1, 3, 2], [1, 3, 0], [0, 2, 3]]
+
+            for i, points in enumerate(tets_elements):
+
+                xyz = [tets_points[j] for j in points]
+                xdraw_mesh(name=str(i), vertices=xyz, faces=tet_faces, layer=draw_tets)
+
+        print('***** MeshPy (TetGen) successfull *****')
+
+    except:
+
+        print('***** Error using MeshPy (TetGen) or drawing Tets *****')
 
 
 # def add_elset_from_bmeshes(structure, name, bmeshes=None, layer=None):
@@ -431,8 +441,14 @@ def add_nsets_from_layers(structure, layers):
         for point in get_points(layer=layer):
             nodes.append(structure.check_node_exists(list(point.location)))
 
-        # ADD MESHES HERE AND ADD VERTICES TO NODES
-        # for object in get_objects(layer=layer):
+        for mesh in get_meshes(layer=layer):
+
+            for vertex in BlenderMesh(mesh).get_vertices_coordinates().values():
+
+                node = structure.check_node_exists(vertex)
+
+                if node is not None:
+                    nodes.append(node)
 
         structure.add_set(name=layer, type='node', selection=nodes)
 
@@ -577,6 +593,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     npts = 8
     mesh_faces  = []
     block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
+    tet_faces   = [[0, 2, 1], [1, 2, 3], [1, 3, 0], [0, 3, 2]]
     pipes       = []
     mesh_add    = []
 
@@ -606,7 +623,11 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
         elif n in [3, 4]:
 
-            mesh_faces.append(nodes)
+            if structure.elements[element].__name__ in ['ShellElement', 'MembraneElement']:
+                mesh_faces.append(nodes)
+            else:
+                for face in tet_faces:
+                    mesh_faces.append([nodes[i] for i in face])
 
         elif n == 8:
 
@@ -829,6 +850,8 @@ if __name__ == "__main__":
 
     from compas_fea.structure import Structure
 
-    mdl = Structure.load_from_obj(filename='/home/al/compas/compas_fea/data/_workshop/example_tets.obj')
+    # mdl = Structure.load_from_obj(filename='/home/al/compas/compas_fea/data/_workshop/example_tets.obj')
+    # plot_voxels(mdl, step='step_load', field='smises', vdx=0.100)
 
-    plot_voxels(mdl, step='step_load', field='smises', vdx=0.100)
+    mdl = Structure.load_from_obj(filename='C:/Temp/block_tets.obj')
+    plot_voxels(mdl, step='step_load', field='um', vdx=0.010)

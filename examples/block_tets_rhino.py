@@ -64,7 +64,7 @@ mdl.summary()
 
 # Run
 
-mdl.analyse_and_extract(software='opensees', fields=['u'])
+mdl.analyse_and_extract(software='abaqus', fields=['u'])
 
 rhino.plot_data(mdl, step='step_load', field='um')
 #rhino.plot_voxels(mdl, step='step_load', field='um', vdx=0.05)

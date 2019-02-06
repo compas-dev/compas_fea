@@ -372,7 +372,7 @@ def add_sets_from_layers(structure, layers):
                 print('***** Layer {0} contained a mixture of points and elements, set not created *****'.format(name))
 
 
-def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, layer='Default', thermal=False):
+def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, thermal=False):
 
     """ Adds tetrahedron elements from a mesh in Rhino to the Structure object.
 
@@ -414,6 +414,7 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
         ekeys = []
 
         for element in tets_elements:
+
             nodes = [structure.check_node_exists(tets_points[i]) for i in element]
             ekey  = structure.add_element(nodes=nodes, type='TetrahedronElement', thermal=thermal)
             ekeys.append(ekey)
@@ -429,6 +430,7 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
             tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
 
             for i, points in enumerate(tets_elements):
+
                 xyz = [tets_points[j] for j in points]
                 rs.AddMesh(vertices=xyz, face_vertices=tet_faces)
 
