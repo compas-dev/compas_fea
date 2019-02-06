@@ -711,5 +711,4 @@ def principal_stresses(data, ptype, scale, rotate):
 
 if __name__ == "__main__":
 
-    data = [1, 2, 3, 4, 6, 15, 7, 8, 11, 12, 13, 9, 10, 55, 89, 56, 56]
-    print(identify_ranges(data))
+    pass
