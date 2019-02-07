@@ -13,9 +13,7 @@ try:
     from compas_blender.utilities import get_objects
     from compas_blender.utilities import get_points
     from compas_blender.utilities import mesh_from_bmesh
-    from compas_blender.utilities import set_select
     from compas_blender.utilities import set_deselect
-    # from compas_blender.utilities import get_object_location
     from compas_blender.utilities import set_objects_coordinates
     from compas_blender.utilities import get_object_property
     from compas_blender.utilities import set_object_property
@@ -29,7 +27,6 @@ from compas.geometry import subtract_vectors
 
 from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
-# from compas_fea.utilities import network_order
 from compas_fea.utilities import discretise_faces
 from compas_fea.utilities import postprocess
 from compas_fea.utilities import tets_from_vertices_faces
@@ -41,13 +38,6 @@ from numpy import max
 from numpy import newaxis
 from numpy import where
 from numpy.linalg import norm
-
-try:
-    import bpy
-except ImportError:
-    pass
-
-# import json
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -62,8 +52,6 @@ __all__ = [
     'discretise_mesh',
     'add_tets_from_mesh',
     'add_nset_from_meshes',
-#     'add_elset_from_bmeshes',
-#     'add_nset_from_objects',
     'plot_data',
     'plot_voxels',
     'mesh_extrude',
@@ -136,11 +124,10 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
 
         if mesh_type in ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']:
 
-            pass
-#             nodes = [structure.check_node_exists(i) for i in vertices]
-#             e = structure.add_element(nodes=nodes, type=mesh_type, acoustic=acoustic, thermal=thermal)
-#             if e is not None:
-#                 created_elements.add(e)
+            nodes = [structure.check_node_exists(i) for i in vertices]
+            ekey  = structure.add_element(nodes=nodes, type=mesh_type, thermal=thermal)
+            if ekey is not None:
+                added_elements.add(ekey)
 
         else:
 
@@ -328,59 +315,6 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, ther
     except:
 
         print('***** Error using MeshPy (TetGen) or drawing Tets *****')
-
-
-# def add_elset_from_bmeshes(structure, name, bmeshes=None, layer=None):
-
-#     """ Adds the Blender meshes' edges and faces as an element set.
-
-#     Parameters
-#     ----------
-#     structure : obj
-#         Structure object to update.
-#     name : str
-#         Name of the new element set.
-#     bmeshes : list
-#         Blender mesh objects to extract edges and faces.
-#     layer : int
-#         Layer to get bmeshes from if bmeshes are not given.
-
-#     Returns
-#     -------
-#     None
-
-#     Notes
-#     -----
-#     - Either bmeshes or layer should be given, not both.
-
-#     """
-
-#     if layer is not None:
-#         bmeshes = [object for object in get_objects(layer=layer) if object.type == 'MESH']
-
-#     elements = []
-
-#     for bmesh in bmeshes:
-
-#         blendermesh = BlenderMesh(bmesh)
-#         vertices = blendermesh.get_vertex_coordinates()
-#         edges    = blendermesh.get_edge_vertex_indices()
-#         faces    = blendermesh.get_face_vertex_indices()
-
-#         for u, v in edges:
-#             sp = structure.check_node_exists(vertices[u])
-#             ep = structure.check_node_exists(vertices[v])
-#             element = structure.check_element_exists([sp, ep])
-#             if element is not None:
-#                 elements.append(element)
-
-#         for face in faces:
-#             nodes = [structure.check_node_exists(vertices[i]) for i in face]
-#             element = structure.check_element_exists(nodes)
-#             if element is not None:
-#                 elements.append(element)
-
-#     structure.add_set(name=name, type='element', selection=elements)
 
 
 def add_nset_from_meshes(structure, layer):
