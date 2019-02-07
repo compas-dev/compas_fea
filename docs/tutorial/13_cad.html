@@ -134,7 +134,7 @@
 <a class="reference internal image-reference" href="../_images/mesh_floor_rhino.png"><img alt="../_images/mesh_floor_rhino.png" src="../_images/mesh_floor_rhino.png" style="width: 691.2px; height: 364.77000000000004px;" /></a>
 <a class="reference internal image-reference" href="../_images/mesh_floor_blender.png"><img alt="../_images/mesh_floor_blender.png" src="../_images/mesh_floor_blender.png" style="width: 742.4px; height: 417.59999999999997px;" /></a>
 <p>To plot voxel data for solid element results, use the <code class="docutils literal notranslate"><span class="pre">.plot_voxels()</span></code> function of the <code class="docutils literal notranslate"><span class="pre">blender</span></code> and <code class="docutils literal notranslate"><span class="pre">rhino</span></code> modules. This function uses the <code class="docutils literal notranslate"><span class="pre">VtkViewer</span></code> from the main <strong>compas.viewers</strong> package and requires that the user has the visualisation tool-kit (Vtk) installed. This function requires the following arguments: the <code class="docutils literal notranslate"><span class="pre">structure</span></code> object to extract data from, the <code class="docutils literal notranslate"><span class="pre">step</span></code> of interest, the <code class="docutils literal notranslate"><span class="pre">field</span></code> to plot, the <code class="docutils literal notranslate"><span class="pre">iptype</span></code> and <code class="docutils literal notranslate"><span class="pre">nodal</span></code> strings for element data, a <code class="docutils literal notranslate"><span class="pre">cbar</span></code> list to trim data, and an approximate voxel size <code class="docutils literal notranslate"><span class="pre">vdx</span></code> for interpolating data in space. The call and output from this function would look similar to:</p>
-<a class="reference internal image-reference" href="../_images/block_tets_blender.png"><img alt="../_images/block_tets_blender.png" src="../_images/block_tets_blender.png" style="width: 624.6px; height: 356.4px;" /></a>
+<a class="reference internal image-reference" href="../_images/block_tets_blender.png"><img alt="../_images/block_tets_blender.png" src="../_images/block_tets_blender.png" style="width: 686.6999999999999px; height: 416.09999999999997px;" /></a>
 <div class="section" id="processing">
 <h3>Processing</h3>
 <p>A degree of data post-processing is performed on the raw data in <code class="docutils literal notranslate"><span class="pre">structure.results</span></code> before plotting, through the function <code class="docutils literal notranslate"><span class="pre">postprocess()</span></code> of the <strong>compas_fea.utilities.functions</strong> module. This post-processing requires NumPy and SciPy to be available for efficiency in handling large models, and so is carried out in a subprocess (via <strong>compas.utilities</strong> XFunc) for non-CPython based CAD environments like Rhino. The function calls a selection of other functions contained within the same module which do the following:</p>
@@ -263,7 +263,7 @@
 
         <footer class="compas-footer">
             
-                Last updated on Jan 31, 2019.
+                Last updated on Feb 07, 2019.
             
 
             

@@ -43,8 +43,8 @@ Blender
     examples/beam_simple_blender
 
     .. examples/block_bridge_blender
-    .. examples/block_deepbeam_blender
-    .. examples/block_tets_blender
+    examples/block_deepbeam_blender
+    examples/block_tets_blender
 
     examples/mesh_floor_blender
     examples/mesh_mould_blender

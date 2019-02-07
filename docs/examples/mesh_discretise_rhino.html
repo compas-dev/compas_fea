@@ -65,7 +65,6 @@
 </div>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span>
 <span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">rhino</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Structure</span>
 
 <span class="kn">import</span> <span class="nn">rhinoscriptsyntax</span> <span class="kn">as</span> <span class="nn">rs</span>
 
@@ -76,14 +75,10 @@
 <span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
 
 
-<span class="c1"># Structure</span>
-
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mesh_discretise&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;C:/Temp/&#39;</span><span class="p">)</span>
-
 <span class="c1"># Discretise</span>
 
 <span class="n">guid</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">ObjectsByLayer</span><span class="p">(</span><span class="s1">&#39;mesh_input&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">discretise_mesh</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">guid</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="mf">0.050</span><span class="p">,</span> <span class="n">min_angle</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">discretise_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="o">=</span><span class="n">guid</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="mf">0.050</span><span class="p">,</span> <span class="n">min_angle</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
 </code></pre></div>
 </div>
 </div>
@@ -137,6 +132,8 @@
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_blender.html">block_deepbeam</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_tets_blender.html">block_tets</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_blender.html">mesh_floor</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_discretise_blender.html">mesh_discretise</a></li>
@@ -175,7 +172,7 @@
 
         <footer class="compas-footer">
             
-                Last updated on Jan 31, 2019.
+                Last updated on Feb 07, 2019.
             
 
             

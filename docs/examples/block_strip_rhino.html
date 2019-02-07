@@ -91,9 +91,9 @@
 
 <span class="c1"># Extrude</span>
 
-<span class="n">rhino</span><span class="o">.</span><span class="n">mesh_extrude</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">guid</span><span class="o">=</span><span class="n">rs</span><span class="o">.</span><span class="n">ObjectsByLayer</span><span class="p">(</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">),</span> <span class="n">layers</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mf">0.010</span><span class="p">,</span> 
+<span class="n">rhino</span><span class="o">.</span><span class="n">mesh_extrude</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">guid</span><span class="o">=</span><span class="n">rs</span><span class="o">.</span><span class="n">ObjectsByLayer</span><span class="p">(</span><span class="s1">&#39;base_mesh&#39;</span><span class="p">),</span> <span class="n">layers</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mf">0.010</span><span class="p">,</span>
                    <span class="n">blocks_name</span><span class="o">=</span><span class="s1">&#39;elset_blocks&#39;</span><span class="p">,</span> <span class="n">plot_blocks</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-                   
+
 <span class="c1"># Elements</span>
 
 <span class="n">rhino</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">line_type</span><span class="o">=</span><span class="s1">&#39;BeamElement&#39;</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="s1">&#39;elset_beams&#39;</span><span class="p">)</span>
@@ -221,6 +221,8 @@
 <li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="truss_frame_rhino.html">truss_frame</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_blender.html">block_deepbeam</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_tets_blender.html">block_tets</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_blender.html">mesh_floor</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_discretise_blender.html">mesh_discretise</a></li>
@@ -259,7 +261,7 @@
 
         <footer class="compas-footer">
             
-                Last updated on Jan 31, 2019.
+                Last updated on Feb 07, 2019.
             
 
             
