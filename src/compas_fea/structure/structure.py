@@ -34,7 +34,7 @@ __all__ = [
 
 class Structure(ObjectMixins, ElementMixins, NodeMixins):
 
-    """ Initialises empty Structure object for use in finite element analysis.
+    """ Initialises Structure object for use in finite element analysis.
 
     Parameters
     ----------
@@ -89,10 +89,6 @@ class Structure(ObjectMixins, ElementMixins, NodeMixins):
         Element objects for virtual elements.
     virtual_element_index : dict
         Index of virtual elements (element centroid geometric keys).
-
-    Returns
-    -------
-    None
 
     """
 

@@ -107,7 +107,7 @@ class NodeMixins(object):
         xyz : list
             [x, y, z] co-ordinates of the node.
         virtual: bool
-            Is the node virtual or not
+            Is the node virtual or not.
 
         Returns
         -------
@@ -172,25 +172,6 @@ class NodeMixins(object):
         self.add_node_to_node_index(key, self.node_xyz(key))
 
 
-    def make_node_index_dic(self):
-
-        """ Makes a node_index dictionary from existing structure.nodes.
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        None
-
-        """
-
-        for key in self.nodes:
-            gkey = geometric_key(self.node_xyz(key), '{0}f'.format(self.tol))
-            self.node_index[gkey] = key
-
-
     def node_bounds(self):
 
         """ Return the bounds formed by the Structure's nodal co-ordinates.
@@ -229,7 +210,7 @@ class NodeMixins(object):
 
     def node_count(self):
 
-        """ Return the number of nodes in structure.nodes.
+        """ Return the number of nodes in the Structure.
 
         Parameters
         ----------

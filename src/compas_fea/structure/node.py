@@ -31,10 +31,27 @@ class Node(object):
         Node's local y axis.
     ez : list
         Node's local z axis.
+    mass : float
+        Mass in kg associated with the node.
 
-    Returns
-    -------
-    None
+    Attributes
+    ----------
+    key : int
+        Node key number.
+    x : float
+        x co-ordinates of the node.
+    y : float
+        y co-ordinates of the node.
+    z : float
+        z co-ordinates of the node.
+    ex : list
+        Node's local x axis.
+    ey : list
+        Node's local y axis.
+    ez : list
+        Node's local z axis.
+    mass : float
+        Mass in kg associated with the node.
 
     """
 
