@@ -562,10 +562,6 @@ class Steps(object):
 
             elif self.software == 'abaqus':
 
-                #     if 'spf' in fields:
-                #         fields['ctf'] = 'all'
-                #         del fields['spf']
-
                 node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
                 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
 
