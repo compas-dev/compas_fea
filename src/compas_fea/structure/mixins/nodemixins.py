@@ -155,7 +155,7 @@ class NodeMixins(object):
         key : int
             Key of the node to edit.
         attr_dict : dict
-            Atribute dictionary of data to edit.
+            Attribute dictionary of data to edit.
 
         Returns
         -------
@@ -245,14 +245,14 @@ class NodeMixins(object):
         return [getattr(self.nodes[node], i) for i in 'xyz']
 
 
-    def nodes_xyz(self, nodes=[]):
+    def nodes_xyz(self, nodes=None):
 
         """ Return the xyz co-ordinates of given or all nodes.
 
         Parameters
         ----------
         nodes : list
-            Node numbers, else all nodes will be given.
+            Node numbers, give None for all nodes.
 
         Returns
         -------
@@ -261,6 +261,7 @@ class NodeMixins(object):
 
         """
 
-        if not nodes:
+        if nodes is None:
             nodes = sorted(self.nodes, key=int)
+
         return [self.node_xyz(node=node) for node in nodes]

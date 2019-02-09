@@ -22,14 +22,14 @@ blender
 
     add_nodes_elements_from_bmesh
     add_nodes_elements_from_layers
-    add_tets_from_bmesh
-    add_nset_from_bmeshes
-    add_elset_from_bmeshes
-    add_nset_from_objects
+    discretise_mesh
+    add_tets_from_mesh
+    add_nset_from_meshes
     plot_data
-    ordered_network
     plot_voxels
     mesh_extrude
+    plot_reaction_forces
+    plot_concentrated_forces
 
 
 rhino
