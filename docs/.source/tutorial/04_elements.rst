@@ -20,7 +20,7 @@ As with nodes, the elements will be added with integer keys numbered sequentiall
 
     mdl.add_elements(elements=[[0, 4], [1, 4], [2, 4], [3, 4]], type='BeamElement')  # multiple elements added
 
-For Abaqus, adding elements will also create a set for each individual element. So for example, when element 4 is written to the input file, an element set named **element_4** (corresponding to element numer 5 in Abaqus) will also be created. The utility of this is that individual elements can be referenced to whenever needed, which is useful for selectively assigning a thickness, material, section or orientation to specific elements by way of their number (see some of the examples for demonstrations of this).
+For Abaqus, adding elements will also create a set for each individual element. So for example, when element 4 is written to the input file, an element set named **element_4** (corresponding to element number 5 in Abaqus) will also be created. The utility of this is that individual elements can be referenced to whenever needed, which is useful for selectively assigning a thickness, material, section or orientation to specific elements by way of their number (see some of the examples for demonstrations of this).
 
 
 ================
