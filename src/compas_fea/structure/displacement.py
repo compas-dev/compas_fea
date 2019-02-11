@@ -33,7 +33,7 @@ class GeneralDisplacement(object):
     Parameters
     ----------
     name : str
-        Name of the GeneralDisplacement object.
+        Name of the Displacement object.
     nodes : str, list
         Node set string or nodes list the displacement is applied to.
     x : float
@@ -51,9 +51,16 @@ class GeneralDisplacement(object):
     axes : str
         'local' or 'global' co-ordinate axes.
 
-    Returns
-    -------
-    None
+    Attributes
+    ----------
+    name : str
+        Name of the Displacement object.
+    nodes : str
+        Node set string or nodes list the displacement is applied to.
+    components : dict
+        Values of x, y, z, xx, yy, zz degrees-of-freedom.
+    axes : str
+        'local' or 'global' coordinate axes.
 
     """
 
@@ -65,6 +72,7 @@ class GeneralDisplacement(object):
         self.components = {'x': x, 'y': y, 'z': z, 'xx': xx, 'yy': yy, 'zz': zz}
         self.axes       = axes
 
+
     def __str__(self):
 
         print('\n')
@@ -75,6 +83,7 @@ class GeneralDisplacement(object):
             print('{0:<10} : {1}'.format(attr, getattr(self, attr)))
 
         return ''
+
 
     def __repr__(self):
 
@@ -92,16 +101,12 @@ class FixedDisplacement(GeneralDisplacement):
     nodes : str, list
         Node set string or nodes list the displacement is applied to.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, nodes, axes='global'):
         GeneralDisplacement.__init__(self, name=name, nodes=nodes, axes=axes)
 
-        self.__name__ = 'FixedDisplacement'
+        self.__name__   = 'FixedDisplacement'
         self.components = {'x': 0, 'y': 0, 'z': 0, 'xx': 0, 'yy': 0, 'zz': 0}
 
 
@@ -115,10 +120,6 @@ class PinnedDisplacement(GeneralDisplacement):
         Name of the PinnedDisplacement object.
     nodes : str, list
         Node set string or nodes list the displacement is applied to.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -140,10 +141,6 @@ class FixedDisplacementXX(PinnedDisplacement):
         Node set string or nodes list the displacement is applied to.
     axes : str
         'local' or 'global' co-ordinate axes.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -167,10 +164,6 @@ class FixedDisplacementYY(PinnedDisplacement):
     axes : str
         'local' or 'global' co-ordinate axes.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -192,10 +185,6 @@ class FixedDisplacementZZ(PinnedDisplacement):
         Node set string or nodes list the displacement is applied to.
     axes : str
         'local' or 'global' co-ordinate axes.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -219,10 +208,6 @@ class RollerDisplacementX(PinnedDisplacement):
     axes : str
         'local' or 'global' co-ordinate axes.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -244,10 +229,6 @@ class RollerDisplacementY(PinnedDisplacement):
         Node set string or nodes list the displacement is applied to.
     axes : str
         'local' or 'global' co-ordinate axes.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -271,10 +252,6 @@ class RollerDisplacementZ(PinnedDisplacement):
     axes : str
         'local' or 'global' co-ordinate axes.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -296,10 +273,6 @@ class RollerDisplacementXY(PinnedDisplacement):
         Node set string or nodes list the displacement is applied to.
     axes : str
         'local' or 'global' co-ordinate axes.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -324,10 +297,6 @@ class RollerDisplacementYZ(PinnedDisplacement):
     axes : str
         'local' or 'global' co-ordinate axes.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, nodes, axes='global'):
@@ -350,10 +319,6 @@ class RollerDisplacementXZ(PinnedDisplacement):
         Node set string or nodes list the displacement is applied to.
     axes : str
         'local' or 'global' co-ordinate axes.
-
-    Returns
-    -------
-    None
 
     """
 
