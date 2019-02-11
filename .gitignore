@@ -1,5 +1,4 @@
 *.pyc
-*.pyc
 *.rhl
 *.3dmbak
 *.nbi
@@ -12,3 +11,4 @@
 temp/**
 !temp/PLACEHOLDER
 
+/.idea/
