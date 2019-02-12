@@ -30,9 +30,16 @@ class Set(object):
     index : int
         Set index number.
 
-    Returns
-    -------
-    None
+    Attributes
+    ----------
+    name : str
+        Name of the set.
+    type : str
+        'node', 'element', 'surface_node', surface_element'.
+    selection : list, dict
+        The integer keys of the nodes, elements or the element numbers and sides.
+    index : int
+        Set index number.
 
     """
 

@@ -38,13 +38,13 @@ If the ``selection`` is not given as a list, but instead as a single integer (to
     ---------------------
     name      : elset_shell
     type      : element
-    selection : [4]
+    selection : [7, 8]
     index     : 3
 
     >>> mdl.sets['elset_shell'].selection.append(5)  # add an element to the element set
 
     >>> mdl.sets['elset_shell'].selection  # show updated selection
-    [4, 5]
+    [7, 8, 5]
 
 From the node and element data of the **Structure** object, a surface can be defined by one of two surface set types. The first is by using ``type='surface_node'`` when creating a set with the ``.add_set()`` method. This will describe a surface by the nodes given in the ``selection`` list. This surface type can be created like:
 

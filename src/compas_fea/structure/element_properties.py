@@ -27,16 +27,27 @@ class ElementProperties(object):
         Name of the Material object to assign.
     section : str
         Name of the Section object to assign.
-    elset : list
-        Element set names assignment.
+    elset : str
+        Element set name.
     elements : list
         Element keys assignment.
     rebar : dict
         Reinforcement layer data.
 
-    Returns
-    -------
-    None
+    Attributes
+    ----------
+    name : str
+        Key name for the ElementProperties object.
+    material : str
+        Name of the Material object to assign.
+    section : str
+        Name of the Section object to assign.
+    elset : str
+        Element set name.
+    elements : list
+        Element keys assignment.
+    rebar : dict
+        Reinforcement layer data.
 
     Notes
     -----
@@ -57,6 +68,7 @@ class ElementProperties(object):
         if (not elset) and (not elements):
             raise NameError('***** ElementProperties objects require elements or element sets *****')
 
+
     def __str__(self):
 
         print('\n')
@@ -67,6 +79,7 @@ class ElementProperties(object):
             print('{0:<13} : {1}'.format(attr, getattr(self, attr)))
 
         return ''
+
 
     def __repr__(self):
 
