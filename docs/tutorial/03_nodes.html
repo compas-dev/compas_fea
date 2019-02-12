@@ -136,10 +136,10 @@
 </code></pre></div>
 </div>
 <p>It can be checked if a node is already present in the <strong>Structure</strong> object by a query with the method <code class="docutils literal notranslate"><span class="pre">.check_node_exists()</span></code> and with a list of test node co-ordinates. If a node exists at those coordinates, then the method will return the integer key, if not, <code class="docutils literal notranslate"><span class="pre">None</span></code> will be returned. Integer values that are given for co-ordinates will be converted to floats during this check.</p>
-<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># does a node exist at x=5, y=5, z=0</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">xyz</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># does a node exist at x=5, y=5, z=0</span>
 <span class="go">2</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># does a node exist at x=5, y=5, z=-1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">xyz</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># does a node exist at x=5, y=5, z=-1</span>
 <span class="go">None</span>
 </code></pre></div>
 </div>
@@ -239,7 +239,7 @@
 
         <footer class="compas-footer">
             
-                Last updated on Feb 07, 2019.
+                Last updated on Feb 11, 2019.
             
 
             
