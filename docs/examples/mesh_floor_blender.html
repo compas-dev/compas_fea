@@ -19,11 +19,7 @@
         <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
 
         
-            <link rel="next" title="mesh_mould" href="mesh_mould_blender.html" />
         
-        
-        
-            <link rel="prev" title="block_tets" href="block_tets_blender.html" />
         
 
         <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -73,105 +69,6 @@
 <div class="figure">
 <img alt="../_images/mesh_floor_blender.png" class="figure-img img-fluid" src="../_images/mesh_floor_blender.png" />
 </div>
-<div class="nohighlight notranslate"><div class="highlight"><pre><code><span></span>
-<span class="kn">from</span> <span class="nn">compas_blender.helpers</span> <span class="k">import</span> <span class="n">mesh_from_bmesh</span>
-<span class="kn">from</span> <span class="nn">compas_blender.utilities</span> <span class="k">import</span> <span class="n">get_objects</span>
-
-<span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">blender</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Concrete</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralDisplacement</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralStep</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GravityLoad</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PinnedDisplacement</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PrestressLoad</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">RollerDisplacementXY</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ShellSection</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Steel</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">TributaryLoad</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">TrussSection</span>
-
-
-<span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
-<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright 2018, BLOCK Research Group - ETH Zurich&#39;</span>
-<span class="n">__license__</span>   <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
-<span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
-
-
-<span class="c1"># Structure</span>
-
-<span class="n">mdl</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mesh_floor&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;/home/al/temp/&#39;</span><span class="p">)</span>
-
-<span class="c1"># Elements</span>
-
-<span class="n">blender</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mesh_type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">)</span>
-<span class="n">blender</span><span class="o">.</span><span class="n">add_nodes_elements_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">line_type</span><span class="o">=</span><span class="s1">&#39;TrussElement&#39;</span><span class="p">)</span>
-
-<span class="c1"># Sets</span>
-
-<span class="n">blender</span><span class="o">.</span><span class="n">add_elset_from_bmeshes</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;elset_concrete&#39;</span><span class="p">)</span>
-<span class="n">blender</span><span class="o">.</span><span class="n">add_elset_from_bmeshes</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;elset_ties&#39;</span><span class="p">)</span>
-<span class="n">blender</span><span class="o">.</span><span class="n">add_nset_from_objects</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;nset_corners&#39;</span><span class="p">)</span>
-<span class="n">blender</span><span class="o">.</span><span class="n">add_nset_from_objects</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;nset_corner1&#39;</span><span class="p">)</span>
-<span class="n">blender</span><span class="o">.</span><span class="n">add_nset_from_objects</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;nset_corner2&#39;</span><span class="p">)</span>
-
-<span class="c1"># Materials</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_materials</span><span class="p">([</span>
-    <span class="n">Concrete</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">fck</span><span class="o">=</span><span class="mi">90</span><span class="p">),</span>
-    <span class="n">Steel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">)])</span>
-
-<span class="c1"># Sections</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_sections</span><span class="p">([</span>
-    <span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_concrete&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.020</span><span class="p">),</span>
-    <span class="n">TrussSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_ties&#39;</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="mf">0.0004</span><span class="p">)])</span>
-
-<span class="c1"># Properties</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">([</span>
-    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_concrete&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_concrete&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_concrete&#39;</span><span class="p">),</span>
-    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_steel&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_ties&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_ties&#39;</span><span class="p">)])</span>
-
-<span class="c1"># Displacements</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacements</span><span class="p">([</span>
-    <span class="n">RollerDisplacementXY</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_roller&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_corners&#39;</span><span class="p">),</span>
-    <span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_corner1&#39;</span><span class="p">),</span>
-    <span class="n">GeneralDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_xdof&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_corner2&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">)])</span>
-    
-<span class="c1"># Loads</span>
-
-<span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_from_bmesh</span><span class="p">(</span><span class="n">get_objects</span><span class="p">(</span><span class="n">layer</span><span class="o">=</span><span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span>
-    <span class="n">GravityLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;elset_concrete&#39;</span><span class="p">),</span>
-    <span class="n">PrestressLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_prestress&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;elset_ties&#39;</span><span class="p">,</span> <span class="n">sxx</span><span class="o">=</span><span class="mi">50</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">),</span>
-    <span class="n">TributaryLoad</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_tributary&#39;</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mi">5000</span><span class="p">)])</span>
-
-<span class="c1"># Steps</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_steps</span><span class="p">([</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_roller&#39;</span><span class="p">,</span> <span class="s1">&#39;disp_pinned&#39;</span><span class="p">,</span> <span class="s1">&#39;disp_xdof&#39;</span><span class="p">]),</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_prestress&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_prestress&#39;</span><span class="p">]),</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="s1">&#39;load_tributary&#39;</span><span class="p">],</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.1</span><span class="p">)])</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="s1">&#39;step_prestress&#39;</span><span class="p">,</span> <span class="s1">&#39;step_loads&#39;</span><span class="p">]</span>
-
-<span class="c1"># Summary</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-
-<span class="c1"># Run (Abaqus)</span>
-
-<span class="n">exe</span> <span class="o">=</span> <span class="s1">&#39;/home/al/abaqus/Commands/abaqus cae &#39;</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">exe</span><span class="o">=</span><span class="n">exe</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">],</span> <span class="n">license</span><span class="o">=</span><span class="s1">&#39;research&#39;</span><span class="p">)</span>
-
-<span class="n">blender</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_prestress&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;uz&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">blender</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;uz&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">blender</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;smises&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-                  <span class="n">iptype</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="n">nodal</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">])</span>
-</code></pre></div>
-</div>
 </div>
 
                         
@@ -198,11 +95,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Jan 10, 2019.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
             
         </footer>
 

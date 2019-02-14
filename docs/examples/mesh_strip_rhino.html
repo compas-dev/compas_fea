@@ -106,42 +106,43 @@
 
 <span class="c1"># Materials</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_material</span><span class="p">(</span><span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_alu&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">75</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2700</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_elastic&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">75</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2700</span><span class="p">))</span>
 
 <span class="c1"># Sections</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_plate&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.001</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_plate&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.001</span><span class="p">))</span>
 
 <span class="c1"># Properties</span>
 
-<span class="n">ep</span> <span class="o">=</span> <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_plate&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_alu&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_plate&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">(</span><span class="n">ep</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_plate&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_elastic&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_plate&#39;</span><span class="p">,</span> <span class="n">elset</span><span class="o">=</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">))</span>
 
 <span class="c1"># Displacements</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacements</span><span class="p">([</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
     <span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_left&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_left&#39;</span><span class="p">),</span>
     <span class="n">RollerDisplacementX</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_right&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_right&#39;</span><span class="p">),</span>
-    <span class="n">GeneralDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_middle&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_middle&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.200</span><span class="p">)])</span>
+    <span class="n">GeneralDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_middle&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_middle&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.200</span><span class="p">),</span>
+<span class="p">])</span>
 
 <span class="c1"># Loads</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">GravityLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">GravityLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;elset_mesh&#39;</span><span class="p">))</span>
 
 <span class="c1"># Steps</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_steps</span><span class="p">([</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
     <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_left&#39;</span><span class="p">,</span> <span class="s1">&#39;disp_right&#39;</span><span class="p">]),</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">],</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_middle&#39;</span><span class="p">])])</span>
+    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">],</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_middle&#39;</span><span class="p">]),</span>
+<span class="p">])</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="s1">&#39;step_load&#39;</span><span class="p">]</span>
 
 <span class="c1"># Summary</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
 
-<span class="c1"># Run (Abaqus)</span>
+<span class="c1"># Run</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">],</span> <span class="n">license</span><span class="o">=</span><span class="s1">&#39;research&#39;</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">])</span>
 
 <span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;um&#39;</span><span class="p">)</span>
 <span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;smises&#39;</span><span class="p">)</span>
@@ -173,11 +174,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Jan 10, 2019.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
             
         </footer>
 

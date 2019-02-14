@@ -19,14 +19,14 @@ __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
 
-# Structure 
+# Structure
 
 mdl = Structure(name='mesh_mould', path='C:/Temp/')
 
 # Elements
 
 rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers=['elset_wall', 'elset_plinth'])
-        
+
 # Sets
 
 rhino.add_sets_from_layers(mdl, layers=['nset_fixed', 'nset_loads'])

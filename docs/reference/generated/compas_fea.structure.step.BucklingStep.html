@@ -71,7 +71,7 @@
 <h1>BucklingStep</h1>
 <dl class="class">
 <dt id="compas_fea.structure.step.BucklingStep">
-<em class="property">class </em><code class="descclassname">compas_fea.structure.step.</code><code class="descname">BucklingStep</code><span class="sig-paren">(</span><em>name</em>, <em>modes=5</em>, <em>increments=100</em>, <em>factor=1.0</em>, <em>displacements=[]</em>, <em>loads=[]</em>, <em>type='buckle'</em>, <em>step=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/step.html#BucklingStep"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="descclassname">compas_fea.structure.step.</code><code class="descname">BucklingStep</code><span class="sig-paren">(</span><em>name</em>, <em>modes=5</em>, <em>increments=100</em>, <em>factor=1.0</em>, <em>displacements=None</em>, <em>loads=None</em>, <em>type='buckle'</em>, <em>step=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/step.html#BucklingStep"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference internal" href="compas_fea.structure.step.Step.html#compas_fea.structure.step.Step" title="compas_fea.structure.step.Step"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_fea.structure.step.Step</span></code></a></p>
 <p>Initialises BucklingStep object for use in a buckling analysis.</p>
 <dl class="field-list simple">
@@ -80,7 +80,7 @@
 <li><p><strong>name</strong> (<em>str</em>) – Name of the BucklingStep.</p></li>
 <li><p><strong>modes</strong> (<em>int</em>) – Number of modes to analyse.</p></li>
 <li><p><strong>increments</strong> (<em>int</em>) – Number of increments.</p></li>
-<li><p><strong>factor</strong> (<em>float</em>) – Proportionality factor on the loads and displacements.</p></li>
+<li><p><strong>factor</strong> (<em>float, dict</em>) – Proportionality factor on the loads and displacements.</p></li>
 <li><p><strong>displacements</strong> (<em>list</em>) – Displacement object names.</p></li>
 <li><p><strong>loads</strong> (<em>list</em>) – Load object names.</p></li>
 <li><p><strong>type</strong> (<em>str</em>) – ‘buckle’.</p></li>
@@ -131,11 +131,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Jan 10, 2019.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
             
         </footer>
 

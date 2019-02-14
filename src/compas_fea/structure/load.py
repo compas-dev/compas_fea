@@ -323,15 +323,20 @@ class TributaryLoad(Load):
         Load.__init__(self, name=name, axes=axes)
 
         self.__name__ = 'TributaryLoad'
-        self.nodes    = []
+#        
         self.attr_list.append('mesh')
+        
+        nodes = []
+        components = {}
 
-        for key in list(mesh.vertices()):
+        for key in mesh.vertices():
             node = structure.check_node_exists(mesh.vertex_coordinates(key))
             if node is not None:
                 A = mesh.vertex_area(key)
-                self.nodes.append(node)
-                self.components[node] = {'x': x * A, 'y': y * A, 'z': z * A}
+                nodes.append(node)
+                components[node] = {'x': x * A, 'y': y * A, 'z': z * A}#
+        self.components = components
+        self.nodes    = nodes
 
 
 class HarmonicPointLoad(Load):

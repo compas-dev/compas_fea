@@ -71,7 +71,7 @@
 <h1>ElementProperties</h1>
 <dl class="class">
 <dt id="compas_fea.structure.element_properties.ElementProperties">
-<em class="property">class </em><code class="descclassname">compas_fea.structure.element_properties.</code><code class="descname">ElementProperties</code><span class="sig-paren">(</span><em>name</em>, <em>material=None</em>, <em>section=None</em>, <em>elsets=None</em>, <em>elements=None</em>, <em>reinforcement={}</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/element_properties.html#ElementProperties"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="descclassname">compas_fea.structure.element_properties.</code><code class="descname">ElementProperties</code><span class="sig-paren">(</span><em>name</em>, <em>material=None</em>, <em>section=None</em>, <em>elset=None</em>, <em>elements=None</em>, <em>rebar={}</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/structure/element_properties.html#ElementProperties"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Initialises an ElementProperties object.</p>
 <dl class="field-list simple">
@@ -80,9 +80,9 @@
 <li><p><strong>name</strong> (<em>str</em>) – Key name for the ElementProperties object.</p></li>
 <li><p><strong>material</strong> (<em>str</em>) – Name of the Material object to assign.</p></li>
 <li><p><strong>section</strong> (<em>str</em>) – Name of the Section object to assign.</p></li>
-<li><p><strong>elsets</strong> (<em>list</em>) – Element set names assignment.</p></li>
+<li><p><strong>elset</strong> (<em>list</em>) – Element set names assignment.</p></li>
 <li><p><strong>elements</strong> (<em>list</em>) – Element keys assignment.</p></li>
-<li><p><strong>reinforcement</strong> (<em>dict</em>) – Reinforcement layer data.</p></li>
+<li><p><strong>rebar</strong> (<em>dict</em>) – Reinforcement layer data.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -91,7 +91,7 @@
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>Either <code class="docutils literal notranslate"><span class="pre">elements</span></code> or <code class="docutils literal notranslate"><span class="pre">elsets</span></code> should be given, not both.</p></li>
+<li><p>Either <code class="docutils literal notranslate"><span class="pre">elements</span></code> or <code class="docutils literal notranslate"><span class="pre">elset</span></code> should be given, not both.</p></li>
 </ul>
 <p class="rubric">Methods</p>
 <table class="longtable docutils">
@@ -100,7 +100,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code>(name[, material, section, elsets, …])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code>(name[, material, section, elset, …])</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
 </tbody>
@@ -133,11 +133,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Jan 10, 2019.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
             
         </footer>
 

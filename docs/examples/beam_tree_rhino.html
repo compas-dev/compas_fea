@@ -19,7 +19,7 @@
         <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
 
         
-            <link rel="next" title="block_deepbeam" href="block_deepbeam_rhino.html" />
+            <link rel="next" title="block_strip" href="block_strip_rhino.html" />
         
         
         
@@ -108,58 +108,62 @@
 
 <span class="c1"># Sections</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_sections</span><span class="p">([</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
     <span class="n">TrapezoidalSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_mushroom&#39;</span><span class="p">,</span> <span class="n">b1</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">b2</span><span class="o">=</span><span class="mf">0.150</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.225</span><span class="p">),</span>
     <span class="n">RectangularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_bamboo&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.020</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.100</span><span class="p">),</span>
-    <span class="n">RectangularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_joints&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.020</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.075</span><span class="p">)])</span>
+    <span class="n">RectangularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_joints&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.020</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">0.075</span><span class="p">),</span>
+<span class="p">])</span>
 
 <span class="c1"># Materials</span>
 
-<span class="n">fm</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">10000</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">]]</span>
+<span class="n">fm</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">1000000</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">]]</span>
 <span class="n">em</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.09</span><span class="p">]</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_materials</span><span class="p">([</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
     <span class="n">ElasticIsotropic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_bamboo&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">20</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1100</span><span class="p">),</span>
-    <span class="n">ElasticPlastic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_mushroom&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">5</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.30</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">350</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">fm</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="n">em</span><span class="p">)])</span>
+    <span class="n">ElasticPlastic</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_mushroom&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">5</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mf">0.30</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">350</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="n">fm</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="n">em</span><span class="p">),</span>
+<span class="p">])</span>
 
 <span class="c1"># Properties</span>
 
-<span class="n">s1</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;struts_mushroom&#39;</span><span class="p">,</span> <span class="s1">&#39;joints_mushroom&#39;</span><span class="p">]</span>
-<span class="n">s2</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;struts_bamboo&#39;</span><span class="p">,</span> <span class="s1">&#39;joints_bamboo&#39;</span><span class="p">]</span>
-<span class="n">s3</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;joints_grid&#39;</span><span class="p">]</span>
-
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">([</span>
-    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_mushroom&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_mushroom&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_mushroom&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="n">s1</span><span class="p">),</span>
-    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_bamboo&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_bamboo&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_bamboo&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="n">s2</span><span class="p">),</span>
-    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_joints&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_bamboo&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_joints&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="n">s3</span><span class="p">)])</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
+    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_mush_1&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_mushroom&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_mushroom&#39;</span><span class="p">,</span> <span class="n">elset</span><span class="o">=</span><span class="s1">&#39;struts_mushroom&#39;</span><span class="p">),</span>
+    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_mush_2&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_mushroom&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_mushroom&#39;</span><span class="p">,</span> <span class="n">elset</span><span class="o">=</span><span class="s1">&#39;joints_mushroom&#39;</span><span class="p">),</span>
+    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_bamb_1&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_bamboo&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_bamboo&#39;</span><span class="p">,</span> <span class="n">elset</span><span class="o">=</span><span class="s1">&#39;struts_bamboo&#39;</span><span class="p">),</span>
+    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_bamb_2&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_bamboo&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_bamboo&#39;</span><span class="p">,</span> <span class="n">elset</span><span class="o">=</span><span class="s1">&#39;joints_bamboo&#39;</span><span class="p">),</span>
+    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_joints&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_bamboo&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_joints&#39;</span><span class="p">,</span> <span class="n">elset</span><span class="o">=</span><span class="s1">&#39;joints_grid&#39;</span><span class="p">),</span>
+<span class="p">])</span>
 
 <span class="c1"># Displacements</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacements</span><span class="p">([</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
     <span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_bot&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;supports_bot&#39;</span><span class="p">),</span>
-    <span class="n">RollerDisplacementZ</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_top&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;supports_top&#39;</span><span class="p">)])</span>
-    
+    <span class="n">RollerDisplacementZ</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_top&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;supports_top&#39;</span><span class="p">),</span>
+<span class="p">])</span>
+
 <span class="c1"># Loads</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_load</span><span class="p">(</span><span class="n">GravityLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="n">layers</span><span class="p">))</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">GravityLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="n">layers</span><span class="p">))</span>
 
 <span class="c1"># Steps</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_steps</span><span class="p">([</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
     <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_bot&#39;</span><span class="p">,</span> <span class="s1">&#39;disp_top&#39;</span><span class="p">]),</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">])])</span>
+    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">]),</span>
+<span class="p">])</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="s1">&#39;step_loads&#39;</span><span class="p">]</span>
 
 <span class="c1"># Summary</span>
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
 
-<span class="c1"># Run (Abaqus)</span>
+<span class="c1"># Run</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;sf&#39;</span><span class="p">],</span> <span class="n">license</span><span class="o">=</span><span class="s1">&#39;research&#39;</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;sf&#39;</span><span class="p">,</span> <span class="s1">&#39;rf&#39;</span><span class="p">])</span>
 
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;um&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;sf1&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;um&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">cbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;sf1&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">cbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_reaction_forces</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">)</span>
 </code></pre></div>
 </div>
 </div>
@@ -188,11 +192,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Jan 10, 2019.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
             
         </footer>
 

@@ -65,4 +65,4 @@ class Node(object):
 
     def __repr__(self):
 
-        return '{0}({1})'.format(self.__name__, self.number)
+        return '{0}({1})'.format(self.__name__, self.key)

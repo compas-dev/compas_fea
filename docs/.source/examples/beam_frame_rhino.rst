@@ -2,7 +2,7 @@
 beam_frame
 ********************************************************************************
 
-This example works for: **Abaqus**, **OpenSees**, **Sofistik**.
+This example works for: **Abaqus**, **OpenSees**.
 
 .. figure:: /_images/beam_frame_rhino.png
     :figclass: figure

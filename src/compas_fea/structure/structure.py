@@ -231,11 +231,11 @@ Steps
 
 
     # ==============================================================================
-    # Constructors
+    # Constructors    EXPERIMENTAL
     # ==============================================================================
 
     @classmethod
-    def from_mesh(cls, mesh):
+    def from_mesh(cls, mesh, path):
 
         """ Creates a Structure object based on data contained in a compas Mesh datastructure.
 
@@ -255,11 +255,11 @@ Steps
 
         """
 
-        structure = cls()
+        structure = cls(path=path)
 
         # Add nodes and elements from Mesh
 
-        structure.add_nodes_elements_from_mesh(mesh=mesh, type='ShellElement')
+        structure.add_nodes_elements_from_mesh(mesh=mesh, element_type='ShellElement')
 
         # Add displacements
 
@@ -533,7 +533,7 @@ Steps
     # Analysis
     # ==============================================================================
 
-    def write_input_file(self, software, fields='u', output=True, save=False):
+    def write_input_file(self, software, fields='u', output=True, save=False, ndof=6):
 
         """ Writes the FE software's input file.
 
@@ -564,7 +564,7 @@ Steps
             ansys.input_generate(self)
 
         elif software == 'opensees':
-            opensees.input_generate(self, fields=fields, output=output)
+            opensees.input_generate(self, fields=fields, output=output, ndof=ndof)
 
 
     def analyse(self, software, exe=None, cpus=4, license='research', delete=True, output=True):
@@ -647,7 +647,7 @@ Steps
 
 
     def analyse_and_extract(self, software, fields='u', exe=None, cpus=4, license='research', output=True, save=False,
-                            return_data=True, components=None):
+                            return_data=True, components=None, ndof=6):
 
         """ Runs the analysis through the chosen FEA software / library and extracts data.
 
@@ -678,7 +678,7 @@ Steps
 
         """
 
-        self.write_input_file(software=software, fields=fields, output=output, save=save)
+        self.write_input_file(software=software, fields=fields, output=output, save=save, ndof=ndof)
 
         self.analyse(software=software, exe=exe, cpus=cpus, license=license, output=output)
 
@@ -791,7 +791,7 @@ Steps
     # App
     # ==============================================================================
 
-    def view(self):
+    def view(self, mode=''):
 
         """ Starts the PyQt app for visualisation.
 
@@ -814,7 +814,7 @@ Steps
 
             from compas_fea.app.app import App
 
-            app = App(structure=self)
+            app = App(structure=self, mode=mode)
             app.start()
 
         except:

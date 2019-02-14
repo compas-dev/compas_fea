@@ -50,16 +50,16 @@ mdl.add_set(name='nset_edges', type='node', selection=edges)
 
 mdl.add([
     Concrete(name='mat_concrete', fck=90, fr=[1.16, 0.15]),
-    Stiff(name='mat_stiff'),
+    Stiff(name='mat_stiff', E=10**12),
     Steel(name='mat_steel', fy=355),
 ])
-    
+
 # Sections
 
 mdl.add([
     ShellSection(name='sec_ribs', t=0.020),
     ShellSection(name='sec_vault', t=0.050),
-    RectangularSection(name='sec_stiff', b=1, h=1), 
+    RectangularSection(name='sec_stiff', b=1, h=1),
     TrussSection(name='sec_ties', A=pi*0.25*0.030**2),
 ])
 
@@ -79,7 +79,7 @@ mdl.add([
     PinnedDisplacement(name='disp_pinned', nodes='nset_corner1'),
     GeneralDisplacement(name='disp_xdof', nodes='nset_corner2', x=0),
 ])
-    
+
 # Loads
 
 mdl.add([
@@ -102,7 +102,10 @@ mdl.summary()
 
 # Run
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 's'], components=['ux', 'uy', 'uz', 'smises'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'cf'], components=['ux', 'uy', 'uz', 'smises', 'cfx', 'cfy', 'cfz'])
 
 rhino.plot_data(mdl, step='step_loads', field='uz', radius=0.02, cbar_size=0.5)
 rhino.plot_data(mdl, step='step_loads', field='smises', radius=0.02, cbar_size=0.5, cbar=[0, 5*10**6])
+rhino.plot_concentrated_forces(mdl, step='step_loads')
+
+mdl.save_to_obj()

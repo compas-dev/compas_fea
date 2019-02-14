@@ -7,6 +7,7 @@ Finite element analysis, or the finite element method, is a numerical approach t
 .. figure:: /_images/discretise-compound.png
     :figclass: figure
     :class: figure-img img-fluid
+    :align: center
 
     Example discretisations of solids into finite elements: Scientific Computing and Imaging Institute, University of Utah (left), COMSOL Multiphysics (right).
 
@@ -15,6 +16,7 @@ The **compas_fea** package of the **COMPAS** framework seeks to aid the user, be
 .. figure:: /_images/cad_environment.png
     :figclass: figure
     :class: figure-img img-fluid
+    :align: center
 
     A scripting and CAD software pairing can be used to create and analyse a structure, and then visualise the results in the same window.
 

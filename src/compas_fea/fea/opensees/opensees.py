@@ -28,7 +28,7 @@ __all__ = [
 ]
 
 
-def input_generate(structure, fields, output):
+def input_generate(structure, fields, output, ndof):
 
     """ Creates the OpenSees .tcl file from the Structure object.
 
@@ -40,6 +40,8 @@ def input_generate(structure, fields, output):
         Data field requests.
     output : bool
         Print terminal output.
+    ndof : int
+        Number of degrees-of-freedom in the model, 3 or 6.
 
     Returns
     -------
@@ -48,12 +50,6 @@ def input_generate(structure, fields, output):
     """
 
     filename = '{0}{1}.tcl'.format(structure.path, structure.name)
-
-    ndof = 3
-    for element in structure.elements.values():
-        if element.__name__ not in ['TrussElement', 'TieElement', 'StrutElement', 'SpringElement']:
-            ndof = 6
-            break
 
     with Writer(structure=structure, software='opensees', filename=filename, fields=fields, ndof=ndof) as writer:
 

@@ -93,11 +93,11 @@
 <span class="sd">        Name of the Material object to assign.</span>
 <span class="sd">    section : str</span>
 <span class="sd">        Name of the Section object to assign.</span>
-<span class="sd">    elsets : list</span>
+<span class="sd">    elset : list</span>
 <span class="sd">        Element set names assignment.</span>
 <span class="sd">    elements : list</span>
 <span class="sd">        Element keys assignment.</span>
-<span class="sd">    reinforcement : dict</span>
+<span class="sd">    rebar : dict</span>
 <span class="sd">        Reinforcement layer data.</span>
 
 <span class="sd">    Returns</span>
@@ -106,32 +106,37 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    - Either ``elements`` or ``elsets`` should be given, not both.</span>
+<span class="sd">    - Either ``elements`` or ``elset`` should be given, not both.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reinforcement</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">elset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rebar</span><span class="o">=</span><span class="p">{}):</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span>      <span class="o">=</span> <span class="s1">&#39;ElementProperties&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>          <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">material</span>      <span class="o">=</span> <span class="n">material</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">section</span>       <span class="o">=</span> <span class="n">section</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">elsets</span>        <span class="o">=</span> <span class="n">elsets</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span>      <span class="o">=</span> <span class="n">elements</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reinforcement</span> <span class="o">=</span> <span class="n">reinforcement</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;ElementProperties&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">material</span> <span class="o">=</span> <span class="n">material</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">section</span>  <span class="o">=</span> <span class="n">section</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elset</span>    <span class="o">=</span> <span class="n">elset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">elements</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rebar</span>    <span class="o">=</span> <span class="n">rebar</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">elsets</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">elements</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">elset</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">elements</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s1">&#39;***** ElementProperties objects require elements or element sets *****&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;compas_fea </span><span class="si">{0}</span><span class="s1"> object&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="mi">18</span><span class="p">))</span>
 
-        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">,</span> <span class="s1">&#39;section&#39;</span><span class="p">,</span> <span class="s1">&#39;elsets&#39;</span><span class="p">,</span> <span class="s1">&#39;elements&#39;</span><span class="p">,</span> <span class="s1">&#39;reinforcement&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;material&#39;</span><span class="p">,</span> <span class="s1">&#39;section&#39;</span><span class="p">,</span> <span class="s1">&#39;elset&#39;</span><span class="p">,</span> <span class="s1">&#39;elements&#39;</span><span class="p">,</span> <span class="s1">&#39;rebar&#39;</span><span class="p">]:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:&lt;13}</span><span class="s1"> : </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)))</span>
-</div>
+
         <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">(</span><span class="si">{1}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 </code></pre></div>
                         
                     
@@ -157,11 +162,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Jan 10, 2019.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
             
         </footer>
 

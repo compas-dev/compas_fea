@@ -3,24 +3,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from compas.geometry import add_vectors
-from compas.geometry import angles_points_xy
-from compas.geometry import area_polygon_xy
-from compas.geometry import centroid_points
-from compas.geometry import circle_from_points_xy
-from compas.topology import delaunay_from_points
-from compas.geometry import cross_vectors
-from compas.geometry import distance_point_point
-from compas.geometry import length_vector
-from compas.geometry import normalize_vector
-from compas.geometry import scale_vector
-from compas.geometry import subtract_vectors
-
-from compas.topology import dijkstra_path
-
-from compas.utilities import geometric_key
-
 from compas.datastructures import Mesh
+from compas.geometry import distance_point_point
+from compas.topology import dijkstra_path
+from compas.utilities import geometric_key
 
 from time import time
 
@@ -39,7 +25,6 @@ try:
     from numpy import array
     from numpy import asarray
     from numpy import cos
-    from numpy import dot
     from numpy import float64
     from numpy import hstack
     from numpy import isnan
@@ -56,24 +41,13 @@ try:
     from numpy import sqrt
     from numpy import sum
     from numpy import tile
-    from numpy import vstack
     from numpy import zeros
-    from numpy.linalg import inv
 except ImportError:
     pass
 
 try:
     from scipy.interpolate import griddata
-    from scipy.linalg import det
     from scipy.sparse import csr_matrix
-    from scipy.spatial import Delaunay
-    from scipy.spatial import distance_matrix
-except ImportError:
-    pass
-
-try:
-    from meshpy.tet import build
-    from meshpy.tet import MeshInfo
 except ImportError:
     pass
 
@@ -87,15 +61,12 @@ __email__     = 'liew@arch.ethz.ch'
 __all__ = [
     'colorbar',
     'combine_all_sets',
-    'discretise_faces',
-    'extrude_mesh',
     'group_keys_by_attribute',
     'group_keys_by_attributes',
     'network_order',
     'normalise_data',
     'postprocess',
     'process_data',
-    'tets_from_vertices_faces',
     'principal_stresses',
     'plotvoxels',
     'identify_ranges',
@@ -332,105 +303,6 @@ def network_from_line_elements(structure):
     raise NotImplementedError
 
 
-def extrude_mesh(structure, mesh, layers, thickness, mesh_name, links_name, blocks_name):
-
-    """ Extrudes a Mesh and adds/creates elements to a Structure.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object to update.
-    mesh : obj
-        Mesh datastructure
-    layers : int
-        Number of layers.
-    thickness : float
-        Layer thickness.
-    mesh_name : str
-        Name of set for mesh on final surface.
-    links_name : str
-        Name of set for adding links along extrusion.
-    blocks_name : str
-        Name of set for solid elements.
-
-    Returns
-    -------
-    None
-
-    Notes
-    -----
-    - Extrusion is along the Mesh vertex normals.
-
-    """
-
-    ki     = {}
-    faces  = []
-    links  = []
-    blocks = []
-    slices = {i: [] for i in range(layers)}
-
-    for key in mesh.vertices():
-
-        normal = normalize_vector(mesh.vertex_normal(key))
-        xyz    = mesh.vertex_coordinates(key)
-        ki['{0}_0'.format(key)] = structure.add_node(xyz)
-
-        for i in range(layers):
-
-            xyzi = add_vectors(xyz, scale_vector(normal, (i + 1) * thickness))
-            ki['{0}_{1}'.format(key, i + 1)] = structure.add_node(xyzi)
-
-            if links_name:
-
-                node1 = ki['{0}_{1}'.format(key, i + 0)]
-                node2 = ki['{0}_{1}'.format(key, i + 1)]
-                L  = subtract_vectors(xyzi, xyz)
-                ez = normalize_vector(L)
-                try:
-                    ey = cross_vectors(ez, [1, 0, 0])
-                except:
-                    pass
-                axes = {'ez': ez, 'ey': ey}
-
-                ekey = structure.add_element(nodes=[node1, node2], type='SpringElement', thermal=False, axes=axes)
-                structure.elements[ekey].A = mesh.vertex_area(key)
-                structure.elements[ekey].L = L
-                links.append(ekey)
-
-    for face in mesh.faces():
-
-        vs = mesh.face_vertices(face)
-
-        for i in range(layers):
-
-            bot = ['{0}_{1}'.format(j, i + 0) for j in vs]
-            top = ['{0}_{1}'.format(j, i + 1) for j in vs]
-
-            if blocks_name:
-
-                etype  = 'PentahedronElement' if len(vs) == 3 else 'HexahedronElement'
-                nodes  = [ki[j] for j in bot + top]
-                ekey   = structure.add_element(nodes=nodes, type=etype, thermal=False)
-                blocks.append(ekey)
-                slices[i].append(ekey)
-
-            if (i == layers - 1) and mesh_name:
-                nodes = [ki[j] for j in top]
-                ekey = structure.add_element(nodes=nodes, type='ShellElement', acoustic=False, thermal=False)
-                faces.append(ekey)
-
-    if blocks_name:
-        structure.add_set(name=blocks_name, type='element', selection=blocks)
-        for i in range(layers):
-            structure.add_set(name='{0}_layer_{1}'.format(blocks_name, i), type='element', selection=slices[i])
-
-    if mesh_name:
-        structure.add_set(name=mesh_name, type='element', selection=faces)
-
-    if links:
-        structure.add_set(name=links_name, type='element', selection=links)
-
-
 def _angle(A, B, C):
 
     AB = B - A
@@ -456,205 +328,6 @@ def _centre(p1, p2, p3):
     r = sqrt((ax - centerx)**2 + (ay - centery)**2)
 
     return [centerx, centery, 0], r
-
-
-def discretise_faces(vertices, faces, target, min_angle=15, factor=3, iterations=100):
-
-    """ Make discretised triangles from input coarse triangles data.
-
-    Parameters
-    ----------
-    vertices : list
-        Co-ordinates of coarse vertices.
-    faces : list
-        Vertex numbers of each face of the coarse triangles.
-    target : float
-        Target edge length of each triangle.
-    min_angle : float
-        Minimum internal angle of triangles.
-    factor : float
-        Factor on the maximum area of each triangle.
-    iterations : int
-        Number of iterations per face.
-
-    Returns
-    -------
-    list
-        Vertices of the discretised trianlges.
-    list
-        Vertex numbers of the discretised trianlges.
-
-    Notes
-    -----
-    - An experimental script.
-
-    """
-
-    points_all = []
-    faces_all  = []
-
-    Amax = factor * 0.5 * target**2
-
-    for count, face in enumerate(faces):
-
-        # Seed
-
-        face.append(face[0])
-        points = []
-        for u, v in zip(face[:-1], face[1:]):
-            sp  = vertices[u]
-            ep  = vertices[v]
-            vec = subtract_vectors(ep, sp)
-            l   = length_vector(vec)
-            div = l / target
-            n   = max([1, int(div)])
-            for j in range(n):
-                points.append(add_vectors(sp, scale_vector(vec, j / n)))
-        if len(points) > 3:
-            points.append(centroid_points(points))
-
-        # Starting orientation
-
-        cent = centroid_points(points)
-        vec1 = subtract_vectors(points[1], points[0])
-        vec2 = subtract_vectors(cent, points[0])
-        vecn = cross_vectors(vec1, vec2)
-
-        # Rotate about x
-
-        points   = array(points).transpose()
-        phi      = -arctan2(vecn[2], vecn[1]) + 0.5 * pi
-        Rx       = array([[1, 0, 0], [0, cos(phi), -sin(phi)], [0, sin(phi), cos(phi)]])
-        vecn_x   = dot(Rx, array(vecn)[:, newaxis])
-        points_x = dot(Rx, points)
-        Rx_inv   = inv(Rx)
-
-        # Rotate about y
-
-        psi      = +arctan2(vecn_x[2, 0], vecn_x[0, 0]) - 0.5 * pi
-        Ry       = array([[cos(psi), 0, sin(psi)], [0, 1, 0], [-sin(psi), 0, cos(psi)]])
-        points_y = dot(Ry, points_x)
-        Ry_inv   = inv(Ry)
-
-        V = points_y.transpose()
-
-        try:
-            it = 0
-            while it < iterations:
-
-                # Delaunay
-
-                vdl   = 1 * V
-                vdl[:, 2] = 0
-                tris_ = delaunay_from_points(points=[list(i) for i in list(vdl)], boundary=None)
-                tris  = []
-
-                # Filter
-
-                for u, v, w in tris_:
-
-                    p1 = V[u, :2]
-                    p2 = V[v, :2]
-                    p3 = V[w, :2]
-                    t1 = _angle(p1, p2, p3)
-                    t2 = _angle(p2, p3, p1)
-                    t3 = _angle(p3, p1, p2)
-
-                    if not any(array([t1, t2, t3]) < 1):
-                        # mat = array([[p1[0], p2[0], p3[0]], [p1[1], p2[1], p3[1]], [1, 1, 1]])
-                        # A = 0.5 * abs(det(mat))
-                        # if A < 100 * Amax:
-                        tris.append([u, v, w])
-
-                # Area
-
-                checked = True
-
-                for u, v, w in tris:
-
-                    p1 = V[u, :2]
-                    p2 = V[v, :2]
-                    p3 = V[w, :2]
-                    t1 = _angle(p1, p2, p3)
-                    t2 = _angle(p2, p3, p1)
-                    t3 = _angle(p3, p1, p2)
-                    tm = min([t1, t2, t3])
-
-                    c, r  = _centre(p1, p2, p3)
-                    c[2] = V[0, 2]
-                    mat = array([[p1[0], p2[0], p3[0]], [p1[1], p2[1], p3[1]], [1, 1, 1]])
-                    A = 0.5 * abs(det(mat))
-                    # if (tm < min_angle) or (A > Amax):
-                    if A > Amax:
-                        checked = False
-                        dist = distance_matrix(array([c]), V, threshold=10**5)
-                        if len(dist[dist <= r]) <= 3:
-                            V = vstack([V, array([c])])
-                            break
-
-                if checked:
-                    break
-
-                it += 1
-
-            print('Discretising face {0}/{1}: {2} iterations'.format(count + 1, len(faces), it))
-
-            points = dot(Ry_inv, V.transpose())
-            points_all.append([list(i) for i in list(dot(Rx_inv, points).transpose())])
-            faces_all.append([[int(i) for i in tri] for tri in list(tris)])
-
-        except:
-            print('***** ERROR discretising face {0} *****'.format(count))
-
-    return points_all, faces_all
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def combine_all_sets(sets_a, sets_b):
@@ -959,40 +632,6 @@ def plotvoxels(values, U, vdx, plot=True, indexing=None):
     return Am
 
 
-def tets_from_vertices_faces(vertices, faces, volume=None):
-
-    """ Generate tetrahedron points and elements with MeshPy (TetGen).
-
-    Parameters
-    ----------
-    vertices : list
-        List of lists of vertex co-ordinates for input surface mesh.
-    faces : list
-        List of lists of face indices for input surface mesh.
-    volume : float
-        Volume constraint for each tetrahedron element.
-
-    Returns
-    -------
-    list
-        Points of the tetrahedrons.
-    list
-        Indices of points for each tetrahedron element.
-
-    """
-
-    try:
-        info = MeshInfo()
-        info.set_points(vertices)
-        info.set_facets(faces)
-        tets = build(info, max_volume=volume)
-        tets_points = [list(i) for i in list(tets.points)]
-        tets_elements = [list(i) for i in list(tets.elements)]
-        return tets_points, tets_elements
-    except:
-        print('***** MeshPy failed *****')
-
-
 def principal_stresses(data, ptype, scale, rotate):
 
     """ Performs principal stress calculations.
@@ -1075,5 +714,5 @@ def principal_stresses(data, ptype, scale, rotate):
 
 if __name__ == "__main__":
 
-    data = [1,2,3,4,6,15,7,8,11,12,13,9,10,55,89,56,56]
-    print (identify_ranges(data))
+    data = [1, 2, 3, 4, 6, 15, 7, 8, 11, 12, 13, 9, 10, 55, 89, 56, 56]
+    print(identify_ranges(data))

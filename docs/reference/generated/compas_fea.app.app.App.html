@@ -71,7 +71,7 @@
 <h1>App</h1>
 <dl class="class">
 <dt id="compas_fea.app.app.App">
-<em class="property">class </em><code class="descclassname">compas_fea.app.app.</code><code class="descname">App</code><span class="sig-paren">(</span><em>structure</em>, <em>name='compas_fea App'</em>, <em>width=1500</em>, <em>height=1000</em>, <em>data={}</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/app/app.html#App"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="descclassname">compas_fea.app.app.</code><code class="descname">App</code><span class="sig-paren">(</span><em>structure</em>, <em>name='compas_fea App'</em>, <em>width=1500</em>, <em>height=1000</em>, <em>data={}</em>, <em>mode=''</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_fea/app/app.html#App"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">compas.viewers.vtkviewer.VtkViewer</span></code></p>
 <p class="rubric">Methods</p>
 <table class="longtable docutils">
@@ -80,7 +80,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code>(structure[, name, width, height, data])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code>(structure[, name, width, height, …])</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aboutQt</span></code>()</p></td>
@@ -273,10 +273,10 @@
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">findChild</span></code>(self, type, name, options, …)</p></td>
-<td><p>findChild(self, Tuple, name: str = ‘’, options: Union[Qt.</p></td>
+<td><p>findChild(self, Tuple, name: str = ‘’, options: Union[Qt.FindChildOptions, Qt.FindChildOption] = Qt.FindChildrenRecursively) -&gt; QObject</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">findChildren</span></code>(self, type, name, options, …)</p></td>
-<td><p>findChildren(self, Tuple, name: str = ‘’, options: Union[Qt.</p></td>
+<td><p>findChildren(self, Tuple, name: str = ‘’, options: Union[Qt.FindChildOptions, Qt.FindChildOption] = Qt.FindChildrenRecursively) -&gt; List[QObject] findChildren(self, type, QRegExp, options: Union[Qt.FindChildOptions, Qt.FindChildOption] = Qt.FindChildrenRecursively) -&gt; List[QObject] findChildren(self, Tuple, QRegExp, options: Union[Qt.FindChildOptions, Qt.FindChildOption] = Qt.FindChildrenRecursively) -&gt; List[QObject] findChildren(self, type, QRegularExpression, options: Union[Qt.FindChildOptions, Qt.FindChildOption] = Qt.FindChildrenRecursively) -&gt; List[QObject] findChildren(self, Tuple, QRegularExpression, options: Union[Qt.FindChildOptions, Qt.FindChildOption] = Qt.FindChildrenRecursively) -&gt; List[QObject]</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">flush</span></code>()</p></td>
 <td><p></p></td>
@@ -423,7 +423,7 @@
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">processEvents</span></code>(flags, …)</p></td>
-<td><p>processEvents(Union[QEventLoop.</p></td>
+<td><p>processEvents(Union[QEventLoop.ProcessEventsFlags, QEventLoop.ProcessEventsFlag], int)</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">property</span></code>(self, str)</p></td>
 <td><p></p></td>
@@ -708,13 +708,13 @@
 <td><p>applicationDisplayNameChanged(self) [signal]</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">applicationStateChanged</span></code></p></td>
-<td><p>applicationStateChanged(self, Qt.</p></td>
+<td><p>applicationStateChanged(self, Qt.ApplicationState) [signal]</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">commitDataRequest</span></code></p></td>
 <td><p>commitDataRequest(self, QSessionManager) [signal]</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">destroyed</span></code></p></td>
-<td><p>destroyed(self, QObject = None) [signal]</p></td>
+<td><p>QObject = None) [signal]</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">focusChanged</span></code></p></td>
 <td><p>focusChanged(self, QWidget, QWidget) [signal]</p></td>
@@ -735,7 +735,7 @@
 <td><p>lastWindowClosed(self) [signal]</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">layoutDirectionChanged</span></code></p></td>
-<td><p>layoutDirectionChanged(self, Qt.</p></td>
+<td><p>layoutDirectionChanged(self, Qt.LayoutDirection) [signal]</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">objectNameChanged</span></code></p></td>
 <td><p>objectNameChanged(self, str) [signal]</p></td>
@@ -788,11 +788,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Jan 10, 2019.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
             
         </footer>
 

@@ -23,7 +23,7 @@
         
         
         
-            <link rel="prev" title="block_strip" href="block_tets_rhino.html" />
+            <link rel="prev" title="mesh_discretise" href="mesh_discretise_rhino.html" />
         
 
         <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -118,56 +118,56 @@
 <span class="c1"># Sets</span>
 
 <span class="n">rhino</span><span class="o">.</span><span class="n">add_sets_from_layers</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;nset_corner1&#39;</span><span class="p">,</span> <span class="s1">&#39;nset_corner2&#39;</span><span class="p">])</span>
-<span class="n">edges</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span> <span class="k">if</span> <span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="p">]</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span> <span class="k">if</span> <span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">z</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="p">]</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;nset_edges&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">edges</span><span class="p">)</span>
 
 <span class="c1"># Materials</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_materials</span><span class="p">([</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
     <span class="n">Concrete</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">fck</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">fr</span><span class="o">=</span><span class="p">[</span><span class="mf">1.16</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">]),</span>
-    <span class="n">Stiff</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_stiff&#39;</span><span class="p">),</span>
+    <span class="n">Stiff</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_stiff&#39;</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">12</span><span class="p">),</span>
     <span class="n">Steel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="mi">355</span><span class="p">),</span>
 <span class="p">])</span>
-    
+
 <span class="c1"># Sections</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_sections</span><span class="p">([</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
     <span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_ribs&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.020</span><span class="p">),</span>
     <span class="n">ShellSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_vault&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">0.050</span><span class="p">),</span>
-    <span class="n">RectangularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_stiff&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> 
+    <span class="n">RectangularSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_stiff&#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
     <span class="n">TrussSection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sec_ties&#39;</span><span class="p">,</span> <span class="n">A</span><span class="o">=</span><span class="n">pi</span><span class="o">*</span><span class="mf">0.25</span><span class="o">*</span><span class="mf">0.030</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span>
 <span class="p">])</span>
 
 <span class="c1"># Properties</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_element_properties</span><span class="p">([</span>
-    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_ribs&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_ribs&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_ribs&#39;</span><span class="p">),</span>
-    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_vault&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_vault&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_vault&#39;</span><span class="p">),</span>
-    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_stiff&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_stiff&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_stiff&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_stiff&#39;</span><span class="p">),</span>
-    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_ties&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_ties&#39;</span><span class="p">,</span> <span class="n">elsets</span><span class="o">=</span><span class="s1">&#39;elset_ties&#39;</span><span class="p">),</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
+    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_ribs&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_ribs&#39;</span><span class="p">,</span> <span class="n">elset</span><span class="o">=</span><span class="s1">&#39;elset_ribs&#39;</span><span class="p">),</span>
+    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_vault&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_concrete&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_vault&#39;</span><span class="p">,</span> <span class="n">elset</span><span class="o">=</span><span class="s1">&#39;elset_vault&#39;</span><span class="p">),</span>
+    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_stiff&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_stiff&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_stiff&#39;</span><span class="p">,</span> <span class="n">elset</span><span class="o">=</span><span class="s1">&#39;elset_stiff&#39;</span><span class="p">),</span>
+    <span class="n">Properties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_ties&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;mat_steel&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;sec_ties&#39;</span><span class="p">,</span> <span class="n">elset</span><span class="o">=</span><span class="s1">&#39;elset_ties&#39;</span><span class="p">),</span>
 <span class="p">])</span>
 
 <span class="c1"># Displacements</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_displacements</span><span class="p">([</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
     <span class="n">RollerDisplacementXY</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_edges&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_edges&#39;</span><span class="p">),</span>
     <span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_corner1&#39;</span><span class="p">),</span>
     <span class="n">GeneralDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_xdof&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_corner2&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
 <span class="p">])</span>
-    
+
 <span class="c1"># Loads</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_loads</span><span class="p">([</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
     <span class="n">GravityLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;elset_ribs&#39;</span><span class="p">,</span> <span class="s1">&#39;elset_vault&#39;</span><span class="p">]),</span>
     <span class="n">PrestressLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_prestress&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;elset_ties&#39;</span><span class="p">,</span> <span class="n">sxx</span><span class="o">=</span><span class="mi">10</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">),</span>
-    <span class="n">TributaryLoad</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_tributary&#39;</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_from_guid</span><span class="p">(</span><span class="n">Mesh</span><span class="p">(),</span> <span class="n">rs</span><span class="o">.</span><span class="n">ObjectsByLayer</span><span class="p">(</span><span class="s1">&#39;load_mesh&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">z</span><span class="o">=-</span><span class="mi">2000</span><span class="p">),</span>
+    <span class="n">TributaryLoad</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_area&#39;</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh_from_guid</span><span class="p">(</span><span class="n">Mesh</span><span class="p">(),</span> <span class="n">rs</span><span class="o">.</span><span class="n">ObjectsByLayer</span><span class="p">(</span><span class="s1">&#39;load_mesh&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">z</span><span class="o">=-</span><span class="mi">2000</span><span class="p">),</span>
 <span class="p">])</span>
 
 <span class="c1"># Steps</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">add_steps</span><span class="p">([</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">([</span>
     <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_edges&#39;</span><span class="p">,</span> <span class="s1">&#39;disp_pinned&#39;</span><span class="p">,</span> <span class="s1">&#39;disp_xdof&#39;</span><span class="p">]),</span>
-    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="s1">&#39;load_tributary&#39;</span><span class="p">],</span> <span class="n">factor</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">:</span> <span class="mf">1.35</span><span class="p">,</span> <span class="s1">&#39;load_tributary&#39;</span><span class="p">:</span> <span class="mf">1.50</span><span class="p">}),</span>
+    <span class="n">GeneralStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="s1">&#39;load_area&#39;</span><span class="p">],</span> <span class="n">factor</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">:</span> <span class="mf">1.35</span><span class="p">,</span> <span class="s1">&#39;load_area&#39;</span><span class="p">:</span> <span class="mf">1.50</span><span class="p">}),</span>
 <span class="p">])</span>
 <span class="n">mdl</span><span class="o">.</span><span class="n">steps_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;step_bc&#39;</span><span class="p">,</span> <span class="s1">&#39;step_loads&#39;</span><span class="p">]</span>
 
@@ -175,12 +175,15 @@
 
 <span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
 
-<span class="c1"># Run (Abaqus)</span>
+<span class="c1"># Run</span>
 
-<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">],</span> <span class="n">license</span><span class="o">=</span><span class="s1">&#39;research&#39;</span><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">analyse_and_extract</span><span class="p">(</span><span class="n">software</span><span class="o">=</span><span class="s1">&#39;abaqus&#39;</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;cf&#39;</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ux&#39;</span><span class="p">,</span> <span class="s1">&#39;uy&#39;</span><span class="p">,</span> <span class="s1">&#39;uz&#39;</span><span class="p">,</span> <span class="s1">&#39;smises&#39;</span><span class="p">,</span> <span class="s1">&#39;cfx&#39;</span><span class="p">,</span> <span class="s1">&#39;cfy&#39;</span><span class="p">,</span> <span class="s1">&#39;cfz&#39;</span><span class="p">])</span>
 
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;uz&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;smises&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">colorbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">])</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;uz&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">cbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;smises&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">cbar_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">])</span>
+<span class="n">rhino</span><span class="o">.</span><span class="n">plot_concentrated_forces</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_loads&#39;</span><span class="p">)</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">save_to_obj</span><span class="p">()</span>
 </code></pre></div>
 </div>
 </div>
@@ -209,11 +212,11 @@
             
 
             
-                Last updated on Oct 15, 2018.
+                Last updated on Jan 10, 2019.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
             
         </footer>
 

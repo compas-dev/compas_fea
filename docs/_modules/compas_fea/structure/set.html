@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>COMPAS</title>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+        <meta name="author" content="Tom Van Mele" />
+        <meta name="description" content="compas is a computational framework for research in architecture and structures." />
+
+        <link rel="shortcut icon" href="../../../_static/images/compas.ico" type="image/x-icon">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+
+        <link rel="stylesheet" type="text/css" href="../../../_static/css/prism.css" />
+        <link rel="stylesheet" type="text/css" href="../../../_static/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="../../../_static/css/compas-reference.css" />
+
+        
+        
+        
+
+        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    </head>
+    <body data-spy="scroll" data-target="#compas-localnav">
+
+        <header class="navbar navbar-expand compas-navbar">
+            <a class="navbar-brand" href="/">
+                <img src="/_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
+            </a>
+
+            <ul class="navbar-nav">
+                <li class="nav-item ">
+                    <a class="nav-link " href="/">Home</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link " href="/main/">Main library</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link " href="/packages/">Additional Packages</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" target="_blank" href="http://forum.compas-framework.org">Forum</a>
+                </li>
+            </ul>
+        </header>
+        
+        <div class="container-fluid compas-container">
+            <div class="row flex-xl-nowrap">
+
+                <!-- main content -->
+
+                
+
+                <main class="col-12 col-md-9 col-xl-8 mx-auto compas-content" role="main">
+
+                
+
+                    
+
+                        
+
+                        <h1>Source code for compas_fea.structure.set</h1><div class="highlight"><pre><code>
+<span></span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+
+<span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright 2018, BLOCK Research Group - ETH Zurich&#39;</span>
+<span class="n">__license__</span>   <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
+<span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;liew@arch.ethz.ch&#39;</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;Set&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="Set"><a class="viewcode-back" href="../../../reference/generated/compas_fea.structure.set.Set.html#compas_fea.structure.set.Set">[docs]</a><span class="k">class</span> <span class="nc">Set</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot; Initialises base Set object.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the set.</span>
+<span class="sd">    type : str</span>
+<span class="sd">        &#39;node&#39;, &#39;element&#39;, &#39;surface_node&#39;, surface_element&#39;.</span>
+<span class="sd">    selection : list, dict</span>
+<span class="sd">        The integer keys of the nodes, elements or the element numbers and sides.</span>
+<span class="sd">    index : int</span>
+<span class="sd">        Set index number.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">selection</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span>  <span class="o">=</span> <span class="s1">&#39;Set&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>      <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span>      <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selection</span> <span class="o">=</span> <span class="n">selection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span>     <span class="o">=</span> <span class="n">index</span>
+
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;compas_fea </span><span class="si">{0}</span><span class="s1"> object&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="mi">18</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:&lt;9}</span><span class="s1"> : </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">(</span><span class="si">{1}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+</code></pre></div>
+                        
+                    
+
+                </main>
+
+                <!-- site navigation sidebar -->
+
+                
+
+                <!-- table of contents of main content -->
+                
+                
+
+            </div>
+        </div>
+
+        <footer class="compas-footer">
+            
+                
+                    &#169; Copyright 2017, Block Research Group - ETH Zurich.
+                
+            
+
+            
+                Last updated on Jan 10, 2019.
+            
+
+            
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
+            
+        </footer>
+
+        
+
+            <script type="text/javascript">
+var DOCUMENTATION_OPTIONS = {
+    URL_ROOT          : '',
+    VERSION           : '0.1.0',
+    COLLAPSE_INDEX    : false,
+    FILE_SUFFIX       : '.html',
+    HAS_SOURCE        : 'false',
+    SOURCELINK_SUFFIX : '.txt'
+};
+            </script>
+
+            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+
+            <script src="../../../_static/underscore.js"></script>
+            <script src="../../../_static/doctools.js"></script>
+            <script src="../../../_static/js/searchtools_.js"></script>
+            <script src="../../../_static/js/prism.js"></script>
+
+            <script>
+$(document).ready(function() {
+
+    // $(".language-default pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-bash pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-python pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-c pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-cpp pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-fortran pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-markdown pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-rest pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    anchors.add();
+});
+            </script>
+
+        
+    </body>
+</html>

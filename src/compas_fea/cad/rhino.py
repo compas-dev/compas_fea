@@ -205,23 +205,26 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                 added_nodes.add(ep)
 
                 try:
-
                     name = rs.ObjectName(guid).replace("'", '"')
+
                     if name[0] in ['_', '^']:
                         name = name[1:]
+
                     dic = json.loads(name)
                     ex  = dic.get('ex', None)
                     ey  = dic.get('ey', None)
+
                     if ex and not ey:
                         ey = cross_vectors(ex, ez)
-                except:
 
+                except:
                     ex = None
                     ey = None
 
                 axes = {'ex': ex, 'ey': ey, 'ez': ez}
 
                 ekey = structure.add_element(nodes=[sp, ep], type=line_type, thermal=thermal, axes=axes)
+
                 if ekey is not None:
                     added_elements.add(ekey)
                     elset.add(ekey)
@@ -240,32 +243,42 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                 added_nodes.update(nodes)
 
                 if mesh_type in ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']:
+
                     ekey = structure.add_element(nodes=nodes, type=mesh_type, thermal=thermal)
+
                     if ekey is not None:
                         added_elements.add(ekey)
                         elset.add(ekey)
 
                 else:
+
                     try:
                         name = rs.ObjectName(guid).replace("'", '"')
+
                         if name[0] in ['_', '^']:
                             name = name[1:]
+
                         dic = json.loads(name)
                         ex  = dic.get('ex', None)
                         ey  = dic.get('ey', None)
                         ez  = dic.get('ez', None)
+
                         if (ex and ey) and (not ez):
                             ez = cross_vectors(ex, ey)
+
                     except:
                         ex = None
                         ey = None
                         ez = None
+
                     axes = {'ex': ex, 'ey': ey, 'ez': ez}
 
                     for face in rs.MeshFaceVertices(guid):
+
                         nodes = [structure.check_node_exists(vertices[i]) for i in face]
                         if nodes[-1] == nodes[-2]:
                             del nodes[-1]
+
                         ekey = structure.add_element(nodes=nodes, type=mesh_type, thermal=thermal, axes=axes)
                         if ekey is not None:
                             added_elements.add(ekey)
@@ -350,12 +363,14 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
     xfunc = XFunc('tets', basedir=basedir, tmpdir=structure.path)
     xfunc.funcname = 'meshing.tets_from_vertices_faces'
 
+
     try:
         tets_points, tets_elements = xfunc(vertices=vertices, faces=faces, volume=volume)
 
         for point in tets_points:
             structure.add_node(point)
 
+        print('test')
         ekeys = []
 
         for element in tets_elements:
@@ -620,6 +635,7 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
 
     if not layer:
         layer = '{0}-{1}'.format(step, 'reactions')
+
     rs.CurrentLayer(rs.AddLayer(layer))
     rs.DeleteObjects(rs.ObjectsByLayer(layer))
     rs.EnableRedraw(False)
@@ -629,12 +645,13 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
     rfz = structure.results[step]['nodal']['rfz']
 
     nkeys = rfx.keys()
-    v = [scale_vector([rfx[i], rfy[i], rfz[i]], -scale * 0.001) for i in nkeys]
-    rm = [length_vector(i) for i in v]
-    rmax = max(rm)
+    v     = [scale_vector([rfx[i], rfy[i], rfz[i]], -scale * 0.001) for i in nkeys]
+    rm    = [length_vector(i) for i in v]
+    rmax  = max(rm)
     nodes = structure.nodes_xyz(nkeys)
 
     for i in nkeys:
+
         if rm[i] > 0.001:
             l = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
             rs.CurveArrows(l, 1)
@@ -874,25 +891,28 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
     if not layer:
         layer = '{0}-{1}{2}'.format(step, field, mode)
+
     rs.CurrentLayer(rs.AddLayer(layer))
     rs.DeleteObjects(rs.ObjectsByLayer(layer))
     rs.EnableRedraw(False)
 
     # Node and element data
 
-    nodes = structure.nodes_xyz()
-    elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
+    nodes      = structure.nodes_xyz()
+    elements   = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
     nodal_data = structure.results[step]['nodal']
-    nkeys = sorted(structure.nodes, key=int)
+    nkeys      = sorted(structure.nodes, key=int)
+
     ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
     uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
     uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
 
     try:
-        data = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
+        data  = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
         dtype = 'nodal'
+
     except(Exception):
-        data = structure.results[step]['element'][field]
+        data  = structure.results[step]['element'][field]
         dtype = 'element'
 
     # Postprocess
@@ -908,15 +928,17 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
         # Plot meshes
 
-        mesh_faces = []
-        line_faces = [[0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]]
+        mesh_faces  = []
+        line_faces  = [[0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]]
         block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
-        tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
+        tet_faces   = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
 
         for element, nodes in enumerate(elements):
+
             n = len(nodes)
 
             if n == 2:
+
                 u, v = nodes
                 sp, ep = U[u], U[v]
                 plane = rs.PlaneFromNormal(sp, subtract_vectors(ep, sp))
@@ -932,17 +954,22 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
                        add_vectors(ep, xa_pr), add_vectors(ep, ya_pr),
                        add_vectors(ep, xa_mr), add_vectors(ep, ya_mr)]
                 guid = rs.AddMesh(pts, line_faces)
+
                 if dtype == 'element':
                     col1 = col2 = celements[element]
+
                 elif dtype == 'nodal':
                     col1 = cnodes[u]
                     col2 = cnodes[v]
+
                 rs.MeshVertexColors(guid, [col1] * 4 + [col2] * 4)
 
             elif n == 3:
+
                 mesh_faces.append(nodes + [nodes[-1]])
 
             elif n == 4:
+
                 if structure.elements[element].__name__ in ['ShellElement', 'MembraneElement']:
                     mesh_faces.append(nodes)
                 else:
@@ -950,6 +977,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
                         mesh_faces.append([nodes[i] for i in face])
 
             elif n == 8:
+
                 for block in block_faces:
                     mesh_faces.append([nodes[i] for i in block])
 
@@ -961,7 +989,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
         xr, yr, _ = structure.node_bounds()
         yran = yr[1] - yr[0] if yr[1] - yr[0] else 1
-        s = yran * 0.1 * cbar_size
+        s    = yran * 0.1 * cbar_size
         xmin = xr[1] + 3 * s
         ymin = yr[0]
 
@@ -971,7 +999,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         faces = [[i, i + 1, i + 12, i + 11] for i in range(10)]
         id = rs.AddMesh(verts, faces)
 
-        y = [i[1] for i in verts]
+        y  = [i[1] for i in verts]
         yn = yran * cbar_size
         colors = [colorbar(2 * (yi - ymin - 0.5 * yn) / yn, input='float', type=255) for yi in y]
         rs.MeshVertexColors(id, colors)
@@ -979,6 +1007,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         h = 0.4 * s
 
         for i in range(5):
+
             x0 = xmin + 1.2 * s
             yu = ymin + (5.8 + i) * s
             yl = ymin + (3.8 - i) * s

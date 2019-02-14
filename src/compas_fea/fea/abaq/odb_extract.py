@@ -37,7 +37,7 @@ convert = {
     'SF1':   'sf1',  'SF2':  'sf2',  'SF3':  'sf3',  'SF4':  'sf4',  'SF5':  'sf5',  'SF6':  'sf6',
     'SM1':   'sm1',  'SM2':  'sm2',  'SM3':  'sm3',
     'SK1':   'skx',  'SK2':  'sky',  'SK3':  'skz',
-    'SE1':   'senx', 'SE2':  'sevy', 'SE3':  'sevx',
+    'SE1':   'se1',  'SE2':  'se2',  'SE3':  'se3',
     'CTF1':  'spfx', 'CTF2': 'spfy', 'CTF3': 'spfz',
 
     'VALUE':  'rbfor',
