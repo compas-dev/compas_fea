@@ -281,8 +281,6 @@ def write_request_reactions(path, name, step_name):
 
 def write_request_element_stresses(structure, step_index):
 
-    write_request_ip_stresses(structure, step_index)
-
     for et in structure.et_dict:
         etkey = structure.et_dict[et]
         if et == 'BEAM188':
@@ -292,6 +290,7 @@ def write_request_element_stresses(structure, step_index):
 
 
 def write_request_beam_stresses(structure, step_index, etkey):
+    # TODO: Shear stresses (s12, s13)
 
     name = structure.name
     path = structure.path
@@ -308,88 +307,47 @@ def write_request_beam_stresses(structure, step_index, etkey):
     fh.write('*dim, enum, array, nelem, 1 \n')
     fh.write('*vget, enum, ELEM, , ELIST \n')
 
-    fh.write('ETABLE, , SMISC, 1  \n')  # axial force in node I
-    fh.write('ETABLE, , SMISC, 14 \n')  # axial force in node J
+    fh.write('ETABLE, , SMISC, 31 \n')  # axial stress (s11) I
+    fh.write('ETABLE, , SMISC, 36 \n')  # axial stress (s11) J
 
-    # fh.write('ETABLE, , SMISC, 5  \n')  # section force arround Y in node I
-    # fh.write('ETABLE, , SMISC, 18 \n')  # section force arround Y in node J
+    fh.write('ETABLE, , SMISC, 32  \n')  # bending stress TOP in node I
+    fh.write('ETABLE, , SMISC, 37 \n')  # bending stress TOP in node J
 
-    # fh.write('ETABLE, , SMISC, 6  \n')  # section force arround X in node I
-    # fh.write('ETABLE, , SMISC, 19 \n')  # section force arround X in node J
+    fh.write('ETABLE, , SMISC, 33  \n')  # bending stress BOT in node I
+    fh.write('ETABLE, , SMISC, 38 \n')  # bending stress BOT in node J
 
-    # fh.write('ETABLE, , SMISC, 2  \n')  # bending moments arround X in node I
-    # fh.write('ETABLE, , SMISC, 15 \n')  # bending moments arround X in node J
+    fh.write('ETABLE, , SMISC, 34  \n')  # bending stress RIGHT in node I
+    fh.write('ETABLE, , SMISC, 39 \n')  # bending stress RIGHT in node J
 
-    # fh.write('ETABLE, , SMISC, 3  \n')  # bending moments arround Y in node I
-    # fh.write('ETABLE, , SMISC, 16 \n')  # bending moments arround Y in node J
+    fh.write('ETABLE, , SMISC, 35  \n')  # bending stress LEFT in node I
+    fh.write('ETABLE, , SMISC, 40 \n')  # bending stress LEFT in node J
 
-    # fh.write('ETABLE, , SMISC, 4  \n')  # torsional moments in node I
-    # fh.write('ETABLE, , SMISC, 17 \n')  # torsional moments in node J
-
-    fh.write('*dim, eforces, array, nelem, 12 \n')
+    fh.write('*dim, estress, array, nelem, 10 \n')
 
     fh.write('*do,i,1,nelem \n')
-    fh.write('*get, eforces(i,1), ETAB, 1, ELEM, enum(i) \n')
-    fh.write('*get, eforces(i,2), ETAB, 2, ELEM, enum(i) \n')
-    # fh.write('*get, eforces(i,3), ETAB, 3, ELEM, enum(i) \n')
-    # fh.write('*get, eforces(i,4), ETAB, 4, ELEM, enum(i) \n')
-    # fh.write('*get, eforces(i,5), ETAB, 5, ELEM, enum(i) \n')
-    # fh.write('*get, eforces(i,6), ETAB, 6, ELEM, enum(i) \n')
-    # fh.write('*get, eforces(i,7), ETAB, 7, ELEM, enum(i) \n')
-    # fh.write('*get, eforces(i,8), ETAB, 8, ELEM, enum(i) \n')
-    # fh.write('*get, eforces(i,9), ETAB, 9, ELEM, enum(i) \n')
-    # fh.write('*get, eforces(i,10), ETAB, 10, ELEM, enum(i) \n')
-    # fh.write('*get, eforces(i,11), ETAB, 11, ELEM, enum(i) \n')
-    # fh.write('*get, eforces(i,12), ETAB, 12, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,1), ETAB, 1, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,2), ETAB, 2, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,3), ETAB, 3, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,4), ETAB, 4, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,5), ETAB, 5, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,6), ETAB, 6, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,7), ETAB, 7, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,8), ETAB, 8, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,9), ETAB, 9, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,10), ETAB, 10, ELEM, enum(i) \n')
     fh.write('*Enddo \n')
 
-    fname = str(step_name) + '_' + 'beam_axial'
+    fname = str(step_name) + '_' + 'beam_stresses'
     fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
+    fh.write('*CFWRITE, stresses, E number, S11I, S11J, SByTI, SByTJ, SByBI, SByBJ, SBzTI, SBzTJ, SBzBI, SBzBJ \n')
     fh.write('*do,i,1,nelem \n')
-    fh.write('*CFWRITE, axial, enum(i,1), eforces(i,1), eforces(i,2) \n')
+    fh.write('*CFWRITE, stresses, enum(i,1), estress(i,1), estress(i,2),estress(i,3), estress(i,4), estress(i,5), estress(i,6), estress(i,7), estress(i,8), estress(i,9), estress(i,10) \n')
     fh.write('*Enddo \n')
+
+
+    fh.write('ESEL, ALL \n')
+    fh.write('ETABLE, ERAS \n')
     fh.write('! \n')
-
-    # fname = str(step_name) + '_' + 'beam_secY'
-    # fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
-    # fh.write('*do,i,1,nelem \n')
-    # fh.write('*CFWRITE, secY, enum(i,1), eforces(i,3), eforces(i,4) \n')
-    # fh.write('*Enddo \n')
-    # fh.write('! \n')
-
-    # fname = str(step_name) + '_' + 'beam_secX'
-    # fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
-    # fh.write('*do,i,1,nelem \n')
-    # fh.write('*CFWRITE, secX, enum(i,1), eforces(i,5), eforces(i,6) \n')
-    # fh.write('*Enddo \n')
-    # fh.write('! \n')
-
-    # fname = str(step_name) + '_' + 'beam_mX'
-    # fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
-    # fh.write('*do,i,1,nelem \n')
-    # fh.write('*CFWRITE, mX, enum(i,1), eforces(i,7), eforces(i,8) \n')
-    # fh.write('*Enddo \n')
-    # fh.write('! \n')
-
-    # fname = str(step_name) + '_' + 'beam_mY'
-    # fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
-    # fh.write('*do,i,1,nelem \n')
-    # fh.write('*CFWRITE, mY, enum(i,1), eforces(i,9), eforces(i,10) \n')
-    # fh.write('*Enddo \n')
-    # fh.write('! \n')
-
-    # fname = str(step_name) + '_' + 'beam_tor'
-    # fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
-    # fh.write('*do,i,1,nelem \n')
-    # fh.write('*CFWRITE, tors, enum(i,1), eforces(i,11), eforces(i,12) \n')
-    # fh.write('*Enddo \n')
-    # fh.write('! \n')
-
-    # fh.write('ESEL, ALL \n')
-    # fh.write('ETABLE, ERAS \n')
-    # fh.write('! \n')
-
-    fh.close()
 
 
 def write_request_shell_stresses(structure, step_index, etkey):
@@ -400,10 +358,8 @@ def write_request_shell_stresses(structure, step_index, etkey):
 
     out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
-    fname = str(step_name) + '_' + 'shell_axial'
 
     fh = open(os.path.join(path, filename), 'a')
-
     fh.write('ESEL, S, TYPE, , {0}, {0} \n'.format(etkey))
 
     fh.write('*get, nelem, elem,, count \n')
@@ -411,55 +367,57 @@ def write_request_shell_stresses(structure, step_index, etkey):
     fh.write('*dim, enum, array, nelem, 1 \n')
     fh.write('*vget, enum, ELEM, , ELIST \n')
 
-    fh.write('ETABLE, , SMISC, 1 \n')
-    fh.write('ETABLE, , SMISC, 2 \n')
+    fh.write('ETABLE, , SMISC, 34 \n')  # Sm 11 Membrane stresses
+    fh.write('ETABLE, , SMISC, 35 \n')  # Sm 22 Membrane stresses
+    fh.write('ETABLE, , SMISC, 36 \n')  # Sm 12 Membrane stresses
 
-    fh.write('*dim, eaxial, array, nelem, 2 \n')
+    fh.write('ETABLE, , SMISC, 37 \n')  # Sb 11 Bending stresses
+    fh.write('ETABLE, , SMISC, 38 \n')  # Sb 22 Bending stresses
+    fh.write('ETABLE, , SMISC, 39 \n')  # Sb 12 Bending stresses
+
+    fh.write('ETABLE, , SMISC, 40 \n')  # Sp 11 (BOT)Peak stresses
+    fh.write('ETABLE, , SMISC, 41 \n')  # Sp 22 (BOT)Peak stresses
+    fh.write('ETABLE, , SMISC, 42 \n')  # Sp 12 (BOT)Peak stresses
+    fh.write('ETABLE, , SMISC, 43 \n')  # Sp 11 (TOP)Peak stresses
+    fh.write('ETABLE, , SMISC, 44 \n')  # Sp 22 (TOP)Peak stresses
+    fh.write('ETABLE, , SMISC, 45 \n')  # Sp 12 (TOP)Peak stresses
+
+    fh.write('ETABLE, , SMISC, 46 \n')  # St 13 Transverse stresses
+    fh.write('ETABLE, , SMISC, 47 \n')  # St 23 Transverse stresses
+
+    fh.write('*dim, estress, array, nelem, 14 \n')
 
     fh.write('*do,i,1,nelem \n')
-    fh.write('*get, eaxial(i,1), ETAB, 1, ELEM, enum(i) \n')
-    fh.write('*get, eaxial(i,2), ETAB, 2, ELEM, enum(i)\n')
+    fh.write('*get, estress(i,1), ETAB, 1, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,2), ETAB, 2, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,3), ETAB, 3, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,4), ETAB, 4, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,5), ETAB, 5, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,6), ETAB, 6, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,7), ETAB, 7, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,8), ETAB, 8, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,9), ETAB, 9, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,10), ETAB, 10, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,11), ETAB, 11, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,12), ETAB, 12, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,13), ETAB, 13, ELEM, enum(i) \n')
+    fh.write('*get, estress(i,14), ETAB, 14, ELEM, enum(i) \n')
     fh.write('*Enddo \n')
 
+    fname = str(step_name) + '_' + 'shell_stresses'
     fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
+    fh.write('*CFWRITE, stresses, E number, Sm11, Sm22, Sm12, Sb11, Sb22, Sb12, Sv11Top, Sv22Top, Sv13Top, Sv11Bot, Sv22Bot, Sv12Bot, St13, St23 \n')
     fh.write('*do,i,1,nelem \n')
-    fh.write('*CFWRITE, axial, enum(i,1), eaxial(i,1), eaxial(i,2) \n')
+    fh.write('*CFWRITE, stresses, enum(i,1), estress(i,1), estress(i,2),estress(i,3), estress(i,4),')
+    fh.write('estress(i,5), estress(i,6), estress(i,7), estress(i,8), estress(i,9), estress(i,10),')
+    fh.write('estress(i,11), estress(i,12), estress(i,13), estress(i,14) \n')
     fh.write('*Enddo \n')
-    fh.write('! \n')
+
     fh.write('ESEL, ALL \n')
     fh.write('ETABLE, ERAS \n')
     fh.write('! \n')
-    fh.close()
 
+    # fname = str(step_name) + '_' + 'shell_stresses'
+    # write_request_write_array(structure, fname, out_path, 'eforces', 6, 4, index_name='enum')
+    # write_etable_restart(structure)
 
-def write_request_ip_stresses(structure, step_index):
-
-    name = structure.name
-    path = structure.path
-    step_name = structure.steps_order[step_index]
-
-    out_path = os.path.join(path, name + '_output')
-    filename = name + '_extract.txt'
-    fname = str(step_name) + '_' + 'ip_stresses'
-
-    fh = open(os.path.join(path, filename), 'a')
-    fh.write('*get, nelem, elem,, count \n')
-    fh.write('*dim, ips, array, nelem, 3 \n')
-
-    fh.write('*do,i,1,nelem \n')
-    fh.write('ESEL, S, ELEM, , i, i \n')
-    # fh.write('*do,j,1,2 \n')
-    fh.write('*GET, num, ELEM, i, NODE, 1 \n')
-    fh.write('*get, ips(i,1), NODE, num, S, X \n')
-    fh.write('*get, ips(i,2), NODE, num, S, Y \n')
-    fh.write('*get, ips(i,3), NODE, num, S, Z \n')
-    # fh.write('*Enddo \n')
-    fh.write('*Enddo \n')
-
-    fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
-    fh.write('*do,i,1,nelem \n')
-    fh.write('*CFWRITE, IPS, ips(i,1), ips(i,2), ips(i,3) \n')
-    fh.write('*Enddo \n')
-    fh.write('! \n')
-
-    fh.close()

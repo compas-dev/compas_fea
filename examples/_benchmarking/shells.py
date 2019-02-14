@@ -3,7 +3,7 @@ import compas_fea
 from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import FixedDisplacement
-from compas_fea.structure import RectangularSection
+from compas_fea.structure import ShellSection
 from compas_fea.structure import PointLoad
 from compas_fea.structure import Steel
 from compas_fea.structure import Structure
@@ -17,17 +17,22 @@ __email__       = 'mendez@arch.ethz.ch'
 
 # Structure
 
-mdl = Structure(name='beam_bench', path=compas_fea.TEMP)
+mdl = Structure(name='shell_bench', path=compas_fea.TEMP)
 
 # Nodes and Elements
 
-xyz = [[0, 0, 0], [1, 0, 0]]
+xyz = [[0, 0, 0], [1, 0, 0], [2, 0, 0],
+       [0, 1, 0], [1, 1, 0], [2, 1, 0],
+       [0, 2, 0], [1, 2, 0], [2, 2, 0]]
+
 nodes = mdl.add_nodes(xyz)
-beam = mdl.add_element(nodes, 'BeamElement', axes={'ex':[0, 1, 0]})
+shells = [[0, 1, 4, 3], [1, 2, 5, 4], [3, 4, 7, 6], [4, 5, 8, 7]]
+
+shells = [mdl.add_element(shell, 'ShellElement') for shell in shells]
 
 # Sets
 
-elset_beams = mdl.add_set('elset_beams', 'element', [beam])
+elset_shells = mdl.add_set('elset_shells', 'element', shells)
 
 # Materials
 
@@ -35,19 +40,19 @@ mdl.add(Steel(name='mat_steel'))
 
 # Sections
 
-mdl.add(RectangularSection(name='sec_pipe', b=0.05, h=0.1))
+mdl.add(ShellSection(name='sec_shell', t=0.01))
 
 # Properties
 
-mdl.add(Properties(name='ep_beam', material='mat_steel', section='sec_pipe', elset='elset_beams'))
+mdl.add(Properties(name='ep_shell', material='mat_steel', section='sec_shell', elset='elset_shells'))
 
 # Displacements
 
-mdl.add(FixedDisplacement(name='disp_pins', nodes=[0]))
+mdl.add(FixedDisplacement(name='disp_pins', nodes=[0, 2, 8 , 6]))
 
 # Loads
 
-mdl.add(PointLoad(name='load_v', nodes=[1], z=-1000))
+mdl.add(PointLoad(name='load_v', nodes=[4], z=-1000))
 
 # Steps
 
@@ -64,6 +69,6 @@ mdl.steps_order = ['step_bc_loads']
 
 # Run (Ansys)
 
-mdl.analyse_and_extract(software='ansys', fields=['sf', 's'], license='research')
+mdl.analyse_and_extract(software='ansys', fields=['sf'], license='research')
 
 # print(mdl.get_nodal_results(step='step_loads', field='rfm', nodes='nset_pins'))

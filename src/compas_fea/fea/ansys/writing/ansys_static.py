@@ -53,13 +53,15 @@ def write_static_results_from_ansys_rst(structure, fields, step_index=0):
         write_request_node_displacements(structure, step_index)
     if 'sf' in fields or 'all' in fields:
         write_request_element_forces(structure, step_index)
-
-
-
-
     if 's' in fields or 'all' in fields:
         # write_request_nodal_stresses(structure, step_index)
         write_request_element_stresses(structure, step_index)
+
+
+
+
+
+
     if 'sp' in fields or 'all' in fields:
         write_request_pricipal_stresses(path, name, step_name)
     if 'ss' in fields or 'all' in fields:

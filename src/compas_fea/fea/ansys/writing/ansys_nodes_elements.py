@@ -99,8 +99,8 @@ def write_set_element_material(output_path, filename, mat_index, elem_type, elem
     cFile.write('TYPE,' + str(elem_type_index) + '\n')
     if elem_type == 'BEAM188':
         cFile.write('KEYOPT, {0},  7, 2 \n'.format(str(elem_type_index)))
-        cFile.write('KEYOPT, {0},  9, 2 \n'.format(str(elem_type_index)))
-    # cFile.write('KEYOPT, {0}, 15, 1 \n'.format(str(elem_type_index)))
+        cFile.write('KEYOPT, {0},  9, 3 \n'.format(str(elem_type_index)))
+        # cFile.write('KEYOPT, {0}, 15, 1 \n'.format(str(elem_type_index)))
     if mat_index:
         cFile.write('MAT,' + str(mat_index + 1) + '\n')
     cFile.write('!\n')
@@ -528,7 +528,7 @@ def write_request_node_displacements(structure, step_index, mode=None):
     fh.write('! \n')
 
     fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
-
+    fh.write('*CFWRITE, node U, num, ux, uy, uz, uSUM \n')
     fh.write('*do,i,1,nnodes \n')
     fh.write('*CFWRITE, node U, u(i,1), u(i,2), u(i,3), u(i,4), u(i,5) \n')
     fh.write('*Enddo \n')

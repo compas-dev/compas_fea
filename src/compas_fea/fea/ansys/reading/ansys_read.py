@@ -194,8 +194,8 @@ def get_displacements_from_result_files(out_path, step):
     displacements = dfile.readlines()
 
     disp_dict = {'ux': {}, 'uy': {}, 'uz': {}, 'um': {}}
-    for i in range(len(displacements)):
-        dstring = displacements[i].split(',')
+    for disp in displacements[1:]:
+        dstring = disp.split(',')
         disp = map(float, dstring[1:])
         key = int(disp[0]) - 1
         disp_dict['ux'][key] = disp[1]
