@@ -83,7 +83,7 @@ The standard elastic material model is shown below, where tension is taken as po
 Stiff
 -----
 
-Additionally, a very stiff linear elastic material can be made by creating a **Stiff** object. This material is essentially identical to **ElasticIsotropic** but with ``E`` taken as 10000 GPa, ``v`` as 0.3 and ``p`` as 0.1, and is more of a modelling aid than a real structural material.
+A very stiff linear elastic material can be made by creating a **Stiff** object. This material is essentially identical to **ElasticIsotropic** but with ``E`` taken as very high, ``v`` as 0.3 and ``p`` as 0.1, and is more of a modelling aid than a real structural material.
 
 .. code-block:: python
 
