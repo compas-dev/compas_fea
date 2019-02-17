@@ -9,3 +9,4 @@ This example works for: **Abaqus**.
     :class: figure-img img-fluid
 
 .. literalinclude:: /../../examples/mesh_mould_blender.py
+    :language: python

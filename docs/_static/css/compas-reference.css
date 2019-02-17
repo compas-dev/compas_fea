@@ -52,15 +52,15 @@
 
 .admonition.note,
 .admonition.notes {
-  color: #464a4e;
-  background-color: #e7e8ea;
-  border-color: #dddfe2; }
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border-color: #bee5eb; }
   .admonition.note hr,
   .admonition.notes hr {
-    border-top-color: #cfd2d6; }
+    border-top-color: #abdde5; }
   .admonition.note .alert-link,
   .admonition.notes .alert-link {
-    color: #2e3133; }
+    color: #062c33; }
 
 .admonition.important {
   color: #721c24;
@@ -123,9 +123,19 @@ table {
 .method > dt,
 .function > dt,
 .class > dt {
-  padding: 0.5rem 0;
+  padding: 0.5rem;
   margin-bottom: 0.5rem;
-  border-bottom: 4px solid #eee; }
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+  border-bottom: 0px solid #eee;
+  background-color: #eee; }
+
+.staticmethod > dt > code,
+.classmethod > dt > code,
+.method > dt > code,
+.function > dt > code,
+.class > dt > code {
+  background-color: #eee; }
 
 .descclassname {
   border-radius: 0;
@@ -143,9 +153,7 @@ table {
 .method > dt > .reference.internal,
 .function > dt > .reference.internal,
 .class > dt > .reference.internal {
-  position: absolute;
-  top: 0;
-  right: 0; }
+  float: right; }
 
 .field-list {
   margin-top: 1rem;
@@ -158,7 +166,7 @@ table {
 .field-list dd {
   padding: 0 2rem; }
 
-.field-list dd ul {
+.field-list dd > ul {
   padding-left: 0; }
 
 .footnote dt,

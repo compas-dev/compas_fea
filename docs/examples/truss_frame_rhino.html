@@ -1,14 +1,13 @@
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>COMPAS</title>
+        <title></title>
 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     
-        <meta name="author" content="Tom Van Mele" />
-        <meta name="description" content="compas is a computational framework for research in architecture and structures." />
+        <meta name="author" content="" />
+        <meta name="description" content="" />
 
         <link rel="shortcut icon" href="../_static/images/compas.ico" type="image/x-icon">
 
@@ -19,7 +18,7 @@
         <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
 
         
-            <link rel="next" title="script_introduction" href="script_introduction.html" />
+            <link rel="next" title="beam_simple" href="beam_simple_blender.html" />
         
         
         
@@ -31,23 +30,18 @@
     </head>
     <body data-spy="scroll" data-target="#compas-localnav">
 
-        <header class="navbar navbar-expand compas-navbar">
-            <a class="navbar-brand" href="/">
-                <img src="/_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
-            </a>
+        <header class="navbar navbar-expand compas-navbar justify-content-between">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="../index.html">
+                     
+                </a>
+            </div>
 
             <ul class="navbar-nav">
-                <li class="nav-item ">
-                    <a class="nav-link " href="/">Home</a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link " href="/main/">Main library</a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link " href="/packages/">Additional Packages</a>
-                </li>
                 <li class="nav-item">
-                    <a class="nav-link" target="_blank" href="http://forum.compas-framework.org">Forum</a>
+                    <a class="nav-link" href="https://compas-dev.github.io">
+                        <img src="../_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
+                    </a>
                 </li>
             </ul>
         </header>
@@ -57,11 +51,7 @@
 
                 <!-- main content -->
 
-                
-
-                <main class="col-12 col-md-9 col-xl-8 mx-auto compas-content" role="main">
-
-                
+                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
 
                     
 
@@ -73,16 +63,16 @@
 <div class="figure">
 <img alt="../_images/truss_frame_rhino.png" class="figure-img img-fluid" src="../_images/truss_frame_rhino.png" />
 </div>
-<div class="nohighlight notranslate"><div class="highlight"><pre><code><span></span>
-<span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="k">import</span> <span class="n">rhino</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GeneralStep</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">GravityLoad</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PinnedDisplacement</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">PointLoad</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Steel</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">Structure</span>
-<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="k">import</span> <span class="n">TrussSection</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span>
+<span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">rhino</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GeneralStep</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GravityLoad</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PinnedDisplacement</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PointLoad</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Steel</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Structure</span>
+<span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">TrussSection</span>
 
 
 <span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
@@ -174,24 +164,90 @@
 
                 <!-- site navigation sidebar -->
 
-                
+                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
+                    <div class="navbar-light">
+
+                        <form id="" class="d-flex compas-searchbox" action="../search.html" method="get">
+                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
+                            <input type="hidden" name="check_keywords" value="yes" />
+                            <input type="hidden" name="area" value="default" />
+
+                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                        </form>
+
+                        
+                        
+
+                            <div class="navbar-expand-md">
+                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
+
+                                <ul class="nav flex-column active">
+<li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="nav-item active"><a class="nav-link reference internal" href="../examples.html">Examples</a><ul class="nav active">
+<li class="nav-item"><a class="nav-link reference internal" href="beam_bathe_rhino.html">beam_bathe</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="beam_frame_rhino.html">beam_frame</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_rhino.html">beam_simple</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="beam_tree_rhino.html">beam_tree</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_strip_rhino.html">block_strip</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_rhino.html">block_deepbeam</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_tets_rhino.html">block_tets</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_discretise_rhino.html">mesh_discretise</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_rhino.html">mesh_floor</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_modal_rhino.html">mesh_modal</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_rhino.html">mesh_mould</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_bridge_rhino.html">mesh_bridge</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_plate_rhino.html">mesh_plate</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_planar_rhino.html">mesh_planar</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_principal_rhino.html">mesh_principal</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_strip_rhino.html">mesh_strip</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_rhino.html">truss_tower</a></li>
+<li class="nav-item active"><a class="nav-link active current reference internal" href="#">truss_frame</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="beam_simple_blender.html">beam_simple</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_bridge_blender.html">block_bridge</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_deepbeam_blender.html">block_deepbeam</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="block_tets_blender.html">block_tets</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_floor_blender.html">mesh_floor</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="mesh_discretise_blender.html">mesh_discretise</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="truss_tower_blender.html">truss_tower</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="script_introduction.html">script_introduction</a></li>
+</ul>
+</li>
+<li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
+</ul>
+
+
+                                </div>
+                            </div>
+
+                        
+
+                    </div>
+                </div>
 
                 <!-- table of contents of main content -->
                 
-                
+                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+
+                    
+
+                    <ul class="nav flex-column" id="compas-localnav">
+<li class="nav-item"><a class="nav-link reference internal" href="#">truss_frame</a></li>
+</ul>
+
+
+                </div>
 
             </div>
         </div>
 
         <footer class="compas-footer">
             
-                
-                    &#169; Copyright 2017, Block Research Group - ETH Zurich.
-                
-            
-
-            
-                Last updated on Jan 10, 2019.
+                Last updated on Feb 11, 2019.
             
 
             

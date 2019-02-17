@@ -107,7 +107,7 @@ class NodeMixins(object):
         xyz : list
             [x, y, z] co-ordinates of the node.
         virtual: bool
-            Is the node virtual or not
+            Is the node virtual or not.
 
         Returns
         -------
@@ -155,7 +155,7 @@ class NodeMixins(object):
         key : int
             Key of the node to edit.
         attr_dict : dict
-            Atribute dictionary of data to edit.
+            Attribute dictionary of data to edit.
 
         Returns
         -------
@@ -170,25 +170,6 @@ class NodeMixins(object):
             setattr(self.nodes[key], attr, item)
 
         self.add_node_to_node_index(key, self.node_xyz(key))
-
-
-    def make_node_index_dic(self):
-
-        """ Makes a node_index dictionary from existing structure.nodes.
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        None
-
-        """
-
-        for key in self.nodes:
-            gkey = geometric_key(self.node_xyz(key), '{0}f'.format(self.tol))
-            self.node_index[gkey] = key
 
 
     def node_bounds(self):
@@ -229,7 +210,7 @@ class NodeMixins(object):
 
     def node_count(self):
 
-        """ Return the number of nodes in structure.nodes.
+        """ Return the number of nodes in the Structure.
 
         Parameters
         ----------
@@ -264,14 +245,14 @@ class NodeMixins(object):
         return [getattr(self.nodes[node], i) for i in 'xyz']
 
 
-    def nodes_xyz(self, nodes=[]):
+    def nodes_xyz(self, nodes=None):
 
         """ Return the xyz co-ordinates of given or all nodes.
 
         Parameters
         ----------
         nodes : list
-            Node numbers, else all nodes will be given.
+            Node numbers, give None for all nodes.
 
         Returns
         -------
@@ -280,6 +261,7 @@ class NodeMixins(object):
 
         """
 
-        if not nodes:
+        if nodes is None:
             nodes = sorted(self.nodes, key=int)
+
         return [self.node_xyz(node=node) for node in nodes]

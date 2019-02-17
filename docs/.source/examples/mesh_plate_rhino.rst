@@ -9,3 +9,4 @@ This example works for: **Abaqus**, **OpenSees**.
     :class: figure-img img-fluid
 
 .. literalinclude:: /../../examples/mesh_plate_rhino.py
+    :language: python

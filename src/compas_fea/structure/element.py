@@ -46,13 +46,22 @@ class Element(object):
     axes : dict
         The local element axes.
 
-    Returns
-    -------
-    None
+    Attributes
+    ----------
+    nodes : list
+        Node keys the element connects to.
+    number : int
+        Number of the element.
+    thermal : bool
+        Thermal properties on or off.
+    axes : dict
+        The local element axes.
+    element_property : str
+        Element property name
 
     """
 
-    def __init__(self, nodes=[], number=None, thermal=None, axes={}):
+    def __init__(self, nodes=None, number=None, thermal=None, axes={}):
 
         self.__name__         = 'Element'
         self.nodes            = nodes
@@ -60,6 +69,7 @@ class Element(object):
         self.thermal          = thermal
         self.axes             = axes
         self.element_property = None
+
 
     def __str__(self):
 
@@ -71,6 +81,7 @@ class Element(object):
             print('{0:<10} : {1}'.format(attr, getattr(self, attr)))
 
         return ''
+
 
     def __repr__(self):
 
@@ -89,10 +100,6 @@ class BeamElement(Element):
     ----------
     None
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self):
@@ -107,10 +114,6 @@ class SpringElement(Element):
 
     Parameters
     ----------
-    None
-
-    Returns
-    -------
     None
 
     """
@@ -129,10 +132,6 @@ class TrussElement(Element):
     ----------
     None
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self):
@@ -149,10 +148,6 @@ class StrutElement(TrussElement):
     ----------
     None
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self):
@@ -167,10 +162,6 @@ class TieElement(TrussElement):
 
     Parameters
     ----------
-    None
-
-    Returns
-    -------
     None
 
     """
@@ -193,10 +184,6 @@ class ShellElement(Element):
     ----------
     None
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self):
@@ -213,10 +200,6 @@ class FaceElement(Element):
     ----------
     None
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self):
@@ -231,10 +214,6 @@ class MembraneElement(ShellElement):
 
     Parameters
     ----------
-    None
-
-    Returns
-    -------
     None
 
     """
@@ -257,10 +236,6 @@ class SolidElement(Element):
     ----------
     None
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self):
@@ -275,10 +250,6 @@ class PentahedronElement(SolidElement):
 
     Parameters
     ----------
-    None
-
-    Returns
-    -------
     None
 
     """
@@ -297,10 +268,6 @@ class TetrahedronElement(SolidElement):
     ----------
     None
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self):
@@ -315,10 +282,6 @@ class HexahedronElement(SolidElement):
 
     Parameters
     ----------
-    None
-
-    Returns
-    -------
     None
 
     """

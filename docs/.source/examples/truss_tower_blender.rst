@@ -9,4 +9,4 @@ This example works for: **Abaqus**.
     :class: figure-img img-fluid
 
 .. literalinclude:: /../../examples/truss_tower_blender.py
-
+    :language: python

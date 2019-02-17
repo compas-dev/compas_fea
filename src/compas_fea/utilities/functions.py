@@ -586,7 +586,7 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
     return toc, U, cnodes_, fabs_, fscaled_, celements_, float(eabs)
 
 
-def plotvoxels(values, U, vdx, plot=True, indexing=None):
+def plotvoxels(values, U, vdx, indexing=None):
 
     """ Plot values as voxel data.
 
@@ -598,8 +598,6 @@ def plotvoxels(values, U, vdx, plot=True, indexing=None):
         Nodal co-ordinates.
     vdx : float
         Representative volume size for a voxel.
-    plot : str
-        Plot voxels using compas VtkVoxels 'vtk'.
 
     Returns
     -------
@@ -618,16 +616,15 @@ def plotvoxels(values, U, vdx, plot=True, indexing=None):
     Y = linspace(ymin, ymax, (ymax - ymin) / vdx)
     Z = linspace(zmin, zmax, (zmax - zmin) / vdx)
     Xm, Ym, Zm = meshgrid(X, Y, Z)
-    if indexing:
-        Zm, Ym, Xm = meshgrid(X, Y, Z, indexing='ij')
+    # Zm, Ym, Xm = meshgrid(X, Y, Z, indexing='ij')
 
-    f = abs(asarray(values))
+    f  = abs(asarray(values))
     Am = squeeze(griddata(U, f, (Xm, Ym, Zm), method='linear', fill_value=0))
     Am[isnan(Am)] = 0
 
-    if plot == 'vtk':
-        voxels = VtkViewer(data={'voxels': Am})
-        voxels.start()
+    voxels = VtkViewer(data={'voxels': Am})
+    voxels.setup()
+    voxels.start()
 
     return Am
 
@@ -714,5 +711,4 @@ def principal_stresses(data, ptype, scale, rotate):
 
 if __name__ == "__main__":
 
-    data = [1, 2, 3, 4, 6, 15, 7, 8, 11, 12, 13, 9, 10, 55, 89, 56, 56]
-    print(identify_ranges(data))
+    pass

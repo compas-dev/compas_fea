@@ -35,17 +35,19 @@ class Material(object):
     name : str
         Name of the Material object.
 
-    Returns
-    -------
-    None
+    Attributes
+    ----------
+    name : str
+        Name of the Material object.
 
     """
 
     def __init__(self, name):
 
-        self.__name__  = 'MaterialObject'
+        self.__name__  = 'Material'
         self.name      = name
         self.attr_list = ['name']
+
 
     def __str__(self):
 
@@ -57,6 +59,7 @@ class Material(object):
             print('{0:<11} : {1}'.format(attr, getattr(self, attr)))
 
         return ''
+
 
     def __repr__(self):
 
@@ -86,10 +89,6 @@ class ElasticIsotropic(Material):
     compression : bool
         Can take compression.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, E, v, p, tension=True, compression=True):
@@ -108,16 +107,14 @@ class ElasticIsotropic(Material):
 
 class Stiff(ElasticIsotropic):
 
-    """ Elastic and very stiff massless material.
+    """ Elastic, very stiff and massless material.
 
     Parameters
     ----------
     name : str
         Material name.
-
-    Returns
-    -------
-    None
+    E : float
+        Young's modulus E [Pa].
 
     """
 
@@ -160,13 +157,9 @@ class ElasticOrthotropic(Material):
     compression : bool
         Can take compression.
 
-    Returns
-    -------
-    None
-
     Notes
     -----
-    - Class can be created but is currently not implemented.
+    - Can be created but is currently not implemented.
 
     """
 
@@ -207,10 +200,6 @@ class ElasticPlastic(Material):
     e : list
         Plastic strain data (positive tension values) [-].
 
-    Returns
-    -------
-    None
-
     Notes
     -----
     - Plastic stress--strain pairs applies to both compression and tension.
@@ -240,7 +229,7 @@ class ElasticPlastic(Material):
 
 class Steel(Material):
 
-    """ Bi-linear non-linear steel with yield stress.
+    """ Bi-linear steel with given yield stress.
 
     Parameters
     ----------
@@ -259,10 +248,6 @@ class Steel(Material):
     p : float
         Density [kg/m3].
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, fy=355, fu=None, eu=20, E=210, v=0.3, p=7850):
@@ -271,10 +256,12 @@ class Steel(Material):
         E  *= 10.**9
         fy *= 10.**6
         eu *= 0.01
+
         if not fu:
             fu = fy
         else:
             fu *= 10.**6
+
         ep = eu - fy / E
         f  = [fy, fu]
         e  = [0, ep]
@@ -287,12 +274,12 @@ class Steel(Material):
         self.fu          = fu
         self.eu          = eu
         self.ep          = ep
-        self.p           = p
         self.E           = {'E': E}
         self.v           = {'v': v}
         self.G           = {'G': 0.5 * E / (1 + v)}
-        self.compression = {'f': fc, 'e': ec}
+        self.p           = p
         self.tension     = {'f': f, 'e': e}
+        self.compression = {'f': fc, 'e': ec}
         self.attr_list.extend(['fy', 'fu', 'eu', 'ep', 'E', 'v', 'G', 'p', 'tension', 'compression'])
 
 
@@ -327,10 +314,6 @@ class Concrete(Material):
     fr : list
         Failure ratios.
 
-    Returns
-    -------
-    None
-
     Notes
     -----
     - The concrete model is based on Eurocode 2 up to fck=90 MPa.
@@ -345,14 +328,17 @@ class Concrete(Material):
         Ecm  = 22 * 10**3 * (fcm / 10.)**0.3
         ec1  = min(0.7 * fcm**0.31, 2.8) * 0.001
         ecu1 = 0.0035 if fck < 50 else (2.8 + 27 * ((98 - fcm) / 100.)**4) * 0.001
+
         k    = 1.05 * Ecm * ec1 / fcm
         e    = [i * de for i in range(int(ecu1 / de) + 1)]
         ec   = [ei - e[1] for ei in e[1:]]
         fctm = 0.3 * fck**(2. / 3.) if fck <= 50 else 2.12 * log(1 + fcm / 10.)
         f    = [10**6 * fcm * (k * (ei / ec1) - (ei / ec1)**2) / (1. + (k - 2) * (ei / ec1)) for ei in e]
+
         E    = f[1] / e[1]
         ft   = [1., 0.]
         et   = [0., 0.001]
+
         if not fr:
             fr = [1.16, fctm / fcm]
 
@@ -361,10 +347,10 @@ class Concrete(Material):
         self.fck         = fck * 10.**6
         self.E           = {'E': E}
         self.v           = {'v': v}
-        self.G           = {'G': 0.5 * E / (1 + v)}  # check assumption
+        self.G           = {'G': 0.5 * E / (1 + v)}
         self.p           = p
-        self.compression = {'f': f[1:], 'e': ec}
         self.tension     = {'f': ft, 'e': et}
+        self.compression = {'f': f[1:], 'e': ec}
         self.fratios     = fr
         self.attr_list.extend(['fck', 'fratios', 'E', 'v', 'G', 'p', 'tension', 'compression'])
 
@@ -388,15 +374,11 @@ class ConcreteSmearedCrack(Material):
     ec : list
         Plastic strain data in compression [-].
     ft : list
-        Plastic stress data in tension [Pa].
+        Plastic stress data in tension [-].
     et : list
         Plastic strain data in tension [-].
     fr : list
         Failure ratios.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -407,10 +389,10 @@ class ConcreteSmearedCrack(Material):
         self.name        = name
         self.E           = {'E': E}
         self.v           = {'v': v}
-        self.G           = {'G': 0.5 * E / (1 + v)}  # check assumption
+        self.G           = {'G': 0.5 * E / (1 + v)}
         self.p           = p
-        self.compression = {'f': fc, 'e': ec}
         self.tension     = {'f': ft, 'e': et}
+        self.compression = {'f': fc, 'e': ec}
         self.fratios     = fr
         self.attr_list.extend(['E', 'v', 'G', 'p', 'tension', 'compression', 'fratios'])
 
@@ -436,10 +418,6 @@ class ConcreteDamagedPlasticity(Material):
     stiffening : list
         Tension stiffening parameters.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, E, v, p, damage, hardening, stiffening):
@@ -449,7 +427,7 @@ class ConcreteDamagedPlasticity(Material):
         self.name       = name
         self.E          = {'E': E}
         self.v          = {'v': v}
-        self.G          = {'G': 0.5 * E / (1 + v)}  # check assumption
+        self.G          = {'G': 0.5 * E / (1 + v)}
         self.p          = p
         self.damage     = damage
         self.hardening  = hardening
@@ -475,10 +453,6 @@ class ThermalMaterial(Material):
         Pairs of density and temperature values.
     sheat : list
         Pairs of specific heat and temperature values.
-
-    Returns
-    -------
-    None
 
     """
 

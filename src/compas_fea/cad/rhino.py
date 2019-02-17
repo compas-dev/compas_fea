@@ -23,6 +23,8 @@ from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
 from compas_fea.utilities import network_order
 
+from compas_fea.structure import Structure
+
 try:
     import rhinoscriptsyntax as rs
 except ImportError:
@@ -57,7 +59,47 @@ __all__ = [
     'plot_data',
     'plot_principal_stresses',
     'plot_voxels',
+    'weld_meshes_from_layer',
 ]
+
+
+def weld_meshes_from_layer(layer_input, layer_output):
+
+    """ Grab meshes on an input layer and weld them onto an output layer.
+
+    Parameters
+    ----------
+    layer_input : str
+        Layer containing the Rhino meshes to weld.
+    layer_output : str
+        Layer to plot single welded mesh.
+
+    Returns
+    -------
+    None
+
+    """
+
+    print('Welding meshes on layer:{0}'.format(layer_input))
+
+    mdl = Structure(path=' ')
+
+    add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers=layer_input)
+
+    faces = []
+
+    for element in mdl.elements.values():
+        enodes = element.nodes
+
+        if len(enodes) == 3:
+            enodes.append(enodes[-1])
+
+        if len(enodes) == 4:
+            faces.append(enodes)
+
+    rs.DeleteObjects(rs.ObjectsByLayer(layer_output))
+    rs.CurrentLayer(layer_output)
+    rs.AddMesh(mdl.nodes_xyz(), faces)
 
 
 def add_element_set(structure, guids, name):
@@ -330,7 +372,7 @@ def add_sets_from_layers(structure, layers):
                 print('***** Layer {0} contained a mixture of points and elements, set not created *****'.format(name))
 
 
-def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, layer='Default', thermal=False):
+def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, thermal=False):
 
     """ Adds tetrahedron elements from a mesh in Rhino to the Structure object.
 
@@ -363,17 +405,16 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
     xfunc = XFunc('tets', basedir=basedir, tmpdir=structure.path)
     xfunc.funcname = 'meshing.tets_from_vertices_faces'
 
-
     try:
         tets_points, tets_elements = xfunc(vertices=vertices, faces=faces, volume=volume)
 
         for point in tets_points:
             structure.add_node(point)
 
-        print('test')
         ekeys = []
 
         for element in tets_elements:
+
             nodes = [structure.check_node_exists(tets_points[i]) for i in element]
             ekey  = structure.add_element(nodes=nodes, type='TetrahedronElement', thermal=thermal)
             ekeys.append(ekey)
@@ -389,6 +430,7 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
             tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
 
             for i, points in enumerate(tets_elements):
+
                 xyz = [tets_points[j] for j in points]
                 rs.AddMesh(vertices=xyz, face_vertices=tet_faces)
 
@@ -401,14 +443,12 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, laye
         print('***** Error using MeshPy (TetGen) or drawing Tets *****')
 
 
-def discretise_mesh(structure, mesh, layer, target, min_angle=15, factor=1):
+def discretise_mesh(mesh, layer, target, min_angle=15, factor=1):
 
     """ Discretise a mesh from an input triangulated coarse mesh into small denser meshes.
 
     Parameters
     ----------
-    structure : obj
-        Structure object.
     mesh : guid
         The guid of the Rhino input mesh.
     layer : str
@@ -431,7 +471,7 @@ def discretise_mesh(structure, mesh, layer, target, min_angle=15, factor=1):
     faces     = [face[:3] for face in rhinomesh.get_face_vertices()]
 
     basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc('discretise', basedir=basedir, tmpdir=structure.path)
+    xfunc = XFunc('discretise', basedir=basedir)
     xfunc.funcname = 'meshing.discretise_faces'
 
     try:

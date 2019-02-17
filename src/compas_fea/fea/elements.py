@@ -63,7 +63,11 @@ class Elements(object):
             geometry      = section.geometry
 
             material      = materials.get(property.material)
-            m_index       = material.index + 1
+
+            written_springs = []
+
+            if material:
+                m_index = material.index + 1
 
             selection = property.elements if property.elements else sets[elset].selection
 
@@ -84,6 +88,7 @@ class Elements(object):
                 n       = select + 1
                 ex      = element.axes.get('ex', None)
                 ey      = element.axes.get('ey', None)
+                ez      = element.axes.get('ez', None)
 
 
                 # =====================================================================================================
@@ -236,6 +241,64 @@ class Elements(object):
 
                 # =====================================================================================================
                 # =====================================================================================================
+                # SPRING
+                # =====================================================================================================
+                # =====================================================================================================
+
+                elif stype == 'SpringSection':
+
+                    # -------------------------------------------------------------------------------------------------
+                    # OpenSees
+                    # -------------------------------------------------------------------------------------------------
+
+                    if self.software == 'opensees':
+
+                        pass
+
+                    # -------------------------------------------------------------------------------------------------
+                    # Abaqus
+                    # -------------------------------------------------------------------------------------------------
+
+                    elif self.software == 'abaqus':
+
+                        if section.stiffness:
+
+                            kx = section.stiffness.get('axial', 0)
+                            ky = section.stiffness.get('lateral', 0)
+                            kr = section.stiffness.get('rotation', 0)
+
+                            b1 = 'BEH_{0}'.format(section.name)
+
+                            if b1 not in written_springs:
+                                self.write_line('*CONNECTOR BEHAVIOR, NAME={0}'.format(b1))
+
+                                if kx:
+                                    self.write_line('*CONNECTOR ELASTICITY, COMPONENT=1')
+                                    self.write_line('{0}'.format(kx))
+
+                        #         elif section.forces['axial'] and section.displacements['axial']:
+                        #             f.write('*CONNECTOR ELASTICITY, COMPONENT=1, NONLINEAR\n')
+                        #             for i, j in zip(section.forces['axial'], section.displacements['axial']):
+                        #                 f.write('{0}, {1}\n'.format(i, j))
+
+                                written_springs.append(b1)
+                                self.blank_line()
+
+                            e = 'element_{0}'.format(select)
+                            self.write_line('*ELEMENT, TYPE=CONN3D2, ELSET={0}'.format(e))
+                            self.write_line('{0}, {1},{2}'.format(n, nodes[0], nodes[1]))
+
+                            self.write_line('*ORIENTATION, NAME=ORI_{0}'.format(select))
+                            self.write_line(', '.join([str(k) for k in ez]) + ', ' + ', '.join([str(k) for k in ey]))
+
+                            self.write_line('*CONNECTOR SECTION, ELSET={0}, BEHAVIOR={1}'.format(e, b1))
+                            self.write_line('AXIAL')
+                            self.write_line('ORI_{0}'.format(select))
+                            self.blank_line()
+
+
+                # =====================================================================================================
+                # =====================================================================================================
                 # BEAM
                 # =====================================================================================================
                 # =====================================================================================================
@@ -280,6 +343,7 @@ class Elements(object):
 
                         pass
 
+
                 self.blank_line()
 
             self.blank_line()
@@ -300,7 +364,7 @@ class Elements(object):
 #     solids     = ['SolidSection']
 #     trusses    = ['TrussSection', 'StrutSection', 'TieSection']
 
-#     written_springs = []
+#
 
 #         # Make elsets list
 
@@ -347,32 +411,7 @@ class Elements(object):
 
 
 
-# def _write_springs(f, software, selection, elements, section, written_springs):
 
-#     if section.stiffness:
-
-#         kx = section.stiffness.get('axial', 0)
-#         ky = section.stiffness.get('lateral', 0)
-#         kr = section.stiffness.get('rotation', 0)
-
-#     if software == 'abaqus':
-
-#         b1 = 'BEH_{0}'.format(section.name)
-
-#         if b1 not in written_springs:
-#             f.write('*CONNECTOR BEHAVIOR, NAME={0}\n'.format(b1))
-
-#             if kx:
-#                 f.write('*CONNECTOR ELASTICITY, COMPONENT=1\n')
-#                 f.write('{0}\n'.format(kx))
-
-#             elif section.forces['axial'] and section.displacements['axial']:
-#                 f.write('*CONNECTOR ELASTICITY, COMPONENT=1, NONLINEAR\n')
-#                 for i, j in zip(section.forces['axial'], section.displacements['axial']):
-#                     f.write('{0}, {1}\n'.format(i, j))
-
-#             written_springs.append(b1)
-#             f.write('**\n')
 
 #     elif software == 'opensees':
 
@@ -392,31 +431,6 @@ class Elements(object):
 #             #     f.write('#\n')
 
 #             written_springs.append(section_index)
-
-#     for select in selection:
-
-#         element = elements[select]
-#         sp, ep = element.nodes
-#         ni = select + 1
-#         i  = sp + 1
-#         j  = ep + 1
-#         ey = element.axes.get('ey')
-#         ez = element.axes.get('ez')
-
-#         if software == 'abaqus':
-
-#             e1 = 'element_{0}'.format(select)
-#             f.write('*ELEMENT, TYPE=CONN3D2, ELSET={0}\n'.format(e1))
-#             f.write('{0}, {1},{2}\n'.format(ni, i, j))
-
-#             f.write('*ORIENTATION, NAME=ORI_{0}\n'.format(select))
-#             f.write(', '.join([str(k) for k in ez]) + ', ')
-#             f.write(', '.join([str(k) for k in ey]) + '\n')
-
-#             f.write('*CONNECTOR SECTION, ELSET={0}, BEHAVIOR={1}\n'.format(e1, b1))
-#             f.write('AXIAL\n')
-#             f.write('ORI_{0}\n'.format(select))
-#             f.write('**\n')
 
 #         elif software == 'opensees':
 

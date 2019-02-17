@@ -21,7 +21,7 @@ __all__ = [
 ]
 
 
-func_dic = {
+func_dict = {
     'BeamElement':        BeamElement,
     'SpringElement':      SpringElement,
     'TrussElement':       TrussElement,
@@ -51,7 +51,7 @@ class ElementMixins(object):
             Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
         thermal : bool
             Thermal properties on or off.
-        axes : dic
+        axes : dict
             The local element axes 'ex', 'ey' and 'ez'.
 
         Returns
@@ -70,13 +70,15 @@ class ElementMixins(object):
             ekey = self.check_element_exists(nodes)
 
             if ekey is None:
-                ekey = self.element_count()
-                element         = func_dic[type]()
-                element.axes    = axes
-                element.nodes   = nodes
-                element.number  = ekey
-                element.thermal = thermal
+
+                ekey                = self.element_count()
+                element             = func_dict[type]()
+                element.axes        = axes
+                element.nodes       = nodes
+                element.number      = ekey
+                element.thermal     = thermal
                 self.elements[ekey] = element
+
                 self.add_element_to_element_index(ekey, nodes)
 
             return ekey
@@ -98,7 +100,7 @@ class ElementMixins(object):
             Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
         thermal : bool
             Thermal properties on or off.
-        axes : dic
+        axes : dict
             The local element axes 'ex', 'ey' and 'ez' for all elements.
 
         Returns
@@ -112,8 +114,7 @@ class ElementMixins(object):
 
         """
 
-        return [self.add_element(nodes=nodes, type=type, thermal=thermal, axes=axes)
-                for nodes in elements]
+        return [self.add_element(nodes=nodes, type=type, thermal=thermal, axes=axes) for nodes in elements]
 
 
     def add_element_to_element_index(self, key, nodes, virtual=False):
@@ -136,16 +137,17 @@ class ElementMixins(object):
         """
 
         centroid = centroid_points([self.node_xyz(node) for node in nodes])
-        gkey = geometric_key(centroid, '{0}f'.format(self.tol))
+        gkey     = geometric_key(centroid, '{0}f'.format(self.tol))
+
         if virtual:
             self.virtual_element_index[gkey] = key
         else:
             self.element_index[gkey] = key
 
 
-    def check_element_exists(self, nodes, xyz=None, virtual=False):
+    def check_element_exists(self, nodes=None, xyz=None, virtual=False):
 
-        """ Check if an element already exists based on the nodes it connects to or its centroid.
+        """ Check if an element already exists based on nodes or centroid.
 
         Parameters
         ----------
@@ -169,7 +171,9 @@ class ElementMixins(object):
 
         if not xyz:
             xyz = centroid_points([self.node_xyz(node) for node in nodes])
+
         gkey = geometric_key(xyz, '{0}f'.format(self.tol))
+
         if virtual:
             return self.virtual_element_index.get(gkey, None)
         else:
@@ -177,17 +181,17 @@ class ElementMixins(object):
 
 
     def edit_element(self):
+
         raise NotImplementedError
 
 
     def element_count(self):
 
-        """ Return the number of elements in structure.elements.
+        """ Return the number of elements in the Structure.
 
         Parameters
         ----------
-        virtual: bool
-            If true, returns the number of vurtual elements.
+        None
 
         Returns
         -------
@@ -197,24 +201,6 @@ class ElementMixins(object):
         """
 
         return len(self.elements) + len(self.virtual_elements)
-
-
-    def make_element_index_dic(self):
-
-        """ Makes an element_index dictionary from existing structure.elements.
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        None
-
-        """
-
-        for key, element in self.elements.items():
-            self.add_element_to_element_index(key=key, nodes=element.nodes)
 
 
     def element_centroid(self, element):
@@ -233,8 +219,8 @@ class ElementMixins(object):
 
         """
 
-        nodes = self.elements[element].nodes
-        return centroid_points([self.node_xyz(node) for node in nodes])
+        return centroid_points(self.nodes_xyz(nodes=self.elements[element].nodes))
+
 
     def add_nodal_element(self, node, type, virtual_node=False):
 
@@ -275,21 +261,21 @@ class ElementMixins(object):
         else:
             nodes = [node]
 
-        func_dic = {
+        func_dict = {
             'SpringElement': SpringElement,
         }
 
         ekey = self.element_count()
-        element = func_dic[type]()
+        element = func_dict[type]()
         element.nodes = nodes
         element.number = ekey
         self.elements[ekey] = element
         return ekey
 
+
     def add_virtual_element(self, nodes, type, thermal=False, axes={}):
 
-        """ Adds a virtual element to structure.elements. Virtual elements are
-        added to an element set called 'virtual_elements'.
+        """ Adds a virtual element to structure.elements and to element set 'virtual_elements'.
 
         Parameters
         ----------
@@ -297,6 +283,10 @@ class ElementMixins(object):
             Nodes the element is connected to.
         type : str
             Element type: 'HexahedronElement', 'BeamElement, 'TrussElement' etc.
+        thermal : bool
+            Thermal properties on or off.
+        axes : dict
+            The local element axes 'ex', 'ey' and 'ez'.
 
         Returns
         -------
@@ -310,22 +300,27 @@ class ElementMixins(object):
         """
 
         ekey = self.check_element_exists(nodes, virtual=True)
+
         if ekey is None:
-            ekey = self.element_count()
-            element = func_dic[type]()
-            element.axes = axes
-            element.nodes = nodes
-            element.number = ekey
+
+            ekey            = self.element_count()
+            element         = func_dict[type]()
+            element.axes    = axes
+            element.nodes   = nodes
+            element.number  = ekey
             element.thermal = thermal
+
             self.virtual_elements[ekey] = element
             self.add_element_to_element_index(ekey, nodes, virtual=True)
 
             if 'virtual_elements' in self.sets:
                 self.sets['virtual_elements']['selection'].append(ekey)
             else:
-                self.sets['virtual_elements'] = {'type': 'virtual_element', 'selection': [ekey], 'index': len(self.sets)}
+                self.sets['virtual_elements'] = {'type': 'virtual_element', 'selection': [ekey],
+                                                 'index': len(self.sets)}
 
         return ekey
+
 
     def assign_element_property(self, element_property):
 
@@ -333,8 +328,8 @@ class ElementMixins(object):
 
         Parameters
         ----------
-        element_property : str
-            Name of the ElementProperties object.
+        element_property : obj
+            ElementProperties object.
 
         Returns
         -------

@@ -382,6 +382,10 @@ table {
 	background-color: #eee;
 }
 
+.language-none pre {
+	background-color: #eee;
+}
+
 .compas-content .anchorjs-link {
 	text-decoration: none;
 }

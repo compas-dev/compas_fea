@@ -9,3 +9,4 @@ This example works for: **Abaqus**.
     :class: figure-img img-fluid
 
 .. literalinclude:: /../../examples/block_bridge_blender.py
+    :language: python

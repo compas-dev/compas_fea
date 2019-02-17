@@ -43,9 +43,18 @@ class Load(object):
     elements : str, list
         Element set or element keys the load is applied to.
 
-    Returns
-    -------
-    None
+    Attributes
+    ----------
+    name : str
+        Name of the Load object.
+    axes : str
+        Load applied via 'local' or 'global' axes.
+    components : dict
+        Load components.
+    nodes : str, list
+        Node set or node keys the load is applied to.
+    elements : str, list
+        Element set or element keys the load is applied to.
 
     """
 
@@ -59,6 +68,7 @@ class Load(object):
         self.elements   = elements
         self.attr_list  = ['name', 'axes', 'components', 'nodes', 'elements']
 
+
     def __str__(self):
 
         print('\n')
@@ -69,6 +79,7 @@ class Load(object):
             print('{0:<10} : {1}'.format(attr, getattr(self, attr)))
 
         return ''
+
 
     def __repr__(self):
 
@@ -87,10 +98,6 @@ class PrestressLoad(Load):
         Element set or element keys the prestress is applied to.
     sxx : float
         Value of prestress for axial stress component sxx.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -124,10 +131,6 @@ class PointLoad(Load):
     zz : float
         zz component of moment.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, nodes, x=0, y=0, z=0, xx=0, yy=0, zz=0):
@@ -139,7 +142,7 @@ class PointLoad(Load):
 
 class PointLoads(Load):
 
-    """ Different concentrated forces and moments [units:N, Nm] applied to different nodes.
+    """ Concentrated forces and moments [units:N, Nm] applied to different nodes.
 
     Parameters
     ----------
@@ -147,10 +150,6 @@ class PointLoads(Load):
         Name of the PointLoads object.
     components : dict
         Node key : components dictionary data.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -183,10 +182,6 @@ class LineLoad(Load):
     zz : float
         zz component of moment / length.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, elements, x=0, y=0, z=0, xx=0, yy=0, zz=0, axes='local'):
@@ -212,10 +207,6 @@ class AreaLoad(Load):
         y component of area load.
     z : float
         z component of area load.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -245,10 +236,6 @@ class GravityLoad(Load):
     z : float
         Factor to apply to z direction.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, elements, g=-9.81, x=0., y=0., z=1.):
@@ -272,10 +259,6 @@ class ThermalLoad(object):
         Element set or element keys the load is applied to.
     temperature : float
         Temperature to apply to elements.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -308,10 +291,6 @@ class TributaryLoad(Load):
     axes : str
         TributaryLoad applied via 'local' or 'global' axes.
 
-    Returns
-    -------
-    None
-
     Notes
     -----
     - The load components are loads per unit area [N/m2].
@@ -323,20 +302,22 @@ class TributaryLoad(Load):
         Load.__init__(self, name=name, axes=axes)
 
         self.__name__ = 'TributaryLoad'
-#        
         self.attr_list.append('mesh')
-        
-        nodes = []
+
+        nodes      = []
         components = {}
 
         for key in mesh.vertices():
+
             node = structure.check_node_exists(mesh.vertex_coordinates(key))
+
             if node is not None:
                 A = mesh.vertex_area(key)
                 nodes.append(node)
-                components[node] = {'x': x * A, 'y': y * A, 'z': z * A}#
+                components[node] = {'x': x * A, 'y': y * A, 'z': z * A}
+
         self.components = components
-        self.nodes    = nodes
+        self.nodes      = nodes
 
 
 class HarmonicPointLoad(Load):
@@ -362,10 +343,6 @@ class HarmonicPointLoad(Load):
     zz : float
         zz component of moment.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, nodes, x=0, y=0, z=0, xx=0, yy=0, zz=0):
@@ -390,10 +367,6 @@ class HarmonicPressureLoad(Load):
     phase : float
         Phase angle in radians.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, elements, pressure=0, phase=None):
@@ -404,6 +377,7 @@ class HarmonicPressureLoad(Load):
 
 
 class AcousticDiffuseFieldLoad(Load):
+
     """ Acoustic Diffuse field loads applied to elements.
 
     Parameters
@@ -419,16 +393,12 @@ class AcousticDiffuseFieldLoad(Load):
     max_inc_angle: float
         Maximum angle with the positive z axis for the randon incident plane waves
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, elements, air_density=1.225, sound_speed=340, max_inc_angle=90):
         Load.__init__(self, name=name, elements=elements, axes='global')
 
-        self.__name__ = 'AcousticDiffuseFieldLoad'
-        self.components = {'air_density': air_density,
-                           'sound_speed': sound_speed,
+        self.__name__   = 'AcousticDiffuseFieldLoad'
+        self.components = {'air_density':   air_density,
+                           'sound_speed':   sound_speed,
                            'max_inc_angle': max_inc_angle}

@@ -106,10 +106,10 @@ It can be checked if a node is already present in the **Structure** object by a 
 
 .. code-block:: python
 
-   >>> mdl.check_node_exists([5, 5, 0])  # does a node exist at x=5, y=5, z=0
+   >>> mdl.check_node_exists(xyz=[5, 5, 0])  # does a node exist at x=5, y=5, z=0
    2
 
-   >>> mdl.check_node_exists([5, 5, -1])  # does a node exist at x=5, y=5, z=-1
+   >>> mdl.check_node_exists(xyz=[5, 5, -1])  # does a node exist at x=5, y=5, z=-1
    None
 
 **Note**: no more than one node can exist for the same co-ordinates, i.e. no overlapping nodes are allowed, this ensures a unique entry in the node index dictionary (see below) and is currently important for many operations in **compas_fea**.
