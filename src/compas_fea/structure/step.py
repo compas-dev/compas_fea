@@ -30,16 +30,17 @@ class Step(object):
     name : str
         Name of the Step object.
 
-    Returns
-    -------
-    None
+    Attributes
+    ----------
+    name : str
+        Name of the Step object.
 
     """
 
     def __init__(self, name):
 
-        self.__name__ = 'StepObject'
-        self.name = name
+        self.__name__  = 'StepObject'
+        self.name      = name
         self.attr_list = ['name']
 
 
@@ -89,10 +90,6 @@ class GeneralStep(Step):
     modify : bool
         Modify the previously added loads.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, increments=100, iterations=100, tolerance=0.01, factor=1.0, nlgeom=True, nlmat=True, displacements=None, loads=None, type='static', modify=True):
@@ -141,10 +138,6 @@ class HeatStep(Step):
     duration : float
         Duration of step.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, interaction, increments=100, temp0=20, dTmax=1, type='heat transfer', duration=1):
@@ -177,10 +170,6 @@ class ModalStep(Step):
         Displacement object names.
     type : str
         'modal'.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -219,10 +208,6 @@ class HarmonicStep(Step):
         Constant harmonic damping ratio.
     type : str
         'harmonic'.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -268,10 +253,6 @@ class BucklingStep(Step):
         'buckle'.
     step : str
         Step to copy loads and displacements from.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -323,10 +304,6 @@ class AcousticStep(Step):
         Constant harmonic damping ratio.
     type : str
         'acoustic'.
-
-    Returns
-    -------
-    None
 
     """
 
