@@ -41,9 +41,12 @@ class Section(object):
     name : str
         Section object name.
 
-    Returns
-    -------
-    None
+    Attributes
+    ----------
+    name : str
+        Section object name.
+    geometry : dict
+        Geometry of the Section.
 
     """
 
@@ -53,18 +56,19 @@ class Section(object):
         self.name     = name
         self.geometry = {}
 
+
     def __str__(self):
 
         print('\n')
         print('compas_fea {0} object'.format(self.__name__))
         print('-' * (len(self.__name__) + 18))
-
         print('name  : {0}'.format(self.name))
 
         for i, j in self.geometry.items():
             print('{0:<5} : {1}'.format(i, j))
 
         return ''
+
 
     def __repr__(self):
 
@@ -89,10 +93,6 @@ class AngleSection(Section):
         Height.
     t : float
         Thickness.
-
-    Returns
-    -------
-    None
 
     Notes
     -----
@@ -133,10 +133,6 @@ class BoxSection(Section):
     tf : float
         Flange thickness.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, b, h, tw, tf):
@@ -164,10 +160,6 @@ class CircularSection(Section):
         Section name.
     r : float
         Radius.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -207,10 +199,6 @@ class GeneralSection(Section):
     gw : float
         Warping constant.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, A, Ixx, Ixy, Iyy, J, g0, gw):
@@ -237,10 +225,6 @@ class ISection(Section):
         Web thickness.
     tf : float
         Flange thickness.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -270,10 +254,6 @@ class PipeSection(Section):
     t : float
         Wall thickness.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, r, t):
@@ -301,10 +281,6 @@ class RectangularSection(Section):
         Width.
     h : float
         Height.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -340,10 +316,6 @@ class TrapezoidalSection(Section):
     h : float
         Height.
 
-    Returns
-    -------
-    None
-
     Notes
     -----
     - J not yet calculated.
@@ -374,10 +346,6 @@ class TrussSection(Section):
     A : float
         Area.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, A):
@@ -399,10 +367,6 @@ class StrutSection(TrussSection):
     A : float
         Area.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, A):
@@ -421,10 +385,6 @@ class TieSection(TrussSection):
         Section name.
     A : float
         Area.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -448,10 +408,6 @@ class SpringSection(Section):
         Displacements data for non-linear springs.
     stiffness : dict
         Elastic stiffness for linear springs.
-
-    Returns
-    -------
-    None
 
     Notes
     -----
@@ -487,10 +443,6 @@ class ShellSection(Section):
     t : float
         Thickness.
 
-    Returns
-    -------
-    None
-
     """
 
     def __init__(self, name, t):
@@ -511,10 +463,6 @@ class MembraneSection(Section):
         Section name.
     t : float
         Thickness.
-
-    Returns
-    -------
-    None
 
     """
 
@@ -538,10 +486,6 @@ class SolidSection(Section):
     ----------
     name : str
         Section name.
-
-    Returns
-    -------
-    None
 
     """
 

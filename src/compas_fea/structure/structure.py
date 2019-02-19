@@ -542,7 +542,7 @@ Steps
         output : bool
             Print terminal output.
         save : bool
-            Save to structure to .obj before file writing.
+            Save structure to .obj before file writing.
 
         Returns
         -------

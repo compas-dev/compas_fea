@@ -87,14 +87,15 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
     """
 
     blendermesh = BlenderMesh(bmesh)
-    vertices = blendermesh.get_vertices_coordinates()
-    edges    = blendermesh.get_edges_vertex_indices()
-    faces    = blendermesh.get_faces_vertex_indices()
+    vertices    = blendermesh.get_vertices_coordinates()
+    edges       = blendermesh.get_edges_vertex_indices()
+    faces       = blendermesh.get_faces_vertex_indices()
 
     added_nodes    = set()
     added_elements = set()
 
     for xyz in vertices.values():
+
         node = structure.add_node(xyz=xyz)
         added_nodes.add(node)
 
@@ -117,6 +118,7 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
             axes['ez'] = ez
 
             ekey = structure.add_element(nodes=[sp, ep], type=line_type, thermal=thermal, axes=axes)
+
             if ekey is not None:
                 added_elements.add(ekey)
 
