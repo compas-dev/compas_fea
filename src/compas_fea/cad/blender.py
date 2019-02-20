@@ -375,13 +375,14 @@ def add_nsets_from_layers(structure, layers):
         nodes = []
 
         for point in get_points(layer=layer):
-            nodes.append(structure.check_node_exists(list(point.location)))
+
+            nodes.append(structure.check_node_exists(xyz=list(point.location)))
 
         for mesh in get_meshes(layer=layer):
 
             for vertex in BlenderMesh(mesh).get_vertices_coordinates().values():
 
-                node = structure.check_node_exists(vertex)
+                node = structure.check_node_exists(xyz=vertex)
 
                 if node is not None:
                     nodes.append(node)
