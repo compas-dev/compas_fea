@@ -175,4 +175,4 @@ As stress is a tensor, any point in the structure has a local axes orientation w
    rhino.plot_principal_stresses(structure=mdl, step='step_loads', ptype='smaxp', scale=0.2)  # max principal
 
 .. image:: /_images/principals.png
-   :scale: 60 %
+   :scale: 38 %

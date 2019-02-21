@@ -87,13 +87,13 @@
 <span class="go">---------------------</span>
 <span class="go">name      : elset_shell</span>
 <span class="go">type      : element</span>
-<span class="go">selection : [4]</span>
+<span class="go">selection : [7, 8]</span>
 <span class="go">index     : 3</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">&#39;elset_shell&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">selection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># add an element to the element set</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">sets</span><span class="p">[</span><span class="s1">&#39;elset_shell&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">selection</span>  <span class="c1"># show updated selection</span>
-<span class="go">[4, 5]</span>
+<span class="go">[7, 8, 5]</span>
 </code></pre></div>
 </div>
 <p>From the node and element data of the <strong>Structure</strong> object, a surface can be defined by one of two surface set types. The first is by using <code class="docutils literal notranslate"><span class="pre">type='surface_node'</span></code> when creating a set with the <code class="docutils literal notranslate"><span class="pre">.add_set()</span></code> method. This will describe a surface by the nodes given in the <code class="docutils literal notranslate"><span class="pre">selection</span></code> list. This surface type can be created like:</p>
@@ -187,7 +187,7 @@
 
         <footer class="compas-footer">
             
-                Last updated on Feb 11, 2019.
+                Last updated on Feb 21, 2019.
             
 
             
