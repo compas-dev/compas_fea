@@ -3,6 +3,9 @@ import re
 from compas.geometry import length_vector
 
 
+# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
+
+
 def get_nodes_elements_from_result_files(path):
     try:
         node_file    = open(os.path.join(path, 'nodes.txt'), 'r')

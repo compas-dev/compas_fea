@@ -20,10 +20,7 @@ from compas_fea.structure import TrussSection
 from math import pi
 
 
-__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
-__license__   = 'MIT License'
-__email__     = 'liew@arch.ethz.ch'
+# Author(s): Andrew Liew (github.com/andrewliew)
 
 
 # Structure

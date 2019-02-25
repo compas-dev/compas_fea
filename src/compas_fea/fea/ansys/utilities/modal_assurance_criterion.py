@@ -1,10 +1,8 @@
 from compas_fea.fea.ansys import ansys_launch_process
 from compas_fea.fea.ansys.writing.ansys_process import ansys_open_post_process
 
-__author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'mendez@arch.ethz.ch'
+
+# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
 
 
 def run_mac(name, path, file1, lstep1, file2, lstep2, num_modes, cpus=2, license='research'):

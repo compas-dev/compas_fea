@@ -11,6 +11,9 @@ from compas_fea.structure import GeneralStep
 from compas_fea.structure import BucklingStep
 
 
+# Author(s): Andrew Liew (github.com/andrewliew)
+
+
 mdl = Structure(name='example_shell', path='C:/Temp/')
 
 rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers='mesh')
@@ -37,7 +40,7 @@ mdl.add(ElementProperties(name='ep', material='material', section='section', els
 
 mdl.add(PinnedDisplacement(name='pinned', nodes='supports'))
 #print(mdl.displacements['pinned'])
-    
+
 mdl.add([
     GravityLoad(name='gravity', elements='mesh'),
     PointLoad(name='loads', nodes='loads', z=-5000),

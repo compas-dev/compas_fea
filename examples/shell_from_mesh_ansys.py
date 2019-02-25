@@ -5,6 +5,9 @@ from compas_fea.structure import Structure
 from compas_fea.fea import ansys
 
 
+# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
+
+
 def pin_all_boundary_vertices(mesh):
     bkeys = mesh.vertices_on_boundary()
     mesh.set_vertices_attribute('UX', 0, bkeys)

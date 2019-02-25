@@ -21,10 +21,7 @@ import pickle
 import os
 
 
-__author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tomas Mendez <mendez@arch.ethz.ch>']
-__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
-__license__   = 'MIT License'
-__email__     = 'liew@arch.ethz.ch'
+# Author(s): Andrew Liew (github.com/andrewliew), Tomás Méndez Echenagucia (github.com/tmsmendez)
 
 
 __all__ = [

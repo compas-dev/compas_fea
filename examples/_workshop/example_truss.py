@@ -12,6 +12,9 @@ from compas_fea.structure import PointLoad
 from compas_fea.structure import GeneralStep
 
 
+# Author(s): Andrew Liew (github.com/andrewliew)
+
+
 mdl = Structure(name='example_truss', path='C:/Temp/')
 
 rhino.add_nodes_elements_from_layers(mdl, line_type='TrussElement', layers='trusses')

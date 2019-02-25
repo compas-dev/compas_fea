@@ -11,6 +11,9 @@ from compas_fea.structure import GeneralStep
 import rhinoscriptsyntax as rs
 
 
+# Author(s): Andrew Liew (github.com/andrewliew)
+
+
 mdl = Structure(name='example_tets', path='C:/Temp/')
 
 # Triangles

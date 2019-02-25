@@ -11,10 +11,7 @@ from compas_fea.structure import Structure
 from compas_blender.utilities import get_object_by_name
 
 
-__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
-__license__   = 'MIT License'
-__email__     = 'liew@arch.ethz.ch'
+# Author(s): Andrew Liew (github.com/andrewliew)
 
 
 # Structure

@@ -9,10 +9,7 @@ from compas_fea.structure import Steel
 from compas_fea.structure import Structure
 
 
-__author__      = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
-__copyright__   = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__     = 'MIT License'
-__email__       = 'mendez@arch.ethz.ch'
+# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
 
 
 # Structure
