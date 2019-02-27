@@ -88,4 +88,5 @@ rhino.plot_concentrated_forces(mdl, step='loads', scale=0.1)
 
 mdl.save_to_obj()
 
-# show App
+# show in App
+# show raw data, discuss methods to extract data
