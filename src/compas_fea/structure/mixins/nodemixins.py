@@ -8,7 +8,7 @@ from compas_fea.structure import Node
 from compas.utilities import geometric_key
 
 
-# Author(s): Andrew Liew (github.com/andrewliew), Tomás Méndez Echenagucia (github.com/tmsmendez)
+# Author(s): Andrew Liew (github.com/andrewliew), Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 __all__ = [

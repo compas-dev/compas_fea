@@ -1,7 +1,7 @@
 import os
 
 
-# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 def write_all_materials(structure, output_path, filename):

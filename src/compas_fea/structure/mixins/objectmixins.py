@@ -12,7 +12,7 @@ from compas_fea.structure import Section
 from compas_fea.structure import Step
 
 
-# Author(s): Andrew Liew (github.com/andrewliew), Tomás Méndez Echenagucia (github.com/tmsmendez)
+# Author(s): Andrew Liew (github.com/andrewliew), Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 __all__ = [

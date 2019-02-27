@@ -10,7 +10,7 @@ from compas_fea.fea.ansys.writing.ansys_nodes_elements import *
 from compas_fea.utilities import identify_ranges
 
 
-# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 def write_acoustic_analysis_request(structure, path, name, skey):

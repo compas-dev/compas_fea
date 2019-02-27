@@ -6,7 +6,7 @@ from compas_fea.fea.ansys.writing import *
 from compas_fea.fea.ansys.reading import *
 
 
-# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 __all__ = [

@@ -4,7 +4,7 @@ from compas.geometry import add_vectors
 from compas.geometry import normalize_vector
 
 
-# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 def write_elements(structure, output_path, filename):

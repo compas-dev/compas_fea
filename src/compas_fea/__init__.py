@@ -27,7 +27,7 @@ Interfaces to Finite Element Analysis software built on COMPAS.
 import os
 
 
-# Author(s): Andrew Liew (github.com/andrewliew), Tomás Méndez Echenagucia (github.com/tmsmendez)
+# Author(s): Andrew Liew (github.com/andrewliew), Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 HERE = os.path.dirname(__file__)

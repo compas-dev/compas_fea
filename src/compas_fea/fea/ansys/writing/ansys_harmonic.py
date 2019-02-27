@@ -9,7 +9,7 @@ from compas_fea.fea.ansys.writing.ansys_steps import *
 from compas_fea.fea.ansys.writing.ansys_nodes_elements import *
 
 
-# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 def write_harmonic_analysis_request(structure, path, name, skey):

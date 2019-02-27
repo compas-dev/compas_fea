@@ -4,7 +4,7 @@ from __future__ import division
 from __future__ import print_function
 
 
-# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 class AnsysFileWriter(object):

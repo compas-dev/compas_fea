@@ -2,7 +2,7 @@ from compas_fea.fea.ansys import ansys_launch_process
 from compas_fea.fea.ansys.writing.ansys_process import ansys_open_post_process
 
 
-# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 def run_mac(name, path, file1, lstep1, file2, lstep2, num_modes, cpus=2, license='research'):

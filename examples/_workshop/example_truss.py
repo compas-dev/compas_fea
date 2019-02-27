@@ -87,3 +87,5 @@ rhino.plot_concentrated_forces(mdl, step='loads', scale=0.1)
 # make 3D, change loads to z
 
 mdl.save_to_obj()
+
+# show App

@@ -3,7 +3,7 @@ import re
 from compas.geometry import length_vector
 
 
-# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 def get_nodes_elements_from_result_files(path):

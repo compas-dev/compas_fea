@@ -1,7 +1,7 @@
 import os
 
 
-# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 def ansys_open_pre_process(path, filename):
