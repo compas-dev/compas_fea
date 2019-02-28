@@ -10,6 +10,7 @@ from compas_fea.structure import PointLoad
 from compas_fea.structure import AreaLoad
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import BucklingStep
+from compas_fea.structure import ModalStep
 
 
 # Author(s): Andrew Liew (github.com/andrewliew)
@@ -53,9 +54,10 @@ mdl.add([
 mdl.add_steps([
     GeneralStep(name='bc', displacements='pinned'),
     GeneralStep(name='loads', loads=['gravity', 'loads', 'pressure'], factor=1.5),
-#    BucklingStep(name='buckling', modes=5, loads=['gravity', 'loads'], displacements='pinned'),
+    BucklingStep(name='buckling', modes=5, loads=['gravity', 'loads', 'pressure'], displacements='pinned'),
+    ModalStep(name='modal', modes=5),
 ])
-mdl.steps_order = ['bc', 'loads']
+mdl.steps_order = ['bc', 'loads', 'buckling', 'modal']
 
 #print(mdl.steps['bc'])
 #print(mdl.steps['loads'])
@@ -67,16 +69,23 @@ mdl.steps_order = ['bc', 'loads']
 
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's', 'rf', 'cf'])
 
-rhino.plot_data(mdl, step='loads', field='um', scale=1)
-#rhino.plot_data(mdl, step='loads', field='smaxp')
-#rhino.plot_data(mdl, step='loads', field='sminp')
+rhino.plot_data(mdl, step='loads', field='um')
+rhino.plot_data(mdl, step='loads', field='smaxp')
+rhino.plot_data(mdl, step='loads', field='sminp')
 
 rhino.plot_reaction_forces(mdl, step='loads', scale=0.1)
 rhino.plot_concentrated_forces(mdl, step='loads', scale=0.1)
 
-#rhino.plot_mode_shapes(mdl, step='buckling', layer='buckling-')
+rhino.plot_mode_shapes(mdl, step='buckling', layer='buckling-')
+rhino.plot_mode_shapes(mdl, step='modal', layer='modal-')
 
-#mdl.save_to_obj()
+print(mdl.results['modal']['frequencies'])
+print(mdl.results['modal']['masses'])
+
+print(mdl.results['buckling']['info'])
+
+mdl.save_to_obj()
 
 # remove faces
+# load / show .inp and .odb files
 # show in App
