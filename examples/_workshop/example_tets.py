@@ -58,3 +58,6 @@ rhino.plot_data(mdl, step='step_load', field='smises')
 #rhino.plot_voxels(mdl, step='step_load', field='um', vdx=0.100)
 
 mdl.save_to_obj()
+
+# blender
+# voxels
