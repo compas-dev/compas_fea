@@ -86,6 +86,8 @@ print(mdl.results['buckling']['info'])
 
 mdl.save_to_obj()
 
-# remove faces
+# edit parameters and geometry
 # load / show .inp and .odb files
 # show in App
+# show Blender example mesh_floor and mesh_discretise
+# show example_tets in App

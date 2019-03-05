@@ -1,5 +1,5 @@
 
-# 60 mins
+# 50 mins
 
 from compas_fea.cad import rhino
 from compas_fea.structure import Structure
