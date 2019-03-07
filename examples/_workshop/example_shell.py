@@ -54,8 +54,8 @@ mdl.add([
 mdl.add_steps([
     GeneralStep(name='bc', displacements='pinned'),
     GeneralStep(name='loads', loads=['gravity', 'loads', 'pressure'], factor=1.5),
-    BucklingStep(name='buckling', modes=5, loads=['gravity', 'loads', 'pressure'], displacements='pinned'),
-    ModalStep(name='modal', modes=5),
+    BucklingStep(name='buckling', modes=3, loads=['gravity', 'loads', 'pressure'], displacements='pinned'),
+    ModalStep(name='modal', modes=3),
 ])
 mdl.steps_order = ['bc', 'loads', 'buckling', 'modal']
 
