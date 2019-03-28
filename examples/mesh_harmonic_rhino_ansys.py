@@ -15,10 +15,8 @@ from compas.datastructures.mesh.mesh import Mesh
 from math import sqrt
 from compas.utilities.colors import i_to_rgb
 
-__author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'mendez@arch.ethz.ch'
+
+# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
 
 
 def harmonic(mesh, pts, lpts, freq_range, freq_steps, damping, path, filename):

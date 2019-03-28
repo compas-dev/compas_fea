@@ -11,10 +11,7 @@ from compas_fea.structure import Structure
 import rhinoscriptsyntax as rs
 
 
-__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
-__license__   = 'MIT License'
-__email__     = 'liew@arch.ethz.ch'
+# Author(s): Andrew Liew (github.com/andrewliew)
 
 
 # Structure
@@ -68,4 +65,6 @@ mdl.summary()
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's'], components=['ux', 'uy', 'uz', 'smises'])
 
 rhino.plot_data(mdl, step='step_load', field='smises', cbar=[0, 2])
-rhino.plot_voxels(mdl, step='step_load', field='smises', cbar=[0, 2], vdx=1./nz)
+#rhino.plot_voxels(mdl, step='step_load', field='smises', cbar=[0, 2], vdx=1./nz)
+
+mdl.save_to_obj()

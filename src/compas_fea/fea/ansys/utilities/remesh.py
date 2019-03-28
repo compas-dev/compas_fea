@@ -15,6 +15,9 @@ from compas_fea.fea.ansys.reading import get_nodes_elements_from_result_files
 from compas_fea.fea.ansys import ansys_launch_process
 
 
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
+
+
 def areas_from_mesh(structure, mesh):
     areas = {}
     fkeys = sorted(mesh.face.keys(), key=int)

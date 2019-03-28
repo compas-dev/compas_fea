@@ -1,9 +1,7 @@
 import os
 
-__author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'mendez@arch.ethz.ch'
+
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 def ansys_open_pre_process(path, filename):

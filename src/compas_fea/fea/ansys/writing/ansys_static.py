@@ -6,10 +6,8 @@ from compas_fea.fea.ansys.writing.ansys_process import *
 from compas_fea.fea.ansys.writing.ansys_steps import *
 from compas_fea.fea.ansys.writing.ansys_forces import *
 
-__author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'mendez@arch.ethz.ch'
+
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 def write_static_analysis_request(structure, path, name):

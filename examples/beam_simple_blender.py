@@ -13,10 +13,7 @@ from math import pi
 deg = pi / 180
 
 
-__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
-__license__   = 'MIT License'
-__email__     = 'liew@arch.ethz.ch'
+# Author(s): Andrew Liew (github.com/andrewliew)
 
 
 # Structure

@@ -9,10 +9,8 @@ from compas_fea.fea.ansys.writing.ansys_steps import *
 from compas_fea.fea.ansys.writing.ansys_nodes_elements import *
 from compas_fea.utilities import identify_ranges
 
-__author__ = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
-__copyright__ = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__ = 'MIT License'
-__email__ = 'mendez@arch.ethz.ch'
+
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 def write_acoustic_analysis_request(structure, path, name, skey):

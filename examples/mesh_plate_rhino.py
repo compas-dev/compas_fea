@@ -10,13 +10,10 @@ from compas_fea.structure import ShellSection
 from compas_fea.structure import Structure
 
 
-__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
-__license__   = 'MIT License'
-__email__     = 'liew@arch.ethz.ch'
+# Author(s): Andrew Liew (github.com/andrewliew)
 
 
-# Structure 
+# Structure
 
 mdl = Structure(name='mesh_plate', path='C:/Temp/')
 

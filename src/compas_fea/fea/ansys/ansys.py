@@ -5,10 +5,8 @@ import subprocess
 from compas_fea.fea.ansys.writing import *
 from compas_fea.fea.ansys.reading import *
 
-__author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'mendez@arch.ethz.ch'
+
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 __all__ = [

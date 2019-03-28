@@ -40,10 +40,7 @@ from numpy import where
 from numpy.linalg import norm
 
 
-__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
-__license__   = 'MIT License'
-__email__     = 'liew@arch.ethz.ch'
+# Author(s): Andrew Liew (github.com/andrewliew)
 
 
 __all__ = [
@@ -87,14 +84,15 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
     """
 
     blendermesh = BlenderMesh(bmesh)
-    vertices = blendermesh.get_vertices_coordinates()
-    edges    = blendermesh.get_edges_vertex_indices()
-    faces    = blendermesh.get_faces_vertex_indices()
+    vertices    = blendermesh.get_vertices_coordinates()
+    edges       = blendermesh.get_edges_vertex_indices()
+    faces       = blendermesh.get_faces_vertex_indices()
 
     added_nodes    = set()
     added_elements = set()
 
     for xyz in vertices.values():
+
         node = structure.add_node(xyz=xyz)
         added_nodes.add(node)
 
@@ -117,6 +115,7 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
             axes['ez'] = ez
 
             ekey = structure.add_element(nodes=[sp, ep], type=line_type, thermal=thermal, axes=axes)
+
             if ekey is not None:
                 added_elements.add(ekey)
 
@@ -373,13 +372,14 @@ def add_nsets_from_layers(structure, layers):
         nodes = []
 
         for point in get_points(layer=layer):
-            nodes.append(structure.check_node_exists(list(point.location)))
+
+            nodes.append(structure.check_node_exists(xyz=list(point.location)))
 
         for mesh in get_meshes(layer=layer):
 
             for vertex in BlenderMesh(mesh).get_vertices_coordinates().values():
 
-                node = structure.check_node_exists(vertex)
+                node = structure.check_node_exists(xyz=vertex)
 
                 if node is not None:
                     nodes.append(node)

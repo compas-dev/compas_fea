@@ -1,13 +1,7 @@
 import os
 
-from compas_fea.fea.ansys.writing.ansys_process import write_request_write_array
-from compas_fea.fea.ansys.writing.ansys_process import write_etable_restart
 
-
-__author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'mendez@arch.ethz.ch'
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 def write_request_element_forces(structure, step_index):

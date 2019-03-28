@@ -22,13 +22,10 @@ from math import pi
 import rhinoscriptsyntax as rs
 
 
-__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
-__license__   = 'MIT License'
-__email__     = 'liew@arch.ethz.ch'
+# Author(s): Andrew Liew (github.com/andrewliew)
 
 
-# Structure 
+# Structure
 
 mdl = Structure(name='mesh_bridge', path='C:/Temp/')
 
@@ -112,5 +109,5 @@ mdl.analyse_and_extract(software='abaqus', fields=['u', 's'], components=['ux', 
 rhino.plot_data(mdl, step='step_loads', field='uz', radius=0.01, cbar_size=0.5)
 rhino.plot_data(mdl, step='step_loads', field='smaxp', cbar=[0, 1.5*10**6], radius=0.01, cbar_size=0.5)
 rhino.plot_data(mdl, step='step_loads', field='sminp', cbar=[-5*10**6, 0], radius=0.01, cbar_size=0.5)
-                
+
 rhino.plot_mode_shapes(mdl, step='step_buckle', scale=0.5, radius=0.001)

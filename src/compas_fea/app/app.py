@@ -13,10 +13,7 @@ from numpy import newaxis
 from numpy import zeros
 
 
-__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
-__license__   = 'MIT License'
-__email__     = 'liew@arch.ethz.ch'
+# Author(s): Andrew Liew (github.com/andrewliew)
 
 
 __all__ = [
@@ -204,6 +201,7 @@ if __name__ == "__main__":
 
     from compas_fea.structure import Structure
 
+    # fnm = '/home/al/compas/compas_fea/data/_workshop/example_truss.obj'
     # fnm = '/home/al/compas/compas_fea/data/_workshop/example_shell.obj'
     fnm = '/home/al/compas/compas_fea/data/_workshop/example_tets.obj'
 

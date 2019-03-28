@@ -7,10 +7,7 @@ from math import pi
 import rhinoscriptsyntax as rs
 
 
-__author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'mendez@arch.ethz.ch'
+# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
 
 
 # Folders and Structure name
@@ -98,7 +95,7 @@ mdl.set_steps_order(order)
 #mdl.summary()
 
 # Generate .inp file
-fnm = path + name + '.inp' 
+fnm = path + name + '.inp'
 ansys.inp_generate(mdl, filename=fnm)
 
 # # Run and extract data
@@ -113,7 +110,7 @@ mdl.analyse(path=path, name=name+'.inp', temp=temp, software='ansys')
 #     component='magnitude', radius=0.01)
 # fo, U = rhino.plot_deformed_data(mdl, step='S2_LOAD', field='UR',
 #     component='UR2', radius=0.01)
-    
+
 # # Plot section forces/moments
 # fo, U = rhino.plot_deformed_data(mdl, step='S2_LOAD', field='SF',
 #     component='SF1', radius=0.01)
@@ -121,7 +118,7 @@ mdl.analyse(path=path, name=name+'.inp', temp=temp, software='ansys')
 #     component='SF3', radius=0.01)
 # fo, U = rhino.plot_deformed_data(mdl, step='S2_LOAD', field='SM',
 #     component='SM2', radius=0.01)
-    
+
 # # Reactions
 # RF = mdl.extract_results('S2_LOAD', field='RF')
 # RM = mdl.extract_results('S2_LOAD', field='RM')

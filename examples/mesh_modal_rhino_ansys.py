@@ -13,10 +13,7 @@ from compas.datastructures.mesh.mesh import Mesh
 from math import sqrt
 
 
-__author__     = ['Tomas Mendez Echenagucia <mendez@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'mendez@arch.ethz.ch'
+# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
 
 
 def modal(mesh, pts, num_modes, path, name):
@@ -46,7 +43,7 @@ def modal(mesh, pts, num_modes, path, name):
     step = ModalStep(name='modal_analysis', displacements=['supports'], modes=num_modes)
     s.add_step(step)
     s.set_steps_order(['modal_analysis'])
-    
+
     # analyse ------------------------------------------------------------------
     fields = 'all'
     s.write_input_file(software='ansys', fields=fields)
