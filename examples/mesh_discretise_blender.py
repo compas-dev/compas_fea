@@ -17,6 +17,10 @@ mdl = Structure(name='mesh_discretise', path='C:/Temp/')
 mesh = get_object_by_name(name='mesh_input')
 blender.discretise_mesh(mdl, mesh=mesh, layer='elset_mesh', target=0.100, min_angle=15)
 
+# Weld
+
+blender.weld_meshes_from_layer(layer_input='elset_mesh', layer_output='elset_welded')
+
 # Summary
 
 mdl.summary()

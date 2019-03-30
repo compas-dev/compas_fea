@@ -30,6 +30,7 @@ blender
     mesh_extrude
     plot_reaction_forces
     plot_concentrated_forces
+    weld_meshes_from_layer
 
 
 rhino
@@ -59,6 +60,7 @@ rhino
     plot_data
     plot_principal_stresses
     plot_voxels
+    weld_meshes_from_layer
 
 """
 

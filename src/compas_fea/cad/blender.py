@@ -32,6 +32,8 @@ except:
 from compas.geometry import cross_vectors
 from compas.geometry import subtract_vectors
 
+from compas_fea.structure import Structure
+
 from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
 from compas_fea.utilities import discretise_faces
@@ -61,7 +63,46 @@ __all__ = [
     'mesh_extrude',
     'plot_reaction_forces',
     'plot_concentrated_forces',
+    'weld_meshes_from_layer',
 ]
+
+
+def weld_meshes_from_layer(layer_input, layer_output):
+
+    """ Grab meshes on an input layer and weld them onto an output layer.
+
+    Parameters
+    ----------
+    layer_input : str
+        Layer containing the Blender meshes to weld.
+    layer_output : str
+        Layer to plot single welded mesh.
+
+    Returns
+    -------
+    None
+
+    """
+
+    print('Welding meshes on layer:{0}'.format(layer_input))
+
+    S = Structure(path=' ')
+
+    add_nodes_elements_from_layers(S, mesh_type='ShellElement', layers=layer_input)
+
+    faces = []
+
+    for element in S.elements.values():
+        faces.append(element.nodes)
+
+    try:
+        clear_layer(layer_output)
+    except:
+        create_layer(layer_output)
+
+    vertices = S.nodes_xyz()
+
+    xdraw_mesh(name='welded_mesh', vertices=vertices, faces=faces, layer=layer_output)
 
 
 def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=None, thermal=False):
