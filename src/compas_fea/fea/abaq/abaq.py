@@ -138,7 +138,20 @@ def launch_process(structure, exe, cpus, output):
 
     toc = time() - tic
 
+    if not success:
+
+        try:
+
+            with open(temp + name + '.sta', 'r') as f:
+
+                if 'COMPLETED SUCCESSFULLY' in f.readlines()[-1]:
+                    success = True
+
+        except:
+            pass
+
     if success:
+
         if output:
             print('***** Analysis successful - analysis time : {0} s *****'.format(toc))
 

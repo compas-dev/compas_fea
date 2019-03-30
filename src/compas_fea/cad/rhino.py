@@ -747,6 +747,7 @@ def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
     nodes = structure.nodes_xyz(nkeys)
 
     for i in nkeys:
+
         if rm[i]:
             l = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
             rs.CurveArrows(l, 1)
