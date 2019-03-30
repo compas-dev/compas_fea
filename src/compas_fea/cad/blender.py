@@ -5,6 +5,7 @@ from __future__ import print_function
 
 try:
     from compas_blender.geometry import BlenderMesh
+    from compas_blender.utilities import create_layer
     from compas_blender.utilities import clear_layer
     from compas_blender.utilities import draw_cylinder
     from compas_blender.utilities import draw_plane
@@ -14,11 +15,17 @@ try:
     from compas_blender.utilities import get_points
     from compas_blender.utilities import mesh_from_bmesh
     from compas_blender.utilities import set_deselect
+    from compas_blender.utilities import set_select
     from compas_blender.utilities import set_objects_coordinates
     from compas_blender.utilities import get_object_property
     from compas_blender.utilities import set_object_property
     from compas_blender.utilities import draw_text
     from compas_blender.utilities import xdraw_mesh
+except:
+    pass
+
+try:
+    import bpy
 except:
     pass
 
@@ -115,6 +122,12 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
             axes['ez'] = ez
 
             ekey = structure.add_element(nodes=[sp, ep], type=line_type, thermal=thermal, axes=axes)
+
+            if (line_type == 'BeamElement') and (ex is None):
+
+                if (abs(ez[0]) < 0.0001) and (abs(ez[1]) < 0.0001):
+
+                    print('***** WARNING: vertical BeamElement with no ex axis, element {0} *****'.format(ekey))
 
             if ekey is not None:
                 added_elements.add(ekey)
@@ -489,7 +502,10 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     if not layer:
         layer = '{0}-{1}{2}'.format(step, field, mode)
 
-    clear_layer(layer=layer)
+    try:
+        clear_layer(layer)
+    except:
+        create_layer(layer)
 
     # Node and element data
 
@@ -594,8 +610,9 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     blendermesh.set_vertices_colors({i: j for i, j in zip(range(len(vertices)), colors)})
 
     set_deselect()
-    # set_select(objects=pipes + [cmesh] + mesh_add)
-    # bpy.ops.object.join()
+    set_select(objects=pipes + mesh_add + [cmesh])
+    bpy.context.view_layer.objects.active = cmesh
+    bpy.ops.object.join()
 
     h = 0.6 * s
 
@@ -638,7 +655,10 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
     if not layer:
         layer = '{0}-{1}'.format(step, 'reactions')
 
-    clear_layer(layer=layer)
+    try:
+        clear_layer(layer)
+    except:
+        create_layer(layer)
 
     rfx   = array(list(structure.results[step]['nodal']['rfx'].values()))[:, newaxis]
     rfy   = array(list(structure.results[step]['nodal']['rfy'].values()))[:, newaxis]
@@ -685,7 +705,10 @@ def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
     if not layer:
         layer = '{0}-{1}'.format(step, 'forces')
 
-    clear_layer(layer=layer)
+    try:
+        clear_layer(layer)
+    except:
+        create_layer(layer)
 
     cfx   = array(list(structure.results[step]['nodal']['cfx'].values()))[:, newaxis]
     cfy   = array(list(structure.results[step]['nodal']['cfy'].values()))[:, newaxis]

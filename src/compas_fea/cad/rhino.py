@@ -264,6 +264,12 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 
                 ekey = structure.add_element(nodes=[sp, ep], type=line_type, thermal=thermal, axes=axes)
 
+                if (line_type == 'BeamElement') and (ex is None):
+
+                    if (ez[0] == 0) and (ez[1] == 0):
+
+                        print('***** WARNING: vertical BeamElement with no ex axis, element {0} *****'.format(ekey))
+
                 if ekey is not None:
                     added_elements.add(ekey)
                     elset.add(ekey)
