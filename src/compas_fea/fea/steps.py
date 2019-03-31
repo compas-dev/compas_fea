@@ -84,7 +84,7 @@ class Steps(object):
                     if stype != 'ModalStep':
 
                         self.write_line('timeSeries Constant {0} -factor 1.0'.format(s_index))
-                        self.write_line('pattern Plain {0} {0} -fact {1} {2}'.format(s_index, factor, '{'))
+                        self.write_line('pattern Plain {0} {0} -fact {1} {2}'.format(s_index, 1, '{'))
                         self.blank_line()
 
                 # -------------------------------------------------------------------------------------------------
@@ -167,7 +167,7 @@ class Steps(object):
 
                         if ltype == 'PointLoad':
 
-                            compnents = ' '.join([str(com[dof]) for dof in dofs[:self.ndof]])
+                            compnents = ' '.join([str(com[dof] * fact) for dof in dofs[:self.ndof]])
 
                             for node in nodes:
 
@@ -182,6 +182,7 @@ class Steps(object):
                         elif ltype == 'GravityLoad':
 
                             for nkey, node in self.structure.nodes.items():
+
                                 W = - fact * node.mass * 9.81
                                 self.write_line('load {0} {1} {2} {3}'.format(nkey + 1, gx * W, gy * W, gz * W))
 

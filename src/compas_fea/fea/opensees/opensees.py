@@ -242,16 +242,16 @@ def extract_data(structure, fields):
 
                 try:
 
+                    with open('{0}{1}_beam.out'.format(temp, file), 'r') as f:
+                        lines = f.readlines()
+                    data = [float(i) for i in lines[-1].split(' ')[1:]]
+
                     element['sf1'] = {}
                     element['sf2'] = {}
                     element['sf3'] = {}
                     element['sm1'] = {}
                     element['sm2'] = {}
                     element['sm3'] = {}
-
-                    with open('{0}{1}_beam.out'.format(temp, file), 'r') as f:
-                        lines = f.readlines()
-                    data = [float(i) for i in lines[-1].split(' ')[1:]]
 
                     sf1_a = data[0::12]
                     sf2_a = data[1::12]

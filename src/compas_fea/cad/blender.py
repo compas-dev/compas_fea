@@ -714,7 +714,7 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
         sp   = nodes[i, :]
         ep   = nodes[i, :] + rf[i, :] * -scale * 0.001
         col  = colorbar(rfm[i] / rmax, input='float', type=1)
-        line = draw_line(start=sp, end=ep, width=0.01, color=col)
+        line = draw_line(start=sp, end=ep, width=0.01, color=col, layer=layer)
 
         set_object_property(object=line, property='rfx', value=rf[i, 0])
         set_object_property(object=line, property='rfy', value=rf[i, 1])
@@ -764,7 +764,7 @@ def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
         sp   = nodes[i, :]
         ep   = nodes[i, :] + cf[i, :] * -scale * 0.001
         col  = colorbar(cfm[i] / cmax, input='float', type=1)
-        line = draw_line(start=sp, end=ep, width=0.01, color=col)
+        line = draw_line(start=sp, end=ep, width=0.01, color=col, layer=layer)
 
         set_object_property(object=line, property='cfx', value=cf[i, 0])
         set_object_property(object=line, property='cfy', value=cf[i, 1])

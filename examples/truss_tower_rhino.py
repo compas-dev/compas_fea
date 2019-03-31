@@ -58,11 +58,10 @@ mdl.summary()
 
 # Run
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'cf', 'rf', 'sf', 's'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 'cf', 'rf', 'sf', 's'], ndof=3)
 
 rhino.plot_data(mdl, step='step_load', field='um')
-rhino.plot_data(mdl, step='step_load', field='smises')  # abaqus
-#rhino.plot_data(mdl, step='step_load', field='sf1')  # opensees
+rhino.plot_data(mdl, step='step_load', field='sxx')  # abaqus:sxx opensees:sf1
 rhino.plot_reaction_forces(mdl, step='step_load', scale=0.05)
 rhino.plot_concentrated_forces(mdl, step='step_load', scale=0.05)
 
@@ -70,3 +69,4 @@ rhino.plot_concentrated_forces(mdl, step='step_load', scale=0.05)
 
 print(mdl.get_nodal_results(step='step_load', field='um', nodes='nset_top'))
 print(mdl.get_nodal_results(step='step_load', field='rfm', nodes='nset_pins'))
+print(mdl.get_element_results(step='step_load', field='sxx'))
