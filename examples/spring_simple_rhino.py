@@ -56,7 +56,7 @@ mdl.add(PointLoad(name='load_middle', nodes='middle', z=-500))
 
 mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_pins', 'disp_roller']),
-    GeneralStep(name='step_load', loads=['load_middle']),
+    GeneralStep(name='step_load', loads='load_middle'),
 ])
 mdl.steps_order = ['step_bc', 'step_load']
 
@@ -66,7 +66,9 @@ mdl.summary()
 
 # Run
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 'spf'])
+mdl.analyse_and_extract(software='opensees', fields=['u', 'spf'], ndof=3)
 
 rhino.plot_data(mdl, step='step_load', field='um', radius=0.02)
 rhino.plot_data(mdl, step='step_load', field='spfx', radius=0.02)
+
+print(mdl.get_element_results(step='step_load', field='spfx'))

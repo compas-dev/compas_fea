@@ -43,7 +43,7 @@ convert = {
 }
 
 node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
-element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'spf', 'rbfor']
+element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'ctf', 'rbfor']
 
 
 def extract_odb_data(temp, name, fields, components, steps='all'):
