@@ -68,7 +68,11 @@ mdl.summary()
 mdl.analyse_and_extract(software='abaqus', fields=['u', 'rf', 'sf', 'sm'])
 
 rhino.plot_data(mdl, step='step_loads', field='um', scale=50)
-rhino.plot_data(mdl, step='step_loads', field='sf1', iptype='abs', nodal='max')
-rhino.plot_data(mdl, step='step_loads', field='sf2', iptype='abs', nodal='max')
-rhino.plot_data(mdl, step='step_loads', field='sm1', iptype='abs', nodal='max')
+rhino.plot_data(mdl, step='step_loads', field='sf1')
+rhino.plot_data(mdl, step='step_loads', field='sf2')
+rhino.plot_data(mdl, step='step_loads', field='sm1')
 rhino.plot_reaction_forces(mdl, step='step_loads', scale=0.5)
+
+print(mdl.get_nodal_results(step='step_loads', field='rfm', nodes='nset_pins'))
+print(mdl.get_nodal_results(step='step_loads', field='um', nodes='nset_load_v'))
+
