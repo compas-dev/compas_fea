@@ -47,6 +47,8 @@ class Elements(object):
         sections   = self.structure.sections
         sets       = self.structure.sets
 
+        written_springs = []
+
         for key in sorted(properties):
 
             self.write_subsection(key)
@@ -58,13 +60,12 @@ class Elements(object):
             section       = sections[property.section]
             stype         = section.__name__
             geometry      = section.geometry
-
             material      = materials.get(property.material)
-
-            written_springs = []
 
             if material:
                 m_index = material.index + 1
+
+            s_index = section.index + 1
 
             selection = property.elements if property.elements else sets[elset].selection
 
@@ -144,11 +145,12 @@ class Elements(object):
                     if self.software == 'opensees':
 
                         if no == 3:
-                            # self.write_line('element tri31 {0} {1} {2} PlaneStress {3} 0 {4} 0 0'.format(
-                                            # n, ' '.join(nodes), t, m_index + 1000, material.p))
-                            self.write_line('section PlateFiber {0} {1} {2}'.format(n, m_index + 1000, t))
-                            self.write_line('element ShellDKGT {0} {1} {0}'.format(n, ' '.join(nodes)))
+                            self.write_line('element tri31 {0} {1} {2} PlaneStress {3} 0 {4} 0 0'.format(
+                                            n, ' '.join(nodes), t, m_index + 1000, material.p))
+                            # self.write_line('section PlateFiber {0} {1} {2}'.format(n, m_index + 1000, t))
+                            # self.write_line('element ShellDKGT {0} {1} {0}'.format(n, ' '.join(nodes)))
                             # self.write_line('element ShellNLDKGT {0} {1} {0}'.format(n, ' '.join(nodes)))
+                            # aparently unknown to OpenSees
                         else:
                             self.write_line('section PlateFiber {0} {1} {2}'.format(n, m_index + 1000, t))
                             self.write_line('element ShellNLDKGQ {0} {1} {0}'.format(n, ' '.join(nodes)))
@@ -244,13 +246,35 @@ class Elements(object):
 
                 elif stype == 'SpringSection':
 
+                    kx = section.stiffness.get('axial', 0)
+                    ky = section.stiffness.get('lateral', 0)
+                    kr = section.stiffness.get('rotation', 0)
+
                     # -------------------------------------------------------------------------------------------------
                     # OpenSees
                     # -------------------------------------------------------------------------------------------------
 
                     if self.software == 'opensees':
 
-                        pass
+                        if s_index not in written_springs:
+
+                            if kx:
+
+                                self.write_line('uniaxialMaterial Elastic 2{0:0>3} {1}'.format(s_index, kx))
+                                self.blank_line()
+
+                            # else:
+                            #     i = ' '.join([str(k) for k in section.forces['axial']])
+                            #     j = ' '.join([str(k) for k in section.displacements['axial']])
+                            #     f.write('uniaxialMaterial ElasticMultiLinear {0}01 -strain {1} -stress {2}\n'.format(
+                            #         s_index, j, i))
+                            #     f.write('#\n')
+
+                            written_springs.append(s_index)
+
+                        orientation = ' '.join([str(k) for k in ey])
+
+                        self.write_line('element twoNodeLink {0} {1} {2} -mat 2{3:0>3} -dir 1 -orient {4}'.format(n, nodes[0], nodes[1], s_index, orientation))
 
                     # -------------------------------------------------------------------------------------------------
                     # Abaqus
@@ -259,10 +283,6 @@ class Elements(object):
                     elif self.software == 'abaqus':
 
                         if section.stiffness:
-
-                            kx = section.stiffness.get('axial', 0)
-                            ky = section.stiffness.get('lateral', 0)
-                            kr = section.stiffness.get('rotation', 0)
 
                             b1 = 'BEH_{0}'.format(section.name)
 
@@ -279,6 +299,7 @@ class Elements(object):
                         #                 f.write('{0}, {1}\n'.format(i, j))
 
                                 written_springs.append(b1)
+
                                 self.blank_line()
 
                             e = 'element_{0}'.format(select)
@@ -291,7 +312,6 @@ class Elements(object):
                             self.write_line('*CONNECTOR SECTION, ELSET={0}, BEHAVIOR={1}'.format(e, b1))
                             self.write_line('AXIAL')
                             self.write_line('ORI_{0}'.format(select))
-                            self.blank_line()
 
 
                 # =====================================================================================================
@@ -347,30 +367,6 @@ class Elements(object):
             self.blank_line()
 
 
-
-
-
-
-
-
-# from math import pi
-# from math import sqrt
-
-
-#     membranes  = ['MembraneSection']
-#     solids     = ['SolidSection']
-#     trusses    = ['TrussSection', 'StrutSection', 'TieSection']
-
-#
-
-#         # Make elsets list
-
-#         if not (stype == 'SpringSection'):
-#             f.write('{0} Property: {1}\n'.format(c, key))
-#             f.write('{0} ----------'.format(c) + '-' * (len(key)) + '\n')
-#             f.write('{0}\n'.format(c))
-
-
 # def _write_membranes(f, software, selection, elements, geometry, material, materials, reinforcement):
 
 #     for select in selection:
@@ -405,33 +401,3 @@ class Elements(object):
 #             f.write('{0}\n'.format(t))
 
 #         f.write('{0}\n'.format(comments[software]))
-
-
-
-
-
-#     elif software == 'opensees':
-
-#         section_index = section.index + 1
-
-#         if section_index not in written_springs:
-#             if kx:
-
-#                 f.write('uniaxialMaterial Elastic 1{0:0>3} {1}\n'.format(section_index, kx))
-#                 f.write('#\n')
-
-#             # else:
-#             #     i = ' '.join([str(k) for k in section.forces['axial']])
-#             #     j = ' '.join([str(k) for k in section.displacements['axial']])
-#             #     f.write('uniaxialMaterial ElasticMultiLinear {0}01 -strain {1} -stress {2}\n'.format(
-#             #         section_index, j, i))
-#             #     f.write('#\n')
-
-#             written_springs.append(section_index)
-
-#         elif software == 'opensees':
-
-#             orientation = ' '.join([str(k) for k in ey])
-#             f.write('element twoNodeLink {0} {1} {2} -mat 1{3:0>3} -dir 1 -orient {4} \n'.format(
-#                     ni, i, j, section_index, orientation))
-#             f.write('#\n')

@@ -216,7 +216,7 @@ def extract_data(structure, fields):
 
             # Element data
 
-            elif field in ['sf']:
+            elif field in ['sf', 'spf']:
 
                 # Truss data
 
@@ -242,16 +242,16 @@ def extract_data(structure, fields):
 
                 try:
 
+                    with open('{0}{1}_beam.out'.format(temp, file), 'r') as f:
+                        lines = f.readlines()
+                    data = [float(i) for i in lines[-1].split(' ')[1:]]
+
                     element['sf1'] = {}
                     element['sf2'] = {}
                     element['sf3'] = {}
                     element['sm1'] = {}
                     element['sm2'] = {}
                     element['sm3'] = {}
-
-                    with open('{0}{1}_beam.out'.format(temp, file), 'r') as f:
-                        lines = f.readlines()
-                    data = [float(i) for i in lines[-1].split(' ')[1:]]
 
                     sf1_a = data[0::12]
                     sf2_a = data[1::12]
@@ -283,25 +283,26 @@ def extract_data(structure, fields):
 
                     print('***** No beam element data loaded *****')
 
-                # try:
+                try:
 
-                #     file = step + '_element_spring_sf'
+                    with open('{0}{1}_spring.out'.format(temp, file), 'r') as f:
+                        lines = f.readlines()
+                    data = [float(i) for i in lines[-1].split(' ')[1:]]
 
-                #     with open('{0}{1}.out'.format(temp, file), 'r') as f:
-                #         lines = f.readlines()
-                #     spring_data = [float(i) for i in lines[-1].split(' ')[1:]]
+                    element['spfx'] = {}
 
-                #     with open('{0}spring_numbers.json'.format(temp), 'r') as f:
-                #         spring_numbers = json.load(f)['spring_numbers']
+                    with open('{0}spring_ekeys.json'.format(temp), 'r') as f:
+                        spring_ekeys = json.load(f)['spring_ekeys']
 
-                #     element['spfx'] = {}
-                #     for ekey, spfx in zip(spring_numbers, spring_data):
-                #         element['spfx'][ekey] = {}
-                #         element['spfx'][ekey]['ip'] = spfx
+                    for ekey, spfx in zip(spring_ekeys, data):
+                        element['spfx'][ekey] = {}
+                        element['spfx'][ekey]['ip'] = spfx
 
-                # except:
+                    print('***** {0}.out data loaded *****'.format(file))
 
-                #     print('***** No spring element data loaded *****')
+                except:
+
+                    print('***** No spring element data loaded *****')
 
         print('\n***** Data extracted from OpenSees .out file(s) : {0} s *****\n'.format(time() - tic))
 

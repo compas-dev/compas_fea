@@ -84,7 +84,7 @@ class Steps(object):
                     if stype != 'ModalStep':
 
                         self.write_line('timeSeries Constant {0} -factor 1.0'.format(s_index))
-                        self.write_line('pattern Plain {0} {0} -fact {1} {2}'.format(s_index, factor, '{'))
+                        self.write_line('pattern Plain {0} {0} -fact {1} {2}'.format(s_index, 1, '{'))
                         self.blank_line()
 
                 # -------------------------------------------------------------------------------------------------
@@ -167,7 +167,7 @@ class Steps(object):
 
                         if ltype == 'PointLoad':
 
-                            compnents = ' '.join([str(com[dof]) for dof in dofs[:self.ndof]])
+                            compnents = ' '.join([str(com[dof] * fact) for dof in dofs[:self.ndof]])
 
                             for node in nodes:
 
@@ -182,6 +182,7 @@ class Steps(object):
                         elif ltype == 'GravityLoad':
 
                             for nkey, node in self.structure.nodes.items():
+
                                 W = - fact * node.mass * 9.81
                                 self.write_line('load {0} {1} {2} {3}'.format(nkey + 1, gx * W, gy * W, gz * W))
 
@@ -443,12 +444,12 @@ class Steps(object):
 
                     # Sort elements
 
-                    truss_elements = ''
-                    beam_elements  = ''
-                    truss_ekeys    = []
-                    beam_ekeys     = []
-                    # spring_elements = ''
-                    # spring_numbers = []
+                    truss_elements  = ''
+                    beam_elements   = ''
+                    spring_elements = ''
+                    truss_ekeys     = []
+                    beam_ekeys      = []
+                    spring_ekeys    = []
 
                     for ekey, element in self.structure.elements.items():
 
@@ -456,17 +457,19 @@ class Steps(object):
                         n = '{0} '.format(ekey + 1)
 
                         if etype == 'TrussElement':
+
                             truss_elements += n
                             truss_ekeys.append(ekey)
 
                         elif etype == 'BeamElement':
+
                             beam_elements += n
                             beam_ekeys.append(ekey)
 
-                    # elif etype in ['SpringElement']:
-                    #     spring_elements += '{0} '.format(ekey + 1)
-                    #     spring_numbers.append(ekey)
+                        elif etype == 'SpringElement':
 
+                            spring_elements += n
+                            spring_ekeys.append(ekey)
 
                     # Element recorders
 
@@ -483,13 +486,11 @@ class Steps(object):
                         if beam_elements:
                             self.write_line('{0}sf_beam.out -time -ele {1} force'.format(prefix, beam_elements))
 
-                        # if 'spf' in fields:
+                    if 'spf' in fields:
 
-                        #     if spring_elements:
-                        #         k = 'element_spring_sf.out'
-                        #         j = 'basicForces'
-                        #         self.write_line('{0}{1} -time -ele {2}{3}\n'.format(prefix, k, spring_elements, j))
-
+                        if spring_elements:
+                            self.write_line('{0}spf_spring.out -time -ele {1} basicForces'.format(prefix,
+                                                                                                 spring_elements))
 
                     # ekeys
 
@@ -499,9 +500,8 @@ class Steps(object):
                     with open('{0}beam_ekeys.json'.format(temp), 'w') as file:
                         json.dump({'beam_ekeys': beam_ekeys}, file)
 
-                    # with open('{0}spring_numbers.json'.format(temp), 'w') as file:
-                    #     json.dump({'spring_numbers': spring_numbers}, file)
-
+                    with open('{0}spring_ekeys.json'.format(temp), 'w') as file:
+                        json.dump({'spring_ekeys': spring_ekeys}, file)
 
                     # Solver
 
@@ -561,6 +561,7 @@ class Steps(object):
 
                 node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
                 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
+                fields[fields.index('spf')] = 'ctf'
 
                 self.write_line('*OUTPUT, FIELD')
                 self.blank_line()
