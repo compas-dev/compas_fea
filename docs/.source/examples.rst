@@ -31,7 +31,7 @@ Rhino
     examples/truss_tower_rhino
     examples/truss_frame_rhino
 
-    .. examples/spring_simple_rhino
+    examples/spring_simple_rhino
 
 -------
 Blender
