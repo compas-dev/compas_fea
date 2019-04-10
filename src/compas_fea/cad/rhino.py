@@ -16,7 +16,7 @@ from compas.geometry import cross_vectors
 from compas.geometry import length_vector
 from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
-from compas.utilities import XFunc
+from compas.rpc import Proxy
 
 from compas_fea import utilities
 from compas_fea.utilities import colorbar
@@ -33,6 +33,9 @@ except ImportError:
         raise
 
 import json
+
+functions = Proxy('compas_fea.utilities.functions')
+meshing   = Proxy('compas_fea.utilities.meshing')
 
 
 # Author(s): Andrew Liew (github.com/andrewliew), Tomas Mendez Echenagucia (github.com/tmsmendez)
@@ -404,12 +407,8 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, ther
     vertices  = rhinomesh.get_vertex_coordinates()
     faces     = [face[:3] for face in rhinomesh.get_face_vertices()]
 
-    basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc('tets', basedir=basedir, tmpdir=structure.path)
-    xfunc.funcname = 'meshing.tets_from_vertices_faces'
-
     try:
-        tets_points, tets_elements = xfunc(vertices=vertices, faces=faces, volume=volume)
+        tets_points, tets_elements = meshing.tets_from_vertices_faces(vertices=vertices, faces=faces, volume=volume)
 
         for point in tets_points:
             structure.add_node(point)
@@ -473,13 +472,9 @@ def discretise_mesh(mesh, layer, target, min_angle=15, factor=1):
     vertices  = rhinomesh.get_vertex_coordinates()
     faces     = [face[:3] for face in rhinomesh.get_face_vertices()]
 
-    basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc('discretise', basedir=basedir)
-    xfunc.funcname = 'meshing.discretise_faces'
-
     try:
 
-        points, tris = xfunc(vertices=vertices, faces=faces, target=target, min_angle=min_angle, factor=factor)
+        points, tris = meshing.discretise_faces(vertices=vertices, faces=faces, target=target, min_angle=min_angle, factor=factor)
 
         rs.CurrentLayer(rs.AddLayer(layer))
         rs.DeleteObjects(rs.ObjectsByLayer(layer))
@@ -961,10 +956,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
     # Postprocess
 
-    basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc('postprocess', basedir=basedir, tmpdir=structure.path)
-    xfunc.funcname = 'functions.postprocess'
-    result = xfunc(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)
+    result = functions.postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, 255, iptype, nodal)
 
     try:
         toc, U, cnodes, fabs, fscaled, celements, eabs = result
@@ -1112,10 +1104,7 @@ def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None)
     """
 
     data    = structure.results[step]['element']
-    basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc   = XFunc('principal_stresses', basedir=basedir, tmpdir=structure.path)
-    xfunc.funcname = 'functions.principal_stresses'
-    result  = xfunc(data, ptype, scale, rotate)
+    result  = functions.principal_stresses(data, ptype, scale, rotate)
 
     try:
 
@@ -1198,10 +1187,7 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
 
     # Postprocess
 
-    basedir = utilities.__file__.split('__init__.py')[0]
-    xfunc = XFunc('postprocess', basedir=basedir, tmpdir=structure.path)
-    xfunc.funcname = 'functions.postprocess'
-    result = xfunc(xyz, elements, ux, uy, uz, data, dtype, 1, cbar, 255, iptype, nodal)
+    result = functions.postprocess(xyz, elements, ux, uy, uz, data, dtype, 1, cbar, 255, iptype, nodal)
 
     try:
         toc, U, cnodes, fabs, fscaled, celements, eabs = result
@@ -1211,9 +1197,7 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
         print('\n***** Error post-processing *****')
 
     try:
-        xfunc = XFunc('voxels', basedir=basedir, tmpdir=structure.path)
-        xfunc.funcname = 'functions.plotvoxels'
-        xfunc(values=fscaled, U=U, vdx=vdx)
+        functions.plotvoxels(values=fscaled, U=U, vdx=vdx)
         print('\n***** Voxels finished *****')
 
     except:
