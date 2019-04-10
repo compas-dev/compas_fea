@@ -561,7 +561,9 @@ class Steps(object):
 
                 node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
                 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
-                fields[fields.index('spf')] = 'ctf'
+                
+                if 'spf' in fields:
+                    fields[fields.index('spf')] = 'ctf'
 
                 self.write_line('*OUTPUT, FIELD')
                 self.blank_line()
