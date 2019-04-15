@@ -1,13 +1,10 @@
 """An example compas_fea package use for beam elements."""
-
-from compas_fea.ansys import ansys
-from compas_fea.rhino import rhino
+import compas_fea
+from compas_fea.fea.ansys import ansys
+from compas_fea.cad.rhino import rhino
 from compas_fea import structure
 from math import pi
 import rhinoscriptsyntax as rs
-
-
-# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
 
 
 # Folders and Structure name
