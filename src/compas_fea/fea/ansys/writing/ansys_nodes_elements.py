@@ -537,11 +537,15 @@ def write_constraint_nodes(structure, output_path, filename, displacements):
     cFile = open(os.path.join(output_path, filename), 'a')
 
     cdict = {'x' : 'UX', 'y' : 'UY', 'z' : 'UZ', 'xx' : 'ROTX', 'yy' : 'ROTY', 'zz' : 'ROTZ'}
+
+    if type(displacements) != list:
+        displacements = [displacements]
+
     for dkey in displacements:
         components = structure.displacements[dkey].components
         nodes = structure.displacements[dkey].nodes
         if type(nodes) == str:
-            nodes = structure.sets[nodes]['selection']
+            nodes = structure.sets[nodes].selection
         for node in nodes:
             for com in components:
                 if components[com] != None:

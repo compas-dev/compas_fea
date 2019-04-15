@@ -1,5 +1,7 @@
 import os
 
+from compas_fea.fea.ansys.writing.ansys_process import write_request_write_array
+from compas_fea.fea.ansys.writing.ansys_process import write_etable_restart
 
 # Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 

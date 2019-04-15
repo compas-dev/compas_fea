@@ -9,7 +9,7 @@ from compas_fea.structure import Steel
 from compas_fea.structure import Structure
 
 
-# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 # Structure

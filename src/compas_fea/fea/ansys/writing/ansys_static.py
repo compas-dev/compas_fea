@@ -20,7 +20,10 @@ def write_static_analysis_request(structure, path, name):
     for skey in structure.steps_order:
         displacements = structure.steps[skey].displacements
         factor = structure.steps[skey].factor
-        loads.extend(structure.steps[skey].loads)
+        loads_ = structure.steps[skey].loads
+        if type(loads_) != list:
+            loads_ = [loads_]
+        loads.extend(loads_)
         write_static_solve(structure, path, filename, skey)
         write_constraint_nodes(structure, path, filename, displacements)
         write_loads(structure, path, filename, loads, factor)

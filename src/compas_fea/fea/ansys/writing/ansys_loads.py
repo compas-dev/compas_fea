@@ -8,7 +8,7 @@ def add_load_to_ploads(structure, pload, load, factor):
     nodes = load.nodes
 
     if type(nodes) == str:
-        nkeys = structure.sets[nodes]['selection']
+        nkeys = structure.sets[nodes].selection
     elif type(nodes) == list:
         nkeys = nodes
     for nkey in nkeys:
@@ -30,6 +30,9 @@ def write_loads(structure, output_path, filename, loads, factor):
     # TODO: Implement all load types
     pload = {}
     if loads:
+        if type(loads) != list:
+            loads = [loads]
+
         for index, lkey in enumerate(loads):
             load = structure.loads[lkey]
             if load.__name__ == 'GravityLoad':
