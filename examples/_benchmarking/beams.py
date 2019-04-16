@@ -61,6 +61,6 @@ mdl.steps_order = ['step_bc_loads']
 
 # Run (Ansys)
 
-mdl.analyse_and_extract(software='ansys', fields=['sf', 's'], license='research')
+mdl.analyse_and_extract(software='ansys', fields=['u'], license='research')
 
-# print(mdl.get_nodal_results(step='step_loads', field='rfm', nodes='nset_pins'))
+print(mdl.get_nodal_results(step='step_bc_loads', field='um', nodes=[1]))

@@ -62,7 +62,7 @@ mdl.summary()
 
 # Run
 
-mdl.analyse_and_extract(software='abaqus', fields=['u'])
+mdl.analyse_and_extract(software='ansys', fields=['u'])
 
 rhino.plot_data(mdl, step='step_load', field='um')
 
