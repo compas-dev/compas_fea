@@ -201,9 +201,7 @@ if __name__ == "__main__":
 
     from compas_fea.structure import Structure
 
-    # fnm = '/home/al/compas/compas_fea/data/_workshop/example_truss.obj'
-    # fnm = '/home/al/compas/compas_fea/data/_workshop/example_shell.obj'
-    fnm = '/home/al/compas/compas_fea/data/_workshop/example_tets.obj'
+    fnm = '/home/al/temp/example_shell.obj'
 
     mdl = Structure.load_from_obj(fnm)
     mdl.view()
