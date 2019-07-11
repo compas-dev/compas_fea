@@ -21,6 +21,7 @@ __all__ = [
     'PentahedronElement',
     'TetrahedronElement',
     'HexahedronElement',
+    'MassElement'
 ]
 
 
@@ -83,6 +84,25 @@ class Element(object):
     def __repr__(self):
 
         return '{0}({1})'.format(self.__name__, self.number)
+
+# ==============================================================================
+# 0D elements
+# ==============================================================================
+class MassElement(Element):
+
+    """ A 1D element that resists axial, shear, bending and torsion.
+
+    Parameters
+    ----------
+    None
+
+    """
+
+    def __init__(self):
+        Element.__init__(self)
+
+        self.__name__ = 'MassElement'
+
 
 
 # ==============================================================================
