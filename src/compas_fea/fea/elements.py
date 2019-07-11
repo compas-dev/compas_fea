@@ -339,12 +339,9 @@ class Elements(object):
                    
                         e = 'element_{0}'.format(select)
 
-                        self.write_line('*ELEMENT, TYPE=MASS, ELSET={0}'.format(e))
-                        
-                        self.write_line('{0}, {1}'.format(n, ','.join(nodes)))#it is not e is the node
-                        
+                        self.write_line('*ELEMENT, TYPE=MASS, ELSET={0}'.format(e))                 
+                        self.write_line('{0}, {1}'.format(n, ','.join(nodes)))                      
                         self.write_line('*MASS, ELSET={0}'.format(e))
-                        # self.write_line(self.structure.nodes[nodes[0]].mass)
                         self.write_line(element.mass)
 
 

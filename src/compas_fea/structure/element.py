@@ -90,7 +90,7 @@ class Element(object):
 # ==============================================================================
 class MassElement(Element):
 
-    """ A 1D element that resists axial, shear, bending and torsion.
+    """ A 0D element for concentrated point mass.
 
     Parameters
     ----------
