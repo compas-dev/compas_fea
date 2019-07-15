@@ -282,7 +282,7 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                 mesh = mesh_from_guid(Mesh(), guid)
 
                 vertices = rs.MeshVertices(guid)
-                nodes = []
+                nodes  = []
                 masses = []
 
                 for c, vertex in enumerate(vertices):
@@ -299,11 +299,15 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                         added_elements.add(ekey)
                         elset.add(ekey)
 
-                elif mesh_type=='MassElement':  
-                    node_iterator=0  
+                elif mesh_type == 'MassElement':
+
+                    nodei = 0
+
                     for node in nodes:
-                        ekey = structure.add_element(nodes=[node], type=mesh_type, thermal=thermal, mass=masses[node_iterator]) #structure.nodes[node].mass
-                        node_iterator += 1
+
+                        ekey = structure.add_element(nodes=[node], type=mesh_type, thermal=thermal, mass=masses[nodei])
+                        nodei += 1
+
                         if ekey is not None:
                             added_elements.add(ekey)
                             elset.add(ekey)

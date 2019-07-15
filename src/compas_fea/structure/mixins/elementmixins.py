@@ -51,6 +51,8 @@ class ElementMixins(object):
             Thermal properties on or off.
         axes : dict
             The local element axes 'ex', 'ey' and 'ez'.
+        mass : float
+            Element mass.
 
         Returns
         -------

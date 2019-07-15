@@ -85,9 +85,11 @@ class Element(object):
 
         return '{0}({1})'.format(self.__name__, self.number)
 
+
 # ==============================================================================
 # 0D elements
 # ==============================================================================
+
 class MassElement(Element):
 
     """ A 0D element for concentrated point mass.
@@ -102,7 +104,6 @@ class MassElement(Element):
         Element.__init__(self)
 
         self.__name__ = 'MassElement'
-
 
 
 # ==============================================================================

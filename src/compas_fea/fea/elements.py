@@ -314,8 +314,6 @@ class Elements(object):
                             self.write_line('ORI_{0}'.format(select))
 
 
-
-
                 # =====================================================================================================
                 # =====================================================================================================
                 # MASS
@@ -329,6 +327,7 @@ class Elements(object):
                     # -------------------------------------------------------------------------------------------------
 
                     if self.software == 'opensees':
+
                         raise NotImplementedError
 
                     # -------------------------------------------------------------------------------------------------
@@ -336,20 +335,20 @@ class Elements(object):
                     # -------------------------------------------------------------------------------------------------
 
                     elif self.software == 'abaqus':
-                   
+
                         e = 'element_{0}'.format(select)
 
-                        self.write_line('*ELEMENT, TYPE=MASS, ELSET={0}'.format(e))                 
-                        self.write_line('{0}, {1}'.format(n, ','.join(nodes)))                      
+                        self.write_line('*ELEMENT, TYPE=MASS, ELSET={0}'.format(e))
+                        self.write_line('{0}, {1}'.format(n, ','.join(nodes)))
                         self.write_line('*MASS, ELSET={0}'.format(e))
                         self.write_line(element.mass)
-
 
                     # -------------------------------------------------------------------------------------------------
                     # Ansys
                     # -------------------------------------------------------------------------------------------------
 
                     elif self.software == 'ansys':
+
                         raise NotImplementedError
 
 

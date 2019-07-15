@@ -494,9 +494,11 @@ class SolidSection(Section):
         self.name     = name
         self.geometry = None
 
+
 # ==============================================================================
 # 0D
 # ==============================================================================
+
 class MassSection(Section):
 
     """ Section for mass elements.
