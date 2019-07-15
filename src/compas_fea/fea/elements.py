@@ -70,6 +70,7 @@ class Elements(object):
             selection = property.elements if property.elements else sets[elset].selection
 
             if geometry is not None:
+
                 t   = geometry.get('t', None)
                 A   = geometry.get('A', None)
                 J   = geometry.get('J', None)
