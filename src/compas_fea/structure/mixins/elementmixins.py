@@ -31,12 +31,13 @@ func_dict = {
     'TetrahedronElement': TetrahedronElement,
     'PentahedronElement': PentahedronElement,
     'HexahedronElement':  HexahedronElement,
+    'MassElement':        MassElement
 }
 
 
 class ElementMixins(object):
 
-    def add_element(self, nodes, type, thermal=False, axes={}):
+    def add_element(self, nodes, type, thermal=False, axes={}, mass=None):
 
         """ Adds an element to structure.elements with centroid geometric key.
 
@@ -74,6 +75,7 @@ class ElementMixins(object):
                 element.nodes       = nodes
                 element.number      = ekey
                 element.thermal     = thermal
+                element.mass        = mass
                 self.elements[ekey] = element
 
                 self.add_element_to_element_index(ekey, nodes)

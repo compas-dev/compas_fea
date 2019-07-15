@@ -283,20 +283,30 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 
                 vertices = rs.MeshVertices(guid)
                 nodes = []
+                masses = []
 
                 for c, vertex in enumerate(vertices):
                     m = mesh.vertex_area(c) * pA if pA else None
+                    masses.append(m)
                     nodes.append(structure.add_node(xyz=vertex, mass=m))
 
                 added_nodes.update(nodes)
 
                 if mesh_type in ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']:
-
                     ekey = structure.add_element(nodes=nodes, type=mesh_type, thermal=thermal)
 
                     if ekey is not None:
                         added_elements.add(ekey)
                         elset.add(ekey)
+
+                elif mesh_type=='MassElement':  
+                    node_iterator=0  
+                    for node in nodes:
+                        ekey = structure.add_element(nodes=[node], type=mesh_type, thermal=thermal, mass=masses[node_iterator]) #structure.nodes[node].mass
+                        node_iterator += 1
+                        if ekey is not None:
+                            added_elements.add(ekey)
+                            elset.add(ekey)
 
                 else:
 
