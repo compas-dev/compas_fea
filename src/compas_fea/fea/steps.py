@@ -484,13 +484,13 @@ class Steps(object):
                             self.write_line('{0}sf_truss.out -time -ele {1} axialForce'.format(prefix, truss_elements))
 
                         if beam_elements:
-                            self.write_line('{0}sf_beam.out -time -ele {1} force'.format(prefix, beam_elements))
+                            self.write_line('{0}sf_beam.out -time -ele {1} localForce'.format(prefix, beam_elements))
 
                     if 'spf' in fields:
 
                         if spring_elements:
                             self.write_line('{0}spf_spring.out -time -ele {1} basicForces'.format(prefix,
-                                                                                                 spring_elements))
+                                                                                                  spring_elements))
 
                     # ekeys
 
@@ -561,7 +561,7 @@ class Steps(object):
 
                 node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
                 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
-                
+
                 if 'spf' in fields:
                     fields[fields.index('spf')] = 'ctf'
 

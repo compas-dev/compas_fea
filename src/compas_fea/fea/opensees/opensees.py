@@ -239,6 +239,8 @@ def extract_data(structure, fields):
                 except:
 
                     print('***** No truss element data loaded')
+                    
+                # Beam data
 
                 try:
 
@@ -256,32 +258,34 @@ def extract_data(structure, fields):
                     sf1_a = data[0::12]
                     sf2_a = data[1::12]
                     sf3_a = data[2::12]
-                    sm1_a = data[3::12]
+                    sm1_a = data[5::12]
                     sm2_a = data[4::12]
-                    sm3_a = data[5::12]
+                    sm3_a = data[3::12]
                     sf1_b = data[6::12]
                     sf2_b = data[7::12]
                     sf3_b = data[8::12]
-                    sm1_b = data[9::12]
+                    sm1_b = data[11::12]
                     sm2_b = data[10::12]
-                    sm3_b = data[11::12]
+                    sm3_b = data[9::12]
 
                     with open('{0}beam_ekeys.json'.format(temp), 'r') as f:
                         beam_ekeys = json.load(f)['beam_ekeys']
 
                     for c, ekey in enumerate(beam_ekeys):
-                        element['sf1'][ekey] = {'ip1': sf1_a[c], 'ip2': sf1_b[c]}
-                        element['sf2'][ekey] = {'ip1': sf2_a[c], 'ip2': sf2_b[c]}
-                        element['sf3'][ekey] = {'ip1': sf3_a[c], 'ip2': sf3_b[c]}
-                        element['sm1'][ekey] = {'ip1': sm1_a[c], 'ip2': sm1_b[c]}
-                        element['sm2'][ekey] = {'ip1': sm2_a[c], 'ip2': sm2_b[c]}
-                        element['sm3'][ekey] = {'ip1': sm3_a[c], 'ip2': sm3_b[c]}
+                        element['sf1'][ekey] = {'ip1': -sf1_a[c], 'ip2': sf1_b[c]}
+                        element['sf2'][ekey] = {'ip1': -sf2_a[c], 'ip2': sf2_b[c]}
+                        element['sf3'][ekey] = {'ip1': -sf3_a[c], 'ip2': sf3_b[c]}
+                        element['sm1'][ekey] = {'ip1': -sm1_a[c], 'ip2': sm1_b[c]}
+                        element['sm2'][ekey] = {'ip1': -sm2_a[c], 'ip2': sm2_b[c]}
+                        element['sm3'][ekey] = {'ip1': -sm3_a[c], 'ip2': sm3_b[c]}
 
                     print('***** {0}.out data loaded *****'.format(file))
 
                 except:
 
                     print('***** No beam element data loaded *****')
+                    
+                # Spring data
 
                 try:
 
