@@ -25,7 +25,8 @@ __all__ = [
     'TrussSection',
     'StrutSection',
     'TieSection',
-    'SpringSection'
+    'SpringSection',
+    'MassSection'
 ]
 
 
@@ -490,5 +491,28 @@ class SolidSection(Section):
         Section.__init__(self, name=name)
 
         self.__name__ = 'SolidSection'
+        self.name     = name
+        self.geometry = None
+
+
+# ==============================================================================
+# 0D
+# ==============================================================================
+
+class MassSection(Section):
+
+    """ Section for mass elements.
+
+    Parameters
+    ----------
+    name : str
+        Section name.
+
+    """
+
+    def __init__(self, name):
+        Section.__init__(self, name=name)
+
+        self.__name__ = 'MassSection'
         self.name     = name
         self.geometry = None
