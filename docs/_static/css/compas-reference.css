@@ -12,7 +12,7 @@
   color: #fff;
   background-color: #28a745;
   margin-left: 0rem; }
-  .badge-public[href]:focus, .badge-public[href]:hover {
+  .badge-public[href]:hover, .badge-public[href]:focus {
     color: #fff;
     text-decoration: none;
     background-color: #1e7e34; }
@@ -21,17 +21,17 @@
   color: #fff;
   background-color: #dc3545;
   margin-left: 0rem; }
-  .badge-private[href]:focus, .badge-private[href]:hover {
+  .badge-private[href]:hover, .badge-private[href]:focus {
     color: #fff;
     text-decoration: none;
     background-color: #bd2130; }
 
 .badge-shared {
-  color: #111;
+  color: #212529;
   background-color: #ffc107;
   margin-left: 0rem; }
-  .badge-shared[href]:focus, .badge-shared[href]:hover {
-    color: #111;
+  .badge-shared[href]:hover, .badge-shared[href]:focus {
+    color: #212529;
     text-decoration: none;
     background-color: #d39e00; }
 
@@ -81,13 +81,13 @@
     color: #491217; }
 
 .admonition.seealso {
-  color: #464a4e;
-  background-color: #e7e8ea;
-  border-color: #dddfe2; }
+  color: #383d41;
+  background-color: #e2e3e5;
+  border-color: #d6d8db; }
   .admonition.seealso hr {
-    border-top-color: #cfd2d6; }
+    border-top-color: #c8cbcf; }
   .admonition.seealso .alert-link {
-    color: #2e3133; }
+    color: #202326; }
 
 /* ----------------------------------------------------------------- */
 table {
@@ -128,14 +128,16 @@ table {
   margin-left: -0.5rem;
   margin-right: -0.5rem;
   border-bottom: 0px solid #eee;
-  background-color: #eee; }
+  background-color: #eee;
+  font-weight: normal; }
 
 .staticmethod > dt > code,
 .classmethod > dt > code,
 .method > dt > code,
 .function > dt > code,
 .class > dt > code {
-  background-color: #eee; }
+  background-color: #eee;
+  font-weight: bold; }
 
 .descclassname {
   border-radius: 0;

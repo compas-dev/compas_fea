@@ -472,8 +472,7 @@ var Search = {
 
     // lookup as object
     for (i = 0; i < objectterms.length; i++) {
-      var others = [].concat(objectterms.slice(0, i),
-                             objectterms.slice(i+1, objectterms.length));
+      var others = [].concat(objectterms.slice(0, i), objectterms.slice(i+1, objectterms.length));
       results = results.concat(this.performObjectSearch(objectterms[i], others));
     }
 
@@ -523,38 +522,36 @@ var Search = {
           } else if (dirname == 'index/') {
             dirname = '';
           }
-          listItem.append($('<a/>').attr('href',
-            DOCUMENTATION_OPTIONS.URL_ROOT + dirname +
-            highlightstring + item[2]).html(item[1]));
+          listItem.append($('<a/>').attr('href', DOCUMENTATION_OPTIONS.URL_ROOT + dirname + highlightstring + item[2]).html(item[1]));
         } else {
           // normal html builders
-          listItem.append($('<a/>').attr('href',
-            item[0] + DOCUMENTATION_OPTIONS.FILE_SUFFIX +
-            highlightstring + item[2]).html(item[1]));
+          listItem.append($('<a/>').attr('href', item[0] + DOCUMENTATION_OPTIONS.FILE_SUFFIX + highlightstring + item[2]).html(item[1]));
         }
         if (item[3]) {
-          listItem.append($('<span> (' + item[3] + ')</span>'));
+          // listItem.append($('<span> (' + item[3] + ')</span>'));
           Search.output.append(listItem);
           listItem.slideDown(5, function() {
             displayNextItem();
           });
-        } else if (DOCUMENTATION_OPTIONS.HAS_SOURCE) {
-          var suffix = DOCUMENTATION_OPTIONS.SOURCELINK_SUFFIX;
-          $.ajax({url: DOCUMENTATION_OPTIONS.URL_ROOT + '_sources/' + item[5] + (item[5].slice(-suffix.length) === suffix ? '' : suffix),
-                  dataType: "text",
-                  complete: function(jqxhr, textstatus) {
-                    var data = jqxhr.responseText;
-                    if (data !== '' && data !== undefined) {
-                      listItem.append(Search.makeSearchSummary(data, searchterms, hlterms));
-                    }
-                    Search.output.append(listItem);
-                    listItem.slideDown(5, function() {
-                      displayNextItem();
-                    });
-                  }});
-        } else {
+        } 
+        // else if (DOCUMENTATION_OPTIONS.HAS_SOURCE) {
+        //   var suffix = DOCUMENTATION_OPTIONS.SOURCELINK_SUFFIX;
+        //   $.ajax({url: DOCUMENTATION_OPTIONS.URL_ROOT + '_sources/' + item[5] + (item[5].slice(-suffix.length) === suffix ? '' : suffix),
+        //           dataType: "text",
+        //           complete: function(jqxhr, textstatus) {
+        //             var data = jqxhr.responseText;
+        //             // if (data !== '' && data !== undefined) {
+        //             //   listItem.append(Search.makeSearchSummary(data, searchterms, hlterms));
+        //             // }
+        //             Search.output.append(listItem);
+        //             listItem.slideDown(5, function() {
+        //               displayNextItem();
+        //             });
+        //           }});
+        // } 
+        else {
           // no source available, just display title
-          Search.output.append(listItem);
+          // Search.output.append(listItem);
           listItem.slideDown(5, function() {
             displayNextItem();
           });
@@ -567,7 +564,8 @@ var Search = {
         if (!resultCount)
           Search.status.text(_('Your search did not match any documents. Please make sure that all words are spelled correctly and that you\'ve selected enough categories.'));
         else
-            Search.status.text(_('Search finished, found %s page(s) matching the search query.').replace('%s', resultCount));
+            // Search.status.text(_('Search finished, found %s page(s) matching the search query.').replace('%s', resultCount));
+            Search.status.text(_('Search finished.'));
         Search.status.fadeIn(500);
       }
     }

@@ -1,63 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title></title>
+<head>
+    <title>compas_frankie_ea</title>
 
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <meta name="author" content="" />
+    <meta name="description" content="" />
+
+    <link rel="shortcut icon" href="../_static/images/compas.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/styles/default.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../_static/css/prism.css" /> -->
+    <link rel="stylesheet" type="text/css" href="../_static/css/compas.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
+
     
-        <meta name="author" content="" />
-        <meta name="description" content="" />
+        <link rel="next" title="CAD" href="13_cad.html" />
+    
+    
+    
+        <link rel="prev" title="Steps" href="11_steps.html" />
+    
 
-        <link rel="shortcut icon" href="../_static/images/compas.ico" type="image/x-icon">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+</head>
 
-        <link rel="stylesheet" type="text/css" href="../_static/css/prism.css" />
-        <link rel="stylesheet" type="text/css" href="../_static/css/compas.css" />
-        <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
+<body data-spy="scroll" data-target="#compas-localnav">
 
-        
-            <link rel="next" title="CAD" href="13_cad.html" />
-        
-        
-        
-            <link rel="prev" title="Steps" href="11_steps.html" />
-        
+    <nav class="navbar navbar-expand compas-navbar">
+        <a class="navbar-brand" href="/">
+            <img src="../_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
+        </a>
 
-        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+        <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="../index.html">compas_frankie-ea</a></li>
+        </ul>
 
-    </head>
-    <body data-spy="scroll" data-target="#compas-localnav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" target="_blank" href="">Github</a></li>
+            <li class="nav-item"><a class="nav-link" target="_blank" href="https://compas-dev.github.io">COMPAS framework</a></li>
+        </ul>
+    </nav>    
 
-        <header class="navbar navbar-expand compas-navbar justify-content-between">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="../index.html">
-                     
-                </a>
-            </div>
+    <div class="container-fluid">
+        <div class="row flex-xl-nowrap">
 
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="https://compas-dev.github.io">
-                        <img src="../_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
-                    </a>
-                </li>
-            </ul>
-        </header>
-        
-        <div class="container-fluid compas-container">
-            <div class="row flex-xl-nowrap">
-
-                <!-- main content -->
-
-                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+            <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+                <div class="container">
+                
 
                     
 
-                        
-
-                        <div class="section" id="analysis">
+                    <div class="section" id="analysis">
 <h1>Analysis</h1>
 <p>This page describes how to analyse a completed <strong>Structure</strong> object and view the resulting data. There are three processes involved when analysing a <strong>Structure</strong> object using a specific finite element software package or library:</p>
 <ul class="simple">
@@ -78,7 +77,7 @@
 <li><p>When an element is created in the input file, <strong>compas_fea</strong> will also make an individual set for just that element named <strong>element_x</strong>, where <strong>x</strong> is the Python 0 based element number. Because of the different numbering systems of Python and Abaqus, an element set named <strong>element_4</strong> will refer to Abaqus element number 5.</p></li>
 </ul>
 <p>When an input file is written, a confirmation message will appear (if <code class="docutils literal notranslate"><span class="pre">output=True</span></code>) in the terminal stating where it was written to:</p>
-<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="o">*****</span> <span class="n">Abaqus</span> <span class="nb">input</span> <span class="nb">file</span> <span class="n">generated</span><span class="p">:</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">Temp</span><span class="o">/</span><span class="n">truss_tower</span><span class="o">.</span><span class="n">inp</span> <span class="o">*****</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="o">*****</span> <span class="n">Abaqus</span> <span class="nb">input</span> <span class="n">file</span> <span class="n">generated</span><span class="p">:</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">Temp</span><span class="o">/</span><span class="n">truss_tower</span><span class="o">.</span><span class="n">inp</span> <span class="o">*****</span>
 </code></pre></div>
 </div>
 <p>The input file will be sent for analysis via Abaqus in a system subprocess that launches the Abaqus executable <code class="docutils literal notranslate"><span class="pre">abaqus</span> <span class="pre">cae</span></code> with no graphical user interface (<code class="docutils literal notranslate"><span class="pre">noGUI</span></code> mode) and running the <strong>launch_job.py</strong> script from <strong>compas_fea.fea.abaq</strong>. The goal of this subprocess is to pair the Abaqus executable with the <code class="docutils literal notranslate"><span class="pre">.inp</span></code> file and to generate an <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file of data, and is equivalent to manually performing the following in a terminal:</p>
@@ -135,11 +134,11 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 <p>The input file for generating an OpenSees structural model is the <code class="docutils literal notranslate"><span class="pre">.tcl</span></code> input file. A <code class="docutils literal notranslate"><span class="pre">basic</span></code> model type will be made in 3D <code class="docutils literal notranslate"><span class="pre">-ndm</span> <span class="pre">3</span></code> with degrees-of-freedom at each node <code class="docutils literal notranslate"><span class="pre">-ndf</span></code> set from the <code class="docutils literal notranslate"><span class="pre">dof</span></code> argument. Nodes and elements will be numbered starting from 1, and then 1 subtracted for the storage of data after the analysis, so that it is consistent with the input <strong>Structure</strong> object. An important difference (currently) with OpenSees is that the structural model should have only two steps: the first step representing all of the persistent boundary conditions containing only <strong>Displacement</strong> objects, and the second step representing all applied <strong>Load</strong> objects and any further applied <strong>Displacement</strong> objects.</p>
 <p>Beam elements must be given an <code class="docutils literal notranslate"><span class="pre">ex</span></code> local axis orientation for <code class="docutils literal notranslate"><span class="pre">geomTransf</span></code>, as OpenSees will not make an assumption for the cross-section orientation. This should be defined either directly when adding the elements with the <code class="docutils literal notranslate"><span class="pre">axes</span></code> argument, or added to the element name (<code class="docutils literal notranslate"><span class="pre">{'ex':</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">0]}</span></code> for example) so it can be picked-up in a CAD environment and automatically applied. This orientation need not be defined for <strong>TrussElement</strong> types as there is no local bending orientation.</p>
 <p>When written, a confirmation message will appear in the terminal showing where the file was saved:</p>
-<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="o">*****</span> <span class="n">OpenSees</span> <span class="nb">input</span> <span class="nb">file</span> <span class="n">generated</span><span class="p">:</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">Temp</span><span class="o">/</span><span class="n">beam_frame</span><span class="o">.</span><span class="n">tcl</span> <span class="o">*****</span>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="o">*****</span> <span class="n">OpenSees</span> <span class="nb">input</span> <span class="n">file</span> <span class="n">generated</span><span class="p">:</span> <span class="n">C</span><span class="p">:</span><span class="o">/</span><span class="n">Temp</span><span class="o">/</span><span class="n">beam_frame</span><span class="o">.</span><span class="n">tcl</span> <span class="o">*****</span>
 </code></pre></div>
 </div>
 <p>The input file will be sent for analysis via OpenSees in a system subprocess that launches the executable, given by the <code class="docutils literal notranslate"><span class="pre">exe</span></code> string, or by assuming the default <code class="docutils literal notranslate"><span class="pre">C:/OpenSees.exe</span></code> location for Windows. No graphical user interface is launched for OpenSees, feedback will only be presented in the terminal while the <code class="docutils literal notranslate"><span class="pre">.tcl</span></code> file is running:</p>
-<div class="nohighlight notranslate"><div class="highlight"><pre><code><span></span>          OpenSees -- Open System For Earthquake Engineering Simulation
+<div class="language-none notranslate"><div class="highlight"><pre><code><span></span>          OpenSees -- Open System For Earthquake Engineering Simulation
                Pacific Earthquake Engineering Research Center
                       Version 2.5.0 (rev 6536) 64-Bit
 
@@ -185,7 +184,7 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </div>
 <div class="section" id="node-fields">
 <h2>Node fields</h2>
-<table class="table table-responsive table-bordered docutils">
+<table class="table table-responsive table-bordered docutils align-default">
 <colgroup>
 <col style="width: 41%" />
 <col style="width: 15%" />
@@ -244,7 +243,7 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 <div class="section" id="element-fields">
 <h2>Element fields</h2>
 <p>For elements such as shell elements, the local element axes can be accessed through <code class="docutils literal notranslate"><span class="pre">'axes'</span></code> as a component entry. <strong>Note</strong>: shell forces and moments are per unit width.</p>
-<table class="table table-responsive table-bordered docutils">
+<table class="table table-responsive table-bordered docutils align-default">
 <colgroup>
 <col style="width: 26%" />
 <col style="width: 25%" />
@@ -343,34 +342,36 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </div>
 </div>
 
-                        
+                    
+                
+                </div>
+            </main>
+
+            <!-- site navigation sidebar -->
+
+            <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
+                <div class="navbar-light">
+
+                    <form id="" class="d-flex compas-searchbox" action="../search.html" method="get">
+                        <input class="form-control" type="text" name="q" placeholder="Search docs" />
+                        <input type="hidden" name="check_keywords" value="yes" />
+                        <input type="hidden" name="area" value="default" />
+
+                        <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </form>
+
+                    
                     
 
-                </main>
+                        <div class="navbar-expand-md">
+                            <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
 
-                <!-- site navigation sidebar -->
-
-                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
-                    <div class="navbar-light">
-
-                        <form id="" class="d-flex compas-searchbox" action="../search.html" method="get">
-                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
-                            <input type="hidden" name="check_keywords" value="yes" />
-                            <input type="hidden" name="area" value="default" />
-
-                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                        </form>
-
-                        
-                        
-
-                            <div class="navbar-expand-md">
-                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
-
-                                <ul class="nav flex-column active">
-<li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
+                            <ul class="nav flex-column active">
+<li class="nav-item"><a class="nav-link reference internal" href="../intro.html">compas_frakie_ea</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../intro.html#introduction">Introduction</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="01_setup.html">Setup</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="02_structure.html">Structure</a></li>
@@ -389,26 +390,26 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </ul>
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../reference.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../api.html">API Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
 </ul>
 
 
-                                </div>
                             </div>
-
-                        
-
-                    </div>
-                </div>
-
-                <!-- table of contents of main content -->
-                
-                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+                        </div>
 
                     
 
-                    <ul class="nav flex-column" id="compas-localnav">
+                </div>
+            </div>
+
+            <!-- table of contents of main content -->
+            
+            <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+
+                
+
+                <ul class="nav flex-column" id="compas-localnav">
 <li class="nav-item"><a class="nav-link reference internal" href="#">Analysis</a><ul class="nav">
 <li class="nav-item"><a class="nav-link reference internal" href="#abaqus">Abaqus</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#opensees">OpenSees</a></li>
@@ -424,86 +425,60 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </ul>
 
 
-                </div>
-
             </div>
+
         </div>
+    </div>
 
-        <footer class="compas-footer">
+    <footer class="bg-dark pb-5">
+        <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Feb 21, 2019.
+                Last updated on Feb 25, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
             
-        </footer>
+        </div>
+    </footer>
 
-        
+    
+        <script type="text/javascript">
+            var DOCUMENTATION_OPTIONS = {
+            URL_ROOT          : '',
+            VERSION           : '0.1.0',
+            COLLAPSE_INDEX    : false,
+            FILE_SUFFIX       : '.html',
+            HAS_SOURCE        : 'false',
+            SOURCELINK_SUFFIX : '.txt'
+            };
+        </script>
 
-            <script type="text/javascript">
-var DOCUMENTATION_OPTIONS = {
-    URL_ROOT          : '',
-    VERSION           : '0.1.0',
-    COLLAPSE_INDEX    : false,
-    FILE_SUFFIX       : '.html',
-    HAS_SOURCE        : 'false',
-    SOURCELINK_SUFFIX : '.txt'
-};
-            </script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/highlight.min.js"></script>
 
-            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/js/searchtools_.js"></script>
+        <!-- <script src="../_static/js/prism.js"></script> -->
 
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-            
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+        <script>
+        $(document).ready(function() {
+        $(".language-default code").addClass("python");
+        $(".language-python code").addClass("python");
+        $(".language-bash code").addClass("bash");
+        $(".language-cpp code").addClass("cpp");
+        $(".language-json code").addClass("json");
+        $(".language-none code").addClass("plaintext");
 
-            <script src="../_static/underscore.js"></script>
-            <script src="../_static/doctools.js"></script>
-            <script src="../_static/js/searchtools_.js"></script>
-            <script src="../_static/js/prism.js"></script>
-
-            <script>
-$(document).ready(function() {
-
-    // $(".language-default pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-bash pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-python pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-c pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-cpp pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-fortran pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-markdown pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-rest pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    anchors.add();
-});
-            </script>
-
-        
-    </body>
+        hljs.initHighlighting();
+        anchors.add();
+        });
+        </script>
+    
+</body>
 </html>
