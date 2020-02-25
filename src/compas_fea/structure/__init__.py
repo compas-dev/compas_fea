@@ -236,5 +236,6 @@ from .material import *
 from .misc import *
 from .node import *
 from .section import *
+from .set import *
 from .step import *
 from .structure import *
