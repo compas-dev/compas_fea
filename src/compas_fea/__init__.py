@@ -1,45 +1,44 @@
 """
-.. _compas_fea:
-
 ********************************************************************************
 compas_fea
 ********************************************************************************
 
-.. module:: compas_fea
-
-
-Interfaces to Finite Element Analysis software built on COMPAS.
+.. currentmodule:: compas_fea
 
 
 .. toctree::
     :maxdepth: 1
-    :titlesonly:
 
-    compas_fea.app
     compas_fea.cad
     compas_fea.fea
     compas_fea.structure
     compas_fea.utilities
 
-
 """
 
-import os
 
 
 # Author(s): Andrew Liew (github.com/andrewliew), Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
+from __future__ import print_function
+
+import os
+import sys
+
+__author__ = ['Andrew Liew (github.com/andrewliew), Tomas Mendez Echenagucia (github.com/tmsmendez)']
+__copyright__ = 'Block Research Group'
+__license__ = 'MIT License'
+__email__ = ''
+__version__ = '0.1.0'
+
+
 HERE = os.path.dirname(__file__)
+
 HOME = os.path.abspath(os.path.join(HERE, '../../'))
 DATA = os.path.abspath(os.path.join(HOME, 'data'))
 DOCS = os.path.abspath(os.path.join(HOME, 'docs'))
 TEMP = os.path.abspath(os.path.join(HOME, 'temp'))
 
 
-def get(filename):
-    filename = filename.strip('/')
-    return os.path.abspath(os.path.join(DATA, filename))
-
-
-__all__ = []
+__all__ = ['HOME', 'DATA', 'DOCS', 'TEMP']

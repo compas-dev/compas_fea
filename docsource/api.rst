@@ -5,4 +5,4 @@ API Reference
 .. toctree::
     :maxdepth: 2
 
-    api/compas_frankie_ea
+    api/compas_fea

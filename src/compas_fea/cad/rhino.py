@@ -25,12 +25,18 @@ from compas_fea.utilities import network_order
 
 from compas_fea.structure import Structure
 
+
 try:
     import rhinoscriptsyntax as rs
 except ImportError:
-    import platform
-    if platform.system() == 'Windows':
-        raise
+    print('could not import rhinoscriptsyntax')
+
+# try:
+#     import rhinoscriptsyntax as rs
+# except ImportError:
+#     import platform
+#     if platform.system() == 'Windows':
+#         raise
 
 import json
 
