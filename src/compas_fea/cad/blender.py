@@ -41,13 +41,15 @@ from compas_fea.utilities import postprocess
 from compas_fea.utilities import tets_from_vertices_faces
 from compas_fea.utilities import plotvoxels
 
-from numpy import array
-from numpy import hstack
-from numpy import max
-from numpy import newaxis
-from numpy import where
-from numpy.linalg import norm
-
+try:
+    from numpy import array
+    from numpy import hstack
+    from numpy import max
+    from numpy import newaxis
+    from numpy import where
+    from numpy.linalg import norm
+except:
+    pass
 
 # Author(s): Andrew Liew (github.com/andrewliew)
 

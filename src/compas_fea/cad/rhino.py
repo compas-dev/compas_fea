@@ -28,7 +28,7 @@ from compas_fea.structure import Structure
 try:
     import rhinoscriptsyntax as rs
 except ImportError:
-    print('could not import rhinoscriptsyntax')
+    pass
 
 # try:
 #     import rhinoscriptsyntax as rs
