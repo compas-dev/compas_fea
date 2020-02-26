@@ -1,4 +1,5 @@
 # compas_fea
+
 **compas** finite element package
 
 Finite element analysis, is a numerical approach to solving a variety of problems in the sciences, mathematics and engineering fields. A continuum such as a fluid or solid volume, is discretised into a set of smaller discrete elements. For each element, data of interest, such as stresses, displacements, temperatures and so on, are found at the nodes and element integration points. The greater the number of elements used to represent the continuum, the better the numerical model will represent the original continuous solution.
@@ -9,12 +10,12 @@ Once the model has been constructed, it may be analysed through a finite element
 
 By using the **compas_fea** package, the majority of the repetitive scripting tasks needed to perform a geometrically or structurally complex analysis are eliminated, allowing for the rapid investigation of models, with easy to use and streamlined data post-processing and visualisation support.
 
-The complete documentation of the **compas_fea** package is available here: https://compas-dev.github.io/compas_fea.
+The complete documentation of the **compas_fea** package is available here: <https://compas-dev.github.io/compas_fea>.
 
-The **compas_fea** forum can be visited here: http://forum.compas-framework.org/c/compas-fea.
+The **compas_fea** forum can be visited here: <http://forum.compas-framework.org/c/compas-fea>.
 
-For citations to the **compas_fea** package please use: 
+For citations to the **compas_fea** package please use:
 
-```
+```bibtex
 Liew, A. and Méndez Echenagucia, T., compas_fea: A finite element analysis package for Python, 2018. DOI: 10.5281/zenodo.2553836
 ```
