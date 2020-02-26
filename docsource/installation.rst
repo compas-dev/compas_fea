@@ -1,5 +1,5 @@
 ********************************************************************************
-Installing compas_fea
+Installation
 ********************************************************************************
 
 .. _Anaconda: https://www.continuum.io/
@@ -7,7 +7,6 @@ Installing compas_fea
 
 .. highlight:: bash
 
-|
 
 Installation from source
 ========================
@@ -15,6 +14,7 @@ Installation from source
 Choose a location where you want to clone the repository, open a terminal and do:
 
 ::
+
     $ cd <path-to-folder>/
     $ git clone https://github.com/compas-dev/compas_fea.git
 
@@ -22,6 +22,7 @@ Choose a location where you want to clone the repository, open a terminal and do
 Now you have the source code on your machine. To keep it up-to-date regularly pull the lastest changes by doing:
 
 ::
+
     $ cd <path-to-folder>/compas_fea/
     $ git pull
 
@@ -30,9 +31,10 @@ Released versions of :mod:`compas_fea` can be installed with *pip*.
 With the desired virtual environment activated, do
 
 ::
+
     $ cd <path-to-folder>/compas_fea/
     $ pip install -e .
-|
+
 
 Installation from GitHub
 ========================
@@ -41,18 +43,14 @@ You can also install directly from the GitHub repo. Use this method if you don't
 
 ::
 
-    $ pip install git+https://github.com/compas-dev/compas_3gs.git
+    $ pip install git+https://github.com/compas-dev/compas_fea.git
 
 
 If you want to upgrade it to the latest version, do
 
 ::
 
-    $ pip install compas-3gs --upgrade
-
-|
-
-----
+    $ pip install compas-fea --upgrade
 
 
 Rhino
@@ -70,7 +68,3 @@ In order to install :mod:`compas_3gs` for Rhino, with the desired virtual enviro
     $ python -m compas_rhino.install -p compas_fea
 
 Every time a new file is opened in Rhino, be sure to reset the Python Scritp Engine before running scripts.
-
-|
-
-----

@@ -1,21 +1,15 @@
 """
-.. _compas_fea.fea:
-
 ********************************************************************************
 fea
 ********************************************************************************
 
-.. module:: compas_fea.fea
+.. currentmodule:: compas_fea.fea
 
 The compas_fea package supports Abaqus, Ansys, Sofistik and OpenSees as analysis backends.
 
 
 writer
 ======
-
-.. currentmodule:: compas_fea.fea.writer
-
-:mod:`compas_fea.fea.writer`
 
 .. autosummary::
     :toctree: generated/
@@ -27,8 +21,6 @@ abaq
 ====
 
 .. currentmodule:: compas_fea.fea.abaq
-
-:mod:`compas_fea.fea.abaq`
 
 .. autosummary::
     :toctree: generated/
@@ -42,8 +34,6 @@ ansys
 =====
 
 .. currentmodule:: compas_fea.fea.ansys
-
-:mod:`compas_fea.fea.ansys`
 
 .. autosummary::
     :toctree: generated/
@@ -64,8 +54,6 @@ opensees
 ========
 
 .. currentmodule:: compas_fea.fea.opensees
-
-:mod:`compas_fea.fea.opensees`
 
 .. autosummary::
     :toctree: generated/

@@ -1,9 +1,9 @@
 """
-.. compas_ea.cad:
-
 ********************************************************************************
 cad
 ********************************************************************************
+
+.. currentmodule:: compas_fea.cad
 
 The compas_fea package supports Rhino and Blender in the frontend.
 
@@ -55,6 +55,9 @@ Rhino
     weld_meshes_from_layer
 
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 from .blender import *
 from .rhino import *

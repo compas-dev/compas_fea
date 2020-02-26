@@ -8,5 +8,5 @@ This example works for: **Abaqus**.
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/truss_tower_blender.py
+.. literalinclude:: /../examples/truss_tower_blender.py
     :language: python

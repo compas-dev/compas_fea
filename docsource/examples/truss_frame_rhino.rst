@@ -8,5 +8,5 @@ This example works for: **Abaqus**, **OpenSees**.
     :figclass: figure
     :class: figure-img img-fluid
 
-.. literalinclude:: /../../examples/truss_frame_rhino.py
+.. literalinclude:: /../examples/truss_frame_rhino.py
     :language: python

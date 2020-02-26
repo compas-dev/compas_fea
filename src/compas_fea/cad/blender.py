@@ -66,6 +66,7 @@ __all__ = [
     'plot_voxels',
     'weld_meshes_from_layer',
 ]
+
 def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=None, thermal=False):
     """
     Adds the Blender mesh's nodes, edges and faces to the Structure object.

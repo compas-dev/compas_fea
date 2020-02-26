@@ -43,7 +43,7 @@ In Blender, the function with the same name (``add_nodes_elements_from_layers``)
 
 .. code-block:: python
 
-  blender.add_nodes_elements_from_layers(structure=mdl, line_type='TrussElement', mesh_type='ShellElement', layers=['elset_trusses', 'elset_shells'])
+    blender.add_nodes_elements_from_layers(structure=mdl, line_type='TrussElement', mesh_type='ShellElement', layers=['elset_trusses', 'elset_shells'])
 
 Adding nodes and elements from layers with the ``add_nodes_elements_from_layers()`` function, in both the Rhino and Blender cases, will return the lists of the node keys and element keys that were added.
 
@@ -119,6 +119,7 @@ A typical Rhino and Blender environment after plotting data would look like:
 To plot voxel data for solid element results, use the ``.plot_voxels()`` function of the ``blender`` and ``rhino`` modules. This function uses the ``VtkViewer`` from the main **compas.viewers** package and requires that the user has the visualisation tool-kit (Vtk) installed. This function requires the following arguments: the ``structure`` object to extract data from, the ``step`` of interest, the ``field`` to plot, the ``iptype`` and ``nodal`` strings for element data, a ``cbar`` list to trim data, and an approximate voxel size ``vdx`` for interpolating data in space. The call and output from this function would look similar to:
 
 .. code-block:: python
+
     blender.plot_voxels(structure=mdl, step='step_load', field='smises', vdx=0.1, cbar=[0, 1.5])
 
 
