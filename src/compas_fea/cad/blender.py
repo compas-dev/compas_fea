@@ -55,59 +55,20 @@ from numpy.linalg import norm
 __all__ = [
     'add_nodes_elements_from_bmesh',
     'add_nodes_elements_from_layers',
-    'discretise_mesh',
-    'add_tets_from_mesh',
+    'add_nsets_from_layers',
     'add_nset_from_meshes',
-    'plot_data',
-    'plot_voxels',
+    'add_tets_from_mesh',
+    'discretise_mesh',
     'mesh_extrude',
-    'plot_reaction_forces',
     'plot_concentrated_forces',
+    'plot_data',
+    'plot_reaction_forces',
+    'plot_voxels',
     'weld_meshes_from_layer',
 ]
-
-
-def weld_meshes_from_layer(layer_input, layer_output):
-
-    """ Grab meshes on an input layer and weld them onto an output layer.
-
-    Parameters
-    ----------
-    layer_input : str
-        Layer containing the Blender meshes to weld.
-    layer_output : str
-        Layer to plot single welded mesh.
-
-    Returns
-    -------
-    None
-
-    """
-
-    print('Welding meshes on layer:{0}'.format(layer_input))
-
-    S = Structure(path=' ')
-
-    add_nodes_elements_from_layers(S, mesh_type='ShellElement', layers=layer_input)
-
-    faces = []
-
-    for element in S.elements.values():
-        faces.append(element.nodes)
-
-    try:
-        clear_layer(layer_output)
-    except:
-        create_layer(layer_output)
-
-    vertices = S.nodes_xyz()
-
-    xdraw_mesh(name='welded_mesh', vertices=vertices, faces=faces, layer=layer_output)
-
-
 def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=None, thermal=False):
-
-    """ Adds the Blender mesh's nodes, edges and faces to the Structure object.
+    """
+    Adds the Blender mesh's nodes, edges and faces to the Structure object.
 
     Parameters
     ----------
@@ -211,8 +172,8 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
 
 
 def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, thermal=False, pA=None, pL=None):
-
-    """ Adds node and element data from Blender layers to Structure object.
+    """
+    Adds node and element data from Blender layers to Structure object.
 
     Parameters
     ----------
@@ -265,24 +226,16 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
     return list(added_nodes), list(added_elements)
 
 
-def discretise_mesh(structure, mesh, layer, target, min_angle=15, factor=1):
-
-    """ Discretise a mesh from an input triangulated coarse mesh into small denser meshes.
+def add_nsets_from_layers(structure, layers):
+    """
+    Adds node sets from objects in layers.
 
     Parameters
     ----------
     structure : obj
-        Structure object.
-    mesh : obj
-        The object of the Blender input mesh.
-    layer : str
-        Layer name to draw results.
-    target : float
-        Target length of each triangle.
-    min_angle : float
-        Minimum internal angle of triangles.
-    factor : float
-        Factor on the maximum area of each triangle.
+        Structure object to update.
+    layers : list
+        Layers to get objects from.
 
     Returns
     -------
@@ -290,27 +243,63 @@ def discretise_mesh(structure, mesh, layer, target, min_angle=15, factor=1):
 
     """
 
-    blendermesh = BlenderMesh(mesh)
-    vertices = list(blendermesh.get_vertices_coordinates().values())
-    faces    = list(blendermesh.get_faces_vertex_indices().values())
+    if isinstance(layers, str):
+        layers = [layers]
 
-    try:
+    for layer in layers:
 
-        points, tris = discretise_faces(vertices=vertices, faces=faces, target=target, min_angle=min_angle,
-                                        factor=factor)
+        nodes = []
 
-        for pts, tri in zip(points, tris):
-            bmesh = xdraw_mesh(name='face', vertices=pts, faces=tri, layer=layer)
-            add_nodes_elements_from_bmesh(structure=structure, bmesh=bmesh, mesh_type='ShellElement')
+        for point in get_points(layer=layer):
 
-    except:
+            nodes.append(structure.check_node_exists(xyz=list(point.location)))
 
-        print('***** Error using MeshPy (Triangle) or drawing faces *****')
+        for mesh in get_meshes(layer=layer):
+
+            for vertex in BlenderMesh(mesh).get_vertices_coordinates().values():
+
+                node = structure.check_node_exists(xyz=vertex)
+
+                if node is not None:
+                    nodes.append(node)
+
+        structure.add_set(name=layer, type='node', selection=nodes)
+
+
+def add_nset_from_meshes(structure, layer):
+    """
+    Adds the Blender meshes' vertices from a layer as a node set.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object to update.
+    layer : str
+        Layer to get meshes.
+
+    Returns
+    -------
+    None
+
+    """
+
+    nodes = []
+
+    for mesh in get_meshes(layer=layer):
+
+        for vertex in BlenderMesh(mesh).get_vertices_coordinates().values():
+
+            node = structure.check_node_exists(vertex)
+
+            if node is not None:
+                nodes.append(node)
+
+    structure.add_set(name=layer, type='node', selection=nodes)
 
 
 def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, thermal=False):
-
-    """ Adds tetrahedron elements from a mesh to the Structure object.
+    """
+    Adds tetrahedron elements from a mesh to the Structure object.
 
     Parameters
     ----------
@@ -370,16 +359,24 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, ther
         print('***** Error using MeshPy (TetGen) or drawing Tets *****')
 
 
-def add_nset_from_meshes(structure, layer):
-
-    """ Adds the Blender meshes' vertices from a layer as a node set.
+def discretise_mesh(structure, mesh, layer, target, min_angle=15, factor=1):
+    """
+    Discretise a mesh from an input triangulated coarse mesh into small denser meshes.
 
     Parameters
     ----------
     structure : obj
-        Structure object to update.
+        Structure object.
+    mesh : obj
+        The object of the Blender input mesh.
     layer : str
-        Layer to get meshes.
+        Layer name to draw results.
+    target : float
+        Target length of each triangle.
+    min_angle : float
+        Minimum internal angle of triangles.
+    factor : float
+        Factor on the maximum area of each triangle.
 
     Returns
     -------
@@ -387,64 +384,28 @@ def add_nset_from_meshes(structure, layer):
 
     """
 
-    nodes = []
+    blendermesh = BlenderMesh(mesh)
+    vertices = list(blendermesh.get_vertices_coordinates().values())
+    faces    = list(blendermesh.get_faces_vertex_indices().values())
 
-    for mesh in get_meshes(layer=layer):
+    try:
 
-        for vertex in BlenderMesh(mesh).get_vertices_coordinates().values():
+        points, tris = discretise_faces(vertices=vertices, faces=faces, target=target, min_angle=min_angle,
+                                        factor=factor)
 
-            node = structure.check_node_exists(vertex)
+        for pts, tri in zip(points, tris):
+            bmesh = xdraw_mesh(name='face', vertices=pts, faces=tri, layer=layer)
+            add_nodes_elements_from_bmesh(structure=structure, bmesh=bmesh, mesh_type='ShellElement')
 
-            if node is not None:
-                nodes.append(node)
+    except:
 
-    structure.add_set(name=layer, type='node', selection=nodes)
-
-
-def add_nsets_from_layers(structure, layers):
-
-    """ Adds node sets from objects in layers.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object to update.
-    layers : list
-        Layers to get objects from.
-
-    Returns
-    -------
-    None
-
-    """
-
-    if isinstance(layers, str):
-        layers = [layers]
-
-    for layer in layers:
-
-        nodes = []
-
-        for point in get_points(layer=layer):
-
-            nodes.append(structure.check_node_exists(xyz=list(point.location)))
-
-        for mesh in get_meshes(layer=layer):
-
-            for vertex in BlenderMesh(mesh).get_vertices_coordinates().values():
-
-                node = structure.check_node_exists(xyz=vertex)
-
-                if node is not None:
-                    nodes.append(node)
-
-        structure.add_set(name=layer, type='node', selection=nodes)
+        print('***** Error using MeshPy (Triangle) or drawing faces *****')
 
 
 def mesh_extrude(structure, mesh, layers, thickness, mesh_name='', links_name='', blocks_name='', points_name='',
                  plot_mesh=False, plot_links=False, plot_blocks=False, plot_points=False):
-
-    """ Extrudes a Blender mesh and adds/creates elements.
+    """
+    Extrudes a Blender mesh and adds/creates elements.
 
     Parameters
     ----------
@@ -490,10 +451,60 @@ def mesh_extrude(structure, mesh, layers, thickness, mesh_name='', links_name=''
     # ADD PLOTTING FUNCTIONS HERE
 
 
+def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
+    """
+    Plots reaction forces for the Structure analysis results.
+
+    Parameters
+    ----------
+    structure : obj
+        Structure object.
+    step : str
+        Name of the Step.
+    layer : str
+        Layer name for plotting.
+    scale : float
+        Scale of the arrows.
+
+    Returns
+    -------
+    None
+
+    """
+
+    if not layer:
+        layer = '{0}-{1}'.format(step, 'forces')
+
+    try:
+        clear_layer(layer)
+    except:
+        create_layer(layer)
+
+    cfx   = array(list(structure.results[step]['nodal']['cfx'].values()))[:, newaxis]
+    cfy   = array(list(structure.results[step]['nodal']['cfy'].values()))[:, newaxis]
+    cfz   = array(list(structure.results[step]['nodal']['cfz'].values()))[:, newaxis]
+    cf    = hstack([cfx, cfy, cfz])
+    cfm   = norm(cf, axis=1)
+    cmax  = max(cfm)
+    nodes = array(structure.nodes_xyz())
+
+    for i in where(cfm > 0)[0]:
+
+        sp   = nodes[i, :]
+        ep   = nodes[i, :] + cf[i, :] * -scale * 0.001
+        col  = colorbar(cfm[i] / cmax, input='float', type=1)
+        line = draw_line(start=sp, end=ep, width=0.01, color=col, layer=layer)
+
+        set_object_property(object=line, property='cfx', value=cf[i, 0])
+        set_object_property(object=line, property='cfy', value=cf[i, 1])
+        set_object_property(object=line, property='cfz', value=cf[i, 2])
+        set_object_property(object=line, property='cfm', value=cfm[i])
+
+
 def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
               nodal='mean', mode='', cbar_size=1):
-
-    """ Plots analysis results on the deformed shape of the Structure.
+    """
+    Plots analysis results on the deformed shape of the Structure.
 
     Parameters
     ----------
@@ -673,8 +684,8 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
 
 def plot_reaction_forces(structure, step, layer=None, scale=1.0):
-
-    """ Plots reaction forces for the Structure analysis results.
+    """
+    Plots reaction forces for the Structure analysis results.
 
     Parameters
     ----------
@@ -722,59 +733,9 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
         set_object_property(object=line, property='rfm', value=rfm[i])
 
 
-def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
-
-    """ Plots reaction forces for the Structure analysis results.
-
-    Parameters
-    ----------
-    structure : obj
-        Structure object.
-    step : str
-        Name of the Step.
-    layer : str
-        Layer name for plotting.
-    scale : float
-        Scale of the arrows.
-
-    Returns
-    -------
-    None
-
-    """
-
-    if not layer:
-        layer = '{0}-{1}'.format(step, 'forces')
-
-    try:
-        clear_layer(layer)
-    except:
-        create_layer(layer)
-
-    cfx   = array(list(structure.results[step]['nodal']['cfx'].values()))[:, newaxis]
-    cfy   = array(list(structure.results[step]['nodal']['cfy'].values()))[:, newaxis]
-    cfz   = array(list(structure.results[step]['nodal']['cfz'].values()))[:, newaxis]
-    cf    = hstack([cfx, cfy, cfz])
-    cfm   = norm(cf, axis=1)
-    cmax  = max(cfm)
-    nodes = array(structure.nodes_xyz())
-
-    for i in where(cfm > 0)[0]:
-
-        sp   = nodes[i, :]
-        ep   = nodes[i, :] + cf[i, :] * -scale * 0.001
-        col  = colorbar(cfm[i] / cmax, input='float', type=1)
-        line = draw_line(start=sp, end=ep, width=0.01, color=col, layer=layer)
-
-        set_object_property(object=line, property='cfx', value=cf[i, 0])
-        set_object_property(object=line, property='cfy', value=cf[i, 1])
-        set_object_property(object=line, property='cfz', value=cf[i, 2])
-        set_object_property(object=line, property='cfm', value=cfm[i])
-
-
 def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean', nodal='mean', vdx=None, mode=''):
-
-    """ Voxel 4D visualisation.
+    """
+    Voxel 4D visualisation.
 
     Parameters
     ----------
@@ -838,6 +799,44 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
 
     except:
         print('\n***** Error plotting voxels *****')
+
+
+def weld_meshes_from_layer(layer_input, layer_output):
+    """
+    Grab meshes on an input layer and weld them onto an output layer.
+
+    Parameters
+    ----------
+    layer_input : str
+        Layer containing the Blender meshes to weld.
+    layer_output : str
+        Layer to plot single welded mesh.
+
+    Returns
+    -------
+    None
+
+    """
+
+    print('Welding meshes on layer:{0}'.format(layer_input))
+
+    S = Structure(path=' ')
+
+    add_nodes_elements_from_layers(S, mesh_type='ShellElement', layers=layer_input)
+
+    faces = []
+
+    for element in S.elements.values():
+        faces.append(element.nodes)
+
+    try:
+        clear_layer(layer_output)
+    except:
+        create_layer(layer_output)
+
+    vertices = S.nodes_xyz()
+
+    xdraw_mesh(name='welded_mesh', vertices=vertices, faces=faces, layer=layer_output)
 
 
 # ==============================================================================
