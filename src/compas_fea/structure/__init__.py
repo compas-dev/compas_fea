@@ -1,19 +1,13 @@
 """
-.. _compas_fea.structure:
-
 ********************************************************************************
 structure
 ********************************************************************************
 
-.. module:: compas_fea.structure
+.. currentmodule:: compas_fea.structure
 
 
 structure
 =========
-
-.. currentmodule:: compas_fea.structure.structure
-
-:mod:`compas_fea.structure.structure`
 
 .. autosummary::
     :toctree: generated/
@@ -24,10 +18,6 @@ structure
 constraint
 ==========
 
-.. currentmodule:: compas_fea.structure.constraint
-
-:mod:`compas_fea.structure.constraint`
-
 .. autosummary::
     :toctree: generated/
 
@@ -37,10 +27,6 @@ constraint
 
 displacement
 ============
-
-.. currentmodule:: compas_fea.structure.displacement
-
-:mod:`compas_fea.structure.displacement`
 
 .. autosummary::
     :toctree: generated/
@@ -62,10 +48,6 @@ displacement
 node
 ====
 
-.. currentmodule:: compas_fea.structure.node
-
-:mod:`compas_fea.structure.node`
-
 .. autosummary::
     :toctree: generated/
 
@@ -75,10 +57,6 @@ node
 set
 ===
 
-.. currentmodule:: compas_fea.structure.set
-
-:mod:`compas_fea.structure.set`
-
 .. autosummary::
     :toctree: generated/
 
@@ -87,10 +65,6 @@ set
 
 element
 =======
-
-.. currentmodule:: compas_fea.structure.element
-
-:mod:`compas_fea.structure.element`
 
 .. autosummary::
     :toctree: generated/
@@ -112,10 +86,6 @@ element
 element_properties
 ==================
 
-.. currentmodule:: compas_fea.structure.element_properties
-
-:mod:`compas_fea.structure.element_properties`
-
 .. autosummary::
     :toctree: generated/
 
@@ -124,10 +94,6 @@ element_properties
 
 load
 ====
-
-.. currentmodule:: compas_fea.structure.load
-
-:mod:`compas_fea.structure.load`
 
 .. autosummary::
     :toctree: generated/
@@ -146,10 +112,6 @@ load
 material
 ========
 
-.. currentmodule:: compas_fea.structure.material
-
-:mod:`compas_fea.structure.material`
-
 .. autosummary::
     :toctree: generated/
 
@@ -167,10 +129,6 @@ material
 misc
 ====
 
-.. currentmodule:: compas_fea.structure.misc
-
-:mod:`compas_fea.structure.misc`
-
 .. autosummary::
     :toctree: generated/
 
@@ -181,10 +139,6 @@ misc
 
 section
 =======
-
-.. currentmodule:: compas_fea.structure.section
-
-:mod:`compas_fea.structure.section`
 
 .. autosummary::
     :toctree: generated/
@@ -210,10 +164,6 @@ section
 step
 ====
 
-.. currentmodule:: compas_fea.structure.step
-
-:mod:`compas_fea.structure.step`
-
 .. autosummary::
     :toctree: generated/
 
@@ -225,6 +175,9 @@ step
 
 
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 from .constraint import *
 from .displacement import *
@@ -236,5 +189,8 @@ from .material import *
 from .misc import *
 from .node import *
 from .section import *
+from .set import *
 from .step import *
 from .structure import *
+
+__all__ = [name for name in dir() if not name.startswith('_')]

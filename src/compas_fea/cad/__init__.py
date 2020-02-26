@@ -1,47 +1,39 @@
 """
-.. _compas_fea.cad:
-
 ********************************************************************************
 cad
 ********************************************************************************
 
-.. module:: compas_fea.cad
+.. currentmodule:: compas_fea.cad
 
-The compas_fea package supports Rhino and Blender.
+The compas_fea package supports Rhino and Blender in the frontend.
 
-
-blender
+Blender
 =======
-
-.. currentmodule:: compas_fea.cad.blender
-
-:mod:`compas_fea.cad.blender`
 
 .. autosummary::
     :toctree: generated/
+    :nosignatures:
 
     add_nodes_elements_from_bmesh
     add_nodes_elements_from_layers
-    discretise_mesh
-    add_tets_from_mesh
+    add_nsets_from_layers
     add_nset_from_meshes
-    plot_data
-    plot_voxels
+    add_tets_from_mesh
+    discretise_mesh
     mesh_extrude
-    plot_reaction_forces
     plot_concentrated_forces
+    plot_data
+    plot_reaction_forces
+    plot_voxels
     weld_meshes_from_layer
 
 
-rhino
+Rhino
 =====
-
-.. currentmodule:: compas_fea.cad.rhino
-
-:mod:`compas_fea.cad.rhino`
 
 .. autosummary::
     :toctree: generated/
+    :nosignatures:
 
     add_element_set
     add_node_set
@@ -63,5 +55,11 @@ rhino
     weld_meshes_from_layer
 
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
-__all__ = []
+from .blender import *
+from .rhino import *
+
+__all__ = [name for name in dir() if not name.startswith('_')]

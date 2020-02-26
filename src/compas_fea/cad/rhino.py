@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -25,12 +24,18 @@ from compas_fea.utilities import network_order
 
 from compas_fea.structure import Structure
 
+
 try:
     import rhinoscriptsyntax as rs
 except ImportError:
-    import platform
-    if platform.system() == 'Windows':
-        raise
+    print('could not import rhinoscriptsyntax')
+
+# try:
+#     import rhinoscriptsyntax as rs
+# except ImportError:
+#     import platform
+#     if platform.system() == 'Windows':
+#         raise
 
 import json
 
@@ -63,48 +68,9 @@ __all__ = [
 ]
 
 
-def weld_meshes_from_layer(layer_input, layer_output):
-
-    """ Grab meshes on an input layer and weld them onto an output layer.
-
-    Parameters
-    ----------
-    layer_input : str
-        Layer containing the Rhino meshes to weld.
-    layer_output : str
-        Layer to plot single welded mesh.
-
-    Returns
-    -------
-    None
-
-    """
-
-    print('Welding meshes on layer:{0}'.format(layer_input))
-
-    mdl = Structure(path=' ')
-
-    add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers=layer_input)
-
-    faces = []
-
-    for element in mdl.elements.values():
-        enodes = element.nodes
-
-        if len(enodes) == 3:
-            enodes.append(enodes[-1])
-
-        if len(enodes) == 4:
-            faces.append(enodes)
-
-    rs.DeleteObjects(rs.ObjectsByLayer(layer_output))
-    rs.CurrentLayer(layer_output)
-    rs.AddMesh(mdl.nodes_xyz(), faces)
-
-
 def add_element_set(structure, guids, name):
-
-    """ Adds element set information from Rhino curve and mesh guids.
+    """
+    Adds element set information from Rhino curve and mesh guids.
 
     Parameters
     ----------
@@ -122,7 +88,6 @@ def add_element_set(structure, guids, name):
     Notes
     -----
     - Meshes representing solids must have 'solid' in their name.
-
     """
 
     elements = []
@@ -160,8 +125,8 @@ def add_element_set(structure, guids, name):
 
 
 def add_node_set(structure, guids, name):
-
-    """ Adds node set information from Rhino point guids.
+    """
+    Adds node set information from Rhino point guids.
 
     Parameters
     ----------
@@ -192,8 +157,8 @@ def add_node_set(structure, guids, name):
 
 
 def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=None, thermal=False, pA=None, pL=None):
-
-    """ Adds node and element data from Rhino layers to the Structure object.
+    """
+    Adds node and element data from Rhino layers to the Structure object.
 
     Parameters
     ----------
@@ -282,7 +247,7 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                 mesh = mesh_from_guid(Mesh(), guid)
 
                 vertices = rs.MeshVertices(guid)
-                nodes  = []
+                nodes = []
                 masses = []
 
                 for c, vertex in enumerate(vertices):
@@ -299,15 +264,11 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                         added_elements.add(ekey)
                         elset.add(ekey)
 
-                elif mesh_type == 'MassElement':
-
-                    nodei = 0
-
+                elif mesh_type=='MassElement':
+                    node_iterator=0
                     for node in nodes:
-
-                        ekey = structure.add_element(nodes=[node], type=mesh_type, thermal=thermal, mass=masses[nodei])
-                        nodei += 1
-
+                        ekey = structure.add_element(nodes=[node], type=mesh_type, thermal=thermal, mass=masses[node_iterator]) #structure.nodes[node].mass
+                        node_iterator += 1
                         if ekey is not None:
                             added_elements.add(ekey)
                             elset.add(ekey)
@@ -352,8 +313,8 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 
 
 def add_sets_from_layers(structure, layers):
-
-    """ Add node and element sets to the Structure object from Rhino layers.
+    """
+    Add node and element sets to the Structure object from Rhino layers.
 
     Parameters
     ----------
@@ -393,8 +354,8 @@ def add_sets_from_layers(structure, layers):
 
 
 def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, thermal=False):
-
-    """ Adds tetrahedron elements from a mesh in Rhino to the Structure object.
+    """
+    Adds tetrahedron elements from a mesh in Rhino to the Structure object.
 
     Parameters
     ----------
@@ -460,8 +421,8 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, ther
 
 
 def discretise_mesh(mesh, layer, target, min_angle=15, factor=1):
-
-    """ Discretise a mesh from an input triangulated coarse mesh into small denser meshes.
+    """
+    Discretise a mesh from an input triangulated coarse mesh into small denser meshes.
 
     Parameters
     ----------
@@ -511,8 +472,8 @@ def discretise_mesh(mesh, layer, target, min_angle=15, factor=1):
 
 def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name='', blocks_name='', points_name='',
                  plot_mesh=False, plot_links=False, plot_blocks=False, plot_points=False):
-
-    """ Extrudes a Rhino mesh and adds/creates elements.
+    """
+    Extrudes a Rhino mesh and adds/creates elements.
 
     Parameters
     ----------
@@ -608,8 +569,8 @@ def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name=''
 
 
 def network_from_lines(guids=[], layer=None):
-
-    """ Creates a Network datastructure object from a list of Rhino curve guids.
+    """
+    Creates a Network datastructure object from a list of Rhino curve guids.
 
     Parameters
     ----------
@@ -633,8 +594,8 @@ def network_from_lines(guids=[], layer=None):
 
 
 def ordered_network(structure, network, layer):
-
-    """ Extract vertex and edge orders from a Network for a given start-point.
+    """
+    Extract vertex and edge orders from a Network for a given start-point.
 
     Parameters
     ----------
@@ -665,8 +626,8 @@ def ordered_network(structure, network, layer):
 
 
 def plot_reaction_forces(structure, step, layer=None, scale=1.0):
-
-    """ Plots reaction forces for the Structure analysis results.
+    """
+    Plots reaction forces for the Structure analysis results.
 
     Parameters
     ----------
@@ -719,8 +680,8 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
 
 
 def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
-
-    """ Plots concentrated forces forces for the Structure analysis results.
+    """
+    Plots concentrated forces forces for the Structure analysis results.
 
     Parameters
     ----------
@@ -772,8 +733,8 @@ def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
 
 
 def plot_mode_shapes(structure, step, layer=None, scale=1.0, radius=1):
-
-    """ Plots modal shapes from structure.results.
+    """
+    Plots modal shapes from structure.results.
 
     Parameters
     ----------
@@ -816,7 +777,8 @@ def plot_mode_shapes(structure, step, layer=None, scale=1.0, radius=1):
 
 def plot_volmesh(volmesh, layer=None, draw_cells=True):
 
-    """ Plot a volmesh datastructure.
+    """
+    Plot a volmesh datastructure.
 
     Parameters
     ----------
@@ -856,8 +818,8 @@ def plot_volmesh(volmesh, layer=None, draw_cells=True):
 
 
 def plot_axes(xyz, e11, e22, e33, layer, sc=1):
-
-    """ Plots a set of axes.
+    """
+    Plots a set of axes.
 
     Parameters
     ----------
@@ -894,8 +856,8 @@ def plot_axes(xyz, e11, e22, e33, layer, sc=1):
 
 def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, cbar=[None, None], iptype='mean',
               nodal='mean', mode='', cbar_size=1):
-
-    """ Plots analysis results on the deformed shape of the Structure.
+    """
+    Plots analysis results on the deformed shape of the Structure.
 
     Parameters
     ----------
@@ -1088,8 +1050,8 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
 
 def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None):
-
-    """ Plots the principal stresses of the elements.
+    """
+    Plots the principal stresses of the elements.
 
     Parameters
     ----------
@@ -1152,8 +1114,8 @@ def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None)
 
 
 def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean', nodal='mean', vdx=None, mode=''):
-
-    """ Voxel 4D visualisation.
+    """
+    Voxel 4D visualisation.
 
     Parameters
     ----------
@@ -1217,6 +1179,44 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
     except:
         print('\n***** Error plotting voxels *****')
 
+
+def weld_meshes_from_layer(layer_input, layer_output):
+    """
+    Grab meshes on an input layer and weld them onto an output layer.
+
+    Parameters
+    ----------
+    layer_input : str
+        Layer containing the Rhino meshes to weld.
+    layer_output : str
+        Layer to plot single welded mesh.
+
+    Returns
+    -------
+    None
+
+    """
+
+    print('Welding meshes on layer:{0}'.format(layer_input))
+
+    mdl = Structure(path=' ')
+
+    add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers=layer_input)
+
+    faces = []
+
+    for element in mdl.elements.values():
+        enodes = element.nodes
+
+        if len(enodes) == 3:
+            enodes.append(enodes[-1])
+
+        if len(enodes) == 4:
+            faces.append(enodes)
+
+    rs.DeleteObjects(rs.ObjectsByLayer(layer_output))
+    rs.CurrentLayer(layer_output)
+    rs.AddMesh(mdl.nodes_xyz(), faces)
 
 # ==============================================================================
 # Debugging

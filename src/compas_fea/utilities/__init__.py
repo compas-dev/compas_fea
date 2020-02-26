@@ -1,21 +1,15 @@
 """
-.. _compas_fea.utilities:
-
 ********************************************************************************
 utilities
 ********************************************************************************
 
-.. module:: compas_fea.utilities
+.. currentmodule:: compas_fea.utilities
 
 The compas_fea package's supporting utilities and functions.
 
 
 functions
 =========
-
-.. currentmodule:: compas_fea.utilities.functions
-
-:mod:`compas_fea.utilities.functions`
 
 .. autosummary::
     :toctree: generated/
@@ -37,10 +31,6 @@ functions
 meshing
 =======
 
-.. currentmodule:: compas_fea.utilities.meshing
-
-:mod:`compas_fea.utilities.meshing`
-
 .. autosummary::
     :toctree: generated/
 
@@ -49,6 +39,11 @@ meshing
     tets_from_vertices_faces
 
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 from .functions import *
 from .meshing import *
+
+__all__ = [name for name in dir() if not name.startswith('_')]

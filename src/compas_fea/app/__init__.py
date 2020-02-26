@@ -1,21 +1,15 @@
 """
-.. _compas_fea.app:
-
 ********************************************************************************
 app
 ********************************************************************************
 
-.. module:: compas_fea.app
+.. currentmodule:: compas_fea.app
 
 The compas_fea package PyQt and Vtk application.
 
 
-app
-===
-
-.. currentmodule:: compas_fea.app.app
-
-:mod:`compas_fea.app.app`
+Classes
+=======
 
 .. autosummary::
     :toctree: generated/
@@ -23,5 +17,10 @@ app
     App
 
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
-__all__ = []
+from .app import *  # noqa: F401 F403
+
+__all__ = [name for name in dir() if not name.startswith('_')]
