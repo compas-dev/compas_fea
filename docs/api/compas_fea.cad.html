@@ -19,7 +19,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
 
     
-        <link rel="next" title="fea" href="compas_fea.fea.html" />
+        <link rel="next" title="add_nodes_elements_from_bmesh" href="generated/compas_fea.cad.add_nodes_elements_from_bmesh.html" />
     
     
     
@@ -56,7 +56,123 @@
 
                     
 
-                    
+                    <span class="target" id="module-compas_fea.cad"></span><div class="section" id="cad">
+<h1>cad</h1>
+<p>The compas_fea package supports Rhino and Blender in the frontend.</p>
+<div class="section" id="blender">
+<h2>Blender</h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.cad.add_nodes_elements_from_bmesh.html#compas_fea.cad.add_nodes_elements_from_bmesh" title="compas_fea.cad.add_nodes_elements_from_bmesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_nodes_elements_from_bmesh</span></code></a></p></td>
+<td><p>Adds the Blender mesh’s nodes, edges and faces to the Structure object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.cad.add_nodes_elements_from_layers.html#compas_fea.cad.add_nodes_elements_from_layers" title="compas_fea.cad.add_nodes_elements_from_layers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_nodes_elements_from_layers</span></code></a></p></td>
+<td><p>Adds node and element data from Rhino layers to the Structure object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.cad.add_nsets_from_layers.html#compas_fea.cad.add_nsets_from_layers" title="compas_fea.cad.add_nsets_from_layers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_nsets_from_layers</span></code></a></p></td>
+<td><p>Adds node sets from objects in layers.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.cad.add_nset_from_meshes.html#compas_fea.cad.add_nset_from_meshes" title="compas_fea.cad.add_nset_from_meshes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_nset_from_meshes</span></code></a></p></td>
+<td><p>Adds the Blender meshes’ vertices from a layer as a node set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.cad.add_tets_from_mesh.html#compas_fea.cad.add_tets_from_mesh" title="compas_fea.cad.add_tets_from_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_tets_from_mesh</span></code></a></p></td>
+<td><p>Adds tetrahedron elements from a mesh in Rhino to the Structure object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.cad.discretise_mesh.html#compas_fea.cad.discretise_mesh" title="compas_fea.cad.discretise_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">discretise_mesh</span></code></a></p></td>
+<td><p>Discretise a mesh from an input triangulated coarse mesh into small denser meshes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.cad.mesh_extrude.html#compas_fea.cad.mesh_extrude" title="compas_fea.cad.mesh_extrude"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh_extrude</span></code></a></p></td>
+<td><p>Extrudes a Rhino mesh and adds/creates elements.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.cad.plot_concentrated_forces.html#compas_fea.cad.plot_concentrated_forces" title="compas_fea.cad.plot_concentrated_forces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_concentrated_forces</span></code></a></p></td>
+<td><p>Plots concentrated forces forces for the Structure analysis results.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.cad.plot_data.html#compas_fea.cad.plot_data" title="compas_fea.cad.plot_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_data</span></code></a></p></td>
+<td><p>Plots analysis results on the deformed shape of the Structure.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.cad.plot_reaction_forces.html#compas_fea.cad.plot_reaction_forces" title="compas_fea.cad.plot_reaction_forces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_reaction_forces</span></code></a></p></td>
+<td><p>Plots reaction forces for the Structure analysis results.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.cad.plot_voxels.html#compas_fea.cad.plot_voxels" title="compas_fea.cad.plot_voxels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_voxels</span></code></a></p></td>
+<td><p>Voxel 4D visualisation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.cad.weld_meshes_from_layer.html#compas_fea.cad.weld_meshes_from_layer" title="compas_fea.cad.weld_meshes_from_layer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">weld_meshes_from_layer</span></code></a></p></td>
+<td><p>Grab meshes on an input layer and weld them onto an output layer.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="rhino">
+<h2>Rhino</h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.cad.add_element_set.html#compas_fea.cad.add_element_set" title="compas_fea.cad.add_element_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_element_set</span></code></a></p></td>
+<td><p>Adds element set information from Rhino curve and mesh guids.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.cad.add_node_set.html#compas_fea.cad.add_node_set" title="compas_fea.cad.add_node_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_node_set</span></code></a></p></td>
+<td><p>Adds node set information from Rhino point guids.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.cad.add_nodes_elements_from_layers.html#compas_fea.cad.add_nodes_elements_from_layers" title="compas_fea.cad.add_nodes_elements_from_layers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_nodes_elements_from_layers</span></code></a></p></td>
+<td><p>Adds node and element data from Rhino layers to the Structure object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.cad.add_sets_from_layers.html#compas_fea.cad.add_sets_from_layers" title="compas_fea.cad.add_sets_from_layers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_sets_from_layers</span></code></a></p></td>
+<td><p>Add node and element sets to the Structure object from Rhino layers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.cad.add_tets_from_mesh.html#compas_fea.cad.add_tets_from_mesh" title="compas_fea.cad.add_tets_from_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_tets_from_mesh</span></code></a></p></td>
+<td><p>Adds tetrahedron elements from a mesh in Rhino to the Structure object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.cad.discretise_mesh.html#compas_fea.cad.discretise_mesh" title="compas_fea.cad.discretise_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">discretise_mesh</span></code></a></p></td>
+<td><p>Discretise a mesh from an input triangulated coarse mesh into small denser meshes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.cad.mesh_extrude.html#compas_fea.cad.mesh_extrude" title="compas_fea.cad.mesh_extrude"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh_extrude</span></code></a></p></td>
+<td><p>Extrudes a Rhino mesh and adds/creates elements.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.cad.network_from_lines.html#compas_fea.cad.network_from_lines" title="compas_fea.cad.network_from_lines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">network_from_lines</span></code></a></p></td>
+<td><p>Creates a Network datastructure object from a list of Rhino curve guids.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.cad.ordered_network.html#compas_fea.cad.ordered_network" title="compas_fea.cad.ordered_network"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ordered_network</span></code></a></p></td>
+<td><p>Extract vertex and edge orders from a Network for a given start-point.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.cad.plot_reaction_forces.html#compas_fea.cad.plot_reaction_forces" title="compas_fea.cad.plot_reaction_forces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_reaction_forces</span></code></a></p></td>
+<td><p>Plots reaction forces for the Structure analysis results.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.cad.plot_concentrated_forces.html#compas_fea.cad.plot_concentrated_forces" title="compas_fea.cad.plot_concentrated_forces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_concentrated_forces</span></code></a></p></td>
+<td><p>Plots concentrated forces forces for the Structure analysis results.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.cad.plot_mode_shapes.html#compas_fea.cad.plot_mode_shapes" title="compas_fea.cad.plot_mode_shapes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_mode_shapes</span></code></a></p></td>
+<td><p>Plots modal shapes from structure.results.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.cad.plot_volmesh.html#compas_fea.cad.plot_volmesh" title="compas_fea.cad.plot_volmesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_volmesh</span></code></a></p></td>
+<td><p>Plot a volmesh datastructure.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.cad.plot_axes.html#compas_fea.cad.plot_axes" title="compas_fea.cad.plot_axes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_axes</span></code></a></p></td>
+<td><p>Plots a set of axes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.cad.plot_data.html#compas_fea.cad.plot_data" title="compas_fea.cad.plot_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_data</span></code></a></p></td>
+<td><p>Plots analysis results on the deformed shape of the Structure.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.cad.plot_principal_stresses.html#compas_fea.cad.plot_principal_stresses" title="compas_fea.cad.plot_principal_stresses"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_principal_stresses</span></code></a></p></td>
+<td><p>Plots the principal stresses of the elements.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.cad.plot_voxels.html#compas_fea.cad.plot_voxels" title="compas_fea.cad.plot_voxels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_voxels</span></code></a></p></td>
+<td><p>Voxel 4D visualisation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.cad.weld_meshes_from_layer.html#compas_fea.cad.weld_meshes_from_layer" title="compas_fea.cad.weld_meshes_from_layer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">weld_meshes_from_layer</span></code></a></p></td>
+<td><p>Grab meshes on an input layer and weld them onto an output layer.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
                     
                 
                 </div>
@@ -83,12 +199,16 @@
                         <div class="navbar-expand-md">
                             <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
 
-                            <ul class="nav flex-column">
+                            <ul class="nav flex-column active">
 <li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../installation.html">Installing compas_fea</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../api.html">API Reference</a></li>
+<li class="nav-item active"><a class="nav-link reference internal" href="../api.html">API Reference</a><ul class="nav active">
+<li class="nav-item active"><a class="nav-link reference internal" href="compas_fea.html">compas_fea</a></li>
+</ul>
+</li>
 <li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
 </ul>
 
@@ -107,7 +227,12 @@
 
                 
 
-                <ul class="simple">
+                <ul class="nav flex-column" id="compas-localnav">
+<li class="nav-item"><a class="nav-link reference internal" href="#">cad</a><ul class="nav">
+<li class="nav-item"><a class="nav-link reference internal" href="#blender">Blender</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#rhino">Rhino</a></li>
+</ul>
+</li>
 </ul>
 
 
