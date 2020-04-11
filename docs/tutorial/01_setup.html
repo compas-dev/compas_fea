@@ -86,10 +86,6 @@
 </div>
 <div class="section" id="python">
 <h2>Python</h2>
-<p>As the <strong>compas_fea</strong> package uses the core <a class="reference external" href="https://compas-dev.github.io/">compas</a> framework for a variety of datastructure, visualisation and geometric tasks, the core <strong>compas</strong> library <code class="docutils literal notranslate"><span class="pre">src</span></code> folder in addition to the <strong>compas_fea</strong> package <code class="docutils literal notranslate"><span class="pre">src</span></code> folder must be on the <strong>PYTHONPATH</strong>. This can be set in Windows under <strong>Environment Variables</strong> in <strong>Advanced System Settings</strong>, and on Linux with the following addition to the <strong>.bashrc</strong> or <strong>.profile</strong> files:</p>
-<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s1">&#39;$PYTHONPATH:/path/to/compas/src/:/path/to/compas_fea/src/&#39;</span>
-</code></pre></div>
-</div>
 <p>The <strong>compas_fea</strong> package is compatible with Python versions 2.7 and 3.7, although Python 2.7 is discouraged. Even if any utilised finite element software chooses one version of Python for their API (Abaqus 6.14 uses Python 2.6 for example), the input files that are needed to run a structural model through this software are generated independently by <strong>compas_fea</strong> with the user’s own independent choice of Python version.</p>
 <p>A number of Python package dependencies exists to use <strong>compas_fea</strong>, either as an optional or a required module or package, these are listed below. A Python distribution such as <a class="reference external" href="http://www.anaconda.com/download/">Anaconda</a> 2 or 3 for Python 2.7 and 3.7 respectively, will cover all of the required module and packages and most of the optional ones as standard. For a standalone <a class="reference external" href="https://www.python.org/downloads/">CPython</a> installation, additional modules and packages are recommended to be installed individually via <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span></code>.</p>
 <div class="section" id="required">
@@ -98,6 +94,7 @@
 <li><p><a class="reference external" href="http://www.numpy.org/">NumPy</a>: needed for efficient post-processing of analysis output data in array formats.</p></li>
 <li><p><a class="reference external" href="https://www.scipy.org/">SciPy</a>: used for various spatial and visualisation functions, and post-processing with sparse arrays.</p></li>
 </ul>
+<p>These packages are automatically installed during the compas_fea installation.</p>
 </div>
 <div class="section" id="optional">
 <h3>Optional</h3>
@@ -107,6 +104,7 @@
 <li><p><a class="reference external" href="https://www.vtk.org/">Vtk</a>: (Python version) utilised for standalone line, mesh and voxel plotting of elements and results.</p></li>
 <li><p><a class="reference external" href="https://riverbankcomputing.com/software/pyqt/intro">PyQt5</a> Python wrapping of the Qt application framework, for GUIs.</p></li>
 </ul>
+<p>These packages need to be installed by the user (if needed) using <code class="docutils literal notranslate"><span class="pre">conda</span></code> or <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
 </div>
 </div>
 <div class="section" id="cad-software">
@@ -114,11 +112,17 @@
 <p>The <strong>compas_fea</strong> package does not need Computer Aided Design (CAD) software to be installed and used effectively, but it is very valuable for generating and inserting geometry into the <strong>Structure</strong> object and for efficiently visualising results in 3D. This is useful either for a single analysis of a structural model with geometry extracted from the CAD workspace, or as part of a parametric study with many models and analyses through scripted geometry. In general, the only difference in using a specific type of CAD software, is the manner in which geometric information is taken from the CAD environment (e.g. through layers or objects) and the way that output data is then re-plotted on native geometry types. There is no difference in how objects such as loads, materials and boundary conditions are applied, as this is based on adding objects to the <strong>Structure</strong> through core Python scripting, making it CAD independent.</p>
 <div class="section" id="rhinoceros">
 <h3>Rhinoceros</h3>
-<p>Support for <a class="reference external" href="http://www.rhino3d.com">Rhinoceros</a> from Robert McNeel &amp; Associates is based on version 6.0, for which the <a class="reference external" href="http://www.ironpython.net/">IronPython</a> distribution is standard. Please see the installation and set-up instructions for using Rhinoceros with the core <strong>compas</strong> library, such as installing IronPython 2.7.x and adding the <code class="docutils literal notranslate"><span class="pre">Lib</span></code> directory. The only addition for <strong>compas_fea</strong> compatibility is to include the <strong>compas_fea</strong> package <code class="docutils literal notranslate"><span class="pre">src</span></code> folder in the Rhinoceros equivalent <strong>PYTHONPATH</strong>. As for the required NumPy and SciPy packages (and optional packages) which are not supported by IronPython, these will be called automatically via sub-processes in the background using the <code class="docutils literal notranslate"><span class="pre">xfunc</span></code> function in <code class="docutils literal notranslate"><span class="pre">compas.utilities</span></code>, and so the CPython distribution that has these packages installed should be on the system’s <strong>PYTHONPATH</strong> (this is separate from Rhino’s path manager).</p>
+<p>Support for <a class="reference external" href="http://www.rhino3d.com">Rhinoceros</a> from Robert McNeel &amp; Associates is based on version 6.0, for which the <a class="reference external" href="http://www.ironpython.net/">IronPython</a> distribution is standard. Please see the installation and set-up instructions for using Rhinoceros with the core <strong>compas</strong> library.</p>
+<p>The only addition for <strong>compas_fea</strong> is to run in your terminal (as admin) the following commands:</p>
+<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>conda activate name_of_your_environment
+python -m compas_rhino.install -p compas_fea
+</code></pre></div>
+</div>
 </div>
 <div class="section" id="blender">
 <h3>Blender</h3>
-<p>Support for the open-source graphics software <a class="reference external" href="https://www.blender.org/">Blender</a> by the Blender Foundation is based on version 2.80, for which Python 3.7 (CPython) is standard. Blender uses its own Python paths as well as the global system or user Python paths, so the easiest step is to place the <strong>compas_fea</strong> package <code class="docutils literal notranslate"><span class="pre">src</span></code> folder on the <strong>PYTHONPATH</strong>, along with access to the NumPy, SciPy and other packages which will have been registered already in the system <code class="docutils literal notranslate"><span class="pre">site-packages</span></code>. As Blender uses CPython, sub-processes are not needed at any stage of the analysis or data processing and viewing, which allows for a faster execution time for processes that would require the serialisation of large <code class="docutils literal notranslate"><span class="pre">.json</span></code> files, as is the case for data extraction after an analysis when using Rhino.</p>
+<p>Support for the open-source graphics software <a class="reference external" href="https://www.blender.org/">Blender</a> by the Blender Foundation is based on version 2.80, for which Python 3.7 (CPython) is standard. Please see the installation and set-up instructions for using Rhinoceros with the core <strong>compas</strong> library.</p>
+<p>As Blender uses CPython, sub-processes are not needed at any stage of the analysis or data processing and viewing, which allows for a faster execution time for processes that would require the serialisation of large <code class="docutils literal notranslate"><span class="pre">.json</span></code> files, as is the case for data extraction after an analysis when using Rhino.</p>
 </div>
 </div>
 </div>
@@ -152,7 +156,6 @@
                             <ul class="nav flex-column active">
 <li class="nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../installation.html">Installation</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a><ul class="nav active">
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">Setup</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="02_structure.html">Structure</a></li>
@@ -221,11 +224,11 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Feb 26, 2020.
+                Last updated on Apr 11, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
             
         </div>
     </footer>

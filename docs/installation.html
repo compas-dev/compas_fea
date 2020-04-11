@@ -19,7 +19,7 @@
     <link rel="stylesheet" type="text/css" href="_static/css/compas-reference.css" />
 
     
-        <link rel="next" title="Getting Started" href="gettingstarted.html" />
+        <link rel="next" title="Tutorial" href="tutorial.html" />
     
     
     
@@ -58,6 +58,11 @@
 
                     <div class="section" id="installation">
 <h1>Installation</h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since version <code class="docutils literal notranslate"><span class="pre">0.1.1</span></code>, adding the <em>compas_fea</em> package <em>src</em> folder to the <em>PYTHONPATH</em> is <strong>no longer necessary</strong>. For previous users, it is <strong>strongly suggested</strong> to remove the package from the <em>PYTHONPATH</em> and proceed with a clean installation following the instructions below.</p>
+</div>
+<p>You can choose either of the following two installations:</p>
 <div class="section" id="installation-from-source">
 <h2>Installation from source</h2>
 <p>Choose a location where you want to clone the repository, open a terminal and do:</p>
@@ -70,8 +75,8 @@ $ git clone https://github.com/compas-dev/compas_fea.git
 $ git pull
 </code></pre></div>
 </div>
-<p>Released versions of <a class="reference internal" href="api/compas_fea.html#module-compas_fea" title="compas_fea"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea</span></code></a> can be installed with <em>pip</em>.
-With the desired virtual environment activated, do</p>
+<p>Released versions of :mod: <code class="docutils literal notranslate"><span class="pre">compas_fea</span></code> can be installed with <em>pip</em>.
+With the desired virtual (conda) environment activated, do</p>
 <div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>$ <span class="nb">cd</span> &lt;path-to-folder&gt;/compas_fea/
 $ pip install -e .
 </code></pre></div>
@@ -131,7 +136,6 @@ $ python -m compas_rhino.install -p compas_fea
                             <ul class="nav flex-column active">
 <li class="nav-item"><a class="nav-link reference internal" href="intro.html">Introduction</a></li>
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">Installation</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="examples.html">Examples</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="api.html">API Reference</a></li>
@@ -171,11 +175,11 @@ $ python -m compas_rhino.install -p compas_fea
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Feb 26, 2020.
+                Last updated on Apr 11, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
             
         </div>
     </footer>

@@ -8,8 +8,9 @@ Installation
 .. highlight:: bash
 
 .. note::
-Since of version ``0.1.1`` is no longer necessary to add the **compas_fea** package ``src`` folder to the **PYTHONPATH**. For previous users, it is strongly suggested to remove the package from  the **PYTHONPATH** and proceed with a clean installation following the instructions below.
-:: 
+    Since version ``0.1.1``, adding the *compas_fea* package *src* folder to the *PYTHONPATH* is **no longer necessary**. For previous users, it is **strongly suggested** to remove the package from the *PYTHONPATH* and proceed with a clean installation following the instructions below.
+
+You can choose either of the following two installations:
 
 Installation from source
 ========================
@@ -30,8 +31,8 @@ Now you have the source code on your machine. To keep it up-to-date regularly pu
     $ git pull
 
 
-Released versions of :mod:`compas_fea` can be installed with *pip*.
-With the desired virtual environment activated, do
+Released versions of :mod: ``compas_fea`` can be installed with *pip*.
+With the desired virtual (conda) environment activated, do
 
 ::
 
