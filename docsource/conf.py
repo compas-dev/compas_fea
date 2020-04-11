@@ -13,9 +13,9 @@ import sphinx_compas_theme
 # -- General configuration ------------------------------------------------
 
 project = 'compas_fea'
-copyright = ''
+copyright = 'Block Research Group'
 author = ''
-release = '0.1.0'
+release = '0.1.1'
 version = '.'.join(release.split('.')[0:2])
 
 master_doc = 'index'
@@ -99,8 +99,8 @@ html_theme_path = sphinx_compas_theme.get_html_theme_path()
 
 html_theme_options = {
     'package_name'    : 'compas_fea',
-    'package_title'   : project,
-    'package_version' : release,
+    'package_title'   : 'compas_fea',
+    'package_version' : '0.1.1',
 }
 
 html_context = {}
