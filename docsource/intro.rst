@@ -19,9 +19,10 @@ The ``compas_fea`` package of the ``COMPAS`` framework seeks to aid the user, be
     :class: figure-img img-fluid
     :align: center
 
-    A scripting and CAD software pairing can be used to create and analyse a structure, and then visualise the results in the same window.
+    `A scripting and CAD software pairing can be used to create and analyse a structure, and then visualise the results in the same window.`
 
 By using the ``compas_fea`` package, the majority of the repetitive scripting tasks needed to perform a geometrically or structurally complex analysis are eliminated, allowing for the analysis of many different models, with easy to use and streamlined data post-processing and visualisation support.
 
-**Note**: although finite element analysis has established itself as the preferred analysis method in a variety of fields, it is important to construct a model that closely represents the physical problem and is appropriate for the task at hand. As such, the results of a finite element analysis should always be checked with hand calculations, intuition, experience, and ideally reviewed by someone skilled in the field before the results are taken as 'correct'.
+.. note:: 
+    although finite element analysis has established itself as the preferred analysis method in a variety of fields, it is important to construct a model that closely represents the physical problem and is appropriate for the task at hand. As such, the results of a finite element analysis should always be checked with hand calculations, intuition, experience, and ideally reviewed by someone skilled in the field before the results are taken as 'correct'.
 
