@@ -7,6 +7,9 @@ Installation
 
 .. highlight:: bash
 
+.. note::
+Since of version ``0.1.1`` is no longer necessary to add the **compas_fea** package ``src`` folder to the **PYTHONPATH**. For previous users, it is strongly suggested to remove the package from  the **PYTHONPATH** and proceed with a clean installation following the instructions below.
+:: 
 
 Installation from source
 ========================

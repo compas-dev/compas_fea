@@ -46,11 +46,7 @@ An OpenSees executable for Apple Machines with Intel processors running OS 10.4 
 Python
 ======
 
-As the **compas_fea** package uses the core `compas <https://compas-dev.github.io/>`_ framework for a variety of datastructure, visualisation and geometric tasks, the core **compas** library ``src`` folder in addition to the **compas_fea** package ``src`` folder must be on the **PYTHONPATH**. This can be set in Windows under **Environment Variables** in **Advanced System Settings**, and on Linux with the following addition to the **.bashrc** or **.profile** files:
-
-.. code-block:: bash
-
-    export PYTHONPATH='$PYTHONPATH:/path/to/compas/src/:/path/to/compas_fea/src/'
+Since of version ``0.1.1`` is no longer necessary to add the **compas_fea** package ``src`` folder to the **PYTHONPATH**. For previous users, it is strongly suggested to remove the package from  the **PYTHONPATH** and proceed with a clean installation following the instructions below. 
 
 The **compas_fea** package is compatible with Python versions 2.7 and 3.7, although Python 2.7 is discouraged. Even if any utilised finite element software chooses one version of Python for their API (Abaqus 6.14 uses Python 2.6 for example), the input files that are needed to run a structural model through this software are generated independently by **compas_fea** with the user's own independent choice of Python version.
 
