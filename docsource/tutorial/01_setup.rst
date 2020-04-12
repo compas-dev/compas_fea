@@ -46,12 +46,6 @@ An OpenSees executable for Apple Machines with Intel processors running OS 10.4 
 Python
 ======
 
-As the **compas_fea** package uses the core `compas <https://compas-dev.github.io/>`_ framework for a variety of datastructure, visualisation and geometric tasks, the core **compas** library ``src`` folder in addition to the **compas_fea** package ``src`` folder must be on the **PYTHONPATH**. This can be set in Windows under **Environment Variables** in **Advanced System Settings**, and on Linux with the following addition to the **.bashrc** or **.profile** files:
-
-.. code-block:: bash
-
-    export PYTHONPATH='$PYTHONPATH:/path/to/compas/src/:/path/to/compas_fea/src/'
-
 The **compas_fea** package is compatible with Python versions 2.7 and 3.7, although Python 2.7 is discouraged. Even if any utilised finite element software chooses one version of Python for their API (Abaqus 6.14 uses Python 2.6 for example), the input files that are needed to run a structural model through this software are generated independently by **compas_fea** with the user's own independent choice of Python version.
 
 A number of Python package dependencies exists to use **compas_fea**, either as an optional or a required module or package, these are listed below. A Python distribution such as `Anaconda <http://www.anaconda.com/download/>`_ 2 or 3 for Python 2.7 and 3.7 respectively, will cover all of the required module and packages and most of the optional ones as standard. For a standalone `CPython <https://www.python.org/downloads/>`_ installation, additional modules and packages are recommended to be installed individually via ``pip install``.
@@ -62,6 +56,8 @@ Required
 - `NumPy <http://www.numpy.org/>`_: needed for efficient post-processing of analysis output data in array formats.
 - `SciPy <https://www.scipy.org/>`_: used for various spatial and visualisation functions, and post-processing with sparse arrays.
 
+These packages are automatically installed during the compas_fea installation.
+
 Optional
 ********
 
@@ -70,6 +66,7 @@ Optional
 - `Vtk <https://www.vtk.org/>`_: (Python version) utilised for standalone line, mesh and voxel plotting of elements and results.
 - `PyQt5 <https://riverbankcomputing.com/software/pyqt/intro>`_ Python wrapping of the Qt application framework, for GUIs.
 
+These packages need to be installed by the user (if needed) using ``conda`` or ``pip``.
 
 ============
 CAD software
@@ -80,9 +77,18 @@ The **compas_fea** package does not need Computer Aided Design (CAD) software to
 Rhinoceros
 **********
 
-Support for `Rhinoceros <http://www.rhino3d.com>`_ from Robert McNeel & Associates is based on version 6.0, for which the `IronPython <http://www.ironpython.net/>`_ distribution is standard. Please see the installation and set-up instructions for using Rhinoceros with the core **compas** library, such as installing IronPython 2.7.x and adding the ``Lib`` directory. The only addition for **compas_fea** compatibility is to include the **compas_fea** package ``src`` folder in the Rhinoceros equivalent **PYTHONPATH**. As for the required NumPy and SciPy packages (and optional packages) which are not supported by IronPython, these will be called automatically via sub-processes in the background using the ``xfunc`` function in ``compas.utilities``, and so the CPython distribution that has these packages installed should be on the system's **PYTHONPATH** (this is separate from Rhino's path manager).
+Support for `Rhinoceros <http://www.rhino3d.com>`_ from Robert McNeel & Associates is based on version 6.0, for which the `IronPython <http://www.ironpython.net/>`_ distribution is standard. Please see the installation and set-up instructions for using Rhinoceros with the core **compas** library.
+
+The only addition for **compas_fea** is to run in your terminal (as admin) the following commands:
+
+.. code-block:: bash
+
+    conda activate name_of_your_environment
+    python -m compas_rhino.install -p compas_fea
 
 Blender
 *******
 
-Support for the open-source graphics software `Blender <https://www.blender.org/>`_ by the Blender Foundation is based on version 2.80, for which Python 3.7 (CPython) is standard. Blender uses its own Python paths as well as the global system or user Python paths, so the easiest step is to place the **compas_fea** package ``src`` folder on the **PYTHONPATH**, along with access to the NumPy, SciPy and other packages which will have been registered already in the system ``site-packages``. As Blender uses CPython, sub-processes are not needed at any stage of the analysis or data processing and viewing, which allows for a faster execution time for processes that would require the serialisation of large ``.json`` files, as is the case for data extraction after an analysis when using Rhino.
+Support for the open-source graphics software `Blender <https://www.blender.org/>`_ by the Blender Foundation is based on version 2.80, for which Python 3.7 (CPython) is standard. Please see the installation and set-up instructions for using Rhinoceros with the core **compas** library. 
+
+As Blender uses CPython, sub-processes are not needed at any stage of the analysis or data processing and viewing, which allows for a faster execution time for processes that would require the serialisation of large ``.json`` files, as is the case for data extraction after an analysis when using Rhino.

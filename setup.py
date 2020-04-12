@@ -25,13 +25,13 @@ optional_requirements = {}
 
 setup(
     name='compas_fea',
-    version='0.1.0',
-    description='',
+    version='0.1.1',
+    description='compas finite element package',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/compas-dev/compas_fea',
-    author='',
-    author_email='',
+    author='Andrew Liew',
+    author_email='a.liew@sheffield.ac.uk',
     license='MIT license',
     classifiers=[
         'Development Status :: 4 - Beta',
