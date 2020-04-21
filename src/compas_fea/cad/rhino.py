@@ -4,7 +4,6 @@ from __future__ import print_function
 
 try:
     from compas_rhino.geometry import RhinoMesh
-    from compas_rhino.helpers.mesh import mesh_from_guid
 except:
     pass
 
@@ -378,9 +377,9 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, ther
 
     """
 
-    rhinomesh = RhinoMesh(mesh)
-    vertices  = rhinomesh.get_vertex_coordinates()
-    faces     = [face[:3] for face in rhinomesh.get_face_vertices()]
+    rhinomesh = RhinoMesh.from_guid(mesh)
+    vertices  = rhinomesh.vertices
+    faces     = [face[:3] for face in rhinomesh.faces]
 
     try:
         tets_points, tets_elements = meshing.tets_from_vertices_faces(vertices=vertices, faces=faces, volume=volume)
@@ -443,9 +442,9 @@ def discretise_mesh(mesh, layer, target, min_angle=15, factor=1):
 
     """
 
-    rhinomesh = RhinoMesh(mesh)
-    vertices  = rhinomesh.get_vertex_coordinates()
-    faces     = [face[:3] for face in rhinomesh.get_face_vertices()]
+    rhinomesh = RhinoMesh.from_guid(mesh)
+    vertices  = rhinomesh.vertices
+    faces     = [face[:3] for face in rhinomesh.faces]
 
     try:
 
@@ -512,7 +511,7 @@ def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name=''
 
     """
 
-    mesh = mesh_from_guid(Mesh(), guid)
+    mesh = RhinoMesh.from_guid(guid).to_compas(cls=Mesh)
     extrude_mesh(structure=structure, mesh=mesh, layers=layers, thickness=thickness, mesh_name=mesh_name,
                  links_name=links_name, blocks_name=blocks_name)
 
