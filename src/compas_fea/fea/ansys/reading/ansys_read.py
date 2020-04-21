@@ -197,15 +197,15 @@ def get_displacements_from_result_files(out_path, step):
     displacements = dfile.readlines()
 
     disp_dict = {'ux': {}, 'uy': {}, 'uz': {}, 'um': {}}
-    for disp in displacements[1:]:
+    for disp in displacements:
         dstring = disp.split(',')
         disp = map(float, dstring[1:])
-        key = int(disp[0]) - 1
-        disp_dict['ux'][key] = disp[1]
-        disp_dict['uy'][key] = disp[2]
-        disp_dict['uz'][key] = disp[3]
-        disp_dict['um'][key] = disp[4]
-
+        key = int(float(dstring[0])) - 1
+        disp_dict['ux'][key] = disp[0]
+        disp_dict['uy'][key] = disp[1]
+        disp_dict['uz'][key] = disp[2]
+        # disp_dict['um'][key] = disp[4]
+        disp_dict['um'][key] = length_vector([disp[0], disp[1], disp[2]])
     return disp_dict
 
 
@@ -352,7 +352,7 @@ def get_reactions_from_result_files(out_path, step):
     react_dict = {'rmx': {}, 'rmy': {}, 'rmz': {}, 'rfx': {}, 'rfy': {}, 'rfz': {}, 'rfm': {}}
     for i in range(len(r)):
         r_string = r[i].split(',')
-        reaction = map(float, r_string[1:])
+        reaction = map(float, r_string)
         key = int(reaction[0]) - 1
         if all(v == 0.0 for v in reaction) is False:
             react_dict['rmx'][key] = float(reaction[4])

@@ -1,132 +1,78 @@
-"""An example compas_fea package use for beam elements."""
-import compas_fea
-from compas_fea.fea.ansys import ansys
-# from compas_fea.cad.rhino import rhino
-from compas_fea import structure
+
+from compas_fea.cad import rhino
+from compas_fea.structure import CircularSection
+from compas_fea.structure import ElasticIsotropic
+from compas_fea.structure import ElementProperties as Properties
+from compas_fea.structure import GeneralDisplacement
+from compas_fea.structure import GeneralStep
+from compas_fea.structure import PinnedDisplacement
+from compas_fea.structure import PointLoad
+from compas_fea.structure import Structure
+
 from math import pi
-import rhinoscriptsyntax as rs
 
 
-# Folders and Structure name
-name = 'beam'
-path = 'Mac/Home/Desktop/ansys_test/'
-temp = 'C:/Temp/'
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
-# Create an empty Structure object named mdl
-mdl = structure.Structure()
 
-rs.EnableRedraw(False)
+# Structure
 
-# Clear layers
-rs.DeleteObjects(rs.ObjectsByLayer('LINES'))
-rs.DeleteObjects(rs.ObjectsByLayer('NSET_LEFT'))
-rs.DeleteObjects(rs.ObjectsByLayer('NSET_RIGHT'))
+mdl = Structure(name='beam_simple', path='C:/Temp/')
 
-# Create Network from lines
-L = 1.0
-nx = 100
-dx = L / nx
-x = [i * dx for i in range(nx + 1)]
-rs.CurrentLayer(rs.AddLayer('LINES'))
-for i in range(nx):
-    rs.AddLine([x[i], 0, 0], [x[i + 1], 0, 0])
-network = rhino.network_from_lines(rs.ObjectsByLayer('LINES'))
+# Elements
 
-# Beam ends
-rs.CurrentLayer('NSET_LEFT')
-rs.AddPoint([x[0], 0, 0])
-rs.CurrentLayer('NSET_RIGHT')
-rs.AddPoint([x[-1], 0, 0])
+network = rhino.network_from_lines(layer='elset_lines')
+mdl.add_nodes_elements_from_network(network=network, element_type='BeamElement',
+                                    elset='elset_lines', axes={'ex': [0, -1, 0]})
 
-# Balls
-spacing = 10
-ball_weight = -0.1
-rs.DeleteObjects(rs.ObjectsByLayer('NSET_BALLS'))
-rs.CurrentLayer('NSET_BALLS')
-for xi in x[spacing::spacing]:
-    rs.AddPoint([xi, 0, 0])
+# Sets
 
-rs.EnableRedraw(True)
+rhino.add_sets_from_layers(mdl, layers=['nset_left', 'nset_right', 'nset_weights'])
 
-# Add beam element and geometry to Structure
-rhino.add_nodes_elements_from_network(mdl, network=network, element_type='BEAM')
+# Materials
 
-# Add node and element sets to the Structure object
-rhino.sets_from_layers(mdl, layers=['NSET_LEFT', 'NSET_RIGHT', 'NSET_BALLS'])
+mdl.add(ElasticIsotropic(name='mat_elastic', E=20*10**9, v=0.3, p=1500))
 
-# Add materials
-structure.add_ElasticIsotropic(mdl, name='MAT_ELASTIC', E=20*10**9, v=0.3, p=1500)
+# Sections
 
-# Add sections via function
-nodes, elements, elsets, arclengths, L = rhino.ordered_lines(mdl,
-    network=network, layer='NSET_LEFT')
+_, ekeys, L, Lt = rhino.ordered_network(mdl, network=network, layer='nset_left')
 
-for c, i in enumerate(arclengths):
-    ri = (((i / L) - 0.5)**2 + 0.4) * 0.01
-    sec_name = 'SEC_ROD_{0}_{1}'.format(c, 'NSET_LEFT')
-    structure.add_Circular(mdl, name=sec_name, r=ri)
-    mdl.add_element_properties(type='BEAM', material='MAT_ELASTIC',
-                               section=sec_name, elsets=[elsets[c]])
+for i, Li in zip(ekeys, L):
+    ri = (1 + Li / Lt) * 0.020
+    sname = 'sec_{0}'.format(i)
+    mdl.add(CircularSection(name=sname, r=ri))
+    mdl.add(Properties(name='ep_{0}'.format(i), material='mat_elastic', section=sname, elements=[i]))
 
-# Add loads
-structure.add_PointLoad(mdl, name='LOAD_BALLS', nodes='NSET_BALLS', z=ball_weight)
-structure.add_GravityLoad(mdl, name='LOAD_GRAVITY', elements='ELSET_ALL')
+# Displacements
 
-# Add displacements
-structure.add_Displacement(mdl, name='DISP_LEFT', nodes='NSET_LEFT',
-    x=0, y=0, z=0, xx=0, yy=45*pi/180, zz=0)
-structure.add_Displacement(mdl, name='DISP_RIGHT', nodes='NSET_RIGHT',
-    x='-', y=0.1, z=0.2, xx='-', yy=0, zz=25*pi/180)
+mdl.add([
+    PinnedDisplacement(name='disp_left', nodes='nset_left'),
+    GeneralDisplacement(name='disp_right', nodes='nset_right', y=0, z=0, xx=0),
+    GeneralDisplacement(name='disp_rotate', nodes='nset_left', yy=30*pi/180),
+])
 
-# Add steps
-structure.add_Step(mdl, name='S1_BC', nlgeom=True, type='STATIC',
-    displacements=['DISP_LEFT', 'DISP_RIGHT'])
-structure.add_Step(mdl, name='S2_LOAD', nlgeom=True, type='STATIC',
-    loads=['LOAD_GRAVITY', 'LOAD_BALLS'])
+# Loads
 
-# Set steps order
-order = ['S1_BC','S2_LOAD']
-mdl.set_steps_order(order)
+mdl.add(PointLoad(name='load_weights', nodes='nset_weights', z=-100))
 
-# Structure summary
-#mdl.summary()
+# Steps
 
-# Generate .inp file
-fnm = path + name + '.inp'
-ansys.inp_generate(mdl, filename=fnm)
+mdl.add([
+    GeneralStep(name='step_bc', displacements=['disp_left', 'disp_right']),
+    GeneralStep(name='step_load', loads='load_weights', displacements='disp_rotate'),
+])
+mdl.steps_order = ['step_bc', 'step_load']
 
-# # Run and extract data
-mdl.analyse(path=path, name=name+'.inp', temp=temp, software='ansys')
+# Summary
 
-# # Load data
-# fnm = path + name + '.obj'
-# mdl = structure.load(fnm)
+mdl.summary()
 
-# # Plot displacements
-# fo, U = rhino.plot_deformed_data(mdl, step='S2_LOAD', field='U',
-#     component='magnitude', radius=0.01)
-# fo, U = rhino.plot_deformed_data(mdl, step='S2_LOAD', field='UR',
-#     component='UR2', radius=0.01)
+# Run
 
-# # Plot section forces/moments
-# fo, U = rhino.plot_deformed_data(mdl, step='S2_LOAD', field='SF',
-#     component='SF1', radius=0.01)
-# fo, U = rhino.plot_deformed_data(mdl, step='S2_LOAD', field='SF',
-#     component='SF3', radius=0.01)
-# fo, U = rhino.plot_deformed_data(mdl, step='S2_LOAD', field='SM',
-#     component='SM2', radius=0.01)
+mdl.analyse_and_extract(software='ansys', fields=['u', 'rf', 's'], license='introductory')
 
-# # Reactions
-# RF = mdl.extract_results('S2_LOAD', field='RF')
-# RM = mdl.extract_results('S2_LOAD', field='RM')
-# inc = RF.keys()[0]
-# l_node = mdl.sets['NSET_LEFT']['selection'][0]
-# r_node = mdl.sets['NSET_RIGHT']['selection'][0]
-# print('Left reactions')
-# print(RF[inc][l_node])
-# print(RM[inc][l_node])
-# print('Right reactions')
-# print(RF[inc][r_node])
-# print(RM[inc][r_node])
-
-# print('\nSCRIPT FINISHED\n')
+rhino.plot_data(mdl, step='step_load', field='um', radius=0.01, cbar_size=0.3)
+rhino.plot_reaction_forces(mdl, step='step_load', layer=None, scale=.1)
+#rhino.plot_data(mdl, step='step_load', field='s', radius=0.01, cbar_size=0.3)
+#rhino.plot_data(mdl, step='step_load', field='sf2', radius=0.01, cbar_size=0.3)
+#rhino.plot_data(mdl, step='step_load', field='sm1', radius=0.01, cbar_size=0.3)

@@ -9,10 +9,10 @@ from compas_fea.structure import GeneralStep
 from compas_fea.structure import ModalStep
 from compas_fea.structure import HarmonicStep
 from compas_fea.structure import PointLoad
-from compas.datastructures.mesh.mesh import Mesh
+from compas.datastructures import Mesh
 
 
-# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
+# Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 def static(geom_file):

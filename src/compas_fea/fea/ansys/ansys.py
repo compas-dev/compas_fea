@@ -272,7 +272,8 @@ def load_to_results(structure, fields, steps):
         if structure.steps[step].__name__ == 'GeneralStep':
             rlist = []
             if 'u' in fields or 'all' in fields:
-                rlist.append(get_displacements_from_result_files(out_path, step))
+                udict = get_displacements_from_result_files(out_path, step)  # shold be modal shapes or this function?
+                rlist.append(udict)                
             if 's' in fields or 'all' in fields:
                 rlist.append(get_nodal_stresses_from_result_files(out_path, step))
             if 'rf' in fields or 'all' in fields:
@@ -287,7 +288,8 @@ def load_to_results(structure, fields, steps):
         elif structure.steps[step].__name__ == 'ModalStep':
             rlist = []
             if 'u' in fields or 'all' in fields:
-                rlist.append(get_modal_shapes_from_result_files(out_path))
+                udict = get_modal_shapes_from_result_files(out_path)
+                rlist.append(udict)
             if 'f' in fields or 'all' in fields:
                 fdict = get_modal_freq_from_result_files(out_path)
                 structure.results[step]['frequencies'] = fdict

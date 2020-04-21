@@ -454,11 +454,11 @@ def network_order(start, structure, network):
     leaves.remove(start)
     end = leaves[0]
 
-    adjacency = {i: network.vertex_neighbors(i) for i in network.vertices()}
+    adjacency = {i: network.neighbors(i) for i in network.nodes()}
     weight = {(u, v): 1 for u, v in network.edges()}
     weight.update({(v, u): weight[(u, v)] for u, v in network.edges()})
     path = dijkstra_path(adjacency, weight, start, end)
-    nodes = [structure.check_node_exists(network.vertex_coordinates(i)) for i in path]
+    nodes = [structure.check_node_exists(network.node_coordinates(i)) for i in path]
     elements, arclengths, length = [], [], 0
 
     for i in range(len(nodes) - 1):

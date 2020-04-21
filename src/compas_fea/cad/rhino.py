@@ -244,7 +244,7 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 
             elif mesh_type and rs.IsMesh(guid):
 
-                mesh = mesh_from_guid(Mesh(), guid)
+#                mesh = mesh_from_guid(Mesh(), guid)
 
                 vertices = rs.MeshVertices(guid)
                 nodes = []
@@ -917,7 +917,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     elements   = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
     nodal_data = structure.results[step]['nodal']
     nkeys      = sorted(structure.nodes, key=int)
-
+    
     ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
     uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
     uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]

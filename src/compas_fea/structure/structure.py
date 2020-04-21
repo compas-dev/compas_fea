@@ -382,14 +382,14 @@ Steps
 
         """
 
-        for key in sorted(list(network.vertices()), key=int):
-            self.add_node(network.vertex_coordinates(key))
+        for key in sorted(list(network.nodes()), key=int):
+            self.add_node(network.node_coordinates(key))
 
         ekeys = []
 
         for u, v in list(network.edges()):
-            sp = self.check_node_exists(network.vertex_coordinates(u))
-            ep = self.check_node_exists(network.vertex_coordinates(v))
+            sp = self.check_node_exists(network.node_coordinates(u))
+            ep = self.check_node_exists(network.node_coordinates(v))
             ekeys.append(self.add_element(nodes=[sp, ep], type=element_type, thermal=thermal, axes=axes))
 
         if elset:
