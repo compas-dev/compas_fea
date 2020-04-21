@@ -69,7 +69,7 @@ mdl.summary()
 
 # Run
 
-mdl.analyse_and_extract(software='ansys', fields=['u', 'rf', 's'], license='introductory')
+mdl.analyse_and_extract(software='ansys', fields=['u', 'rf', 's'])
 
 rhino.plot_data(mdl, step='step_load', field='um', radius=0.01, cbar_size=0.3)
 rhino.plot_reaction_forces(mdl, step='step_load', layer=None, scale=.1)
