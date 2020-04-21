@@ -227,98 +227,98 @@ Steps
     # Constructors    EXPERIMENTAL
     # ==============================================================================
 
-    @classmethod
-    def from_mesh(cls, mesh, path):
+    # @classmethod
+    # def from_mesh(cls, mesh, path):
 
-        """ Creates a Structure object based on data contained in a compas Mesh datastructure.
+    #     """ Creates a Structure object based on data contained in a compas Mesh datastructure.
 
-        Parameters
-        ----------
-        mesh : obj
-            Mesh datastructure object.
+    #     Parameters
+    #     ----------
+    #     mesh : obj
+    #         Mesh datastructure object.
 
-        Returns
-        -------
-        obj
-            The resulting Structure object.
+    #     Returns
+    #     -------
+    #     obj
+    #         The resulting Structure object.
 
-        Notes
-        -----
-        - The Mesh object must contain displacements, materials, sections and loads.
+    #     Notes
+    #     -----
+    #     - The Mesh object must contain displacements, materials, sections and loads.
 
-        """
+    #     """
 
-        structure = cls(path=path)
+    #     structure = cls(path=path)
 
-        # Add nodes and elements from Mesh
+    #     # Add nodes and elements from Mesh
 
-        structure.add_nodes_elements_from_mesh(mesh=mesh, element_type='ShellElement')
+    #     structure.add_nodes_elements_from_mesh(mesh=mesh, element_type='ShellElement')
 
-        # Add displacements
+    #     # Add displacements
 
-        disp_groups = group_keys_by_attributes(mesh.vertex, ['ux', 'uy', 'uz', 'urx', 'ury', 'urz'])
-        disp_names  = []
+    #     disp_groups = group_keys_by_attributes(mesh.vertex, ['ux', 'uy', 'uz', 'urx', 'ury', 'urz'])
+    #     disp_names  = []
 
-        for dk in disp_groups:
-            if dk != '-_-_-_-_-_-':
-                disp_names.append(dk + '_nodes')
-                structure.add_set(name=dk, type='node', selection=disp_groups[dk])
-                d = [float(x) if x != '-' else None for x in dk.split('_')]
-                supports = GeneralDisplacement(name=dk + '_nodes', nodes=dk, x=d[0], y=d[1], z=d[2],
-                                               xx=d[3], yy=d[4], zz=d[5])
-                structure.add_displacement(supports)
+    #     for dk in disp_groups:
+    #         if dk != '-_-_-_-_-_-':
+    #             disp_names.append(dk + '_nodes')
+    #             structure.add_set(name=dk, type='node', selection=disp_groups[dk])
+    #             d = [float(x) if x != '-' else None for x in dk.split('_')]
+    #             supports = GeneralDisplacement(name=dk + '_nodes', nodes=dk, x=d[0], y=d[1], z=d[2],
+    #                                            xx=d[3], yy=d[4], zz=d[5])
+    #             structure.add_displacement(supports)
 
-        # Add materials and sections
+    #     # Add materials and sections
 
-        mat_groups = group_keys_by_attributes(mesh.facedata, ['E', 'v', 'p'])
+    #     mat_groups = group_keys_by_attributes(mesh.facedata, ['E', 'v', 'p'])
 
-        for mk in mat_groups:
-            m = [float(x) if x != '-' else None for x in mk.split('_')]
-            material = ElasticIsotropic(name=mk + '_material', E=m[0], v=m[1], p=m[2])
-            structure.add_material(material)
+    #     for mk in mat_groups:
+    #         m = [float(x) if x != '-' else None for x in mk.split('_')]
+    #         material = ElasticIsotropic(name=mk + '_material', E=m[0], v=m[1], p=m[2])
+    #         structure.add_material(material)
 
-        thick_groups = group_keys_by_attribute(mesh.facedata, 'thick')
+    #     thick_groups = group_keys_by_attribute(mesh.facedata, 'thick')
 
-        for tk in thick_groups:
-            t = float(tk)
-            section = ShellSection(name=tk + '_section', t=t)
-            structure.add_section(section)
+    #     for tk in thick_groups:
+    #         t = float(tk)
+    #         section = ShellSection(name=tk + '_section', t=t)
+    #         structure.add_section(section)
 
-        prop_comb = combine_all_sets(mat_groups, thick_groups)
+    #     prop_comb = combine_all_sets(mat_groups, thick_groups)
 
-        for pk in prop_comb:
-            mat, sec = pk.split(',')
-            prop = ElementProperties(material=mat + '_material', section=sec + '_section', elements=prop_comb[pk])
-            structure.add_element_properties(prop)
+    #     for pk in prop_comb:
+    #         mat, sec = pk.split(',')
+    #         prop = ElementProperties(material=mat + '_material', section=sec + '_section', elements=prop_comb[pk])
+    #         structure.add_element_properties(prop)
 
-        # Add loads
+    #     # Add loads
 
-        load_groups = group_keys_by_attribute(mesh.vertex, 'l')
-        load_names  = []
+    #     load_groups = group_keys_by_attribute(mesh.vertex, 'l')
+    #     load_names  = []
 
-        for lk in load_groups:
-            if lk != '-':
-                load_names.append(str(lk) + '_load')
-                nkeys = load_groups[lk]
-                load = PointLoad(name=str(lk) + '_load', nodes=nkeys, x=lk[0], y=lk[1], z=lk[2])
-                structure.add_load(load)
+    #     for lk in load_groups:
+    #         if lk != '-':
+    #             load_names.append(str(lk) + '_load')
+    #             nkeys = load_groups[lk]
+    #             load = PointLoad(name=str(lk) + '_load', nodes=nkeys, x=lk[0], y=lk[1], z=lk[2])
+    #             structure.add_load(load)
 
-        gstep = GeneralStep(name='Structure from Mesh', displacements=disp_names, loads=load_names)
-        structure.add_step(gstep)
+    #     gstep = GeneralStep(name='Structure from Mesh', displacements=disp_names, loads=load_names)
+    #     structure.add_step(gstep)
 
-        return structure
-
-
-    @classmethod
-    def from_network(cls, network):
-
-        pass
+    #     return structure
 
 
-    @classmethod
-    def from_volmesh(cls, network):
+    # @classmethod
+    # def from_network(cls, network):
 
-        pass
+    #     pass
+
+
+    # @classmethod
+    # def from_volmesh(cls, network):
+
+    #     pass
 
 
     def add_nodes_elements_from_mesh(self, mesh, element_type, thermal=False, elset=None):
