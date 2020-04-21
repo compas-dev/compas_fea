@@ -19,7 +19,7 @@
     <link rel="stylesheet" type="text/css" href="_static/css/compas-reference.css" />
 
     
-        <link rel="next" title="Getting Started" href="gettingstarted.html" />
+        <link rel="next" title="Tutorial" href="tutorial.html" />
     
     
     
@@ -58,8 +58,15 @@
 
                     <div class="section" id="installation">
 <h1>Installation</h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since version <code class="docutils literal notranslate"><span class="pre">0.1.1</span></code>, adding the <em>compas_fea</em> package <em>src</em> folder to the <em>PYTHONPATH</em> is <strong>no longer necessary</strong>. For previous users, it is <strong>strongly suggested</strong> to remove the package from the <em>PYTHONPATH</em> and proceed with a clean installation following the instructions below.</p>
+</div>
+<div class="section" id="compas-fea-package">
+<h2>compas_fea package</h2>
+<p>You can choose either of the following two installations:</p>
 <div class="section" id="installation-from-source">
-<h2>Installation from source</h2>
+<h3>Installation from source</h3>
 <p>Choose a location where you want to clone the repository, open a terminal and do:</p>
 <div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>$ <span class="nb">cd</span> &lt;path-to-folder&gt;/
 $ git clone https://github.com/compas-dev/compas_fea.git
@@ -70,15 +77,15 @@ $ git clone https://github.com/compas-dev/compas_fea.git
 $ git pull
 </code></pre></div>
 </div>
-<p>Released versions of <a class="reference internal" href="api/compas_fea.html#module-compas_fea" title="compas_fea"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea</span></code></a> can be installed with <em>pip</em>.
-With the desired virtual environment activated, do</p>
+<p>Released versions of <code class="docutils literal notranslate"><span class="pre">compas_fea</span></code> can be installed with <em>pip</em>.
+With the desired virtual (conda) environment activated, do</p>
 <div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>$ <span class="nb">cd</span> &lt;path-to-folder&gt;/compas_fea/
 $ pip install -e .
 </code></pre></div>
 </div>
 </div>
 <div class="section" id="installation-from-github">
-<h2>Installation from GitHub</h2>
+<h3>Installation from GitHub</h3>
 <p>You can also install directly from the GitHub repo. Use this method if you don’t plan to contribute to the package.</p>
 <div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>$ pip install git+https://github.com/compas-dev/compas_fea.git
 </code></pre></div>
@@ -88,17 +95,29 @@ $ pip install -e .
 </code></pre></div>
 </div>
 </div>
-<div class="section" id="rhino">
-<h2>Rhino</h2>
-<p><a class="reference internal" href="api/compas_fea.html#module-compas_fea" title="compas_fea"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea</span></code></a> is developed independent of the functionality of CAD software.
-However, CAD software is still necessary in a computational design environment for visualising and interacting with datastructures, geometrical objects and visualise the results of the analysis.</p>
-<p>In order to install <code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_3gs</span></code> for Rhino, with the desired virtual environment activated, do</p>
+</div>
+<div class="section" id="cad-software">
+<h2>CAD software</h2>
+<p><code class="docutils literal notranslate"><span class="pre">compas_fea</span></code> does not need Computer Aided Design (CAD) software to be installed and used effectively, but it is very valuable for generating and inserting geometry into the <strong>Structure</strong> object and for efficiently visualising results in 3D. This is useful either for a single analysis of a structural model with geometry extracted from the CAD workspace, or as part of a parametric study with many models and analyses through scripted geometry. In general, the only difference in using a specific type of CAD software, is the manner in which geometric information is taken from the CAD environment (e.g. through layers or objects) and the way that output data is then re-plotted on native geometry types. There is no difference in how objects such as loads, materials and boundary conditions are applied, as this is based on adding objects to the <strong>Structure</strong> through core Python scripting, making it CAD independent.</p>
+<div class="section" id="rhinoceros">
+<h3>Rhinoceros</h3>
+<p>Support for <a class="reference external" href="http://www.rhino3d.com">Rhinoceros</a> from Robert McNeel &amp; Associates is based on version 6.0, for which the <a class="reference external" href="http://www.ironpython.net/">IronPython</a> distribution is standard. Please see the installation and set-up instructions for using Rhinoceros with the core <a class="reference external" href="https://compas-dev.github.io/main/gettingstarted/cad/rhino.html">compas library</a>.</p>
+<p>In order to install <code class="docutils literal notranslate"><span class="pre">compas_fea</span></code> for Rhino, with the desired virtual (conda) environment activated, do</p>
 <div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>$ python -m compas_rhino.uninstall
 $ python -m compas_rhino.install
 $ python -m compas_rhino.install -p compas_fea
 </code></pre></div>
 </div>
 <p>Every time a new file is opened in Rhino, be sure to reset the Python Scritp Engine before running scripts.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>if you have a new installation of Rhino and you never used the Python editor included in Rhino, you have to open the editor at least once before running these coomands.</p>
+</div>
+</div>
+<div class="section" id="blender">
+<h3>Blender</h3>
+<p>For using <code class="docutils literal notranslate"><span class="pre">compas_fea</span></code> with Blender you just need to link the environment where <code class="docutils literal notranslate"><span class="pre">compas_fea</span></code> is installed to Blender as explained <a class="reference external" href="https://compas-dev.github.io/main/gettingstarted/cad/blender.html">here</a>.</p>
+</div>
 </div>
 </div>
 
@@ -131,7 +150,6 @@ $ python -m compas_rhino.install -p compas_fea
                             <ul class="nav flex-column active">
 <li class="nav-item"><a class="nav-link reference internal" href="intro.html">Introduction</a></li>
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">Installation</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="examples.html">Examples</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="api.html">API Reference</a></li>
@@ -155,9 +173,16 @@ $ python -m compas_rhino.install -p compas_fea
 
                 <ul class="nav flex-column" id="compas-localnav">
 <li class="nav-item"><a class="nav-link reference internal" href="#">Installation</a><ul class="nav">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas-fea-package">compas_fea package</a><ul class="nav">
 <li class="nav-item"><a class="nav-link reference internal" href="#installation-from-source">Installation from source</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#installation-from-github">Installation from GitHub</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#rhino">Rhino</a></li>
+</ul>
+</li>
+<li class="nav-item"><a class="nav-link reference internal" href="#cad-software">CAD software</a><ul class="nav">
+<li class="nav-item"><a class="nav-link reference internal" href="#rhinoceros">Rhinoceros</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#blender">Blender</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -171,11 +196,11 @@ $ python -m compas_rhino.install -p compas_fea
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Feb 26, 2020.
+                Last updated on Apr 11, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.3.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
             
         </div>
     </footer>
@@ -184,7 +209,7 @@ $ python -m compas_rhino.install -p compas_fea
         <script type="text/javascript">
             var DOCUMENTATION_OPTIONS = {
             URL_ROOT          : '',
-            VERSION           : '0.1.0',
+            VERSION           : '0.1.1',
             COLLAPSE_INDEX    : false,
             FILE_SUFFIX       : '.html',
             HAS_SOURCE        : 'false',

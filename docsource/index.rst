@@ -8,7 +8,6 @@ compas_fea
 
    intro
    installation
-   gettingstarted
    tutorial
    examples
    api
