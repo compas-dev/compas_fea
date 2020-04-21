@@ -20,7 +20,7 @@ from compas_fea.fea.ansys import ansys_launch_process
 
 def areas_from_mesh(structure, mesh):
     areas = {}
-    fkeys = sorted(mesh.face.keys(), key=int)
+    fkeys = sorted(mesh.faces(), key=int)
     for fkey in fkeys:
         face = mesh.face_vertices(fkey)
         areas[fkey] = face
