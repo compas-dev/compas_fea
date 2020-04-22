@@ -28,9 +28,6 @@ Structure
         ~Structure.analyse
         ~Structure.analyse_and_extract
         ~Structure.extract_data
-        ~Structure.from_mesh
-        ~Structure.from_network
-        ~Structure.from_volmesh
         ~Structure.get_element_results
         ~Structure.get_nodal_results
         ~Structure.load_from_obj
