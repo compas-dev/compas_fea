@@ -59,6 +59,8 @@ def write_static_results_from_ansys_rst(structure, fields, step_index=0):
         # write_request_element_stresses(structure, step_index)
     if 'rf' in fields or 'all' in fields:
         write_request_reactions(structure, step_index)
+    if 'sp' in fields or 'all' in fields:
+        write_request_pricipal_stresses(structure, step_index)
 
     # these are quite old, will not work 
     # if 'sp' in fields or 'all' in fields:
