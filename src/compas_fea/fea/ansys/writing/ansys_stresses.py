@@ -130,7 +130,12 @@ def write_request_pricipal_stresses(structure, step_index):
     cFile.close()
 
 
-def write_request_shear_stresses(path, name, step_name):
+def write_request_shear_stresses(structure, step_index):
+
+    name = structure.name
+    path = structure.path
+    step_name = structure.steps_order[step_index]
+
     out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'shear_stresses'
@@ -174,7 +179,12 @@ def write_request_shear_stresses(path, name, step_name):
     cFile.close()
 
 
-def write_request_principal_strains(path, name, step_name):
+def write_request_principal_strains(structure, step_index):
+
+    name = structure.name
+    path = structure.path
+    step_name = structure.steps_order[step_index]
+
     out_path = os.path.join(path, name + '_output')
     filename = name + '_extract.txt'
     fname = str(step_name) + '_' + 'principal_strains'
@@ -356,6 +366,7 @@ def write_request_beam_stresses(structure, step_index, etkey):
     fh.write('ESEL, ALL \n')
     fh.write('ETABLE, ERAS \n')
     fh.write('! \n')
+    fh.close()
 
 
 def write_request_shell_stresses(structure, step_index, etkey):

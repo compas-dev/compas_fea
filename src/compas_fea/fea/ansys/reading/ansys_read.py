@@ -5,6 +5,8 @@ from compas.geometry import length_vector
 
 # Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
+# TODO: Read shell and beam stresses - - -
+
 
 def get_nodes_elements_from_result_files(path):
     try:
@@ -378,7 +380,6 @@ def get_acoustic_radiation_from_results_files(out_path, step):
         data = line.split(' ')
         tl_data[i] = {'freq': float(data[0]), 'tl': float(data[1]), 'rad': float(data[2]), 'inc': float(data[3])}
     return tl_data
-
 
 
 if __name__ == '__main__':
