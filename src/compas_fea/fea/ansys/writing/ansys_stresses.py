@@ -424,6 +424,7 @@ def write_request_shell_stresses(structure, step_index, etkey):
     fh.write('ESEL, ALL \n')
     fh.write('ETABLE, ERAS \n')
     fh.write('! \n')
+    fh.close()
 
     # fname = str(step_name) + '_' + 'shell_stresses'
     # write_request_write_array(structure, fname, out_path, 'eforces', 6, 4, index_name='enum')

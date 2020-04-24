@@ -17,7 +17,7 @@ import rhinoscriptsyntax as rs
 
 # Structure
 
-mdl = Structure(name='mesh_from_rhino', path='C:/Temp/')
+mdl = Structure(name='meshpillow_from_rhino', path='C:/Temp/')
 
 # Elements
 
