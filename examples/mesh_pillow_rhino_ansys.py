@@ -4,6 +4,7 @@ from compas_fea.structure import Concrete
 from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
 from compas_fea.structure import PointLoad
+from compas_fea.structure import GravityLoad
 from compas_fea.structure import PinnedDisplacement
 from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ShellSection
@@ -45,13 +46,14 @@ mdl.add(PinnedDisplacement(name='disp_pin', nodes='supports'))
 
 # Loads
 
+mdl.add(GravityLoad(name='gravity', elements='all'))
 mdl.add(PointLoad(name='load_points', nodes='lpts1', x=0, y=0, z=-1000))
 
 # Steps
 
 mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_pin']),
-    GeneralStep(name='step_load', loads=['load_points']),
+    GeneralStep(name='step_load', loads=['gravity', 'load_points']),
 ])
 mdl.steps_order = ['step_bc', 'step_load']
 
@@ -61,9 +63,12 @@ mdl.summary()
 
 # Run
 
-mdl.analyse_and_extract(software='ansys', fields=['u', 's', 'sp', 'e', 'ss'], license='introductory')
+mdl.analyse_and_extract(software='ansys', fields=['u', 's', 'sp', 'e', 'ss', 'rf'], license='introductory')
 
 
-rhino.plot_data(mdl, step='step_load', field='um', radius=0.01)
-rhino.plot_data(mdl, step='step_load', field='szt', radius=0.01)
-rhino.plot_data(mdl, step='step_load', field='ps1t', radius=0.01)
+rhino.plot_data(mdl, step='step_load', field='um', scale=1e4)
+rhino.plot_data(mdl, step='step_load', field='szt')
+rhino.plot_data(mdl, step='step_load', field='ps1t')
+rhino.plot_data(mdl, step='step_load', field='sxzt')
+rhino.plot_data(mdl, step='step_load', field='e1t')
+rhino.plot_reaction_forces(mdl, step='step_load', layer=None, scale=1)
