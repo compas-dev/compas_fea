@@ -1,15 +1,14 @@
 
 from compas_fea.cad import rhino
+from compas_fea.structure import GeneralStep
 from compas_fea.structure import CircularSection
 from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ElementProperties as Properties
-from compas_fea.structure import GeneralDisplacement
-from compas_fea.structure import GeneralStep
+from compas_fea.structure import FixedDisplacement
 from compas_fea.structure import PinnedDisplacement
 from compas_fea.structure import PointLoad
+from compas_fea.structure import GravityLoad
 from compas_fea.structure import Structure
-
-from math import pi
 
 
 # Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
@@ -46,21 +45,20 @@ for i, Li in zip(ekeys, L):
 # Displacements
 
 mdl.add([
-    PinnedDisplacement(name='disp_left', nodes='nset_left'),
-    GeneralDisplacement(name='disp_right', nodes='nset_right', y=0, z=0, xx=0),
-    GeneralDisplacement(name='disp_rotate', nodes='nset_left', yy=30*pi/180),
+    FixedDisplacement(name='disp_left', nodes='nset_left'),
+    PinnedDisplacement(name='disp_right', nodes='nset_right'),
 ])
 
 # Loads
 
-mdl.add(PointLoad(name='load_weights', nodes='nset_weights', z=-100))
-
+mdl.add(GravityLoad(name='gravity', elements='all'))
+mdl.add(PointLoad(name='load_weights', nodes='nset_weights', z=-1000))
 
 # Steps
 
 mdl.add([
     GeneralStep(name='step_bc', displacements=['disp_left', 'disp_right']),
-    GeneralStep(name='step_load', loads='load_weights', displacements='disp_rotate'),
+    GeneralStep(name='step_load', loads=['load_weights', 'gravity']),
 ])
 mdl.steps_order = ['step_bc', 'step_load']
 
@@ -70,10 +68,13 @@ mdl.summary()
 
 # Run
 
-mdl.analyse_and_extract(software='ansys', fields=['u', 'rf', 's'], license='introductory')
+mdl.analyse_and_extract(software='ansys',
+                        fields=['u', 's', 'sp', 'e', 'ss', 'rf'],
+                        license='introductory')
 
-rhino.plot_data(mdl, step='step_load', field='um', radius=0.01, cbar_size=0.3)
-rhino.plot_reaction_forces(mdl, step='step_load', layer=None, scale=.1)
-#rhino.plot_data(mdl, step='step_load', field='s', radius=0.01, cbar_size=0.3)
-#rhino.plot_data(mdl, step='step_load', field='sf2', radius=0.01, cbar_size=0.3)
-#rhino.plot_data(mdl, step='step_load', field='sm1', radius=0.01, cbar_size=0.3)
+rhino.plot_data(mdl, step='step_load', field='um', scale=1e2)
+rhino.plot_data(mdl, step='step_load', field='szt')
+rhino.plot_data(mdl, step='step_load', field='ps1t')
+rhino.plot_data(mdl, step='step_load', field='sxzt')
+rhino.plot_data(mdl, step='step_load', field='e1t')
+rhino.plot_reaction_forces(mdl, step='step_load', layer=None, scale=1)

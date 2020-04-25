@@ -63,7 +63,9 @@ mdl.summary()
 
 # Run
 
-mdl.analyse_and_extract(software='ansys', fields=['u', 's', 'sp', 'e', 'ss', 'rf'], license='introductory')
+mdl.analyse_and_extract(software='ansys',
+                        fields=['u', 's', 'sp', 'e', 'ss', 'rf'],
+                        license='introductory')
 
 
 rhino.plot_data(mdl, step='step_load', field='um', scale=1e4)
