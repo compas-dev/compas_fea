@@ -7,7 +7,7 @@ compas_fea
    :titlesonly:
 
    intro
-   installation
+   gettingstarted
    tutorial
    examples
    api

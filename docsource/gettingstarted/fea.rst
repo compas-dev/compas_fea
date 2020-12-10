@@ -1,15 +1,17 @@
-********************************************************************************
-Setup
-********************************************************************************
-
-The following instructions describe the setup prerequisites for using the **compas_fea** package. Information is provided for setting-up the supported finite element software/libraries, settings required for Python, and the use of supported CAD software.
-
-=====================
+.. _fea:
+***********
 FE software
-=====================
+***********
+
+``compas_fea`` use FEA Software in the background to run the analyses.
+Currently the following backends are supported to various degrees:
+
+* Abaqus: ...
+* ANSYS: ...
+* OpenSEES: ...
 
 Abaqus
-******
+======
 
 Most support with the **compas_fea** package is for the finite element software `Abaqus <https://www.3ds.com/products-services/simulia/products/abaqus/>`_ by `SIMULIA <https://www.3ds.com/products-services/simulia/>`_ of `Dassault Systemes <https://www.3ds.com/en-uk/>`_. Development of the **compas_fea** package has been for version 6.14 (2014) and has not yet been verified to work for the newer 201x releases. As this software is generally used by academia, licensing is usually through a university network academic license. Licenses that require the computer to be connected to the same network as the license server will require the host to be connected through a Virtual Private Network (VPN) if they are off-site, through a client such as `Cisco AnyConnect <https://www.cisco.com/c/en/us/products/security/anyconnect-secure-mobility-client/index.html>`_ or `OpenVPN <https://openvpn.net/get-open-vpn/>`_. The Abaqus documentation does not need to be installed for the **compas_fea** package to run, but is a useful reference. On installation, Abaqus requires a temporary directory to be nominated for saving many different files during analysis, including the most important output database **.odb** file and various useful log files. Generally this folder will be **C:/Temp/** on Windows or **~/Temp** on Linux, but a different folder location may be defined at the start of any **compas_fea** script or through the **structure.path** attribute of the **Structure** object (this is described later).
 
@@ -24,14 +26,20 @@ Having these aliases set will make the use of the **compas_fea** package easier 
 
 There is no official support for Abaqus with MacOS, and so Mac users will need to use a Virtual Machine such as `Parallels <http://www.parallels.com/>`_, `VirtualBox <https://www.virtualbox.org/>`_ or `VMWare Workstation <https://www.vmware.com/products/workstation.html>`_, and use a Windows or Linux operating system.
 
-ANSYS
-*****
 
-Support for ANSYS finite element software is in development.
+ANSYS
+=====
+
+Support for ANSYS finite element software is in development and is currently only available for Windows.
+To be able to use ANSYS as a backend, make sure it is available on the ``PATH`` variable.
+
+.. code-block:: bash
+
+    "C:\Program Files\ANSYS Inc\v195\ansys\bin\winx64"
 
 
 OpenSees
-********
+========
 
 The open-source finite element library `OpenSees <http://opensees.berkeley.edu/wiki/index.php/OpenSees_User>`_ by the Pacific Earthquake Engineering (PEER) Centre, has cross-platform support and is in active development. The functionality is current behind that of Abaqus but growing (please contact us if you would like to contribute). OpenSees is much leaner than larger software such as Abaqus and Ansys in terms of its file size and resources usage, which leads to a much faster analysis and results extraction time, but has generally much less functionality.
 
@@ -41,54 +49,3 @@ For Linux variants, make sure the **Tcl** programming language is installed on t
 
 An OpenSees executable for Apple Machines with Intel processors running OS 10.4 or above is also available, making OpenSees the only currently supported FE solver for Mac computers.
 
-
-======
-Python
-======
-
-The **compas_fea** package is compatible with Python versions 2.7 and 3.7, although Python 2.7 is discouraged. Even if any utilised finite element software chooses one version of Python for their API (Abaqus 6.14 uses Python 2.6 for example), the input files that are needed to run a structural model through this software are generated independently by **compas_fea** with the user's own independent choice of Python version.
-
-A number of Python package dependencies exists to use **compas_fea**, either as an optional or a required module or package, these are listed below. A Python distribution such as `Anaconda <http://www.anaconda.com/download/>`_ 2 or 3 for Python 2.7 and 3.7 respectively, will cover all of the required module and packages and most of the optional ones as standard. For a standalone `CPython <https://www.python.org/downloads/>`_ installation, additional modules and packages are recommended to be installed individually via ``pip install``.
-
-Required
-********
-
-- `NumPy <http://www.numpy.org/>`_: needed for efficient post-processing of analysis output data in array formats.
-- `SciPy <https://www.scipy.org/>`_: used for various spatial and visualisation functions, and post-processing with sparse arrays.
-
-These packages are automatically installed during the compas_fea installation.
-
-Optional
-********
-
-- `MeshPy <https://mathema.tician.de/software/meshpy/>`_: for the meshing of triangular shells (Triangle) and tetrahedron solids (TetGen).
-- `PyOpenGL <http://pyopengl.sourceforge.net/>`_: a Python OpenGL requirement for 3D viewing of models.
-- `Vtk <https://www.vtk.org/>`_: (Python version) utilised for standalone line, mesh and voxel plotting of elements and results.
-- `PyQt5 <https://riverbankcomputing.com/software/pyqt/intro>`_ Python wrapping of the Qt application framework, for GUIs.
-
-These packages need to be installed by the user (if needed) using ``conda`` or ``pip``.
-
-============
-CAD software
-============
-
-The **compas_fea** package does not need Computer Aided Design (CAD) software to be installed and used effectively, but it is very valuable for generating and inserting geometry into the **Structure** object and for efficiently visualising results in 3D. This is useful either for a single analysis of a structural model with geometry extracted from the CAD workspace, or as part of a parametric study with many models and analyses through scripted geometry. In general, the only difference in using a specific type of CAD software, is the manner in which geometric information is taken from the CAD environment (e.g. through layers or objects) and the way that output data is then re-plotted on native geometry types. There is no difference in how objects such as loads, materials and boundary conditions are applied, as this is based on adding objects to the **Structure** through core Python scripting, making it CAD independent.
-
-Rhinoceros
-**********
-
-Support for `Rhinoceros <http://www.rhino3d.com>`_ from Robert McNeel & Associates is based on version 6.0, for which the `IronPython <http://www.ironpython.net/>`_ distribution is standard. Please see the installation and set-up instructions for using Rhinoceros with the core **compas** library.
-
-The only addition for **compas_fea** is to run in your terminal (as admin) the following commands:
-
-.. code-block:: bash
-
-    conda activate name_of_your_environment
-    python -m compas_rhino.install -p compas_fea
-
-Blender
-*******
-
-Support for the open-source graphics software `Blender <https://www.blender.org/>`_ by the Blender Foundation is based on version 2.80, for which Python 3.7 (CPython) is standard. Please see the installation and set-up instructions for using Rhinoceros with the core **compas** library. 
-
-As Blender uses CPython, sub-processes are not needed at any stage of the analysis or data processing and viewing, which allows for a faster execution time for processes that would require the serialisation of large ``.json`` files, as is the case for data extraction after an analysis when using Rhino.

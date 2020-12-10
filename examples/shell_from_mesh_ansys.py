@@ -5,7 +5,7 @@ from compas_fea.structure import Structure
 from compas_fea.fea import ansys
 
 
-# Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
+# Author(s): Tomaas Mendez Echenagucia (github.com/tmsmendez)
 
 
 def pin_all_boundary_vertices(mesh):
@@ -15,7 +15,7 @@ def pin_all_boundary_vertices(mesh):
     mesh.set_vertices_attribute('UZ', 0, bkeys)
 
 
-def applly_uniform_point_load(mesh, load):
+def apply_uniform_point_load(mesh, load):
     for vk in mesh.vertices():
         if not mesh.is_vertex_on_boundary(vk):
             mesh.set_vertex_attribute(vk, 'l', load)
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     v = 0.2
     p = 2400
     pin_all_boundary_vertices(mesh)
-    applly_uniform_point_load(mesh, load)
+    apply_uniform_point_load(mesh, load)
     create_variable_thick_shell(mesh, minthick, maxthick)
     assign_structure_property_to_mesh_faces(mesh, 'E', E35)
     assign_structure_property_to_mesh_faces(mesh, 'v', v)
