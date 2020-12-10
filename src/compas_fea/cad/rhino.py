@@ -38,8 +38,8 @@ except ImportError:
 
 import json
 
-functions = Proxy('compas_fea.utilities.functions')
-meshing   = Proxy('compas_fea.utilities.meshing')
+#functions = Proxy('compas_fea.utilities.functions')
+#meshing   = Proxy('compas_fea.utilities.meshing')
 
 
 # Author(s): Andrew Liew (github.com/andrewliew), Tomas Mendez Echenagucia (github.com/tmsmendez)
