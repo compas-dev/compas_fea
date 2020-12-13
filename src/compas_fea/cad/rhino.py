@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import compas
 try:
     from compas_rhino.geometry import RhinoMesh
 except:
@@ -16,13 +17,19 @@ from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
 from compas.rpc import Proxy
 
-from compas_fea import utilities
+from compas_fea.structure import Structure
+
+
 from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
 from compas_fea.utilities import network_order
 
-from compas_fea.structure import Structure
-
+if compas.IPY:
+    functions = Proxy('compas_fea.utilities.functions')
+    meshing   = Proxy('compas_fea.utilities.meshing')
+else:
+    from compas_fea.utilities import meshing
+    from compas_fea.utilities import functions
 
 try:
     import rhinoscriptsyntax as rs
@@ -38,10 +45,7 @@ except ImportError:
 
 import json
 
-#functions = Proxy('compas_fea.utilities.functions')
-#meshing   = Proxy('compas_fea.utilities.meshing')
-
-
+    
 # Author(s): Andrew Liew (github.com/andrewliew), Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
@@ -243,7 +247,7 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 
             elif mesh_type and rs.IsMesh(guid):
 
-#                mesh = mesh_from_guid(Mesh(), guid)
+                mesh = mesh_from_guid(Mesh(), guid)
 
                 vertices = rs.MeshVertices(guid)
                 nodes = []
