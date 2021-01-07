@@ -96,7 +96,7 @@ class Steps(object):
                     if stype == 'ModalStep':
 
                         self.write_line('*STEP, NAME={0}'.format(key))
-                        self.write_line('*FREQUENCY, EIGENSOLVER=LANCZOS, NORMALIZATION=DISPLACEMENT')
+                        self.write_line('*FREQUENCY, EIGENSOLVER=LANCZOS, NORMALIZATION=MASS')
                         self.write_line('{0}'.format(modes))
 
                     else:
