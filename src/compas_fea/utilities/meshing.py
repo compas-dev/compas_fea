@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from compas.geometry import add_vectors
+from compas.geometry import add_vectors, primitives
 from compas.geometry import centroid_points
 from compas.geometry import cross_vectors
 from compas.geometry import length_vector
@@ -29,6 +29,7 @@ try:
     from meshpy.triangle import MeshInfo as MeshInfo_tri
     from meshpy.triangle import build as build_tri
 except:
+    print('no meshpy lib')
     pass
 
 
