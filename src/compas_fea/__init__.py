@@ -26,11 +26,11 @@ from __future__ import print_function
 import os
 import sys
 
-__author__ = ['Andrew Liew (github.com/andrewliew), Tomas Mendez Echenagucia (github.com/tmsmendez)']
+__author__ = ['Andrew Liew (github.com/andrewliew), Tomas Mendez Echenagucia (github.com/tmsmendez), Francesco Ranaudo (github.com/franaudo']
 __copyright__ = 'Block Research Group'
 __license__ = 'MIT License'
 __email__ = ''
-__version__ = '0.1.1'
+__version__ = '0.4.0'
 
 HERE = os.path.dirname(__file__)
 
