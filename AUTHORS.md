@@ -15,3 +15,4 @@ Authors
 * Block Research Group `@blockresearchgroup <https://github.com/blockresearchgroup>`_
 * Andrew Liew `@andrewliew <https://github.com/andrewliew>`_
 * Tomás Méndez Echenagucia `@andrewliew <https://github.com/tmsmendez>`_
+* Francesco Ranaudo `@franaudo <https://github.com/franaudo>`_
