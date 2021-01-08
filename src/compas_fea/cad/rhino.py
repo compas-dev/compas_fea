@@ -247,7 +247,7 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
 
             elif mesh_type and rs.IsMesh(guid):
 
-                mesh = mesh_from_guid(Mesh(), guid)
+                mesh = RhinoMesh.from_guid(guid).to_compas()
 
                 vertices = rs.MeshVertices(guid)
                 nodes = []
