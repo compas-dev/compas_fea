@@ -63,5 +63,6 @@ opensees
     launch_process
 
 """
+from __future__ import absolute_import
 
 from .writer import *
