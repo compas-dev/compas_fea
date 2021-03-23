@@ -2,11 +2,11 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import json
+
 import compas
-try:
+if compas.RHINO:
     from compas_rhino.geometry import RhinoMesh
-except:
-    pass
 
 from compas.datastructures.mesh import Mesh
 from compas.datastructures import Network
@@ -15,7 +15,6 @@ from compas.geometry import cross_vectors
 from compas.geometry import length_vector
 from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
-from compas.rpc import Proxy
 
 from compas_fea.structure import Structure
 
@@ -24,29 +23,16 @@ from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
 from compas_fea.utilities import network_order
 
-if compas.IPY:
-    functions = Proxy('compas_fea.utilities.functions')
-    meshing   = Proxy('compas_fea.utilities.meshing')
-else:
+if not compas.IPY:
     from compas_fea.utilities import meshing
     from compas_fea.utilities import functions
+else:
+    from compas.rpc import Proxy
+    functions = Proxy('compas_fea.utilities.functions')
+    meshing   = Proxy('compas_fea.utilities.meshing')
 
-try:
+if compas.RHINO:
     import rhinoscriptsyntax as rs
-except ImportError:
-    pass
-
-# try:
-#     import rhinoscriptsyntax as rs
-# except ImportError:
-#     import platform
-#     if platform.system() == 'Windows':
-#         raise
-
-import json
-
-    
-# Author(s): Andrew Liew (github.com/andrewliew), Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 __all__ = [
@@ -920,7 +906,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     elements   = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
     nodal_data = structure.results[step]['nodal']
     nkeys      = sorted(structure.nodes, key=int)
-    
+
     ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
     uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
     uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]

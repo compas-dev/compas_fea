@@ -1,31 +1,25 @@
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import compas
-if not compas.IPY:
-    try:
-        from compas_blender.geometry import BlenderMesh
-        from compas_blender.utilities import create_layer
-        from compas_blender.utilities import clear_layer
-        from compas_blender.utilities import draw_cylinder
-        from compas_blender.utilities import draw_plane
-        from compas_blender.utilities import draw_line
-        from compas_blender.utilities import get_meshes
-        from compas_blender.utilities import get_objects
-        from compas_blender.utilities import get_points
-        from compas_blender.utilities import mesh_from_bmesh
-        from compas_blender.utilities import set_deselect
-        from compas_blender.utilities import set_select
-        from compas_blender.utilities import set_objects_coordinates
-        from compas_blender.utilities import get_object_property
-        from compas_blender.utilities import set_object_property
-        from compas_blender.utilities import draw_text
-        from compas_blender.utilities import draw_mesh
-        import bpy
-    except ImportError:
-        pass
+
+if compas.BLENDER:
+    import bpy
+
+from compas_blender.geometry import BlenderMesh
+from compas_blender.utilities import create_layer
+from compas_blender.utilities import clear_layer
+from compas_blender.utilities import draw_cylinder
+from compas_blender.utilities import draw_plane
+from compas_blender.utilities import draw_line
+from compas_blender.utilities import get_meshes
+from compas_blender.utilities import get_objects
+from compas_blender.utilities import get_points
+from compas_blender.utilities import mesh_from_bmesh
+from compas_blender.utilities import set_deselect
+from compas_blender.utilities import set_select
+from compas_blender.utilities import set_objects_coordinates
+from compas_blender.utilities import get_object_property
+from compas_blender.utilities import set_object_property
+from compas_blender.utilities import draw_text
+from compas_blender.utilities import draw_mesh
 
 from compas.geometry import cross_vectors
 from compas.geometry import subtract_vectors
@@ -39,17 +33,13 @@ from compas_fea.utilities import postprocess
 from compas_fea.utilities import tets_from_vertices_faces
 from compas_fea.utilities import plotvoxels
 
-try:
+if not compas.IPY:
     from numpy import array
     from numpy import hstack
     from numpy import max
     from numpy import newaxis
     from numpy import where
     from numpy.linalg import norm
-except:
-    pass
-
-# Author(s): Andrew Liew (github.com/andrewliew)
 
 
 __all__ = [
