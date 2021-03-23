@@ -131,4 +131,5 @@ src/.build/**
 
 .vscode
 /.idea/
-.vscode
+
+docs/api/generated/
