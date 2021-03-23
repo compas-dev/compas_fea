@@ -8,6 +8,7 @@ Liew, A. and Méndez Echenagucia, T., compas_fea: A finite element analysis pack
 
 ## Authors
 
-* Block Research Group [@blockresearchgroup](https://github.com/blockresearchgroup)
-* Andrew Liew [@andrewliew](https://github.com/andrewliew)
-* Tomás Méndez Echenagucia [@andrewliew](https://github.com/tmsmendez)
+* Block Research Group `@blockresearchgroup <https://github.com/blockresearchgroup>`_
+* Andrew Liew `@andrewliew <https://github.com/andrewliew>`_
+* Tomás Méndez Echenagucia `@andrewliew <https://github.com/tmsmendez>`_
+* Francesco Ranaudo `@franaudo <https://github.com/franaudo>`_

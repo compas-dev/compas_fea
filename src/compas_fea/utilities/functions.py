@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import compas
 from compas.datastructures import Mesh
 from compas.geometry import distance_point_point
 from compas.topology import dijkstra_path
@@ -19,31 +20,33 @@ except:
     pass
 
 try:
-    from numpy import abs
-    from numpy import arccos
-    from numpy import arctan2
-    from numpy import array
-    from numpy import asarray
-    from numpy import cos
-    from numpy import float64
-    from numpy import hstack
-    from numpy import isnan
-    from numpy import int64
-    from numpy import linspace
-    from numpy import meshgrid
-    from numpy import max
-    from numpy import mean
-    from numpy import min
-    from numpy import newaxis
-    from numpy import pi
-    from numpy import sin
-    from numpy import squeeze
-    from numpy import sqrt
-    from numpy import sum
-    from numpy import tile
-    from numpy import zeros
+    import numpy as np
+    # from numpy import abs
+    # from numpy import arccos
+    # from numpy import arctan2
+    # from numpy import array
+    # from numpy import asarray
+    # from numpy import cos
+    # from numpy import float64
+    # from numpy import hstack
+    # from numpy import isnan
+    # from numpy import int64
+    # from numpy import linspace
+    # from numpy import meshgrid
+    # from numpy import max
+    # from numpy import mean
+    # from numpy import min
+    # from numpy import newaxis
+    # from numpy import pi
+    # from numpy import sin
+    # from numpy import squeeze
+    # from numpy import sqrt
+    # from numpy import sum
+    # from numpy import tile
+    # from numpy import zeros
 except ImportError:
     pass
+    
 
 try:
     from scipy.interpolate import griddata
@@ -101,14 +104,14 @@ def process_data(data, dtype, iptype, nodal, elements, n):
 
     if dtype == 'nodal':
 
-        vn = array(data)[:, newaxis]
+        vn = np.array(data)[:, np.newaxis]
         ve = None
 
     elif dtype == 'element':
 
         m          = len(elements)
-        lengths    = zeros(m, dtype=int64)
-        data_array = zeros((m, 20), dtype=float64)
+        lengths    = np.zeros(m, dtype=np.int64)
+        data_array = np.zeros((m, 20), dtype=np.float64)
 
         iptypes = {'max': 0, 'min': 1, 'mean': 2, 'abs': 3}
 
@@ -138,7 +141,7 @@ def process_data(data, dtype, iptype, nodal, elements, n):
         def _process(data_array, lengths, iptype):
 
             m  = len(lengths)
-            ve = zeros((m, 1))
+            ve = np.zeros((m, 1))
 
             for i in range(m):
 
@@ -149,7 +152,7 @@ def process_data(data, dtype, iptype, nodal, elements, n):
                     ve[i]  = min(data_array[i, :lengths[i]])
 
                 elif iptype == 2:
-                    ve[i]  = mean(data_array[i, :lengths[i]])
+                    ve[i]  = np.mean(data_array[i, :lengths[i]])
 
                 elif iptype == 3:
                     ve[i]  = max(abs(data_array[i, :lengths[i]]))
@@ -159,7 +162,7 @@ def process_data(data, dtype, iptype, nodal, elements, n):
 
         def _nodal(rows, cols, nodal, ve, n):
 
-            vn = zeros((n, 1))
+            vn = np.zeros((n, 1))
 
             for i in range(len(rows)):
 
@@ -180,7 +183,7 @@ def process_data(data, dtype, iptype, nodal, elements, n):
         ve = _process(data_array, lengths, iptypes[iptype])
 
         if nodal == 'mean':
-            vsum = asarray(AT.dot(ve))
+            vsum = np.asarray(AT.dot(ve))
             vn = vsum / sum(AT, 1)
 
         else:
@@ -245,7 +248,7 @@ def colorbar(fsc, input='array', type=255):
 
     if input == 'array':
 
-        rgb = hstack([r, g, b])
+        rgb = np.hstack([r, g, b])
         rgb[rgb > 1] = 1
         rgb[rgb < 0] = 0
 
@@ -304,7 +307,7 @@ def _angle(A, B, C):
 
     AB = B - A
     BC = C - B
-    th = arccos(sum(AB * BC) / (sqrt(sum(AB**2)) * sqrt(sum(BC**2)))) * 180 / pi
+    th = np.arccos(sum(AB * BC) / (np.sqrt(sum(AB**2)) * np.sqrt(sum(BC**2)))) * 180 / np.pi
     return th
 
 
@@ -322,7 +325,7 @@ def _centre(p1, p2, p3):
     g = 2 * (a * (cy - by) - b * (cx - bx))
     centerx = (d * e - b * f) / g
     centery = (a * f - c * e) / g
-    r = sqrt((ax - centerx)**2 + (ay - centery)**2)
+    r = np.sqrt((ax - centerx)**2 + (ay - centery)**2)
 
     return [centerx, centery, 0], r
 
@@ -496,7 +499,7 @@ def normalise_data(data, cmin, cmax):
 
     """
 
-    f = asarray(data)
+    f = np.asarray(data)
     fmax = cmax if cmax is not None else max(abs(f))
     fmin = cmin if cmin is not None else min(abs(f))
     fabs = max([abs(fmin), abs(fmax)])
@@ -559,8 +562,8 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
 
     tic = time()
 
-    dU = hstack([array(ux)[:, newaxis], array(uy)[:, newaxis], array(uz)[:, newaxis]])
-    U = [list(i) for i in list(array(nodes) + scale * dU)]
+    dU = np.hstack((np.array(ux)[:, np.newaxis], np.array(uy)[:, np.newaxis], np.array(uz)[:, np.newaxis]))
+    U = [list(i) for i in list(np.array(nodes) + scale * dU)]
 
     vn, ve = process_data(data=data, dtype=dtype, iptype=iptype, nodal=nodal, elements=elements, n=len(U))
 
@@ -602,22 +605,22 @@ def plotvoxels(values, U, vdx, indexing=None):
 
     """
 
-    U = array(U)
+    U = np.array(U)
     x = U[:, 0]
     y = U[:, 1]
     z = U[:, 2]
     xmin, xmax = min(x), max(x)
     ymin, ymax = min(y), max(y)
     zmin, zmax = min(z), max(z)
-    X = linspace(xmin, xmax, (xmax - xmin) / vdx)
-    Y = linspace(ymin, ymax, (ymax - ymin) / vdx)
-    Z = linspace(zmin, zmax, (zmax - zmin) / vdx)
-    Xm, Ym, Zm = meshgrid(X, Y, Z)
+    X = np.linspace(xmin, xmax, (xmax - xmin) / vdx)
+    Y = np.linspace(ymin, ymax, (ymax - ymin) / vdx)
+    Z = np.linspace(zmin, zmax, (zmax - zmin) / vdx)
+    Xm, Ym, Zm = np.meshgrid(X, Y, Z)
     # Zm, Ym, Xm = meshgrid(X, Y, Z, indexing='ij')
 
-    f  = abs(asarray(values))
-    Am = squeeze(griddata(U, f, (Xm, Ym, Zm), method='linear', fill_value=0))
-    Am[isnan(Am)] = 0
+    f  = abs(np.asarray(values))
+    Am = np.squeeze(griddata(U, f, (Xm, Ym, Zm), method='linear', fill_value=0))
+    Am[np.isnan(Am)] = 0
 
     voxels = VtkViewer(data={'voxels': Am})
     voxels.setup()
@@ -664,16 +667,16 @@ def principal_stresses(data, ptype, scale, rotate):
 
     ekeys = spr.keys()
     m = len(ekeys)
-    s11_sp1 = zeros(m)
-    s22_sp1 = zeros(m)
-    s12_sp1 = zeros(m)
-    spr_sp1 = zeros(m)
-    s11_sp5 = zeros(m)
-    s22_sp5 = zeros(m)
-    s12_sp5 = zeros(m)
-    spr_sp5 = zeros(m)
-    e11 = zeros((m, 3))
-    e22 = zeros((m, 3))
+    s11_sp1 = np.zeros(m)
+    s22_sp1 = np.zeros(m)
+    s12_sp1 = np.zeros(m)
+    spr_sp1 = np.zeros(m)
+    s11_sp5 = np.zeros(m)
+    s22_sp5 = np.zeros(m)
+    s12_sp5 = np.zeros(m)
+    spr_sp5 = np.zeros(m)
+    e11 = np.zeros((m, 3))
+    e22 = np.zeros((m, 3))
 
     for ekey in ekeys:
         i = int(ekey)
@@ -691,12 +694,12 @@ def principal_stresses(data, ptype, scale, rotate):
         except:
             pass
 
-    th1 = tile((0.5 * arctan2(s12_sp1, 0.5 * (s11_sp1 - s22_sp1)) + 0.5 * pi * rotate)[:, newaxis], (1, 3))
-    th5 = tile((0.5 * arctan2(s12_sp5, 0.5 * (s11_sp5 - s22_sp5)) + 0.5 * pi * rotate)[:, newaxis], (1, 3))
-    er1 = e11 * cos(th1) + e22 * sin(th1)
-    er5 = e11 * cos(th5) + e22 * sin(th5)
-    vec1 = er1 * (tile(spr_sp1[:, newaxis], (1, 3)) * scale / 10**7 + 0.0001)
-    vec5 = er5 * (tile(spr_sp5[:, newaxis], (1, 3)) * scale / 10**7 + 0.0001)
+    th1 = np.tile((0.5 * np.arctan2(s12_sp1, 0.5 * (s11_sp1 - s22_sp1)) + 0.5 * np.pi * rotate)[:, np.newaxis], (1, 3))
+    th5 = np.tile((0.5 * np.arctan2(s12_sp5, 0.5 * (s11_sp5 - s22_sp5)) + 0.5 * np.pi * rotate)[:, np.newaxis], (1, 3))
+    er1 = e11 * np.cos(th1) + e22 * np.sin(th1)
+    er5 = e11 * np.cos(th5) + e22 * np.sin(th5)
+    vec1 = er1 * (np.tile(spr_sp1[:, np.newaxis], (1, 3)) * scale / 10**7 + 0.0001)
+    vec5 = er5 * (np.tile(spr_sp5[:, np.newaxis], (1, 3)) * scale / 10**7 + 0.0001)
     pmax = max([max(abs(spr_sp1)), max(abs(spr_sp5))])
 
     return vec1, vec5, spr_sp1, spr_sp5, pmax

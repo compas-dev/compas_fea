@@ -3,31 +3,29 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-try:
-    from compas_blender.geometry import BlenderMesh
-    from compas_blender.utilities import create_layer
-    from compas_blender.utilities import clear_layer
-    from compas_blender.utilities import draw_cylinder
-    from compas_blender.utilities import draw_plane
-    from compas_blender.utilities import draw_line
-    from compas_blender.utilities import get_meshes
-    from compas_blender.utilities import get_objects
-    from compas_blender.utilities import get_points
-    from compas_blender.utilities import mesh_from_bmesh
-    from compas_blender.utilities import set_deselect
-    from compas_blender.utilities import set_select
-    from compas_blender.utilities import set_objects_coordinates
-    from compas_blender.utilities import get_object_property
-    from compas_blender.utilities import set_object_property
-    from compas_blender.utilities import draw_text
-    from compas_blender.utilities import xdraw_mesh
-except:
-    pass
-
-try:
-    import bpy
-except:
-    pass
+import compas
+if not compas.IPY:
+    try:
+        from compas_blender.geometry import BlenderMesh
+        from compas_blender.utilities import create_layer
+        from compas_blender.utilities import clear_layer
+        from compas_blender.utilities import draw_cylinder
+        from compas_blender.utilities import draw_plane
+        from compas_blender.utilities import draw_line
+        from compas_blender.utilities import get_meshes
+        from compas_blender.utilities import get_objects
+        from compas_blender.utilities import get_points
+        from compas_blender.utilities import mesh_from_bmesh
+        from compas_blender.utilities import set_deselect
+        from compas_blender.utilities import set_select
+        from compas_blender.utilities import set_objects_coordinates
+        from compas_blender.utilities import get_object_property
+        from compas_blender.utilities import set_object_property
+        from compas_blender.utilities import draw_text
+        from compas_blender.utilities import draw_mesh
+        import bpy
+    except ImportError:
+        pass
 
 from compas.geometry import cross_vectors
 from compas.geometry import subtract_vectors
@@ -353,7 +351,7 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, ther
             for i, points in enumerate(tets_elements):
 
                 xyz = [tets_points[j] for j in points]
-                xdraw_mesh(name=str(i), vertices=xyz, faces=tet_faces, layer=draw_tets)
+                draw_mesh(name=str(i), vertices=xyz, faces=tet_faces, layer=draw_tets)
 
         print('***** MeshPy (TetGen) successfull *****')
 
@@ -397,7 +395,7 @@ def discretise_mesh(structure, mesh, layer, target, min_angle=15, factor=1):
                                         factor=factor)
 
         for pts, tri in zip(points, tris):
-            bmesh = xdraw_mesh(name='face', vertices=pts, faces=tri, layer=layer)
+            bmesh = draw_mesh(name='face', vertices=pts, faces=tri, layer=layer)
             add_nodes_elements_from_bmesh(structure=structure, bmesh=bmesh, mesh_type='ShellElement')
 
     except:
@@ -641,7 +639,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
     if mesh_faces:
 
-        bmesh = xdraw_mesh(name='bmesh', vertices=U, faces=mesh_faces, layer=layer)
+        bmesh = draw_mesh(name='bmesh', vertices=U, faces=mesh_faces, layer=layer)
         blendermesh = BlenderMesh(bmesh)
         blendermesh.set_vertices_colors({i: col for i, col in enumerate(cnodes)})
         mesh_add = [bmesh]
@@ -839,7 +837,7 @@ def weld_meshes_from_layer(layer_input, layer_output):
 
     vertices = S.nodes_xyz()
 
-    xdraw_mesh(name='welded_mesh', vertices=vertices, faces=faces, layer=layer_output)
+    draw_mesh(name='welded_mesh', vertices=vertices, faces=faces, layer=layer_output)
 
 
 # ==============================================================================
