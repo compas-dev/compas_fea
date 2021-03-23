@@ -1,6 +1,4 @@
-********************************************************************************
-Citing
-********************************************************************************
+# Citing
 
 For citations to the **compas_fea** package please use:
 
@@ -8,10 +6,8 @@ For citations to the **compas_fea** package please use:
 Liew, A. and Méndez Echenagucia, T., compas_fea: A finite element analysis package for Python, 2018. DOI: 10.5281/zenodo.2553836
 ```
 
+## Authors
 
-Authors
-=======
-
-* Block Research Group `@blockresearchgroup <https://github.com/blockresearchgroup>`_
-* Andrew Liew `@andrewliew <https://github.com/andrewliew>`_
-* Tomás Méndez Echenagucia `@andrewliew <https://github.com/tmsmendez>`_
+* Block Research Group [@blockresearchgroup](https://github.com/blockresearchgroup)
+* Andrew Liew [@andrewliew](https://github.com/andrewliew)
+* Tomás Méndez Echenagucia [@andrewliew](https://github.com/tmsmendez)
