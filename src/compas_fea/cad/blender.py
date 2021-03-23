@@ -2,24 +2,23 @@ import compas
 
 if compas.BLENDER:
     import bpy
-
-from compas_blender.geometry import BlenderMesh
-from compas_blender.utilities import create_layer
-from compas_blender.utilities import clear_layer
-from compas_blender.utilities import draw_cylinder
-from compas_blender.utilities import draw_plane
-from compas_blender.utilities import draw_line
-from compas_blender.utilities import get_meshes
-from compas_blender.utilities import get_objects
-from compas_blender.utilities import get_points
-from compas_blender.utilities import mesh_from_bmesh
-from compas_blender.utilities import set_deselect
-from compas_blender.utilities import set_select
-from compas_blender.utilities import set_objects_coordinates
-from compas_blender.utilities import get_object_property
-from compas_blender.utilities import set_object_property
-from compas_blender.utilities import draw_text
-from compas_blender.utilities import draw_mesh
+    from compas_blender.geometry import BlenderMesh
+    from compas_blender.utilities import create_layer
+    from compas_blender.utilities import clear_layer
+    from compas_blender.utilities import draw_cylinder
+    from compas_blender.utilities import draw_plane
+    from compas_blender.utilities import draw_line
+    from compas_blender.utilities import get_meshes
+    from compas_blender.utilities import get_objects
+    from compas_blender.utilities import get_points
+    from compas_blender.utilities import mesh_from_bmesh
+    from compas_blender.utilities import set_deselect
+    from compas_blender.utilities import set_select
+    from compas_blender.utilities import set_objects_coordinates
+    from compas_blender.utilities import get_object_property
+    from compas_blender.utilities import set_object_property
+    from compas_blender.utilities import draw_text
+    from compas_blender.utilities import draw_mesh
 
 from compas.geometry import cross_vectors
 from compas.geometry import subtract_vectors

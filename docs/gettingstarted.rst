@@ -8,4 +8,3 @@ Getting Started
 
     gettingstarted/installation
     gettingstarted/fea
-    gettingstarted/cad
