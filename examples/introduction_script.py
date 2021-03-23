@@ -15,7 +15,7 @@ from compas_fea.structure import Structure
 
 # Create empty Structure object
 
-mdl = Structure(name='introduction', path='/home/al/temp/')
+mdl = Structure(name='introduction', path='C:/temp/')
 
 # Add nodes
 
@@ -104,6 +104,6 @@ mdl.summary()
 
 mdl.write_input_file(software='abaqus', fields=['s', 'u'])
 
-# Launch App
+# # Launch App
 
-mdl.view()
+# mdl.view()
