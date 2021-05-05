@@ -46,10 +46,13 @@ log = Log()
 def confirm(question):
     while True:
         response = input(question).lower().strip()
+
         if not response or response in ('n', 'no'):
             return False
+
         if response in ('y', 'yes'):
             return True
+
         print('Focus, kid! It is either (y)es or (n)o', file=sys.stderr)
 
 
@@ -66,9 +69,11 @@ def help(ctx):
     'builds': 'True to clean up build/packaging artifacts, otherwise False.'})
 def clean(ctx, docs=True, bytecode=True, builds=True):
     """Cleans the local copy from compiled artifacts."""
+
     with chdir(BASE_FOLDER):
         if builds:
             ctx.run('python setup.py clean')
+
         if bytecode:
             for root, dirs, files in os.walk(BASE_FOLDER):
                 for f in files:
@@ -76,16 +81,22 @@ def clean(ctx, docs=True, bytecode=True, builds=True):
                         os.remove(os.path.join(root, f))
                 if '.git' in dirs:
                     dirs.remove('.git')
+
         folders = []
+
         if docs:
             folders.append('docs/api/generated')
+
         folders.append('dist/')
+
         if bytecode:
             for t in ('src', 'tests'):
                 folders.extend(glob.glob('{}/**/__pycache__'.format(t), recursive=True))
+
         if builds:
             folders.append('build/')
-            folders.append('src/compas_occ.egg-info/')
+            folders.append('src/compas_fea.egg-info/')
+
         for folder in folders:
             rmtree(os.path.join(BASE_FOLDER, folder), ignore_errors=True)
 
@@ -94,15 +105,21 @@ def clean(ctx, docs=True, bytecode=True, builds=True):
       'rebuild': 'True to clean all previously built docs before starting, otherwise False.',
       'doctest': 'True to run doctests, otherwise False.',
       'check_links': 'True to check all web links in docs for validity, otherwise False.'})
-def docs(ctx, doctest=False, rebuild=True, check_links=False):
+def docs(ctx, doctest=False, rebuild=False, check_links=False):
     """Builds package's HTML documentation."""
+
     if rebuild:
         clean(ctx)
+
     with chdir(BASE_FOLDER):
+        # ctx.run('sphinx-autogen docs/**.rst')
+
         if doctest:
             testdocs(ctx, rebuild=rebuild)
+
         opts = '-E' if rebuild else ''
         ctx.run('sphinx-build {} -b html docs dist/docs'.format(opts))
+
         if check_links:
             linkcheck(ctx, rebuild=rebuild)
 
@@ -115,7 +132,7 @@ def lint(ctx):
 
 
 @task()
-def testdocs(ctx, rebuild=True):
+def testdocs(ctx, rebuild=False):
     """Test the examples in the docstrings."""
     log.write('Running doctest...')
     opts = '-E' if rebuild else ''
@@ -123,7 +140,7 @@ def testdocs(ctx, rebuild=True):
 
 
 @task()
-def linkcheck(ctx, rebuild=True):
+def linkcheck(ctx, rebuild=False):
     """Check links in documentation."""
     log.write('Running link check...')
     opts = '-E' if rebuild else ''
@@ -133,10 +150,13 @@ def linkcheck(ctx, rebuild=True):
 @task()
 def check(ctx):
     """Check the consistency of documentation, coding style and a few other things."""
+
     with chdir(BASE_FOLDER):
         lint(ctx)
+
         log.write('Checking MANIFEST.in...')
         ctx.run('check-manifest')
+
         log.write('Checking metadata...')
         ctx.run('python setup.py check --strict --metadata')
 
@@ -147,10 +167,12 @@ def test(ctx, checks=False, doctest=False):
     """Run all tests."""
     if checks:
         check(ctx)
+
     with chdir(BASE_FOLDER):
         cmd = ['pytest']
         if doctest:
             cmd.append('--doctest-modules')
+
         ctx.run(' '.join(cmd))
 
 
@@ -158,6 +180,7 @@ def test(ctx, checks=False, doctest=False):
 def prepare_changelog(ctx):
     """Prepare changelog for next release."""
     UNRELEASED_CHANGELOG_TEMPLATE = '## Unreleased\n\n### Added\n\n### Changed\n\n### Removed\n\n\n## '
+
     with chdir(BASE_FOLDER):
         # Preparing changelog for next release
         with open('CHANGELOG.md', 'r+') as changelog:
@@ -165,32 +188,31 @@ def prepare_changelog(ctx):
             changelog.seek(0)
             changelog.write(content.replace(
                 '## ', UNRELEASED_CHANGELOG_TEMPLATE, 1))
+
         ctx.run('git add CHANGELOG.md && git commit -m "Prepare changelog for next release"')
 
 
 @task(help={
-      'release_type': 'Type of release follows semver rules. Must be one of: major, minor, patch.'})
+      'release_type': 'Type of release follows semver rules. Must be one of: major, minor, patch, major-rc, minor-rc, patch-rc, rc, release.'})
 def release(ctx, release_type):
     """Releases the project in one swift command!"""
-    if release_type not in ('patch', 'minor', 'major'):
-        raise Exit('The release type parameter is invalid.\nMust be one of: major, minor, patch')
+    if release_type not in ('patch', 'minor', 'major', 'major-rc', 'minor-rc', 'patch-rc', 'rc', 'release'):
+        raise Exit('The release type parameter is invalid.\nMust be one of: major, minor, patch, major-rc, minor-rc, patch-rc, rc, release')
+
+    is_rc = release_type.find('rc') >= 0
+    release_type = release_type.split('-')[0]
+
     # Run checks
-    ctx.run('invoke check test')
+    ctx.run('invoke check')
+
     # Bump version and git tag it
-    ctx.run('bump2version %s --verbose' % release_type)
-    # Build project
-    ctx.run('python setup.py clean --all sdist bdist_wheel')
-    # Upload to pypi
-    if confirm('You are about to upload the release to pypi.org. Are you sure? [y/N]'):
-        files = ['dist/*.whl', 'dist/*.gz', 'dist/*.zip']
-        dist_files = ' '.join([pattern for f in files for pattern in glob.glob(f)])
-        if len(dist_files):
-            ctx.run('twine upload --skip-existing %s' % dist_files)
-            prepare_changelog(ctx)
-        else:
-            raise Exit('No files found to release')
+    if is_rc:
+        ctx.run('bump2version %s --verbose' % release_type)
+    elif release_type == 'release':
+        ctx.run('bump2version release --verbose')
     else:
-        raise Exit('Aborted release')
+        ctx.run('bump2version %s --verbose --no-tag' % release_type)
+        ctx.run('bump2version release --verbose')
 
 
 @contextlib.contextmanager
