@@ -68,7 +68,6 @@ __all__ = [
     'postprocess',
     'process_data',
     'principal_stresses',
-    'principal_stresses_mohr',
     'plotvoxels',
     'identify_ranges',
     'mesh_from_shell_elements'
@@ -626,11 +625,11 @@ def principal_stresses(data):
 
     Returns
     -------
-    spr: dict
+    spr : dict
         dictionary with the principal stresses of each element organised per
         `stress_type` ('max', 'min') and `section_point` ('sp1, 'sp5').
         {section_point: {stress_type: array([element_0, elemnt_1, ...])}}
-    e: dict
+    e : dict
         dictionary with the principal stresses vector components in World coordinates
         of each element organised per `stress_type` ('max', 'min') and
         `section_point` ('sp1, 'sp5').
@@ -646,11 +645,12 @@ def principal_stresses(data):
     section_points = ['sp1', 'sp5']
 
     stress_results = list(zip(*[data[stress_name].values() for stress_name in components]))
-    spr = {sp: {st: np.zeros((len(stress_results))) for st in stype} for sp in section_points}
-    e = {sp: {k: np.zeros((2, len(stress_results))) for k in stype} for sp in section_points}
+    array_size = ((len(stress_results)), (2, len(stress_results)))
+    spr, e = [{sp: {st: np.zeros(size) for st in stype} for sp in section_points} for size in array_size]
+
     for sp in section_points:
         for c, element_stresses in enumerate(stress_results):
-            # Stresses are computed as mean values of the integration points
+            # Stresses are computed as mean of the values at each integration points
             stress_vector = [np.mean(np.array([v for k, v in i.items() if sp in k])) for i in element_stresses]
             # The principal stresses and their directions are computed solving the eigenvalues problem
             stress_matrix = np.array([(stress_vector[0], stress_vector[1]),
@@ -662,85 +662,10 @@ def principal_stresses(data):
 
     return spr, e
 
-
-def principal_stresses_mohr(data, ptype, scale, rotate):
-    """ Performs principal stress calculations using Mohr's cirle.
-
-    Parameters
-    ----------
-    data : dic
-        Element data from structure.results for the Step.
-    ptype : str
-        'max' 'min' for maximum or minimum principal stresses.
-    scale : float
-        Scale on the length of the vectors.
-    rotate : int
-        Rotate lines by 90 deg, 0 or 1.
-
-    Returns
-    -------
-    array
-        Vectors for section point 1.
-    array
-        Vectors for section point 5.
-    array
-        Principal stresses for section point 1.
-    array
-        Principal stresses for section point 5.
-    float
-        Maxium stress magnitude.
-
-    """
-
-    axes = data['axes']
-    s11 = data['sxx']
-    s22 = data['syy']
-    s12 = data['sxy']
-    spr = data['s{0}p'.format(ptype)]
-
-    ekeys = spr.keys()
-    m = len(ekeys)
-    s11_sp1 = np.zeros(m)
-    s22_sp1 = np.zeros(m)
-    s12_sp1 = np.zeros(m)
-    spr_sp1 = np.zeros(m)
-    s11_sp5 = np.zeros(m)
-    s22_sp5 = np.zeros(m)
-    s12_sp5 = np.zeros(m)
-    spr_sp5 = np.zeros(m)
-    e11 = np.zeros((m, 3))
-    e22 = np.zeros((m, 3))
-
-    for ekey in ekeys:
-        i = int(ekey)
-        try:
-            e11[i, :] = axes[ekey][0]
-            e22[i, :] = axes[ekey][1]
-            s11_sp1[i] = s11[ekey]['ip1_sp1']
-            s22_sp1[i] = s22[ekey]['ip1_sp1']
-            s12_sp1[i] = s12[ekey]['ip1_sp1']
-            spr_sp1[i] = spr[ekey]['ip1_sp1']
-            s11_sp5[i] = s11[ekey]['ip1_sp5']
-            s22_sp5[i] = s22[ekey]['ip1_sp5']
-            s12_sp5[i] = s12[ekey]['ip1_sp5']
-            spr_sp5[i] = spr[ekey]['ip1_sp5']
-        except:
-            pass
-
-    th1 = np.tile((0.5 * np.arctan2(s12_sp1, 0.5 * (s11_sp1 - s22_sp1)) + 0.5 * np.pi * rotate)[:, np.newaxis], (1, 3))
-    th5 = np.tile((0.5 * np.arctan2(s12_sp5, 0.5 * (s11_sp5 - s22_sp5)) + 0.5 * np.pi * rotate)[:, np.newaxis], (1, 3))
-    er1 = e11 * np.cos(th1) + e22 * np.sin(th1)
-    er5 = e11 * np.cos(th5) + e22 * np.sin(th5)
-    vec1 = er1 * (np.tile(spr_sp1[:, np.newaxis], (1, 3)) * scale / 10**7 + 0.0001)
-    vec5 = er5 * (np.tile(spr_sp5[:, np.newaxis], (1, 3)) * scale / 10**7 + 0.0001)
-    pmax = max([max(abs(spr_sp1)), max(abs(spr_sp5))])
-
-    return vec1, vec5, spr_sp1, spr_sp5, pmax
-
-
 # ==============================================================================
 # Debugging
 # ==============================================================================
+
 
 if __name__ == "__main__":
 
