@@ -46,7 +46,7 @@ try:
     # from numpy import zeros
 except ImportError:
     pass
-    
+
 
 try:
     from scipy.interpolate import griddata
@@ -68,6 +68,7 @@ __all__ = [
     'postprocess',
     'process_data',
     'principal_stresses',
+    'principal_stresses_mohr',
     'plotvoxels',
     'identify_ranges',
     'mesh_from_shell_elements'
@@ -75,7 +76,6 @@ __all__ = [
 
 
 def process_data(data, dtype, iptype, nodal, elements, n):
-
     """ Process the raw data.
 
     Parameters
@@ -109,8 +109,8 @@ def process_data(data, dtype, iptype, nodal, elements, n):
 
     elif dtype == 'element':
 
-        m          = len(elements)
-        lengths    = np.zeros(m, dtype=np.int64)
+        m = len(elements)
+        lengths = np.zeros(m, dtype=np.int64)
         data_array = np.zeros((m, 20), dtype=np.float64)
 
         iptypes = {'max': 0, 'min': 1, 'mean': 2, 'abs': 3}
@@ -134,31 +134,29 @@ def process_data(data, dtype, iptype, nodal, elements, n):
             cols.extend(nodes)
         vals = [1] * len(rows)
 
-        A  = csr_matrix((vals, (rows, cols)), shape=(m, n))
+        A = csr_matrix((vals, (rows, cols)), shape=(m, n))
         AT = A.transpose()
-
 
         def _process(data_array, lengths, iptype):
 
-            m  = len(lengths)
+            m = len(lengths)
             ve = np.zeros((m, 1))
 
             for i in range(m):
 
                 if iptype == 0:
-                    ve[i]  = max(data_array[i, :lengths[i]])
+                    ve[i] = max(data_array[i, :lengths[i]])
 
                 elif iptype == 1:
-                    ve[i]  = min(data_array[i, :lengths[i]])
+                    ve[i] = min(data_array[i, :lengths[i]])
 
                 elif iptype == 2:
-                    ve[i]  = np.mean(data_array[i, :lengths[i]])
+                    ve[i] = np.mean(data_array[i, :lengths[i]])
 
                 elif iptype == 3:
-                    ve[i]  = max(abs(data_array[i, :lengths[i]]))
+                    ve[i] = max(abs(data_array[i, :lengths[i]]))
 
             return ve
-
 
         def _nodal(rows, cols, nodal, ve, n):
 
@@ -166,7 +164,7 @@ def process_data(data, dtype, iptype, nodal, elements, n):
 
             for i in range(len(rows)):
 
-                node    = cols[i]
+                node = cols[i]
                 element = rows[i]
 
                 if nodal == 0:
@@ -178,7 +176,6 @@ def process_data(data, dtype, iptype, nodal, elements, n):
                         vn[node] = ve[element]
 
             return vn
-
 
         ve = _process(data_array, lengths, iptypes[iptype])
 
@@ -193,7 +190,6 @@ def process_data(data, dtype, iptype, nodal, elements, n):
 
 
 def identify_ranges(data):
-
     """ Identifies continuous interger series from a list and returns a list of ranges.
 
     Parameters
@@ -223,7 +219,6 @@ def identify_ranges(data):
 
 
 def colorbar(fsc, input='array', type=255):
-
     """ Creates RGB color information from -1 to 1 scaled values.
 
     Parameters
@@ -264,7 +259,6 @@ def colorbar(fsc, input='array', type=255):
 
 
 def mesh_from_shell_elements(structure):
-
     """ Returns a Mesh datastructure object from a Structure's ShellElement objects.
 
     Parameters
@@ -331,7 +325,6 @@ def _centre(p1, p2, p3):
 
 
 def combine_all_sets(sets_a, sets_b):
-
     """ Combines two nested lists of node or element sets into the minimum ammount of set combinations.
 
     Parameters
@@ -358,7 +351,6 @@ def combine_all_sets(sets_a, sets_b):
 
 
 def group_keys_by_attribute(adict, name, tol='3f'):
-
     """ Make group keys by shared attribute values.
 
     Parameters
@@ -388,7 +380,6 @@ def group_keys_by_attribute(adict, name, tol='3f'):
 
 
 def group_keys_by_attributes(adict, names, tol='3f'):
-
     """ Make group keys by shared values of attributes.
 
     Parameters
@@ -426,7 +417,6 @@ def group_keys_by_attributes(adict, names, tol='3f'):
 
 
 def network_order(start, structure, network):
-
     """ Extract node and element orders from a Network for a given start-point.
 
     Parameters
@@ -478,7 +468,6 @@ def network_order(start, structure, network):
 
 
 def normalise_data(data, cmin, cmax):
-
     """ Normalise a vector of data to between -1 and 1.
 
     Parameters
@@ -511,7 +500,6 @@ def normalise_data(data, cmin, cmax):
 
 
 def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, iptype, nodal):
-
     """ Post-process data from analysis results for given step and field.
 
     Parameters
@@ -578,16 +566,15 @@ def postprocess(nodes, elements, ux, uy, uz, data, dtype, scale, cbar, ctype, ip
         eabs = 0
         celements_ = []
 
-    toc      = time() - tic
-    cnodes_  = [list(i) for i in list(cnodes)]
-    fabs_    = float(fabs)
+    toc = time() - tic
+    cnodes_ = [list(i) for i in list(cnodes)]
+    fabs_ = float(fabs)
     fscaled_ = [float(i) for i in list(fscaled)]
 
     return toc, U, cnodes_, fabs_, fscaled_, celements_, float(eabs)
 
 
 def plotvoxels(values, U, vdx, indexing=None):
-
     """ Plot values as voxel data.
 
     Parameters
@@ -618,7 +605,7 @@ def plotvoxels(values, U, vdx, indexing=None):
     Xm, Ym, Zm = np.meshgrid(X, Y, Z)
     # Zm, Ym, Xm = meshgrid(X, Y, Z, indexing='ij')
 
-    f  = abs(np.asarray(values))
+    f = abs(np.asarray(values))
     Am = np.squeeze(griddata(U, f, (Xm, Ym, Zm), method='linear', fill_value=0))
     Am[np.isnan(Am)] = 0
 
@@ -629,9 +616,55 @@ def plotvoxels(values, U, vdx, indexing=None):
     return Am
 
 
-def principal_stresses(data, ptype, scale, rotate):
+def principal_stresses(data):
+    """ Performs principal stress calculations solving the eigenvalues problem.
 
-    """ Performs principal stress calculations.
+    Parameters
+    ----------
+    data : dic
+        Element data from structure.results for the Step.
+
+    Returns
+    -------
+    spr: dict
+        dictionary with the principal stresses of each element organised per
+        `stress_type` ('max', 'min') and `section_point` ('sp1, 'sp5').
+        {section_point: {stress_type: array([element_0, elemnt_1, ...])}}
+    e: dict
+        dictionary with the principal stresses vector components in World coordinates
+        of each element organised per `stress_type` ('max', 'min') and
+        `section_point` ('sp1, 'sp5').
+        {section_point: {stress_type: array([element_0_x, elemnt_1_x, ...],
+        [element_0_y, elemnt_1_y, ...])}}
+
+    Warnings
+    --------
+    The function is experimental and works only for shell elements at the moment.
+    """
+    components = ['sxx', 'sxy', 'syy']
+    stype = ['max', 'min']
+    section_points = ['sp1', 'sp5']
+
+    stress_results = list(zip(*[data[stress_name].values() for stress_name in components]))
+    spr = {sp: {st: np.zeros((len(stress_results))) for st in stype} for sp in section_points}
+    e = {sp: {k: np.zeros((2, len(stress_results))) for k in stype} for sp in section_points}
+    for sp in section_points:
+        for c, element_stresses in enumerate(stress_results):
+            # Stresses are computed as mean values of the integration points
+            stress_vector = [np.mean(np.array([v for k, v in i.items() if sp in k])) for i in element_stresses]
+            # The principal stresses and their directions are computed solving the eigenvalues problem
+            stress_matrix = np.array([(stress_vector[0], stress_vector[1]),
+                                      (stress_vector[1], stress_vector[2])])
+            w_sp, v_sp = np.linalg.eig(stress_matrix)
+            for v, k in enumerate(stype):
+                spr[sp][k][c] += w_sp[v]
+                e[sp][k][:, c] += v_sp[:, v]
+
+    return spr, e
+
+
+def principal_stresses_mohr(data, ptype, scale, rotate):
+    """ Performs principal stress calculations using Mohr's cirle.
 
     Parameters
     ----------
@@ -660,10 +693,10 @@ def principal_stresses(data, ptype, scale, rotate):
     """
 
     axes = data['axes']
-    s11  = data['sxx']
-    s22  = data['syy']
-    s12  = data['sxy']
-    spr  = data['s{0}p'.format(ptype)]
+    s11 = data['sxx']
+    s22 = data['syy']
+    s12 = data['sxy']
+    spr = data['s{0}p'.format(ptype)]
 
     ekeys = spr.keys()
     m = len(ekeys)

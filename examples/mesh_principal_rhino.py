@@ -60,5 +60,8 @@ mdl.summary()
 
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
-rhino.plot_principal_stresses(mdl, step='step_load', ptype='max', scale=3)
-rhino.plot_principal_stresses(mdl, step='step_load', ptype='min', scale=3)
+rhino.plot_principal_stresses_mohr(mdl, step='step_load', ptype='max', scale=3)
+rhino.plot_principal_stresses_mohr(mdl, step='step_load', ptype='min', scale=3)
+
+#rhino.plot_principal_stresses(mdl, step='step_load', ptype='max', scale=3)
+#rhino.plot_principal_stresses(mdl, step='step_load', ptype='min', scale=3)

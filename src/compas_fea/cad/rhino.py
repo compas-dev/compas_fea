@@ -29,7 +29,7 @@ if not compas.IPY:
 else:
     from compas.rpc import Proxy
     functions = Proxy('compas_fea.utilities.functions')
-    meshing   = Proxy('compas_fea.utilities.meshing')
+    meshing = Proxy('compas_fea.utilities.meshing')
 
 if compas.RHINO:
     import rhinoscriptsyntax as rs
@@ -94,10 +94,10 @@ def add_element_set(structure, guids, name):
         elif rs.IsMesh(guid):
 
             vertices = rs.MeshVertices(guid)
-            faces    = rs.MeshFaceVertices(guid)
+            faces = rs.MeshFaceVertices(guid)
 
             if rs.ObjectName(guid) and ('solid' in rs.ObjectName(guid)):
-                nodes   = [structure.check_node_exists(i) for i in vertices]
+                nodes = [structure.check_node_exists(i) for i in vertices]
                 element = structure.check_element_exists(nodes)
                 if element is not None:
                     elements.append(element)
@@ -178,7 +178,7 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
     if isinstance(layers, str):
         layers = [layers]
 
-    added_nodes    = set()
+    added_nodes = set()
     added_elements = set()
 
     for layer in layers:
@@ -192,8 +192,8 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                 sp_xyz = rs.CurveStartPoint(guid)
                 ep_xyz = rs.CurveEndPoint(guid)
                 ez = subtract_vectors(ep_xyz, sp_xyz)
-                L  = length_vector(ez)
-                m  = 0.5 * L * pL if pL else None
+                L = length_vector(ez)
+                m = 0.5 * L * pL if pL else None
 
                 sp = structure.add_node(xyz=sp_xyz, mass=m)
                 ep = structure.add_node(xyz=ep_xyz, mass=m)
@@ -207,8 +207,8 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                         name = name[1:]
 
                     dic = json.loads(name)
-                    ex  = dic.get('ex', None)
-                    ey  = dic.get('ey', None)
+                    ex = dic.get('ex', None)
+                    ey = dic.get('ey', None)
 
                     if ex and not ey:
                         ey = cross_vectors(ex, ez)
@@ -253,10 +253,12 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                         added_elements.add(ekey)
                         elset.add(ekey)
 
-                elif mesh_type=='MassElement':
-                    node_iterator=0
+                elif mesh_type == 'MassElement':
+                    node_iterator = 0
                     for node in nodes:
-                        ekey = structure.add_element(nodes=[node], type=mesh_type, thermal=thermal, mass=masses[node_iterator]) #structure.nodes[node].mass
+                        # structure.nodes[node].mass
+                        ekey = structure.add_element(nodes=[node], type=mesh_type,
+                                                     thermal=thermal, mass=masses[node_iterator])
                         node_iterator += 1
                         if ekey is not None:
                             added_elements.add(ekey)
@@ -271,9 +273,9 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                             name = name[1:]
 
                         dic = json.loads(name)
-                        ex  = dic.get('ex', None)
-                        ey  = dic.get('ey', None)
-                        ez  = dic.get('ez', None)
+                        ex = dic.get('ex', None)
+                        ey = dic.get('ey', None)
+                        ez = dic.get('ez', None)
 
                         if (ex and ey) and (not ez):
                             ez = cross_vectors(ex, ey)
@@ -368,8 +370,8 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, ther
     """
 
     rhinomesh = RhinoMesh.from_guid(mesh)
-    vertices  = rhinomesh.vertices
-    faces     = [face[:3] for face in rhinomesh.faces]
+    vertices = rhinomesh.vertices
+    faces = [face[:3] for face in rhinomesh.faces]
 
     try:
         tets_points, tets_elements = meshing.tets_from_vertices_faces(vertices=vertices, faces=faces, volume=volume)
@@ -382,7 +384,7 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, ther
         for element in tets_elements:
 
             nodes = [structure.check_node_exists(tets_points[i]) for i in element]
-            ekey  = structure.add_element(nodes=nodes, type='TetrahedronElement', thermal=thermal)
+            ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', thermal=thermal)
             ekeys.append(ekey)
 
         structure.add_set(name=name, type='element', selection=ekeys)
@@ -433,12 +435,13 @@ def discretise_mesh(mesh, layer, target, min_angle=15, factor=1):
     """
 
     rhinomesh = RhinoMesh.from_guid(mesh)
-    vertices  = rhinomesh.vertices
-    faces     = [face[:3] for face in rhinomesh.faces]
+    vertices = rhinomesh.vertices
+    faces = [face[:3] for face in rhinomesh.faces]
 
     try:
 
-        points, tris = meshing.discretise_faces(vertices=vertices, faces=faces, target=target, min_angle=min_angle, factor=factor)
+        points, tris = meshing.discretise_faces(vertices=vertices, faces=faces,
+                                                target=target, min_angle=min_angle, factor=factor)
 
         rs.CurrentLayer(rs.AddLayer(layer))
         rs.DeleteObjects(rs.ObjectsByLayer(layer))
@@ -517,7 +520,7 @@ def mesh_extrude(structure, guid, layers, thickness, mesh_name='', links_name=''
 
         for i in structure.sets[blocks_name]['selection']:
             nodes = structure.elements[i].nodes
-            xyz   = structure.nodes_xyz(nodes)
+            xyz = structure.nodes_xyz(nodes)
             rs.AddMesh(xyz, block_faces)
 
     if plot_mesh:
@@ -647,9 +650,9 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
     rfz = structure.results[step]['nodal']['rfz']
 
     nkeys = rfx.keys()
-    v     = [scale_vector([rfx[i], rfy[i], rfz[i]], -scale * 0.001) for i in nkeys]
-    rm    = [length_vector(i) for i in v]
-    rmax  = max(rm)
+    v = [scale_vector([rfx[i], rfy[i], rfz[i]], -scale * 0.001) for i in nkeys]
+    rm = [length_vector(i) for i in v]
+    rmax = max(rm)
     nodes = structure.nodes_xyz(nkeys)
 
     for i in nkeys:
@@ -765,7 +768,6 @@ def plot_mode_shapes(structure, step, layer=None, scale=1.0, radius=1):
 
 
 def plot_volmesh(volmesh, layer=None, draw_cells=True):
-
     """
     Plot a volmesh datastructure.
 
@@ -787,7 +789,7 @@ def plot_volmesh(volmesh, layer=None, draw_cells=True):
     if layer:
         rs.CurrentLayer(layer)
 
-    vkeys    = sorted(list(volmesh.vertices()), key=int)
+    vkeys = sorted(list(volmesh.vertices()), key=int)
     vertices = [volmesh.vertex_coordinates(vkey) for vkey in vkeys]
 
     if draw_cells:
@@ -884,11 +886,11 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     """
 
     if field in ['smaxp', 'smises']:
-        nodal  = 'max'
+        nodal = 'max'
         iptype = 'max'
 
     elif field in ['sminp']:
-        nodal  = 'min'
+        nodal = 'min'
         iptype = 'min'
 
     # Create and clear Rhino layer
@@ -902,21 +904,21 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
     # Node and element data
 
-    nodes      = structure.nodes_xyz()
-    elements   = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
+    nodes = structure.nodes_xyz()
+    elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
     nodal_data = structure.results[step]['nodal']
-    nkeys      = sorted(structure.nodes, key=int)
+    nkeys = sorted(structure.nodes, key=int)
 
     ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
     uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
     uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
 
     try:
-        data  = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
+        data = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
         dtype = 'nodal'
 
     except(Exception):
-        data  = structure.results[step]['element'][field]
+        data = structure.results[step]['element'][field]
         dtype = 'element'
 
     # Postprocess
@@ -929,10 +931,10 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
         # Plot meshes
 
-        mesh_faces  = []
-        line_faces  = [[0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]]
+        mesh_faces = []
+        line_faces = [[0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]]
         block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
-        tet_faces   = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
+        tet_faces = [[0, 2, 1, 1], [1, 2, 3, 3], [1, 3, 0, 0], [0, 3, 2, 2]]
 
         for element, nodes in enumerate(elements):
 
@@ -990,7 +992,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
         xr, yr, _ = structure.node_bounds()
         yran = yr[1] - yr[0] if yr[1] - yr[0] else 1
-        s    = yran * 0.1 * cbar_size
+        s = yran * 0.1 * cbar_size
         xmin = xr[1] + 3 * s
         ymin = yr[0]
 
@@ -1000,7 +1002,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         faces = [[i, i + 1, i + 12, i + 11] for i in range(10)]
         id = rs.AddMesh(verts, faces)
 
-        y  = [i[1] for i in verts]
+        y = [i[1] for i in verts]
         yn = yran * cbar_size
         colors = [colorbar(2 * (yi - ymin - 0.5 * yn) / yn, input='float', type=255) for yi in y]
         rs.MeshVertexColors(id, colors)
@@ -1068,8 +1070,9 @@ def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None)
 
     """
 
-    data    = structure.results[step]['element']
-    result  = functions.principal_stresses(data, ptype, scale, rotate)
+    data = structure.results[step]['element']
+    # result = functions.principal_stresses_mohr(data, ptype, scale, rotate)
+    result = functions.principal_stresses(data, ptype, scale)
 
     try:
 
@@ -1085,10 +1088,10 @@ def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None)
 
         for c, centroid in enumerate(centroids):
 
-            v1   = vec1[c]
-            v5   = vec5[c]
-            id1  = rs.AddLine(add_vectors(centroid, scale_vector(v1, -1)), add_vectors(centroid, v1))
-            id5  = rs.AddLine(add_vectors(centroid, scale_vector(v5, -1)), add_vectors(centroid, v5))
+            v1 = vec1[c]
+            v5 = vec5[c]
+            id1 = rs.AddLine(add_vectors(centroid, scale_vector(v1, -1)), add_vectors(centroid, v1))
+            id5 = rs.AddLine(add_vectors(centroid, scale_vector(v5, -1)), add_vectors(centroid, v5))
             col1 = colorbar(pr1[c] / pmax, input='float', type=255)
             col5 = colorbar(pr5[c] / pmax, input='float', type=255)
 
@@ -1133,10 +1136,10 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
 
     # Node and element data
 
-    xyz        = structure.nodes_xyz()
-    elements   = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
+    xyz = structure.nodes_xyz()
+    elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
     nodal_data = structure.results[step]['nodal']
-    nkeys      = sorted(structure.nodes, key=int)
+    nkeys = sorted(structure.nodes, key=int)
 
     ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
     uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
@@ -1210,6 +1213,7 @@ def weld_meshes_from_layer(layer_input, layer_output):
 # ==============================================================================
 # Debugging
 # ==============================================================================
+
 
 if __name__ == "__main__":
 
