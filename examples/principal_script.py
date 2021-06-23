@@ -8,13 +8,12 @@ shell elements. Once the analysis is complete, the principal stresses and their
 directions are extracted and printed.
 """
 
-import matplotlib.pyplot as plt
-from compas_fea.utilities import functions
-import numpy as np
-from scipy.linalg import hankel
 import json
 from math import atan2, degrees
+import numpy as np
 from pathlib import Path
+import matplotlib.pyplot as plt
+from compas_fea.utilities import principal_stresses
 
 from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ElementProperties as Properties
@@ -34,7 +33,7 @@ name = 'principal_stresses'
 mdl = Structure(name=name, path=folder)
 
 minX, maxX, minY, maxY = 0., 1., 0., 1.
-discretization = 5
+discretization = 25
 x = np.linspace(minX, maxX, int((maxX-minX)*discretization+1))
 y = np.linspace(minY, maxY,  int((maxY-minY)*discretization+1))
 X, Y = np.meshgrid(x, y)
@@ -77,12 +76,12 @@ with open(Path(folder).joinpath(name, f"{name}-results.json"), "r") as f:
 step = 'step_loads'
 data = results[step]['element']
 
-spr, e = functions.principal_stresses(data)
+spr, e = principal_stresses(data)
 
 # check the results for an element
-id = 0
+sp = 'sp5'
 stype = 'max'
-sp = 'sp1'
+id = 0
 print(f'the {stype} principal stress for element {id} is: ', spr[sp][stype][id])
 print('principal axes (basis):\n', e[sp][stype][:, id])
 print('and its inclination w.r.t. World is: ', degrees(atan2(*e[sp][stype][:, id][::-1])))
