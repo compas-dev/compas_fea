@@ -627,14 +627,13 @@ def principal_stresses(data):
     -------
     spr : dict
         dictionary with the principal stresses of each element organised per
-        `stress_type` ('max', 'min') and `section_point` ('sp1, 'sp5').
-        {section_point: {stress_type: array([element_0, elemnt_1, ...])}}
+        `stress_type` ('max', 'min') and `section_point` ('sp1, 'sp5').\n
+        `{section_point: {stress_type: array([element_0, elemnt_1, ...])}}`
     e : dict
         dictionary with the principal stresses vector components in World coordinates
         of each element organised per `stress_type` ('max', 'min') and
-        `section_point` ('sp1, 'sp5').
-        {section_point: {stress_type: array([element_0_x, elemnt_1_x, ...],
-        [element_0_y, elemnt_1_y, ...])}}
+        `section_point` ('sp1, 'sp5').\n
+        `{section_point: {stress_type: array([element_0_x, elemnt_1_x, ...],[element_0_y, elemnt_1_y, ...])}}`
 
     Warnings
     --------
