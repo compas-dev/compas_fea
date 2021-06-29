@@ -91,7 +91,7 @@
 
         
         
-        <div class="section" id="analysis">
+        <section id="analysis">
 <h1>Analysis</h1>
 <p>This page describes how to analyse a completed <strong>Structure</strong> object and view the resulting data. There are three processes involved when analysing a <strong>Structure</strong> object using a specific finite element software package or library:</p>
 <ul class="simple">
@@ -104,7 +104,7 @@
 </code></pre></div>
 </div>
 <p>Some additional arguments that can be given to <code class="docutils literal notranslate"><span class="pre">.analyse_and_extract()</span></code> are: <code class="docutils literal notranslate"><span class="pre">output</span></code> (bool) to display terminal text updates, <code class="docutils literal notranslate"><span class="pre">return_data</span></code> (bool) to return results back to <strong>structure.results</strong> or not, <code class="docutils literal notranslate"><span class="pre">components</span></code> (list) to request individual components of the requested <code class="docutils literal notranslate"><span class="pre">fields</span></code>, and <code class="docutils literal notranslate"><span class="pre">dof</span></code> (int) which is specific to OpenSees for the number of degrees-of-freedom at a node (3 or 6).</p>
-<div class="section" id="abaqus">
+<section id="abaqus">
 <h2>Abaqus</h2>
 <p>The input file for generating an Abaqus structural model is the <code class="docutils literal notranslate"><span class="pre">.inp</span></code> file. With this file, it is possible to generate and analyse a structural model, as well as request certain output data to be written to an output database <code class="docutils literal notranslate"><span class="pre">.odb</span></code> file. Because the official reference documentation for Abaqus <code class="docutils literal notranslate"><span class="pre">.inp</span></code> files is vast, it will not be described here what every line of the <code class="docutils literal notranslate"><span class="pre">.inp</span></code> file means. There are a few important points to highlight about the Python procedure and data format of the <strong>Structure</strong> object, and the generated input file format:</p>
 <ul class="simple">
@@ -163,8 +163,8 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 <div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>***** Saving data to structure.results unsuccessful *****
 </code></pre></div>
 </div>
-</div>
-<div class="section" id="opensees">
+</section>
+<section id="opensees">
 <h2>OpenSees</h2>
 <p>The input file for generating an OpenSees structural model is the <code class="docutils literal notranslate"><span class="pre">.tcl</span></code> input file. A <code class="docutils literal notranslate"><span class="pre">basic</span></code> model type will be made in 3D <code class="docutils literal notranslate"><span class="pre">-ndm</span> <span class="pre">3</span></code> with degrees-of-freedom at each node <code class="docutils literal notranslate"><span class="pre">-ndf</span></code> set from the <code class="docutils literal notranslate"><span class="pre">dof</span></code> argument. Nodes and elements will be numbered starting from 1, and then 1 subtracted for the storage of data after the analysis, so that it is consistent with the input <strong>Structure</strong> object. An important difference (currently) with OpenSees is that the structural model should have only two steps: the first step representing all of the persistent boundary conditions containing only <strong>Displacement</strong> objects, and the second step representing all applied <strong>Load</strong> objects and any further applied <strong>Displacement</strong> objects.</p>
 <p>Beam elements must be given an <code class="docutils literal notranslate"><span class="pre">ex</span></code> local axis orientation for <code class="docutils literal notranslate"><span class="pre">geomTransf</span></code>, as OpenSees will not make an assumption for the cross-section orientation. This should be defined either directly when adding the elements with the <code class="docutils literal notranslate"><span class="pre">axes</span></code> argument, or added to the element name (<code class="docutils literal notranslate"><span class="pre">{'ex':</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">0]}</span></code> for example) so it can be picked-up in a CAD environment and automatically applied. This orientation need not be defined for <strong>TrussElement</strong> types as there is no local bending orientation.</p>
@@ -199,13 +199,13 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </ul>
 </div></blockquote>
 <p>As OpenSees support is still in early development, only limited output is automatically extracted, mainly nodal data such as <code class="docutils literal notranslate"><span class="pre">'u'</span></code>: displacements and <code class="docutils literal notranslate"><span class="pre">'ur'</span></code>: rotations, <code class="docutils literal notranslate"><span class="pre">rf</span></code>: reaction forces and <code class="docutils literal notranslate"><span class="pre">rm</span></code>: reaction moments, and only limited element data such as truss axial forces and some beam element data. Data will be stored for all nodes and elements as <code class="docutils literal notranslate"><span class="pre">.out</span></code> text files such as <code class="docutils literal notranslate"><span class="pre">step_name_u.out</span></code>. These files are organised with OpenSees file writing defaults, which lists analysis increments vertically in the output text files and the data horizontally. <strong>Note</strong>: plotting functions currently use only the final increment, i.e. the last line of the file.</p>
-</div>
-<div class="section" id="ansys">
+</section>
+<section id="ansys">
 <h2>Ansys</h2>
 <ul class="simple">
 <li></li>
 </ul>
-<div class="section" id="fields-components-and-data">
+<section id="fields-components-and-data">
 <h3>Fields, components and data</h3>
 <p>After the analysis, the data are stored in the <strong>Structure</strong> object, where they can be accessed by the user to read or visualise the results. The organisation of the collected data in <code class="docutils literal notranslate"><span class="pre">structure.results</span></code> is in nested dictionaries with keys following a sequence of: the <code class="docutils literal notranslate"><span class="pre">step</span></code> string for the <strong>Step</strong> of interest, a data type string for <code class="docutils literal notranslate"><span class="pre">'nodal'</span></code> or <code class="docutils literal notranslate"><span class="pre">'element'</span></code> based data, the <code class="docutils literal notranslate"><span class="pre">field</span></code> string corresponding to one of the field tables below, and finally the node or element number. The general format of accessing data is thus <code class="docutils literal notranslate"><span class="pre">structure.results[step][type][field][number]</span></code>. Two helper methods are also provided through <code class="docutils literal notranslate"><span class="pre">structure.get_nodal_results()</span></code> and <code class="docutils literal notranslate"><span class="pre">structure.get_element_results()</span></code>, where the <code class="docutils literal notranslate"><span class="pre">step</span></code>, <code class="docutils literal notranslate"><span class="pre">field</span></code> and <code class="docutils literal notranslate"><span class="pre">nodes</span></code> or <code class="docutils literal notranslate"><span class="pre">elements</span></code> are given the same as above, and the requested results are returned as a dictionary:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">get_nodal_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;rfm&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">)</span>
@@ -215,9 +215,9 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </code></pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">field</span></code> strings are based on the notation tables below for the nodal data and the element data:</p>
-</div>
-</div>
-<div class="section" id="node-fields">
+</section>
+</section>
+<section id="node-fields">
 <h2>Node fields</h2>
 <table class="table table-responsive table-bordered docutils align-default">
 <colgroup>
@@ -274,8 +274,8 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="element-fields">
+</section>
+<section id="element-fields">
 <h2>Element fields</h2>
 <p>For elements such as shell elements, the local element axes can be accessed through <code class="docutils literal notranslate"><span class="pre">'axes'</span></code> as a component entry. <strong>Note</strong>: shell forces and moments are per unit width.</p>
 <table class="table table-responsive table-bordered docutils align-default">
@@ -364,8 +364,8 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 </tbody>
 </table>
 <p>Reinforcement forces <code class="docutils literal notranslate"><span class="pre">'rbfor'</span></code></p>
-</div>
-<div class="section" id="integration-and-section-points">
+</section>
+<section id="integration-and-section-points">
 <h2>Integration and section points</h2>
 <p>For <code class="docutils literal notranslate"><span class="pre">'nodal'</span></code> data, accessing the displacement in <cite>z</cite> for step <code class="docutils literal notranslate"><span class="pre">'step_load'</span></code> and for node 4 would be <code class="docutils literal notranslate"><span class="pre">structure.results['step_load']['nodal']['uz'][4]</span></code>, which would give a single float value in return. For <code class="docutils literal notranslate"><span class="pre">'element'</span></code> data, there is often no single data value that can represent the entire element, as some elements require many data values to be evaluated across its volume, especially higher order elements, quads and solid elements. During a finite element analysis, specific points are evaluated across an element and  section related to the element shape function and cross-section shape (Gauss points). Each of these data-points is stored by <strong>compas_fea</strong> for each of the elements with an integration point–section point string key. This special key takes the form of <code class="docutils literal notranslate"><span class="pre">'ip4_sp1'</span></code>, which represents data for integration point 4 and section point 1 (see the Elements and Sections topics for the locations of these points).</p>
 <p>The data request <code class="docutils literal notranslate"><span class="pre">structure.results['step_load']['element']['smises'][4]</span></code> for an example element, will return a dictionary of data with string keys as the integration point–section point keys. For a four noded linear shell element, these would be four integration points (the four internal points, unless a reduced integration scheme is used leading to one point) and two section points (top and bottom layers by default). When data stored in this integration–section point format are converted to nodal data, which is important for plotting data on meshes where vertices are coloured, the following points must be observed:</p>
@@ -374,8 +374,8 @@ Abaqus/Standard checked out <span class="m">6</span> tokens from Flexnet server 
 <li><p>Selecting one representative integration point for an element is generally not possible without some understanding of the structural model and loading. For instance, points around a beam cross-section will have completely different stress values depending on the combination of major axis and minor axis bending.</p></li>
 <li><p>Picking a maximum value of Von Mises stress could be used to find a critical heavily stressed point, as these stresses are always positive. But picking a maximum or minimum value for a stress where the sign matters is not so straightforward and must be done carefully, because it represents say compression or tension.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
         
       </main>

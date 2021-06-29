@@ -91,10 +91,10 @@
 
         
         
-        <div class="section" id="elements">
+        <section id="elements">
 <h1>Elements</h1>
 <p>This page shows how different types of <strong>Element</strong> objects are added and edited with the <strong>Structure</strong> object, here the example <strong>Structure</strong> object is given as <code class="docutils literal notranslate"><span class="pre">mdl</span></code>. The <strong>Element</strong> objects represent linear, surface and solid finite elements connecting different nodes of the structure.</p>
-<div class="section" id="adding-elements">
+<section id="adding-elements">
 <h2>Adding elements</h2>
 <p><strong>Element</strong> objects are added to the <strong>Structure</strong> object with the <code class="docutils literal notranslate"><span class="pre">.add_element()</span></code> and <code class="docutils literal notranslate"><span class="pre">.add_elements()</span></code> methods, by giving the list(s) of nodes that the element(s) connect to, as well as the element type as a string. If a single element is being added with <code class="docutils literal notranslate"><span class="pre">.add_element()</span></code>, then the node numbers are given in <code class="docutils literal notranslate"><span class="pre">nodes</span></code>, while if multiple elements are added with <code class="docutils literal notranslate"><span class="pre">.add_elements()</span></code>, lists of nodes are given through <code class="docutils literal notranslate"><span class="pre">elements</span></code>. The <strong>Element</strong> objects are added to the <code class="docutils literal notranslate"><span class="pre">.elements</span></code> dictionary of the <strong>Structure</strong>, from the classes found in module <strong>compas_fea.structure.element</strong>, where the class names match the string entered for the element type <code class="docutils literal notranslate"><span class="pre">type</span></code>.</p>
 <p>The element types include, amongst others, 1D elements: <strong>SpringElement</strong>, <strong>BeamElement</strong>, <strong>TrussElement</strong>, 2D elements: <strong>ShellElement</strong>, <strong>MembraneElement</strong>, and 3D elements: <strong>PentahedronElement</strong>, <strong>TetrahedronElement</strong>, <strong>HexahedronElement</strong>. <strong>Note</strong>: to date, not all elements types are consistently available across all FE solvers, Abaqus, OpenSees and Ansys.</p>
@@ -105,8 +105,8 @@
 </code></pre></div>
 </div>
 <p>For Abaqus, adding elements will also create a set for each individual element. So for example, when element 4 is written to the input file, an element set named <strong>element_4</strong> (corresponding to element number 5 in Abaqus) will also be created. The utility of this is that individual elements can be referenced to whenever needed, which is useful for selectively assigning a thickness, material, section or orientation to specific elements by way of their number (see some of the examples for demonstrations of this).</p>
-</div>
-<div class="section" id="viewing-elements">
+</section>
+<section id="viewing-elements">
 <h2>Viewing elements</h2>
 <p>The <strong>Element</strong> objects that have been added to the <strong>Structure</strong> can be viewed through their integer key and the attributes <code class="docutils literal notranslate"><span class="pre">.__name__</span></code>, <code class="docutils literal notranslate"><span class="pre">.axes</span></code>, <code class="docutils literal notranslate"><span class="pre">.nodes</span></code>, <code class="docutils literal notranslate"><span class="pre">.number</span></code>, <code class="docutils literal notranslate"><span class="pre">element_property</span></code> and <code class="docutils literal notranslate"><span class="pre">.thermal</span></code> (the thermal boolean attribute is a placeholder for later functionality). A summary of the element can be viewed by printing the element to the terminal.</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span> <span class="o">&gt;&gt;&gt;</span> <span class="n">mdl</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>  <span class="c1"># element number 3</span>
@@ -132,16 +132,16 @@
  <span class="kc">False</span>
 </code></pre></div>
 </div>
-</div>
-<div class="section" id="element-index">
+</section>
+<section id="element-index">
 <h2>Element index</h2>
 <p>A geometric key to integer key index dictionary is accessed through <code class="docutils literal notranslate"><span class="pre">.element_index</span></code>, where the geometric key is taken as the element centroid and the key is the number of the element. The <code class="docutils literal notranslate"><span class="pre">.element_index</span></code> dictionary is similar in function to the <code class="docutils literal notranslate"><span class="pre">.node_index</span></code> dictionary, and is useful for checking if an element exists (see methods below).</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_index</span>  <span class="c1"># view the structure element_index</span>
 <span class="go">{&#39;-2.500,-2.500,2.500&#39;: 0, &#39;2.500,-2.500,2.500&#39;: 1, &#39;2.500,2.500,2.500&#39;: 2, &#39;-2.500,2.500,2.500&#39;:  3}</span>
 </code></pre></div>
 </div>
-</div>
-<div class="section" id="methods">
+</section>
+<section id="methods">
 <h2>Methods</h2>
 <p>It can be checked if an element is already present in the <strong>Structure</strong> object (via <code class="docutils literal notranslate"><span class="pre">.element_index</span></code> in the background), by a query with the method <code class="docutils literal notranslate"><span class="pre">.check_element_exists()</span></code>. This method must be given the list of <code class="docutils literal notranslate"><span class="pre">nodes</span></code> the element would be connected to, or the location <code class="docutils literal notranslate"><span class="pre">xyz</span></code> of where its centroid would be. As the check is based on the centroid of the element, it does not matter the order that the nodes are given in the list <code class="docutils literal notranslate"><span class="pre">nodes</span></code>. If an element exists, the method will return the integer key, if not, <code class="docutils literal notranslate"><span class="pre">None</span></code> will be returned.</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_element_exists</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>  <span class="c1"># does an element exist connecting nodes 1 and 4</span>
@@ -164,8 +164,8 @@
 <span class="go">(-2.5, 2.5, 2.5)</span>
 </code></pre></div>
 </div>
-</div>
-<div class="section" id="axes">
+</section>
+<section id="axes">
 <h2>Axes</h2>
 <p>Giving a dictionary for the argument <code class="docutils literal notranslate"><span class="pre">axes</span></code> when adding the element, will store <code class="docutils literal notranslate"><span class="pre">{'ex':</span> <span class="pre">[],</span> <span class="pre">'ey':</span> <span class="pre">[],</span> <span class="pre">'ez':</span> <span class="pre">[]}</span></code> in the <strong>Element</strong> object’s <code class="docutils literal notranslate"><span class="pre">.axes</span></code> attribute. The <code class="docutils literal notranslate"><span class="pre">'ex'</span></code>, <code class="docutils literal notranslate"><span class="pre">'ey'</span></code> and <code class="docutils literal notranslate"><span class="pre">'ez'</span></code> lists are the element’s local <cite>x</cite>, <cite>y</cite> and <cite>z</cite> axes, and are used for example when orientating cross-sections, using anisotropic materials, or for aligning rebar in concrete shells. If no <code class="docutils literal notranslate"><span class="pre">axes</span></code> data are given, it is left up to the finite element solver to determine default local axes values. This default alignment, if supported by the software, is often based on the global axes of the model, thus it is important to understand if these defaults are suitable, especially for an element geometry that does not align well with the global <cite>x</cite>, <cite>y</cite>, <cite>z</cite> directions. If for example you create a <strong>BeamElement</strong> for Abaqus that is perfectly vertical, you will get an error from Abaqus that it was not able to work out a local orientation, as it tries to align beam elements to the global <cite>x</cite> and <cite>y</cite> directions. OpenSees demands explicitly a local orientation for beams, so this step of defining the local axes cannot be skipped.</p>
 <p>For the local axes of a line element such as a beam, the <code class="docutils literal notranslate"><span class="pre">'ex'</span></code> axis represents the cross-section’s major axis, <code class="docutils literal notranslate"><span class="pre">'ey'</span></code> is the cross-section’s minor axis, and <code class="docutils literal notranslate"><span class="pre">'ez'</span></code> is the axis along the element. For surface elements, the <code class="docutils literal notranslate"><span class="pre">'ex'</span></code> and <code class="docutils literal notranslate"><span class="pre">'ey'</span></code> axes represent the in-plane local axes, with <code class="docutils literal notranslate"><span class="pre">'ez'</span></code> then representing the positive normal vector. The CAD functions (described in the CAD topic) that add elements to the <strong>Structure</strong> from geometry in the workspace, will automate some of these axis definitions/tasks, so see the Rhino and Blender pages later on how the CAD environment can help prescribe these orientations more effectively.</p>
@@ -175,29 +175,29 @@
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_element</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;ShellElement&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ex&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;ey&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;ez&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]})</span>
 </code></pre></div>
 </div>
-</div>
-<div class="section" id="id1">
+</section>
+<section id="id1">
 <h2>Elements</h2>
-<div class="section" id="d-elements">
+<section id="d-elements">
 <h3>1D elements</h3>
 <p>One dimensional elements such as truss (<strong>TrussElement</strong>) and beam (<strong>BeamElement</strong>) elements are currently first order linear elements defined by two nodes, which are the start (<strong>n1</strong>) and end (<strong>n2</strong>) points of a straight line. An internal node is currently not supported for second order parabolic elements. For the modelling of a curved shaped beam, use many straight segments. The single integration point (<strong>ip1</strong>) is at the midpoint of the line element.</p>
 <a class="reference internal image-reference" href="../_images/truss-element.png"><img alt="../_images/truss-element.png" src="../_images/truss-element.png" style="width: 162.45000000000002px; height: 72.9px;" /></a>
-</div>
-<div class="section" id="id2">
+</section>
+<section id="id2">
 <h3>2D elements</h3>
 <p>Two dimensional elements such as membrane (<strong>MembraneElement</strong>) and shell (<strong>ShellElement</strong>) elements are currently first order linear defined by either three (<strong>n1</strong>, <strong>n2</strong>, <strong>n3</strong>) or four (<strong>n1</strong>, <strong>n2</strong>, <strong>n3</strong>, <strong>n4</strong>) nodes. These nodes are the corners of straight-sided elements, intermediate edge nodes are currently not supported for second order parabolic elements. For modelling a curved edge, use many straight segments. There are three or four internal integration points within the element (<strong>ip1</strong> through to <strong>ip3</strong> or <strong>ip4</strong>).</p>
 <a class="reference internal image-reference" href="../_images/shell-element.png"><img alt="../_images/shell-element.png" src="../_images/shell-element.png" style="width: 346.95px; height: 115.65px;" /></a>
-</div>
-<div class="section" id="id3">
+</section>
+<section id="id3">
 <h3>3D elements</h3>
 <p>Three dimensional solid elements are also currently first order (linear), they are defined by four nodes (<strong>TetrahedronElement</strong> with four sides <strong>S1</strong> to <strong>S4</strong>), six nodes (<strong>PentahedronElement</strong> with five sides <strong>S1</strong> to <strong>S5</strong>) or eight nodes (<strong>HexahedronElement</strong> with six sides <strong>S1</strong> to <strong>S6</strong>). The nodes are the corners of flat-faced elements and should be added in the order shown below. Intermediate edge nodes are currently not supported for second order parabolic elements. For a curved edge/face, use many straight segments/faces for modelling. There is one internal integration point for a <strong>TetrahedronElement</strong> (<strong>ip1</strong>). two for a <strong>PentahedronElement</strong> (<strong>ip1</strong> and <strong>ip2</strong>) and eight for a <strong>HexahedronElement</strong> (<strong>ip1</strong> to <strong>ip8</strong>).</p>
 <a class="reference internal image-reference" href="../_images/solid-element.png"><img alt="../_images/solid-element.png" src="../_images/solid-element.png" style="width: 603.0px; height: 326.25px;" /></a>
-</div>
-</div>
-<div class="section" id="meshing">
+</section>
+</section>
+<section id="meshing">
 <h2>Meshing</h2>
 <p>The <strong>compas_fea</strong> package supports the use of <a class="reference external" href="https://www.cs.cmu.edu/~quake/triangle.html">Triangle</a> and <a class="reference external" href="http://wias-berlin.de/software/index.jsp?id=TetGen&amp;lang=1">TetGen</a> via the Python wrapper <a class="reference external" href="https://mathema.tician.de/software/meshpy/">MeshPy</a>, and is independent of any CAD environment. <strong>MeshPy</strong> can easily be installed via <code class="docutils literal notranslate"><span class="pre">pip</span></code> on Linux systems, while a <code class="docutils literal notranslate"><span class="pre">.whl</span></code> file is recommended for Windows from the excellent resource page <a class="reference external" href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#meshpy">here</a> .</p>
-<div class="section" id="id4">
+<section id="id4">
 <h3>2D elements</h3>
 <p>There are two main ways to discretise coarse meshes into denser forms for an accurate finite element analysis. The first is to use the discretisation and subdivision methods in the core <strong>compas</strong> package, namely those under <strong>compas.topology</strong>. The second is to use the <code class="docutils literal notranslate"><span class="pre">discretise_faces()</span></code> function found in <strong>compas_fea.utilities.meshing</strong>. This takes the <code class="docutils literal notranslate"><span class="pre">vertices</span></code> and <code class="docutils literal notranslate"><span class="pre">faces</span></code> of the coarse mesh, a <code class="docutils literal notranslate"><span class="pre">target</span></code> triangle element size, and a minimum angle <code class="docutils literal notranslate"><span class="pre">min_angle</span></code> for the triangles’ internal angles. The function will then discretise the coarse mesh with MeshPy (via Triangle) and return a finer mesh for each of the faces of the input mesh. The returned discretised faces will not be welded together to form a single mesh (this is also not needed when adding elements to the <strong>Structure</strong> object anyway).</p>
 <p>The function call <strong>compas_fea.utilities.meshing.discretise_faces</strong> has been conveniently wrapped for use in Rhino and Blender with the functions <strong>rhino.discretise_mesh</strong> and <strong>blender.discretise_mesh</strong>. Which requires: 1) the <code class="docutils literal notranslate"><span class="pre">structure</span></code> to add the discretised mesh to, 2) the <code class="docutils literal notranslate"><span class="pre">guid</span></code> or <code class="docutils literal notranslate"><span class="pre">object</span></code> of the triangulated  coarse mesh in the workspace, 3) the <code class="docutils literal notranslate"><span class="pre">layer</span></code> to plot the finer mesh to, and 4) the required <code class="docutils literal notranslate"><span class="pre">target</span></code> and <code class="docutils literal notranslate"><span class="pre">min_angle</span></code> parameters for the final triangles. These functions will automatically sort out the <code class="docutils literal notranslate"><span class="pre">vertices</span></code> and <code class="docutils literal notranslate"><span class="pre">faces</span></code>  arguments needed in <code class="docutils literal notranslate"><span class="pre">discretise_faces()</span></code> by extracting them from the mesh geometry. A call using these functions may look like the following, which gives example meshing results afterwards for Rhino and Blender.</p>
@@ -214,8 +214,8 @@
 </div>
 <a class="reference internal image-reference" href="../_images/meshing_rhino.png"><img alt="../_images/meshing_rhino.png" src="../_images/meshing_rhino.png" style="width: 613.92px; height: 324.0px;" /></a>
 <a class="reference internal image-reference" href="../_images/mesh_triangle_blender.png"><img alt="../_images/mesh_triangle_blender.png" src="../_images/mesh_triangle_blender.png" style="width: 768.0px; height: 432.0px;" /></a>
-</div>
-<div class="section" id="id5">
+</section>
+<section id="id5">
 <h3>3D elements</h3>
 <p>When discretising a solid volume into finite elements, the first step is usually to create a mesh that represents the outer-surface of the solid. This mesh can be represented as a triangulated mesh with somewhat equally sized triangles, as there are many algorithms for creating tetrahedron elements from an outer surface by adding them across the internal volume. A function has been set-up to facilitate converting a collection of triangles and vertices data representing the outer-surface, into tetrahedron elements. This is the function <code class="docutils literal notranslate"><span class="pre">tets_from_vertices_faces()</span></code>, found in <strong>compas_fea.utilities.meshing</strong>, where the <code class="docutils literal notranslate"><span class="pre">vertices</span></code> co-ordinates, the triangle <code class="docutils literal notranslate"><span class="pre">faces</span></code>, and a <code class="docutils literal notranslate"><span class="pre">volume</span></code> constraint (optional) are given. The outputs of using the function are the points and indices of the tetrahedron corners.</p>
 <p>If you are in a CAD environment, you can use the geometry from a constructed triangulated outer-surface mesh to create and automatically add tetrahedron elements to your <strong>Structure</strong> object. In Rhino, use <code class="docutils literal notranslate"><span class="pre">.add_tets_from_mesh()</span></code> from <strong>compas_fea.cad.rhino</strong>, and in Blender, use the same name of function <code class="docutils literal notranslate"><span class="pre">.add_tets_from_mesh()</span></code> from <strong>compas_fea.cad.blender</strong>. These functions effectively wrap around <code class="docutils literal notranslate"><span class="pre">tets_from_vertices_faces()</span></code> and add the elements to the <strong>Structure</strong> object for you. These function calls could look like:</p>
@@ -241,9 +241,9 @@
 </div>
 <p>For both the Rhino and Blender cases the following must be given: 1) the <strong>Structure</strong> object <code class="docutils literal notranslate"><span class="pre">structure</span></code> to add the tets to, 2) the <code class="docutils literal notranslate"><span class="pre">name</span></code> of the element set to make after adding the tetrahedrons, 3) whether to draw mesh representations of the tetrahedrons with the boolean <code class="docutils literal notranslate"><span class="pre">draw_tets</span></code> (they will be drawn on layer <code class="docutils literal notranslate"><span class="pre">layer</span></code>), and 4) the volume constraint if desired with <code class="docutils literal notranslate"><span class="pre">volume</span></code>. For the Rhino case above, a mesh was gathered from layer <code class="docutils literal notranslate"><span class="pre">'mesh'</span></code>, and for Blender the mesh named <code class="docutils literal notranslate"><span class="pre">mesh</span></code>. The tetrahedrons will have been added to <code class="docutils literal notranslate"><span class="pre">structure.elements</span></code> and the created element set stored under <code class="docutils literal notranslate"><span class="pre">structure.sets</span></code>. <strong>Note</strong>: take care when plotting a dense collection of tetrahedrons with <code class="docutils literal notranslate"><span class="pre">draw_tets=True</span></code>, as it can easily overload the viewport with many individual meshes. An example of some generated and plotted tetrahedrons is shown below, stemming from the outer surface mesh of a cylinder.</p>
 <a class="reference internal image-reference" href="../_images/tets.png"><img alt="../_images/tets.png" src="../_images/tets.png" style="width: 385.0px; height: 368.0px;" /></a>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
         
       </main>

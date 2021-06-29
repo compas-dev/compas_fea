@@ -91,10 +91,10 @@
 
         
         
-        <div class="section" id="nodes">
+        <section id="nodes">
 <h1>Nodes</h1>
 <p>This page shows how nodes are added, viewed and edited within the <strong>Structure</strong> object, here given as object with handle <code class="docutils literal notranslate"><span class="pre">mdl</span></code>. Node data is fundamental to the <strong>Structure</strong>, and is stored in the <code class="docutils literal notranslate"><span class="pre">.nodes</span></code> attribute as a dictionary of <strong>Node</strong> objects.</p>
-<div class="section" id="adding-nodes">
+<section id="adding-nodes">
 <h2>Adding nodes</h2>
 <p>Nodes can be added manually at prescribed spatial co-ordinates with the <code class="docutils literal notranslate"><span class="pre">.add_node()</span></code> and <code class="docutils literal notranslate"><span class="pre">.add_nodes()</span></code> methods, where <code class="docutils literal notranslate"><span class="pre">xyz</span></code> is given as a list of co-ordinates for a single node with <code class="docutils literal notranslate"><span class="pre">.add_node()</span></code>, and for <code class="docutils literal notranslate"><span class="pre">nodes</span></code> as a list of lists for multiple node co-ordinates when using <code class="docutils literal notranslate"><span class="pre">.add_nodes()</span></code>. If integer values for co-ordinates are given, they are converted to floats before adding to the <strong>Structure</strong> object. A <code class="docutils literal notranslate"><span class="pre">mass</span></code> can be added also, which is needed for some specific <strong>compas_fea</strong> functionality.</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">xyz</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># add a single node at x=-5, y=-5, z=0</span>
@@ -102,8 +102,8 @@
 <span class="n">mdl</span><span class="o">.</span><span class="n">add_nodes</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>  <span class="c1"># add four nodes at one time</span>
 </code></pre></div>
 </div>
-</div>
-<div class="section" id="viewing-nodes">
+</section>
+<section id="viewing-nodes">
 <h2>Viewing nodes</h2>
 <p>The nodes data are <strong>Node</strong> objects stored in the <code class="docutils literal notranslate"><span class="pre">.nodes</span></code> dictionary, and are added with integer keys numbered sequentially starting from 0 (Python based). The data summary for each node can be viewed by printing the <strong>Node</strong> to the terminal.</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>  <span class="c1"># print a summary of node number 3</span>
@@ -134,8 +134,8 @@
 <span class="go">[1, 0, 0]</span>
 </code></pre></div>
 </div>
-</div>
-<div class="section" id="editing-nodes">
+</section>
+<section id="editing-nodes">
 <h2>Editing nodes</h2>
 <p>To edit the data of a node use the <code class="docutils literal notranslate"><span class="pre">.edit_node()</span></code> method, which will change both the data of the <strong>Node</strong> and update the <code class="docutils literal notranslate"><span class="pre">.node_index</span></code> dictionary (explained later) if the co-ordinates were changed during editing.</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>  <span class="c1"># print the x and z coordinates of node number 3</span>
@@ -147,8 +147,8 @@
 <span class="go">0.0 4.0</span>
 </code></pre></div>
 </div>
-</div>
-<div class="section" id="methods">
+</section>
+<section id="methods">
 <h2>Methods</h2>
 <p>The co-ordinates of a given node or many nodes, and the total number of nodes in the <strong>Structure</strong>, may be evaluated with the <code class="docutils literal notranslate"><span class="pre">.node_xyz()</span></code>, <code class="docutils literal notranslate"><span class="pre">.nodes_xyz()</span></code> and <code class="docutils literal notranslate"><span class="pre">.node_count()</span></code> methods:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># fetch the coordinates of node number 3</span>
@@ -178,16 +178,16 @@
 </code></pre></div>
 </div>
 <p><strong>Note</strong>: no more than one node can exist for the same co-ordinates, i.e. no overlapping nodes are allowed, this ensures a unique entry in the node index dictionary (see below) and is currently important for many operations in <strong>compas_fea</strong>.</p>
-</div>
-<div class="section" id="node-index">
+</section>
+<section id="node-index">
 <h2>Node index</h2>
 <p>The <strong>Structure</strong> object’s node index is a geometric key to integer key dictionary accessed through <code class="docutils literal notranslate"><span class="pre">.node_index</span></code>. The geometric key is the string representation of the node’s co-ordinates to a prescribed (default 3) float precision, while the value that is returned for this geometric key is the node’s number. The node index can be used to quickly see what node number corresponds to a nodal spatial location. <strong>Note</strong>: the <code class="docutils literal notranslate"><span class="pre">.node_index</span></code> should never be edited manually.</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">node_index</span>  <span class="c1"># show the current node index dictionary</span>
 <span class="go">{&#39;-5.000,-5.000,0.000&#39;: 0, &#39;5.000,-5.000,0.000&#39;: 1, &#39;5.000,5.000,0.000&#39;: 2, &#39;-5.000,5.000,0.000&#39;: 3}</span>
 </code></pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
         
       </main>

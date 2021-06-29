@@ -95,20 +95,20 @@
 
         
         
-        <div class="detail section" id="plot-principal-stresses">
+        <section class="detail" id="plot-principal-stresses">
 <h1>plot_principal_stresses</h1>
 <dl class="py function">
-<dt id="compas_fea.cad.plot_principal_stresses">
-<code class="sig-prename descclassname"><span class="pre">compas_fea.cad.</span></code><code class="sig-name descname"><span class="pre">plot_principal_stresses</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ptype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/cad/rhino.py#L1041"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dt class="sig sig-object py" id="compas_fea.cad.plot_principal_stresses">
+<span class="sig-prename descclassname"><span class="pre">compas_fea.cad.</span></span><span class="sig-name descname"><span class="pre">plot_principal_stresses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/cad/rhino.py#L1043"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Plots the principal stresses of the elements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>structure</strong> (<em>obj</em>) – Structure object.</p></li>
 <li><p><strong>step</strong> (<em>str</em>) – Name of the Step.</p></li>
-<li><p><strong>ptype</strong> (<em>str</em>) – ‘max’ or ‘min’ for maximum or minimum principal stresses.</p></li>
-<li><p><strong>scale</strong> (<em>float</em>) – Scale on the length of the line markers.</p></li>
-<li><p><strong>rotate</strong> (<em>int</em>) – Rotate lines by 90 deg, 0 or 1.</p></li>
+<li><p><strong>sp</strong> (<em>str</em>) – ‘sp1’ or ‘sp5’ for stection point 1 or 5.</p></li>
+<li><p><strong>stype</strong> (<em>str</em>) – ‘max’ or ‘min’ for maximum or minimum principal stresses.</p></li>
+<li><p><strong>scale</strong> (<em>float</em>) – Scale on the length of the line markers (usually 10^6).</p></li>
 <li><p><strong>layer</strong> (<em>str</em>) – Layer name for plotting.</p></li>
 </ul>
 </dd>
@@ -118,12 +118,11 @@
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>Currently an alpha script and only for triangular shell elements in Abaqus.</p></li>
 <li><p>Centroids are taken on the undeformed geometry.</p></li>
 </ul>
 </dd></dl>
 
-</div>
+</section>
 
         
       </main>

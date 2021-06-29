@@ -91,10 +91,10 @@
 
         
         
-        <div class="section" id="sets">
+        <section id="sets">
 <h1>Sets</h1>
 <p>This page shows how sets can be used to gather groups of nodes, elements and surfaces within the <strong>Structure</strong> object, here given as <code class="docutils literal notranslate"><span class="pre">mdl</span></code>. A <strong>Set</strong> object is a group of components that can be conveniently referred to by a string name, for use with other classes and methods, and accessing specific data of a model after an analysis.</p>
-<div class="section" id="adding-sets">
+<section id="adding-sets">
 <h2>Adding sets</h2>
 <p>A set is a group of nodes, elements or surfaces that are given a string name. By assigning a name to such a group of components, it is easier and more meaningful to refer to them in other classes, instead of giving (and keeping track of) a long list of node or element numbers. A <strong>Set</strong> object is stored in the dictionary <code class="docutils literal notranslate"><span class="pre">.sets</span></code> through the method <code class="docutils literal notranslate"><span class="pre">.add_set()</span></code>, where the string key is the <code class="docutils literal notranslate"><span class="pre">name</span></code> of the set, the <code class="docutils literal notranslate"><span class="pre">type</span></code> of the set is the string <code class="docutils literal notranslate"><span class="pre">'node'</span></code>, <code class="docutils literal notranslate"><span class="pre">'element'</span></code>, <code class="docutils literal notranslate"><span class="pre">'surface_node'</span></code> or <code class="docutils literal notranslate"><span class="pre">'surface_element'</span></code>, and the <code class="docutils literal notranslate"><span class="pre">selection</span></code> stores the nodes, elements and surfaces of interest. To add node or element sets, use <code class="docutils literal notranslate"><span class="pre">.add_set()</span></code> as follows:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;nset_top&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>  <span class="c1"># add a note set &#39;nset_top&#39;</span>
@@ -138,8 +138,8 @@
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;surf_set&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;surface_element&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">{</span><span class="mi">4</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;S1&#39;</span><span class="p">,</span> <span class="s1">&#39;S2&#39;</span><span class="p">],</span> <span class="mi">7</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;SPOS&#39;</span><span class="p">]})</span>
 </code></pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
         
       </main>

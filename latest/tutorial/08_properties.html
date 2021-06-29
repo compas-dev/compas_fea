@@ -91,10 +91,10 @@
 
         
         
-        <div class="section" id="properties">
+        <section id="properties">
 <h1>Properties</h1>
 <p>This page shows how <strong>ElementProperties</strong> objects are added to the <strong>Structure</strong> object, here given as a <strong>Structure</strong> named <code class="docutils literal notranslate"><span class="pre">mdl</span></code>. This type of object ties together <strong>Element</strong>, <strong>Material</strong> and <strong>Section</strong> objects to fully define structural elements.</p>
-<div class="section" id="adding-properties">
+<section id="adding-properties">
 <h2>Adding properties</h2>
 <p>To associate <strong>Material</strong> and <strong>Section</strong> objects to specific elements, an <strong>ElementProperties</strong> object is used. Without creating an association between these objects, the materials and sections will exist as objects in the main <strong>Structure</strong> object, but they will be unassigned to any of the structure’s elements. The <strong>ElementProperties</strong> class is first imported from  module <strong>compas_fea.structure.element_properties</strong>, and then an object is created and added to the <code class="docutils literal notranslate"><span class="pre">.element_properties</span></code> dictionary of the <strong>Structure</strong> object with method <code class="docutils literal notranslate"><span class="pre">.add()</span></code>. The argument <code class="docutils literal notranslate"><span class="pre">elset</span></code> or <code class="docutils literal notranslate"><span class="pre">elements</span></code> can be an element set string name or a list of elements for assigning the properties to many similar elements (either <code class="docutils literal notranslate"><span class="pre">elements</span></code> or <code class="docutils literal notranslate"><span class="pre">elset</span></code> should be given, not both.). The <code class="docutils literal notranslate"><span class="pre">material</span></code> and <code class="docutils literal notranslate"><span class="pre">section</span></code> arguments are the string names of the respective <strong>Material</strong> and <strong>Section</strong> objects to link together, while the <code class="docutils literal notranslate"><span class="pre">name</span></code> is the key used to store and represent the <strong>ElementProperties</strong> object.</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElementProperties</span> <span class="k">as</span> <span class="n">Properties</span>
@@ -103,8 +103,8 @@
 </code></pre></div>
 </div>
 <p><strong>Note</strong>: A <strong>SpringElement</strong> does not require a material to be defined, and is handed <code class="docutils literal notranslate"><span class="pre">None</span></code> by default. A spring will define itself through its <strong>SpringSection</strong> and the elements it is linked to.</p>
-</div>
-<div class="section" id="accessing-and-editing-properties">
+</section>
+<section id="accessing-and-editing-properties">
 <h2>Accessing and editing properties</h2>
 <p>At any time, the input data of an <strong>ElementProperties</strong> object can be viewed or manipulated as usual through the object’s string key and attributes, and also by printing the object to the terminal.</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">element_properties</span><span class="p">[</span><span class="s1">&#39;ep_circ&#39;</span><span class="p">]</span>  <span class="c1"># ElementProperties object `ep_circ`</span>
@@ -132,8 +132,8 @@
 <span class="go">&#39;elset_beams&#39;</span>
 </code></pre></div>
 </div>
-</div>
-<div class="section" id="reinforcement">
+</section>
+<section id="reinforcement">
 <h2>Reinforcement</h2>
 <p>Reinforcement layers for shell and membrane elements can be added to an <strong>ElementProperties</strong> object through the dictionary <code class="docutils literal notranslate"><span class="pre">rebar</span></code>. This dictionary has the keys as the name of each reinforcement layer, and the item as a dictionary with the following data: <code class="docutils literal notranslate"><span class="pre">pos</span></code> the float position of the reinforcement layer above or below the section’s middle axis, <code class="docutils literal notranslate"><span class="pre">spacing</span></code> the float spacing between the reinforcing bars for that layer, <code class="docutils literal notranslate"><span class="pre">material</span></code> string name of the <strong>Material</strong> object, <code class="docutils literal notranslate"><span class="pre">dia</span></code> the float diameter of each bar, and <code class="docutils literal notranslate"><span class="pre">angle</span></code> the float angle the reinforcement layer makes with the orientation of the section’s local axes. A call to the <strong>ElementProperties</strong> class could then look like:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">rebar</span> <span class="o">=</span> <span class="p">{</span>
@@ -144,8 +144,8 @@
 <span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ElementProperties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep_rc&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="s1">&#39;concrete&#39;</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;shell&#39;</span><span class="p">,</span> <span class="n">elset</span><span class="o">=</span><span class="s1">&#39;slab&#39;</span><span class="p">,</span> <span class="n">rebar</span><span class="o">=</span><span class="n">rebar</span><span class="p">))</span>
 </code></pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
         
       </main>

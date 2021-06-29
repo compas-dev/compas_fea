@@ -19,7 +19,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
 
   
-    <link rel="next" title="script_introduction" href="script_introduction.html" />
+    <link rel="next" title="API Reference" href="../api.html" />
   
 
   
@@ -91,13 +91,13 @@
 
         
         
-        <div class="section" id="truss-tower">
+        <section id="truss-tower">
 <h1>truss_tower</h1>
 <p>This example works for: <strong>Abaqus</strong>.</p>
 <p>To run this example, download the Blender file <a class="reference external" href="https://github.com/compas-dev/compas_fea/raw/master/data/truss_tower.blend">truss_tower.blend</a> and copy the code in the script editor in Blender.</p>
-<div class="figure align-default">
+<figure class="figure align-default">
 <img alt="../_images/truss_tower_blender.png" class="figure-img img-fluid" src="../_images/truss_tower_blender.png" />
-</div>
+</figure>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span>
 <span class="kn">from</span> <span class="nn">compas_fea.cad</span> <span class="kn">import</span> <span class="n">blender</span>
 <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ElasticIsotropic</span>
@@ -171,7 +171,7 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">get_nodal_results</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="s1">&#39;step_load&#39;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;rfm&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_pins&#39;</span><span class="p">))</span>
 </code></pre></div>
 </div>
-</div>
+</section>
 
         
       </main>
@@ -221,7 +221,6 @@
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_mould_blender.html">mesh_mould</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="mesh_discretise_blender.html">mesh_discretise</a></li>
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">truss_tower</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="script_introduction.html">script_introduction</a></li>
 </ul>
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="../api.html">API Reference</a></li>
@@ -258,10 +257,10 @@
       
 
       
-        <a href="script_introduction.html" title="script_introduction" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+        <a href="../api.html" title="API Reference" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
           <div class="nav-title footer-link flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Next</div>
-            script_introduction
+            API Reference
           </div>
           <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
         </a>

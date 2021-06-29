@@ -91,10 +91,10 @@
 
         
         
-        <div class="section" id="app">
+        <section id="app">
 <h1>App</h1>
 <p>This page describes the use of the <strong>compas_fea</strong> App, which can be used for visualising the geometry of the created <strong>Structure</strong> and for plotting the results from an analysis. The App is still experimental and has only limited functionality, it requires PyOpenGL, VTK and PyQt5 to function.</p>
-<div class="section" id="viewing-the-structure">
+<section id="viewing-the-structure">
 <h2>Viewing the Structure</h2>
 <p>The App may be invoked by using the <code class="docutils literal notranslate"><span class="pre">.view()</span></code> method, which will take the geometry information stored in the <code class="docutils literal notranslate"><span class="pre">.nodes</span></code> and <code class="docutils literal notranslate"><span class="pre">.elements</span></code> dictionaries, and plot a 3D representation of the <strong>Structure</strong> in a graphical user interface. To load and view a <strong>Structure</strong> from an existing <code class="docutils literal notranslate"><span class="pre">.obj'</span></code> file, use the following code:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">Structure</span>
@@ -115,8 +115,8 @@
 <a class="reference internal image-reference" href="../_images/app_element.png"><img alt="../_images/app_element.png" src="../_images/app_element.png" style="width: 673.2px; height: 457.65000000000003px;" /></a>
 <p>The analysis results will be plotted on the deformed structure for the selected <strong>Step</strong>. To change the scale of the deformations use the <em>Scale</em> slider, by default deformations are scaled to 1, they can be turned off by setting this slider to 0, or magnified up to a scale of 1000.</p>
 <a class="reference internal image-reference" href="../_images/app_scale.png"><img alt="../_images/app_scale.png" src="../_images/app_scale.png" style="width: 671.85px; height: 457.2px;" /></a>
-</div>
-</div>
+</section>
+</section>
 
         
       </main>

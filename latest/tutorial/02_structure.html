@@ -91,9 +91,9 @@
 
         
         
-        <div class="section" id="structure">
+        <section id="structure">
 <h1>Structure</h1>
-<div class="section" id="structure-object">
+<section id="structure-object">
 <h2>Structure object</h2>
 <p>The central container for all model and analysis data is the <strong>Structure</strong> object, created from the <strong>Structure</strong> class.
 All of the attributes and methods of this class can be found at <strong>compas_fea.structure.structure</strong> and <strong>compas_fea.structure.mixins</strong>, with the most important methods demonstrated here and throughout the other topics of the tutorial. So please see the various topics on the other tutorial pages to understand how to add all the various data and objects to the <strong>Structure</strong> object. The following code creates an empty <strong>Structure</strong> object named <code class="docutils literal notranslate"><span class="pre">mdl</span></code> (used in all of the tutorials and examples as a short-cut handle).</p>
@@ -108,8 +108,8 @@ All of the attributes and methods of this class can be found at <strong>compas_f
 </code></pre></div>
 </div>
 <p>The above pairing will later produce files such as <strong>/home/al/Folder/new-truss.inp</strong> (an Abaqus input file) and <strong>/home/al/Folder/new-truss.obj</strong> (a hard copy of the structure). Additional temporary files, including output <strong>.json</strong> data and analysis output databases such as an Abaqus <strong>.odb</strong> file will be stored in <strong>/home/al/Folder/new-truss/</strong>, this is to keep things organised in one folder as an analysis will often generate many output files that would clutter the <code class="docutils literal notranslate"><span class="pre">path</span></code> folder.</p>
-</div>
-<div class="section" id="summary">
+</section>
+<section id="summary">
 <h2>Summary</h2>
 <p>Once constructed, a top-down summary of the <strong>Structure</strong> object can be printed with the method <code class="docutils literal notranslate"><span class="pre">.summary()</span></code> or by printing the object with <code class="docutils literal notranslate"><span class="pre">print(mdl)</span></code>. This will print information to the terminal such as the number of nodes and elements, the name of sets and how many items in their selection, and the name and type of added objects such as <strong>Materials</strong>, <strong>Sections</strong>, <strong>Loads</strong>, <strong>Displacements</strong> and <strong>Steps</strong> (all of these are described on other tutorial pages). This summary is useful for checking that nodes, elements and objects have been added correctly before any analysis is performed. If no objects of a particular type are present in that attribute of the <strong>Structure</strong>, then <strong>n/a</strong> is printed. The summary of a populated <strong>Structure</strong> could look like:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
@@ -173,8 +173,8 @@ All of the attributes and methods of this class can be found at <strong>compas_f
 <span class="go">  step_loads : GeneralStep</span>
 </code></pre></div>
 </div>
-</div>
-<div class="section" id="loading-and-saving">
+</section>
+<section id="loading-and-saving">
 <h2>Loading and saving</h2>
 <p>The methods to save and load a <strong>Structure</strong> object are <code class="docutils literal notranslate"><span class="pre">.save_to_obj()</span></code> and <code class="docutils literal notranslate"><span class="pre">.load_from_obj()</span></code>. Saving the <strong>Structure</strong> will use the <code class="docutils literal notranslate"><span class="pre">.path</span></code> and <code class="docutils literal notranslate"><span class="pre">.name</span></code> attribute strings for creating the file name, i.e. <strong>/path/name.obj</strong>. The file name string <code class="docutils literal notranslate"><span class="pre">filename</span></code> must be given for loading an existing <strong>.obj</strong>. These operations will save or load data as a pickled object using the Python <code class="docutils literal notranslate"><span class="pre">Pickle</span></code> module, containing all of the populated dictionaries, objects and analysis results (if any). A confirmation message will be displayed in the Python terminal upon each save and load call if the argument <code class="docutils literal notranslate"><span class="pre">output</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, if <code class="docutils literal notranslate"><span class="pre">False</span></code> then it is suppressed.</p>
 <div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>&gt;&gt;&gt; mdl.save_to_obj<span class="o">(</span><span class="nv">output</span><span class="o">=</span>True<span class="o">)</span>
@@ -184,8 +184,8 @@ All of the attributes and methods of this class can be found at <strong>compas_f
 ***** Structure loaded from: /home/al/Temp/simple-truss.obj *****
 </code></pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
         
       </main>

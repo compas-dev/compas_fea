@@ -91,10 +91,10 @@
 
         
         
-        <div class="section" id="steps">
+        <section id="steps">
 <h1>Steps</h1>
 <p>This page shows how <strong>Step</strong> objects are added to the <strong>Structure</strong> object, here given as a <strong>Structure</strong> named <code class="docutils literal notranslate"><span class="pre">mdl</span></code>. <strong>Step</strong> objects are the means to instruct what is required for an analysis stage, in terms of the applied loads, displacements and parameters for the finite element solver.</p>
-<div class="section" id="adding-steps">
+<section id="adding-steps">
 <h2>Adding steps</h2>
 <p><strong>Step</strong> objects are used to define the type and order of analysis stages by bringing together all of the <strong>Displacement</strong> and <strong>Load</strong> objects. In the same way that <strong>Material</strong> and <strong>Section</strong> objects require <strong>ElementProperties</strong> objects to be activated, <strong>Load</strong> and <strong>Displacement</strong> objects need <strong>Step</strong> objects to be activated, as without them they will not impose any effect on the structure. <strong>Step</strong> objects are created from classes in module <strong>compas_fea.structure.step</strong>, for which the most commonly used <strong>GeneralStep</strong> is shown in a simple example below. A <strong>Step</strong> is added to the <code class="docutils literal notranslate"><span class="pre">.steps</span></code> dictionary of the <strong>Structure</strong> object with its string key <code class="docutils literal notranslate"><span class="pre">name</span></code>, as well as lists of the string key names of the <strong>Load</strong> and <strong>Displacement</strong> objects to apply.</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span> <span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GeneralStep</span>
@@ -133,10 +133,10 @@
 <span class="go">modify        : True</span>
 </code></pre></div>
 </div>
-</div>
-<div class="section" id="step-types">
+</section>
+<section id="step-types">
 <h2>Step types</h2>
-<div class="section" id="generalstep">
+<section id="generalstep">
 <h3>GeneralStep</h3>
 <p>The most general <strong>Step</strong> type available is the <strong>GeneralStep</strong> object, it requires the string <code class="docutils literal notranslate"><span class="pre">name</span></code> and the lists of string names of the <strong>Load</strong> and <strong>Displacement</strong> objects to apply.</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GeneralStep</span>
@@ -154,8 +154,8 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">type</span></code> (default <code class="docutils literal notranslate"><span class="pre">'static'</span></code>) the default <code class="docutils literal notranslate"><span class="pre">'static'</span></code> analysis type will incrementally increase the loads (and/or displacements) until equilibrium is ideally achieved for the requested load and/or displacement level. The loads in a <code class="docutils literal notranslate"><span class="pre">'static'</span></code> analysis are generally increased from zero, and the structure follows its load–displacement curve up until a peak load. This is performed in increments related to the tangent stiffness (gradient) at any point on the load–displacement curve. If the applied load exceeds the peak load of the structure, it cannot be in equilibrium and will fail prematurely. A monotonically increasing load controlled analysis will not give information on the post-peak load behaviour on the load–displacement curve, as loads are now decreasing. For this post-peak load information, it is required to use either a displacement controlled analysis or to change the <code class="docutils literal notranslate"><span class="pre">type</span></code>, such as the <code class="docutils literal notranslate"><span class="pre">'static,riks'</span></code> in Abaqus, which is an arc-length based analysis process.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">modify</span></code> (default <code class="docutils literal notranslate"><span class="pre">True</span></code>) is a boolean that is targeted specifically at Abaqus for the <code class="docutils literal notranslate"><span class="pre">OP</span></code> load flag for modifying previous load components. If it is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, then <code class="docutils literal notranslate"><span class="pre">OP=MOD</span></code> will be set in Abaqus.</p></li>
 </ul>
-</div>
-<div class="section" id="bucklingstep">
+</section>
+<section id="bucklingstep">
 <h3>BucklingStep</h3>
 <p>The <strong>BucklingStep</strong> object shares many of the same arguments as the <strong>GeneralStep</strong> object, and is used for determining buckling loads and buckling modes for structures that have prescribed loads and boundary conditions. The arguments in common with <strong>GeneralStep</strong> are: the step’s string <code class="docutils literal notranslate"><span class="pre">name</span></code>, the integer number of <code class="docutils literal notranslate"><span class="pre">increments</span></code> (default <code class="docutils literal notranslate"><span class="pre">100</span></code>), the proportionality factor <code class="docutils literal notranslate"><span class="pre">factor</span></code> (default <code class="docutils literal notranslate"><span class="pre">1.0</span></code>), and the <code class="docutils literal notranslate"><span class="pre">loads</span></code> and <code class="docutils literal notranslate"><span class="pre">displacements</span></code> lists of string object names. The <strong>BucklingStep</strong> is also defined by its <code class="docutils literal notranslate"><span class="pre">type</span></code> (default <code class="docutils literal notranslate"><span class="pre">'buckle'</span></code>) and the number of requested buckling modes <code class="docutils literal notranslate"><span class="pre">modes</span></code> (default <code class="docutils literal notranslate"><span class="pre">5</span></code>).</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">BucklingStep</span>
@@ -163,8 +163,8 @@
 <span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">BucklingStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_buckle&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_bc&#39;</span><span class="p">],</span> <span class="n">loads</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;load_point&#39;</span><span class="p">],</span> <span class="n">modes</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
 </code></pre></div>
 </div>
-</div>
-<div class="section" id="modalstep">
+</section>
+<section id="modalstep">
 <h3>ModalStep</h3>
 <p>The <strong>ModalStep</strong> object shares many of the same arguments as the <strong>BucklingStep</strong> object, and is used for determining modal frequencies and modal shapes for structures that have prescribed boundary conditions (no loads are given). The arguments common with <strong>BucklingStep</strong> are: the step’s string <code class="docutils literal notranslate"><span class="pre">name</span></code>, the integer number of <code class="docutils literal notranslate"><span class="pre">increments</span></code> (default <code class="docutils literal notranslate"><span class="pre">100</span></code>) and the <code class="docutils literal notranslate"><span class="pre">displacements</span></code> list of string object names. The <strong>ModalStep</strong> is also similarly defined by its <code class="docutils literal notranslate"><span class="pre">type</span></code> (default <code class="docutils literal notranslate"><span class="pre">'modal'</span></code>) and the number of requested <code class="docutils literal notranslate"><span class="pre">modes</span></code> (default <code class="docutils literal notranslate"><span class="pre">5</span></code>).</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">ModalStep</span>
@@ -172,8 +172,8 @@
 <span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ModalStep</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;step_modal&#39;</span><span class="p">,</span> <span class="n">displacements</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;disp_bc&#39;</span><span class="p">],</span> <span class="n">modes</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
 </code></pre></div>
 </div>
-</div>
-<div class="section" id="harmonicstep">
+</section>
+<section id="harmonicstep">
 <h3>HarmonicStep</h3>
 <p>The <strong>HarmonicStep</strong> object shares many of the same arguments as the <strong>GeneralStep</strong> object. The common arguments are: the step’s string <code class="docutils literal notranslate"><span class="pre">name</span></code>, the proportionality factor <code class="docutils literal notranslate"><span class="pre">factor</span></code> (default <code class="docutils literal notranslate"><span class="pre">1.0</span></code>), and the <code class="docutils literal notranslate"><span class="pre">loads</span></code> and <code class="docutils literal notranslate"><span class="pre">displacements</span></code> lists of string object names. The <strong>HarmonicStep</strong> is also defined by its frequency range in a list <code class="docutils literal notranslate"><span class="pre">freq_list</span></code>, the <code class="docutils literal notranslate"><span class="pre">damping</span></code> (default <code class="docutils literal notranslate"><span class="pre">None</span></code>) and the type which defaults to <code class="docutils literal notranslate"><span class="pre">type='harmonic'</span></code>.</p>
 <div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">HarmonicStep</span>
@@ -182,9 +182,9 @@
                      <span class="n">freq_list</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">]))</span>
 </code></pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
         
       </main>
