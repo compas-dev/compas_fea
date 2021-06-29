@@ -7,14 +7,18 @@ from compas_fea.structure import GravityLoad
 from compas_fea.structure import PinnedDisplacement
 from compas_fea.structure import ShellSection
 from compas_fea.structure import Structure
+import json
+
+# Author(s): Andrew Liew (github.com/andrewliew), 
+#            Francesco Ranaudo (github.com/franaudo)
 
 
-# Author(s): Andrew Liew (github.com/andrewliew)
-
+folder = 'C:/temp/'
+name = 'principal_stresses_rhino'
 
 # Structure
 
-mdl = Structure(name='mesh_principal', path='C:/Temp/')
+mdl = Structure(name=name, path=folder)
 
 # Elements
 
@@ -58,7 +62,8 @@ mdl.summary()
 
 # Run
 
-mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
+mdl.analyse_and_extract(software='abaqus', fields=['u', 's'], save=False)
 
-rhino.plot_principal_stresses(mdl, step='step_load', ptype='max', scale=3)
-rhino.plot_principal_stresses(mdl, step='step_load', ptype='min', scale=3)
+# Plot
+rhino.plot_principal_stresses(mdl, step='step_load', sp='sp1', stype='max', scale=10**6)
+rhino.plot_principal_stresses(mdl, step='step_load', sp='sp1', stype='min', scale=10**6)
