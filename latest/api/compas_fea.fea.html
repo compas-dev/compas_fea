@@ -23,7 +23,7 @@
   
 
   
-    <link rel="prev" title="plot_principal_stresses" href="generated/compas_fea.cad.plot_principal_stresses.html" />
+    <link rel="prev" title="cad" href="compas_fea.cad.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -96,8 +96,8 @@
         <span class="target" id="module-compas_fea.fea"></span><section id="fea">
 <h1>fea</h1>
 <p>The compas_fea package supports Abaqus, Ansys, Sofistik and OpenSees as analysis backends.</p>
-<section id="writer">
-<h2>writer</h2>
+<section id="classes">
+<h2>Classes</h2>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -110,8 +110,10 @@
 </tbody>
 </table>
 </section>
+<section id="backends">
+<h2>Backends</h2>
 <section id="abaq">
-<h2>abaq</h2>
+<h3>abaq</h3>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -131,48 +133,18 @@
 </table>
 </section>
 <section id="ansys">
-<h2>ansys</h2>
+<h3>ansys</h3>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.input_generate.html#compas_fea.fea.ansys.input_generate" title="compas_fea.fea.ansys.input_generate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_generate</span></code></a>(structure)</p></td>
-<td><p>Generates Ansys input file.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_static.html#compas_fea.fea.ansys.make_command_file_static" title="compas_fea.fea.ansys.make_command_file_static"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_command_file_static</span></code></a>(structure, path, name)</p></td>
-<td><p>Generates Ansys input file for static analysis.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_modal.html#compas_fea.fea.ansys.make_command_file_modal" title="compas_fea.fea.ansys.make_command_file_modal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_command_file_modal</span></code></a>(structure, path, name)</p></td>
-<td><p>Generates Ansys input file for modal analysis.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_harmonic.html#compas_fea.fea.ansys.make_command_file_harmonic" title="compas_fea.fea.ansys.make_command_file_harmonic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_command_file_harmonic</span></code></a>(structure, …)</p></td>
-<td><p>Generates Ansys input file for harmonic analysis.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.ansys_launch_process.html#compas_fea.fea.ansys.ansys_launch_process" title="compas_fea.fea.ansys.ansys_launch_process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ansys_launch_process</span></code></a>(path, name[, cpus, …])</p></td>
-<td><p>Launches an analysis using Ansys.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.ansys_launch_process_extract.html#compas_fea.fea.ansys.ansys_launch_process_extract" title="compas_fea.fea.ansys.ansys_launch_process_extract"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ansys_launch_process_extract</span></code></a>(path, name[, …])</p></td>
-<td><p>Calls an extraction of results from Ansys.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.delete_result_files.html#compas_fea.fea.ansys.delete_result_files" title="compas_fea.fea.ansys.delete_result_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_result_files</span></code></a>(path, name)</p></td>
-<td><p>Deletes Ansys result files.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.extract_rst_data.html#compas_fea.fea.ansys.extract_rst_data" title="compas_fea.fea.ansys.extract_rst_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_rst_data</span></code></a>(structure[, fields, steps, …])</p></td>
-<td><p>Extracts results from Ansys rst file.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.write_results_from_rst.html#compas_fea.fea.ansys.write_results_from_rst" title="compas_fea.fea.ansys.write_results_from_rst"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_results_from_rst</span></code></a>(structure, fields, steps)</p></td>
-<td><p>Writes results request file from Ansys.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.load_to_results.html#compas_fea.fea.ansys.load_to_results" title="compas_fea.fea.ansys.load_to_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_to_results</span></code></a>(structure, fields, steps)</p></td>
-<td><p>Loads results from Ansys txt files to Structure object.</p></td>
-</tr>
 </tbody>
 </table>
 </section>
 <section id="opensees">
-<h2>opensees</h2>
+<h3>opensees</h3>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -190,6 +162,7 @@
 </tr>
 </tbody>
 </table>
+</section>
 </section>
 </section>
 
@@ -230,10 +203,13 @@
         
         <ul class="nav flex-column" id="compas-toc">
 <li class="nav-item"><a class="nav-link reference internal" href="#">fea</a><ul class="nav flex-column">
-<li class="nav-item"><a class="nav-link reference internal" href="#writer">writer</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#classes">Classes</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#backends">Backends</a><ul class="nav flex-column">
 <li class="nav-item"><a class="nav-link reference internal" href="#abaq">abaq</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#ansys">ansys</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#opensees">opensees</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -247,11 +223,11 @@
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-        <a href="generated/compas_fea.cad.plot_principal_stresses.html" title="plot_principal_stresses" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+        <a href="compas_fea.cad.html" title="cad" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
           <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
           <div class="nav-title flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Previous</div>
-            plot_principal_stresses
+            cad
           </div>
         </a>
       
