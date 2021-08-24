@@ -2,8 +2,27 @@ import os
 import shutil
 import subprocess
 
-from compas_fea.fea.ansys.writing import *
-from compas_fea.fea.ansys.reading import *
+from compas_fea.fea.ansys.writing import write_static_analysis_request
+from compas_fea.fea.ansys.writing import write_modal_analysis_request
+from compas_fea.fea.ansys.writing import write_harmonic_analysis_request
+from compas_fea.fea.ansys.writing import write_acoustic_analysis_request
+from compas_fea.fea.ansys.writing import ansys_open_post_process
+from compas_fea.fea.ansys.writing import write_static_results_from_ansys_rst
+from compas_fea.fea.ansys.writing import write_harmonic_results_from_ansys_rst
+from compas_fea.fea.ansys.writing import write_modal_results_from_ansys_rst
+from compas_fea.fea.ansys.writing import set_current_step
+
+from compas_fea.fea.ansys.reading import get_nodal_stresses_from_result_files
+from compas_fea.fea.ansys.reading import get_displacements_from_result_files
+from compas_fea.fea.ansys.reading import get_reactions_from_result_files
+from compas_fea.fea.ansys.reading import get_principal_strains_from_result_files
+from compas_fea.fea.ansys.reading import get_principal_stresses_from_result_files
+from compas_fea.fea.ansys.reading import get_shear_stresses_from_result_files
+from compas_fea.fea.ansys.reading import get_modal_shapes_from_result_files
+from compas_fea.fea.ansys.reading import get_modal_freq_from_result_files
+from compas_fea.fea.ansys.reading import get_harmonic_data_from_result_files
+from compas_fea.fea.ansys.reading import get_acoustic_radiation_from_results_files
+from compas_fea.fea.ansys.reading import get_nodes_elements_from_result_files
 
 
 # Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
@@ -154,7 +173,7 @@ def ansys_launch_process_extract(path, name, cpus=2, license='teaching'):
     ansys_path = 'MAPDL.exe'
     inp_path = os.path.join(path, name + '_extract.txt')
     work_dir = os.path.join(path, name + '_output')
-    out_path = os.path.join(work_dir , 'output_extract.out')
+    out_path = os.path.join(work_dir, 'output_extract.out')
 
     if license == 'research':
         lic_str = 'aa_r'
@@ -273,7 +292,7 @@ def load_to_results(structure, fields, steps):
             rlist = []
             if 'u' in fields or 'all' in fields:
                 udict = get_displacements_from_result_files(out_path, step)  # shold be modal shapes or this function?
-                rlist.append(udict)                
+                rlist.append(udict)
             if 's' in fields or 'all' in fields:
                 rlist.append(get_nodal_stresses_from_result_files(out_path, step))
             if 'rf' in fields or 'all' in fields:

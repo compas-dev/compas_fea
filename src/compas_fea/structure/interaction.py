@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -14,8 +13,7 @@ __all__ = [
 
 
 class Interaction(object):
-
-    """ Initialises base Interaction object.
+    """Initialises base Interaction object.
 
     Parameters
     ----------
@@ -29,13 +27,11 @@ class Interaction(object):
     """
 
     def __init__(self, name):
-
-        self.__name__  = 'Interaction'
-        self.name      = name
+        self.__name__ = 'Interaction'
+        self.name = name
         self.attr_list = ['name']
 
     def __str__(self):
-
         print('\n')
         print('compas_fea {0} object'.format(self.__name__))
         print('-' * (len(self.__name__) + 18))
@@ -47,8 +43,7 @@ class Interaction(object):
 
 
 class HeatTransfer(Interaction):
-
-    """ Heat transfer across an interface.
+    """Heat transfer across an interface.
 
     Parameters
     ----------

@@ -1,2 +1,1 @@
-
-from .opensees import *
+from .opensees import *  # noqa: F401 F403

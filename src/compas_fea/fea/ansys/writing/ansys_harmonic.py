@@ -4,9 +4,10 @@ from .ansys_nodes_elements import write_nodes
 from .ansys_nodes_elements import write_elements
 from .ansys_materials import write_all_materials
 from .ansys_loads import write_loads
-from compas_fea.fea.ansys.writing.ansys_process import *
-from compas_fea.fea.ansys.writing.ansys_steps import *
-from compas_fea.fea.ansys.writing.ansys_nodes_elements import *
+from compas_fea.fea.ansys.writing.ansys_process import ansys_open_pre_process
+from compas_fea.fea.ansys.writing.ansys_steps import write_request_load_step_file
+from compas_fea.fea.ansys.writing.ansys_steps import write_request_solve_steps
+from compas_fea.fea.ansys.writing.ansys_nodes_elements import write_request_element_nodes
 
 
 # Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
@@ -94,7 +95,7 @@ def write_harmonic_post_process(path, name):
 
 def write_request_per_freq_nodal_displacements(path, name, freq_list, step_index, sets=None):
 
-    step_folder = 'harmonic_out'.format(step_index)
+    step_folder = 'harmonic_out_{}'.format(step_index)
     filename = name + '_extract.txt'
     harmonic_outpath = os.path.join(path, name + '_output', step_folder)
 
@@ -190,7 +191,7 @@ def write_request_per_freq_nodal_displacements(path, name, freq_list, step_index
 
 def write_request_complex_displacements(path, name, freq, step_index):
 
-    step_folder = 'harmonic_out'.format(step_index)
+    step_folder = 'harmonic_out_{}'.format(step_index)
     filename = name + '_extract.txt'
     harmonic_outpath = os.path.join(path, name + '_output', step_folder)
 

@@ -8,8 +8,8 @@ fea
 The compas_fea package supports Abaqus, Ansys, Sofistik and OpenSees as analysis backends.
 
 
-writer
-======
+Classes
+=======
 
 .. autosummary::
     :toctree: generated/
@@ -17,8 +17,11 @@ writer
     Writer
 
 
+Backends
+========
+
 abaq
-====
+----
 
 .. currentmodule:: compas_fea.fea.abaq
 
@@ -31,7 +34,7 @@ abaq
 
 
 ansys
-=====
+-----
 
 .. currentmodule:: compas_fea.fea.ansys
 
@@ -51,7 +54,7 @@ ansys
 
 
 opensees
-========
+--------
 
 .. currentmodule:: compas_fea.fea.opensees
 
@@ -65,4 +68,8 @@ opensees
 """
 from __future__ import absolute_import
 
-from .writer import *
+from .writer import Writer
+
+__all__ = [
+    'Writer'
+]

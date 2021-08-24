@@ -8,7 +8,6 @@ from compas.geometry import normalize_vector
 
 
 def write_elements(structure, output_path, filename):
-
     structure.et_dict = {}
 
     # combine elementa and virtual elements ------------------------------------
@@ -64,7 +63,7 @@ def write_virtual_elements(structure, output_path, filename):
               'TrussElement': [], 'FaceElement': []}
     func_dict = {'ShellElement': write_shell4_elements,
                  'BeamElement': write_beam_elements,
-                 'TieElement' : write_tie_elements,
+                 'TieElement': write_tie_elements,
                  'StrutElement': write_tie_elements,
                  'TrussElement': write_tie_elements,
                  'SpringElement': write_spring_elements_nodal,
@@ -201,7 +200,6 @@ def write_shell_thickness(output_path, filename, thickness, sec_index, mat_index
 
 
 def write_beam_elements(structure, output_path, filename, ekeys, section, material):
-
     ekeys = sorted(ekeys, key=int)
     mat_index = structure.materials[material].index
     sec_index = structure.sections[section].index
@@ -234,7 +232,7 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
     elif sec_type == 'TrapezoidalSection':
         b1 = structure.sections[section].geometry['b1']
         b2 = structure.sections[section].geometry['b2']
-        h  = structure.sections[section].geometry['h']
+        h = structure.sections[section].geometry['h']
         write_trapezoidal_section(output_path, filename, b1, b2, h, sec_index)
     else:
         raise ValueError(sec_type + ' Type of section is not yet implemented for Ansys')
@@ -270,7 +268,6 @@ def write_beam_elements(structure, output_path, filename, ekeys, section, materi
 
 
 def write_trapezoidal_section(output_path, filename, b1, b2, h, sec_index):
-
     x1 = b1 / 2.
     x2 = b2 / 2.
     h = h / 2.
@@ -331,7 +328,6 @@ def write_pipe_section(output_path, filename, in_radius, thickness, sec_index):
 
 
 def write_tie_elements(structure, output_path, filename, ekeys, section, material, etype):
-
     ekeys = sorted(ekeys, key=int)
     mat_index = structure.materials[material].index
     sec_index = structure.sections[section].index
@@ -466,7 +462,6 @@ def write_request_element_nodes(path, name):
 
 
 def write_request_node_displacements(structure, step_index, mode=None):
-
     name = structure.name
     path = structure.path
     step_name = structure.steps_order[step_index]
@@ -536,7 +531,7 @@ def write_request_node_displacements(structure, step_index, mode=None):
 def write_constraint_nodes(structure, output_path, filename, displacements):
     cFile = open(os.path.join(output_path, filename), 'a')
 
-    cdict = {'x' : 'UX', 'y' : 'UY', 'z' : 'UZ', 'xx' : 'ROTX', 'yy' : 'ROTY', 'zz' : 'ROTZ'}
+    cdict = {'x': 'UX', 'y': 'UY', 'z': 'UZ', 'xx': 'ROTX', 'yy': 'ROTY', 'zz': 'ROTZ'}
 
     if type(displacements) != list:
         displacements = [displacements]
@@ -548,7 +543,7 @@ def write_constraint_nodes(structure, output_path, filename, displacements):
             nodes = structure.sets[nodes].selection
         for node in nodes:
             for com in components:
-                if components[com] != None:
+                if components[com] is not None:
                     string = 'D, {0}, {1}, {2} \n'.format(str(node + 1), cdict[com], components[com])
                     cFile.write(string)
 
@@ -558,7 +553,6 @@ def write_constraint_nodes(structure, output_path, filename, displacements):
 
 
 def write_areas(structure, output_path, filename):
-
     areas = structure.areas
     areas_keys = sorted(areas.keys(), key=int)
 
@@ -599,7 +593,6 @@ def write_volume_areas(output_path, filename):
 
 
 def write_request_mesh_areas(structure, output_path, name, size=None, smart_size=None, div=None):
-
     filename = name + '.txt'
 
     if not os.path.exists(output_path):
@@ -708,7 +701,6 @@ def write_request_mesh_areas(structure, output_path, name, size=None, smart_size
 
 
 def write_request_mesh_volume(structure, output_path, name, size=1, hex=True, div=None):
-
     filename = name + '.txt'
 
     if not os.path.exists(output_path):
@@ -732,7 +724,7 @@ def write_request_mesh_volume(structure, output_path, name, size=1, hex=True, di
         size_str = 'SMRTSIZE, {0} \n'.format(size)
 
     cFile = open(os.path.join(output_path, filename), 'a')
-    cFile.write('ET, 1, {0} \n'.format(et)) # shold the element type key be taken from somewhere?
+    cFile.write('ET, 1, {0} \n'.format(et))  # shold the element type key be taken from somewhere?
     cFile.write('!\n')
     cFile.write('!\n')
     cFile.write('MSHAPE, {0}, 3D \n'.format(shape))

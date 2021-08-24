@@ -5,7 +5,6 @@ import os
 
 
 def write_request_nodal_stresses(structure, step_index):
-
     name = structure.name
     path = structure.path
     step_name = structure.steps_order[step_index]
@@ -83,7 +82,6 @@ def write_request_nodal_stresses(structure, step_index):
 
 
 def write_request_pricipal_stresses(structure, step_index):
-
     name = structure.name
     path = structure.path
     step_name = structure.steps_order[step_index]
@@ -131,7 +129,6 @@ def write_request_pricipal_stresses(structure, step_index):
 
 
 def write_request_shear_stresses(structure, step_index):
-
     name = structure.name
     path = structure.path
     step_name = structure.steps_order[step_index]
@@ -180,7 +177,6 @@ def write_request_shear_stresses(structure, step_index):
 
 
 def write_request_principal_strains(structure, step_index):
-
     name = structure.name
     path = structure.path
     step_name = structure.steps_order[step_index]
@@ -229,7 +225,6 @@ def write_request_principal_strains(structure, step_index):
 
 
 def write_request_reactions(structure, step_index):
-
     name = structure.name
     path = structure.path
     step_name = structure.steps_order[step_index]
@@ -298,7 +293,6 @@ def write_request_reactions(structure, step_index):
 
 
 def write_request_element_stresses(structure, step_index):
-
     for et in structure.et_dict:
         etkey = structure.et_dict[et]
         if et == 'BEAM188':
@@ -362,7 +356,6 @@ def write_request_beam_stresses(structure, step_index, etkey):
     fh.write('*CFWRITE, stresses, enum(i,1), estress(i,1), estress(i,2),estress(i,3), estress(i,4), estress(i,5), estress(i,6), estress(i,7), estress(i,8), estress(i,9), estress(i,10) \n')
     fh.write('*Enddo \n')
 
-
     fh.write('ESEL, ALL \n')
     fh.write('ETABLE, ERAS \n')
     fh.write('! \n')
@@ -370,7 +363,6 @@ def write_request_beam_stresses(structure, step_index, etkey):
 
 
 def write_request_shell_stresses(structure, step_index, etkey):
-
     name = structure.name
     path = structure.path
     step_name = structure.steps_order[step_index]
@@ -440,4 +432,3 @@ def write_request_shell_stresses(structure, step_index, etkey):
     # fname = str(step_name) + '_' + 'shell_stresses'
     # write_request_write_array(structure, fname, out_path, 'eforces', 6, 4, index_name='enum')
     # write_etable_restart(structure)
-

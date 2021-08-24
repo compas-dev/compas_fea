@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -18,9 +17,7 @@ GPa = 10**(-9)
 class Materials(object):
 
     def __init__(self):
-
         pass
-
 
     def write_materials(self):
 
@@ -33,14 +30,14 @@ class Materials(object):
 
             self.write_subsection(key)
 
-            mtype       = material.__name__
-            m_index     = material.index + 1
+            mtype = material.__name__
+            m_index = material.index + 1
             compression = getattr(material, 'compression', None)
-            tension     = getattr(material, 'tension', None)
-            E           = material.E
-            G           = material.G
-            v           = material.v
-            p           = material.p
+            tension = getattr(material, 'tension', None)
+            E = material.E
+            # G = material.G
+            v = material.v
+            p = material.p
 
             # ------------------------------------------------------------------------------------------------------
             # OpenSees

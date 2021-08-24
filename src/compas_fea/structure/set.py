@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -13,8 +12,7 @@ __all__ = [
 
 
 class Set(object):
-
-    """ Initialises base Set object.
+    """Initialises base Set object.
 
     Parameters
     ----------
@@ -41,16 +39,13 @@ class Set(object):
     """
 
     def __init__(self, name, type, selection, index):
-
-        self.__name__  = 'Set'
-        self.name      = name
-        self.type      = type
+        self.__name__ = 'Set'
+        self.name = name
+        self.type = type
         self.selection = selection
-        self.index     = index
-
+        self.index = index
 
     def __str__(self):
-
         print('\n')
         print('compas_fea {0} object'.format(self.__name__))
         print('-' * (len(self.__name__) + 18))
@@ -60,7 +55,5 @@ class Set(object):
 
         return ''
 
-
     def __repr__(self):
-
         return '{0}({1})'.format(self.__name__, self.name)

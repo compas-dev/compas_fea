@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -6,14 +5,11 @@ from __future__ import print_function
 import os
 import json
 
-
 # Author(s): Andrew Liew (github.com/andrewliew)
-
 
 __all__ = [
     'Steps',
 ]
-
 
 dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 
@@ -21,9 +17,7 @@ dofs = ['x', 'y', 'z', 'xx', 'yy', 'zz']
 class Steps(object):
 
     def __init__(self):
-
         pass
-
 
     def write_steps(self):
 
@@ -31,10 +25,10 @@ class Steps(object):
         self.blank_line()
 
         displacements = self.structure.displacements
-        loads         = self.structure.loads
-        steps         = self.structure.steps
-        sets          = self.structure.sets
-        fields        = self.fields
+        loads = self.structure.loads
+        steps = self.structure.steps
+        sets = self.structure.sets
+        fields = self.fields
 
         # temp folder
 
@@ -44,26 +38,25 @@ class Steps(object):
             os.stat(temp)
             for file in os.listdir(temp):
                 os.remove(os.path.join(temp, file))
-        except:
+        except Exception:
             os.mkdir(temp)
 
         # Steps
 
         for key in self.structure.steps_order[1:]:
 
-            step       = steps[key]
-            stype      = step.__name__
-            s_index    = step.index
-            factor     = getattr(step, 'factor', 1)
+            step = steps[key]
+            stype = step.__name__
+            s_index = step.index
+            factor = getattr(step, 'factor', 1)
             increments = getattr(step, 'increments', 100)
             iterations = getattr(step, 'iterations', 100)
-            tolerance  = getattr(step, 'tolerance', None)
-            method     = getattr(step, 'type')
-            modes      = getattr(step, 'modes', None)
-            modify     = getattr(step, 'modify', None)
-            nlgeom     = 'YES' if getattr(step, 'nlgeom', None) else 'NO'
-            op         = 'MOD' if modify else 'NEW'
-
+            tolerance = getattr(step, 'tolerance', None)
+            method = getattr(step, 'type')
+            modes = getattr(step, 'modes', None)
+            modify = getattr(step, 'modify', None)
+            nlgeom = 'YES' if getattr(step, 'nlgeom', None) else 'NO'
+            op = 'MOD' if modify else 'NEW'
 
             # =====================================================================================================
             # =====================================================================================================
@@ -120,7 +113,6 @@ class Steps(object):
 
                     pass
 
-
             # =====================================================================================================
             # =====================================================================================================
             # LOADS
@@ -136,12 +128,12 @@ class Steps(object):
 
                     self.write_subsection(k)
 
-                    load  = loads[k]
+                    load = loads[k]
                     ltype = load.__name__
-                    com   = getattr(load, 'components', None)
-                    axes  = getattr(load, 'axes', None)
+                    com = getattr(load, 'components', None)
+                    axes = getattr(load, 'axes', None)
                     nodes = getattr(load, 'nodes', None)
-                    fact  = factor.get(k, 1.0) if isinstance(factor, dict) else factor
+                    fact = factor.get(k, 1.0) if isinstance(factor, dict) else factor
 
                     if com:
                         gx = com.get('x', 0)
@@ -330,7 +322,6 @@ class Steps(object):
                 self.blank_line()
                 self.blank_line()
 
-
             # =====================================================================================================
             # =====================================================================================================
             # DISPLACEMENTS
@@ -345,8 +336,8 @@ class Steps(object):
                 for k in step.displacements:
 
                     displacement = displacements[k]
-                    com          = displacement.components
-                    nodes        = displacement.nodes
+                    com = displacement.components
+                    nodes = displacement.nodes
 
                     if isinstance(nodes, str):
                         nodes = [nodes]
@@ -402,7 +393,6 @@ class Steps(object):
 
                         pass
 
-
             # =====================================================================================================
             # =====================================================================================================
             # OUTPUT
@@ -444,12 +434,12 @@ class Steps(object):
 
                     # Sort elements
 
-                    truss_elements  = ''
-                    beam_elements   = ''
+                    truss_elements = ''
+                    beam_elements = ''
                     spring_elements = ''
-                    truss_ekeys     = []
-                    beam_ekeys      = []
-                    spring_ekeys    = []
+                    truss_ekeys = []
+                    beam_ekeys = []
+                    spring_ekeys = []
 
                     for ekey, element in self.structure.elements.items():
 
@@ -559,7 +549,7 @@ class Steps(object):
 
             elif self.software == 'abaqus':
 
-                node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
+                node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
                 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
 
                 if 'spf' in fields:
@@ -593,12 +583,11 @@ class Steps(object):
                 pass
 
 
-
 # Thermal
 
 # try:
 #     duration = step.duration
-# except:
+# except Exception:
 #     duration = 1
 #     temperatures = steps[key].temperatures
 #     if temperatures:

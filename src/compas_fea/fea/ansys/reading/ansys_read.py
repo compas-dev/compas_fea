@@ -10,11 +10,11 @@ from compas.geometry import length_vector
 
 def get_nodes_elements_from_result_files(path):
     try:
-        node_file    = open(os.path.join(path, 'nodes.txt'), 'r')
+        node_file = open(os.path.join(path, 'nodes.txt'), 'r')
     except(Exception):
         node_file = None
     try:
-        elementFile    = open(os.path.join(path, 'elements.txt'), 'r')
+        elementFile = open(os.path.join(path, 'elements.txt'), 'r')
     except(Exception):
         elementFile = None
 
@@ -53,7 +53,7 @@ def get_nodes_elements_from_result_files(path):
     return nodes, elements
 
 
-def _get_harmonic_data_from_result_files(path): #  this function works with multiple freqs per step (the old way?)
+def _get_harmonic_data_from_result_files(path):  # this function works with multiple freqs per step (the old way?)
     harmonic_path = os.path.join(path, 'harmonic_out')
     files = os.listdir(harmonic_path)
 
@@ -110,7 +110,7 @@ def get_harmonic_data_from_result_files(structure, path, step):
 
     freq = structure.steps[step].freq_list[0]
     harmonic_path = os.path.join(path, 'harmonic_out')
-    filename  = 'harmonic_disp_real_{0}_Hz.txt'.format(freq)
+    filename = 'harmonic_disp_real_{0}_Hz.txt'.format(freq)
     filename_ = 'harmonic_disp_imag_{0}_Hz.txt'.format(freq)
 
     fh = open(os.path.join(harmonic_path, filename), 'r')
@@ -142,7 +142,7 @@ def get_modal_shapes_from_result_files(out_path):
     try:
         files = os.listdir(modal_path)
     except(Exception):
-        print ('Result files not found')
+        print('Result files not found')
         return None, None
     filenames = []
     for f in files:
@@ -214,7 +214,7 @@ def get_displacements_from_result_files(out_path, step):
 def get_nodal_stresses_from_result_files(out_path, step):
     filename = step + '_nodal_stresses.txt'
     try:
-        sfile   = open(os.path.join(out_path, filename), 'r')
+        sfile = open(os.path.join(out_path, filename), 'r')
     except(Exception):
         return None
 
@@ -245,7 +245,7 @@ def get_nodal_stresses_from_result_files(out_path, step):
 def get_principal_stresses_from_result_files(out_path, step):
     filename = step + '_principal_stresses.txt'
     try:
-        psfile   = open(os.path.join(out_path, filename), 'r')
+        psfile = open(os.path.join(out_path, filename), 'r')
     except(Exception):
         return None
 
@@ -308,7 +308,7 @@ def get_shear_stresses_from_result_files(out_path, step):
 def get_principal_strains_from_result_files(out_path, step):
     filename = step + '_principal_strains.txt'
     try:
-        efile   = open(os.path.join(out_path, filename), 'r')
+        efile = open(os.path.join(out_path, filename), 'r')
     except(Exception):
         return None
     pe = efile.readlines()
@@ -338,7 +338,7 @@ def get_principal_strains_from_result_files(out_path, step):
 def get_reactions_from_result_files(out_path, step):
     filename = step + '_reactions.txt'
     try:
-        rfile   = open(os.path.join(out_path, filename), 'r')
+        rfile = open(os.path.join(out_path, filename), 'r')
     except(Exception):
         return None
     r = rfile.readlines()
@@ -380,7 +380,3 @@ def get_acoustic_radiation_from_results_files(out_path, step):
         data = line.split(' ')
         tl_data[i] = {'freq': float(data[0]), 'tl': float(data[1]), 'rad': float(data[2]), 'inc': float(data[3])}
     return tl_data
-
-
-if __name__ == '__main__':
-    pass

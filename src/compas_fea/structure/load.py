@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -57,14 +56,13 @@ class Load(object):
 
     def __init__(self, name, axes='global', components={}, nodes=[], elements=[]):
 
-        self.__name__   = 'LoadObject'
-        self.name       = name
-        self.axes       = axes
+        self.__name__ = 'LoadObject'
+        self.name = name
+        self.axes = axes
         self.components = components
-        self.nodes      = nodes
-        self.elements   = elements
-        self.attr_list  = ['name', 'axes', 'components', 'nodes', 'elements']
-
+        self.nodes = nodes
+        self.elements = elements
+        self.attr_list = ['name', 'axes', 'components', 'nodes', 'elements']
 
     def __str__(self):
 
@@ -76,7 +74,6 @@ class Load(object):
             print('{0:<10} : {1}'.format(attr, getattr(self, attr)))
 
         return ''
-
 
     def __repr__(self):
 
@@ -101,7 +98,7 @@ class PrestressLoad(Load):
     def __init__(self, name, elements, sxx=0):
         Load.__init__(self, name=name, elements=elements, axes='local')
 
-        self.__name__   = 'PrestressLoad'
+        self.__name__ = 'PrestressLoad'
         self.components = {'sxx': sxx}
 
 
@@ -133,7 +130,7 @@ class PointLoad(Load):
     def __init__(self, name, nodes, x=0, y=0, z=0, xx=0, yy=0, zz=0):
         Load.__init__(self, name=name, nodes=nodes, axes='global')
 
-        self.__name__   = 'PointLoad'
+        self.__name__ = 'PointLoad'
         self.components = {'x': x, 'y': y, 'z': z, 'xx': xx, 'yy': yy, 'zz': zz}
 
 
@@ -184,7 +181,7 @@ class LineLoad(Load):
     def __init__(self, name, elements, x=0, y=0, z=0, xx=0, yy=0, zz=0, axes='local'):
         Load.__init__(self, name=name, elements=elements, axes=axes)
 
-        self.__name__   = 'LineLoad'
+        self.__name__ = 'LineLoad'
         self.components = {'x': x, 'y': y, 'z': z, 'xx': xx, 'yy': yy, 'zz': zz}
 
 
@@ -210,7 +207,7 @@ class AreaLoad(Load):
     def __init__(self, name, elements, x=0, y=0, z=0, axes='local'):
         Load.__init__(self, name=name, elements=elements, axes=axes)
 
-        self.__name__   = 'AreaLoad'
+        self.__name__ = 'AreaLoad'
         self.components = {'x': x, 'y': y, 'z': z}
 
 
@@ -238,8 +235,8 @@ class GravityLoad(Load):
     def __init__(self, name, elements, g=-9.81, x=0., y=0., z=1.):
         Load.__init__(self, name=name, elements=elements, axes='global')
 
-        self.__name__   = 'GravityLoad'
-        self.g          = g
+        self.__name__ = 'GravityLoad'
+        self.g = g
         self.components = {'x': x, 'y': y, 'z': z}
         self.attr_list.append('g')
 
@@ -261,9 +258,9 @@ class ThermalLoad(object):
 
     def __init__(self, name, elements, temperature):
 
-        self.__name__    = 'ThermalLoad'
-        self.name        = name
-        self.elements    = elements
+        self.__name__ = 'ThermalLoad'
+        self.name = name
+        self.elements = elements
         self.temperature = temperature
 
 
@@ -301,7 +298,7 @@ class TributaryLoad(Load):
         self.__name__ = 'TributaryLoad'
         self.attr_list.append('mesh')
 
-        nodes      = []
+        nodes = []
         components = {}
 
         for key in mesh.vertices():
@@ -314,7 +311,7 @@ class TributaryLoad(Load):
                 components[node] = {'x': x * A, 'y': y * A, 'z': z * A}
 
         self.components = components
-        self.nodes      = nodes
+        self.nodes = nodes
 
 
 class HarmonicPointLoad(Load):
@@ -345,7 +342,7 @@ class HarmonicPointLoad(Load):
     def __init__(self, name, nodes, x=0, y=0, z=0, xx=0, yy=0, zz=0):
         Load.__init__(self, name=name, nodes=nodes, axes='global')
 
-        self.__name__   = 'HarmonicPointLoad'
+        self.__name__ = 'HarmonicPointLoad'
         self.components = {'x': x, 'y': y, 'z': z, 'xx': xx, 'yy': yy, 'zz': zz}
 
 
@@ -369,7 +366,7 @@ class HarmonicPressureLoad(Load):
     def __init__(self, name, elements, pressure=0, phase=None):
         Load.__init__(self, name=name, elements=elements, axes='global')
 
-        self.__name__   = 'HarmonicPressureLoad'
+        self.__name__ = 'HarmonicPressureLoad'
         self.components = {'pressure': pressure, 'phase': phase}
 
 
@@ -395,7 +392,7 @@ class AcousticDiffuseFieldLoad(Load):
     def __init__(self, name, elements, air_density=1.225, sound_speed=340, max_inc_angle=90):
         Load.__init__(self, name=name, elements=elements, axes='global')
 
-        self.__name__   = 'AcousticDiffuseFieldLoad'
+        self.__name__ = 'AcousticDiffuseFieldLoad'
         self.components = {'air_density':   air_density,
                            'sound_speed':   sound_speed,
                            'max_inc_angle': max_inc_angle}

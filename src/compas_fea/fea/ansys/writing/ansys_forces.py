@@ -16,7 +16,6 @@ def write_request_element_forces(structure, step_index):
 
 
 def write_request_beam_forces(structure, step_index, etkey):
-
     name = structure.name
     path = structure.path
     step_name = structure.steps_order[step_index]
@@ -91,7 +90,6 @@ def write_request_beam_forces(structure, step_index, etkey):
 
 
 def write_request_shell_forces(structure, step_index, etkey):
-
     name = structure.name
     path = structure.path
     step_name = structure.steps_order[step_index]

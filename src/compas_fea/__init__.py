@@ -18,7 +18,6 @@ compas_fea
 from __future__ import print_function
 
 import os
-import sys
 
 __author__ = ['Andrew Liew (github.com/andrewliew), Tomas Mendez Echenagucia (github.com/tmsmendez)']
 __copyright__ = 'Block Research Group - ETH Zurich'

@@ -95,14 +95,3 @@ def ansys_remesh_3d(mesh, output_path, name, size=None, hex=False, div=None):
     ansys_launch_process(output_path, name, cpus=4, license='teaching', delete=True)
     mesh = volmesh_from_ansys_results(output_path, name)
     return mesh
-
-
-if __name__ == '__main__':
-
-    path = '/Users/mtomas/Documents/ETH/01_research/01_vibro/02_num_exp/181100_floor_comparison/geometry/remeshing'
-
-    name = 'remesh'
-    mesh = volmesh_from_ansys_results(path, name)
-    here = os.path.dirname(os.path.realpath(__file__))
-    filepath = os.path.join(here, 'volmesh.json')
-    mesh.to_json(filepath)

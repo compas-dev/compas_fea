@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -24,8 +23,7 @@ __all__ = [
 
 
 class GeneralDisplacement(object):
-
-    """ Initialises the base GeneralDisplacement object.
+    """Initialises the base GeneralDisplacement object.
 
     Parameters
     ----------
@@ -63,12 +61,11 @@ class GeneralDisplacement(object):
 
     def __init__(self, name, nodes, x=None, y=None, z=None, xx=None, yy=None, zz=None, axes='global'):
 
-        self.__name__   = 'GeneralDisplacement'
-        self.name       = name
-        self.nodes      = nodes
+        self.__name__ = 'GeneralDisplacement'
+        self.name = name
+        self.nodes = nodes
         self.components = {'x': x, 'y': y, 'z': z, 'xx': xx, 'yy': yy, 'zz': zz}
-        self.axes       = axes
-
+        self.axes = axes
 
     def __str__(self):
 
@@ -81,7 +78,6 @@ class GeneralDisplacement(object):
 
         return ''
 
-
     def __repr__(self):
 
         return '{0}({1})'.format(self.__name__, self.name)
@@ -89,7 +85,7 @@ class GeneralDisplacement(object):
 
 class FixedDisplacement(GeneralDisplacement):
 
-    """ A fixed nodal displacement boundary condition.
+    """A fixed nodal displacement boundary condition.
 
     Parameters
     ----------
@@ -103,13 +99,13 @@ class FixedDisplacement(GeneralDisplacement):
     def __init__(self, name, nodes, axes='global'):
         GeneralDisplacement.__init__(self, name=name, nodes=nodes, axes=axes)
 
-        self.__name__   = 'FixedDisplacement'
+        self.__name__ = 'FixedDisplacement'
         self.components = {'x': 0, 'y': 0, 'z': 0, 'xx': 0, 'yy': 0, 'zz': 0}
 
 
 class PinnedDisplacement(GeneralDisplacement):
 
-    """ A pinned nodal displacement boundary condition.
+    """A pinned nodal displacement boundary condition.
 
     Parameters
     ----------
@@ -128,7 +124,7 @@ class PinnedDisplacement(GeneralDisplacement):
 
 class FixedDisplacementXX(PinnedDisplacement):
 
-    """ A pinned nodal displacement boundary condition clamped in XX.
+    """A pinned nodal displacement boundary condition clamped in XX.
 
     Parameters
     ----------
@@ -150,7 +146,7 @@ class FixedDisplacementXX(PinnedDisplacement):
 
 class FixedDisplacementYY(PinnedDisplacement):
 
-    """ A pinned nodal displacement boundary condition clamped in YY.
+    """A pinned nodal displacement boundary condition clamped in YY.
 
     Parameters
     ----------
@@ -172,7 +168,7 @@ class FixedDisplacementYY(PinnedDisplacement):
 
 class FixedDisplacementZZ(PinnedDisplacement):
 
-    """ A pinned nodal displacement boundary condition clamped in ZZ.
+    """A pinned nodal displacement boundary condition clamped in ZZ.
 
     Parameters
     ----------
@@ -194,7 +190,7 @@ class FixedDisplacementZZ(PinnedDisplacement):
 
 class RollerDisplacementX(PinnedDisplacement):
 
-    """ A pinned nodal displacement boundary condition released in X.
+    """A pinned nodal displacement boundary condition released in X.
 
     Parameters
     ----------
@@ -216,7 +212,7 @@ class RollerDisplacementX(PinnedDisplacement):
 
 class RollerDisplacementY(PinnedDisplacement):
 
-    """ A pinned nodal displacement boundary condition released in Y.
+    """A pinned nodal displacement boundary condition released in Y.
 
     Parameters
     ----------
@@ -238,7 +234,7 @@ class RollerDisplacementY(PinnedDisplacement):
 
 class RollerDisplacementZ(PinnedDisplacement):
 
-    """ A pinned nodal displacement boundary condition released in Z.
+    """A pinned nodal displacement boundary condition released in Z.
 
     Parameters
     ----------
@@ -260,7 +256,7 @@ class RollerDisplacementZ(PinnedDisplacement):
 
 class RollerDisplacementXY(PinnedDisplacement):
 
-    """ A pinned nodal displacement boundary condition released in X and Y.
+    """A pinned nodal displacement boundary condition released in X and Y.
 
     Parameters
     ----------
@@ -283,7 +279,7 @@ class RollerDisplacementXY(PinnedDisplacement):
 
 class RollerDisplacementYZ(PinnedDisplacement):
 
-    """ A pinned nodal displacement boundary condition released in Y and Z.
+    """A pinned nodal displacement boundary condition released in Y and Z.
 
     Parameters
     ----------
@@ -306,7 +302,7 @@ class RollerDisplacementYZ(PinnedDisplacement):
 
 class RollerDisplacementXZ(PinnedDisplacement):
 
-    """ A pinned nodal displacement boundary condition released in X and Z.
+    """A pinned nodal displacement boundary condition released in X and Z.
 
     Parameters
     ----------

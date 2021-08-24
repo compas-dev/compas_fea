@@ -4,16 +4,16 @@ from .ansys_nodes_elements import write_constraint_nodes
 from .ansys_nodes_elements import write_nodes
 from .ansys_nodes_elements import write_elements
 from .ansys_materials import write_all_materials
-from compas_fea.fea.ansys.writing.ansys_process import *
-from compas_fea.fea.ansys.writing.ansys_steps import *
-from compas_fea.fea.ansys.writing.ansys_nodes_elements import *
+from compas_fea.fea.ansys.writing.ansys_process import ansys_open_pre_process
+from compas_fea.fea.ansys.writing.ansys_steps import write_request_load_step_file
+from compas_fea.fea.ansys.writing.ansys_steps import write_request_solve_steps
+from compas_fea.fea.ansys.writing.ansys_nodes_elements import write_request_element_nodes
 
 
 # Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
 
 
 def write_modal_analysis_request(structure, path, name):
-
     filename = name + '.txt'
     ansys_open_pre_process(path, filename)
     write_all_materials(structure, path, filename)
@@ -107,7 +107,6 @@ def write_request_modal_shapes(path, name, step_name, num_modes, step_index):
 
 
 def write_modal_results_from_ansys_rst(name, path, fields, num_modes, step_index=0, step_name='step'):
-
     if not os.path.exists(os.path.join(path, name + '_output', 'modal_out')):
         os.makedirs(os.path.join(path, name + '_output', 'modal_out'))
 

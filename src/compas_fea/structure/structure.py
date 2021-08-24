@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -7,14 +6,14 @@ from compas_fea.fea.abaq import abaq
 from compas_fea.fea.ansys import ansys
 from compas_fea.fea.opensees import opensees
 
-from compas_fea.utilities import combine_all_sets
-from compas_fea.utilities import group_keys_by_attribute
-from compas_fea.utilities import group_keys_by_attributes
+# from compas_fea.utilities import combine_all_sets
+# from compas_fea.utilities import group_keys_by_attribute
+# from compas_fea.utilities import group_keys_by_attributes
 
 from compas_fea.structure.mixins.nodemixins import NodeMixins
 from compas_fea.structure.mixins.elementmixins import ElementMixins
 from compas_fea.structure.mixins.objectmixins import ObjectMixins
-from compas_fea.structure.displacement import *
+# from compas_fea.structure.displacement import *
 from compas_fea.structure.set import Set
 
 import pickle
@@ -30,8 +29,7 @@ __all__ = [
 
 
 class Structure(ObjectMixins, ElementMixins, NodeMixins):
-
-    """ Initialises Structure object for use in finite element analysis.
+    """Initialises Structure object for use in finite element analysis.
 
     Parameters
     ----------
@@ -90,34 +88,31 @@ class Structure(ObjectMixins, ElementMixins, NodeMixins):
     """
 
     def __init__(self, path, name='compas_fea-Structure'):
-
-        self.constraints           = {}
-        self.displacements         = {}
-        self.elements              = {}
-        self.element_index         = {}
-        self.element_properties    = {}
-        self.interactions          = {}
-        self.loads                 = {}
-        self.materials             = {}
-        self.misc                  = {}
-        self.name                  = name
-        self.nodes                 = {}
-        self.node_index            = {}
-        self.path                  = path
-        self.results               = {}
-        self.sections              = {}
-        self.sets                  = {}
-        self.steps                 = {}
-        self.steps_order           = []
-        self.tol                   = '3'
-        self.virtual_nodes         = {}
-        self.virtual_node_index    = {}
-        self.virtual_elements      = {}
+        self.constraints = {}
+        self.displacements = {}
+        self.elements = {}
+        self.element_index = {}
+        self.element_properties = {}
+        self.interactions = {}
+        self.loads = {}
+        self.materials = {}
+        self.misc = {}
+        self.name = name
+        self.nodes = {}
+        self.node_index = {}
+        self.path = path
+        self.results = {}
+        self.sections = {}
+        self.sets = {}
+        self.steps = {}
+        self.steps_order = []
+        self.tol = '3'
+        self.virtual_nodes = {}
+        self.virtual_node_index = {}
+        self.virtual_elements = {}
         self.virtual_element_index = {}
 
-
     def __str__(self):
-
         n = self.node_count()
         m = self.element_count()
         data = [
@@ -193,14 +188,12 @@ Steps
 
 """.format(self.name, n, m, d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8])
 
-
     # ==============================================================================
     # Sets
     # ==============================================================================
 
     def add_set(self, name, type, selection):
-
-        """ Adds a node, element or surface set to structure.sets.
+        """Adds a node, element or surface set to structure.sets.
 
         Parameters
         ----------
@@ -222,7 +215,6 @@ Steps
 
         self.sets[name] = Set(name=name, type=type, selection=selection, index=len(self.sets))
 
-
     # ==============================================================================
     # Constructors    EXPERIMENTAL
     # ==============================================================================
@@ -230,7 +222,7 @@ Steps
     # @classmethod
     # def from_mesh(cls, mesh, path):
 
-    #     """ Creates a Structure object based on data contained in a compas Mesh datastructure.
+    #     """Creates a Structure object based on data contained in a compas Mesh datastructure.
 
     #     Parameters
     #     ----------
@@ -308,22 +300,18 @@ Steps
 
     #     return structure
 
-
     # @classmethod
     # def from_network(cls, network):
 
     #     pass
-
 
     # @classmethod
     # def from_volmesh(cls, network):
 
     #     pass
 
-
     def add_nodes_elements_from_mesh(self, mesh, element_type, thermal=False, elset=None):
-
-        """ Adds the nodes and faces of a Mesh to the Structure object.
+        """Adds the nodes and faces of a Mesh to the Structure object.
 
         Parameters
         ----------
@@ -357,10 +345,8 @@ Steps
 
         return ekeys
 
-
     def add_nodes_elements_from_network(self, network, element_type, thermal=False, elset=None, axes={}):
-
-        """ Adds the nodes and edges of a Network to the Structure object.
+        """Adds the nodes and edges of a Network to the Structure object.
 
         Parameters
         ----------
@@ -397,10 +383,8 @@ Steps
 
         return ekeys
 
-
-    def add_nodes_elements_from_volmesh(self, volmesh, element_type='SolidElement', thermal=False, elset=None, axes={}):
-
-        """ Adds the nodes and cells of a VolMesh to the Structure object.
+    def add_nodes_elements_from_volmesh(self, volmesh, element_type='SolidElement', acoustic=False, thermal=False, elset=None, axes={}):
+        """Adds the nodes and cells of a VolMesh to the Structure object.
 
         Parameters
         ----------
@@ -408,6 +392,8 @@ Steps
             VolMesh datastructure object.
         element_type : str
             Element type: 'SolidElement' or ....
+        acoustic : bool
+            Acoustic properties on or off.
         thermal : bool
             Thermal properties on or off.
         elset : str
@@ -437,14 +423,12 @@ Steps
 
         return ekeys
 
-
     # ==============================================================================
     # Modifiers
     # ==============================================================================
 
     def scale_displacements(self, displacements, factor):
-
-        """ Scales displacements by a given factor.
+        """Scales displacements by a given factor.
 
         Parameters
         ----------
@@ -470,10 +454,8 @@ Steps
 
         return disp_dic
 
-
     def scale_loads(self, loads, factor):
-
-        """ Scales loads by a given factor.
+        """Scales loads by a given factor.
 
         Parameters
         ----------
@@ -499,14 +481,12 @@ Steps
 
         return loads_dic
 
-
     # ==============================================================================
     # Steps
     # ==============================================================================
 
     def set_steps_order(self, order):
-
-        """ Sets the order that the Steps will be analysed.
+        """Sets the order that the Steps will be analysed.
 
         Parameters
         ----------
@@ -521,14 +501,12 @@ Steps
 
         self.steps_order = order
 
-
     # ==============================================================================
     # Analysis
     # ==============================================================================
 
     def write_input_file(self, software, fields='u', output=True, save=False, ndof=6):
-
-        """ Writes the FE software's input file.
+        """Writes the FE software's input file.
 
         Parameters
         ----------
@@ -559,10 +537,8 @@ Steps
         elif software == 'opensees':
             opensees.input_generate(self, fields=fields, output=output, ndof=ndof)
 
-
     def analyse(self, software, exe=None, cpus=4, license='research', delete=True, output=True):
-
-        """ Runs the analysis through the chosen FEA software / library.
+        """Runs the analysis through the chosen FEA software / library.
 
         Parameters
         ----------
@@ -595,11 +571,9 @@ Steps
         elif software == 'opensees':
             opensees.launch_process(self, exe=exe, output=output)
 
-
     def extract_data(self, software, fields='u', steps='all', exe=None, sets=None, license='research', output=True,
                      return_data=True, components=None):
-
-        """ Extracts data from the analysis output files.
+        """Extracts data from the analysis output files.
 
         Parameters
         ----------
@@ -638,11 +612,9 @@ Steps
         elif software == 'opensees':
             opensees.extract_data(self, fields=fields)
 
-
     def analyse_and_extract(self, software, fields='u', exe=None, cpus=4, license='research', output=True, save=False,
                             return_data=True, components=None, ndof=6):
-
-        """ Runs the analysis through the chosen FEA software / library and extracts data.
+        """Runs the analysis through the chosen FEA software / library and extracts data.
 
         Parameters
         ----------
@@ -678,14 +650,12 @@ Steps
         self.extract_data(software=software, fields=fields, exe=exe, license=license, output=output,
                           return_data=return_data, components=components)
 
-
     # ==============================================================================
     # Results
     # ==============================================================================
 
     def get_nodal_results(self, step, field, nodes='all'):
-
-        """ Extract nodal results from self.results.
+        """Extract nodal results from self.results.
 
         Parameters
         ----------
@@ -703,7 +673,7 @@ Steps
 
         """
 
-        data  = {}
+        data = {}
         rdict = self.results[step]['nodal']
 
         if nodes == 'all':
@@ -720,10 +690,8 @@ Steps
 
         return data
 
-
     def get_element_results(self, step, field, elements='all'):
-
-        """ Extract element results from self.results.
+        """Extract element results from self.results.
 
         Parameters
         ----------
@@ -741,7 +709,7 @@ Steps
 
         """
 
-        data  = {}
+        data = {}
         rdict = self.results[step]['element']
 
         if elements == 'all':
@@ -758,14 +726,12 @@ Steps
 
         return data
 
-
     # ==============================================================================
     # Summary
     # ==============================================================================
 
     def summary(self):
-
-        """ Prints a summary of the Structure object.
+        """Prints a summary of the Structure object.
 
         Parameters
         ----------
@@ -779,14 +745,12 @@ Steps
 
         print(self)
 
-
     # ==============================================================================
     # App
     # ==============================================================================
 
     def view(self, mode=''):
-
-        """ Starts the PyQt app for visualisation.
+        """Starts the PyQt app for visualisation.
 
         Parameters
         ----------
@@ -810,17 +774,15 @@ Steps
             app = App(structure=self, mode=mode)
             app.start()
 
-        except:
+        except Exception:
             print('***** Launching App failed *****')
-
 
     # ==============================================================================
     # Save
     # ==============================================================================
 
     def save_to_obj(self, output=True):
-
-        """ Exports the Structure object to an .obj file through Pickle.
+        """Exports the Structure object to an .obj file through Pickle.
 
         Parameters
         ----------
@@ -841,15 +803,13 @@ Steps
         if output:
             print('***** Structure saved to: {0} *****\n'.format(filename))
 
-
     # ==============================================================================
     # Load
     # ==============================================================================
 
     @staticmethod
     def load_from_obj(filename, output=True):
-
-        """ Imports a Structure object from an .obj file through Pickle.
+        """Imports a Structure object from an .obj file through Pickle.
 
         Parameters
         ----------

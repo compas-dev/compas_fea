@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -13,8 +12,7 @@ __all__ = [
 
 
 class Node(object):
-
-    """ Initialises base Node object.
+    """Initialises base Node object.
 
     Parameters
     ----------
@@ -55,18 +53,16 @@ class Node(object):
     def __init__(self, key, xyz, ex, ey, ez, mass):
 
         self.__name__ = 'Node'
-        self.key      = key
-        self.x        = xyz[0]
-        self.y        = xyz[1]
-        self.z        = xyz[2]
-        self.ex       = ex
-        self.ey       = ey
-        self.ez       = ez
-        self.mass     = mass
-
+        self.key = key
+        self.x = xyz[0]
+        self.y = xyz[1]
+        self.z = xyz[2]
+        self.ex = ex
+        self.ey = ey
+        self.ez = ez
+        self.mass = mass
 
     def __str__(self):
-
         print('\n')
         print('compas_fea {0} object'.format(self.__name__))
         print('-' * (len(self.__name__) + 18))
@@ -76,7 +72,5 @@ class Node(object):
 
         return ''
 
-
     def __repr__(self):
-
         return '{0}({1})'.format(self.__name__, self.key)

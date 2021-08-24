@@ -1,11 +1,10 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
 try:
-    from job import *
-except:
+    from job import openOdb
+except ImportError:
     pass
 
 import json
@@ -42,12 +41,11 @@ convert = {
     'SMISES': 'smises', 'SMAXP': 'smaxp', 'SMINP': 'sminp',
 }
 
-node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
+node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'ctf', 'rbfor']
 
 
 def extract_odb_data(temp, name, fields, components, steps='all'):
-
     """ Extracts data from the .odb file for the requested steps and fields.
 
     Parameters
@@ -79,7 +77,7 @@ def extract_odb_data(temp, name, fields, components, steps='all'):
         components = set(components)
 
     results = {}
-    info    = {}
+    info = {}
 
     if steps == 'all':
         steps = odb.steps.keys()
@@ -87,7 +85,7 @@ def extract_odb_data(temp, name, fields, components, steps='all'):
     for step in steps:
 
         results[step] = {'nodal': {}, 'element': {}}
-        info[step]    = {}
+        info[step] = {}
 
         description = odb.steps[step].frames[-1].description
 
@@ -132,13 +130,13 @@ def extract_odb_data(temp, name, fields, components, steps='all'):
             try:
                 frequencies = odb.steps[step].historyRegions['Assembly Assembly-1'].historyOutputs['EIGFREQ'].data
                 results[step]['frequencies'] = [i[1] for i in frequencies]
-            except:
+            except Exception:
                 pass
 
             try:
                 masses = odb.steps[step].historyRegions['Assembly Assembly-1'].historyOutputs['GM'].data
                 results[step]['masses'] = [i[1] for i in masses]
-            except:
+            except Exception:
                 pass
 
         else:
@@ -218,30 +216,30 @@ def extract_odb_data(temp, name, fields, components, steps='all'):
                                 data = [data]
 
                             element = value.elementLabel - 1
-                            ip      = value.integrationPoint
-                            sp      = value.sectionPoint.number if value.sectionPoint else 0
-                            id      = 'ip{0}_sp{1}'.format(ip, sp)
+                            ip = value.integrationPoint
+                            sp = value.sectionPoint.number if value.sectionPoint else 0
+                            id = 'ip{0}_sp{1}'.format(ip, sp)
 
                             for i, c in enumerate(clabels):
                                 if convert[c] in components:
                                     try:
                                         refe[convert[c]][element][id] = float(data[i])
-                                    except:
+                                    except Exception:
                                         refe[convert[c]][element] = {}
                                         try:
                                             refe[convert[c]][element][id] = float(data[i])
-                                        except:
+                                        except Exception:
                                             refe[convert[c]][element][id] = None
 
                             if field == 's':
                                 if 'smises' in components:
                                     try:
                                         refe['smises'][element][id] = float(value.mises)
-                                    except:
+                                    except Exception:
                                         refe['smises'][element] = {}
                                         try:
                                             refe['smises'][element][id] = float(value.mises)
-                                        except:
+                                        except Exception:
                                             refe['smises'][element][id] = None
 
                             if field in ['s', 'pe']:
@@ -252,7 +250,7 @@ def extract_odb_data(temp, name, fields, components, steps='all'):
                                         refe[field + 'minp'][element][id] = float(value.minPrincipal)
                                     if 'axes' in components:
                                         refe['axes'][element] = value.localCoordSystem
-                                except:
+                                except Exception:
                                     refe[field + 'maxp'][element] = {}
                                     refe[field + 'minp'][element] = {}
                                     try:
@@ -260,7 +258,7 @@ def extract_odb_data(temp, name, fields, components, steps='all'):
                                             refe[field + 'maxp'][element][id] = float(value.maxPrincipal)
                                         if field + 'minp' in components:
                                             refe[field + 'minp'][element][id] = float(value.minPrincipal)
-                                    except:
+                                    except Exception:
                                         if field + 'maxp' in components:
                                             refe[field + 'maxp'][element][id] = None
                                         if field + 'minp' in components:
@@ -272,7 +270,7 @@ def extract_odb_data(temp, name, fields, components, steps='all'):
                                         refe['emaxp'][element][id] = float(value.maxPrincipal)
                                     if 'eminp' in components:
                                         refe['eminp'][element][id] = float(value.minPrincipal)
-                                except:
+                                except Exception:
                                     refe['emaxp'][element] = {}
                                     refe['eminp'][element] = {}
                                     try:
@@ -280,12 +278,12 @@ def extract_odb_data(temp, name, fields, components, steps='all'):
                                             refe['emaxp'][element][id] = float(value.maxPrincipal)
                                         if 'eminp' in components:
                                             refe['eminp'][element][id] = float(value.minPrincipal)
-                                    except:
+                                    except Exception:
                                         if 'emaxp' in components:
                                             refe['emaxp'][element][id] = None
                                         if 'eminp' in components:
                                             refe['eminp'][element][id] = None
-                    except:
+                    except Exception:
                         pass
 
     with open('{0}{1}-results.json'.format(temp, name), 'w') as f:
@@ -295,11 +293,15 @@ def extract_odb_data(temp, name, fields, components, steps='all'):
         json.dump(info, f)
 
 
+# ==============================================================================
+# Main
+# ==============================================================================
+
 if __name__ == "__main__":
 
-    temp       = sys.argv[-1]
-    name       = sys.argv[-2]
-    fields     = sys.argv[-3].split(',')
+    temp = sys.argv[-1]
+    name = sys.argv[-2]
+    fields = sys.argv[-3].split(',')
     components = None if sys.argv[-4] == 'None' else sys.argv[-4].split(',')
 
     extract_odb_data(temp=temp, name=name, fields=fields, components=components)

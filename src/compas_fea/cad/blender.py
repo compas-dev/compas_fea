@@ -1,24 +1,21 @@
-import compas
-
-if compas.BLENDER:
-    import bpy
-    from compas_blender.geometry import BlenderMesh
-    from compas_blender.utilities import create_layer
-    from compas_blender.utilities import clear_layer
-    from compas_blender.utilities import draw_cylinder
-    from compas_blender.utilities import draw_plane
-    from compas_blender.utilities import draw_line
-    from compas_blender.utilities import get_meshes
-    from compas_blender.utilities import get_objects
-    from compas_blender.utilities import get_points
-    from compas_blender.utilities import mesh_from_bmesh
-    from compas_blender.utilities import set_deselect
-    from compas_blender.utilities import set_select
-    from compas_blender.utilities import set_objects_coordinates
-    from compas_blender.utilities import get_object_property
-    from compas_blender.utilities import set_object_property
-    from compas_blender.utilities import draw_text
-    from compas_blender.utilities import draw_mesh
+import bpy
+from compas_blender.geometry import BlenderMesh
+from compas_blender.utilities import create_layer
+from compas_blender.utilities import clear_layer
+from compas_blender.utilities import draw_cylinder
+from compas_blender.utilities import draw_plane
+from compas_blender.utilities import draw_line
+from compas_blender.utilities import get_meshes
+from compas_blender.utilities import get_objects
+from compas_blender.utilities import get_points
+from compas_blender.utilities import mesh_from_bmesh
+from compas_blender.utilities import set_deselect
+from compas_blender.utilities import set_select
+from compas_blender.utilities import set_objects_coordinates
+from compas_blender.utilities import get_object_property
+from compas_blender.utilities import set_object_property
+from compas_blender.utilities import draw_text
+from compas_blender.utilities import draw_mesh
 
 from compas.geometry import cross_vectors
 from compas.geometry import subtract_vectors
@@ -32,13 +29,12 @@ from compas_fea.utilities import postprocess
 from compas_fea.utilities import tets_from_vertices_faces
 from compas_fea.utilities import plotvoxels
 
-if not compas.IPY:
-    from numpy import array
-    from numpy import hstack
-    from numpy import max
-    from numpy import newaxis
-    from numpy import where
-    from numpy.linalg import norm
+from numpy import array
+from numpy import hstack
+from numpy import max
+from numpy import newaxis
+from numpy import where
+from numpy.linalg import norm
 
 
 __all__ = [
@@ -55,6 +51,7 @@ __all__ = [
     'plot_voxels',
     'weld_meshes_from_layer',
 ]
+
 
 def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=None, thermal=False):
     """
@@ -83,11 +80,11 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
     """
 
     blendermesh = BlenderMesh(bmesh)
-    vertices    = blendermesh.get_vertices_coordinates()
-    edges       = blendermesh.get_edges_vertex_indices()
-    faces       = blendermesh.get_faces_vertex_indices()
+    vertices = blendermesh.get_vertices_coordinates()
+    edges = blendermesh.get_edges_vertex_indices()
+    faces = blendermesh.get_faces_vertex_indices()
 
-    added_nodes    = set()
+    added_nodes = set()
     added_elements = set()
 
     for xyz in vertices.values():
@@ -97,8 +94,8 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
 
     if line_type and edges:
 
-        ex   = get_object_property(object=bmesh, property='ex')
-        ey   = get_object_property(object=bmesh, property='ey')
+        ex = get_object_property(object=bmesh, property='ex')
+        ey = get_object_property(object=bmesh, property='ey')
         axes = {'ex': list(ex) if ex else ex, 'ey': list(ey) if ey else ey}
 
         for u, v in edges.values():
@@ -129,7 +126,7 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
         if mesh_type in ['HexahedronElement', 'TetrahedronElement', 'SolidElement', 'PentahedronElement']:
 
             nodes = [structure.check_node_exists(i) for i in vertices]
-            ekey  = structure.add_element(nodes=nodes, type=mesh_type, thermal=thermal)
+            ekey = structure.add_element(nodes=nodes, type=mesh_type, thermal=thermal)
             if ekey is not None:
                 added_elements.add(ekey)
 
@@ -144,7 +141,7 @@ def add_nodes_elements_from_bmesh(structure, bmesh, line_type=None, mesh_type=No
                 else:
                     ez = None
 
-            except:
+            except Exception:
                 ex = None
                 ey = None
                 ez = None
@@ -194,7 +191,7 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
     if isinstance(layers, str):
         layers = [layers]
 
-    added_nodes    = set()
+    added_nodes = set()
     added_elements = set()
 
     for layer in layers:
@@ -313,8 +310,8 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, ther
     """
 
     blendermesh = BlenderMesh(mesh)
-    vertices    = blendermesh.get_vertices_coordinates().values()
-    faces       = blendermesh.get_faces_vertex_indices().values()
+    vertices = blendermesh.get_vertices_coordinates().values()
+    faces = blendermesh.get_faces_vertex_indices().values()
 
     try:
 
@@ -328,7 +325,7 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, ther
         for element in tets_elements:
 
             nodes = [structure.check_node_exists(tets_points[i]) for i in element]
-            ekey  = structure.add_element(nodes=nodes, type='TetrahedronElement', thermal=thermal)
+            ekey = structure.add_element(nodes=nodes, type='TetrahedronElement', thermal=thermal)
             ekeys.append(ekey)
 
         structure.add_set(name=name, type='element', selection=ekeys)
@@ -344,7 +341,7 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, ther
 
         print('***** MeshPy (TetGen) successfull *****')
 
-    except:
+    except Exception:
 
         print('***** Error using MeshPy (TetGen) or drawing Tets *****')
 
@@ -376,7 +373,7 @@ def discretise_mesh(structure, mesh, layer, target, min_angle=15, factor=1):
 
     blendermesh = BlenderMesh(mesh)
     vertices = list(blendermesh.get_vertices_coordinates().values())
-    faces    = list(blendermesh.get_faces_vertex_indices().values())
+    faces = list(blendermesh.get_faces_vertex_indices().values())
 
     try:
 
@@ -387,7 +384,7 @@ def discretise_mesh(structure, mesh, layer, target, min_angle=15, factor=1):
             bmesh = draw_mesh(name='face', vertices=pts, faces=tri, layer=layer)
             add_nodes_elements_from_bmesh(structure=structure, bmesh=bmesh, mesh_type='ShellElement')
 
-    except:
+    except Exception:
 
         print('***** Error using MeshPy (Triangle) or drawing faces *****')
 
@@ -467,22 +464,22 @@ def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
 
     try:
         clear_layer(layer)
-    except:
+    except Exception:
         create_layer(layer)
 
-    cfx   = array(list(structure.results[step]['nodal']['cfx'].values()))[:, newaxis]
-    cfy   = array(list(structure.results[step]['nodal']['cfy'].values()))[:, newaxis]
-    cfz   = array(list(structure.results[step]['nodal']['cfz'].values()))[:, newaxis]
-    cf    = hstack([cfx, cfy, cfz])
-    cfm   = norm(cf, axis=1)
-    cmax  = max(cfm)
+    cfx = array(list(structure.results[step]['nodal']['cfx'].values()))[:, newaxis]
+    cfy = array(list(structure.results[step]['nodal']['cfy'].values()))[:, newaxis]
+    cfz = array(list(structure.results[step]['nodal']['cfz'].values()))[:, newaxis]
+    cf = hstack([cfx, cfy, cfz])
+    cfm = norm(cf, axis=1)
+    cmax = max(cfm)
     nodes = array(structure.nodes_xyz())
 
     for i in where(cfm > 0)[0]:
 
-        sp   = nodes[i, :]
-        ep   = nodes[i, :] + cf[i, :] * -scale * 0.001
-        col  = colorbar(cfm[i] / cmax, input='float', type=1)
+        sp = nodes[i, :]
+        ep = nodes[i, :] + cf[i, :] * -scale * 0.001
+        col = colorbar(cfm[i] / cmax, input='float', type=1)
         line = draw_line(start=sp, end=ep, width=0.01, color=col, layer=layer)
 
         set_object_property(object=line, property='cfx', value=cf[i, 0])
@@ -532,11 +529,11 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
     """
 
     if field in ['smaxp', 'smises']:
-        nodal  = 'max'
+        nodal = 'max'
         iptype = 'max'
 
     elif field in ['sminp']:
-        nodal  = 'min'
+        nodal = 'min'
         iptype = 'min'
 
     # Create and clear Blender layer
@@ -546,26 +543,26 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
     try:
         clear_layer(layer)
-    except:
+    except Exception:
         create_layer(layer)
 
     # Node and element data
 
-    nodes      = structure.nodes_xyz()
-    elements   = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
+    nodes = structure.nodes_xyz()
+    elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
     nodal_data = structure.results[step]['nodal']
-    nkeys      = sorted(structure.nodes, key=int)
+    nkeys = sorted(structure.nodes, key=int)
 
     ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
     uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
     uz = [nodal_data['uz{0}'.format(mode)][i] for i in nkeys]
 
     try:
-        data  = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
+        data = [nodal_data['{0}{1}'.format(field, mode)][i] for i in nkeys]
         dtype = 'nodal'
 
     except(Exception):
-        data  = structure.results[step]['element'][field]
+        data = structure.results[step]['element'][field]
         dtype = 'element'
 
     # Postprocess
@@ -577,17 +574,17 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         U = array(U)
         print('\n***** Data processed : {0} s *****'.format(toc))
 
-    except:
+    except Exception:
         print('\n***** Error encountered during data processing or plotting *****')
 
     # Plot meshes
 
     npts = 8
-    mesh_faces  = []
+    mesh_faces = []
     block_faces = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
-    tet_faces   = [[0, 2, 1], [1, 2, 3], [1, 3, 0], [0, 3, 2]]
-    pipes       = []
-    mesh_add    = []
+    tet_faces = [[0, 2, 1], [1, 2, 3], [1, 3, 0], [0, 3, 2]]
+    pipes = []
+    mesh_add = []
 
     for element, nodes in enumerate(elements):
 
@@ -610,7 +607,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
                 blendermesh = BlenderMesh(object=pipe)
                 blendermesh.set_vertices_colors({i: col1 for i in range(0, 2 * npts, 2)})
                 blendermesh.set_vertices_colors({i: col2 for i in range(1, 2 * npts, 2)})
-            except:
+            except Exception:
                 pass
 
         elif n in [3, 4]:
@@ -637,16 +634,16 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
 
     xr, yr, _ = structure.node_bounds()
     yran = yr[1] - yr[0] if yr[1] - yr[0] else 1
-    s    = yran * 0.1 * cbar_size
+    s = yran * 0.1 * cbar_size
     xmin = xr[1] + 3 * s
     ymin = yr[0]
 
     cmesh = draw_plane(name='colorbar', Lx=s, dx=s, Ly=10*s, dy=s, layer=layer)
     set_objects_coordinates(objects=[cmesh], coords=[[xmin, ymin, 0]])
     blendermesh = BlenderMesh(object=cmesh)
-    vertices    = blendermesh.get_vertices_coordinates().values()
+    vertices = blendermesh.get_vertices_coordinates().values()
 
-    y  = array(list(vertices))[:, 1]
+    y = array(list(vertices))[:, 1]
     yn = yran * cbar_size
     colors = colorbar(((y - ymin - 0.5 * yn) * 2 / yn)[:, newaxis], input='array', type=1)
     blendermesh.set_vertices_colors({i: j for i, j in zip(range(len(vertices)), colors)})
@@ -699,22 +696,22 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
 
     try:
         clear_layer(layer)
-    except:
+    except Exception:
         create_layer(layer)
 
-    rfx   = array(list(structure.results[step]['nodal']['rfx'].values()))[:, newaxis]
-    rfy   = array(list(structure.results[step]['nodal']['rfy'].values()))[:, newaxis]
-    rfz   = array(list(structure.results[step]['nodal']['rfz'].values()))[:, newaxis]
-    rf    = hstack([rfx, rfy, rfz])
-    rfm   = norm(rf, axis=1)
-    rmax  = max(rfm)
+    rfx = array(list(structure.results[step]['nodal']['rfx'].values()))[:, newaxis]
+    rfy = array(list(structure.results[step]['nodal']['rfy'].values()))[:, newaxis]
+    rfz = array(list(structure.results[step]['nodal']['rfz'].values()))[:, newaxis]
+    rf = hstack([rfx, rfy, rfz])
+    rfm = norm(rf, axis=1)
+    rmax = max(rfm)
     nodes = array(structure.nodes_xyz())
 
     for i in where(rfm > 0)[0]:
 
-        sp   = nodes[i, :]
-        ep   = nodes[i, :] + rf[i, :] * -scale * 0.001
-        col  = colorbar(rfm[i] / rmax, input='float', type=1)
+        sp = nodes[i, :]
+        ep = nodes[i, :] + rf[i, :] * -scale * 0.001
+        col = colorbar(rfm[i] / rmax, input='float', type=1)
         line = draw_line(start=sp, end=ep, width=0.01, color=col, layer=layer)
 
         set_object_property(object=line, property='rfx', value=rf[i, 0])
@@ -754,11 +751,10 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
 
     # Node and element data
 
-
-    xyz        = structure.nodes_xyz()
-    elements   = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
+    xyz = structure.nodes_xyz()
+    elements = [structure.elements[i].nodes for i in sorted(structure.elements, key=int)]
     nodal_data = structure.results[step]['nodal']
-    nkeys      = sorted(structure.nodes, key=int)
+    nkeys = sorted(structure.nodes, key=int)
 
     ux = [nodal_data['ux{0}'.format(mode)][i] for i in nkeys]
     uy = [nodal_data['uy{0}'.format(mode)][i] for i in nkeys]
@@ -781,13 +777,13 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
         U = array(U)
         print('\n***** Data processed : {0:.3f} s *****'.format(toc))
 
-    except:
+    except Exception:
         print('\n***** Error post-processing *****')
 
     try:
         plotvoxels(values=fscaled, U=U, vdx=vdx)
 
-    except:
+    except Exception:
         print('\n***** Error plotting voxels *****')
 
 
@@ -821,24 +817,9 @@ def weld_meshes_from_layer(layer_input, layer_output):
 
     try:
         clear_layer(layer_output)
-    except:
+    except Exception:
         create_layer(layer_output)
 
     vertices = S.nodes_xyz()
 
     draw_mesh(name='welded_mesh', vertices=vertices, faces=faces, layer=layer_output)
-
-
-# ==============================================================================
-# Debugging
-# ==============================================================================
-
-if __name__ == "__main__":
-
-    from compas_fea.structure import Structure
-
-    # mdl = Structure.load_from_obj(filename='/home/al/compas/compas_fea/data/_workshop/example_tets.obj')
-    # plot_voxels(mdl, step='step_load', field='smises', vdx=0.100)
-
-    mdl = Structure.load_from_obj(filename='C:/Temp/block_tets.obj')
-    plot_voxels(mdl, step='step_load', field='um', vdx=0.010)

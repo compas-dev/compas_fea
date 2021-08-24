@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -23,8 +22,7 @@ __all__ = [
 class ObjectMixins(object):
 
     def add(self, objects):
-
-        """ Adds object(s) to their correct attribute dictionary in the structure.
+        """Adds object(s) to their correct attribute dictionary in the structure.
 
         Parameters
         ----------
@@ -36,7 +34,6 @@ class ObjectMixins(object):
         None
 
         """
-
         if not isinstance(objects, list):
             objects = [objects]
 
@@ -65,8 +62,7 @@ class ObjectMixins(object):
                 print('***** WARNING: object type not found using structure.add() *****')
 
     def add_constraint(self, constraint):
-
-        """ Adds a Constraint object to structure.constraints.
+        """Adds a Constraint object to structure.constraints.
 
         Parameters
         ----------
@@ -78,13 +74,11 @@ class ObjectMixins(object):
         None
 
         """
-
         constraint.index = len(self.constraints)
         self.constraints[constraint.name] = constraint
 
     def add_displacement(self, displacement):
-
-        """ Adds a Displacement object to structure.displacements.
+        """Adds a Displacement object to structure.displacements.
 
         Parameters
         ----------
@@ -96,13 +90,11 @@ class ObjectMixins(object):
         None
 
         """
-
         displacement.index = len(self.displacements)
         self.displacements[displacement.name] = displacement
 
     def add_displacements(self, displacements):
-
-        """ Adds Displacement objects to structure.displacements.
+        """Adds Displacement objects to structure.displacements.
 
         Parameters
         ----------
@@ -114,13 +106,11 @@ class ObjectMixins(object):
         None
 
         """
-
         for displacement in displacements:
             self.add_displacement(displacement)
 
     def add_element_properties(self, element_properties):
-
-        """ Adds ElementProperties object(s) to structure.element_properties.
+        """Adds ElementProperties object(s) to structure.element_properties.
 
         Parameters
         ----------
@@ -132,7 +122,6 @@ class ObjectMixins(object):
         None
 
         """
-
         if isinstance(element_properties, list):
             for element_property in element_properties:
                 element_property.index = len(self.element_properties)
@@ -144,8 +133,7 @@ class ObjectMixins(object):
             self.assign_element_property(element_properties)
 
     def add_interaction(self, interaction):
-
-        """ Adds an Interaction object to structure.interactions.
+        """Adds an Interaction object to structure.interactions.
 
         Parameters
         ----------
@@ -157,13 +145,11 @@ class ObjectMixins(object):
         None
 
         """
-
         interaction.index = len(self.interactions)
         self.interactions[interaction.name] = interaction
 
     def add_load(self, load):
-
-        """ Adds a Load object to structure.loads.
+        """Adds a Load object to structure.loads.
 
         Parameters
         ----------
@@ -180,8 +166,7 @@ class ObjectMixins(object):
         self.loads[load.name] = load
 
     def add_loads(self, loads):
-
-        """ Adds Load objects to structure.loads.
+        """Adds Load objects to structure.loads.
 
         Parameters
         ----------
@@ -193,13 +178,11 @@ class ObjectMixins(object):
         None
 
         """
-
         for load in loads:
             self.add_load(load)
 
     def add_material(self, material):
-
-        """ Adds a Material object to structure.materials.
+        """Adds a Material object to structure.materials.
 
         Parameters
         ----------
@@ -211,13 +194,11 @@ class ObjectMixins(object):
         None
 
         """
-
         material.index = len(self.materials)
         self.materials[material.name] = material
 
     def add_materials(self, materials):
-
-        """ Adds Material objects to structure.materials.
+        """Adds Material objects to structure.materials.
 
         Parameters
         ----------
@@ -229,13 +210,11 @@ class ObjectMixins(object):
         None
 
         """
-
         for material in materials:
             self.add_material(material)
 
     def add_misc(self, misc):
-
-        """ Adds a Misc object to structure.misc.
+        """Adds a Misc object to structure.misc.
 
         Parameters
         ----------
@@ -247,13 +226,11 @@ class ObjectMixins(object):
         None
 
         """
-
         misc.index = len(self.misc)
         self.misc[misc.name] = misc
 
     def add_section(self, section):
-
-        """ Adds a Section object to structure.sections.
+        """Adds a Section object to structure.sections.
 
         Parameters
         ----------
@@ -265,13 +242,11 @@ class ObjectMixins(object):
         None
 
         """
-
         section.index = len(self.sections)
         self.sections[section.name] = section
 
     def add_sections(self, sections):
-
-        """ Adds Section objects to structure.sections.
+        """Adds Section objects to structure.sections.
 
         Parameters
         ----------
@@ -283,13 +258,11 @@ class ObjectMixins(object):
         None
 
         """
-
         for section in sections:
             self.add_section(section)
 
     def add_step(self, step):
-
-        """ Adds a Step object to structure.steps.
+        """Adds a Step object to structure.steps.
 
         Parameters
         ----------
@@ -301,13 +274,11 @@ class ObjectMixins(object):
         None
 
         """
-
         step.index = len(self.steps)
         self.steps[step.name] = step
 
     def add_steps(self, steps):
-
-        """ Adds Step objects to structure.steps.
+        """Adds Step objects to structure.steps.
 
         Parameters
         ----------
@@ -319,6 +290,5 @@ class ObjectMixins(object):
         None
 
         """
-
         for step in steps:
             self.add_step(step)

@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -35,17 +34,16 @@ class Elements(object):
 
         pass
 
-
     def write_elements(self):
 
         self.write_section('Elements')
         self.blank_line()
 
-        elements   = self.structure.elements
-        materials  = self.structure.materials
+        elements = self.structure.elements
+        materials = self.structure.materials
         properties = self.structure.element_properties
-        sections   = self.structure.sections
-        sets       = self.structure.sets
+        sections = self.structure.sections
+        sets = self.structure.sets
 
         written_springs = []
 
@@ -53,14 +51,14 @@ class Elements(object):
 
             self.write_subsection(key)
 
-            property      = properties[key]
+            property = properties[key]
             reinforcement = property.rebar
-            elset         = property.elset
+            elset = property.elset
 
-            section       = sections[property.section]
-            stype         = section.__name__
-            geometry      = section.geometry
-            material      = materials.get(property.material)
+            section = sections[property.section]
+            stype = section.__name__
+            geometry = section.geometry
+            material = materials.get(property.material)
 
             if material:
                 m_index = material.index + 1
@@ -71,24 +69,23 @@ class Elements(object):
 
             if geometry is not None:
 
-                t   = geometry.get('t', None)
-                A   = geometry.get('A', None)
-                J   = geometry.get('J', None)
+                t = geometry.get('t', None)
+                A = geometry.get('A', None)
+                J = geometry.get('J', None)
                 Ixx = geometry.get('Ixx', None)
                 Iyy = geometry.get('Iyy', None)
-                E   = material.E.get('E', None)
-                G   = material.G.get('G', None)
+                E = material.E.get('E', None)
+                G = material.G.get('G', None)
 
             for select in selection:
 
                 element = elements[select]
-                nodes   = [str(i + 1) for i in element.nodes]
-                no      = len(nodes)
-                n       = select + 1
-                ex      = element.axes.get('ex', None)
-                ey      = element.axes.get('ey', None)
-                ez      = element.axes.get('ez', None)
-
+                nodes = [str(i + 1) for i in element.nodes]
+                no = len(nodes)
+                n = select + 1
+                ex = element.axes.get('ex', None)
+                ey = element.axes.get('ey', None)
+                ez = element.axes.get('ez', None)
 
                 # =====================================================================================================
                 # =====================================================================================================
@@ -167,7 +164,7 @@ class Elements(object):
                         self.write_line('{0}, {1}'.format(n, ','.join(nodes)))
 
                         if ex and ey:
-                            o   = 'ORI_element_{0}'.format(select)
+                            o = 'ORI_element_{0}'.format(select)
                             ori = ', ORIENTATION={0}'.format(o)
                             self.write_line('*ORIENTATION, NAME={0}'.format(o))
                             self.write_line(', '.join([str(j) for j in ex]) + ', ' + ', '.join([str(j) for j in ey]))
@@ -183,14 +180,14 @@ class Elements(object):
 
                             for name, rebar in reinforcement.items():
 
-                                pos   = rebar['pos']
-                                l     = rebar['spacing']
-                                rmat  = rebar['material']
+                                pos = rebar['pos']
+                                length = rebar['spacing']
+                                rmat = rebar['material']
                                 angle = rebar['angle']
-                                dia   = rebar['dia']
-                                area  = 0.25 * pi * dia**2
+                                dia = rebar['dia']
+                                area = 0.25 * pi * dia**2
 
-                                self.write_line('{0}, {1}, {2}, {3}, {4}, {5}'.format(name, area, l, pos, rmat, angle))
+                                self.write_line('{0}, {1}, {2}, {3}, {4}, {5}'.format(name, area, length, pos, rmat, angle))
 
                     # -------------------------------------------------------------------------------------------------
                     # Ansys
@@ -199,7 +196,6 @@ class Elements(object):
                     elif self.software == 'ansys':
 
                         pass
-
 
                 # =====================================================================================================
                 # =====================================================================================================
@@ -238,7 +234,6 @@ class Elements(object):
 
                         pass
 
-
                 # =====================================================================================================
                 # =====================================================================================================
                 # SPRING
@@ -248,8 +243,8 @@ class Elements(object):
                 elif stype == 'SpringSection':
 
                     kx = section.stiffness.get('axial', 0)
-                    ky = section.stiffness.get('lateral', 0)
-                    kr = section.stiffness.get('rotation', 0)
+                    # ky = section.stiffness.get('lateral', 0)
+                    # kr = section.stiffness.get('rotation', 0)
 
                     # -------------------------------------------------------------------------------------------------
                     # OpenSees
@@ -314,7 +309,6 @@ class Elements(object):
                             self.write_line('AXIAL')
                             self.write_line('ORI_{0}'.format(select))
 
-
                 # =====================================================================================================
                 # =====================================================================================================
                 # MASS
@@ -351,7 +345,6 @@ class Elements(object):
                     elif self.software == 'ansys':
 
                         raise NotImplementedError
-
 
                 # =====================================================================================================
                 # =====================================================================================================
@@ -398,7 +391,6 @@ class Elements(object):
                     elif self.software == 'ansys':
 
                         pass
-
 
                 self.blank_line()
 

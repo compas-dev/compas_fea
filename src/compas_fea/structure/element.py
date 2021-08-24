@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -30,8 +29,7 @@ __all__ = [
 # ==============================================================================
 
 class Element(object):
-
-    """ Initialises base Element object.
+    """Initialises base Element object.
 
     Parameters
     ----------
@@ -61,16 +59,14 @@ class Element(object):
 
     def __init__(self, nodes=None, number=None, thermal=None, axes={}):
 
-        self.__name__         = 'Element'
-        self.nodes            = nodes
-        self.number           = number
-        self.thermal          = thermal
-        self.axes             = axes
+        self.__name__ = 'Element'
+        self.nodes = nodes
+        self.number = number
+        self.thermal = thermal
+        self.axes = axes
         self.element_property = None
 
-
     def __str__(self):
-
         print('\n')
         print('compas_fea {0} object'.format(self.__name__))
         print('-' * (len(self.__name__) + 18))
@@ -80,9 +76,7 @@ class Element(object):
 
         return ''
 
-
     def __repr__(self):
-
         return '{0}({1})'.format(self.__name__, self.number)
 
 
@@ -92,7 +86,7 @@ class Element(object):
 
 class MassElement(Element):
 
-    """ A 0D element for concentrated point mass.
+    """A 0D element for concentrated point mass.
 
     Parameters
     ----------
@@ -112,7 +106,7 @@ class MassElement(Element):
 
 class BeamElement(Element):
 
-    """ A 1D element that resists axial, shear, bending and torsion.
+    """A 1D element that resists axial, shear, bending and torsion.
 
     Parameters
     ----------
@@ -128,7 +122,7 @@ class BeamElement(Element):
 
 class SpringElement(Element):
 
-    """ A 1D spring element.
+    """A 1D spring element.
 
     Parameters
     ----------
@@ -144,7 +138,7 @@ class SpringElement(Element):
 
 class TrussElement(Element):
 
-    """ A 1D element that resists axial loads.
+    """A 1D element that resists axial loads.
 
     Parameters
     ----------
@@ -160,7 +154,7 @@ class TrussElement(Element):
 
 class StrutElement(TrussElement):
 
-    """ A truss element that resists axial compressive loads.
+    """A truss element that resists axial compressive loads.
 
     Parameters
     ----------
@@ -176,7 +170,7 @@ class StrutElement(TrussElement):
 
 class TieElement(TrussElement):
 
-    """ A truss element that resists axial tensile loads.
+    """A truss element that resists axial tensile loads.
 
     Parameters
     ----------
@@ -196,7 +190,7 @@ class TieElement(TrussElement):
 
 class ShellElement(Element):
 
-    """ A 2D element that resists axial, shear, bending and torsion.
+    """A 2D element that resists axial, shear, bending and torsion.
 
     Parameters
     ----------
@@ -212,7 +206,7 @@ class ShellElement(Element):
 
 class FaceElement(Element):
 
-    """ A 2D Face element used for special loading cases.
+    """A 2D Face element used for special loading cases.
 
     Parameters
     ----------
@@ -228,7 +222,7 @@ class FaceElement(Element):
 
 class MembraneElement(ShellElement):
 
-    """ A shell element that resists only axial loads.
+    """A shell element that resists only axial loads.
 
     Parameters
     ----------
@@ -248,7 +242,7 @@ class MembraneElement(ShellElement):
 
 class SolidElement(Element):
 
-    """ A 3D element that resists axial, shear, bending and torsion.
+    """A 3D element that resists axial, shear, bending and torsion.
 
     Parameters
     ----------
@@ -264,7 +258,7 @@ class SolidElement(Element):
 
 class PentahedronElement(SolidElement):
 
-    """ A Solid element with 5 faces (extruded triangle).
+    """A Solid element with 5 faces (extruded triangle).
 
     Parameters
     ----------
@@ -280,7 +274,7 @@ class PentahedronElement(SolidElement):
 
 class TetrahedronElement(SolidElement):
 
-    """ A Solid element with 4 faces.
+    """A Solid element with 4 faces.
 
     Parameters
     ----------
@@ -296,7 +290,7 @@ class TetrahedronElement(SolidElement):
 
 class HexahedronElement(SolidElement):
 
-    """ A Solid cuboid element with 6 faces (extruded rectangle).
+    """A Solid cuboid element with 6 faces (extruded rectangle).
 
     Parameters
     ----------

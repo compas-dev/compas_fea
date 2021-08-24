@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -13,7 +12,6 @@ __all__ = [
 
 
 class ElementProperties(object):
-
     """ Initialises an ElementProperties object.
 
     Parameters
@@ -53,21 +51,18 @@ class ElementProperties(object):
     """
 
     def __init__(self, name, material=None, section=None, elset=None, elements=None, rebar={}):
-
         self.__name__ = 'ElementProperties'
-        self.name     = name
+        self.name = name
         self.material = material
-        self.section  = section
-        self.elset    = elset
+        self.section = section
+        self.elset = elset
         self.elements = elements
-        self.rebar    = rebar
+        self.rebar = rebar
 
         if (not elset) and (not elements):
             raise NameError('***** ElementProperties objects require elements or element sets *****')
 
-
     def __str__(self):
-
         print('\n')
         print('compas_fea {0} object'.format(self.__name__))
         print('-' * (len(self.__name__) + 18))
@@ -77,7 +72,5 @@ class ElementProperties(object):
 
         return ''
 
-
     def __repr__(self):
-
         return '{0}({1})'.format(self.__name__, self.name)

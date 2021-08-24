@@ -1,2 +1,1 @@
-
-from .abaq import *
+from .abaq import *  # noqa: F401 F403

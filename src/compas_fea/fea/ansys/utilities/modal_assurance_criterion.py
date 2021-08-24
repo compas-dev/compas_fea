@@ -20,7 +20,7 @@ def read_mac_results_file(name, path, num_modes):
         out_path = path + '/' + name + '_output/modal_out/'
         fh = open(out_path + filename, 'r')
         lines = fh.readlines()
-        mac_list = [float(l) for l in lines]
+        mac_list = [float(line) for line in lines]
         mac[i] = dict((j, m) for (j, m) in enumerate(mac_list))
         mac[i]['best_match'] = mac_list.index(max(mac_list))
         mac[i]['best_mac'] = max(mac_list)

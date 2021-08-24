@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -11,7 +10,7 @@ __all__ = [
     'BCs',
 ]
 
-dofs    = ['x',  'y',  'z',  'xx', 'yy', 'zz']
+dofs = ['x',  'y',  'z',  'xx', 'yy', 'zz']
 
 
 class BCs(object):
@@ -20,14 +19,13 @@ class BCs(object):
 
         pass
 
-
     def write_boundary_conditions(self):
 
         self.write_section('Boundary conditions')
         self.blank_line()
 
-        sets          = self.structure.sets
-        steps         = self.structure.steps
+        sets = self.structure.sets
+        steps = self.structure.steps
         displacements = self.structure.displacements
 
         try:
@@ -39,10 +37,10 @@ class BCs(object):
 
             for key in step.displacements:
 
-                nodes      = displacements[key].nodes
+                nodes = displacements[key].nodes
                 components = displacements[key].components
-                nset       = nodes if isinstance(nodes, str) else None
-                selection  = sets[nset].selection if isinstance(nodes, str) else nodes
+                nset = nodes if isinstance(nodes, str) else None
+                selection = sets[nset].selection if isinstance(nodes, str) else nodes
 
                 self.write_subsection(key)
 
@@ -84,7 +82,7 @@ class BCs(object):
 
                 self.blank_line()
 
-        except:
+        except Exception:
 
             print('***** Error writing boundary conditions, check Step exists in structure.steps_order[0] *****')
 

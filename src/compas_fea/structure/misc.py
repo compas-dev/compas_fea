@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -15,8 +14,7 @@ __all__ = [
 
 
 class Misc(object):
-
-    """ Initialises base Misc object.
+    """Initialises base Misc object.
 
     Parameters
     ----------
@@ -31,8 +29,8 @@ class Misc(object):
 
     def __init__(self, name):
 
-        self.__name__  = 'Misc'
-        self.name      = name
+        self.__name__ = 'Misc'
+        self.name = name
         self.attr_list = ['name']
 
     def __str__(self):
@@ -48,8 +46,7 @@ class Misc(object):
 
 
 class Amplitude(Misc):
-
-    """ Initialises an Amplitude object to act as a discretised function f(x).
+    """Initialises an Amplitude object to act as a discretised function f(x).
 
     Parameters
     ----------
@@ -68,14 +65,13 @@ class Amplitude(Misc):
         Misc.__init__(self, name=name)
 
         self.__name__ = 'Amplitude'
-        self.name     = name
-        self.values   = values
+        self.name = name
+        self.values = values
         self.attr_list.extend(['values'])
 
 
 class Temperatures(Misc):
-
-    """ Define nodal temperatures data.
+    """Define nodal temperatures data.
 
     Parameters
     ----------
@@ -98,8 +94,8 @@ class Temperatures(Misc):
         Misc.__init__(self, name=name)
 
         self.__name__ = 'Temperatures'
-        self.name     = name
-        self.file     = file
-        self.values   = values
-        self.tend     = tend
+        self.name = name
+        self.file = file
+        self.values = values
+        self.tend = tend
         self.attr_list.extend(['file', 'values', 'tend'])

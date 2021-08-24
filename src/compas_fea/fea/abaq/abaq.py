@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -27,12 +26,11 @@ __all__ = [
 ]
 
 
-node_fields    = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
+node_fields = ['rf', 'rm', 'u', 'ur', 'cf', 'cm']
 element_fields = ['sf', 'sm', 'sk', 'se', 's', 'e', 'pe', 'rbfor', 'ctf']
 
 
 def input_generate(structure, fields, output):
-
     """ Creates the Abaqus .inp file from the Structure object.
 
     Parameters
@@ -74,7 +72,6 @@ def input_generate(structure, fields, output):
 
 
 def launch_process(structure, exe, cpus, output):
-
     """ Runs the analysis through Abaqus.
 
     Parameters
@@ -103,12 +100,12 @@ def launch_process(structure, exe, cpus, output):
     tic = time()
 
     subprocess = 'noGUI={0}'.format(launch_job.__file__.replace('\\', '/'))
-    success    = False
+    success = False
 
     if not exe:
 
         args = ['abaqus', 'cae', subprocess, '--', str(cpus), path, name]
-        p    = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+        p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
 
         while True:
 
@@ -147,7 +144,7 @@ def launch_process(structure, exe, cpus, output):
                 if 'COMPLETED SUCCESSFULLY' in f.readlines()[-1]:
                     success = True
 
-        except:
+        except Exception:
             pass
 
     if success:
@@ -160,7 +157,6 @@ def launch_process(structure, exe, cpus, output):
 
 
 def extract_data(structure, fields, exe, output, return_data, components):
-
     """ Extract data from the Abaqus .odb file.
 
     Parameters
@@ -193,7 +189,7 @@ def extract_data(structure, fields, exe, output, return_data, components):
     if isinstance(fields, str):
         fields = [fields]
 
-    fields     = ','.join(fields)
+    fields = ','.join(fields)
     components = ','.join(components) if components else 'None'
 
     tic1 = time()
@@ -203,7 +199,7 @@ def extract_data(structure, fields, exe, output, return_data, components):
     if not exe:
 
         args = ['abaqus', 'cae', subprocess, '--', components, fields, name, temp]
-        p    = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
+        p = Popen(args, stdout=PIPE, stderr=PIPE, cwd=temp, shell=True)
 
         while True:
 
@@ -270,7 +266,7 @@ def extract_data(structure, fields, exe, output, return_data, components):
             if output:
                 print('***** Saving data to structure.results successful : {0:.3f} s *****\n'.format(toc2))
 
-        except:
+        except Exception:
 
             if output:
                 print('***** Saving data to structure.results unsuccessful *****')

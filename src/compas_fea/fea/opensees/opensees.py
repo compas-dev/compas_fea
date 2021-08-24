@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -26,7 +25,6 @@ __all__ = [
 
 
 def input_generate(structure, fields, output, ndof):
-
     """ Creates the OpenSees .tcl file from the Structure object.
 
     Parameters
@@ -61,7 +59,6 @@ def input_generate(structure, fields, output, ndof):
 
 
 def launch_process(structure, exe, output):
-
     """ Runs the analysis through OpenSees.
 
     Parameters
@@ -87,7 +84,7 @@ def launch_process(structure, exe, output):
 
         try:
             os.stat(temp)
-        except:
+        except Exception:
             os.mkdir(temp)
 
         tic = time()
@@ -120,13 +117,12 @@ def launch_process(structure, exe, output):
 
         print('\n***** OpenSees analysis time : {0} s *****'.format(toc))
 
-    except:
+    except Exception:
 
         print('\n***** OpenSees analysis failed')
 
 
 def extract_data(structure, fields):
-
     """ Extract data from the OpenSees .out files.
 
     Parameters
@@ -148,9 +144,9 @@ def extract_data(structure, fields):
     path = structure.path
     temp = '{0}{1}/'.format(path, name)
 
-    step    = structure.steps_order[1]
+    step = structure.steps_order[1]
     results = structure.results[step] = {'nodal': {}, 'element': {}}
-    nodal   = results['nodal']
+    nodal = results['nodal']
     element = results['element']
 
     if structure.steps[step].__name__ != 'ModalStep':
@@ -168,7 +164,7 @@ def extract_data(structure, fields):
             load = structure.loads[k]
 
             if load.__name__ == 'PointLoad':
-                com  = load.components
+                com = load.components
 
                 nn = load.nodes
                 if isinstance(nn, str):
@@ -210,7 +206,7 @@ def extract_data(structure, fields):
 
                     print('***** {0}.out data loaded *****'.format(file))
 
-                except:
+                except Exception:
 
                     print('***** {0}.out data not loaded/saved'.format(file))
 
@@ -236,10 +232,10 @@ def extract_data(structure, fields):
 
                     print('***** {0}.out data loaded *****'.format(file))
 
-                except:
+                except Exception:
 
                     print('***** No truss element data loaded')
-                    
+
                 # Beam data
 
                 try:
@@ -281,10 +277,10 @@ def extract_data(structure, fields):
 
                     print('***** {0}.out data loaded *****'.format(file))
 
-                except:
+                except Exception:
 
                     print('***** No beam element data loaded *****')
-                    
+
                 # Spring data
 
                 try:
@@ -304,7 +300,7 @@ def extract_data(structure, fields):
 
                     print('***** {0}.out data loaded *****'.format(file))
 
-                except:
+                except Exception:
 
                     print('***** No spring element data loaded *****')
 
@@ -345,6 +341,6 @@ def extract_data(structure, fields):
 
                 print('***** {0}.out data loaded *****'.format(file))
 
-            except:
+            except Exception:
 
                 print('***** {0}.out data not loaded/saved'.format(file))

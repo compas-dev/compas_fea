@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -18,7 +17,6 @@ class Sets(object):
 
         pass
 
-
     def write_node_sets(self):
 
         self.write_section('Node sets')
@@ -32,7 +30,6 @@ class Sets(object):
                 self.write_node_set(key, node_set)
                 self.blank_line()
                 self.blank_line()
-
 
     def write_node_set(self, key, node_set):
 
@@ -52,7 +49,6 @@ class Sets(object):
         for i in range(0, len(nodes), 8):
             self.write_line(self.spacer[self.software].join([str(j) for j in nodes[i:i + 8]]))
 
-
     def write_element_sets(self):
 
         self.write_section('Element sets')
@@ -66,7 +62,6 @@ class Sets(object):
                 self.write_element_set(key, element_set)
                 self.blank_line()
                 self.blank_line()
-
 
     def write_element_set(self, key, element_set):
 

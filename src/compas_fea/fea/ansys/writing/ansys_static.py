@@ -1,10 +1,26 @@
-from compas_fea.fea.ansys.writing.ansys_nodes_elements import *
-from compas_fea.fea.ansys.writing.ansys_stresses import *
-from compas_fea.fea.ansys.writing.ansys_materials import *
-from compas_fea.fea.ansys.writing.ansys_loads import *
-from compas_fea.fea.ansys.writing.ansys_process import *
-from compas_fea.fea.ansys.writing.ansys_steps import *
-from compas_fea.fea.ansys.writing.ansys_forces import *
+import os
+from compas_fea.fea.ansys.writing.ansys_nodes_elements import write_nodes
+from compas_fea.fea.ansys.writing.ansys_nodes_elements import write_constraint_nodes
+from compas_fea.fea.ansys.writing.ansys_nodes_elements import write_elements
+from compas_fea.fea.ansys.writing.ansys_nodes_elements import write_request_node_displacements
+
+from compas_fea.fea.ansys.writing.ansys_stresses import write_request_shear_stresses
+from compas_fea.fea.ansys.writing.ansys_stresses import write_request_pricipal_stresses
+from compas_fea.fea.ansys.writing.ansys_stresses import write_request_principal_strains
+from compas_fea.fea.ansys.writing.ansys_stresses import write_request_element_stresses
+from compas_fea.fea.ansys.writing.ansys_stresses import write_request_nodal_stresses
+from compas_fea.fea.ansys.writing.ansys_stresses import write_request_reactions
+
+from compas_fea.fea.ansys.writing.ansys_materials import write_all_materials
+
+from compas_fea.fea.ansys.writing.ansys_loads import write_loads
+
+from compas_fea.fea.ansys.writing.ansys_process import ansys_open_pre_process
+
+from compas_fea.fea.ansys.writing.ansys_steps import write_request_solve_steps
+from compas_fea.fea.ansys.writing.ansys_steps import write_request_load_step_file
+
+from compas_fea.fea.ansys.writing.ansys_forces import write_request_element_forces
 
 
 # Author(s): Tomas Mendez Echenagucia (github.com/tmsmendez)
@@ -65,6 +81,3 @@ def write_static_results_from_ansys_rst(structure, fields, step_index=0):
         write_request_principal_strains(structure, step_index)
     if 'ss' in fields or 'all' in fields:
         write_request_shear_stresses(structure, step_index)
-
-
-

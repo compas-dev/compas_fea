@@ -1,4 +1,3 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -15,9 +14,7 @@ __all__ = [
 class Nodes(object):
 
     def __init__(self):
-
         pass
-
 
     def write_nodes(self):
 
@@ -49,16 +46,14 @@ class Nodes(object):
         self.blank_line()
         self.blank_line()
 
-
     def write_node(self, key):
 
-        prefix  = self.prefix[self.software]
-        spacer  = self.spacer[self.software]
+        prefix = self.prefix[self.software]
+        spacer = self.spacer[self.software]
         x, y, z = self.structure.node_xyz(key)
 
-        line    = '{0}{1}{2}{3:.3f}{2}{4:.3f}{2}{5:.3f}'.format(prefix, key + 1, spacer, x, y, z)
+        line = '{0}{1}{2}{3:.3f}{2}{4:.3f}{2}{5:.3f}'.format(prefix, key + 1, spacer, x, y, z)
         self.write_line(line)
-
 
     def write_mass(self, key):
 

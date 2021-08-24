@@ -25,7 +25,7 @@ functions
     principal_stresses
     process_data
     postprocess
-    plotvoxels
+    # plotvoxels
 
 
 meshing
@@ -41,7 +41,41 @@ meshing
 """
 from __future__ import absolute_import
 
-from .functions import *
-from .meshing import *
+from .functions import (
+    colorbar,
+    combine_all_sets,
+    group_keys_by_attribute,
+    group_keys_by_attributes,
+    network_order,
+    normalise_data,
+    postprocess,
+    process_data,
+    principal_stresses,
+    # plotvoxels,
+    identify_ranges,
+    mesh_from_shell_elements
+)
+from .meshing import (
+    discretise_faces,
+    extrude_mesh,
+    tets_from_vertices_faces,
+)
 
-__all__ = [name for name in dir() if not name.startswith('_')]
+__all__ = [
+    'colorbar',
+    'combine_all_sets',
+    'group_keys_by_attribute',
+    'group_keys_by_attributes',
+    'network_order',
+    'normalise_data',
+    'postprocess',
+    'process_data',
+    'principal_stresses',
+    # 'plotvoxels',
+    'identify_ranges',
+    'mesh_from_shell_elements',
+
+    'discretise_faces',
+    'extrude_mesh',
+    'tets_from_vertices_faces',
+]
