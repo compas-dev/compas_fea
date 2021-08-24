@@ -58,5 +58,5 @@ Scripted
 
 .. toctree::
     :maxdepth: 1
-
     examples/script_introduction
+    examples/principal_script

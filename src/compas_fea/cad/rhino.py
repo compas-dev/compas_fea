@@ -9,12 +9,12 @@ from compas_rhino.geometry import RhinoMesh
 
 from compas.datastructures.mesh import Mesh
 from compas.datastructures import Network
+from compas.geometry import Frame, Transformation, Vector
 from compas.geometry import add_vectors
 from compas.geometry import cross_vectors
 from compas.geometry import length_vector
 from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
-
 from compas_fea.structure import Structure
 
 from compas_fea.utilities import colorbar
@@ -434,7 +434,8 @@ def discretise_mesh(mesh, layer, target, min_angle=15, factor=1):
 
     try:
 
-        points, tris = meshing.discretise_faces(vertices=vertices, faces=faces, target=target, min_angle=min_angle, factor=factor)
+        points, tris = meshing.discretise_faces(vertices=vertices, faces=faces,
+                                                target=target, min_angle=min_angle, factor=factor)
 
         rs.CurrentLayer(rs.AddLayer(layer))
         rs.DeleteObjects(rs.ObjectsByLayer(layer))
@@ -1033,7 +1034,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         print('\n***** Error encountered during data processing or plotting *****')
 
 
-def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None):
+def plot_principal_stresses(structure, step, sp, stype, scale, layer=None):
     """
     Plots the principal stresses of the elements.
 
@@ -1043,12 +1044,12 @@ def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None)
         Structure object.
     step : str
         Name of the Step.
-    ptype : str
+    sp : str
+        'sp1' or 'sp5' for stection point 1 or 5.
+    stype : str
         'max' or 'min' for maximum or minimum principal stresses.
     scale : float
-        Scale on the length of the line markers.
-    rotate : int
-        Rotate lines by 90 deg, 0 or 1.
+        Scale on the length of the line markers (usually 10^6).
     layer : str
         Layer name for plotting.
 
@@ -1058,7 +1059,6 @@ def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None)
 
     Notes
     -----
-    - Currently an alpha script and only for triangular shell elements in Abaqus.
     - Centroids are taken on the undeformed geometry.
 
     """
@@ -1066,19 +1066,29 @@ def plot_principal_stresses(structure, step, ptype, scale, rotate=0, layer=None)
     data = structure.results[step]['element']
     result = functions.principal_stresses(data, ptype, scale, rotate)
 
-    try:
+    stresses = spr[sp][stype]
+    max_stress = max([abs(i) for i in stresses])
+    vectors = list(zip([e[sp][stype][0][i]*stresses[i]/scale for i in range(len(stresses))],
+                       [e[sp][stype][1][i]*stresses[i]/scale for i in range(len(stresses))]))
 
-        vec1, vec5, pr1, pr5, pmax = result
+    if not layer:
+        layer = '{0}_{1}_principal_{2}'.format(step, sp, stype)
+    rs.CurrentLayer(rs.AddLayer(layer))
+    rs.DeleteObjects(rs.ObjectsByLayer(layer))
+    rs.EnableRedraw(False)
 
-        if not layer:
-            layer = '{0}_principal_{1}'.format(step, ptype)
-        rs.CurrentLayer(rs.AddLayer(layer))
-        rs.DeleteObjects(rs.ObjectsByLayer(layer))
-        rs.EnableRedraw(False)
+    centroids = [structure.element_centroid(i) for i in sorted(structure.elements, key=int)]
 
-        centroids = [structure.element_centroid(i) for i in sorted(structure.elements, key=int)]
+    for c, centroid in enumerate(centroids):
+        f2 = Frame(centroid, axes[c][0], axes[c][1])
+        T = Transformation.from_frame(f2)
+        v_plus = Vector(vectors[c][0]*0.5, vectors[c][1]*0.5, 0.).transformed(T)
+        v_minus = Vector(-vectors[c][0]*0.5, -vectors[c][1]*0.5, 0.).transformed(T)
+        id1 = rs.AddLine(add_vectors(centroid, v_minus), add_vectors(centroid, v_plus))
+        col1 = colorbar(stresses[c] / max_stress, input='float', type=255)
+        rs.ObjectColor(id1, col1)
+    rs.EnableRedraw(True)
 
-        for c, centroid in enumerate(centroids):
 
             v1 = vec1[c]
             v5 = vec5[c]

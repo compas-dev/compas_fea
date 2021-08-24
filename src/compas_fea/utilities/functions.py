@@ -583,26 +583,22 @@ def principal_stresses(data, ptype, scale, rotate):
     ----------
     data : dic
         Element data from structure.results for the Step.
-    ptype : str
-        'max' 'min' for maximum or minimum principal stresses.
-    scale : float
-        Scale on the length of the vectors.
-    rotate : int
-        Rotate lines by 90 deg, 0 or 1.
 
     Returns
     -------
-    array
-        Vectors for section point 1.
-    array
-        Vectors for section point 5.
-    array
-        Principal stresses for section point 1.
-    array
-        Principal stresses for section point 5.
-    float
-        Maxium stress magnitude.
+    spr : dict
+        dictionary with the principal stresses of each element organised per
+        `stress_type` ('max', 'min') and `section_point` ('sp1, 'sp5').\n
+        `{section_point: {stress_type: array([element_0, elemnt_1, ...])}}`
+    e : dict
+        dictionary with the principal stresses vector components in World coordinates
+        of each element organised per `stress_type` ('max', 'min') and
+        `section_point` ('sp1, 'sp5').\n
+        `{section_point: {stress_type: array([element_0_x, elemnt_1_x, ...],[element_0_y, elemnt_1_y, ...])}}`
 
+    Warnings
+    --------
+    The function is experimental and works only for shell elements at the moment.
     """
     axes = data['axes']
     s11 = data['sxx']
@@ -610,18 +606,17 @@ def principal_stresses(data, ptype, scale, rotate):
     s12 = data['sxy']
     spr = data['s{0}p'.format(ptype)]
 
-    ekeys = spr.keys()
-    m = len(ekeys)
-    s11_sp1 = np.zeros(m)
-    s22_sp1 = np.zeros(m)
-    s12_sp1 = np.zeros(m)
-    spr_sp1 = np.zeros(m)
-    s11_sp5 = np.zeros(m)
-    s22_sp5 = np.zeros(m)
-    s12_sp5 = np.zeros(m)
-    spr_sp5 = np.zeros(m)
-    e11 = np.zeros((m, 3))
-    e22 = np.zeros((m, 3))
+    for sp in section_points:
+        for c, element_stresses in enumerate(stress_results):
+            # Stresses are computed as mean of the values at each integration points
+            stress_vector = [np.mean(np.array([v for k, v in i.items() if sp in k])) for i in element_stresses]
+            # The principal stresses and their directions are computed solving the eigenvalues problem
+            stress_matrix = np.array([(stress_vector[0], stress_vector[1]),
+                                      (stress_vector[1], stress_vector[2])])
+            w_sp, v_sp = np.linalg.eig(stress_matrix)
+            for v, k in enumerate(stype):
+                spr[sp][k][c] += w_sp[v]
+                e[sp][k][:, c] += v_sp[:, v]
 
     for ekey in ekeys:
         i = int(ekey)
