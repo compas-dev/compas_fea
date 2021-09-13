@@ -123,7 +123,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.input_generate.html#compas_fea.fea.abaq.input_generate" title="compas_fea.fea.abaq.input_generate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_generate</span></code></a>(structure, fields, output)</p></td>
 <td><p>Creates the Abaqus .inp file from the Structure object.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.extract_data.html#compas_fea.fea.abaq.extract_data" title="compas_fea.fea.abaq.extract_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_data</span></code></a>(structure, fields, exe, output, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.extract_data.html#compas_fea.fea.abaq.extract_data" title="compas_fea.fea.abaq.extract_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_data</span></code></a>(structure, fields, exe, output, ...)</p></td>
 <td><p>Extract data from the Abaqus .odb file.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.abaq.launch_process.html#compas_fea.fea.abaq.launch_process" title="compas_fea.fea.abaq.launch_process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">launch_process</span></code></a>(structure, exe, cpus, output)</p></td>
@@ -140,6 +140,36 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.input_generate.html#compas_fea.fea.ansys.input_generate" title="compas_fea.fea.ansys.input_generate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_generate</span></code></a>(structure)</p></td>
+<td><p>Generates Ansys input file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_static.html#compas_fea.fea.ansys.make_command_file_static" title="compas_fea.fea.ansys.make_command_file_static"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_command_file_static</span></code></a>(structure, path, name)</p></td>
+<td><p>Generates Ansys input file for static analysis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_modal.html#compas_fea.fea.ansys.make_command_file_modal" title="compas_fea.fea.ansys.make_command_file_modal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_command_file_modal</span></code></a>(structure, path, name)</p></td>
+<td><p>Generates Ansys input file for modal analysis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.make_command_file_harmonic.html#compas_fea.fea.ansys.make_command_file_harmonic" title="compas_fea.fea.ansys.make_command_file_harmonic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_command_file_harmonic</span></code></a>(structure, ...)</p></td>
+<td><p>Generates Ansys input file for harmonic analysis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.ansys_launch_process.html#compas_fea.fea.ansys.ansys_launch_process" title="compas_fea.fea.ansys.ansys_launch_process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ansys_launch_process</span></code></a>(path, name[, cpus, ...])</p></td>
+<td><p>Launches an analysis using Ansys.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.ansys_launch_process_extract.html#compas_fea.fea.ansys.ansys_launch_process_extract" title="compas_fea.fea.ansys.ansys_launch_process_extract"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ansys_launch_process_extract</span></code></a>(path, name[, ...])</p></td>
+<td><p>Calls an extraction of results from Ansys.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.delete_result_files.html#compas_fea.fea.ansys.delete_result_files" title="compas_fea.fea.ansys.delete_result_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_result_files</span></code></a>(path, name)</p></td>
+<td><p>Deletes Ansys result files.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.extract_rst_data.html#compas_fea.fea.ansys.extract_rst_data" title="compas_fea.fea.ansys.extract_rst_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_rst_data</span></code></a>(structure[, fields, steps, ...])</p></td>
+<td><p>Extracts results from Ansys rst file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.write_results_from_rst.html#compas_fea.fea.ansys.write_results_from_rst" title="compas_fea.fea.ansys.write_results_from_rst"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_results_from_rst</span></code></a>(structure, fields, steps)</p></td>
+<td><p>Writes results request file from Ansys.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_fea.fea.ansys.load_to_results.html#compas_fea.fea.ansys.load_to_results" title="compas_fea.fea.ansys.load_to_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_to_results</span></code></a>(structure, fields, steps)</p></td>
+<td><p>Loads results from Ansys txt files to Structure object.</p></td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -310,10 +340,6 @@
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -326,6 +352,13 @@
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

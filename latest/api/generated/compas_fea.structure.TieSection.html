@@ -99,7 +99,7 @@
 <h1>TieSection</h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="compas_fea.structure.TieSection">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">compas_fea.structure.</span></span><span class="sig-name descname"><span class="pre">TieSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/structure/section.py#L376"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">compas_fea.structure.</span></span><span class="sig-name descname"><span class="pre">TieSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/structure/section.py#L363"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <a class="reference internal" href="compas_fea.structure.TrussSection.html#compas_fea.structure.TrussSection" title="compas_fea.structure.section.TrussSection"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_fea.structure.section.TrussSection</span></code></a></p>
 <p>For use with tie elements.</p>
 <dl class="field-list simple">
@@ -249,10 +249,6 @@
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -265,6 +261,13 @@
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

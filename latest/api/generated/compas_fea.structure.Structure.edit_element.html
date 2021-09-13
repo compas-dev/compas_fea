@@ -101,7 +101,7 @@
 <h1>Structure.edit_element</h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="compas_fea.structure.Structure.edit_element">
-<span class="sig-prename descclassname"><span class="pre">Structure.</span></span><span class="sig-name descname"><span class="pre">edit_element</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/structure/structure.py#L184"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">Structure.</span></span><span class="sig-name descname"><span class="pre">edit_element</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/structure/structure.py#L183"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 </section>
@@ -241,10 +241,6 @@
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -257,6 +253,13 @@
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

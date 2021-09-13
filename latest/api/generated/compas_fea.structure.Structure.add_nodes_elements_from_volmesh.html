@@ -101,13 +101,14 @@
 <h1>Structure.add_nodes_elements_from_volmesh</h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="compas_fea.structure.Structure.add_nodes_elements_from_volmesh">
-<span class="sig-prename descclassname"><span class="pre">Structure.</span></span><span class="sig-name descname"><span class="pre">add_nodes_elements_from_volmesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">volmesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SolidElement'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thermal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/structure/structure.py#L401"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">Structure.</span></span><span class="sig-name descname"><span class="pre">add_nodes_elements_from_volmesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">volmesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SolidElement'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acoustic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thermal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/structure/structure.py#L386"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Adds the nodes and cells of a VolMesh to the Structure object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>volmesh</strong> (<em>obj</em>) – VolMesh datastructure object.</p></li>
 <li><p><strong>element_type</strong> (<em>str</em>) – Element type: ‘SolidElement’ or ….</p></li>
+<li><p><strong>acoustic</strong> (<em>bool</em>) – Acoustic properties on or off.</p></li>
 <li><p><strong>thermal</strong> (<em>bool</em>) – Thermal properties on or off.</p></li>
 <li><p><strong>elset</strong> (<em>str</em>) – Name of element set to create.</p></li>
 <li><p><strong>axes</strong> (<em>dict</em>) – The local element axes ‘ex’, ‘ey’ and ‘ez’ for all elements.</p></li>
@@ -256,10 +257,6 @@
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -272,6 +269,13 @@
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

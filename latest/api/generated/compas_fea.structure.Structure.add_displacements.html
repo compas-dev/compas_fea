@@ -101,7 +101,7 @@
 <h1>Structure.add_displacements</h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="compas_fea.structure.Structure.add_displacements">
-<span class="sig-prename descclassname"><span class="pre">Structure.</span></span><span class="sig-name descname"><span class="pre">add_displacements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">displacements</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/structure/structure.py#L103"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">Structure.</span></span><span class="sig-name descname"><span class="pre">add_displacements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">displacements</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/structure/structure.py#L96"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Adds Displacement objects to structure.displacements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -250,10 +250,6 @@
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -266,6 +262,13 @@
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

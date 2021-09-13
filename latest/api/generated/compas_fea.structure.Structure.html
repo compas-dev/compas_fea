@@ -99,7 +99,7 @@
 <h1>Structure</h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="compas_fea.structure.Structure">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">compas_fea.structure.</span></span><span class="sig-name descname"><span class="pre">Structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'compas_fea-Structure'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/structure/structure.py#L32"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">compas_fea.structure.</span></span><span class="sig-name descname"><span class="pre">Structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'compas_fea-Structure'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/structure/structure.py#L31"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">compas_fea.structure.mixins.objectmixins.ObjectMixins</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">compas_fea.structure.mixins.elementmixins.ElementMixins</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">compas_fea.structure.mixins.nodemixins.NodeMixins</span></code></p>
 <p>Initialises Structure object for use in finite element analysis.</p>
 <dl class="field-list simple">
@@ -161,7 +161,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="compas_fea.structure.Structure.add_element_properties.html#compas_fea.structure.Structure.add_element_properties" title="compas_fea.structure.Structure.add_element_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_element_properties</span></code></a>(element_properties)</p></td>
 <td><p>Adds ElementProperties object(s) to structure.element_properties.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_fea.structure.Structure.add_element_to_element_index.html#compas_fea.structure.Structure.add_element_to_element_index" title="compas_fea.structure.Structure.add_element_to_element_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_element_to_element_index</span></code></a>(key, nodes[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_fea.structure.Structure.add_element_to_element_index.html#compas_fea.structure.Structure.add_element_to_element_index" title="compas_fea.structure.Structure.add_element_to_element_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_element_to_element_index</span></code></a>(key, nodes[, ...])</p></td>
 <td><p>Adds the element to the element_index dictionary.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_fea.structure.Structure.add_elements.html#compas_fea.structure.Structure.add_elements" title="compas_fea.structure.Structure.add_elements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_elements</span></code></a>(elements, type[, thermal, axes])</p></td>
@@ -200,10 +200,10 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_fea.structure.Structure.add_nodes_elements_from_mesh.html#compas_fea.structure.Structure.add_nodes_elements_from_mesh" title="compas_fea.structure.Structure.add_nodes_elements_from_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_nodes_elements_from_mesh</span></code></a>(mesh, element_type)</p></td>
 <td><p>Adds the nodes and faces of a Mesh to the Structure object.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_fea.structure.Structure.add_nodes_elements_from_network.html#compas_fea.structure.Structure.add_nodes_elements_from_network" title="compas_fea.structure.Structure.add_nodes_elements_from_network"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_nodes_elements_from_network</span></code></a>(network, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_fea.structure.Structure.add_nodes_elements_from_network.html#compas_fea.structure.Structure.add_nodes_elements_from_network" title="compas_fea.structure.Structure.add_nodes_elements_from_network"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_nodes_elements_from_network</span></code></a>(network, ...)</p></td>
 <td><p>Adds the nodes and edges of a Network to the Structure object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_fea.structure.Structure.add_nodes_elements_from_volmesh.html#compas_fea.structure.Structure.add_nodes_elements_from_volmesh" title="compas_fea.structure.Structure.add_nodes_elements_from_volmesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_nodes_elements_from_volmesh</span></code></a>(volmesh[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_fea.structure.Structure.add_nodes_elements_from_volmesh.html#compas_fea.structure.Structure.add_nodes_elements_from_volmesh" title="compas_fea.structure.Structure.add_nodes_elements_from_volmesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_nodes_elements_from_volmesh</span></code></a>(volmesh[, ...])</p></td>
 <td><p>Adds the nodes and cells of a VolMesh to the Structure object.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_fea.structure.Structure.add_section.html#compas_fea.structure.Structure.add_section" title="compas_fea.structure.Structure.add_section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_section</span></code></a>(section)</p></td>
@@ -222,12 +222,12 @@
 <td><p>Adds Step objects to structure.steps.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_fea.structure.Structure.add_virtual_element.html#compas_fea.structure.Structure.add_virtual_element" title="compas_fea.structure.Structure.add_virtual_element"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_virtual_element</span></code></a>(nodes, type[, thermal, axes])</p></td>
-<td><p>Adds a virtual element to structure.elements and to element set ‘virtual_elements’.</p></td>
+<td><p>Adds a virtual element to structure.elements and to element set 'virtual_elements'.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_fea.structure.Structure.analyse.html#compas_fea.structure.Structure.analyse" title="compas_fea.structure.Structure.analyse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analyse</span></code></a>(software[, exe, cpus, license, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_fea.structure.Structure.analyse.html#compas_fea.structure.Structure.analyse" title="compas_fea.structure.Structure.analyse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analyse</span></code></a>(software[, exe, cpus, license, ...])</p></td>
 <td><p>Runs the analysis through the chosen FEA software / library.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_fea.structure.Structure.analyse_and_extract.html#compas_fea.structure.Structure.analyse_and_extract" title="compas_fea.structure.Structure.analyse_and_extract"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analyse_and_extract</span></code></a>(software[, fields, exe, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_fea.structure.Structure.analyse_and_extract.html#compas_fea.structure.Structure.analyse_and_extract" title="compas_fea.structure.Structure.analyse_and_extract"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analyse_and_extract</span></code></a>(software[, fields, exe, ...])</p></td>
 <td><p>Runs the analysis through the chosen FEA software / library and extracts data.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_fea.structure.Structure.assign_element_property.html#compas_fea.structure.Structure.assign_element_property" title="compas_fea.structure.Structure.assign_element_property"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assign_element_property</span></code></a>(element_property)</p></td>
@@ -243,7 +243,7 @@
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_fea.structure.Structure.edit_node.html#compas_fea.structure.Structure.edit_node" title="compas_fea.structure.Structure.edit_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edit_node</span></code></a>(key, attr_dict)</p></td>
-<td><p>Edit a node’s data.</p></td>
+<td><p>Edit a node's data.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_fea.structure.Structure.element_centroid.html#compas_fea.structure.Structure.element_centroid" title="compas_fea.structure.Structure.element_centroid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">element_centroid</span></code></a>(element)</p></td>
 <td><p>Return the centroid of an element.</p></td>
@@ -251,7 +251,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="compas_fea.structure.Structure.element_count.html#compas_fea.structure.Structure.element_count" title="compas_fea.structure.Structure.element_count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">element_count</span></code></a>()</p></td>
 <td><p>Return the number of elements in the Structure.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_fea.structure.Structure.extract_data.html#compas_fea.structure.Structure.extract_data" title="compas_fea.structure.Structure.extract_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_data</span></code></a>(software[, fields, steps, exe, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_fea.structure.Structure.extract_data.html#compas_fea.structure.Structure.extract_data" title="compas_fea.structure.Structure.extract_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_data</span></code></a>(software[, fields, steps, exe, ...])</p></td>
 <td><p>Extracts data from the analysis output files.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_fea.structure.Structure.get_element_results.html#compas_fea.structure.Structure.get_element_results" title="compas_fea.structure.Structure.get_element_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_element_results</span></code></a>(step, field[, elements])</p></td>
@@ -264,7 +264,7 @@
 <td><p>Imports a Structure object from an .obj file through Pickle.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_fea.structure.Structure.node_bounds.html#compas_fea.structure.Structure.node_bounds" title="compas_fea.structure.Structure.node_bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">node_bounds</span></code></a>()</p></td>
-<td><p>Return the bounds formed by the Structure’s nodal co-ordinates.</p></td>
+<td><p>Return the bounds formed by the Structure's nodal co-ordinates.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_fea.structure.Structure.node_count.html#compas_fea.structure.Structure.node_count" title="compas_fea.structure.Structure.node_count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">node_count</span></code></a>()</p></td>
 <td><p>Return the number of nodes in the Structure.</p></td>
@@ -293,8 +293,8 @@
 <tr class="row-even"><td><p><a class="reference internal" href="compas_fea.structure.Structure.view.html#compas_fea.structure.Structure.view" title="compas_fea.structure.Structure.view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">view</span></code></a>([mode])</p></td>
 <td><p>Starts the PyQt app for visualisation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_fea.structure.Structure.write_input_file.html#compas_fea.structure.Structure.write_input_file" title="compas_fea.structure.Structure.write_input_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_input_file</span></code></a>(software[, fields, output, …])</p></td>
-<td><p>Writes the FE software’s input file.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_fea.structure.Structure.write_input_file.html#compas_fea.structure.Structure.write_input_file" title="compas_fea.structure.Structure.write_input_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_input_file</span></code></a>(software[, fields, output, ...])</p></td>
+<td><p>Writes the FE software's input file.</p></td>
 </tr>
 </tbody>
 </table>
@@ -437,10 +437,6 @@
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -453,6 +449,13 @@
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

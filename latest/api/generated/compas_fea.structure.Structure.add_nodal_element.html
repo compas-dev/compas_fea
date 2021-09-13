@@ -101,7 +101,7 @@
 <h1>Structure.add_nodal_element</h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="compas_fea.structure.Structure.add_nodal_element">
-<span class="sig-prename descclassname"><span class="pre">Structure.</span></span><span class="sig-name descname"><span class="pre">add_nodal_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">virtual_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/structure/structure.py#L226"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">Structure.</span></span><span class="sig-name descname"><span class="pre">add_nodal_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">virtual_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/structure/structure.py#L217"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Adds a nodal element to structure.elements with the possibility of
 adding a coincident virtual node. Virtual nodes are added to a node
 set called ‘virtual_nodes’.</p>
@@ -260,10 +260,6 @@ set called ‘virtual_nodes’.</p>
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -276,6 +272,13 @@ set called ‘virtual_nodes’.</p>
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

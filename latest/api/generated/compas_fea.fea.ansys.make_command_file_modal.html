@@ -99,7 +99,7 @@
 <h1>make_command_file_modal</h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="compas_fea.fea.ansys.make_command_file_modal">
-<span class="sig-prename descclassname"><span class="pre">compas_fea.fea.ansys.</span></span><span class="sig-name descname"><span class="pre">make_command_file_modal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/fea/ansys/ansys.py#L63"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">compas_fea.fea.ansys.</span></span><span class="sig-name descname"><span class="pre">make_command_file_modal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/fea/ansys/ansys.py#L82"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Generates Ansys input file for modal analysis.</p>
 <dl class="simple">
 <dt>Parameters:</dt><dd><p>structure (obj): Structure object.</p>
@@ -246,10 +246,6 @@
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -262,6 +258,13 @@
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

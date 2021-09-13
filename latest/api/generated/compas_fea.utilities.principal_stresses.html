@@ -99,23 +99,22 @@
 <h1>principal_stresses</h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="compas_fea.utilities.principal_stresses">
-<span class="sig-prename descclassname"><span class="pre">compas_fea.utilities.</span></span><span class="sig-name descname"><span class="pre">principal_stresses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ptype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotate</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/utilities/functions.py#L579"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Performs principal stress calculations.</p>
+<span class="sig-prename descclassname"><span class="pre">compas_fea.utilities.</span></span><span class="sig-name descname"><span class="pre">principal_stresses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/utilities/functions.py#L579"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Performs principal stress calculations solving the eigenvalues problem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>data</strong> (<em>dic</em>) – Element data from structure.results for the Step.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul>
+<dd class="field-even"><p><ul class="simple">
 <li><p><strong>spr</strong> (<em>dict</em>) – dictionary with the principal stresses of each element organised per
-<cite>stress_type</cite> (‘max’, ‘min’) and <cite>section_point</cite> (‘sp1, ‘sp5’).</p>
-<p><cite>{section_point: {stress_type: array([element_0, elemnt_1, …])}}</cite></p>
-</li>
+<cite>stress_type</cite> (‘max’, ‘min’) and <cite>section_point</cite> (‘sp1, ‘sp5’).
+{section_point: {stress_type: array([element_0, elemnt_1, …])}}</p></li>
 <li><p><strong>e</strong> (<em>dict</em>) – dictionary with the principal stresses vector components in World coordinates
 of each element organised per <cite>stress_type</cite> (‘max’, ‘min’) and
-<cite>section_point</cite> (‘sp1, ‘sp5’).</p>
-<p><cite>{section_point: {stress_type: array([element_0_x, elemnt_1_x, …],[element_0_y, elemnt_1_y, …])}}</cite></p>
-</li>
+<cite>section_point</cite> (‘sp1, ‘sp5’).
+{section_point: {stress_type: array([element_0_x, elemnt_1_x, …],
+[element_0_y, elemnt_1_y, …])}}</p></li>
 </ul>
 </p>
 </dd>
@@ -263,10 +262,6 @@ of each element organised per <cite>stress_type</cite> (‘max’, ‘min’) an
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -279,6 +274,13 @@ of each element organised per <cite>stress_type</cite> (‘max’, ‘min’) an
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

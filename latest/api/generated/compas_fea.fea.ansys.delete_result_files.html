@@ -99,7 +99,7 @@
 <h1>delete_result_files</h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="compas_fea.fea.ansys.delete_result_files">
-<span class="sig-prename descclassname"><span class="pre">compas_fea.fea.ansys.</span></span><span class="sig-name descname"><span class="pre">delete_result_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/fea/ansys/ansys.py#L175"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">compas_fea.fea.ansys.</span></span><span class="sig-name descname"><span class="pre">delete_result_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/fea/ansys/ansys.py#L194"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Deletes Ansys result files.</p>
 <dl class="simple">
 <dt>Parameters:</dt><dd><p>path (str): Path to the Ansys input file.
@@ -247,10 +247,6 @@ name (str): Name of the structure.</p>
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -263,6 +259,13 @@ name (str): Name of the structure.</p>
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

@@ -99,7 +99,7 @@
 <h1>write_results_from_rst</h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="compas_fea.fea.ansys.write_results_from_rst">
-<span class="sig-prename descclassname"><span class="pre">compas_fea.fea.ansys.</span></span><span class="sig-name descname"><span class="pre">write_results_from_rst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">license</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'teaching'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/fea/ansys/ansys.py#L204"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">compas_fea.fea.ansys.</span></span><span class="sig-name descname"><span class="pre">write_results_from_rst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">license</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'teaching'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/compas-dev/compas_fea/blob/master/src/compas_fea/fea/ansys/ansys.py#L223"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Writes results request file from Ansys.</p>
 <dl class="simple">
 <dt>Parameters:</dt><dd><p>structure (obj): Structure object.
@@ -248,10 +248,6 @@ steps (list): Loads steps to extract from.</p>
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -264,6 +260,13 @@ steps (list): Loads steps to extract from.</p>
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

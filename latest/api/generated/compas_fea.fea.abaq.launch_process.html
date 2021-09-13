@@ -19,7 +19,7 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-    <link rel="next" title="input_generate" href="compas_fea.fea.opensees.input_generate.html" />
+    <link rel="next" title="input_generate" href="compas_fea.fea.ansys.input_generate.html" />
   
 
   
@@ -176,7 +176,7 @@
       
 
       
-        <a href="compas_fea.fea.opensees.input_generate.html" title="input_generate" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+        <a href="compas_fea.fea.ansys.input_generate.html" title="input_generate" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
           <div class="nav-title footer-link flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Next</div>
             input_generate
@@ -253,10 +253,6 @@
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -269,6 +265,13 @@
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

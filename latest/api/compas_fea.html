@@ -97,6 +97,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="compas_fea.cad.html">cad</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compas_fea.fea.html">fea</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compas_fea.structure.html">structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compas_fea.utilities.html">utilities</a></li>
 </ul>
 </div>
@@ -237,10 +238,6 @@
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -253,6 +250,13 @@
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>
