@@ -10,7 +10,7 @@ from compas_fea.fea.ansys.writing import ansys_open_post_process
 from compas_fea.fea.ansys.writing import write_static_results_from_ansys_rst
 from compas_fea.fea.ansys.writing import write_harmonic_results_from_ansys_rst
 from compas_fea.fea.ansys.writing import write_modal_results_from_ansys_rst
-from compas_fea.fea.ansys.writing import set_current_step
+from compas_fea.fea.ansys.writing.ansys_steps import set_current_step
 
 from compas_fea.fea.ansys.reading import get_nodal_stresses_from_result_files
 from compas_fea.fea.ansys.reading import get_displacements_from_result_files
@@ -259,7 +259,8 @@ def write_results_from_rst(structure, fields, steps, license='teaching', sets=No
                 [nodes.extend(structure.sets[s]['selection']) for s in sets]
             else:
                 nodes = None
-            write_harmonic_results_from_ansys_rst(name, path, fields, freq_list, step_index=step_index, step_name='step', sets=nodes)
+            write_harmonic_results_from_ansys_rst(name, path, fields, freq_list,
+                                                  step_index=step_index, step_name='step', sets=nodes)
         elif stype == 'acoustic':
             pass
 
