@@ -658,13 +658,13 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
     for i in nkeys:
 
         if rm[i] > 0.001:
-            l = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
-            rs.CurveArrows(l, 1)
+            line = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
+            rs.CurveArrows(line, 1)
             col = [int(j) for j in colorbar(rm[i] / rmax, input='float', type=255)]
-            rs.ObjectColor(l, col)
+            rs.ObjectColor(line, col)
             vector = [rfx[i], rfy[i], rfz[i]]
             name = json.dumps({'rfx': rfx[i], 'rfy': rfy[i], 'rfz': rfz[i], 'rfm': length_vector(vector)})
-            rs.ObjectName(l, '_' + name)
+            rs.ObjectName(line, '_' + name)
 
     rs.CurrentLayer(rs.AddLayer('Default'))
     rs.LayerVisible(layer, False)
@@ -711,13 +711,13 @@ def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
     for i in nkeys:
 
         if rm[i]:
-            l = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
-            rs.CurveArrows(l, 1)
+            line = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
+            rs.CurveArrows(line, 1)
             col = [int(j) for j in colorbar(rm[i] / rmax, input='float', type=255)]
-            rs.ObjectColor(l, col)
+            rs.ObjectColor(line, col)
             vector = [cfx[i], cfy[i], cfz[i]]
             name = json.dumps({'cfx': cfx[i], 'cfy': cfy[i], 'cfz': cfz[i], 'cfm': length_vector(vector)})
-            rs.ObjectName(l, '_' + name)
+            rs.ObjectName(line, '_' + name)
 
     rs.CurrentLayer(rs.AddLayer('Default'))
     rs.LayerVisible(layer, False)
