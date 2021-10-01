@@ -213,7 +213,7 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                     if ex and not ey:
                         ey = cross_vectors(ex, ez)
 
-                except:
+                except Exception:
                     ex = None
                     ey = None
 
@@ -280,7 +280,7 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                         if (ex and ey) and (not ez):
                             ez = cross_vectors(ex, ey)
 
-                    except:
+                    except Exception:
                         ex = None
                         ey = None
                         ez = None
@@ -406,7 +406,7 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, ther
 
         print('***** MeshPy (TetGen) successfull *****')
 
-    except:
+    except Exception:
 
         print('***** Error using MeshPy (TetGen) or drawing Tets *****')
 
@@ -457,7 +457,7 @@ def discretise_mesh(mesh, layer, target, min_angle=15, factor=1):
 
         rs.EnableRedraw(True)
 
-    except:
+    except Exception:
 
         print('***** Error using MeshPy (Triangle) or drawing faces *****')
 
@@ -752,7 +752,7 @@ def plot_mode_shapes(structure, step, layer=None, scale=1.0, radius=1):
 
     try:
         it = structure.results[step]['frequencies']
-    except:
+    except Exception:
         it = structure.results[step]['info']['description']
 
     if isinstance(it, list):
@@ -1026,7 +1026,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
             try:
                 freq = str(round(structure.results[step]['frequencies'][mode - 1], 3))
                 rs.AddText('Mode:{0}   Freq:{1}Hz'.format(mode, freq), [xmin, ymin - 1.5 * s, 0], height=h)
-            except:
+            except Exception:
                 pass
 
         # Return to Default layer
@@ -1035,7 +1035,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         rs.LayerVisible(layer, False)
         rs.EnableRedraw(True)
 
-    except:
+    except Exception:
 
         print('\n***** Error encountered during data processing or plotting *****')
 
@@ -1153,14 +1153,14 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
         toc, U, cnodes, fabs, fscaled, celements, eabs = result
         print('\n***** Data processed : {0} s *****'.format(toc))
 
-    except:
+    except Exception:
         print('\n***** Error post-processing *****')
 
     try:
         functions.plotvoxels(values=fscaled, U=U, vdx=vdx)
         print('\n***** Voxels finished *****')
 
-    except:
+    except Exception:
         print('\n***** Error plotting voxels *****')
 
 
