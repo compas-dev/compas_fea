@@ -59,10 +59,10 @@ def input_generate(structure):
         make_command_file_static(structure, path, name)
     elif 'modal' in stypes:
         make_command_file_modal(structure, path, name)
-    elif 'harmonic' in stypes:
-        make_command_file_harmonic(structure, path, name, skey)
-    elif 'acoustic' in stypes:
-        make_command_file_acoustic(structure, path, name, skey)
+    # elif 'harmonic' in stypes:
+    #     make_command_file_harmonic(structure, path, name, skey)
+    # elif 'acoustic' in stypes:
+    #     make_command_file_acoustic(structure, path, name, skey)
     else:
         raise ValueError('This analysis type has not yet been implemented for Compas Ansys')
 
