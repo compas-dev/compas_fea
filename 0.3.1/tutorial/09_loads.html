@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <title>compas_fea - Loads</title>
+  
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <meta name="author" content="compas-dev" />
+  <meta name="description" content="" />
+
+  <link rel="shortcut icon" href="../_static/images/compas.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/styles/default.min.css">
+  <link rel="stylesheet" type="text/css" href="../_static/css/compas.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
+
+  
+    <link rel="next" title="Displacements" href="10_displacements.html" />
+  
+
+  
+    <link rel="prev" title="Properties" href="08_properties.html" />
+  
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+
+<body data-spy="scroll" data-target="#compas-toc">
+  <!-- header -->
+  <header id="header" class="compas-header d-flex align-items-center">
+    <nav class="navbar navbar-expand navbar-dark col flex-column flex-md-row text-center">
+      <!-- brand -->
+      <a class="navbar-brand" href="https://compas.dev/compas_fea/">
+        <img src="../_static/images/compas_icon_white.png" alt="COMPAS FEA" width="48px" height="48px" />
+      </a>
+      <!-- brand -->
+      <!-- primary -->
+      <ul class="navbar-nav">
+        <li class="nav-item active"><a class="nav-link" href="https://compas.dev/compas_fea/">COMPAS FEA</a></li>
+      </ul>
+      <!-- primary -->
+      <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        <!-- version -->
+        
+        <meta id="doc_versions" data-url="https://compas.dev/compas_fea/doc_versions.txt" data-docs="https://compas.dev/compas_fea/">
+        <li class="nav-item nav-versions dropdown">
+          <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            0.3.1
+          </a>
+          <div id="doc_version_list" class="dropdown-menu dropdown-menu-md-right" aria-labelledby="bd-versions"></div>
+        </li>
+        
+        <!-- version -->
+        <!-- social -->
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/compas-dev/compas_fea" target="_blank">
+            <span class="fab fa-github fa-1x"></span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://forum.compas-framework.org" target="_blank">
+            <span class="fab fa-discourse fa-1x"></span>
+          </a>
+        </li>
+        <!-- social -->
+      </ul>
+    </nav>
+  </header>
+  <!-- header -->
+  <!-- main -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- main -->
+      <main class="col-12 col-md-9 col-xl-7 px-2 px-md-5 pt-2 pb-5 compas-content" role="main">
+        
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-3 bg-white px-0">
+            <li class="breadcrumb-item"><a href="../index.html">docs</a></li>
+            
+              <li class="breadcrumb-item"><a href="../tutorial.html">Tutorial</a></li>
+            
+            <li class="breadcrumb-item active" aria-current="page">Loads</li>
+          </ol>
+        </nav>
+        
+
+        
+        
+        <section id="loads">
+<h1>Loads</h1>
+<p>This page shows how <strong>Load</strong> objects are added to the <strong>Structure</strong> object, here given as a <strong>Structure</strong> named <code class="docutils literal notranslate"><span class="pre">mdl</span></code>. <strong>Load</strong> objects can be applied to either nodes or elements, and are activated during steps.</p>
+<section id="adding-loads">
+<h2>Adding loads</h2>
+<p>Loads can be applied directly to nodes or distributed (currently only uniformly) across elements. For this, a variety of <strong>Load</strong> classes can be imported from <strong>compas_fea.structure.load</strong> including types such as <strong>PrestressLoad</strong>, <strong>PointLoad</strong>, <strong>LineLoad</strong>, <strong>AreaLoad</strong>, <strong>GravityLoad</strong> and <strong>TributaryLoad</strong>. The <strong>Load</strong> objects are instantiated with these classes and stored within the <code class="docutils literal notranslate"><span class="pre">.loads</span></code> dictionary of the <strong>Structure</strong> object with the <code class="docutils literal notranslate"><span class="pre">.add()</span></code> method, and using <code class="docutils literal notranslate"><span class="pre">name</span></code> as the string key. An example of applying concentrated loads in the <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code> directions directly to nodes in a node set, is shown with the <strong>PointLoad</strong> example below. The <strong>PointLoad</strong> class requires the components of the load and the <code class="docutils literal notranslate"><span class="pre">nodes</span></code> to apply the point loads to, taken as the string name of the node set (<code class="docutils literal notranslate"><span class="pre">'nset_top'</span></code> in this case) or a list of individual node numbers.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PointLoad</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_point&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_top&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mi">10000</span><span class="p">))</span>  <span class="c1"># adding a PointLoad to &#39;nset_top&#39;</span>
+</code></pre></div>
+</div>
+</section>
+<section id="accessing-and-editing-loads">
+<h2>Accessing and editing loads</h2>
+<p>The <strong>Load</strong> objects can be inspected, printed and edited at any time via their string keys and attributes, and will show both the input data given at the time of instantiation and any default zero component values. If there are no  non-zero components given at the time of creating the object, then the <strong>Load</strong> object effectively doesn’t do anything, as all components are zero. In the example below are the input components of the load <code class="docutils literal notranslate"><span class="pre">x=10000</span></code> and <code class="docutils literal notranslate"><span class="pre">z=-10000</span></code> (both are forces with units N) with the <code class="docutils literal notranslate"><span class="pre">y</span></code> component and concentrated moments (units Nm) <code class="docutils literal notranslate"><span class="pre">xx</span></code>, <code class="docutils literal notranslate"><span class="pre">yy</span></code> and <code class="docutils literal notranslate"><span class="pre">zz</span></code> all set to the default value of zero.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">loads</span><span class="p">[</span><span class="s1">&#39;load_point&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">components</span>
+<span class="go">{&#39;x&#39;: 10000, &#39;y&#39;: 0, &#39;z&#39;: -10000, &#39;xx&#39;: 0, &#39;yy&#39;: 0, &#39;zz&#39;: 0}  # show or edit the load components</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">loads</span><span class="p">[</span><span class="s1">&#39;load_point&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>  <span class="c1"># examine the nodes the load is applied to</span>
+<span class="go">&#39;nset_top&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">loads</span><span class="p">[</span><span class="s1">&#39;load_point&#39;</span><span class="p">]</span>  <span class="c1"># PointLoad object &#39;load_point&#39;</span>
+<span class="go">PointLoad(load_point)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">loads</span><span class="p">[</span><span class="s1">&#39;load_point&#39;</span><span class="p">])</span>  <span class="c1"># print a summary of the load</span>
+
+<span class="go">compas_fea PointLoad object</span>
+<span class="go">-------------------</span>
+<span class="go">name       : load_point</span>
+<span class="go">axes       : global</span>
+<span class="go">components : {&#39;x&#39;: 10000, &#39;y&#39;: 0, &#39;z&#39;: -10000, &#39;xx&#39;: 0, &#39;yy&#39;: 0, &#39;zz&#39;: 0}</span>
+<span class="go">nodes      : nset_top</span>
+<span class="go">elements   : []</span>
+</code></pre></div>
+</div>
+</section>
+<section id="prestressload">
+<h2>PrestressLoad</h2>
+<p>A <strong>PrestressLoad</strong> is currently used to add an axial pre-stress, other components of stress will be added as additional functionality at a later date. A <strong>PrestressLoad</strong> is created with the string <code class="docutils literal notranslate"><span class="pre">name</span></code> of the object, the <code class="docutils literal notranslate"><span class="pre">elements</span></code> that it applies to, and the <code class="docutils literal notranslate"><span class="pre">sxx</span></code> (axial) stress component in Pa, which acts along the local <cite>x</cite> axis for shells and along the length for beams and trusses. This object can be created and added as follows:</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PrestressLoad</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">PrestressLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_prestress&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;elset_ties&#39;</span><span class="p">,</span> <span class="n">sxx</span><span class="o">=</span><span class="mi">50</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">))</span>
+</code></pre></div>
+</div>
+</section>
+<section id="pointload">
+<h2>PointLoad</h2>
+<p>The <strong>PointLoad</strong> object applies concentrated loads (forces in units N for <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code> and/or moments in units Nm for <code class="docutils literal notranslate"><span class="pre">xx</span></code>, <code class="docutils literal notranslate"><span class="pre">yy</span></code>, <code class="docutils literal notranslate"><span class="pre">zz</span></code>) directly to <code class="docutils literal notranslate"><span class="pre">nodes</span></code> of the <strong>Structure</strong>. The <code class="docutils literal notranslate"><span class="pre">nodes</span></code> to apply the load to is given as either the string name of the node set or as a list of nodes. The <code class="docutils literal notranslate"><span class="pre">name</span></code> of the <strong>PointLoad</strong> is also required for its key. <strong>PointLoad</strong> objects currently only utilise the global co-ordinate system, they do not yet use the local nodal co-ordinate system (<cite>ex</cite>, <cite>ey</cite>, <cite>ez</cite>).</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PointLoad</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">PointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_point&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_top&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mi">10000</span><span class="p">,</span> <span class="n">yy</span><span class="o">=</span><span class="mi">1000</span><span class="p">))</span>
+</code></pre></div>
+</div>
+</section>
+<section id="pointloads">
+<h2>PointLoads</h2>
+<p>The <strong>PointLoads</strong> object applies different values of concentrated loads (forces in units N for <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code> and/or moments in units Nm for <code class="docutils literal notranslate"><span class="pre">xx</span></code>, <code class="docutils literal notranslate"><span class="pre">yy</span></code>, <code class="docutils literal notranslate"><span class="pre">zz</span></code>) directly to different nodes of the <strong>Structure</strong>. The nodes to apply the loads to are the keys of the <code class="docutils literal notranslate"><span class="pre">components</span></code> dictionary, with the values of this dictionary as the components of each individual point load. The <code class="docutils literal notranslate"><span class="pre">name</span></code> of the <strong>PointLoads</strong> is required for its own key. <strong>PointLoads</strong> objects currently only utilise the global co-ordinate system, they do not yet use the local nodal co-ordinate system (<cite>ex</cite>, <cite>ey</cite>, <cite>ez</cite>).</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PointLoads</span>
+
+<span class="n">components</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">4</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">500</span><span class="p">},</span>  <span class="c1"># apply a load in x of 1000 and y of -500 to node 4</span>
+    <span class="mi">9</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;zz&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">},</span>  <span class="c1"># apply a moment about zz of 200 to node 9</span>
+<span class="p">}</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">PointLoads</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_points&#39;</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="n">components</span><span class="p">))</span>
+</code></pre></div>
+</div>
+</section>
+<section id="lineload">
+<h2>LineLoad</h2>
+<p>The <strong>LineLoad</strong> object applies distributed loads per unit length (forces in units of N/m in <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code>) uniformly along line elements such as beams. The <code class="docutils literal notranslate"><span class="pre">elements</span></code> to apply the load to is given as either the string name of the element set or as a list of elements. The <code class="docutils literal notranslate"><span class="pre">name</span></code> of the <strong>LineLoad</strong> is also required as is key. If <code class="docutils literal notranslate"><span class="pre">axis='global'</span></code>, the <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code> components will be in-line with the global co-ordinate system, while <code class="docutils literal notranslate"><span class="pre">axis='local'</span></code> takes <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> as the local cross-section axes <cite>ex</cite> and <cite>ey</cite>, i.e. positive <code class="docutils literal notranslate"><span class="pre">y</span></code> would be away from the centroid of the cross-section, not towards it.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">LineLoad</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LineLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_line&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;elset_beams&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mi">10000</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">))</span>
+</code></pre></div>
+</div>
+</section>
+<section id="areaload">
+<h2>AreaLoad</h2>
+<p>The <strong>AreaLoad</strong> object applies distributed loads per unit area (pressures <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code> in units of Pa) on elements such as <strong>ShelElement</strong> objects. The <code class="docutils literal notranslate"><span class="pre">elements</span></code> to apply the load to is given as either the string name of the element set or as a list of elements, and the <code class="docutils literal notranslate"><span class="pre">name</span></code> of the <strong>AreaLoad</strong> is required for its key. Only <code class="docutils literal notranslate"><span class="pre">axis='local'</span></code> is currently supported for Abaqus, whereby <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are local surface shears and <code class="docutils literal notranslate"><span class="pre">z</span></code> is the local normal pressure.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">AreaLoad</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">AreaLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_pressure&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;elset_shells&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mi">10000</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">))</span>
+</code></pre></div>
+</div>
+</section>
+<section id="gravityload">
+<h2>GravityLoad</h2>
+<p>Gravity loading to elements is through the <strong>GravityLoad</strong> class and object. The <strong>GravityLoad</strong> object records the <code class="docutils literal notranslate"><span class="pre">elements</span></code> to apply gravitational acceleration to either via the element set name as a string, or as a list of elements. The default gravitational acceleration is <code class="docutils literal notranslate"><span class="pre">g=-9.81</span></code> and applied in <code class="docutils literal notranslate"><span class="pre">z</span></code>, but this can be varied in magnitude and for directions <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> (which is useful if a model isn’t using <code class="docutils literal notranslate"><span class="pre">z</span></code> as the vertical direction). The <code class="docutils literal notranslate"><span class="pre">elements</span></code> for the gravity loading in the example below are those in the element set named <code class="docutils literal notranslate"><span class="pre">'elset_all'</span></code>. Gravity loads are always automatically calculated and applied knowing the material density, element type and cross-section geometry, so only the reference to the elements is needed to apply the load, as all other data will be known.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GravityLoad</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">GravityLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="s1">&#39;elset_all&#39;</span><span class="p">))</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">mdl</span><span class="o">.</span><span class="n">loads</span><span class="p">[</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">components</span>  <span class="c1"># check the gravity components</span>
+<span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">mdl</span><span class="o">.</span><span class="n">loads</span><span class="p">[</span><span class="s1">&#39;load_gravity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">g</span>  <span class="c1"># see magnitude of gravitational acceleration</span>
+<span class="o">-</span><span class="mf">9.81</span>
+</code></pre></div>
+</div>
+</section>
+<section id="tributaryload">
+<h2>TributaryLoad</h2>
+<p>The <strong>TributaryLoad</strong> class can be used to distribute a uniform area load (in units of Pa) that is applied to a <strong>Mesh</strong> datastructure, as equivalent point loads (in units of N) to the nodes of the <strong>Structure</strong> object. The class first takes the <code class="docutils literal notranslate"><span class="pre">structure</span></code> to apply the point loads to, then the <code class="docutils literal notranslate"><span class="pre">name</span></code> of the <strong>TributaryLoad</strong>, then a <strong>Mesh</strong> datastructure object with <code class="docutils literal notranslate"><span class="pre">mesh</span></code>, and finally component pressures <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code>. The class would be used in the following manner:</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">TributaryLoad</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">TributaryLoad</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">mdl</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_tributary&#39;</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mi">2000</span><span class="p">))</span>
+</code></pre></div>
+</div>
+<p>The <strong>Mesh</strong> datastructure will be combined with the pressures <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code> to calculate the tributary area of each vertex and multiply this area by the pressure to get a point load in the component direction. The <code class="docutils literal notranslate"><span class="pre">.components</span></code> attribute of the <strong>TributaryLoad</strong> object will be a dictionary with <strong>Structure</strong> node keys, and the values of these keys are dictionaries of point loads data in <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code> (see below). The global co-ordinate directions <code class="docutils literal notranslate"><span class="pre">axis='global'</span></code> are used for the components of the pressures and final point loads.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">loads</span><span class="p">[</span><span class="s1">&#39;load_tributary&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">components</span>
+
+<span class="p">{</span><span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;z&#39;</span><span class="p">:</span>  <span class="o">-</span><span class="mf">66.28091</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+ <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;z&#39;</span><span class="p">:</span>  <span class="o">-</span><span class="mf">86.36518</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+ <span class="mi">4</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">121.55623</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+ <span class="o">...</span>
+ <span class="mi">25</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;z&#39;</span><span class="p">:</span>  <span class="o">-</span><span class="mf">79.5333</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+ <span class="mi">26</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">283.3817</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}}</span>
+</code></pre></div>
+</div>
+</section>
+<section id="harmonicpointload">
+<h2>HarmonicPointLoad</h2>
+<p>The <strong>HarmonicPointLoad</strong> object applies concentrated loads (forces <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code> and/or moments <code class="docutils literal notranslate"><span class="pre">xx</span></code>, <code class="docutils literal notranslate"><span class="pre">yy</span></code>, <code class="docutils literal notranslate"><span class="pre">zz</span></code>) directly to <code class="docutils literal notranslate"><span class="pre">nodes</span></code> in a harmonic analysis. The <code class="docutils literal notranslate"><span class="pre">nodes</span></code> to apply the load to is given as either the string name of the node set or a list of nodes. The <code class="docutils literal notranslate"><span class="pre">name</span></code> of the <strong>HarmonicPointLoad</strong> is also required to act as its key. <strong>HarmonicPointLoad</strong> objects currently only utilise the global co-ordinate system.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">HarmonicPointLoad</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">HarmonicPointLoad</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;load_point-harmonic&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_top&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=-</span><span class="mi">10000</span><span class="p">))</span>
+</code></pre></div>
+</div>
+</section>
+</section>
+
+        
+      </main>
+      <!-- content -->
+      <!-- sidebar -->
+      <div class="col-12 col-md-3 compas-sidebar" role="navigation">
+        <form id="search" class="d-flex align-items-center compas-searchbox" action="../search.html" method="get">
+          <input class="form-control" type="text" name="q" placeholder="Search docs" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+          <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </form>
+        
+        
+          <div id="compas-navigation" class="collapse compas-navigation">
+          <ul class="nav flex-column active">
+<li class="nav-item"><a class="nav-link reference internal" href="../index.html">Introduction</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../gettingstarted.html">Getting Started</a></li>
+<li class="nav-item active"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a><ul class="nav flex-column active">
+<li class="nav-item"><a class="nav-link reference internal" href="01_basics.html">Basics</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="02_structure.html">Structure</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="03_nodes.html">Nodes</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="04_elements.html">Elements</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="05_sets.html">Sets</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="06_sections.html">Sections</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="07_material.html">Materials</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="08_properties.html">Properties</a></li>
+<li class="nav-item active"><a class="nav-link active current reference internal" href="#">Loads</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="10_displacements.html">Displacements</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="11_steps.html">Steps</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="12_analysis.html">Analysis</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="13_cad.html">CAD</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="14_app.html">App</a></li>
+</ul>
+</li>
+<li class="nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../api.html">API Reference</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
+</ul>
+
+          </div>
+        
+      </div>
+      <!-- sidebar -->
+      <!-- toc -->
+      <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+        
+        <ul class="nav flex-column" id="compas-toc">
+<li class="nav-item"><a class="nav-link reference internal" href="#">Loads</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#adding-loads">Adding loads</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#accessing-and-editing-loads">Accessing and editing loads</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#prestressload">PrestressLoad</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#pointload">PointLoad</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#pointloads">PointLoads</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#lineload">LineLoad</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#areaload">AreaLoad</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#gravityload">GravityLoad</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#tributaryload">TributaryLoad</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#harmonicpointload">HarmonicPointLoad</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+      <!-- toc -->
+    </div>
+  </div>
+  <!-- main -->
+  <!-- footer -->
+  <footer class="compas-footer">
+    <nav class="nav p-2">
+      
+        <a href="08_properties.html" title="Properties" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+          <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
+          <div class="nav-title flex-grow-1 align-self-center">
+            <div class="nav-direction small font-weight-light">Previous</div>
+            Properties
+          </div>
+        </a>
+      
+
+      
+        <a href="10_displacements.html" title="Displacements" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+          <div class="nav-title footer-link flex-grow-1 align-self-center">
+            <div class="nav-direction small font-weight-light">Next</div>
+            Displacements
+          </div>
+          <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
+        </a>
+      
+    </nav>  
+  </footer>
+  <!-- footer -->
+  <!-- below -->
+  <div class="below py-5" style="background-color: #222;">
+    <div class="container">
+      <div class="row flex-column">
+      <div class="col-12 col-md-6 mx-md-auto text-center">
+        <h4 class="pb-3 below-text">COMPAS</h4>
+        <p class="below-text">
+          A computational framework for collaboration and research
+          in Architecture, Engineering, Fabrication, and Construction.
+        </p>
+        <nav class="nav justify-content-center pb-3">
+          <a class="nav-link mx-2 px-0 below-link" href="http://github.com/compas-dev" target="_blank">
+            <span class="fab fa-github fa-1x"></span>
+          </a>
+          <a class="nav-link mx-2 px-0 below-link" href="http://forum.compas-framework.org" target="_blank">
+            <span class="fab fa-discourse fa-1x"></span>
+          </a>
+          <a class="nav-link mx-2 px-0 below-link" href="https://pypi.org/project/COMPAS/" target="_blank">
+            <span class="fab fa-python fa-1x"></span>
+          </a>
+        </nav>
+      </div>
+      </div>
+      <div class="row">
+      <div class="col text-center">
+        <p class="p-0 m-0 below-text">Copyright &copy; 2017-2021 compas-dev</p>
+      </div>
+      </div>
+    </div>
+  </div>
+  <!-- below -->
+  <!-- scripts -->
+  <script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+  URL_ROOT          : '',
+  VERSION           : '0.3.1',
+  COLLAPSE_INDEX    : false,
+  FILE_SUFFIX       : '.html',
+  HAS_SOURCE        : 'false',
+  SOURCELINK_SUFFIX : '.txt'
+  };
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https:////cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.1/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+
+  <script src="../_static/underscore.js"></script>
+  <script src="../_static/doctools.js"></script>
+  <script src="../_static/js/searchtools_.js"></script>
+
+  <script>
+  $(document).ready(function() {
+    $(".language-default code").addClass("python");
+    $(".language-python code").addClass("python");
+    $(".language-bash code").addClass("bash");
+    $(".language-cpp code").addClass("cpp");
+    $(".language-json code").addClass("json");
+    $(".language-none code").addClass("plaintext");
+
+    hljs.initHighlighting();
+    anchors.add();
+
+  });
+
+
+  var url = $("#doc_versions").data("url");
+  var docs_site = $("#doc_versions").data("docs");
+
+  if (url) {
+    $.get(url, res=>{
+      var lines = res.match(/[^\r\n]+/g);
+      lines.forEach(version => {
+        $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
+      });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
+    })
+  }
+  </script>
+  <!-- scripts -->
+  
+  
+</body>
+</html>
