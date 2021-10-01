@@ -5,8 +5,8 @@ import io
 from os import path
 
 from setuptools import setup
-from setuptools.command.develop import develop
-from setuptools.command.install import install
+# from setuptools.command.develop import develop
+# from setuptools.command.install import install
 
 
 here = path.abspath(path.dirname(__file__))
@@ -25,7 +25,7 @@ optional_requirements = {}
 
 setup(
     name='compas_fea',
-    version='0.1.1',
+    version='0.3.0',
     description='compas finite element package',
     long_description=long_description,
     long_description_content_type='text/markdown',
