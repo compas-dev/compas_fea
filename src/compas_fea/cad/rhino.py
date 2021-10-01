@@ -3,9 +3,10 @@ from __future__ import division
 from __future__ import print_function
 
 import json
-import rhinoscriptsyntax as rs
 
-from compas_rhino.geometry import RhinoMesh
+import compas
+if compas.RHINO:
+    from compas_rhino.geometry import RhinoMesh
 
 from compas.datastructures.mesh import Mesh
 from compas.datastructures import Network
@@ -17,18 +18,21 @@ from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
 from compas_fea.structure import Structure
 
+
 from compas_fea.utilities import colorbar
 from compas_fea.utilities import extrude_mesh
 from compas_fea.utilities import network_order
 
-# if not compas.IPY:
-# from compas_fea.utilities import meshing
-# from compas_fea.utilities import functions
-# else:
-from compas.rpc import Proxy
+if not compas.IPY:
+    from compas_fea.utilities import meshing
+    from compas_fea.utilities import functions
+else:
+    from compas.rpc import Proxy
+    functions = Proxy('compas_fea.utilities.functions')
+    meshing = Proxy('compas_fea.utilities.meshing')
 
-functions = Proxy('compas_fea.utilities.functions')
-meshing = Proxy('compas_fea.utilities.meshing')
+if compas.RHINO:
+    import rhinoscriptsyntax as rs
 
 
 __all__ = [
@@ -209,7 +213,7 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                     if ex and not ey:
                         ey = cross_vectors(ex, ez)
 
-                except Exception:
+                except:
                     ex = None
                     ey = None
 
@@ -252,7 +256,9 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                 elif mesh_type == 'MassElement':
                     node_iterator = 0
                     for node in nodes:
-                        ekey = structure.add_element(nodes=[node], type=mesh_type, thermal=thermal, mass=masses[node_iterator])  # structure.nodes[node].mass
+                        # structure.nodes[node].mass
+                        ekey = structure.add_element(nodes=[node], type=mesh_type,
+                                                     thermal=thermal, mass=masses[node_iterator])
                         node_iterator += 1
                         if ekey is not None:
                             added_elements.add(ekey)
@@ -274,7 +280,7 @@ def add_nodes_elements_from_layers(structure, layers, line_type=None, mesh_type=
                         if (ex and ey) and (not ez):
                             ez = cross_vectors(ex, ey)
 
-                    except Exception:
+                    except:
                         ex = None
                         ey = None
                         ez = None
@@ -400,7 +406,7 @@ def add_tets_from_mesh(structure, name, mesh, draw_tets=False, volume=None, ther
 
         print('***** MeshPy (TetGen) successfull *****')
 
-    except Exception:
+    except:
 
         print('***** Error using MeshPy (TetGen) or drawing Tets *****')
 
@@ -451,7 +457,7 @@ def discretise_mesh(mesh, layer, target, min_angle=15, factor=1):
 
         rs.EnableRedraw(True)
 
-    except Exception:
+    except:
 
         print('***** Error using MeshPy (Triangle) or drawing faces *****')
 
@@ -652,13 +658,13 @@ def plot_reaction_forces(structure, step, layer=None, scale=1.0):
     for i in nkeys:
 
         if rm[i] > 0.001:
-            length = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
-            rs.CurveArrows(length, 1)
+            l = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
+            rs.CurveArrows(l, 1)
             col = [int(j) for j in colorbar(rm[i] / rmax, input='float', type=255)]
-            rs.ObjectColor(length, col)
+            rs.ObjectColor(l, col)
             vector = [rfx[i], rfy[i], rfz[i]]
             name = json.dumps({'rfx': rfx[i], 'rfy': rfy[i], 'rfz': rfz[i], 'rfm': length_vector(vector)})
-            rs.ObjectName(length, '_' + name)
+            rs.ObjectName(l, '_' + name)
 
     rs.CurrentLayer(rs.AddLayer('Default'))
     rs.LayerVisible(layer, False)
@@ -705,13 +711,13 @@ def plot_concentrated_forces(structure, step, layer=None, scale=1.0):
     for i in nkeys:
 
         if rm[i]:
-            length = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
-            rs.CurveArrows(length, 1)
+            l = rs.AddLine(nodes[i], add_vectors(nodes[i], v[i]))
+            rs.CurveArrows(l, 1)
             col = [int(j) for j in colorbar(rm[i] / rmax, input='float', type=255)]
-            rs.ObjectColor(length, col)
+            rs.ObjectColor(l, col)
             vector = [cfx[i], cfy[i], cfz[i]]
             name = json.dumps({'cfx': cfx[i], 'cfy': cfy[i], 'cfz': cfz[i], 'cfm': length_vector(vector)})
-            rs.ObjectName(length, '_' + name)
+            rs.ObjectName(l, '_' + name)
 
     rs.CurrentLayer(rs.AddLayer('Default'))
     rs.LayerVisible(layer, False)
@@ -746,7 +752,7 @@ def plot_mode_shapes(structure, step, layer=None, scale=1.0, radius=1):
 
     try:
         it = structure.results[step]['frequencies']
-    except Exception:
+    except:
         it = structure.results[step]['info']['description']
 
     if isinstance(it, list):
@@ -1020,7 +1026,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
             try:
                 freq = str(round(structure.results[step]['frequencies'][mode - 1], 3))
                 rs.AddText('Mode:{0}   Freq:{1}Hz'.format(mode, freq), [xmin, ymin - 1.5 * s, 0], height=h)
-            except Exception:
+            except:
                 pass
 
         # Return to Default layer
@@ -1029,7 +1035,7 @@ def plot_data(structure, step, field='um', layer=None, scale=1.0, radius=0.05, c
         rs.LayerVisible(layer, False)
         rs.EnableRedraw(True)
 
-    except Exception:
+    except:
 
         print('\n***** Error encountered during data processing or plotting *****')
 
@@ -1064,7 +1070,8 @@ def plot_principal_stresses(structure, step, sp, stype, scale, layer=None):
     """
 
     data = structure.results[step]['element']
-    result = functions.principal_stresses(data, ptype, scale, rotate)
+    axes = data['axes']
+    spr, e = functions.principal_stresses(data)
 
     stresses = spr[sp][stype]
     max_stress = max([abs(i) for i in stresses])
@@ -1088,23 +1095,6 @@ def plot_principal_stresses(structure, step, sp, stype, scale, layer=None):
         col1 = colorbar(stresses[c] / max_stress, input='float', type=255)
         rs.ObjectColor(id1, col1)
     rs.EnableRedraw(True)
-
-
-            v1 = vec1[c]
-            v5 = vec5[c]
-            id1 = rs.AddLine(add_vectors(centroid, scale_vector(v1, -1)), add_vectors(centroid, v1))
-            id5 = rs.AddLine(add_vectors(centroid, scale_vector(v5, -1)), add_vectors(centroid, v5))
-            col1 = colorbar(pr1[c] / pmax, input='float', type=255)
-            col5 = colorbar(pr5[c] / pmax, input='float', type=255)
-
-            rs.ObjectColor(id1, col1)
-            rs.ObjectColor(id5, col5)
-
-        rs.EnableRedraw(True)
-
-    except Exception:
-
-        print('\n***** Error calculating or plotting principal stresses *****')
 
 
 def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean', nodal='mean', vdx=None, mode=''):
@@ -1163,14 +1153,14 @@ def plot_voxels(structure, step, field='smises', cbar=[None, None], iptype='mean
         toc, U, cnodes, fabs, fscaled, celements, eabs = result
         print('\n***** Data processed : {0} s *****'.format(toc))
 
-    except Exception:
+    except:
         print('\n***** Error post-processing *****')
 
     try:
         functions.plotvoxels(values=fscaled, U=U, vdx=vdx)
         print('\n***** Voxels finished *****')
 
-    except Exception:
+    except:
         print('\n***** Error plotting voxels *****')
 
 
@@ -1211,3 +1201,12 @@ def weld_meshes_from_layer(layer_input, layer_output):
     rs.DeleteObjects(rs.ObjectsByLayer(layer_output))
     rs.CurrentLayer(layer_output)
     rs.AddMesh(mdl.nodes_xyz(), faces)
+
+# ==============================================================================
+# Debugging
+# ==============================================================================
+
+
+if __name__ == "__main__":
+
+    pass
