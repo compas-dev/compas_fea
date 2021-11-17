@@ -150,7 +150,7 @@ def process_data(data, dtype, iptype, nodal, elements, n):
 
         if nodal == 'mean':
             vsum = np.asarray(AT.dot(ve))
-            vn = vsum / sum(AT, 1)
+            vn = vsum / AT.sum(1)
 
         else:
             vn = _nodal(rows, cols, 0 if nodal == 'max' else 1, ve, n)
