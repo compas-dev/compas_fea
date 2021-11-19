@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <title>compas_fea - Nodes</title>
+  
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <meta name="author" content="compas-dev" />
+  <meta name="description" content="" />
+
+  <link rel="shortcut icon" href="../_static/images/compas.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/styles/default.min.css">
+  <link rel="stylesheet" type="text/css" href="../_static/css/compas.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
+
+  
+    <link rel="next" title="Elements" href="04_elements.html" />
+  
+
+  
+    <link rel="prev" title="Structure" href="02_structure.html" />
+  
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+
+<body data-spy="scroll" data-target="#compas-toc">
+  <!-- header -->
+  <header id="header" class="compas-header d-flex align-items-center">
+    <nav class="navbar navbar-expand navbar-dark col flex-column flex-md-row text-center">
+      <!-- brand -->
+      <a class="navbar-brand" href="https://compas.dev/compas_fea/">
+        <img src="../_static/images/compas_icon_white.png" alt="COMPAS FEA" width="48px" height="48px" />
+      </a>
+      <!-- brand -->
+      <!-- primary -->
+      <ul class="navbar-nav">
+        <li class="nav-item active"><a class="nav-link" href="https://compas.dev/compas_fea/">COMPAS FEA</a></li>
+      </ul>
+      <!-- primary -->
+      <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        <!-- version -->
+        
+        <meta id="doc_versions" data-url="https://compas.dev/compas_fea/doc_versions.txt" data-docs="https://compas.dev/compas_fea/">
+        <li class="nav-item nav-versions dropdown">
+          <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            0.3.3
+          </a>
+          <div id="doc_version_list" class="dropdown-menu dropdown-menu-md-right" aria-labelledby="bd-versions"></div>
+        </li>
+        
+        <!-- version -->
+        <!-- social -->
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/compas-dev/compas_fea" target="_blank">
+            <span class="fab fa-github fa-1x"></span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://forum.compas-framework.org" target="_blank">
+            <span class="fab fa-discourse fa-1x"></span>
+          </a>
+        </li>
+        <!-- social -->
+      </ul>
+    </nav>
+  </header>
+  <!-- header -->
+  <!-- main -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- main -->
+      <main class="col-12 col-md-9 col-xl-7 px-2 px-md-5 pt-2 pb-5 compas-content" role="main">
+        
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-3 bg-white px-0">
+            <li class="breadcrumb-item"><a href="../index.html">docs</a></li>
+            
+              <li class="breadcrumb-item"><a href="../tutorial.html">Tutorial</a></li>
+            
+            <li class="breadcrumb-item active" aria-current="page">Nodes</li>
+          </ol>
+        </nav>
+        
+
+        
+        
+        <section id="nodes">
+<h1>Nodes</h1>
+<p>This page shows how nodes are added, viewed and edited within the <strong>Structure</strong> object, here given as object with handle <code class="docutils literal notranslate"><span class="pre">mdl</span></code>. Node data is fundamental to the <strong>Structure</strong>, and is stored in the <code class="docutils literal notranslate"><span class="pre">.nodes</span></code> attribute as a dictionary of <strong>Node</strong> objects.</p>
+<section id="adding-nodes">
+<h2>Adding nodes</h2>
+<p>Nodes can be added manually at prescribed spatial co-ordinates with the <code class="docutils literal notranslate"><span class="pre">.add_node()</span></code> and <code class="docutils literal notranslate"><span class="pre">.add_nodes()</span></code> methods, where <code class="docutils literal notranslate"><span class="pre">xyz</span></code> is given as a list of co-ordinates for a single node with <code class="docutils literal notranslate"><span class="pre">.add_node()</span></code>, and for <code class="docutils literal notranslate"><span class="pre">nodes</span></code> as a list of lists for multiple node co-ordinates when using <code class="docutils literal notranslate"><span class="pre">.add_nodes()</span></code>. If integer values for co-ordinates are given, they are converted to floats before adding to the <strong>Structure</strong> object. A <code class="docutils literal notranslate"><span class="pre">mass</span></code> can be added also, which is needed for some specific <strong>compas_fea</strong> functionality.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="n">mdl</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">xyz</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># add a single node at x=-5, y=-5, z=0</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add_nodes</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>  <span class="c1"># add four nodes at one time</span>
+</code></pre></div>
+</div>
+</section>
+<section id="viewing-nodes">
+<h2>Viewing nodes</h2>
+<p>The nodes data are <strong>Node</strong> objects stored in the <code class="docutils literal notranslate"><span class="pre">.nodes</span></code> dictionary, and are added with integer keys numbered sequentially starting from 0 (Python based). The data summary for each node can be viewed by printing the <strong>Node</strong> to the terminal.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>  <span class="c1"># print a summary of node number 3</span>
+
+<span class="go">compas_fea Node object</span>
+<span class="go">----------------------</span>
+<span class="go">key   : 3</span>
+<span class="go">x     : -5.0</span>
+<span class="go">y     : 5.0</span>
+<span class="go">z     : 0.0</span>
+<span class="go">ex    : [1, 0, 0]</span>
+<span class="go">ey    : [0, 1, 0]</span>
+<span class="go">ez    : [0, 0, 1]</span>
+<span class="go">mass  : 0</span>
+</code></pre></div>
+</div>
+<p>Individually, all of the <strong>Node</strong> attributes are accessible for inspection.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>  <span class="c1"># node number 3</span>
+<span class="go">Node(3)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">key</span>  <span class="c1"># the key of node number 3</span>
+<span class="go">3</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">x</span>  <span class="c1"># the x coordinate of node number 3</span>
+<span class="go">-5.0</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">ex</span>  <span class="c1"># the local axis of node number 3</span>
+<span class="go">[1, 0, 0]</span>
+</code></pre></div>
+</div>
+</section>
+<section id="editing-nodes">
+<h2>Editing nodes</h2>
+<p>To edit the data of a node use the <code class="docutils literal notranslate"><span class="pre">.edit_node()</span></code> method, which will change both the data of the <strong>Node</strong> and update the <code class="docutils literal notranslate"><span class="pre">.node_index</span></code> dictionary (explained later) if the co-ordinates were changed during editing.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>  <span class="c1"># print the x and z coordinates of node number 3</span>
+<span class="go">-5.0 0.0</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">edit_node</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">attr_dict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="mf">4.0</span><span class="p">})</span>  <span class="c1"># update x and z values</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>  <span class="c1"># print the new x and z coordinates</span>
+<span class="go">0.0 4.0</span>
+</code></pre></div>
+</div>
+</section>
+<section id="methods">
+<h2>Methods</h2>
+<p>The co-ordinates of a given node or many nodes, and the total number of nodes in the <strong>Structure</strong>, may be evaluated with the <code class="docutils literal notranslate"><span class="pre">.node_xyz()</span></code>, <code class="docutils literal notranslate"><span class="pre">.nodes_xyz()</span></code> and <code class="docutils literal notranslate"><span class="pre">.node_count()</span></code> methods:</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">node_xyz</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># fetch the coordinates of node number 3</span>
+<span class="go">[-5.0, 5.0, 0.0]</span>
+</code></pre></div>
+</div>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">nodes_xyz</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>  <span class="c1"># fetch the coordinates of nodes 3 and 4</span>
+<span class="go">[[-5.0, 5.0, 0.0], [5.0, 0.0, 2.0]]</span>
+</code></pre></div>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">nodes</span></code> is not given for <code class="docutils literal notranslate"><span class="pre">.nodes_xyz()</span></code>, then all of the node coordinates will be returned.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">node_count</span><span class="p">()</span>  <span class="c1"># get the count of nodes in the structure</span>
+<span class="go">5</span>
+</code></pre></div>
+</div>
+<p>The simple bounding box made by the <strong>Structure</strong> can be found by calling the <code class="docutils literal notranslate"><span class="pre">.node_bounds()</span></code> method. This will return three lists, containing the minimum and maximum <cite>x</cite>, <cite>y</cite> and <cite>z</cite> co-ordinates of the node coordinates in <code class="docutils literal notranslate"><span class="pre">.nodes</span></code>.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">node_bounds</span><span class="p">()</span>  <span class="c1"># return [xmin, xmax], [ymin, ymax], [zmin, zmax]</span>
+<span class="go">([-5.0, 5.0], [-5.0, 5.0], [0.0, 5.0])</span>
+</code></pre></div>
+</div>
+<p>It can be checked if a node is already present in the <strong>Structure</strong> object by a query with the method <code class="docutils literal notranslate"><span class="pre">.check_node_exists()</span></code> and with a list of test node co-ordinates. If a node exists at those coordinates, then the method will return the integer key, if not, <code class="docutils literal notranslate"><span class="pre">None</span></code> will be returned. Integer values that are given for co-ordinates will be converted to floats during this check.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">xyz</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># does a node exist at x=5, y=5, z=0</span>
+<span class="go">2</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">check_node_exists</span><span class="p">(</span><span class="n">xyz</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># does a node exist at x=5, y=5, z=-1</span>
+<span class="go">None</span>
+</code></pre></div>
+</div>
+<p><strong>Note</strong>: no more than one node can exist for the same co-ordinates, i.e. no overlapping nodes are allowed, this ensures a unique entry in the node index dictionary (see below) and is currently important for many operations in <strong>compas_fea</strong>.</p>
+</section>
+<section id="node-index">
+<h2>Node index</h2>
+<p>The <strong>Structure</strong> object’s node index is a geometric key to integer key dictionary accessed through <code class="docutils literal notranslate"><span class="pre">.node_index</span></code>. The geometric key is the string representation of the node’s co-ordinates to a prescribed (default 3) float precision, while the value that is returned for this geometric key is the node’s number. The node index can be used to quickly see what node number corresponds to a nodal spatial location. <strong>Note</strong>: the <code class="docutils literal notranslate"><span class="pre">.node_index</span></code> should never be edited manually.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">node_index</span>  <span class="c1"># show the current node index dictionary</span>
+<span class="go">{&#39;-5.000,-5.000,0.000&#39;: 0, &#39;5.000,-5.000,0.000&#39;: 1, &#39;5.000,5.000,0.000&#39;: 2, &#39;-5.000,5.000,0.000&#39;: 3}</span>
+</code></pre></div>
+</div>
+</section>
+</section>
+
+        
+      </main>
+      <!-- content -->
+      <!-- sidebar -->
+      <div class="col-12 col-md-3 compas-sidebar" role="navigation">
+        <form id="search" class="d-flex align-items-center compas-searchbox" action="../search.html" method="get">
+          <input class="form-control" type="text" name="q" placeholder="Search docs" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+          <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </form>
+        
+        
+          <div id="compas-navigation" class="collapse compas-navigation">
+          <ul class="nav flex-column active">
+<li class="nav-item"><a class="nav-link reference internal" href="../index.html">Introduction</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../gettingstarted.html">Getting Started</a></li>
+<li class="nav-item active"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a><ul class="nav flex-column active">
+<li class="nav-item"><a class="nav-link reference internal" href="01_basics.html">Basics</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="02_structure.html">Structure</a></li>
+<li class="nav-item active"><a class="nav-link active current reference internal" href="#">Nodes</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="04_elements.html">Elements</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="05_sets.html">Sets</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="06_sections.html">Sections</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="07_material.html">Materials</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="08_properties.html">Properties</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="09_loads.html">Loads</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="10_displacements.html">Displacements</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="11_steps.html">Steps</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="12_analysis.html">Analysis</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="13_cad.html">CAD</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="14_app.html">App</a></li>
+</ul>
+</li>
+<li class="nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../api.html">API Reference</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
+</ul>
+
+          </div>
+        
+      </div>
+      <!-- sidebar -->
+      <!-- toc -->
+      <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+        
+        <ul class="nav flex-column" id="compas-toc">
+<li class="nav-item"><a class="nav-link reference internal" href="#">Nodes</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#adding-nodes">Adding nodes</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#viewing-nodes">Viewing nodes</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#editing-nodes">Editing nodes</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#methods">Methods</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#node-index">Node index</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+      <!-- toc -->
+    </div>
+  </div>
+  <!-- main -->
+  <!-- footer -->
+  <footer class="compas-footer">
+    <nav class="nav p-2">
+      
+        <a href="02_structure.html" title="Structure" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+          <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
+          <div class="nav-title flex-grow-1 align-self-center">
+            <div class="nav-direction small font-weight-light">Previous</div>
+            Structure
+          </div>
+        </a>
+      
+
+      
+        <a href="04_elements.html" title="Elements" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+          <div class="nav-title footer-link flex-grow-1 align-self-center">
+            <div class="nav-direction small font-weight-light">Next</div>
+            Elements
+          </div>
+          <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
+        </a>
+      
+    </nav>  
+  </footer>
+  <!-- footer -->
+  <!-- below -->
+  <div class="below py-5" style="background-color: #222;">
+    <div class="container">
+      <div class="row flex-column">
+      <div class="col-12 col-md-6 mx-md-auto text-center">
+        <h4 class="pb-3 below-text">COMPAS</h4>
+        <p class="below-text">
+          A computational framework for collaboration and research
+          in Architecture, Engineering, Fabrication, and Construction.
+        </p>
+        <nav class="nav justify-content-center pb-3">
+          <a class="nav-link mx-2 px-0 below-link" href="http://github.com/compas-dev" target="_blank">
+            <span class="fab fa-github fa-1x"></span>
+          </a>
+          <a class="nav-link mx-2 px-0 below-link" href="http://forum.compas-framework.org" target="_blank">
+            <span class="fab fa-discourse fa-1x"></span>
+          </a>
+          <a class="nav-link mx-2 px-0 below-link" href="https://pypi.org/project/COMPAS/" target="_blank">
+            <span class="fab fa-python fa-1x"></span>
+          </a>
+        </nav>
+      </div>
+      </div>
+      <div class="row">
+      <div class="col text-center">
+        <p class="p-0 m-0 below-text">Copyright &copy; 2017-2021 compas-dev</p>
+      </div>
+      </div>
+    </div>
+  </div>
+  <!-- below -->
+  <!-- scripts -->
+  <script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+  URL_ROOT          : '',
+  VERSION           : '0.3.3',
+  COLLAPSE_INDEX    : false,
+  FILE_SUFFIX       : '.html',
+  HAS_SOURCE        : 'false',
+  SOURCELINK_SUFFIX : '.txt'
+  };
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https:////cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.1/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+
+  <script src="../_static/underscore.js"></script>
+  <script src="../_static/doctools.js"></script>
+  <script src="../_static/js/searchtools_.js"></script>
+
+  <script>
+  $(document).ready(function() {
+    $(".language-default code").addClass("python");
+    $(".language-python code").addClass("python");
+    $(".language-bash code").addClass("bash");
+    $(".language-cpp code").addClass("cpp");
+    $(".language-json code").addClass("json");
+    $(".language-none code").addClass("plaintext");
+
+    hljs.initHighlighting();
+    anchors.add();
+
+  });
+
+
+  var url = $("#doc_versions").data("url");
+  var docs_site = $("#doc_versions").data("docs");
+
+  if (url) {
+    $.get(url, res=>{
+      var lines = res.match(/[^\r\n]+/g);
+      lines.forEach(version => {
+        $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
+      });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
+    })
+  }
+  </script>
+  <!-- scripts -->
+  
+  
+</body>
+</html>

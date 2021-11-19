@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <title>compas_fea - Displacements</title>
+  
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <meta name="author" content="compas-dev" />
+  <meta name="description" content="" />
+
+  <link rel="shortcut icon" href="../_static/images/compas.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/styles/default.min.css">
+  <link rel="stylesheet" type="text/css" href="../_static/css/compas.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
+
+  
+    <link rel="next" title="Steps" href="11_steps.html" />
+  
+
+  
+    <link rel="prev" title="Loads" href="09_loads.html" />
+  
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+
+<body data-spy="scroll" data-target="#compas-toc">
+  <!-- header -->
+  <header id="header" class="compas-header d-flex align-items-center">
+    <nav class="navbar navbar-expand navbar-dark col flex-column flex-md-row text-center">
+      <!-- brand -->
+      <a class="navbar-brand" href="https://compas.dev/compas_fea/">
+        <img src="../_static/images/compas_icon_white.png" alt="COMPAS FEA" width="48px" height="48px" />
+      </a>
+      <!-- brand -->
+      <!-- primary -->
+      <ul class="navbar-nav">
+        <li class="nav-item active"><a class="nav-link" href="https://compas.dev/compas_fea/">COMPAS FEA</a></li>
+      </ul>
+      <!-- primary -->
+      <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        <!-- version -->
+        
+        <meta id="doc_versions" data-url="https://compas.dev/compas_fea/doc_versions.txt" data-docs="https://compas.dev/compas_fea/">
+        <li class="nav-item nav-versions dropdown">
+          <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            0.3.3
+          </a>
+          <div id="doc_version_list" class="dropdown-menu dropdown-menu-md-right" aria-labelledby="bd-versions"></div>
+        </li>
+        
+        <!-- version -->
+        <!-- social -->
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/compas-dev/compas_fea" target="_blank">
+            <span class="fab fa-github fa-1x"></span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://forum.compas-framework.org" target="_blank">
+            <span class="fab fa-discourse fa-1x"></span>
+          </a>
+        </li>
+        <!-- social -->
+      </ul>
+    </nav>
+  </header>
+  <!-- header -->
+  <!-- main -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- main -->
+      <main class="col-12 col-md-9 col-xl-7 px-2 px-md-5 pt-2 pb-5 compas-content" role="main">
+        
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-3 bg-white px-0">
+            <li class="breadcrumb-item"><a href="../index.html">docs</a></li>
+            
+              <li class="breadcrumb-item"><a href="../tutorial.html">Tutorial</a></li>
+            
+            <li class="breadcrumb-item active" aria-current="page">Displacements</li>
+          </ol>
+        </nav>
+        
+
+        
+        
+        <section id="displacements">
+<h1>Displacements</h1>
+<p>This page shows how <strong>Displacement</strong> objects are added to the <strong>Structure</strong> object, here given as a <strong>Structure</strong> named <code class="docutils literal notranslate"><span class="pre">mdl</span></code>. <strong>Displacement</strong> objects can be used to describe boundary conditions or imposed displacements.</p>
+<section id="adding-displacements">
+<h2>Adding displacements</h2>
+<p><strong>Displacement</strong> objects are used to apply boundary conditions to the model as well as to impose movements directly at selected nodes. Along with <strong>Load</strong> objects, they form the main actions acting on a structural model during the analysis, to do so, they are combined with <strong>Step</strong> objects (see next topic). It is necessary for the first <strong>Step</strong> in the <strong>Structure</strong> to be associated with the boundary conditions represented by <strong>Displacement</strong> objects, these are those that do not change throughout the entire analysis. The following example shows how a <strong>PinnedDisplacement</strong> class is first imported, an object instantiated, and then this object added to the <code class="docutils literal notranslate"><span class="pre">.displacements</span></code> dictionary of the <strong>Structure</strong> object. All <strong>Displacement</strong> objects currently use only the global co-ordinate system with <code class="docutils literal notranslate"><span class="pre">axes='global'</span></code>, this will be improved later with the optional use of the <code class="docutils literal notranslate"><span class="pre">'local'</span></code> nodal system. The <code class="docutils literal notranslate"><span class="pre">nodes</span></code> that the displacement is applied to, should be the string name of the node set, or a list of node numbers.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PinnedDisplacement</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_base&#39;</span><span class="p">))</span>  <span class="c1"># add a PinnedDisplacement to &#39;nset_base&#39;</span>
+</code></pre></div>
+</div>
+</section>
+<section id="accessing-and-editing-displacements">
+<h2>Accessing and editing displacements</h2>
+<p>To access or edit the data stored on a <strong>Displacement</strong> object, use its string key and view or edit its attributes as needed from the <code class="docutils literal notranslate"><span class="pre">.displacements</span></code> dictionary. Like all other objects, printing a <strong>Displacement</strong> will show a summary to the terminal.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">components</span>  <span class="c1"># show the components of Displacement &#39;disp_pinned&#39;</span>
+<span class="go">{&#39;x&#39;: 0, &#39;y&#39;: 0, &#39;z&#39;: 0, &#39;xx&#39;: None, &#39;yy&#39;: None, &#39;zz&#39;: None}</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span>  <span class="c1"># show the nodes that &#39;disp_pinned&#39; applies to</span>
+<span class="go">&#39;nset_base&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mdl</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">]</span>  <span class="c1"># Displacement object name &#39;disp_pinned&#39;</span>
+<span class="go">PinnedDisplacement(disp_pinned)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">displacements</span><span class="p">[</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">])</span>  <span class="c1"># Summary of PinnedDisplacement(disp_pinned)</span>
+
+<span class="go">compas_fea PinnedDisplacement object</span>
+<span class="go">------------------------------------</span>
+<span class="go">name       : disp_pinned</span>
+<span class="go">nodes      : nset_base</span>
+<span class="go">components : {&#39;x&#39;: 0, &#39;y&#39;: 0, &#39;z&#39;: 0, &#39;xx&#39;: None, &#39;yy&#39;: None, &#39;zz&#39;: None}</span>
+<span class="go">axes       : global</span>
+</code></pre></div>
+</div>
+<p>The example <strong>PinnedDisplacement</strong> object above restrains translations in all directions but allows rotations about any axis, as indicated by the automatic assignment of zero for <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code> for the translational degrees-of-freedom, and <code class="docutils literal notranslate"><span class="pre">None</span></code> for the rotational degrees-of-freedom <code class="docutils literal notranslate"><span class="pre">xx</span></code>, <code class="docutils literal notranslate"><span class="pre">yy</span></code> and <code class="docutils literal notranslate"><span class="pre">zz</span></code>. Non-zero values for any of the six components could be given to simulate support settlements or to perform a displacement controlled analysis, this is best performed with a <strong>GeneralDisplacement</strong> object.</p>
+</section>
+<section id="types">
+<h2>Types</h2>
+<p>Different <strong>Displacement</strong> object types are available from the classes in <strong>compas_fea.structure.displacement</strong>, these are detailed below:</p>
+<section id="general">
+<h3>General</h3>
+<p>A <strong>GeneralDisplacement</strong> object is used for manually defining all six spatial translational and rotational degrees-of-freedom, and so is the most general type of <strong>Displacement</strong> object. The object has components <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code>, <code class="docutils literal notranslate"><span class="pre">xx</span></code>, <code class="docutils literal notranslate"><span class="pre">yy</span></code> and <code class="docutils literal notranslate"><span class="pre">zz</span></code> all equal to <code class="docutils literal notranslate"><span class="pre">None</span></code> by default. The <code class="docutils literal notranslate"><span class="pre">name</span></code> of the object, and the nodes it should act on must both be given.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">GeneralDisplacement</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">GeneralDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_general&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_base&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">zz</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>  <span class="c1"># define x, z, zz</span>
+</code></pre></div>
+</div>
+</section>
+<section id="pinned">
+<h3>Pinned</h3>
+<p>A <strong>PinnedDisplacement</strong> object is used for restraining all spatial translations, but still allowing rotations to occur. The object has components <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code> as 0 and <code class="docutils literal notranslate"><span class="pre">xx</span></code>, <code class="docutils literal notranslate"><span class="pre">yy</span></code>, <code class="docutils literal notranslate"><span class="pre">zz</span></code> as <code class="docutils literal notranslate"><span class="pre">None</span></code>, which are all defined automatically. The <code class="docutils literal notranslate"><span class="pre">name</span></code> of the object, and the nodes it should act on must both be given.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">PinnedDisplacement</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">PinnedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_pinned&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_base&#39;</span><span class="p">))</span>  <span class="c1"># x, y and z are equal to 0 for &#39;nset_base&#39;</span>
+</code></pre></div>
+</div>
+</section>
+<section id="fixed">
+<h3>Fixed</h3>
+<p>A <strong>FixedDisplacement</strong> object is used for restraining all spatial translations and all rotations. The object has all components <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code>, <code class="docutils literal notranslate"><span class="pre">xx</span></code>, <code class="docutils literal notranslate"><span class="pre">yy</span></code>, <code class="docutils literal notranslate"><span class="pre">zz</span></code> as 0, which are all defined automatically. The <code class="docutils literal notranslate"><span class="pre">name</span></code> of the object, and the nodes it should act on must both be given.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">FixedDisplacement</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">FixedDisplacement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_fixed&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_base&#39;</span><span class="p">))</span>  <span class="c1"># x, y, z, xx, yy, zz are all 0 for &#39;nset_base&#39;</span>
+</code></pre></div>
+</div>
+<p>There are additionally three other types of fixed displacement objects, <strong>FixedDisplacementXX</strong>, <strong>FixedDisplacementYY</strong> and <strong>FixedDisplacementZZ</strong>, which all assert zero translations <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code> as 0, but with the rotations also fixed for the indicated axis. So, <strong>FixedDisplacementXX</strong> additionally clamps <code class="docutils literal notranslate"><span class="pre">xx=0</span></code>, <strong>FixedDisplacementYY</strong> clamps <code class="docutils literal notranslate"><span class="pre">yy=0</span></code> and <strong>FixedDisplacementZZ</strong> <code class="docutils literal notranslate"><span class="pre">zz=0</span></code>. These objects are created in the same way, for example like:</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">FixedDisplacementXX</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">FixedDisplacementXX</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_fixedxx&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_base&#39;</span><span class="p">))</span>  <span class="c1"># x, y, z and xx are all 0 for &#39;nset_base&#39;</span>
+</code></pre></div>
+</div>
+</section>
+<section id="rollers">
+<h3>Rollers</h3>
+<p>There are six types of roller displacement objects, <strong>RollerDisplacementX</strong>, <strong>RollerDisplacementY</strong>,   <strong>RollerDisplacementZ</strong>, <strong>RollerDisplacementXY</strong>, <strong>RollerDisplacementYZ</strong> and <strong>RollerDisplacementXZ</strong>. These are all based on a <strong>PinnedDisplacement</strong> object, with the indicated translational degree(s)-of-freedom released.  So for example, <strong>RollerDisplacementX</strong> is released in <cite>x</cite> with <code class="docutils literal notranslate"><span class="pre">x=None</span></code>, and so has <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code> as 0, while <strong>RollerDisplacementXY</strong> is released in both <cite>x</cite> and <cite>y</cite> with <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> as <code class="docutils literal notranslate"><span class="pre">None</span></code>, leaving only <code class="docutils literal notranslate"><span class="pre">z=0</span></code>.</p>
+<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas_fea.structure</span> <span class="kn">import</span> <span class="n">RollerDisplacementXY</span>
+
+<span class="n">mdl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">RollerDisplacementXY</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;disp_roller&#39;</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="s1">&#39;nset_base&#39;</span><span class="p">))</span>  <span class="c1"># only z equals 0 for &#39;nset_base&#39;</span>
+</code></pre></div>
+</div>
+</section>
+</section>
+</section>
+
+        
+      </main>
+      <!-- content -->
+      <!-- sidebar -->
+      <div class="col-12 col-md-3 compas-sidebar" role="navigation">
+        <form id="search" class="d-flex align-items-center compas-searchbox" action="../search.html" method="get">
+          <input class="form-control" type="text" name="q" placeholder="Search docs" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+          <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </form>
+        
+        
+          <div id="compas-navigation" class="collapse compas-navigation">
+          <ul class="nav flex-column active">
+<li class="nav-item"><a class="nav-link reference internal" href="../index.html">Introduction</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../gettingstarted.html">Getting Started</a></li>
+<li class="nav-item active"><a class="nav-link reference internal" href="../tutorial.html">Tutorial</a><ul class="nav flex-column active">
+<li class="nav-item"><a class="nav-link reference internal" href="01_basics.html">Basics</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="02_structure.html">Structure</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="03_nodes.html">Nodes</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="04_elements.html">Elements</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="05_sets.html">Sets</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="06_sections.html">Sections</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="07_material.html">Materials</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="08_properties.html">Properties</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="09_loads.html">Loads</a></li>
+<li class="nav-item active"><a class="nav-link active current reference internal" href="#">Displacements</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="11_steps.html">Steps</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="12_analysis.html">Analysis</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="13_cad.html">CAD</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="14_app.html">App</a></li>
+</ul>
+</li>
+<li class="nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../api.html">API Reference</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
+</ul>
+
+          </div>
+        
+      </div>
+      <!-- sidebar -->
+      <!-- toc -->
+      <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+        
+        <ul class="nav flex-column" id="compas-toc">
+<li class="nav-item"><a class="nav-link reference internal" href="#">Displacements</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#adding-displacements">Adding displacements</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#accessing-and-editing-displacements">Accessing and editing displacements</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#types">Types</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#general">General</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#pinned">Pinned</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#fixed">Fixed</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#rollers">Rollers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+      <!-- toc -->
+    </div>
+  </div>
+  <!-- main -->
+  <!-- footer -->
+  <footer class="compas-footer">
+    <nav class="nav p-2">
+      
+        <a href="09_loads.html" title="Loads" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+          <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
+          <div class="nav-title flex-grow-1 align-self-center">
+            <div class="nav-direction small font-weight-light">Previous</div>
+            Loads
+          </div>
+        </a>
+      
+
+      
+        <a href="11_steps.html" title="Steps" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+          <div class="nav-title footer-link flex-grow-1 align-self-center">
+            <div class="nav-direction small font-weight-light">Next</div>
+            Steps
+          </div>
+          <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
+        </a>
+      
+    </nav>  
+  </footer>
+  <!-- footer -->
+  <!-- below -->
+  <div class="below py-5" style="background-color: #222;">
+    <div class="container">
+      <div class="row flex-column">
+      <div class="col-12 col-md-6 mx-md-auto text-center">
+        <h4 class="pb-3 below-text">COMPAS</h4>
+        <p class="below-text">
+          A computational framework for collaboration and research
+          in Architecture, Engineering, Fabrication, and Construction.
+        </p>
+        <nav class="nav justify-content-center pb-3">
+          <a class="nav-link mx-2 px-0 below-link" href="http://github.com/compas-dev" target="_blank">
+            <span class="fab fa-github fa-1x"></span>
+          </a>
+          <a class="nav-link mx-2 px-0 below-link" href="http://forum.compas-framework.org" target="_blank">
+            <span class="fab fa-discourse fa-1x"></span>
+          </a>
+          <a class="nav-link mx-2 px-0 below-link" href="https://pypi.org/project/COMPAS/" target="_blank">
+            <span class="fab fa-python fa-1x"></span>
+          </a>
+        </nav>
+      </div>
+      </div>
+      <div class="row">
+      <div class="col text-center">
+        <p class="p-0 m-0 below-text">Copyright &copy; 2017-2021 compas-dev</p>
+      </div>
+      </div>
+    </div>
+  </div>
+  <!-- below -->
+  <!-- scripts -->
+  <script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+  URL_ROOT          : '',
+  VERSION           : '0.3.3',
+  COLLAPSE_INDEX    : false,
+  FILE_SUFFIX       : '.html',
+  HAS_SOURCE        : 'false',
+  SOURCELINK_SUFFIX : '.txt'
+  };
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https:////cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.1/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+
+  <script src="../_static/underscore.js"></script>
+  <script src="../_static/doctools.js"></script>
+  <script src="../_static/js/searchtools_.js"></script>
+
+  <script>
+  $(document).ready(function() {
+    $(".language-default code").addClass("python");
+    $(".language-python code").addClass("python");
+    $(".language-bash code").addClass("bash");
+    $(".language-cpp code").addClass("cpp");
+    $(".language-json code").addClass("json");
+    $(".language-none code").addClass("plaintext");
+
+    hljs.initHighlighting();
+    anchors.add();
+
+  });
+
+
+  var url = $("#doc_versions").data("url");
+  var docs_site = $("#doc_versions").data("docs");
+
+  if (url) {
+    $.get(url, res=>{
+      var lines = res.match(/[^\r\n]+/g);
+      lines.forEach(version => {
+        $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
+      });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
+    })
+  }
+  </script>
+  <!-- scripts -->
+  
+  
+</body>
+</html>
