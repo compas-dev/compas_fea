@@ -27,7 +27,7 @@ from compas_fea.structure import Structure
 folder = 'C:/temp/principal_stresses/'
 name = 'principal_stresses'
 
-## ------------------------------ PART 1 -------------------------------------##
+# ------------------------------ PART 1 ------------------------------------- #
 # Create empty Structure object (nxn plate)
 
 mdl = Structure(name=name, path=folder)
@@ -68,7 +68,7 @@ mdl.summary()
 mdl.analyse_and_extract(software='abaqus', fields=['u', 's'])
 
 
-## ------------------------------ PART 2 -------------------------------------##
+# ------------------------------ PART 2 ------------------------------------- #
 # Read the results file
 with open(Path(folder).joinpath(name, f"{name}-results.json"), "r") as f:
     results = json.load(f)

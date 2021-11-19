@@ -1,4 +1,3 @@
-
 from compas.datastructures import Mesh
 from compas.geometry import distance_point_point
 from compas_rhino.helpers import mesh_from_guid

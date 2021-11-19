@@ -1,5 +1,9 @@
+from __future__ import print_function
+
 import rhinoscriptsyntax as rs
 import os
+from math import sqrt
+
 import compas_rhino as rhino
 from compas_fea import structure
 from compas_fea.fea import ansys
@@ -11,9 +15,8 @@ from compas_fea.structure import ShellSection
 from compas_fea.structure import ElementProperties
 from compas_fea.structure import HarmonicStep
 from compas_fea.structure import HarmonicPointLoad
-from compas.datastructures.mesh.mesh import Mesh
-from math import sqrt
-from compas.utilities.colors import i_to_rgb
+from compas.datastructures import Mesh
+from compas.utilities import i_to_rgb
 
 
 # Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
@@ -68,7 +71,7 @@ def draw_harmonic_disp(path, amp, name):
     faces = [elements[k]['topology'] for k in fkeys]
     dkeys = sorted(har_disp.keys(), key=int)
     for freq in freqs:
-        print freq
+        print(freq)
         lname = 'freq ' + str(round(freq, 2)) + 'Hz'
         rs.AddLayer(lname)
         rs.CurrentLayer(lname)
@@ -93,7 +96,12 @@ def draw_harmonic_disp(path, amp, name):
         rs.AddMesh(dvert, faces, vertex_colors=colors)
 
 
+# ==============================================================================
+# Main
+# ==============================================================================
+
 if __name__ == '__main__':
+
     layers = ['s1', 's2']
     path = os.path.dirname(os.path.abspath(__file__)) + '/'
     freq_range = [10, 200]
@@ -107,4 +115,3 @@ if __name__ == '__main__':
         mesh = rhino.mesh_from_guid(Mesh, guid)
         harmonic(mesh, pts, lpts, freq_range, freq_steps, damping, path, filename)
         draw_harmonic_disp(path, 10000000, layer)
-

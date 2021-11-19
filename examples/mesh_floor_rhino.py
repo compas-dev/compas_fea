@@ -1,3 +1,4 @@
+from math import pi
 
 from compas_fea.cad import rhino
 from compas_fea.structure import Concrete
@@ -20,8 +21,6 @@ from compas.datastructures import Mesh
 from compas_rhino.helpers import mesh_from_guid
 
 import rhinoscriptsyntax as rs
-
-from math import pi
 
 
 # Author(s): Andrew Liew (github.com/andrewliew)

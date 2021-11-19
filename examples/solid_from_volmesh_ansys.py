@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import compas_fea
 from compas.datastructures import VolMesh
 
@@ -64,4 +66,4 @@ s.write_input_file(software='ansys', fields=fields)
 s.analyse(software='ansys', cpus=4, delete=True)
 s.extract_data(software='ansys', fields=fields, steps='last')
 
-print s.results
+print(s.results)

@@ -1,4 +1,3 @@
-
 from compas_fea.cad import rhino
 from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
@@ -13,7 +12,7 @@ from compas_fea.structure import TrussSection
 # Author(s): Andrew Liew (github.com/andrewliew)
 
 
-p  = 7850
+p = 7850
 A1 = 0.0008
 A2 = 0.0005
 A3 = 0.0001

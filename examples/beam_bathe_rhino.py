@@ -1,3 +1,5 @@
+import json
+import rhinoscriptsyntax as rs
 
 from compas.geometry import cross_vectors
 from compas.geometry import normalize_vector
@@ -11,9 +13,6 @@ from compas_fea.structure import GeneralStep
 from compas_fea.structure import PointLoad
 from compas_fea.structure import RectangularSection
 from compas_fea.structure import Structure
-
-import rhinoscriptsyntax as rs
-import json
 
 
 # Author(s): Andrew Liew (github.com/andrewliew)

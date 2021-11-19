@@ -1,4 +1,3 @@
-
 from compas_fea.cad import rhino
 from compas_fea.structure import ElementProperties as Properties
 from compas_fea.structure import GeneralStep
@@ -75,4 +74,3 @@ rhino.plot_reaction_forces(mdl, step='step_loads', scale=0.5)
 
 print(mdl.get_nodal_results(step='step_loads', field='rfm', nodes='nset_pins'))
 print(mdl.get_nodal_results(step='step_loads', field='um', nodes='nset_load_v'))
-

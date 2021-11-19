@@ -1,3 +1,4 @@
+from math import pi
 
 from compas_blender.utilities import mesh_from_bmesh
 from compas_blender.utilities import get_object_by_name
@@ -16,8 +17,6 @@ from compas_fea.structure import Steel
 from compas_fea.structure import Structure
 from compas_fea.structure import TributaryLoad
 from compas_fea.structure import TrussSection
-
-from math import pi
 
 
 # Author(s): Andrew Liew (github.com/andrewliew)

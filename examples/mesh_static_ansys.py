@@ -1,3 +1,4 @@
+from __future__ import print_function
 
 import compas_fea
 
@@ -34,6 +35,7 @@ supppots = FixedDisplacement(name='supports', nodes='support_nodes')
 s.add_displacement(supppots)
 
 # add materials and sections -----------------------------------------------
+
 E = 40 * 10 ** 9
 v = .02
 p = 2400
@@ -53,10 +55,10 @@ s.add_load(GravityLoad(name='load_gravity', elements=['shell']))
 # add steps --------------------------------------------------------------------
 
 step = GeneralStep(name='gravity_step',
-                         nlgeom=False,
-                         displacements=['supports'],
-                         loads=['load_gravity'],
-                        type='static')
+                   nlgeom=False,
+                   displacements=['supports'],
+                   loads=['load_gravity'],
+                   type='static')
 
 s.add_steps([step])
 
@@ -69,4 +71,4 @@ s.write_input_file(software='ansys', fields=fields)
 s.analyse(software='ansys', cpus=4, delete=True)
 s.extract_data(software='ansys', fields=fields, steps='last')
 
-print s.results
+print(s.results)

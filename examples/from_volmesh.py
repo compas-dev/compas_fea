@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import compas_fea
 from compas.datastructures import VolMesh
 
@@ -19,6 +21,7 @@ filepath = compas_fea.get('volmesh_torus.json')
 volmesh = VolMesh.from_json(filepath)
 
 # add shell elements from mesh -------------------------------------------------
+
 s = Structure(path=compas_fea.TEMP, name='torus')
 s.add_nodes_elements_from_volmesh(volmesh, elset='solids')
 
@@ -30,6 +33,7 @@ supppots = FixedDisplacement(name='supports', nodes='support_nodes')
 s.add_displacement(supppots)
 
 # add materials and sections -----------------------------------------------
+
 E = 35 * 10 ** 9
 v = .02
 p = 2400
@@ -64,4 +68,4 @@ s.write_input_file(software='ansys', fields=fields)
 s.analyse(software='ansys', cpus=4, delete=True)
 s.extract_data(software='ansys', fields=fields, steps='last')
 
-print s.results
+print(s.results)

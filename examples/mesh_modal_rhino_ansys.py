@@ -1,16 +1,15 @@
 import rhinoscriptsyntax as rs
 import os
+
 from compas_rhino.helpers.mesh import mesh_from_guid
 from compas_fea import structure
-from compas_fea.fea import ansys
 from compas_fea.structure import PinnedDisplacement
 from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ShellSection
 from compas_fea.structure import ElementProperties
 from compas_fea.structure import ModalStep
 from compas_fea.cad.rhino import plot_mode_shapes
-from compas.datastructures.mesh.mesh import Mesh
-from math import sqrt
+from compas.datastructures import Mesh
 
 
 # Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
@@ -51,6 +50,11 @@ def modal(mesh, pts, num_modes, path, name):
     s.extract_data(software='ansys', fields=fields, steps='last')
     return s
 
+
+# ==============================================================================
+# Main
+# ==============================================================================
+
 if __name__ == '__main__':
     path = os.path.dirname(os.path.abspath(__file__)) + '/'
     num_modes = 6
@@ -60,4 +64,4 @@ if __name__ == '__main__':
     guid = rs.ObjectsByLayer(name)[0]
     mesh = mesh_from_guid(Mesh, guid)
     s = modal(mesh, pts, num_modes, path, name)
-    plot_mode_shapes(s, 'modal_analysis', layer='mode',scale=100)
+    plot_mode_shapes(s, 'modal_analysis', layer='mode', scale=100)

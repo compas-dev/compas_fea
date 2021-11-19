@@ -1,4 +1,3 @@
-
 from compas_fea.cad import rhino
 
 import rhinoscriptsyntax as rs

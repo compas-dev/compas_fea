@@ -1,4 +1,3 @@
-
 from compas_fea.cad import rhino
 from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ElementProperties as Properties
@@ -64,4 +63,4 @@ mdl.summary()
 mdl.analyse_and_extract(software='abaqus', fields=['u'])
 
 rhino.plot_data(mdl, step='step_load', field='um')
-#rhino.plot_voxels(mdl, step='step_load', field='um', vdx=0.05)
+# rhino.plot_voxels(mdl, step='step_load', field='um', vdx=0.05)

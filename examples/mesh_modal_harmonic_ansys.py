@@ -139,6 +139,10 @@ def modal(geom_file, num_modes, path):
     return s
 
 
+# ==============================================================================
+# Main
+# ==============================================================================
+
 if __name__ == '__main__':
     # path = 'C:/Users/user/Documents/ansys_test/'
     path = '/Users/mtomas/Desktop/ansys_test/'

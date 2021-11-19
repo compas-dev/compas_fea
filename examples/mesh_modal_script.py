@@ -1,4 +1,3 @@
-
 from compas.datastructures import Mesh
 
 from compas_fea.structure import ElasticIsotropic

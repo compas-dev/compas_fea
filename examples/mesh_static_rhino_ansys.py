@@ -43,6 +43,7 @@ supppots = FixedDisplacement(name='supports', nodes='support_nodes')
 s.add_displacement(supppots)
 
 # add materials and sections -----------------------------------------------
+
 E = 40 * 10 ** 9
 v = .02
 p = 2400
@@ -62,10 +63,10 @@ s.add_load(GravityLoad(name='load_gravity', elements=['shell']))
 # add steps --------------------------------------------------------------------
 
 step = GeneralStep(name='gravity_step',
-                         nlgeom=False,
-                         displacements=['supports'],
-                         loads=['load_gravity'],
-                        type='static')
+                   nlgeom=False,
+                   displacements=['supports'],
+                   loads=['load_gravity'],
+                   type='static')
 
 s.add_steps([step])
 

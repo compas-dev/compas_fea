@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import os
 from compas.datastructures import Mesh
 from compas.geometry import closest_point_in_cloud
@@ -38,6 +40,10 @@ def assign_structure_property_to_mesh_faces(mesh, name, value):
         mesh.set_face_attribute(fkey, name, value)
 
 
+# ==============================================================================
+# Main
+# ==============================================================================
+
 if __name__ == '__main__':
 
     filename = 'example_From_mesh'
@@ -58,6 +64,4 @@ if __name__ == '__main__':
     s = Structure.from_mesh(mesh)
     fnm = path + filename
     ansys.inp_generate(s, filename=fnm, out_path=path)
-    print s
-
-
+    print(s)
