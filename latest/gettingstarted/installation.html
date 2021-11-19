@@ -50,7 +50,7 @@
         <li class="nav-item nav-versions dropdown">
           <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
-            0.3.2
+            0.3.3
           </a>
           <div id="doc_version_list" class="dropdown-menu dropdown-menu-md-right" aria-labelledby="bd-versions"></div>
         </li>
@@ -93,41 +93,57 @@
         
         <section id="installation">
 <h1>Installation</h1>
-<p>To use <code class="docutils literal notranslate"><span class="pre">compas_fea</span></code> you need to install COMPAS,
-and have at least on of the supported analysis backends available on your system.
-Currently, <code class="docutils literal notranslate"><span class="pre">compas_fea</span></code> supports Abaqus, ANSYS, and OpenSEES to various degrees.
-See <a class="reference internal" href="fea.html#fea"><span class="std std-ref">FE software</span></a> for more detailed information.</p>
-<p>By installing COMPAS all required Python packages for <code class="docutils literal notranslate"><span class="pre">compas_fea</span></code> will be installed as well.
-To install COMPAS, see the <a class="reference external" href="https://compas-dev.github.io/main/gettingstarted.html">Getting Started</a> instructions in the COMPAS docs.</p>
-<p><code class="docutils literal notranslate"><span class="pre">compas_fea</span></code> itself can be installed using <code class="docutils literal notranslate"><span class="pre">pip</span></code> from a local source repo, or directly from GitHub.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Make sure to install <code class="docutils literal notranslate"><span class="pre">compas_fea</span></code> in the same environment as COMPAS!</p>
+<p>Old versions of <a class="reference internal" href="../api/compas_fea.html#module-compas_fea" title="compas_fea"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea</span></code></a> were installed by adding the location of a
+local source folder directly to the <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>.
+If you still have such a legacy install on your system, we highly recommend
+that you remove all traces of it, which means to remove <a class="reference external" href="https://compas.dev/compas/latest/api/compas.html#module-compas" title="(in COMPAS v1.7)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas</span></code></a>,
+<a class="reference internal" href="../api/compas_fea.html#module-compas_fea" title="compas_fea"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea</span></code></a>, or any other COMPAS packages from your <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>,
+because it will interfere with the proper functioning of more modern, flexible
+and robust installation procedures adopted by the COMPAS ecosystem.</p>
+<p>This also applies to old procedures for installing COMPAS packages for Rhino.
+If you still have COMPAS packages registered directly in the <code class="docutils literal notranslate"><span class="pre">Modules</span> <span class="pre">Search</span> <span class="pre">Path</span></code> in Rhino,
+please remove them.</p>
 </div>
-<section id="from-local-source">
-<h2>From Local Source</h2>
-<p>To install from a local source repo, clone the repo onto your computer using your Favourite Git client,
-or using the command line.</p>
-<p>Then navigate to the root of the <code class="docutils literal notranslate"><span class="pre">compas_fea</span></code> repo and install using pip:</p>
-<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span><span class="nb">cd</span> compas_fea
-pip install -e .
+<section id="requirements">
+<h2>Requirements</h2>
+<p>To use <a class="reference internal" href="../api/compas_fea.html#module-compas_fea" title="compas_fea"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea</span></code></a> you need to install COMPAS,
+and have at least on of the supported analysis backends available on your system.
+Currently, <a class="reference internal" href="../api/compas_fea.html#module-compas_fea" title="compas_fea"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea</span></code></a> supports Abaqus, ANSYS, and OpenSEES to various degrees.
+See <a class="reference internal" href="fea.html#fea"><span class="std std-ref">FE software</span></a> for more detailed information.</p>
+<p>To install COMPAS, see the <a class="reference external" href="https://compas-dev.github.io/main/gettingstarted.html">Getting Started</a>
+instructions in the COMPAS docs.</p>
+</section>
+<section id="install-compas-fea">
+<h2>Install <a class="reference internal" href="../api/compas_fea.html#module-compas_fea" title="compas_fea"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea</span></code></a></h2>
+<p>As with all other COMPAS packages, we recommend to install <a class="reference internal" href="../api/compas_fea.html#module-compas_fea" title="compas_fea"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea</span></code></a> in a <code class="docutils literal notranslate"><span class="pre">conda</span></code> environment.</p>
+<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>conda create -n fea -c conda-forge <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 compas --yes
+conda activate fea
+pip install compas_fea
 </code></pre></div>
 </div>
 </section>
-<section id="from-github">
-<h2>From GitHub</h2>
-<p>To install directly from the GitHub repo, just do</p>
-<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>$ pip install git+https://github.com/compas-dev/compas_fea.git#egg<span class="o">=</span>compas_fea
+<section id="working-in-rhino">
+<h2>Working in Rhino</h2>
+<p>If you wish to use <a class="reference internal" href="../api/compas_fea.html#module-compas_fea" title="compas_fea"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea</span></code></a> in Rhino, you have to add it to the installed Rhino COMPAS packages.</p>
+<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>conda activate fea
+python -m compas_rhino.install -v <span class="m">7</span>.0
+python -m compas_rhino.install -v <span class="m">7</span>.0 -p compas_fea
 </code></pre></div>
 </div>
+<p>For more information about using COMPAS in Rhino, see the COMPAS docs:
+<a class="reference external" href="https://compas.dev/compas/dev/gettingstarted/rhino.html">https://compas.dev/compas/dev/gettingstarted/rhino.html</a></p>
 </section>
-<section id="verify">
-<h2>Verify</h2>
-<p>To check the installation, open an interactive Python prompt and import the package.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><code><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">compas</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">compas_fea</span>
+<section id="working-in-blender">
+<h2>Working in Blender</h2>
+<p>To use <a class="reference internal" href="../api/compas_fea.html#module-compas_fea" title="compas_fea"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea</span></code></a> in Blender, you simply have to register the environment with Blender.</p>
+<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>conda activate fea
+python -m compas_blender.install -v <span class="m">2</span>.93
 </code></pre></div>
 </div>
+<p>For more information about using COMPAS in Blender, see the COMPAS docs:
+<a class="reference external" href="https://compas.dev/compas/dev/gettingstarted/blender.html">https://compas.dev/compas/dev/gettingstarted/blender.html</a></p>
 </section>
 </section>
 
@@ -169,9 +185,10 @@ pip install -e .
         
         <ul class="nav flex-column" id="compas-toc">
 <li class="nav-item"><a class="nav-link reference internal" href="#">Installation</a><ul class="nav flex-column">
-<li class="nav-item"><a class="nav-link reference internal" href="#from-local-source">From Local Source</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#from-github">From GitHub</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#verify">Verify</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#requirements">Requirements</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#install-compas-fea">Install <code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_fea</span></code></a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#working-in-rhino">Working in Rhino</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#working-in-blender">Working in Blender</a></li>
 </ul>
 </li>
 </ul>
@@ -241,7 +258,7 @@ pip install -e .
   <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
   URL_ROOT          : '',
-  VERSION           : '0.3.2',
+  VERSION           : '0.3.3',
   COLLAPSE_INDEX    : false,
   FILE_SUFFIX       : '.html',
   HAS_SOURCE        : 'false',
