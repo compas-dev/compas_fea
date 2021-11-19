@@ -23,7 +23,7 @@ __author__ = ['Andrew Liew (github.com/andrewliew), Tomas Mendez Echenagucia (gi
 __copyright__ = 'Block Research Group - ETH Zurich'
 __license__ = 'MIT License'
 __email__ = ''
-__version__ = '0.3.1'
+__version__ = '0.3.2'
 
 HERE = os.path.dirname(__file__)
 

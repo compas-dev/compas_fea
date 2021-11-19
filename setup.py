@@ -25,7 +25,7 @@ optional_requirements = {}
 
 setup(
     name='compas_fea',
-    version='0.3.1',
+    version='0.3.2',
     description='compas finite element package',
     long_description=long_description,
     long_description_content_type='text/markdown',
