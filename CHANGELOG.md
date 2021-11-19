@@ -9,17 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-### Changed
-
-### Removed
-
-
-## Unreleased
-
-### Added
-
-* Added support for `compas` v1.0
-* Include changelog for releases
+* Added support for `compas` v1.0.
+* Include changelog for releases.
+* Added changelog to bump version.
 
 ### Changed
 
