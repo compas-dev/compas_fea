@@ -1,3 +1,4 @@
+from math import pi
 
 from compas_fea.cad import rhino
 from compas_fea.structure import CircularSection
@@ -8,8 +9,6 @@ from compas_fea.structure import GeneralStep
 from compas_fea.structure import PinnedDisplacement
 from compas_fea.structure import PointLoad
 from compas_fea.structure import Structure
-
-from math import pi
 
 
 # Author(s): Andrew Liew (github.com/andrewliew)
@@ -75,5 +74,3 @@ rhino.plot_data(mdl, step='step_load', field='um', radius=0.01, cbar_size=0.3)
 rhino.plot_data(mdl, step='step_load', field='sf1', radius=0.01, cbar_size=0.3)
 rhino.plot_data(mdl, step='step_load', field='sf2', radius=0.01, cbar_size=0.3)
 rhino.plot_data(mdl, step='step_load', field='sm1', radius=0.01, cbar_size=0.3)
-
-#print(mdl.results['step_load']['element']['sf1'][4])

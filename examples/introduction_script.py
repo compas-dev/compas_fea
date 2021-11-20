@@ -1,4 +1,3 @@
-
 from compas_fea.structure import CircularSection
 from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ElementProperties as Properties

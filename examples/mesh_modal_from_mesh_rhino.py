@@ -1,4 +1,3 @@
-
 from compas_fea.cad import rhino
 from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ElementProperties as Properties
@@ -10,7 +9,7 @@ from compas_fea.structure import MassSection
 from compas_fea.structure import Structure
 
 
-# Author(s): 
+# Author(s):
 # Francesco Ranaudo (github.com/nefelogeta)
 # Andrew Liew (github.com/andrewliew)
 
@@ -22,7 +21,7 @@ mdl = Structure(name='mesh_modal_from_mesh', path='C:/Temp/')
 # Elements
 
 rhino.add_nodes_elements_from_layers(mdl, mesh_type='ShellElement', layers='elset_concrete', pA=100)
-rhino.add_nodes_elements_from_layers(mdl, mesh_type='MassElement', layers='elset_mass',pA=1000)
+rhino.add_nodes_elements_from_layers(mdl, mesh_type='MassElement', layers='elset_mass', pA=1000)
 
 # Sets
 

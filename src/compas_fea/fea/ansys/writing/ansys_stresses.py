@@ -353,7 +353,8 @@ def write_request_beam_stresses(structure, step_index, etkey):
     fh.write('*cfopen,' + out_path + '/' + fname + ',txt \n')
     fh.write('*CFWRITE, stresses, E number, S11I, S11J, SByTI, SByTJ, SByBI, SByBJ, SBzTI, SBzTJ, SBzBI, SBzBJ \n')
     fh.write('*do,i,1,nelem \n')
-    fh.write('*CFWRITE, stresses, enum(i,1), estress(i,1), estress(i,2),estress(i,3), estress(i,4), estress(i,5), estress(i,6), estress(i,7), estress(i,8), estress(i,9), estress(i,10) \n')
+    fh.write('*CFWRITE, stresses, enum(i,1), estress(i,1), estress(i,2),estress(i,3), estress(i,4), estress(i,5), estress(i,6), ')
+    fh.write('estress(i,7), estress(i,8), estress(i,9), estress(i,10) \n')
     fh.write('*Enddo \n')
 
     fh.write('ESEL, ALL \n')

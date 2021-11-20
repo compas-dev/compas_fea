@@ -1,4 +1,3 @@
-
 from compas_fea.cad import blender
 from compas_fea.structure import Structure
 

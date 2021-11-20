@@ -1,4 +1,3 @@
-
 from compas_fea.cad import rhino
 from compas_fea.structure import Concrete
 from compas_fea.structure import ElementProperties as Properties

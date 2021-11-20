@@ -1,4 +1,6 @@
+import math
 import json
+
 from compas_fea import structure
 from compas_fea.structure import FixedDisplacement
 from compas_fea.structure import ElasticIsotropic
@@ -6,8 +8,7 @@ from compas_fea.structure import ShellSection
 from compas_fea.structure import ElementProperties
 from compas_fea.structure import HarmonicStep
 from compas_fea.structure import HarmonicPressureLoad
-from compas.datastructures.mesh.mesh import Mesh
-import math
+from compas.datastructures import Mesh
 
 
 # Author(s): Tomás Méndez Echenagucia (github.com/tmsmendez)
@@ -62,6 +63,10 @@ def harmonic_pressure(mesh, pts, freq_list, path, name, damping):
     s.extract_data(software='ansys', fields=fields, steps='last')
     return s
 
+
+# ==============================================================================
+# Main
+# ==============================================================================
 
 if __name__ == '__main__':
 

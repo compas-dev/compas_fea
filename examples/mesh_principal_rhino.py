@@ -1,4 +1,3 @@
-
 from compas_fea.cad import rhino
 from compas_fea.structure import ElasticIsotropic
 from compas_fea.structure import ElementProperties as Properties
@@ -7,9 +6,8 @@ from compas_fea.structure import GravityLoad
 from compas_fea.structure import PinnedDisplacement
 from compas_fea.structure import ShellSection
 from compas_fea.structure import Structure
-import json
 
-# Author(s): Andrew Liew (github.com/andrewliew), 
+# Author(s): Andrew Liew (github.com/andrewliew),
 #            Francesco Ranaudo (github.com/franaudo)
 
 

@@ -27,6 +27,6 @@ jobs:
 
       - uses: compas-dev/compas-actions.build@v1.0.0
         with:
-          test_lint: false # TODO: fix lint errors and enable this
+          test_lint: true
           test_compas: true
 
