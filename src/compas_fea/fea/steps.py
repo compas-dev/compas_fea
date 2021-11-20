@@ -160,6 +160,7 @@ class Steps(object):
                         if ltype == 'PointLoad':
 
                             compnents = ' '.join([str(com[dof] * fact) for dof in dofs[:self.ndof]])
+                            compnents + '0. 0. 0.'
 
                             for node in nodes:
 
