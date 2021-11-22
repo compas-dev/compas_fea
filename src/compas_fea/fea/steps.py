@@ -160,7 +160,6 @@ class Steps(object):
                         if ltype == 'PointLoad':
 
                             compnents = ' '.join([str(com[dof] * fact) for dof in dofs[:self.ndof]])
-                            compnents + '0. 0. 0.'
 
                             for node in nodes:
 
@@ -177,7 +176,8 @@ class Steps(object):
                             for nkey, node in self.structure.nodes.items():
 
                                 W = - fact * node.mass * 9.81
-                                self.write_line('load {0} {1} {2} {3}'.format(nkey + 1, gx * W, gy * W, gz * W))
+                                self.write_line('load {0} {1} {2} {3} -0.0 -0.0 -0.0'.format(
+                                    nkey + 1, gx * W, gy * W, gz * W))
 
                         # LineLoad
                         # --------
