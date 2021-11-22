@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Added support for `compas` v1.0.
 * Include changelog for releases.
 * Added changelog to bump version.
-* fixed opensees `addunbalLoad` error
+* Fixed opensees `addunbalLoad` error.
 
 ### Changed
 
