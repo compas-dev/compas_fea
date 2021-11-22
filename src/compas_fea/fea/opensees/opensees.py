@@ -6,6 +6,7 @@ from compas_fea.fea import Writer
 
 from subprocess import Popen
 from subprocess import PIPE
+from pprint import pprint
 
 from time import time
 from math import sqrt
@@ -105,21 +106,21 @@ def launch_process(structure, exe, output):
             line = str(line.strip())
 
             if output:
-                print(line)
+                pprint(line)
 
         stdout, stderr = p.communicate()
 
         if output:
-            print(stdout)
-            print(stderr)
+            pprint(stdout.decode())
+            pprint(stderr.decode())
 
         toc = time() - tic
 
-        print('\n***** OpenSees analysis time : {0} s *****'.format(toc))
+        pprint('\n***** OpenSees analysis time : {0} s *****'.format(toc))
 
     except Exception:
 
-        print('\n***** OpenSees analysis failed')
+        pprint('\n***** OpenSees analysis failed')
 
 
 def extract_data(structure, fields):
