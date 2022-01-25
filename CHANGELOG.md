@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+* Function 'principal stresses' : adding sorting of the resulting eigenvectors + eigenvalues
 
 ### Removed
 

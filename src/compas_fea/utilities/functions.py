@@ -617,7 +617,7 @@ def principal_stresses(data):
                                       (stress_vector[1], stress_vector[2])])
             w_sp, v_sp = np.linalg.eig(stress_matrix)
 
-            # find larger/smaller value (numpy does not sort the eigenvectors/eigenvalues by magnitude : https://numpy.org/doc/stable/reference/generated/numpy.linalg.eig.html) 
+            # find larger/smaller value (numpy does not sort the eigenvectors/eigenvalues by magnitude : https://numpy.org/doc/stable/reference/generated/numpy.linalg.eig.html)
             sorted_magn_indices = []
             if abs(w_sp[0]) > abs(w_sp[1]):
                 sorted_magn_indices = [0, 1]
