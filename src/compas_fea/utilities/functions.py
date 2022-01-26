@@ -616,8 +616,12 @@ def principal_stresses(data):
             stress_matrix = np.array([(stress_vector[0], stress_vector[1]),
                                       (stress_vector[1], stress_vector[2])])
             w_sp, v_sp = np.linalg.eig(stress_matrix)
+            # sort by larger to smaller eigenvalue
+            idx = w_sp.argsort()[::-1]
+            w_sp = w_sp[idx]
+            v_sp = v_sp[:, idx]
+            # populate results
             for v, k in enumerate(stype):
                 spr[sp][k][c] += w_sp[v]
                 e[sp][k][:, c] += v_sp[:, v]
-
     return spr, e
