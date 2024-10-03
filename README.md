@@ -1,7 +1,7 @@
 # COMPAS FEA
 
 > [!WARNING]
-> This package is deprecated due to COMPAS2 FEA development and will be removed in the future.
+> This package is deprecated and will be removed in the future.
 > Please use [compas_fea2](https://github.com/compas-dev/compas_fea2) instead
 
 ![build](https://github.com/compas-dev/compas_fea/workflows/build/badge.svg)
