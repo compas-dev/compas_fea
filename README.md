@@ -2,7 +2,7 @@
 
 > [!WARNING]
 > This package is deprecated and will be removed in the future.
-> Please use [compas_fea2](https://github.com/compas-dev/compas_fea2) instead
+> Please use [compas_fea2](https://github.com/compas-dev/compas_fea2) instead.
 
 ![build](https://github.com/compas-dev/compas_fea/workflows/build/badge.svg)
 [![GitHub - License](https://img.shields.io/github/license/compas-dev/compas_fea.svg)](https://github.com/compas-dev/compas_fea)
