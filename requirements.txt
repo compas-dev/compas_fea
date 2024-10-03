@@ -1,1 +1,2 @@
 COMPAS >=1.0
+opensees>=0.1.0

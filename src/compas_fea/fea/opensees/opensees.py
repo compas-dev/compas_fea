@@ -59,7 +59,7 @@ def input_generate(structure, fields, output, ndof):
     print('***** OpenSees input file generated: {0} *****\n'.format(filename))
 
 
-def launch_process(structure, exe, output):
+def launch_process(structure, exe, output, subproc=True):
     """ Runs the analysis through OpenSees.
 
     Parameters
@@ -70,6 +70,9 @@ def launch_process(structure, exe, output):
         OpenSees exe path to bypass defaults.
     output : bool
         Print terminal output.
+    subproc : bool (optional, default=True)
+        Whether to lauch OpenSees as a subprocess. If False, the
+        new opensees Python package is used to evaluate the input.
 
     Returns
     -------
@@ -89,6 +92,15 @@ def launch_process(structure, exe, output):
             os.mkdir(temp)
 
         tic = time()
+
+        if not subproc:
+            # use new opensees python package to execute the Tcl input
+            import opensees.tcl
+            with open(f"{path}{name}.tcl", "r") as f:
+                opensees.tcl.eval(f.read())
+            toc = time() - tic
+            pprint('\n***** OpenSees analysis time : {0} s *****'.format(toc))
+            return
 
         if not exe:
             exe = 'C:/OpenSees.exe'
